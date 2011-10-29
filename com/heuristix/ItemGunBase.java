@@ -1,0 +1,84 @@
+package com.heuristix;
+
+/**
+ * Created by IntelliJ IDEA.
+ * User: Matt
+ * Date: 9/29/11
+ * Time: 7:40 PM
+ */
+public class ItemGunBase extends ItemGun {
+
+    protected ItemGunBase(int id, ItemProjectile projectile) {
+        super(id, projectile);
+    }
+
+    @Override
+    public int getClipSize() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getReloadTime() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getRecoilY() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getRecoilX() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public float getZoom() {
+        return 1;
+    }
+
+    @Override
+    public int getScope() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getShotsPerMinute() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int getRoundsPerShot() {
+        return 1;
+    }
+
+    @Override
+    public int getRoundsPerMinute() {
+        return getShotsPerMinute();
+    }
+
+    @Override
+    public int getFireMode() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getShootSound() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getName() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getIconPath() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public Object[] getCraftingRecipe() {
+        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+    }
+}
