@@ -34,7 +34,7 @@ public abstract class Mod extends BaseMod {
         this.sounds = new HashMap();
     }
 
-    protected void registerItem(CustomItem item) {
+    protected void registerItem(ItemCustom item) {
         if(item.getIconPath() != null)
             item.setIconIndex(ModLoader.addOverride("/gui/items.png", item.getIconPath()));
         if(item.getItemName() == null)

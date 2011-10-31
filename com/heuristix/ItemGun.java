@@ -80,7 +80,6 @@ public abstract class ItemGun extends ItemProjectileShooter {
         reloading = false;
     }
 
-    @Override
     public int getCraftingAmount() {
         return 1;
     }

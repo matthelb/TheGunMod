@@ -10,7 +10,7 @@ import net.minecraft.src.World;
  * Date: 8/31/11
  * Time: 7:19 PM
  */
-public abstract class ItemProjectile extends CustomItem {
+public abstract class ItemProjectile extends ItemCustom {
 
     protected final Class<? extends EntityProjectile> projectileClass;
 

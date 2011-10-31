@@ -8,7 +8,7 @@ import net.minecraft.src.*;
  * Date: 8/31/11
  * Time: 7:16 PM
  */
-public abstract class ItemProjectileShooter extends CustomItem {
+public abstract class ItemProjectileShooter extends ItemCustom {
 
     public static final int FIRE_MODE_SINGLE = 0;
     public static final int FIRE_MODE_AUTO = 1;
@@ -45,11 +45,13 @@ public abstract class ItemProjectileShooter extends CustomItem {
 
     public void fire(World world, EntityPlayer player) {
         if(canShoot()) {
-            for(int i = 0; i < getRoundsPerShot(); i++) {
-                if(!fireProjectile(world, player, i == 0))
-                    break;
-                if(i == getRoundsPerShot() - 1)
-                    lastShot = System.currentTimeMillis();
+            if(handleAmmunitionConsumption(player)) {
+                for(int i = 0; i < getRoundsPerShot(); i++) {
+                    if(!fireProjectile(world, player, i == 0))
+                        break;
+                    if(i == getRoundsPerShot() - 1)
+                        lastShot = System.currentTimeMillis();
+                }
             }
         }
     }
@@ -57,32 +59,29 @@ public abstract class ItemProjectileShooter extends CustomItem {
     public void burst(World world, EntityPlayer player) {
         if(bursts < 2) {
            if(canFire()) {
-               if(fireProjectile(world, player, true)) {
-                   ++bursts;
-               } else {
-                   isBursting = false;
+               if(handleAmmunitionConsumption(player)) {
+                   if(fireProjectile(world, player, true)) {
+                       ++bursts;
+                       return;
+                   }
                }
            }
-        } else {
-            bursts = 0;
-            isBursting = false;
         }
+        bursts = 0;
+        isBursting = false;
     }
 
     public boolean fireProjectile(World world, EntityPlayer player, boolean playSound) {
-        if(handleAmmunitionConsumption(player)) {
-            if(playSound)
-                world.playSoundAtEntity(player, getShootSound(), 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
-            if(!world.multiplayerWorld) {
-                world.entityJoinedWorld(projectile.newProjectile(world, player));
-            }
-            lastRound = System.currentTimeMillis();
-            onFire(world, player);
-            if(getFireMode() == FIRE_MODE_BURST)
-                isBursting = true;
-            return true;
+        if(playSound)
+            world.playSoundAtEntity(player, getShootSound(), 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
+        if(!world.multiplayerWorld) {
+            world.entityJoinedWorld(projectile.newProjectile(world, player));
         }
-        return false;
+        lastRound = System.currentTimeMillis();
+        onFire(world, player);
+        if(getFireMode() == FIRE_MODE_BURST)
+            isBursting = true;
+        return true;
     }
 
     public void onFire(World world, EntityPlayer player) {
