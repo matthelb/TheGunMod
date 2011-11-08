@@ -14,8 +14,8 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 0.1f;
 
-    private final EntityLiving owner;
-    private final double startX, startY, startZ;
+    private EntityLiving owner;
+    private double startX, startY, startZ;
 
     private int xTile;
     private int yTile;
@@ -26,6 +26,10 @@ public abstract class EntityProjectile extends Entity {
     private int ticksInGround;
     private boolean inGround;
     public boolean doesBelongToPlayer;
+
+    protected EntityProjectile(World world) {
+        super(world);
+    }
 
     public EntityProjectile(World world, EntityLiving owner) {
         super(world);

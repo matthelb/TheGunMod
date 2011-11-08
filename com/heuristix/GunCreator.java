@@ -1,6 +1,10 @@
 package com.heuristix;
 
 import com.heuristix.asm.ByteVector;
+import com.heuristix.util.BytecodeValue;
+import com.heuristix.util.OverrideClassAdapter;
+import com.heuristix.util.Pair;
+import net.minecraft.src.World;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -14,11 +18,11 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.*;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,7 +32,7 @@ import java.util.Map;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.5.1";
+    public static final String VERSION = "0.6";
 
     private static final Dimension TEXT_FIELD_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
@@ -37,15 +41,31 @@ public class GunCreator extends JFrame {
     private DisplayableImageButton gunImageButton, bulletImageButton;
     private DisplayableBytesButton shootSoundButton;
 
-    private JTextField nameField;
+    private JTextField nameField, bulletNameField;
     private JComboBox fireMode, scope;
     private JFormattedTextField damageField, rangeField, zoomField, shotsPerMinuteField, reloadField, clipSizeField, recoilXField, recoilYField, bulletIdField, gunIdField, roundsPerMinuteField, bulletSpreadField, roundsPerShotField;
     private JPanel[] fireModePanels;
-    private HashMap<Class, HashMap<String, String>> methodOverrides;
 
     private final FileChooserCallback openCallback = new FileChooserCallback() {
         public void selectedFile(File file) {
-            load(new CustomGun(Utilities.read(file)));
+            byte[] bytes = Utilities.read(file);
+            if(file.getName().toLowerCase().endsWith("gun"))
+                load(new CustomGun(bytes));
+            else {
+                try {
+                    load(new Gun(bytes));
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     };
 
@@ -55,10 +75,10 @@ public class GunCreator extends JFrame {
             int index = fileName.lastIndexOf('.');
             if(index > -1) {
                 String extension = fileName.substring(index);
-                if(!extension.toLowerCase().equals(".gun"))
-                    fileName = fileName.substring(0, index) + "GUN";
+                if(!extension.toLowerCase().equals(".gun2"))
+                    fileName = fileName.substring(0, index) + "gun2";
             } else {
-                fileName = fileName + ".GUN";
+                fileName = fileName + ".gun2";
             }
             file = new File(file.getAbsolutePath().substring(0, file.getAbsolutePath().lastIndexOf(File.separator)) + File.separator + fileName);
             FileOutputStream out = null;
@@ -82,7 +102,6 @@ public class GunCreator extends JFrame {
 
     public GunCreator() {
         super("GunCreator v" + VERSION);
-        this.methodOverrides = new HashMap<Class, HashMap<String, String>>();
         init();
     }
 
@@ -166,10 +185,15 @@ public class GunCreator extends JFrame {
         fireModePanels[FireMode.BURST.ordinal()].add(new JLabel("Rounds per minute: "));
         fireModePanels[FireMode.BURST.ordinal()].add(roundsPerMinuteField);
 
+        bulletNameField = new JTextField();
+        bulletNameField.setPreferredSize(TEXT_FIELD_SIZE);
+
         westPanel.add(new JLabel("Gun item ID: "));
         westPanel.add(gunIdField);
         westPanel.add(new JLabel("Bullet item ID: "));
         westPanel.add(bulletIdField);
+        westPanel.add(new JLabel("Bullet name: "));
+        westPanel.add(bulletNameField);
         westPanel.add(new JLabel("Bullet damage: "));
         westPanel.add(damageField);
         westPanel.add(new JLabel("Bullet range: "));
@@ -245,22 +269,12 @@ public class GunCreator extends JFrame {
         JMenu fileMenu = new JMenu("File");
         JMenuItem openMenuItem = new JMenuItem("Open"), saveMenuItem = new JMenuItem("Save");
         JFileChooser gunFileChooser = new JFileChooser(Utilities.getHomeDirectory());
-        gunFileChooser.setFileFilter(new FileNameExtensionFilter("GUN file", "gun"));
+        gunFileChooser.setFileFilter(new FileNameExtensionFilter("GUN/2 file", "gun", "gun2"));
         openMenuItem.addActionListener(new FileChooserActionListener(this, openCallback, true, gunFileChooser));
         saveMenuItem.addActionListener(new FileChooserActionListener(this, saveCallback, false, gunFileChooser));
         fileMenu.add(openMenuItem);
         fileMenu.add(saveMenuItem);
         menuBar.add(fileMenu);
-
-        JMenu advancedMenu = new JMenu("Advanced");
-        JMenuItem overrideMethodsItem = new JMenuItem("Override Methods");
-        overrideMethodsItem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                methodOverrides = showOverrideDialog(GunCreator.this, methodOverrides);
-            }
-        });
-        advancedMenu.add(overrideMethodsItem);
-        menuBar.add(advancedMenu);
 
         setJMenuBar(menuBar);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -290,16 +304,59 @@ public class GunCreator extends JFrame {
             bulletSpreadField.setText(String.valueOf(gun.bulletSpread));
             roundsPerShotField.setText(String.valueOf(gun.itemGunRoundsPerShot));
             shootSoundButton.updateButton(gun.itemGunShootSound, gun.itemGunShootSoundBytes);
-            methodOverrides.put(EntityBulletBase.class, transform(gun.bulletOverrideMethods));
-            methodOverrides.put(ItemProjectileBase.class, transform(gun.itemBulletOverrideMethods));
-            methodOverrides.put(ItemGunBase.class, transform(gun.itemGunOverrideMethods));
 
             gunImageButton.updateImage(gun.getGunTexture());
             bulletImageButton.updateImage(gun.getBulletTexture());
         }
     }
 
-    private void write(OutputStream out) throws IOException {
+    private void load(Gun gun) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
+        if(gun != null) {
+            List<Pair<String, byte[]>> gunClasses = gun.getClasses();
+            List<byte[]> resources = gun.getResources();
+
+            Class entityBulletClass = OverrideClassAdapter.defineClass(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst());
+            Class itemBulletClass = OverrideClassAdapter.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst());
+            Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class, Class.class);
+            itemBulletConstructor.setAccessible(true);
+            ItemProjectile itemBullet = (ItemProjectile) itemBulletConstructor.newInstance(gun.getItemBulletId(), entityBulletClass);
+            Constructor entityBulletConstructor = entityBulletClass.getDeclaredConstructor(World.class);
+            entityBulletConstructor.setAccessible(true);
+            EntityProjectile entityProjectile = (EntityProjectile) entityBulletConstructor.newInstance(new Object[]{null});
+            Class itemGunClass = OverrideClassAdapter.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst());
+            Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
+            itemGunConstructor.setAccessible(true);
+            ItemGun itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
+
+            nameField.setText(itemGun.getName());
+            try {
+                fireMode.setSelectedItem(FireMode.values()[(itemGun.getFireMode())]);
+            } catch (ArrayIndexOutOfBoundsException ignored) { }
+            try {
+                scope.setSelectedItem(Scope.values()[itemGun.getScope()]);
+            } catch (ArrayIndexOutOfBoundsException ignored) { }
+            bulletNameField.setText(itemBullet.getName());
+            damageField.setText(String.valueOf(entityProjectile.getDamage()));
+            rangeField.setText(String.valueOf(entityProjectile.getEffectiveRange()));
+            shotsPerMinuteField.setText(String.valueOf(itemGun.getShotsPerMinute()));
+            roundsPerMinuteField.setText(String.valueOf(itemGun.getRoundsPerMinute()));
+            reloadField.setText(String.valueOf(itemGun.getReloadTime()));
+            clipSizeField.setText(String.valueOf(itemGun.getClipSize()));
+            recoilXField.setText(String.valueOf(itemGun.getRecoilX()));
+            recoilYField.setText(String.valueOf(itemGun.getRecoilY()));
+            bulletIdField.setText(String.valueOf(gun.getItemBulletId()));
+            gunIdField.setText(String.valueOf(gun.getItemGunId()));
+            zoomField.setText(String.valueOf(itemGun.getZoom()));
+            bulletSpreadField.setText(String.valueOf(entityProjectile.getSpread()));
+            roundsPerShotField.setText(String.valueOf(itemGun.getRoundsPerShot()));
+
+            bulletImageButton.updateImage(ImageIO.read(new ByteArrayInputStream(resources.get(0))));
+            gunImageButton.updateImage(ImageIO.read(new ByteArrayInputStream(resources.get(1))));
+            shootSoundButton.updateButton(itemGun.getShootSound().substring(itemGun.getShootSound().lastIndexOf('.') + 1) + ".ogg", resources.get(2));
+        }
+    }
+
+    /*private void write(OutputStream out) throws IOException {
         ByteVector outBytes = new ByteVector();
         outBytes.putInt(CustomGun.MAGIC);
         byte[] nameBytes = Utilities.getStringBytes(nameField.getText());
@@ -380,62 +437,75 @@ public class GunCreator extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
-    private static HashMap<Class, HashMap<String, String>> showOverrideDialog(Window parent, HashMap<Class, HashMap<String, String>> methods) {
-        OverrideMethodsDialog dialog = new OverrideMethodsDialog(parent, methods);
-        dialog.setVisible(true);
-        dialog.dispose();
-        return dialog.getOverrideMethods();
-    }
+    private void write(OutputStream out) throws IOException {
+        ByteVector outBytes = new ByteVector();
+        outBytes.putInt(Gun.MAGIC);
 
-    private static class OverrideMethodsDialog extends JDialog {
+        outBytes.putInt(3);
+        HashMap<String, Object> methods = new HashMap<String, Object>();
+        methods.put("getDamage", new BytecodeValue(Integer.parseInt(damageField.getText())));
+        methods.put("getEffectiveRange", new BytecodeValue(Float.parseFloat(rangeField.getText())));
+        methods.put("getSpread", new BytecodeValue(Float.parseFloat(bulletSpreadField.getText())));
+        String name = "Entity" + bulletNameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
+        byte[] bytes = OverrideClassAdapter.extendClassBytes(EntityBulletBase.class, name, new LinkedList<int[]>(), (HashMap<String, Object>) methods.clone());
+        byte[] stringBytes = Utilities.getStringBytes(name);
+        outBytes.putByteArray(stringBytes, 0, stringBytes.length);
+        outBytes.putInt(bytes.length);
+        outBytes.putByteArray(bytes, 0, bytes.length);
 
-        private static final Class[] classes = new Class[]{EntityBulletBase.class, ItemGunBase.class, ItemProjectileBase.class};
-        private JTable[] methodTables;
+        methods.clear();
+        methods.put("getName", new BytecodeValue(bulletNameField.getText()));
+        methods.put("getCraftAmount", new BytecodeValue(16));
+        name = "Item" + bulletNameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
+        bytes = OverrideClassAdapter.extendClassBytes(ItemProjectileBase.class, name, new LinkedList<int[]>(), (HashMap<String, Object>) methods.clone());
+        stringBytes = Utilities.getStringBytes(name);
+        outBytes.putByteArray(stringBytes, 0, stringBytes.length);
+        outBytes.putInt(bytes.length);
+        outBytes.putByteArray(bytes, 0, bytes.length);
 
-        public OverrideMethodsDialog(Window parent, HashMap<Class, HashMap<String, String>> methods) {
-            super(parent, "Override Methods", ModalityType.APPLICATION_MODAL);
-            this.methodTables = new JTable[classes.length];
-            init(methods);
-        }
+        methods.clear();
+        methods.put("getName", new BytecodeValue(nameField.getText()));
+        methods.put("getShootSound", new BytecodeValue("guns." + shootSoundButton.getText().substring(0, shootSoundButton.getText().indexOf("."))));
+        methods.put("getShotsPerMinute", new BytecodeValue(Integer.parseInt(shotsPerMinuteField.getText())));
+        methods.put("getFireMode", new BytecodeValue(((FireMode) fireMode.getSelectedItem()).ordinal()));
+        methods.put("getReloadTime", new BytecodeValue(Integer.parseInt(reloadField.getText())));
+        methods.put("getClipSize", new BytecodeValue(Integer.parseInt(clipSizeField.getText())));
+        methods.put("getRecoilX", new BytecodeValue(Integer.parseInt(recoilXField.getText())));
+        methods.put("getRecoilY", new BytecodeValue(Integer.parseInt(recoilYField.getText())));
+        methods.put("getZoom", new BytecodeValue(Float.parseFloat(zoomField.getText())));
+        methods.put("getScope", new BytecodeValue(((Scope) scope.getSelectedItem()).ordinal()));
+        methods.put("getRoundsPerMinute", new BytecodeValue(Integer.parseInt(roundsPerMinuteField.getText())));
+        methods.put("getRoundsPerShot", new BytecodeValue(Integer.parseInt(roundsPerShotField.getText())));
+        name = "Item" + nameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
+        bytes = OverrideClassAdapter.extendClassBytes(ItemGunBase.class, name, new LinkedList<int[]>(), (HashMap<String, Object>) methods.clone());
+        stringBytes = Utilities.getStringBytes(name);
+        outBytes.putByteArray(stringBytes, 0, stringBytes.length);
+        outBytes.putInt(bytes.length);
+        outBytes.putByteArray(bytes, 0, bytes.length);
 
-        private void init(HashMap<Class, HashMap<String, String>> methods) {
-            this.setLayout(new GridLayout(0, 1, 5, 5));
-            for(int i = 0; i < 3; i++) {
-                methodTables[i] = new JTable(4, 2);
-                int j = 0;
-                HashMap<String, String> classMethods = methods.get(classes[i]);
-                if(classMethods != null) {
-                    for(Map.Entry<String, String> entry : classMethods.entrySet()) {
-                        methodTables[i].setValueAt(entry.getKey(), j, 0);
-                        methodTables[i].setValueAt(entry.getValue(), j++, 1);
-                    }
-                }
-                this.add(methodTables[i]);
-            }
-            pack();
-        }
+        outBytes.putInt(3);
+        ByteArrayOutputStream imageOut = new ByteArrayOutputStream();
+        ImageIO.write(bulletImageButton.getImage(), "png", imageOut);
+        bytes = imageOut.toByteArray();
+        outBytes.putInt(bytes.length);
+        outBytes.putByteArray(bytes, 0, bytes.length);
 
-        public HashMap<Class, HashMap<String, String>> getOverrideMethods() {
-            HashMap<Class, HashMap<String, String>> methods = new HashMap<Class, HashMap<String, String>>();
-            for(int i = 0; i < 3; i++) {
-                TableModel model = methodTables[i].getModel();
-                HashMap classMethods = new HashMap();
-                for(int j = 0; j < model.getRowCount(); j++) {
-                    classMethods.put(model.getValueAt(j, 0), model.getValueAt(j, 1));
-                }
-                methods.put(classes[i], classMethods);
-            }
-            return methods;
-        }
-    }
+        imageOut = new ByteArrayOutputStream();
+        ImageIO.write(gunImageButton.getImage(), "png", imageOut);
+        bytes = imageOut.toByteArray();
+        outBytes.putInt(bytes.length);
+        outBytes.putByteArray(bytes, 0, bytes.length);
 
-    private HashMap<String, String> transform(HashMap<String, byte[]> map) {
-        HashMap<String, String> newMap = new HashMap<String, String>();
-        for(Map.Entry<String, byte[]> entry : map.entrySet())
-            newMap.put(entry.getKey(), Arrays.toString(entry.getValue()).replaceFirst("\\[", "").replace("]", "").replace(" ", ""));
-        return newMap;
+        bytes = shootSoundButton.getBytes();
+        outBytes.putInt(bytes.length);
+        outBytes.putByteArray(bytes, 0, bytes.length);
+
+        outBytes.putInt(Integer.parseInt(bulletIdField.getText()));
+        outBytes.putInt(Integer.parseInt(gunIdField.getText()));
+
+        out.write(outBytes.toByteArray());
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {

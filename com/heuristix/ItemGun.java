@@ -15,7 +15,7 @@ public abstract class ItemGun extends ItemProjectileShooter {
         private EntityPlayer reloadingPlayer;
         private ItemStack reloadingStack;
 
-    protected ItemGun(int id, ItemProjectile projectile) {
+    public ItemGun(int id, ItemProjectile projectile) {
         super(id, projectile);
         this.setMaxDamage(getClipSize());
     }

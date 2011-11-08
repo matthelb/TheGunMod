@@ -8,7 +8,7 @@ package com.heuristix;
  */
 public class ItemGunBase extends ItemGun {
 
-    protected ItemGunBase(int id, ItemProjectile projectile) {
+    public ItemGunBase(int id, ItemProjectile projectile) {
         super(id, projectile);
     }
 
@@ -67,17 +67,14 @@ public class ItemGunBase extends ItemGun {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public String getName() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public String getIconPath() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public Object[] getCraftingRecipe() {
         return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
     }

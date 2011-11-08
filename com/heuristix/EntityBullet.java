@@ -11,6 +11,10 @@ import net.minecraft.src.World;
  */
 public abstract class EntityBullet extends EntityProjectile {
 
+    protected EntityBullet(World world) {
+        super(world);
+    }
+
     public EntityBullet(World world, EntityLiving entityliving) {
         super(world, entityliving);
     }

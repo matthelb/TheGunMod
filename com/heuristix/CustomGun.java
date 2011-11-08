@@ -24,6 +24,7 @@ import java.util.Map;
 public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
 
     public static final int MAGIC = 0xABCDEFAB;
+    public static final int NEW_MAGIC = 0x47554E4D;
 
     private Class<? extends EntityBullet> bulletClass;
     private G itemGun;

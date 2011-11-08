@@ -129,12 +129,12 @@ public class OverrideClassAdapter extends ClassAdapter {
         cr.accept(new OverrideClassAdapter(cw, className, constructorCode, methodImpls), ClassReader.SKIP_DEBUG);
         cr = new ClassReader(cw.toByteArray());
         cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
-        File file = new File(className + ".class");
-        new FileOutputStream(file).write(cw.toByteArray());
+        //File file = new File(className + ".class");
+        //new FileOutputStream(file).write(cw.toByteArray());
         cr.accept(cw, ClassReader.SKIP_DEBUG);
         //CheckClassAdapter.verify(new org.objectweb.asm.ClassReader(cw.toByteArray()), true, new PrintWriter(System.out));
-        file = new File(className + ".class");
-        new FileOutputStream(file).write(cw.toByteArray());
+        //file = new File(className + ".class");
+        //new FileOutputStream(file).write(cw.toByteArray());
         return cw.toByteArray();
     }
 

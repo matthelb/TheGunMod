@@ -12,6 +12,10 @@ import net.minecraft.src.World;
  */
 public class EntityBulletBase extends EntityBullet {
 
+    protected EntityBulletBase(World world) {
+        super(world);
+    }
+
     public EntityBulletBase(World world, EntityLiving entityliving) {
         super(world, entityliving);
     }

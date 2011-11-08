@@ -1,15 +1,21 @@
 package net.minecraft.src;
 
 import com.heuristix.*;
+import com.heuristix.util.OverrideClassAdapter;
+import com.heuristix.util.Pair;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -48,8 +54,10 @@ public class mod_Guns extends Mod {
         values.put("mapItemRenderer", "f");
         obfuscatedFields.put(ItemRenderer.class, (Map<String, String>) values.clone());
     }
+    private static final Map<String, Class> classes = new HashMap<String, Class>();
+    private static final Map<String, ItemProjectile> projectiles = new HashMap<String, ItemProjectile>();
 
-    public mod_Guns() {
+    public mod_Guns() throws InvocationTargetException, IOException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         initItems();
         registerSound("guns/hit.ogg", Utilities.read(Utilities.getFile("hit.ogg", Utilities.getHeuristixDir("sounds"))));
         registerSound("guns/move.ogg", Utilities.read(Utilities.getFile("move.ogg", Utilities.getHeuristixDir("sounds"))));
@@ -58,7 +66,7 @@ public class mod_Guns extends Mod {
         ModLoader.SetInGameHook(this, true, false);
     }
 
-    private void initItems() {
+    private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException {
         File gunsDir = Utilities.getHeuristixDir("guns");
         if(gunsDir != null) {
             if(!gunsDir.exists()) {
@@ -80,6 +88,53 @@ public class mod_Guns extends Mod {
                     itemBullet.setIconIndex(registerTexture(bulletTexture, true));
                     registerItem(itemBullet);
                 }
+                for(File f : gunsDir.listFiles(new FilenameFilter() {
+                    public boolean accept(File dir, String name) {
+                        return name.toLowerCase().endsWith(".gun2");
+                    }
+                } )) {
+                    Gun gun = new Gun(Utilities.read(f));
+                    List<Pair<String, byte[]>> gunClasses = gun.getClasses();
+                    List<byte[]> resources = gun.getResources();
+
+                    Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
+                    if(entityBulletClass == null) {
+                       entityBulletClass = OverrideClassAdapter.defineClass(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst());
+                       classes.put(entityBulletClass.getName(), entityBulletClass);
+                    }
+                    Class itemBulletClass = classes.get(gunClasses.get(1).getFirst());
+                    ItemProjectile itemBullet = null;
+                    if(itemBulletClass == null) {
+                        itemBulletClass = OverrideClassAdapter.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst());
+                        classes.put(itemBulletClass.getName(), itemBulletClass);
+                        Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class, Class.class);
+                        itemBulletConstructor.setAccessible(true);
+                        itemBullet = (ItemProjectile) itemBulletConstructor.newInstance(gun.getItemBulletId(), entityBulletClass);
+                        projectiles.put(itemBulletClass.getName(), itemBullet);
+                    }
+                    if(itemBullet != null) {
+                        itemBullet.setIconIndex(registerTexture(Utilities.resize(ImageIO.read(new ByteArrayInputStream(resources.get(0))), 16, 16), true));
+                        registerItem(itemBullet);
+                    }
+
+                    Class itemGunClass = classes.get(gunClasses.get(2).getFirst());
+                    ItemGun itemGun = null;
+                    if(itemGunClass == null) {
+                        itemGunClass = OverrideClassAdapter.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst());
+                        classes.put(itemGunClass.getName(), itemGunClass);
+                        Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
+                        itemGunConstructor.setAccessible(true);
+                        if(itemBullet == null)
+                            itemBullet = projectiles.get(itemBulletClass.getName());
+                        itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
+                    }
+                    if(itemGun != null) {
+                        itemGun.setIconIndex(registerTexture(Utilities.resize(ImageIO.read(new ByteArrayInputStream(resources.get(1))), 16, 16), true));
+                        registerItem(itemGun);
+                        registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get(2));
+                    }
+                }
+
             }
         } else {
             System.out.println("Could not find minecraft directory. Are you using an obscure operating system?");
@@ -104,7 +159,7 @@ public class mod_Guns extends Mod {
 
     @Override
     public String getVersion() {
-        return "0.4.2";
+        return "0.5";
     }
 
     public void KeyboardEvent(KeyBinding key) {

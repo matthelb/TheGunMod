@@ -12,22 +12,18 @@ public class ItemProjectileBase extends ItemProjectile {
         super(id, projectileClass);
     }
 
-    @Override
     public String getName() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public String getIconPath() {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public Object[] getCraftingRecipe() {
         return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    @Override
     public int getCraftingAmount() {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }

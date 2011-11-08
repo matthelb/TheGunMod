@@ -20,7 +20,7 @@ public abstract class ItemProjectileShooter extends ItemCustom {
     private boolean isBursting;
     private int bursts;
 
-    protected ItemProjectileShooter(int id, ItemProjectile projectile) {
+    public ItemProjectileShooter(int id, ItemProjectile projectile) {
         super(id);
         this.maxStackSize = 1;
         this.projectile = projectile;
