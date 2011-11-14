@@ -1,7 +1,6 @@
-package com.heuristix.test;
-
 import com.heuristix.FireMode;
-import com.heuristix.ItemGun;
+import com.heuristix.ItemGunBase;
+import com.heuristix.ItemProjectile;
 
 /**
 * Created by IntelliJ IDEA.
@@ -9,9 +8,10 @@ import com.heuristix.ItemGun;
 * Date: 10/25/11
 * Time: 5:53 PM
 */
-public class ItemGrenadeLauncher extends ItemGun {
-    public ItemGrenadeLauncher(ItemGrenade grenade) {
-        super(2222, grenade);
+public class ItemGrenadeLauncher extends ItemGunBase {
+
+    public ItemGrenadeLauncher(int id, ItemProjectile projectile) {
+        super(id, projectile);
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ItemGrenadeLauncher extends ItemGun {
             return 0;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        @Override
+    @Override
         public int getShotsPerMinute() {
             return 120;
         }
@@ -69,17 +69,14 @@ public class ItemGrenadeLauncher extends ItemGun {
             return "guns.hit";
         }
 
-        @Override
         public String getName() {
             return "Grenade Launcher";
         }
 
-        @Override
         public String getIconPath() {
             return null;  //To change body of implemented methods use File | Settings | File Templates.
         }
 
-        @Override
         public Object[] getCraftingRecipe() {
             return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
         }

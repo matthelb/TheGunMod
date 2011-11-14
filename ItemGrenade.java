@@ -1,19 +1,20 @@
-package com.heuristix;
+import com.heuristix.ItemProjectile;
+import com.heuristix.ItemProjectileBase;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Matt
- * Date: 9/29/11
- * Time: 7:40 PM
- */
-public class ItemProjectileBase extends ItemProjectile {
+* Created by IntelliJ IDEA.
+* User: Matt
+* Date: 10/25/11
+* Time: 5:53 PM
+*/
+public class ItemGrenade extends ItemProjectileBase {
 
-    public ItemProjectileBase(int id) {
+    public ItemGrenade(int id) {
         super(id);
     }
 
     public String getName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "Grenade";
     }
 
     public String getIconPath() {

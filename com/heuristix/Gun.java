@@ -1,12 +1,12 @@
 package com.heuristix;
 
-import com.heuristix.util.OverrideClassAdapter;
+import com.heuristix.asm.ByteVector;
 import com.heuristix.util.Pair;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,8 +29,8 @@ public class Gun {
     public Gun(Buffer buffer) {
         this.clazzes = new LinkedList<Pair<String, byte[]>>();
         this.resources = new LinkedList<byte[]>();
-        if(!read(buffer))
-            throw new IllegalArgumentException("Incorrectly formatted GUN2 file.");
+        if(!read(buffer));
+            //throw new IllegalArgumentException("Incorrectly formatted GUN2 file.");
     }
 
     public boolean read(Buffer buffer) {
@@ -56,6 +56,28 @@ public class Gun {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public void write(OutputStream out) throws IOException {
+        ByteVector outBytes = new ByteVector();
+        outBytes.putInt(MAGIC);
+        outBytes.putInt(3);
+        for(int i = 0; i < 3; i++) {
+            byte[] stringBytes = Utilities.getStringBytes(clazzes.get(i).getFirst());
+            outBytes.putByteArray(stringBytes, 0, stringBytes.length);
+            byte[] bytes = clazzes.get(i).getSecond();
+            outBytes.putInt(bytes.length);
+            outBytes.putByteArray(bytes, 0, bytes.length);
+        }
+        outBytes.putInt(3);
+        for(int i = 0; i < 3; i++) {
+            byte[] bytes = resources.get(i);
+            outBytes.putInt(bytes.length);
+            outBytes.putByteArray(bytes, 0, bytes.length);
+        }
+        outBytes.putInt(itemBulletId);
+        outBytes.putInt(itemGunId);
+        out.write(outBytes.toByteArray());
     }
 
     public List<Pair<String, byte[]>> getClasses() {

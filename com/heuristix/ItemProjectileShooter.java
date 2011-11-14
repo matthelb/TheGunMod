@@ -75,7 +75,7 @@ public abstract class ItemProjectileShooter extends ItemCustom {
         if(playSound)
             world.playSoundAtEntity(player, getShootSound(), 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
         if(!world.multiplayerWorld) {
-            world.entityJoinedWorld(projectile.newProjectile(world, player));
+            world.entityJoinedWorld(projectile.newProjectile(world, player, this));
         }
         lastRound = System.currentTimeMillis();
         onFire(world, player);

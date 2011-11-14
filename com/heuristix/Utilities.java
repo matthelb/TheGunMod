@@ -5,17 +5,14 @@ import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
@@ -363,5 +360,24 @@ public class Utilities {
         for(int i = 0; i < array.length; i++)
             array[i] = bytes[i];
         return array;
+    }
+
+    public static Class defineClass(byte[] code, String name) {
+        return defineClass(code, name, Thread.currentThread().getContextClassLoader());
+    }
+
+    private static Method methodDefineClass;
+
+    public static Class defineClass(byte[] code, String name, ClassLoader cl) {
+        try {
+            if(methodDefineClass == null) {
+                methodDefineClass = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
+                methodDefineClass.setAccessible(true);
+            }
+            return (Class) methodDefineClass.invoke(cl, name, code, 0, code.length);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 }

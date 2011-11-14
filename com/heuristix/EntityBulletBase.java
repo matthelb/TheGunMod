@@ -35,15 +35,4 @@ public class EntityBulletBase extends EntityBullet {
         return 0;
     }
 
-    public float getSpeed() {
-        return super.getSpeed();
-    }
-
-    public float getMass() {
-        return super.getMass();
-    }
-
-    public boolean onHit(Entity hit) {
-        return super.onHit(hit);
-    }
 }

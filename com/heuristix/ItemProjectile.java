@@ -4,6 +4,9 @@ import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.World;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Matt
@@ -12,33 +15,27 @@ import net.minecraft.src.World;
  */
 public abstract class ItemProjectile extends ItemCustom {
 
-    protected final Class<? extends EntityProjectile> projectileClass;
+    protected final Map<ItemProjectileShooter, Class<? extends EntityProjectile>> classes;
 
-    public ItemProjectile(int id, Class<? extends EntityProjectile> projectileClass) {
+    public ItemProjectile(int id) {
         super(id);
-        this.projectileClass = projectileClass;
+        this.classes = new HashMap<ItemProjectileShooter, Class<? extends EntityProjectile>>();
     }
 
-    public Class<? extends EntityProjectile> getProjectileClass() {
-        return projectileClass;
+    public Class<? extends EntityProjectile> getProjectileClass(ItemProjectileShooter shooter) {
+        return classes.get(shooter);
     }
 
-    public EntityProjectile newProjectile(World world, EntityPlayer player) {
+    public void putProjectileClass(ItemProjectileShooter shooter, Class<? extends EntityProjectile> clazz) {
+        classes.put(shooter, clazz);
+    }
+
+    public EntityProjectile newProjectile(World world, EntityPlayer player, ItemProjectileShooter shooter) {
         try {
-            return getProjectileClass().getDeclaredConstructor(World.class, EntityLiving.class).newInstance(world, player);
+            return getProjectileClass(shooter).getDeclaredConstructor(World.class, EntityLiving.class).newInstance(world, player);
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public ItemProjectile setIconCoord(int i, int j) {
-        super.setIconCoord(i, j);
-        return this;
-    }
-
-    public ItemProjectile setItemName(String s) {
-        super.setItemName(s);
-        return this;
     }
 }

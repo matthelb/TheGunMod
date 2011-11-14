@@ -1,7 +1,10 @@
 package net.minecraft.src;
 
 import com.heuristix.*;
-import com.heuristix.util.OverrideClassAdapter;
+import com.heuristix.asm.Opcodes;
+import com.heuristix.util.ExtensibleClassAdapter;
+import com.heuristix.util.InvokeMethod;
+import com.heuristix.util.Method;
 import com.heuristix.util.Pair;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
@@ -31,6 +34,8 @@ public class mod_Guns extends Mod {
     private static final KeyBinding RELOAD_KEYBINDING = new KeyBinding("key.reload", Keyboard.KEY_R);
     private static final KeyBinding ZOOM_KEYBINDING = new KeyBinding("key.zoom", Keyboard.KEY_Z);
 
+    private static final boolean DEBUG = true;
+
     private boolean justAttemptedFire;
     private boolean reflectionInit;
 
@@ -53,6 +58,7 @@ public class mod_Guns extends Mod {
         values.put("itemToRender", "b");
         values.put("mapItemRenderer", "f");
         obfuscatedFields.put(ItemRenderer.class, (Map<String, String>) values.clone());
+
     }
     private static final Map<String, Class> classes = new HashMap<String, Class>();
     private static final Map<String, ItemProjectile> projectiles = new HashMap<String, ItemProjectile>();
@@ -74,22 +80,6 @@ public class mod_Guns extends Mod {
             } else {
                 for(File f : gunsDir.listFiles(new FilenameFilter() {
                     public boolean accept(File dir, String name) {
-                        return name.toLowerCase().endsWith(".gun");
-                    }
-                } )) {
-                    CustomGun gun = new CustomGun(Utilities.read(f));
-                    ItemGun itemGun = gun.getItemGun();
-                    BufferedImage gunTexture = Utilities.resize(gun.getGunTexture(), 16, 16);
-                    itemGun.setIconIndex(registerTexture(gunTexture, true));
-                    registerItem(itemGun);
-                    registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", gun.getShootSoundBytes());
-                    ItemProjectile itemBullet = gun.getItemBullet();
-                    BufferedImage bulletTexture = Utilities.resize(gun.getBulletTexture(), 16, 16);
-                    itemBullet.setIconIndex(registerTexture(bulletTexture, true));
-                    registerItem(itemBullet);
-                }
-                for(File f : gunsDir.listFiles(new FilenameFilter() {
-                    public boolean accept(File dir, String name) {
                         return name.toLowerCase().endsWith(".gun2");
                     }
                 } )) {
@@ -99,17 +89,32 @@ public class mod_Guns extends Mod {
 
                     Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
                     if(entityBulletClass == null) {
-                       entityBulletClass = OverrideClassAdapter.defineClass(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst());
-                       classes.put(entityBulletClass.getName(), entityBulletClass);
+                        byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
+                        if(DEBUG) {
+                            HashMap<String, Method> methods = new HashMap<String, Method>();
+                            for(int i = 0; i < GunCreator.obfuscatedClassName.size(); i++) {
+                                Pair<String, String> obfuscatedNames = GunCreator.obfuscatedClassName.get(i);
+                                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() +";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
+                                        new InvokeMethod(GunCreator.superWorldEntity, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
+                                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
+                                        new InvokeMethod(GunCreator.superWorld, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+                            }
+                            entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
+                        }
+                        entityBulletClass = Utilities.defineClass(entityBulletClassBytes, gunClasses.get(0).getFirst(), EntityBulletBase.class.getClassLoader());
+                        classes.put(entityBulletClass.getName(), entityBulletClass);
+
                     }
-                    Class itemBulletClass = classes.get(gunClasses.get(1).getFirst());
-                    ItemProjectile itemBullet = null;
-                    if(itemBulletClass == null) {
-                        itemBulletClass = OverrideClassAdapter.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst());
-                        classes.put(itemBulletClass.getName(), itemBulletClass);
-                        Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class, Class.class);
+                    ItemProjectile itemBullet = projectiles.get(gunClasses.get(1).getFirst());
+                    if(itemBullet == null) {
+                        Class itemBulletClass = classes.get(gunClasses.get(1).getFirst());
+                        if(itemBulletClass == null) {
+                            itemBulletClass = Utilities.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst(), ItemProjectileBase.class.getClassLoader());
+                            classes.put(itemBulletClass.getName(), itemBulletClass);
+                        }
+                        Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class);
                         itemBulletConstructor.setAccessible(true);
-                        itemBullet = (ItemProjectile) itemBulletConstructor.newInstance(gun.getItemBulletId(), entityBulletClass);
+                        itemBullet = (ItemProjectile) itemBulletConstructor.newInstance(gun.getItemBulletId());
                         projectiles.put(itemBulletClass.getName(), itemBullet);
                     }
                     if(itemBullet != null) {
@@ -120,12 +125,10 @@ public class mod_Guns extends Mod {
                     Class itemGunClass = classes.get(gunClasses.get(2).getFirst());
                     ItemGun itemGun = null;
                     if(itemGunClass == null) {
-                        itemGunClass = OverrideClassAdapter.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst());
+                        itemGunClass = Utilities.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst(), ItemGunBase.class.getClassLoader());
                         classes.put(itemGunClass.getName(), itemGunClass);
                         Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
                         itemGunConstructor.setAccessible(true);
-                        if(itemBullet == null)
-                            itemBullet = projectiles.get(itemBulletClass.getName());
                         itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
                     }
                     if(itemGun != null) {
@@ -133,6 +136,8 @@ public class mod_Guns extends Mod {
                         registerItem(itemGun);
                         registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get(2));
                     }
+                    itemBullet.putProjectileClass(itemGun, entityBulletClass);
+                    projectiles.put(gunClasses.get(1).getFirst(), itemBullet);
                 }
 
             }
@@ -159,7 +164,7 @@ public class mod_Guns extends Mod {
 
     @Override
     public String getVersion() {
-        return "0.5";
+        return "0.6";
     }
 
     public void KeyboardEvent(KeyBinding key) {

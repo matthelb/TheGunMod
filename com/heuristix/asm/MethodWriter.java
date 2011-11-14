@@ -422,7 +422,7 @@ public class MethodWriter implements MethodVisitor {
         final String[] exceptions,
         final boolean computeMaxs,
         final boolean computeFrames)
-    {
+     {
         if (cw.firstMethod == null) {
             cw.firstMethod = this;
         } else {

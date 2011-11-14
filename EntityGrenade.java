@@ -1,5 +1,3 @@
-package com.heuristix.test;
-
 import com.heuristix.EntityBulletBase;
 import net.minecraft.src.Block;
 import net.minecraft.src.Entity;
@@ -29,10 +27,6 @@ public class EntityGrenade extends EntityBulletBase {
         }
     }
 
-    public int getDamage() {
-        return 5;
-    }
-
     @Override
     public float getSpeed() {
         return 1.0f;
@@ -41,6 +35,10 @@ public class EntityGrenade extends EntityBulletBase {
     @Override
     public float getMass() {
         return 0.1f;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    public int getDamage() {
+        return 5;
     }
 
 

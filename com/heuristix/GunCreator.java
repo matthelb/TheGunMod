@@ -1,20 +1,16 @@
 package com.heuristix;
 
 import com.heuristix.asm.ByteVector;
-import com.heuristix.util.BytecodeValue;
-import com.heuristix.util.OverrideClassAdapter;
-import com.heuristix.util.Pair;
+import com.heuristix.asm.Opcodes;
+import com.heuristix.util.*;
 import net.minecraft.src.World;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import javax.swing.table.TableModel;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.*;
@@ -32,11 +28,16 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.6";
+    public static final String VERSION = "0.6.1";
 
     private static final Dimension TEXT_FIELD_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
     private static final NumberFormatter DECIMAL_FORMATTER = new NumberFormatter(new DecimalFormat("#.#"));
+
+    public static List<Pair<String,String>> obfuscatedClassName = new LinkedList<Pair<String,String>>();
+    static {
+        obfuscatedClassName.add(new Pair("rv", "wd"));
+    }
 
     private DisplayableImageButton gunImageButton, bulletImageButton;
     private DisplayableBytesButton shootSoundButton;
@@ -315,15 +316,39 @@ public class GunCreator extends JFrame {
             List<Pair<String, byte[]>> gunClasses = gun.getClasses();
             List<byte[]> resources = gun.getResources();
 
-            Class entityBulletClass = OverrideClassAdapter.defineClass(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst());
-            Class itemBulletClass = OverrideClassAdapter.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst());
-            Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class, Class.class);
+            HashMap<String, Method> methods = new HashMap<String, Method>();
+            for(int i = 0; i < obfuscatedClassName.size(); i++) {
+                Pair<String, String> obfuscatedNames = obfuscatedClassName.get(i);
+                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() +";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
+                        new InvokeMethod(superWorldEntity, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
+                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
+                        new InvokeMethod(superWorld, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+            }
+            byte[] entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
+            Class entityBulletClass = Utilities.defineClass(entityBulletClassBytes, gunClasses.get(0).getFirst());
+            if(entityBulletClass ==null) {
+                for(int i = 0; entityBulletClass == null; i++) {
+                    entityBulletClass = Utilities.defineClass(ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(0).getFirst() + i);
+                }
+            }
+            Class itemBulletClass = Utilities.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst());
+            if(itemBulletClass == null ) {
+                for(int i = 0; itemBulletClass == null; i++) {
+                    itemBulletClass = Utilities.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(1).getFirst() + i);
+                }
+            }
+            Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class);
             itemBulletConstructor.setAccessible(true);
-            ItemProjectile itemBullet = (ItemProjectile) itemBulletConstructor.newInstance(gun.getItemBulletId(), entityBulletClass);
+            ItemProjectile itemBullet = (ItemProjectile) itemBulletConstructor.newInstance(gun.getItemBulletId());
             Constructor entityBulletConstructor = entityBulletClass.getDeclaredConstructor(World.class);
             entityBulletConstructor.setAccessible(true);
             EntityProjectile entityProjectile = (EntityProjectile) entityBulletConstructor.newInstance(new Object[]{null});
-            Class itemGunClass = OverrideClassAdapter.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst());
+            Class itemGunClass = Utilities.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst());
+            if(itemGunClass == null ) {
+                for(int i = 0; itemGunClass == null; i++) {
+                    itemGunClass = Utilities.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(2).getFirst() + i);
+                }
+            }
             Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
             itemGunConstructor.setAccessible(true);
             ItemGun itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
@@ -438,48 +463,58 @@ public class GunCreator extends JFrame {
             e.printStackTrace();
         }
     }*/
+    public static final int[] superWorld = { Opcodes.ALOAD_0, Opcodes.ALOAD_1};
+    public static final int[] superWorldEntity = { Opcodes.ALOAD_0, Opcodes.ALOAD_1, Opcodes.ALOAD_2 };
 
     private void write(OutputStream out) throws IOException {
         ByteVector outBytes = new ByteVector();
         outBytes.putInt(Gun.MAGIC);
 
         outBytes.putInt(3);
-        HashMap<String, Object> methods = new HashMap<String, Object>();
-        methods.put("getDamage", new BytecodeValue(Integer.parseInt(damageField.getText())));
-        methods.put("getEffectiveRange", new BytecodeValue(Float.parseFloat(rangeField.getText())));
-        methods.put("getSpread", new BytecodeValue(Float.parseFloat(bulletSpreadField.getText())));
-        String name = "Entity" + bulletNameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
-        byte[] bytes = OverrideClassAdapter.extendClassBytes(EntityBulletBase.class, name, new LinkedList<int[]>(), (HashMap<String, Object>) methods.clone());
+        HashMap<String, Method> methods = new HashMap<String, Method>();
+        methods.put("getDamage()I", new Method(new BytecodeValue(Integer.parseInt(damageField.getText()))));
+        methods.put("getEffectiveRange()F", new Method(new BytecodeValue(Float.parseFloat(rangeField.getText()))));
+        methods.put("getSpread()F", new Method(new BytecodeValue(Float.parseFloat(bulletSpreadField.getText()))));
+
+
+        methods.put("<init>(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
+                new Method("(L" + obfuscatedClassName.get(0).getFirst() + ";L" +  obfuscatedClassName.get(0).getSecond() + ";)V",
+                        new InvokeMethod(superWorldEntity, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>",
+                                "(L" + obfuscatedClassName.get(0).getFirst() + ";L" +  obfuscatedClassName.get(0).getSecond() + ";)V", false, true, false)));
+        methods.put("<init>(Lnet/minecraft/src/World;)V", new Method("(L" + obfuscatedClassName.get(0).getFirst() + ";)V",
+                        new InvokeMethod(superWorld, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(L" + obfuscatedClassName.get(0).getFirst() + ";)V", false, true, false)));
+        String name = "Entity" + bulletNameField.getText().replaceAll("[^a-z^A-Z^0-9]", "") + nameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
+        byte[] bytes = ExtensibleClassAdapter.modifyClassBytes(EntityBulletBase.class, name, (HashMap<String, Method>) methods.clone(), true);
         byte[] stringBytes = Utilities.getStringBytes(name);
         outBytes.putByteArray(stringBytes, 0, stringBytes.length);
         outBytes.putInt(bytes.length);
         outBytes.putByteArray(bytes, 0, bytes.length);
 
         methods.clear();
-        methods.put("getName", new BytecodeValue(bulletNameField.getText()));
-        methods.put("getCraftAmount", new BytecodeValue(16));
+        methods.put("getName()Ljava/lang/String;", new Method(new BytecodeValue(bulletNameField.getText())));
+        methods.put("getCraftAmount()I", new Method(new BytecodeValue(16)));
         name = "Item" + bulletNameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
-        bytes = OverrideClassAdapter.extendClassBytes(ItemProjectileBase.class, name, new LinkedList<int[]>(), (HashMap<String, Object>) methods.clone());
+        bytes = ExtensibleClassAdapter.modifyClassBytes(ItemProjectileBase.class, name, (HashMap<String, Method>) methods.clone(), true);
         stringBytes = Utilities.getStringBytes(name);
         outBytes.putByteArray(stringBytes, 0, stringBytes.length);
         outBytes.putInt(bytes.length);
         outBytes.putByteArray(bytes, 0, bytes.length);
 
         methods.clear();
-        methods.put("getName", new BytecodeValue(nameField.getText()));
-        methods.put("getShootSound", new BytecodeValue("guns." + shootSoundButton.getText().substring(0, shootSoundButton.getText().indexOf("."))));
-        methods.put("getShotsPerMinute", new BytecodeValue(Integer.parseInt(shotsPerMinuteField.getText())));
-        methods.put("getFireMode", new BytecodeValue(((FireMode) fireMode.getSelectedItem()).ordinal()));
-        methods.put("getReloadTime", new BytecodeValue(Integer.parseInt(reloadField.getText())));
-        methods.put("getClipSize", new BytecodeValue(Integer.parseInt(clipSizeField.getText())));
-        methods.put("getRecoilX", new BytecodeValue(Integer.parseInt(recoilXField.getText())));
-        methods.put("getRecoilY", new BytecodeValue(Integer.parseInt(recoilYField.getText())));
-        methods.put("getZoom", new BytecodeValue(Float.parseFloat(zoomField.getText())));
-        methods.put("getScope", new BytecodeValue(((Scope) scope.getSelectedItem()).ordinal()));
-        methods.put("getRoundsPerMinute", new BytecodeValue(Integer.parseInt(roundsPerMinuteField.getText())));
-        methods.put("getRoundsPerShot", new BytecodeValue(Integer.parseInt(roundsPerShotField.getText())));
+        methods.put("getName()Ljava/lang/String;", new Method(new BytecodeValue(nameField.getText())));
+        methods.put("getShootSound()Ljava/lang/String;", new Method(new BytecodeValue("guns." + shootSoundButton.getText().substring(0, shootSoundButton.getText().indexOf(".")))));
+        methods.put("getShotsPerMinute()I", new Method(new BytecodeValue(Integer.parseInt(shotsPerMinuteField.getText()))));
+        methods.put("getFireMode()I", new Method(new BytecodeValue(((FireMode) fireMode.getSelectedItem()).ordinal())));
+        methods.put("getReloadTime()I", new Method(new BytecodeValue(Integer.parseInt(reloadField.getText()))));
+        methods.put("getClipSize()I", new Method(new BytecodeValue(Integer.parseInt(clipSizeField.getText()))));
+        methods.put("getRecoilX()I", new Method(new BytecodeValue(Integer.parseInt(recoilXField.getText()))));
+        methods.put("getRecoilY()I", new Method(new BytecodeValue(Integer.parseInt(recoilYField.getText()))));
+        methods.put("getZoom()F", new Method(new BytecodeValue(Float.parseFloat(zoomField.getText()))));
+        methods.put("getScope()I", new Method(new BytecodeValue(((Scope) scope.getSelectedItem()).ordinal())));
+        methods.put("getRoundsPerMinute()I", new Method(new BytecodeValue(Integer.parseInt(roundsPerMinuteField.getText()))));
+        methods.put("getRoundsPerShot()I", new Method(new BytecodeValue(Integer.parseInt(roundsPerShotField.getText()))));
         name = "Item" + nameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
-        bytes = OverrideClassAdapter.extendClassBytes(ItemGunBase.class, name, new LinkedList<int[]>(), (HashMap<String, Object>) methods.clone());
+        bytes = ExtensibleClassAdapter.modifyClassBytes(ItemGunBase.class, name, (HashMap<String, Method>) methods.clone(), true);
         stringBytes = Utilities.getStringBytes(name);
         outBytes.putByteArray(stringBytes, 0, stringBytes.length);
         outBytes.putInt(bytes.length);
