@@ -1,0 +1,17 @@
+***************
+*** 1716,1722 ****
+          tessellator.func_35835_b(block.func_35275_c(field_1772_a, i, j, k));
+          int i1 = block.func_207_d(field_1772_a, i, j, k);
+          float f1 = (float)(i1 >> 16 & 0xff) / 255F;
+-         double d = (float)(i1 >> 8 & 0xff) / 255F;
+          float f2 = (float)(i1 & 0xff) / 255F;
+          tessellator.func_987_a(f * f1, f * d, f * f2);
+          i1 = (l & 0xf) << 4;
+--- 1716,1722 ----
+          tessellator.func_35835_b(block.func_35275_c(field_1772_a, i, j, k));
+          int i1 = block.func_207_d(field_1772_a, i, j, k);
+          float f1 = (float)(i1 >> 16 & 0xff) / 255F;
++         float d = (float)(i1 >> 8 & 0xff) / 255F;
+          float f2 = (float)(i1 & 0xff) / 255F;
+          tessellator.func_987_a(f * f1, f * d, f * f2);
+          i1 = (l & 0xf) << 4;

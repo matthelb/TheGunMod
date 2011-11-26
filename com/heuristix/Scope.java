@@ -22,6 +22,6 @@ public enum Scope {
     }
 
     public String toString() {
-        return Utilities.normalize(name());
+        return Util.normalize(name());
     }
 }

@@ -21,7 +21,7 @@ public class FileChooserActionListener implements ActionListener {
     private File lastSelectedFile;
 
     public FileChooserActionListener(Component parent, FileChooserCallback fcc, boolean open) {
-        this(parent, fcc, open, Utilities.getHomeDirectory());
+        this(parent, fcc, open, Util.getHomeDirectory());
     }
 
     public FileChooserActionListener(Component parent, FileChooserCallback fcc, boolean open, File directory) {

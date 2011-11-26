@@ -66,7 +66,7 @@ public abstract class Mod extends BaseMod {
                     if(sounds != null) {
                         for(Map.Entry<String, byte[]> entry: sounds.entrySet()) {
                             String name = entry.getKey();
-                            File soundFile = Utilities.getTempFile(name.replaceAll("/", "."), null, entry.getValue());
+                            File soundFile = Util.getTempFile(name.replaceAll("/", "."), null, entry.getValue());
                             if(soundFile != null) {
                                 switch(i) {
                                     case 0:

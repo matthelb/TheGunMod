@@ -99,7 +99,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
 
     public void write(ByteVector out) throws IOException {
         out.putInt(MAGIC);
-        byte[] nameBytes = Utilities.getStringBytes(name);
+        byte[] nameBytes = Util.getStringBytes(name);
         out.putByteArray(nameBytes, 0, nameBytes.length);
         out.putInt(bulletDamage);
         out.putInt(Float.floatToIntBits(bulletRange));
@@ -204,7 +204,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
     private static HashMap<String, int[]> transform(HashMap<String, byte[]> map) {
         HashMap<String, int[]> newMap = new HashMap<String, int[]>();
         for(Map.Entry<String, byte[]> entry : map.entrySet()) {
-            newMap.put(entry.getKey(), Utilities.toIntArray(entry.getValue()));
+            newMap.put(entry.getKey(), Util.toIntArray(entry.getValue()));
         }
         return newMap;
     }

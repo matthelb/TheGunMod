@@ -45,16 +45,17 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     @Override
     public void onFire(World world, EntityPlayer player) {
-        double factor = Math.max(0.75, Math.min(Utilities.nextGaussian() + 1, 1.25));
+        double factor = Math.max(0.75, Math.min(Util.nextGaussian() + 1, 1.25));
         mod_Guns.recoilY +=  Math.min(factor * getRecoilY(), player.rotationPitch + 90.0F);
         mod_Guns.recoilX += factor * getRecoilX();
+        //world.entityJoinedWorld(new EntityFlash(world, player.posX, player.posY + player.getEyeHeight(), player.posZ, 15, 1, 2));
     }
 
     public boolean reload(EntityPlayer player) {
         ItemStack equipped = player.getCurrentEquippedItem();
         if(equipped != null && equipped.itemID == shiftedIndex && equipped.getItemDamage() > 0) {
             if(!reloading) {
-                int slot = Utilities.getItemSlot(player.inventory, getProjectile().shiftedIndex);
+                int slot = Util.getItemSlot(player.inventory, getProjectile().shiftedIndex);
                 if(slot != -1) {
                     reloading = true;
                     reloadFinishTime = System.currentTimeMillis() + getReloadTime();
@@ -69,9 +70,9 @@ public abstract class ItemGun extends ItemProjectileShooter {
     }
 
     public void finishReloading() {
-        int amount = Math.min(Utilities.getCount(reloadingPlayer.inventory, getProjectile().shiftedIndex), Math.min(reloadingStack.getItemDamage(), reloadingStack.getMaxDamage()));
+        int amount = Math.min(Util.getCount(reloadingPlayer.inventory, getProjectile().shiftedIndex), Math.min(reloadingStack.getItemDamage(), reloadingStack.getMaxDamage()));
         reloadingStack.damageItem(-amount, reloadingPlayer);
-        Utilities.remove(reloadingPlayer.inventory, getProjectile().shiftedIndex, amount);
+        Util.remove(reloadingPlayer.inventory, getProjectile().shiftedIndex, amount);
         stopReloading();
     }
 

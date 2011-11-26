@@ -63,7 +63,7 @@ public class Gun {
         outBytes.putInt(MAGIC);
         outBytes.putInt(3);
         for(int i = 0; i < 3; i++) {
-            byte[] stringBytes = Utilities.getStringBytes(clazzes.get(i).getFirst());
+            byte[] stringBytes = Util.getStringBytes(clazzes.get(i).getFirst());
             outBytes.putByteArray(stringBytes, 0, stringBytes.length);
             byte[] bytes = clazzes.get(i).getSecond();
             outBytes.putInt(bytes.length);

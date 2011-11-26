@@ -14,7 +14,7 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 0.1f;
 
-    private EntityLiving owner;
+    protected EntityLiving owner;
     private double startX, startY, startZ;
 
     private int xTile;
@@ -34,14 +34,11 @@ public abstract class EntityProjectile extends Entity {
     public EntityProjectile(World world, EntityLiving owner) {
         super(world);
         this.owner = owner;
-        setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, owner.rotationYaw + (Utilities.randomFloat(-getSpread(), getSpread())), owner.rotationPitch + (Utilities.randomFloat(-getSpread(), getSpread())));
+        setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, owner.rotationYaw + (Util.randomFloat(-getSpread(), getSpread())), owner.rotationPitch + (Util.randomFloat(-getSpread(), getSpread())));
         this.startX = posX;
         this.startY = posY;
         this.startZ = posZ;
-        float yawRadians = Utilities.toRadians(rotationYaw);
-        float pitchRadians = Utilities.toRadians(rotationPitch);
-        float cosPitch = MathHelper.cos(pitchRadians);
-        setVelocity(-MathHelper.sin(yawRadians) * cosPitch, -MathHelper.sin(pitchRadians), MathHelper.cos(yawRadians) * cosPitch);
+        setVelocity(computeVelocity());
         changeVelocity(getSpeed());
     }
 
@@ -119,15 +116,16 @@ public abstract class EntityProjectile extends Entity {
                 motionY = (float)(position.hitVec.yCoord - posY);
                 motionZ = (float)(position.hitVec.zCoord - posZ);
                 float f1 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
-                posX -= (motionX / (double)f1) * 0.05000000074505806D;
-                posY -= (motionY / (double)f1) * 0.05000000074505806D;
-                posZ -= (motionZ / (double)f1) * 0.05000000074505806D;
+                posX -= (motionX / f1) * 0.05000000074505806D;
+                posY -= (motionY / f1) * 0.05000000074505806D;
+                posZ -= (motionZ / f1) * 0.05000000074505806D;
                 //worldObj.playSoundAtEntity(this, getMoveSound(), 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
                 inGround = true;
                 onHit(null);
             }
         }
         motionY -= GRAVITY * getMass();
+        setVelocity(computeVelocity());
         setPosition(posX + motionX, posY + motionY, posZ + motionZ);
     }
 
@@ -138,7 +136,7 @@ public abstract class EntityProjectile extends Entity {
     }
 
     protected final float getDamageModifier() {
-        return (float) Math.min(1, getEffectiveRange() / Vec3D.createVectorHelper(startX, startY, startZ).distanceTo(Vec3D.createVectorHelper(posX, posY, posZ)));
+        return (float) Math.min(1, getEffectiveRange() / Vec3D.createVector(startX, startY, startZ).distanceTo(Vec3D.createVector(posX, posY, posZ)));
     }
 
     @Override
@@ -175,5 +173,16 @@ public abstract class EntityProjectile extends Entity {
         motionX *= xFactor;
         motionY *= yFactor;
         motionZ *= zFactor;
+    }
+
+    public void setVelocity(Vec3D velocity) {
+        setVelocity(velocity.xCoord, velocity.yCoord, velocity.zCoord);
+    }
+
+    public Vec3D computeVelocity() {
+        float yawRadians = Util.toRadians(rotationYaw);
+        float pitchRadians = Util.toRadians(rotationPitch);
+        float cosPitch = MathHelper.cos(pitchRadians);
+        return Vec3D.createVector(-MathHelper.sin(yawRadians) * cosPitch, -MathHelper.sin(pitchRadians), MathHelper.cos(yawRadians) * cosPitch);
     }
 }

@@ -1,10 +1,8 @@
 package com.heuristix.util;
 
-import com.heuristix.Utilities;
+import com.heuristix.Util;
 import com.heuristix.asm.*;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -124,11 +122,11 @@ public class ExtensibleClassAdapter extends ClassAdapter {
 
 
     public static Class modifyClass(Class clazz, String className, HashMap<String, com.heuristix.util.Method> methods, boolean extend) throws IOException {
-        return Utilities.defineClass(modifyClassBytes(clazz, className, methods, extend), className, clazz.getClassLoader());
+        return Util.defineClass(modifyClassBytes(clazz, className, methods, extend), className, clazz.getClassLoader());
     }
 
     public static Class modifyClass(byte[] classBytes, String className, HashMap<String, com.heuristix.util.Method> methods, boolean extend) throws IOException {
-        return Utilities.defineClass(modifyClassBytes(classBytes, className, methods, extend), className);
+        return Util.defineClass(modifyClassBytes(classBytes, className, methods, extend), className);
     }
 
 }

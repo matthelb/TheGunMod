@@ -1,11 +1,9 @@
 package com.heuristix.util;
 
 import com.heuristix.Gun;
-import com.heuristix.ItemProjectileShooter;
-import com.heuristix.Utilities;
+import com.heuristix.Util;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -44,7 +42,7 @@ public class CustomGunWriter {
          } else {
              byte[][] bytes = new byte[6][];
              for(int i = 0; i < bytes.length; i++) {
-                 bytes[i] = Utilities.read(new File(args[i]));
+                 bytes[i] = Util.read(new File(args[i]));
              }
              List<Pair<String, byte[]>> classes = new LinkedList<Pair<String, byte[]>>();
              for(int i = 0; i < 3; i++) {

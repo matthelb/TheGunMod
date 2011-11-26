@@ -24,7 +24,7 @@ public class GunItemRenderer extends ItemRenderer {
 
     private float getPrevEquippedProgress() {
         if(prevEquippedProgressField == null) {
-            prevEquippedProgressField = Utilities.getField(ItemRenderer.class, "prevEquippedProgress",obfuscatedFields.get("prevEquippedProgress"));
+            prevEquippedProgressField = Util.getField(ItemRenderer.class, "prevEquippedProgress", obfuscatedFields.get("prevEquippedProgress"));
             if(prevEquippedProgressField == null)
                 return -1;
             else
@@ -40,7 +40,7 @@ public class GunItemRenderer extends ItemRenderer {
 
     private float getEquippedProgress() {
         if(equippedProgressField == null) {
-            equippedProgressField = Utilities.getField(ItemRenderer.class, "equippedProgress",obfuscatedFields.get("equippedProgress"));
+            equippedProgressField = Util.getField(ItemRenderer.class, "equippedProgress", obfuscatedFields.get("equippedProgress"));
             if(equippedProgressField == null)
                 return -1;
             else
@@ -56,7 +56,7 @@ public class GunItemRenderer extends ItemRenderer {
 
     private Minecraft getMC() {
         if(mcField == null) {
-            mcField = Utilities.getField(ItemRenderer.class, "mc",obfuscatedFields.get("mc"));
+            mcField = Util.getField(ItemRenderer.class, "mc", obfuscatedFields.get("mc"));
             if(mcField == null)
                 return null;
             else
@@ -72,7 +72,7 @@ public class GunItemRenderer extends ItemRenderer {
 
     private ItemStack getItemToRender() {
         if(itemToRenderField == null) {
-            itemToRenderField = Utilities.getField(ItemRenderer.class, "itemToRender",obfuscatedFields.get("itemToRender"));
+            itemToRenderField = Util.getField(ItemRenderer.class, "itemToRender", obfuscatedFields.get("itemToRender"));
             if(itemToRenderField == null)
                 return null;
             else
@@ -88,7 +88,7 @@ public class GunItemRenderer extends ItemRenderer {
 
     private MapItemRenderer getMapItemRenderer() {
         if(mapItemRendererField == null) {
-            mapItemRendererField = Utilities.getField(ItemRenderer.class, "mapItemRenderer",obfuscatedFields.get("mapItemRenderer"));
+            mapItemRendererField = Util.getField(ItemRenderer.class, "mapItemRenderer", obfuscatedFields.get("mapItemRenderer"));
             if(mapItemRendererField == null)
                 return null;
             else

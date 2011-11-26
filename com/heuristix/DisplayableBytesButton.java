@@ -9,7 +9,7 @@ public class DisplayableBytesButton extends DisplayableFileButton
   public boolean updateFile(File file)
   {
     if (super.updateFile(file)) {
-      byte[] bytes = Utilities.read(file);
+      byte[] bytes = Util.read(file);
       if (bytes != null) {
         updateButton(file.getName(), bytes);
         return true;

@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.6.1";
+    public static final String VERSION = "0.6.2";
 
     private static final Dimension TEXT_FIELD_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
@@ -49,7 +49,7 @@ public class GunCreator extends JFrame {
 
     private final FileChooserCallback openCallback = new FileChooserCallback() {
         public void selectedFile(File file) {
-            byte[] bytes = Utilities.read(file);
+            byte[] bytes = Util.read(file);
             if(file.getName().toLowerCase().endsWith("gun"))
                 load(new CustomGun(bytes));
             else {
@@ -269,7 +269,7 @@ public class GunCreator extends JFrame {
 
         JMenu fileMenu = new JMenu("File");
         JMenuItem openMenuItem = new JMenuItem("Open"), saveMenuItem = new JMenuItem("Save");
-        JFileChooser gunFileChooser = new JFileChooser(Utilities.getHomeDirectory());
+        JFileChooser gunFileChooser = new JFileChooser(Util.getHomeDirectory());
         gunFileChooser.setFileFilter(new FileNameExtensionFilter("GUN/2 file", "gun", "gun2"));
         openMenuItem.addActionListener(new FileChooserActionListener(this, openCallback, true, gunFileChooser));
         saveMenuItem.addActionListener(new FileChooserActionListener(this, saveCallback, false, gunFileChooser));
@@ -325,16 +325,16 @@ public class GunCreator extends JFrame {
                         new InvokeMethod(superWorld, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
             }
             byte[] entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
-            Class entityBulletClass = Utilities.defineClass(entityBulletClassBytes, gunClasses.get(0).getFirst());
+            Class entityBulletClass = Util.defineClass(entityBulletClassBytes, gunClasses.get(0).getFirst());
             if(entityBulletClass ==null) {
                 for(int i = 0; entityBulletClass == null; i++) {
-                    entityBulletClass = Utilities.defineClass(ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(0).getFirst() + i);
+                    entityBulletClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(0).getFirst() + i);
                 }
             }
-            Class itemBulletClass = Utilities.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst());
+            Class itemBulletClass = Util.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst());
             if(itemBulletClass == null ) {
                 for(int i = 0; itemBulletClass == null; i++) {
-                    itemBulletClass = Utilities.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(1).getFirst() + i);
+                    itemBulletClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(1).getFirst() + i);
                 }
             }
             Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class);
@@ -343,10 +343,10 @@ public class GunCreator extends JFrame {
             Constructor entityBulletConstructor = entityBulletClass.getDeclaredConstructor(World.class);
             entityBulletConstructor.setAccessible(true);
             EntityProjectile entityProjectile = (EntityProjectile) entityBulletConstructor.newInstance(new Object[]{null});
-            Class itemGunClass = Utilities.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst());
+            Class itemGunClass = Util.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst());
             if(itemGunClass == null ) {
                 for(int i = 0; itemGunClass == null; i++) {
-                    itemGunClass = Utilities.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(2).getFirst() + i);
+                    itemGunClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(2).getFirst() + i);
                 }
             }
             Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
@@ -485,7 +485,7 @@ public class GunCreator extends JFrame {
                         new InvokeMethod(superWorld, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(L" + obfuscatedClassName.get(0).getFirst() + ";)V", false, true, false)));
         String name = "Entity" + bulletNameField.getText().replaceAll("[^a-z^A-Z^0-9]", "") + nameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
         byte[] bytes = ExtensibleClassAdapter.modifyClassBytes(EntityBulletBase.class, name, (HashMap<String, Method>) methods.clone(), true);
-        byte[] stringBytes = Utilities.getStringBytes(name);
+        byte[] stringBytes = Util.getStringBytes(name);
         outBytes.putByteArray(stringBytes, 0, stringBytes.length);
         outBytes.putInt(bytes.length);
         outBytes.putByteArray(bytes, 0, bytes.length);
@@ -495,7 +495,7 @@ public class GunCreator extends JFrame {
         methods.put("getCraftAmount()I", new Method(new BytecodeValue(16)));
         name = "Item" + bulletNameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
         bytes = ExtensibleClassAdapter.modifyClassBytes(ItemProjectileBase.class, name, (HashMap<String, Method>) methods.clone(), true);
-        stringBytes = Utilities.getStringBytes(name);
+        stringBytes = Util.getStringBytes(name);
         outBytes.putByteArray(stringBytes, 0, stringBytes.length);
         outBytes.putInt(bytes.length);
         outBytes.putByteArray(bytes, 0, bytes.length);
@@ -515,7 +515,7 @@ public class GunCreator extends JFrame {
         methods.put("getRoundsPerShot()I", new Method(new BytecodeValue(Integer.parseInt(roundsPerShotField.getText()))));
         name = "Item" + nameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
         bytes = ExtensibleClassAdapter.modifyClassBytes(ItemGunBase.class, name, (HashMap<String, Method>) methods.clone(), true);
-        stringBytes = Utilities.getStringBytes(name);
+        stringBytes = Util.getStringBytes(name);
         outBytes.putByteArray(stringBytes, 0, stringBytes.length);
         outBytes.putInt(bytes.length);
         outBytes.putByteArray(bytes, 0, bytes.length);

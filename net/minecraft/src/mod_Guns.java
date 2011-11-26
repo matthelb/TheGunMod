@@ -11,7 +11,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
@@ -65,15 +64,15 @@ public class mod_Guns extends Mod {
 
     public mod_Guns() throws InvocationTargetException, IOException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         initItems();
-        registerSound("guns/hit.ogg", Utilities.read(Utilities.getFile("hit.ogg", Utilities.getHeuristixDir("sounds"))));
-        registerSound("guns/move.ogg", Utilities.read(Utilities.getFile("move.ogg", Utilities.getHeuristixDir("sounds"))));
+        registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
+        registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
         ModLoader.RegisterKey(this, RELOAD_KEYBINDING, false);
         ModLoader.RegisterKey(this, ZOOM_KEYBINDING, false);
         ModLoader.SetInGameHook(this, true, false);
     }
 
     private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException {
-        File gunsDir = Utilities.getHeuristixDir("guns");
+        File gunsDir = Util.getHeuristixDir("guns");
         if(gunsDir != null) {
             if(!gunsDir.exists()) {
                 gunsDir.mkdirs();
@@ -83,7 +82,7 @@ public class mod_Guns extends Mod {
                         return name.toLowerCase().endsWith(".gun2");
                     }
                 } )) {
-                    Gun gun = new Gun(Utilities.read(f));
+                    Gun gun = new Gun(Util.read(f));
                     List<Pair<String, byte[]>> gunClasses = gun.getClasses();
                     List<byte[]> resources = gun.getResources();
 
@@ -101,7 +100,7 @@ public class mod_Guns extends Mod {
                             }
                             entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
                         }
-                        entityBulletClass = Utilities.defineClass(entityBulletClassBytes, gunClasses.get(0).getFirst(), EntityBulletBase.class.getClassLoader());
+                        entityBulletClass = Util.defineClass(entityBulletClassBytes, gunClasses.get(0).getFirst(), EntityBulletBase.class.getClassLoader());
                         classes.put(entityBulletClass.getName(), entityBulletClass);
 
                     }
@@ -109,7 +108,7 @@ public class mod_Guns extends Mod {
                     if(itemBullet == null) {
                         Class itemBulletClass = classes.get(gunClasses.get(1).getFirst());
                         if(itemBulletClass == null) {
-                            itemBulletClass = Utilities.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst(), ItemProjectileBase.class.getClassLoader());
+                            itemBulletClass = Util.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst(), ItemProjectileBase.class.getClassLoader());
                             classes.put(itemBulletClass.getName(), itemBulletClass);
                         }
                         Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class);
@@ -118,21 +117,21 @@ public class mod_Guns extends Mod {
                         projectiles.put(itemBulletClass.getName(), itemBullet);
                     }
                     if(itemBullet != null) {
-                        itemBullet.setIconIndex(registerTexture(Utilities.resize(ImageIO.read(new ByteArrayInputStream(resources.get(0))), 16, 16), true));
+                        itemBullet.setIconIndex(registerTexture(Util.resize(ImageIO.read(new ByteArrayInputStream(resources.get(0))), 16, 16), true));
                         registerItem(itemBullet);
                     }
 
                     Class itemGunClass = classes.get(gunClasses.get(2).getFirst());
                     ItemGun itemGun = null;
                     if(itemGunClass == null) {
-                        itemGunClass = Utilities.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst(), ItemGunBase.class.getClassLoader());
+                        itemGunClass = Util.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst(), ItemGunBase.class.getClassLoader());
                         classes.put(itemGunClass.getName(), itemGunClass);
                         Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
                         itemGunConstructor.setAccessible(true);
                         itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
                     }
                     if(itemGun != null) {
-                        itemGun.setIconIndex(registerTexture(Utilities.resize(ImageIO.read(new ByteArrayInputStream(resources.get(1))), 16, 16), true));
+                        itemGun.setIconIndex(registerTexture(Util.resize(ImageIO.read(new ByteArrayInputStream(resources.get(1))), 16, 16), true));
                         registerItem(itemGun);
                         registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get(2));
                     }
@@ -164,7 +163,7 @@ public class mod_Guns extends Mod {
 
     @Override
     public String getVersion() {
-        return "0.6";
+        return "0.6.1";
     }
 
     public void KeyboardEvent(KeyBinding key) {
@@ -264,7 +263,7 @@ public class mod_Guns extends Mod {
     private static void zoom(Minecraft mc, ItemGun gun, boolean in) {
         setPrivateValue(EntityRenderer.class, mc.entityRenderer, "cameraZoom", obfuscatedFields.get(EntityRenderer.class).get("cameraZoom"), (in && gun != null && gun.getZoom() > 1.0f) ? gun.getZoom() : 1.0f);
         if(gun != null && gun.getScope() > 0 && in) {
-            Utilities.renderTexture(mc, Scope.values()[gun.getScope()].getTexturePath(), 1.0f);
+            Util.renderTexture(mc, Scope.values()[gun.getScope()].getTexturePath(), 1.0f);
         }
     }
 
