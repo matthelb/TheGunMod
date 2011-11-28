@@ -1,17 +1,26 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            TileEntity, PistonBlockTextures, Block, BlockPistonMoving, 
+//            TileEntity, Facing, Block, BlockPistonMoving, 
 //            World, Entity, NBTTagCompound
 
 public class TileEntityPiston extends TileEntity
 {
+
+    private int storedBlockID;
+    private int storedMetadata;
+    private int storedOrientation;
+    private boolean extending;
+    private boolean field_31023_j;
+    private float progress;
+    private float lastProgress;
+    private static List field_31018_m = new ArrayList();
 
     public TileEntityPiston()
     {
@@ -64,10 +73,10 @@ public class TileEntityPiston extends TileEntity
     {
         if(extending)
         {
-            return (func_31008_a(f) - 1.0F) * (float)PistonBlockTextures.offsetsXForSide[storedOrientation];
+            return (func_31008_a(f) - 1.0F) * (float)Facing.offsetsXForSide[storedOrientation];
         } else
         {
-            return (1.0F - func_31008_a(f)) * (float)PistonBlockTextures.offsetsXForSide[storedOrientation];
+            return (1.0F - func_31008_a(f)) * (float)Facing.offsetsXForSide[storedOrientation];
         }
     }
 
@@ -75,10 +84,10 @@ public class TileEntityPiston extends TileEntity
     {
         if(extending)
         {
-            return (func_31008_a(f) - 1.0F) * (float)PistonBlockTextures.offsetsYForSide[storedOrientation];
+            return (func_31008_a(f) - 1.0F) * (float)Facing.offsetsYForSide[storedOrientation];
         } else
         {
-            return (1.0F - func_31008_a(f)) * (float)PistonBlockTextures.offsetsYForSide[storedOrientation];
+            return (1.0F - func_31008_a(f)) * (float)Facing.offsetsYForSide[storedOrientation];
         }
     }
 
@@ -86,10 +95,10 @@ public class TileEntityPiston extends TileEntity
     {
         if(extending)
         {
-            return (func_31008_a(f) - 1.0F) * (float)PistonBlockTextures.offsetsZForSide[storedOrientation];
+            return (func_31008_a(f) - 1.0F) * (float)Facing.offsetsZForSide[storedOrientation];
         } else
         {
-            return (1.0F - func_31008_a(f)) * (float)PistonBlockTextures.offsetsZForSide[storedOrientation];
+            return (1.0F - func_31008_a(f)) * (float)Facing.offsetsZForSide[storedOrientation];
         }
     }
 
@@ -110,7 +119,7 @@ public class TileEntityPiston extends TileEntity
             {
                 field_31018_m.addAll(list);
                 Entity entity;
-                for(Iterator iterator = field_31018_m.iterator(); iterator.hasNext(); entity.moveEntity(f1 * (float)PistonBlockTextures.offsetsXForSide[storedOrientation], f1 * (float)PistonBlockTextures.offsetsYForSide[storedOrientation], f1 * (float)PistonBlockTextures.offsetsZForSide[storedOrientation]))
+                for(Iterator iterator = field_31018_m.iterator(); iterator.hasNext(); entity.moveEntity(f1 * (float)Facing.offsetsXForSide[storedOrientation], f1 * (float)Facing.offsetsYForSide[storedOrientation], f1 * (float)Facing.offsetsZForSide[storedOrientation]))
                 {
                     entity = (Entity)iterator.next();
                 }
@@ -122,7 +131,7 @@ public class TileEntityPiston extends TileEntity
 
     public void clearPistonTileEntity()
     {
-        if(lastProgress < 1.0F)
+        if(lastProgress < 1.0F && worldObj != null)
         {
             lastProgress = progress = 1.0F;
             worldObj.removeBlockTileEntity(xCoord, yCoord, zCoord);
@@ -178,14 +187,5 @@ public class TileEntityPiston extends TileEntity
         nbttagcompound.setFloat("progress", lastProgress);
         nbttagcompound.setBoolean("extending", extending);
     }
-
-    private int storedBlockID;
-    private int storedMetadata;
-    private int storedOrientation;
-    private boolean extending;
-    private boolean field_31023_j;
-    private float progress;
-    private float lastProgress;
-    private static List field_31018_m = new ArrayList();
 
 }

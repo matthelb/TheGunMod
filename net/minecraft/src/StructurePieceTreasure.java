@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,11 @@ package net.minecraft.src;
 public class StructurePieceTreasure extends WeightedRandomChoice
 {
 
+    public int field_35596_a;
+    public int field_35594_b;
+    public int field_35595_c;
+    public int field_35593_e;
+
     public StructurePieceTreasure(int i, int j, int k, int l, int i1)
     {
         super(i1);
@@ -19,9 +24,4 @@ public class StructurePieceTreasure extends WeightedRandomChoice
         field_35595_c = k;
         field_35593_e = l;
     }
-
-    public int field_35596_a;
-    public int field_35594_b;
-    public int field_35595_c;
-    public int field_35593_e;
 }

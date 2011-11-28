@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -36,7 +36,7 @@ public class BlockCrops extends BlockFlower
             if(l < 7)
             {
                 float f = getGrowthRate(world, i, j, k);
-                if(random.nextInt((int)(100F / f)) == 0)
+                if(random.nextInt((int)(25F / f) + 1) == 0)
                 {
                     l++;
                     world.setBlockMetadataWithNotify(i, j, k, l);
@@ -108,14 +108,15 @@ public class BlockCrops extends BlockFlower
         return 6;
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f)
+    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        super.dropBlockAsItemWithChance(world, i, j, k, l, f);
+        super.dropBlockAsItemWithChance(world, i, j, k, l, f, 0);
         if(world.multiplayerWorld)
         {
             return;
         }
-        for(int i1 = 0; i1 < 3; i1++)
+        int j1 = 3 + i1;
+        for(int k1 = 0; k1 < j1; k1++)
         {
             if(world.rand.nextInt(15) <= l)
             {
@@ -131,7 +132,7 @@ public class BlockCrops extends BlockFlower
 
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         if(i == 7)
         {

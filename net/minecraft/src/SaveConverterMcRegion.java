@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -29,7 +29,7 @@ public class SaveConverterMcRegion extends SaveFormatOld
     public List getSaveList()
     {
         ArrayList arraylist = new ArrayList();
-        File afile[] = field_22180_a.listFiles();
+        File afile[] = savesDirectory.listFiles();
         File afile1[] = afile;
         int i = afile1.length;
         for(int j = 0; j < i; j++)
@@ -51,7 +51,8 @@ public class SaveConverterMcRegion extends SaveFormatOld
             {
                 s1 = s;
             }
-            arraylist.add(new SaveFormatComparator(s, s1, worldinfo.getLastTimePlayed(), worldinfo.getSizeOnDisk(), worldinfo.getGameType(), flag));
+            long l = 0L;
+            arraylist.add(new SaveFormatComparator(s, s1, worldinfo.getLastTimePlayed(), l, worldinfo.getGameType(), flag, worldinfo.isHardcoreModeEnabled()));
         }
 
         return arraylist;
@@ -64,7 +65,7 @@ public class SaveConverterMcRegion extends SaveFormatOld
 
     public ISaveHandler getSaveLoader(String s, boolean flag)
     {
-        return new SaveOldDir(field_22180_a, s, flag);
+        return new SaveOldDir(savesDirectory, s, flag);
     }
 
     public boolean isOldMapFormat(String s)
@@ -80,18 +81,26 @@ public class SaveConverterMcRegion extends SaveFormatOld
         ArrayList arraylist1 = new ArrayList();
         ArrayList arraylist2 = new ArrayList();
         ArrayList arraylist3 = new ArrayList();
-        File file = new File(field_22180_a, s);
+        ArrayList arraylist4 = new ArrayList();
+        ArrayList arraylist5 = new ArrayList();
+        File file = new File(savesDirectory, s);
         File file1 = new File(file, "DIM-1");
+        File file2 = new File(file, "DIM1");
         System.out.println("Scanning folders...");
         func_22183_a(file, arraylist, arraylist1);
         if(file1.exists())
         {
             func_22183_a(file1, arraylist2, arraylist3);
         }
-        int i = arraylist.size() + arraylist2.size() + arraylist1.size() + arraylist3.size();
+        if(file2.exists())
+        {
+            func_22183_a(file2, arraylist4, arraylist5);
+        }
+        int i = arraylist.size() + arraylist2.size() + arraylist4.size() + arraylist1.size() + arraylist3.size() + arraylist5.size();
         System.out.println((new StringBuilder()).append("Total conversion count is ").append(i).toString());
         func_22181_a(file, arraylist, 0, i, iprogressupdate);
         func_22181_a(file1, arraylist2, arraylist.size(), i, iprogressupdate);
+        func_22181_a(file2, arraylist4, arraylist.size() + arraylist2.size(), i, iprogressupdate);
         WorldInfo worldinfo = getWorldInfo(s);
         worldinfo.setSaveVersion(19132);
         ISaveHandler isavehandler = getSaveLoader(s, false);
@@ -151,7 +160,7 @@ public class SaveConverterMcRegion extends SaveFormatOld
             {
                 try
                 {
-                    DataInputStream datainputstream = new DataInputStream(new GZIPInputStream(new FileInputStream(chunkfile.getChunkFile())));
+                    DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new FileInputStream(chunkfile.getChunkFile()))));
                     DataOutputStream dataoutputstream = regionfile.getChunkDataOutputStream(k & 0x1f, l & 0x1f);
                     for(int j1 = 0; (j1 = datainputstream.read(abyte0)) != -1;)
                     {
@@ -180,7 +189,7 @@ public class SaveConverterMcRegion extends SaveFormatOld
         {
             File file = (File)iterator.next();
             File afile[] = file.listFiles();
-            func_22179_a(afile);
+            deleteFiles(afile);
             file.delete();
             i++;
             k = (int)Math.round((100D * (double)i) / (double)j);

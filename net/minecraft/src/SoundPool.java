@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,12 @@ import java.util.*;
 
 public class SoundPool
 {
+
+    private Random rand;
+    private Map nameToSoundPoolEntriesMapping;
+    private List allSoundPoolEntries;
+    public int numberOfSoundPoolEntries;
+    public boolean isGetRandomSound;
 
     public SoundPool()
     {
@@ -74,10 +80,4 @@ public class SoundPool
             return (SoundPoolEntry)allSoundPoolEntries.get(rand.nextInt(allSoundPoolEntries.size()));
         }
     }
-
-    private Random rand;
-    private Map nameToSoundPoolEntriesMapping;
-    private List allSoundPoolEntries;
-    public int numberOfSoundPoolEntries;
-    public boolean isGetRandomSound;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,15 @@ import java.io.*;
 
 public class Packet1Login extends Packet
 {
+
+    public int protocolVersion;
+    public String username;
+    public long mapSeed;
+    public int serverMode;
+    public byte worldType;
+    public byte difficultySetting;
+    public byte worldHeight;
+    public byte maxPlayers;
 
     public Packet1Login()
     {
@@ -57,13 +66,4 @@ public class Packet1Login extends Packet
     {
         return 4 + username.length() + 4 + 7 + 4;
     }
-
-    public int protocolVersion;
-    public String username;
-    public long mapSeed;
-    public int serverMode;
-    public byte worldType;
-    public byte difficultySetting;
-    public byte worldHeight;
-    public byte maxPlayers;
 }

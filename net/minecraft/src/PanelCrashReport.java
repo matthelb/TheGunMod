@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -37,7 +37,7 @@ public class PanelCrashReport extends Panel
         {
             s2 = (new StringBuilder(String.valueOf(s2))).append("Generated ").append((new SimpleDateFormat()).format(new Date())).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("\n").toString();
-            s2 = (new StringBuilder(String.valueOf(s2))).append("Minecraft: Minecraft Beta 1.8.1\n").toString();
+            s2 = (new StringBuilder(String.valueOf(s2))).append("Minecraft: Minecraft 1.0.0\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("OS: ").append(System.getProperty("os.name")).append(" (").append(System.getProperty("os.arch")).append(") version ").append(System.getProperty("os.version")).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("Java: ").append(System.getProperty("java.version")).append(", ").append(System.getProperty("java.vendor")).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("VM: ").append(System.getProperty("java.vm.name")).append(" (").append(System.getProperty("java.vm.info")).append("), ").append(System.getProperty("java.vm.vendor")).append("\n").toString();
@@ -53,11 +53,11 @@ public class PanelCrashReport extends Panel
         s2 = (new StringBuilder(String.valueOf(s2))).append(s).toString();
         String s3 = "";
         s3 = (new StringBuilder(String.valueOf(s3))).append("Mods loaded: ").append(ModLoader.getLoadedMods().size() + 1).append("\n").toString();
-        s3 = (new StringBuilder(String.valueOf(s3))).append("ModLoader Beta 1.8.1").append("\n").toString();
+        s3 = (new StringBuilder(String.valueOf(s3))).append("ModLoader 1.0.0").append("\n").toString();
         for(Iterator iterator = ModLoader.getLoadedMods().iterator(); iterator.hasNext();)
         {
             BaseMod basemod = (BaseMod)iterator.next();
-            s3 = (new StringBuilder(String.valueOf(s3))).append(basemod.getClass().getName()).append(" ").append(basemod.Version()).append("\n").toString();
+            s3 = (new StringBuilder(String.valueOf(s3))).append(basemod.getClass().getName()).append(" ").append(basemod.getVersion()).append("\n").toString();
         }
 
         s3 = (new StringBuilder(String.valueOf(s3))).append("\n").toString();

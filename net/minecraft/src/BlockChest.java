@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,11 +9,13 @@ import java.util.Random;
 // Referenced classes of package net.minecraft.src:
 //            BlockContainer, Material, World, EntityLiving, 
 //            MathHelper, Block, IBlockAccess, TileEntityChest, 
-//            IInventory, ItemStack, EntityItem, InventoryLargeChest, 
-//            EntityPlayer, TileEntity
+//            IInventory, ItemStack, EntityItem, NBTTagCompound, 
+//            InventoryLargeChest, EntityPlayer, TileEntity
 
 public class BlockChest extends BlockContainer
 {
+
+    private Random random;
 
     protected BlockChest(int i)
     {
@@ -27,6 +29,11 @@ public class BlockChest extends BlockContainer
         return false;
     }
 
+    public boolean renderAsNormalBlock()
+    {
+        return false;
+    }
+
     public int getRenderType()
     {
         return 22;
@@ -35,26 +42,26 @@ public class BlockChest extends BlockContainer
     public void onBlockAdded(World world, int i, int j, int k)
     {
         super.onBlockAdded(world, i, j, k);
-        func_35306_h(world, i, j, k);
+        unifyAdjacentChests(world, i, j, k);
         int l = world.getBlockId(i, j, k - 1);
         int i1 = world.getBlockId(i, j, k + 1);
         int j1 = world.getBlockId(i - 1, j, k);
         int k1 = world.getBlockId(i + 1, j, k);
         if(l == blockID)
         {
-            func_35306_h(world, i, j, k - 1);
+            unifyAdjacentChests(world, i, j, k - 1);
         }
         if(i1 == blockID)
         {
-            func_35306_h(world, i, j, k + 1);
+            unifyAdjacentChests(world, i, j, k + 1);
         }
         if(j1 == blockID)
         {
-            func_35306_h(world, i - 1, j, k);
+            unifyAdjacentChests(world, i - 1, j, k);
         }
         if(k1 == blockID)
         {
-            func_35306_h(world, i + 1, j, k);
+            unifyAdjacentChests(world, i + 1, j, k);
         }
     }
 
@@ -112,7 +119,7 @@ public class BlockChest extends BlockContainer
         }
     }
 
-    public void func_35306_h(World world, int i, int j, int k)
+    public void unifyAdjacentChests(World world, int i, int j, int k)
     {
         if(world.multiplayerWorld)
         {
@@ -380,7 +387,6 @@ public class BlockChest extends BlockContainer
         TileEntityChest tileentitychest = (TileEntityChest)world.getBlockTileEntity(i, j, k);
         if(tileentitychest != null)
         {
-label0:
             for(int l = 0; l < tileentitychest.getSizeInventory(); l++)
             {
                 ItemStack itemstack = tileentitychest.getStackInSlot(l);
@@ -391,12 +397,8 @@ label0:
                 float f = random.nextFloat() * 0.8F + 0.1F;
                 float f1 = random.nextFloat() * 0.8F + 0.1F;
                 float f2 = random.nextFloat() * 0.8F + 0.1F;
-                do
+                while(itemstack.stackSize > 0) 
                 {
-                    if(itemstack.stackSize <= 0)
-                    {
-                        continue label0;
-                    }
                     int i1 = random.nextInt(21) + 10;
                     if(i1 > itemstack.stackSize)
                     {
@@ -408,8 +410,12 @@ label0:
                     entityitem.motionX = (float)random.nextGaussian() * f3;
                     entityitem.motionY = (float)random.nextGaussian() * f3 + 0.2F;
                     entityitem.motionZ = (float)random.nextGaussian() * f3;
+                    if(itemstack.func_40710_n())
+                    {
+                        entityitem.item.func_40706_d((NBTTagCompound)itemstack.func_40709_o().func_40195_b());
+                    }
                     world.entityJoinedWorld(entityitem);
-                } while(true);
+                }
             }
 
         }
@@ -473,6 +479,4 @@ label0:
     {
         return new TileEntityChest();
     }
-
-    private Random random;
 }

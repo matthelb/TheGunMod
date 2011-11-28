@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,7 +14,17 @@ public enum EnumCreatureType
     creature("creature", 1, net.minecraft.src.EntityAnimal.class, 15, Material.air, true),
     waterCreature("waterCreature", 2, net.minecraft.src.EntityWaterMob.class, 5, Material.water, true);
 /*
-    public static EnumCreatureType[] values()
+    public static final EnumCreatureType monster;
+    public static final EnumCreatureType creature;
+    public static final EnumCreatureType waterCreature;
+*/
+    private final Class creatureClass;
+    private final int maxNumberOfCreature;
+    private final Material creatureMaterial;
+    private final boolean isPeacefulCreature;
+    private static final EnumCreatureType allCreatureTypes[]; /* synthetic field */
+/*
+    public static final EnumCreatureType[] values()
     {
         return (EnumCreatureType[])allCreatureTypes.clone();
     }
@@ -26,6 +36,7 @@ public enum EnumCreatureType
 */
     private EnumCreatureType(String s, int i, Class class1, int j, Material material, boolean flag)
     {
+//        super(s, i);
         creatureClass = class1;
         maxNumberOfCreature = j;
         creatureMaterial = material;
@@ -51,25 +62,16 @@ public enum EnumCreatureType
     {
         return isPeacefulCreature;
     }
-/*
-    public static final EnumCreatureType monster;
-    public static final EnumCreatureType creature;
-    public static final EnumCreatureType waterCreature;
-*/
-    private final Class creatureClass;
-    private final int maxNumberOfCreature;
-    private final Material creatureMaterial;
-    private final boolean isPeacefulCreature;
-//    private static final EnumCreatureType allCreatureTypes[]; /* synthetic field */
-/*
+
     static 
     {
+/*
         monster = new EnumCreatureType("monster", 0, net.minecraft.src.IMob.class, 70, Material.air, false);
         creature = new EnumCreatureType("creature", 1, net.minecraft.src.EntityAnimal.class, 15, Material.air, true);
         waterCreature = new EnumCreatureType("waterCreature", 2, net.minecraft.src.EntityWaterMob.class, 5, Material.water, true);
+*/
         allCreatureTypes = (new EnumCreatureType[] {
             monster, creature, waterCreature
         });
     }
-*/
 }

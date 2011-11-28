@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,11 @@ import java.util.Map;
 
 final class J_JsonConstants extends J_JsonNode
 {
+
+    static final J_JsonConstants NULL;
+    static final J_JsonConstants TRUE;
+    static final J_JsonConstants FALSE;
+    private final EnumJsonNodeType jsonNodeType;
 
     private J_JsonConstants(EnumJsonNodeType enumjsonnodetype)
     {
@@ -37,11 +42,6 @@ final class J_JsonConstants extends J_JsonNode
     {
         throw new IllegalStateException("Attempt to get elements on a JsonNode without elements.");
     }
-
-    static final J_JsonConstants NULL;
-    static final J_JsonConstants TRUE;
-    static final J_JsonConstants FALSE;
-    private final EnumJsonNodeType jsonNodeType;
 
     static 
     {

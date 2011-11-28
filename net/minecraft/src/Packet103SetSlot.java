@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ import java.io.*;
 
 public class Packet103SetSlot extends Packet
 {
+
+    public int windowId;
+    public int itemSlot;
+    public ItemStack myItemStack;
 
     public Packet103SetSlot()
     {
@@ -26,16 +30,7 @@ public class Packet103SetSlot extends Packet
     {
         windowId = datainputstream.readByte();
         itemSlot = datainputstream.readShort();
-        short word0 = datainputstream.readShort();
-        if(word0 >= 0)
-        {
-            byte byte0 = datainputstream.readByte();
-            short word1 = datainputstream.readShort();
-            myItemStack = new ItemStack(word0, byte0, word1);
-        } else
-        {
-            myItemStack = null;
-        }
+        myItemStack = func_40187_b(datainputstream);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
@@ -43,23 +38,11 @@ public class Packet103SetSlot extends Packet
     {
         dataoutputstream.writeByte(windowId);
         dataoutputstream.writeShort(itemSlot);
-        if(myItemStack == null)
-        {
-            dataoutputstream.writeShort(-1);
-        } else
-        {
-            dataoutputstream.writeShort(myItemStack.itemID);
-            dataoutputstream.writeByte(myItemStack.stackSize);
-            dataoutputstream.writeShort(myItemStack.getItemDamage());
-        }
+        writeItemStack(myItemStack, dataoutputstream);
     }
 
     public int getPacketSize()
     {
         return 8;
     }
-
-    public int windowId;
-    public int itemSlot;
-    public ItemStack myItemStack;
 }

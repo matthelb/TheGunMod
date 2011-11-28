@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -23,6 +23,13 @@ import org.lwjgl.util.glu.GLU;
 
 public class GuiMainMenu extends GuiScreen
 {
+
+    private static final Random rand = new Random();
+    private float updateCounter;
+    private String splashText;
+    private GuiButton multiplayerButton;
+    private int field_35357_f;
+    private int viewportTexture;
 
     public GuiMainMenu()
     {
@@ -53,11 +60,11 @@ public class GuiMainMenu extends GuiScreen
             } while(splashText.hashCode() == 0x77f432f);
         }
         catch(Exception exception) { }
+        updateCounter = rand.nextFloat();
     }
 
     public void updateScreen()
     {
-        updateCounter++;
         field_35357_f++;
     }
 
@@ -212,7 +219,7 @@ public class GuiMainMenu extends GuiScreen
         GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
     }
 
-    private void func_35354_a(float f)
+    private void rotateAndBlurSkybox(float f)
     {
         GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, viewportTexture);
         GL11.glCopyTexSubImage2D(3553 /*GL_TEXTURE_2D*/, 0, 0, 0, 0, 0, 256, 256);
@@ -238,18 +245,20 @@ public class GuiMainMenu extends GuiScreen
         GL11.glColorMask(true, true, true, true);
     }
 
-    private void func_35356_c(int i, int j, float f)
+    private void renderSkybox(int i, int j, float f)
     {
         GL11.glViewport(0, 0, 256, 256);
         func_35355_b(i, j, f);
-        func_35354_a(f);
-        func_35354_a(f);
-        func_35354_a(f);
-        func_35354_a(f);
-        func_35354_a(f);
-        func_35354_a(f);
-        func_35354_a(f);
-        func_35354_a(f);
+        GL11.glDisable(3553 /*GL_TEXTURE_2D*/);
+        GL11.glEnable(3553 /*GL_TEXTURE_2D*/);
+        rotateAndBlurSkybox(f);
+        rotateAndBlurSkybox(f);
+        rotateAndBlurSkybox(f);
+        rotateAndBlurSkybox(f);
+        rotateAndBlurSkybox(f);
+        rotateAndBlurSkybox(f);
+        rotateAndBlurSkybox(f);
+        rotateAndBlurSkybox(f);
         GL11.glViewport(0, 0, mc.displayWidth, mc.displayHeight);
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
@@ -270,17 +279,27 @@ public class GuiMainMenu extends GuiScreen
 
     public void drawScreen(int i, int j, float f)
     {
-        func_35356_c(i, j, f);
+        renderSkybox(i, j, f);
         Tessellator tessellator = Tessellator.instance;
         char c = '\u0112';
         int k = width / 2 - c / 2;
         byte byte0 = 30;
-        drawGradientRect(0, 0, width, height, 0xaaffffff, 0xffffff);
-        drawGradientRect(0, 0, width, height, 0, 0xaa000000);
+        drawGradientRect(0, 0, width, height, 0x80ffffff, 0xffffff);
+        drawGradientRect(0, 0, width, height, 0, 0x80000000);
         GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, mc.renderEngine.getTexture("/title/mclogo.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        drawTexturedModalRect(k + 0, byte0 + 0, 0, 0, 155, 44);
-        drawTexturedModalRect(k + 155, byte0 + 0, 0, 45, 155, 44);
+        if((double)updateCounter < 0.0001D)
+        {
+            drawTexturedModalRect(k + 0, byte0 + 0, 0, 0, 99, 44);
+            drawTexturedModalRect(k + 99, byte0 + 0, 129, 0, 27, 44);
+            drawTexturedModalRect(k + 99 + 26, byte0 + 0, 126, 0, 3, 44);
+            drawTexturedModalRect(k + 99 + 26 + 3, byte0 + 0, 99, 0, 26, 44);
+            drawTexturedModalRect(k + 155, byte0 + 0, 0, 45, 155, 44);
+        } else
+        {
+            drawTexturedModalRect(k + 0, byte0 + 0, 0, 0, 155, 44);
+            drawTexturedModalRect(k + 155, byte0 + 0, 0, 45, 155, 44);
+        }
         tessellator.setColorOpaque_I(0xffffff);
         GL11.glPushMatrix();
         GL11.glTranslatef(width / 2 + 90, 70F, 0.0F);
@@ -290,17 +309,10 @@ public class GuiMainMenu extends GuiScreen
         GL11.glScalef(f1, f1, f1);
         drawCenteredString(fontRenderer, splashText, 0, -8, 0xffff00);
         GL11.glPopMatrix();
-        drawString(fontRenderer, "Minecraft Beta 1.8.1", 2, height - 10, 0xffffff);
+        drawString(fontRenderer, "Minecraft 1.0.0", 2, height - 10, 0xffffff);
         String s = "Copyright Mojang AB. Do not distribute!";
         drawString(fontRenderer, s, width - fontRenderer.getStringWidth(s) - 2, height - 10, 0xffffff);
         super.drawScreen(i, j, f);
     }
-
-    private static final Random rand = new Random();
-    private float updateCounter;
-    private String splashText;
-    private GuiButton multiplayerButton;
-    private int field_35357_f;
-    private int viewportTexture;
 
 }

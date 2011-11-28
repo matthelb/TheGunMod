@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,25 +14,27 @@ import net.minecraft.client.Minecraft;
 //            StatList, StatFileWriter, WorldClient, WorldSettings, 
 //            Packet1Login, EntityPlayerSP, GuiDownloadTerrain, Packet21PickupSpawn, 
 //            EntityItem, ItemStack, Packet23VehicleSpawn, EntityMinecart, 
-//            EntityFish, EntityArrow, EntitySnowball, EntityFireball, 
-//            EntityEgg, EntityBoat, EntityTNTPrimed, EntityFallingSand, 
-//            Block, Entity, EntityLiving, EntityXPOrb, 
-//            Packet26EntityExpOrb, Packet71Weather, EntityLightningBolt, EntityPainting, 
-//            Packet25EntityPainting, Packet28EntityVelocity, Packet40EntityMetadata, DataWatcher, 
-//            Packet20NamedEntitySpawn, EntityOtherPlayerMP, InventoryPlayer, Packet34EntityTeleport, 
-//            Packet30Entity, Packet29DestroyEntity, EntityPlayer, Packet10Flying, 
-//            AxisAlignedBB, Packet50PreChunk, Packet52MultiBlockChange, Chunk, 
-//            Packet51MapChunk, Packet53BlockChange, GuiConnectFailed, Packet255KickDisconnect, 
-//            Packet22Collect, EntityPickupFX, EffectRenderer, Packet3Chat, 
-//            GuiIngame, Packet18Animation, Packet17Sleep, Packet2Handshake, 
-//            Session, Packet24MobSpawn, EntityList, Packet4UpdateTime, 
-//            World, ChunkCoordinates, Packet6SpawnPosition, WorldInfo, 
-//            Packet39AttachEntity, Packet38EntityStatus, Packet8UpdateHealth, FoodStats, 
-//            Packet43Experience, Packet9Respawn, Explosion, Packet60Explosion, 
-//            Packet100OpenWindow, InventoryBasic, Container, TileEntityFurnace, 
-//            TileEntityDispenser, MathHelper, Packet103SetSlot, Slot, 
-//            Packet106Transaction, Packet104WindowItems, Packet130UpdateSign, TileEntitySign, 
-//            Packet105UpdateProgressbar, Packet5PlayerInventory, Packet54PlayNoteBlock, Packet70Bed, 
+//            EntityFishHook, EntityArrow, EntitySnowball, EntityEnderPearl, 
+//            EntityEnderEye, EntityFireball, EntitySmallFireball, EntityEgg, 
+//            EntityPotion, EntityBoat, EntityTNTPrimed, EntityEnderCrystal, 
+//            EntityFallingSand, Block, Entity, EntityLiving, 
+//            EntityXPOrb, Packet26EntityExpOrb, Packet71Weather, EntityLightningBolt, 
+//            EntityPainting, Packet25EntityPainting, Packet28EntityVelocity, Packet40EntityMetadata, 
+//            DataWatcher, Packet20NamedEntitySpawn, EntityOtherPlayerMP, InventoryPlayer, 
+//            Packet34EntityTeleport, Packet30Entity, Packet29DestroyEntity, EntityPlayer, 
+//            Packet10Flying, AxisAlignedBB, Packet50PreChunk, Packet52MultiBlockChange, 
+//            Chunk, Packet51MapChunk, Packet53BlockChange, GuiDisconnected, 
+//            Packet255KickDisconnect, Packet22Collect, EntityPickupFX, EffectRenderer, 
+//            Packet3Chat, GuiIngame, Packet18Animation, EntityCrit2FX, 
+//            Packet17Sleep, Packet2Handshake, Session, Packet24MobSpawn, 
+//            EntityList, Packet4UpdateTime, World, ChunkCoordinates, 
+//            Packet6SpawnPosition, WorldInfo, Packet39AttachEntity, Packet38EntityStatus, 
+//            Packet8UpdateHealth, FoodStats, Packet43Experience, Packet9Respawn, 
+//            Explosion, Packet60Explosion, Packet100OpenWindow, InventoryBasic, 
+//            Container, TileEntityFurnace, TileEntityBrewingStand, TileEntityDispenser, 
+//            MathHelper, Packet103SetSlot, Slot, Packet106Transaction, 
+//            Packet104WindowItems, Packet130UpdateSign, TileEntitySign, Packet105UpdateProgressbar, 
+//            Packet5PlayerInventory, Packet54PlayNoteBlock, Packet70Bed, GuiWinGame, 
 //            Packet131MapData, Item, ItemMap, MapData, 
 //            Packet61DoorChange, EntityClientPlayerMP, Packet200Statistic, Packet41EntityEffect, 
 //            PotionEffect, Packet42RemoveEntityEffect, Packet201PlayerInfo, GuiSavingLevelString, 
@@ -40,6 +42,18 @@ import net.minecraft.client.Minecraft;
 
 public class NetClientHandler extends NetHandler
 {
+
+    private boolean disconnected;
+    private NetworkManager netManager;
+    public String field_1209_a;
+    private Minecraft mc;
+    private WorldClient worldClient;
+    private boolean field_1210_g;
+    public MapStorage mapStorage;
+    private Map field_35787_k;
+    public List field_35786_c;
+    public int field_35785_d;
+    Random rand;
 
     public NetClientHandler(Minecraft minecraft, String s, int i)
         throws UnknownHostException, IOException
@@ -69,7 +83,7 @@ public class NetClientHandler extends NetHandler
     {
         mc.playerController = new PlayerControllerMP(mc, this);
         mc.statFileWriter.readStat(StatList.joinMultiplayerStat, 1);
-        worldClient = new WorldClient(this, new WorldSettings(packet1login.mapSeed, packet1login.serverMode, false), packet1login.worldType, packet1login.difficultySetting);
+        worldClient = new WorldClient(this, new WorldSettings(packet1login.mapSeed, packet1login.serverMode, false, false), packet1login.worldType, packet1login.difficultySetting);
         worldClient.multiplayerWorld = true;
         mc.changeWorld1(worldClient);
         mc.thePlayer.dimension = packet1login.worldType;
@@ -114,7 +128,7 @@ public class NetClientHandler extends NetHandler
         }
         if(packet23vehiclespawn.type == 90)
         {
-            obj = new EntityFish(worldClient, d, d1, d2);
+            obj = new EntityFishHook(worldClient, d, d1, d2);
         }
         if(packet23vehiclespawn.type == 60)
         {
@@ -124,14 +138,32 @@ public class NetClientHandler extends NetHandler
         {
             obj = new EntitySnowball(worldClient, d, d1, d2);
         }
+        if(packet23vehiclespawn.type == 65)
+        {
+            obj = new EntityEnderPearl(worldClient, d, d1, d2);
+        }
+        if(packet23vehiclespawn.type == 72)
+        {
+            obj = new EntityEnderEye(worldClient, d, d1, d2);
+        }
         if(packet23vehiclespawn.type == 63)
         {
             obj = new EntityFireball(worldClient, d, d1, d2, (double)packet23vehiclespawn.field_28047_e / 8000D, (double)packet23vehiclespawn.field_28046_f / 8000D, (double)packet23vehiclespawn.field_28045_g / 8000D);
             packet23vehiclespawn.field_28044_i = 0;
         }
+        if(packet23vehiclespawn.type == 64)
+        {
+            obj = new EntitySmallFireball(worldClient, d, d1, d2, (double)packet23vehiclespawn.field_28047_e / 8000D, (double)packet23vehiclespawn.field_28046_f / 8000D, (double)packet23vehiclespawn.field_28045_g / 8000D);
+            packet23vehiclespawn.field_28044_i = 0;
+        }
         if(packet23vehiclespawn.type == 62)
         {
             obj = new EntityEgg(worldClient, d, d1, d2);
+        }
+        if(packet23vehiclespawn.type == 73)
+        {
+            obj = new EntityPotion(worldClient, d, d1, d2, packet23vehiclespawn.field_28044_i);
+            packet23vehiclespawn.field_28044_i = 0;
         }
         if(packet23vehiclespawn.type == 1)
         {
@@ -141,6 +173,10 @@ public class NetClientHandler extends NetHandler
         {
             obj = new EntityTNTPrimed(worldClient, d, d1, d2);
         }
+        if(packet23vehiclespawn.type == 51)
+        {
+            obj = new EntityEnderCrystal(worldClient, d, d1, d2);
+        }
         if(packet23vehiclespawn.type == 70)
         {
             obj = new EntityFallingSand(worldClient, d, d1, d2, Block.sand.blockID);
@@ -149,6 +185,10 @@ public class NetClientHandler extends NetHandler
         {
             obj = new EntityFallingSand(worldClient, d, d1, d2, Block.gravel.blockID);
         }
+        if(packet23vehiclespawn.type == 74)
+        {
+            obj = new EntityFallingSand(worldClient, d, d1, d2, Block.field_41050_bK.blockID);
+        }
         if(obj != null)
         {
             obj.serverPosX = packet23vehiclespawn.xPosition;
@@ -156,6 +196,17 @@ public class NetClientHandler extends NetHandler
             obj.serverPosZ = packet23vehiclespawn.zPosition;
             obj.rotationYaw = 0.0F;
             obj.rotationPitch = 0.0F;
+            Entity aentity[] = ((Entity) (obj)).func_40048_X();
+            if(aentity != null)
+            {
+                int i = packet23vehiclespawn.entityId - ((Entity) (obj)).entityId;
+                for(int j = 0; j < aentity.length; j++)
+                {
+                    aentity[j].entityId += i;
+                    System.out.println(aentity[j].entityId);
+                }
+
+            }
             obj.entityId = packet23vehiclespawn.entityId;
             worldClient.func_712_a(packet23vehiclespawn.entityId, ((Entity) (obj)));
             if(packet23vehiclespawn.field_28044_i > 0)
@@ -229,9 +280,9 @@ public class NetClientHandler extends NetHandler
     public void handleEntityMetadata(Packet40EntityMetadata packet40entitymetadata)
     {
         Entity entity = getEntityByID(packet40entitymetadata.entityId);
-        if(entity != null && packet40entitymetadata.func_21047_b() != null)
+        if(entity != null && packet40entitymetadata.getMetadata() != null)
         {
-            entity.getDataWatcher().updateWatchedObjectsFromList(packet40entitymetadata.func_21047_b());
+            entity.getDataWatcher().updateWatchedObjectsFromList(packet40entitymetadata.getMetadata());
         }
     }
 
@@ -383,7 +434,7 @@ public class NetClientHandler extends NetHandler
         netManager.networkShutdown("disconnect.kicked", new Object[0]);
         disconnected = true;
         mc.changeWorld1(null);
-        mc.displayGuiScreen(new GuiConnectFailed("disconnect.disconnected", "disconnect.genericReason", new Object[] {
+        mc.displayGuiScreen(new GuiDisconnected("disconnect.disconnected", "disconnect.genericReason", new Object[] {
             packet255kickdisconnect.reason
         }));
     }
@@ -397,7 +448,7 @@ public class NetClientHandler extends NetHandler
         {
             disconnected = true;
             mc.changeWorld1(null);
-            mc.displayGuiScreen(new GuiConnectFailed("disconnect.lost", s, aobj));
+            mc.displayGuiScreen(new GuiDisconnected("disconnect.lost", s, aobj));
             return;
         }
     }
@@ -474,6 +525,15 @@ public class NetClientHandler extends NetHandler
             EntityPlayer entityplayer2 = (EntityPlayer)entity;
             entityplayer2.func_6420_o();
         } else
+        if(packet18animation.animate == 6)
+        {
+            mc.effectRenderer.addEffect(new EntityCrit2FX(mc.theWorld, entity));
+        } else
+        if(packet18animation.animate == 7)
+        {
+            EntityCrit2FX entitycrit2fx = new EntityCrit2FX(mc.theWorld, entity, "magicCrit");
+            mc.effectRenderer.addEffect(entitycrit2fx);
+        } else
         if(packet18animation.animate == 5)
         {
             if(!(entity instanceof EntityOtherPlayerMP));
@@ -496,30 +556,47 @@ public class NetClientHandler extends NetHandler
 
     public void handleHandshake(Packet2Handshake packet2handshake)
     {
-        if(packet2handshake.username.equals("-"))
+        boolean flag = true;
+        String s = packet2handshake.username;
+        if(s == null || s.trim().length() == 0)
         {
-            addToSendQueue(new Packet1Login(mc.session.username, 17));
+            flag = false;
         } else
-        if(packet2handshake.username == null || packet2handshake.username.trim().length() == 0)
+        if(!s.equals("-"))
+        {
+            try
+            {
+                Long.parseLong(s, 16);
+            }
+            catch(NumberFormatException numberformatexception)
+            {
+                flag = false;
+            }
+        }
+        if(!flag)
         {
             netManager.networkShutdown("disconnect.genericReason", new Object[] {
                 "The server responded with an invalid server key"
             });
+        } else
+        if(packet2handshake.username.equals("-"))
+        {
+            addToSendQueue(new Packet1Login(mc.session.username, 22));
         } else
         {
             try
             {
                 URL url = new URL((new StringBuilder()).append("http://session.minecraft.net/game/joinserver.jsp?user=").append(mc.session.username).append("&sessionId=").append(mc.session.sessionId).append("&serverId=").append(packet2handshake.username).toString());
                 BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(url.openStream()));
-                String s = bufferedreader.readLine();
+                String s1 = bufferedreader.readLine();
                 bufferedreader.close();
-                if(s.equalsIgnoreCase("ok"))
+                if(s1.equalsIgnoreCase("ok"))
                 {
-                    addToSendQueue(new Packet1Login(mc.session.username, 17));
+                    addToSendQueue(new Packet1Login(mc.session.username, 22));
                 } else
                 {
                     netManager.networkShutdown("disconnect.loginFailedInfo", new Object[] {
-                        s
+                        s1
                     });
                 }
             }
@@ -551,6 +628,16 @@ public class NetClientHandler extends NetHandler
         entityliving.serverPosX = packet24mobspawn.xPosition;
         entityliving.serverPosY = packet24mobspawn.yPosition;
         entityliving.serverPosZ = packet24mobspawn.zPosition;
+        Entity aentity[] = entityliving.func_40048_X();
+        if(aentity != null)
+        {
+            int i = packet24mobspawn.entityId - entityliving.entityId;
+            for(int j = 0; j < aentity.length; j++)
+            {
+                aentity[j].entityId += i;
+            }
+
+        }
         entityliving.entityId = packet24mobspawn.entityId;
         entityliving.setPositionAndRotation(d, d1, d2, f, f1);
         entityliving.isMultiplayerEntity = true;
@@ -628,13 +715,13 @@ public class NetClientHandler extends NetHandler
         if(packet9respawn.respawnDimension != mc.thePlayer.dimension || packet9respawn.mapSeed != mc.thePlayer.worldObj.getWorldSeed())
         {
             field_1210_g = false;
-            worldClient = new WorldClient(this, new WorldSettings(packet9respawn.mapSeed, packet9respawn.creativeMode, false), packet9respawn.respawnDimension, packet9respawn.difficulty);
+            worldClient = new WorldClient(this, new WorldSettings(packet9respawn.mapSeed, packet9respawn.creativeMode, false, false), packet9respawn.respawnDimension, packet9respawn.difficulty);
             worldClient.multiplayerWorld = true;
             mc.changeWorld1(worldClient);
             mc.thePlayer.dimension = packet9respawn.respawnDimension;
             mc.displayGuiScreen(new GuiDownloadTerrain(this));
         }
-        mc.respawn(true, packet9respawn.respawnDimension);
+        mc.respawn(true, packet9respawn.respawnDimension, false);
         ((PlayerControllerMP)mc.playerController).func_35648_a(packet9respawn.creativeMode == 1);
     }
 
@@ -659,6 +746,12 @@ public class NetClientHandler extends NetHandler
             mc.thePlayer.displayGUIFurnace(tileentityfurnace);
             mc.thePlayer.craftingInventory.windowId = packet100openwindow.windowId;
         } else
+        if(packet100openwindow.inventoryType == 5)
+        {
+            TileEntityBrewingStand tileentitybrewingstand = new TileEntityBrewingStand();
+            mc.thePlayer.func_40180_a(tileentitybrewingstand);
+            mc.thePlayer.craftingInventory.windowId = packet100openwindow.windowId;
+        } else
         if(packet100openwindow.inventoryType == 3)
         {
             TileEntityDispenser tileentitydispenser = new TileEntityDispenser();
@@ -669,6 +762,12 @@ public class NetClientHandler extends NetHandler
         {
             EntityPlayerSP entityplayersp = mc.thePlayer;
             mc.thePlayer.displayWorkbenchGUI(MathHelper.floor_double(((EntityPlayer) (entityplayersp)).posX), MathHelper.floor_double(((EntityPlayer) (entityplayersp)).posY), MathHelper.floor_double(((EntityPlayer) (entityplayersp)).posZ));
+            mc.thePlayer.craftingInventory.windowId = packet100openwindow.windowId;
+        } else
+        if(packet100openwindow.inventoryType == 4)
+        {
+            EntityPlayerSP entityplayersp1 = mc.thePlayer;
+            mc.thePlayer.func_40181_c(MathHelper.floor_double(((EntityPlayer) (entityplayersp1)).posX), MathHelper.floor_double(((EntityPlayer) (entityplayersp1)).posY), MathHelper.floor_double(((EntityPlayer) (entityplayersp1)).posZ));
             mc.thePlayer.craftingInventory.windowId = packet100openwindow.windowId;
         }
     }
@@ -795,7 +894,11 @@ public class NetClientHandler extends NetHandler
         } else
         if(i == 3)
         {
-            ((PlayerControllerMP)mc.playerController).func_35648_a(packet70bed.field_35262_c == 1);
+            ((PlayerControllerMP)mc.playerController).func_35648_a(packet70bed.gameMode == 1);
+        } else
+        if(i == 4)
+        {
+            mc.displayGuiScreen(new GuiWinGame());
         }
     }
 
@@ -803,7 +906,7 @@ public class NetClientHandler extends NetHandler
     {
         if(packet131mapdata.itemID == Item.map.shiftedIndex)
         {
-            ItemMap.func_28013_a(packet131mapdata.uniqueID, mc.theWorld).func_28171_a(packet131mapdata.itemData);
+            ItemMap.getMPMapData(packet131mapdata.uniqueID, mc.theWorld).func_28171_a(packet131mapdata.itemData);
         } else
         {
             System.out.println((new StringBuilder()).append("Unknown itemid: ").append(packet131mapdata.uniqueID).toString());
@@ -828,7 +931,7 @@ public class NetClientHandler extends NetHandler
             return;
         } else
         {
-            ((EntityLiving)entity).addPotionEffect(new PotionEffect(packet41entityeffect.effectId, packet41entityeffect.duration, packet41entityeffect.field_35260_c));
+            ((EntityLiving)entity).addPotionEffect(new PotionEffect(packet41entityeffect.effectId, packet41entityeffect.duration, packet41entityeffect.effectAmp));
             return;
         }
     }
@@ -875,16 +978,4 @@ public class NetClientHandler extends NetHandler
     {
         addToSendQueue(new Packet0KeepAlive(packet0keepalive.randomId));
     }
-
-    private boolean disconnected;
-    private NetworkManager netManager;
-    public String field_1209_a;
-    private Minecraft mc;
-    private WorldClient worldClient;
-    private boolean field_1210_g;
-    public MapStorage mapStorage;
-    private Map field_35787_k;
-    public List field_35786_c;
-    public int field_35785_d;
-    Random rand;
 }

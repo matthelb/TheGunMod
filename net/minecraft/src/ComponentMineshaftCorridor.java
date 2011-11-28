@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,11 @@ import java.util.Random;
 
 public class ComponentMineshaftCorridor extends StructureComponent
 {
+
+    private final boolean field_35070_a;
+    private final boolean field_35068_b;
+    private boolean field_35069_c;
+    private int field_35067_d;
 
     public ComponentMineshaftCorridor(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -140,7 +145,7 @@ public class ComponentMineshaftCorridor extends StructureComponent
             }
             break;
         }
-        if(i < 10)
+        if(i < 8)
         {
             if(coordBaseMode == 2 || coordBaseMode == 0)
             {
@@ -256,9 +261,4 @@ public class ComponentMineshaftCorridor extends StructureComponent
         }
         return true;
     }
-
-    private final boolean field_35070_a;
-    private final boolean field_35068_b;
-    private boolean field_35069_c;
-    private int field_35067_d;
 }

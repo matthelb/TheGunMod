@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,9 @@ import java.util.Random;
 
 public class BlockSign extends BlockContainer
 {
+
+    private Class signEntityClass;
+    private boolean isFreestanding;
 
     protected BlockSign(int i, Class class1, boolean flag)
     {
@@ -93,7 +96,7 @@ public class BlockSign extends BlockContainer
         }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Item.sign.shiftedIndex;
     }
@@ -130,12 +133,9 @@ public class BlockSign extends BlockContainer
         }
         if(flag)
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
         }
         super.onNeighborBlockChange(world, i, j, k, l);
     }
-
-    private Class signEntityClass;
-    private boolean isFreestanding;
 }

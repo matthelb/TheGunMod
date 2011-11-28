@@ -1,12 +1,12 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            GenLayer, IntCache
+//            GenLayer, IntCache, BiomeGenBase
 
 public class GenLayerIsland extends GenLayer
 {
@@ -37,12 +37,53 @@ public class GenLayerIsland extends GenLayer
                 func_35499_a(j2 + i, i2 + j);
                 if(k3 == 0 && (k2 != 0 || l2 != 0 || i3 != 0 || j3 != 0))
                 {
-                    ai1[j2 + i2 * k] = 0 + nextInt(3) / 2;
+                    int l3 = 1;
+                    int i4 = 1;
+                    if(k2 != 0 && nextInt(l3++) == 0)
+                    {
+                        i4 = k2;
+                    }
+                    if(l2 != 0 && nextInt(l3++) == 0)
+                    {
+                        i4 = l2;
+                    }
+                    if(i3 != 0 && nextInt(l3++) == 0)
+                    {
+                        i4 = i3;
+                    }
+                    if(j3 != 0 && nextInt(l3++) == 0)
+                    {
+                        i4 = j3;
+                    }
+                    if(nextInt(3) == 0)
+                    {
+                        ai1[j2 + i2 * k] = i4;
+                        continue;
+                    }
+                    if(i4 == BiomeGenBase.icePlains.biomeID)
+                    {
+                        ai1[j2 + i2 * k] = BiomeGenBase.frozenOcean.biomeID;
+                    } else
+                    {
+                        ai1[j2 + i2 * k] = 0;
+                    }
                     continue;
                 }
-                if(k3 == 1 && (k2 != 1 || l2 != 1 || i3 != 1 || j3 != 1))
+                if(k3 > 0 && (k2 == 0 || l2 == 0 || i3 == 0 || j3 == 0))
                 {
-                    ai1[j2 + i2 * k] = 1 - nextInt(5) / 4;
+                    if(nextInt(5) == 0)
+                    {
+                        if(k3 == BiomeGenBase.icePlains.biomeID)
+                        {
+                            ai1[j2 + i2 * k] = BiomeGenBase.frozenOcean.biomeID;
+                        } else
+                        {
+                            ai1[j2 + i2 * k] = 0;
+                        }
+                    } else
+                    {
+                        ai1[j2 + i2 * k] = k3;
+                    }
                 } else
                 {
                     ai1[j2 + i2 * k] = k3;

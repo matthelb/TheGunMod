@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,9 +11,17 @@ package net.minecraft.src;
 public class MapInfo
 {
 
+    public final EntityPlayer entityplayerObj;
+    public int field_28119_b[];
+    public int field_28124_c[];
+    private int field_28122_e;
+    private int field_28121_f;
+    final MapData mapDataObj; /* synthetic field */
+
     public MapInfo(MapData mapdata, EntityPlayer entityplayer)
     {
         mapDataObj = mapdata;
+//        super();
         field_28119_b = new int[128];
         field_28124_c = new int[128];
         field_28122_e = 0;
@@ -26,11 +34,4 @@ public class MapInfo
         }
 
     }
-
-    public final EntityPlayer entityplayerObj;
-    public int field_28119_b[];
-    public int field_28124_c[];
-    private int field_28122_e;
-    private int field_28121_f;
-    final MapData mapDataObj; /* synthetic field */
 }

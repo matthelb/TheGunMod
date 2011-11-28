@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,8 +8,9 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockFlower, ColorizerGrass, ColorizerFoliage, IBlockAccess, 
-//            WorldChunkManager, Item, World, EntityPlayer, 
-//            ItemStack, ItemShears, StatList, Block
+//            WorldChunkManager, BiomeGenBase, Item, World, 
+//            EntityPlayer, ItemStack, ItemShears, StatList, 
+//            Block
 
 public class BlockTallGrass extends BlockFlower
 {
@@ -54,7 +55,7 @@ public class BlockTallGrass extends BlockFlower
             return 0xffffff;
         } else
         {
-            return ColorizerFoliage.func_31073_c();
+            return ColorizerFoliage.getFoliageColorBasic();
         }
     }
 
@@ -66,18 +67,11 @@ public class BlockTallGrass extends BlockFlower
             return 0xffffff;
         } else
         {
-            long l1 = i * 0x2fc20f + k * 0x5d8875 + j;
-            l1 = l1 * l1 * 0x285b825L + l1 * 11L;
-            i = (int)((long)i + ((l1 >> 14 & 31L) - 16L));
-            j = (int)((long)j + ((l1 >> 19 & 31L) - 16L));
-            k = (int)((long)k + ((l1 >> 24 & 31L) - 16L));
-            double d = iblockaccess.getWorldChunkManager().func_35554_b(i, k);
-            double d1 = iblockaccess.getWorldChunkManager().func_35558_c(i, k);
-            return ColorizerGrass.getGrassColor(d, d1);
+            return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).func_40254_a(iblockaccess, i, j, k);
         }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         if(random.nextInt(8) == 0)
         {
@@ -86,6 +80,11 @@ public class BlockTallGrass extends BlockFlower
         {
             return -1;
         }
+    }
+
+    public int func_40198_a(int i, Random random)
+    {
+        return 1 + random.nextInt(i * 2 + 1);
     }
 
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)

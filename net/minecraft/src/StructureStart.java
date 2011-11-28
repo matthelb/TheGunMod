@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,9 @@ import java.util.*;
 public abstract class StructureStart
 {
 
+    protected LinkedList components;
+    protected StructureBoundingBox boundingBox;
+
     protected StructureStart()
     {
         components = new LinkedList();
@@ -20,6 +23,11 @@ public abstract class StructureStart
     public StructureBoundingBox getBoundingBox()
     {
         return boundingBox;
+    }
+
+    public LinkedList func_40560_b()
+    {
+        return components;
     }
 
     public void generateStructure(World world, Random random, StructureBoundingBox structureboundingbox)
@@ -52,8 +60,7 @@ public abstract class StructureStart
 
     protected void markAvailableHeight(World world, Random random, int i)
     {
-        world.getClass();
-        int j = 63 - i;
+        int j = world.field_35470_e - i;
         int k = boundingBox.getYSize() + 1;
         if(k < j)
         {
@@ -69,11 +76,29 @@ public abstract class StructureStart
 
     }
 
+    protected void func_40559_a(World world, Random random, int i, int j)
+    {
+        int k = ((j - i) + 1) - boundingBox.getYSize();
+        int l = 1;
+        if(k > 1)
+        {
+            l = i + random.nextInt(k);
+        } else
+        {
+            l = i;
+        }
+        int i1 = l - boundingBox.minY;
+        boundingBox.offset(0, i1, 0);
+        StructureComponent structurecomponent;
+        for(Iterator iterator = components.iterator(); iterator.hasNext(); structurecomponent.getBoundingBox().offset(0, i1, 0))
+        {
+            structurecomponent = (StructureComponent)iterator.next();
+        }
+
+    }
+
     public boolean isSizeableStructure()
     {
         return true;
     }
-
-    protected LinkedList components;
-    protected StructureBoundingBox boundingBox;
 }

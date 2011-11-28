@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 public final class J_InvalidSyntaxException extends Exception
 {
+
+    private final int column;
+    private final int row;
 
     J_InvalidSyntaxException(String s, J_ThingWithPosition j_thingwithposition)
     {
@@ -24,7 +27,4 @@ public final class J_InvalidSyntaxException extends Exception
         column = j_thingwithposition.getColumn();
         row = j_thingwithposition.getRow();
     }
-
-    private final int column;
-    private final int row;
 }

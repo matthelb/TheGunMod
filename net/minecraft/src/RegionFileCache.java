@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,8 @@ import java.util.*;
 
 public class RegionFileCache
 {
+
+    private static final Map regionsByFilename = new HashMap();
 
     private RegionFileCache()
     {
@@ -71,12 +73,6 @@ public class RegionFileCache
         regionsByFilename.clear();
     }
 
-    public static int getSizeDelta(File file, int i, int j)
-    {
-        RegionFile regionfile = createOrLoadRegionFile(file, i, j);
-        return regionfile.getSizeDelta();
-    }
-
     public static DataInputStream getChunkInputStream(File file, int i, int j)
     {
         RegionFile regionfile = createOrLoadRegionFile(file, i, j);
@@ -88,7 +84,5 @@ public class RegionFileCache
         RegionFile regionfile = createOrLoadRegionFile(file, i, j);
         return regionfile.getChunkDataOutputStream(i & 0x1f, j & 0x1f);
     }
-
-    private static final Map regionsByFilename = new HashMap();
 
 }

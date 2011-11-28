@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 public class GenLayerRiverMix extends GenLayer
 {
+
+    private GenLayer field_35512_b;
+    private GenLayer field_35513_c;
 
     public GenLayerRiverMix(long l, GenLayer genlayer, GenLayer genlayer1)
     {
@@ -35,15 +38,28 @@ public class GenLayerRiverMix extends GenLayer
             if(ai[i1] == BiomeGenBase.ocean.biomeID)
             {
                 ai2[i1] = ai[i1];
+                continue;
+            }
+            if(ai1[i1] >= 0)
+            {
+                if(ai[i1] == BiomeGenBase.icePlains.biomeID)
+                {
+                    ai2[i1] = BiomeGenBase.frozenRiver.biomeID;
+                    continue;
+                }
+                if(ai[i1] == BiomeGenBase.mushroomIsland.biomeID || ai[i1] == BiomeGenBase.mushroomIslandShore.biomeID)
+                {
+                    ai2[i1] = BiomeGenBase.mushroomIslandShore.biomeID;
+                } else
+                {
+                    ai2[i1] = ai1[i1];
+                }
             } else
             {
-                ai2[i1] = ai1[i1] < 0 ? ai[i1] : ai1[i1];
+                ai2[i1] = ai[i1];
             }
         }
 
         return ai2;
     }
-
-    private GenLayer field_35512_b;
-    private GenLayer field_35513_c;
 }

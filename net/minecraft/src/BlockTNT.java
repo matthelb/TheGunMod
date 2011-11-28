@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -93,5 +93,10 @@ public class BlockTNT extends Block
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
         return super.blockActivated(world, i, j, k, entityplayer);
+    }
+
+    protected ItemStack func_41049_c_(int i)
+    {
+        return null;
     }
 }

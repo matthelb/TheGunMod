@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,12 @@ import java.io.*;
 
 public class Packet71Weather extends Packet
 {
+
+    public int entityID;
+    public int posX;
+    public int posY;
+    public int posZ;
+    public int isLightningBolt;
 
     public Packet71Weather()
     {
@@ -58,10 +64,4 @@ public class Packet71Weather extends Packet
     {
         return 17;
     }
-
-    public int entityID;
-    public int posX;
-    public int posY;
-    public int posZ;
-    public int isLightningBolt;
 }

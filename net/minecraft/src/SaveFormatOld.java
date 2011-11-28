@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -16,13 +16,15 @@ public class SaveFormatOld
     implements ISaveFormat
 {
 
+    protected final File savesDirectory;
+
     public SaveFormatOld(File file)
     {
         if(!file.exists())
         {
             file.mkdirs();
         }
-        field_22180_a = file;
+        savesDirectory = file;
     }
 
     public String func_22178_a()
@@ -39,7 +41,7 @@ public class SaveFormatOld
             WorldInfo worldinfo = getWorldInfo(s);
             if(worldinfo != null)
             {
-                arraylist.add(new SaveFormatComparator(s, "", worldinfo.getLastTimePlayed(), worldinfo.getSizeOnDisk(), worldinfo.getGameType(), false));
+                arraylist.add(new SaveFormatComparator(s, "", worldinfo.getLastTimePlayed(), worldinfo.getSizeOnDisk(), worldinfo.getGameType(), false, worldinfo.isHardcoreModeEnabled()));
             }
         }
 
@@ -52,7 +54,7 @@ public class SaveFormatOld
 
     public WorldInfo getWorldInfo(String s)
     {
-        File file = new File(field_22180_a, s);
+        File file = new File(savesDirectory, s);
         if(!file.exists())
         {
             return null;
@@ -88,9 +90,9 @@ public class SaveFormatOld
         return null;
     }
 
-    public void func_22170_a(String s, String s1)
+    public void renameWorld(String s, String s1)
     {
-        File file = new File(field_22180_a, s);
+        File file = new File(savesDirectory, s);
         if(!file.exists())
         {
             return;
@@ -112,27 +114,28 @@ public class SaveFormatOld
         }
     }
 
-    public void func_22172_c(String s)
+    public void deleteWorldDirectory(String s)
     {
-        File file = new File(field_22180_a, s);
+        File file = new File(savesDirectory, s);
         if(!file.exists())
         {
             return;
         } else
         {
-            func_22179_a(file.listFiles());
+            deleteFiles(file.listFiles());
             file.delete();
             return;
         }
     }
 
-    protected static void func_22179_a(File afile[])
+    protected static void deleteFiles(File afile[])
     {
         for(int i = 0; i < afile.length; i++)
         {
             if(afile[i].isDirectory())
             {
-                func_22179_a(afile[i].listFiles());
+                System.out.println((new StringBuilder()).append("Deleting ").append(afile[i]).toString());
+                deleteFiles(afile[i].listFiles());
             }
             afile[i].delete();
         }
@@ -141,7 +144,7 @@ public class SaveFormatOld
 
     public ISaveHandler getSaveLoader(String s, boolean flag)
     {
-        return new SaveHandler(field_22180_a, s, flag);
+        return new SaveHandler(savesDirectory, s, flag);
     }
 
     public boolean isOldMapFormat(String s)
@@ -153,6 +156,4 @@ public class SaveFormatOld
     {
         return false;
     }
-
-    protected final File field_22180_a;
 }

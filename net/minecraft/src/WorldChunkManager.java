@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,15 @@ import java.util.*;
 
 public class WorldChunkManager
 {
+
+    private GenLayer field_34903_b;
+    private GenLayer field_34902_c;
+    private GenLayer temperatureLayer;
+    private GenLayer rainfallLayer;
+    private BiomeCache biomeCache;
+    private List biomesToSpawnIn;
+    public BiomeGenBase field_4195_d[];
+    public float field_40541_b[];
 
     protected WorldChunkManager()
     {
@@ -73,9 +82,20 @@ public class WorldChunkManager
         return af;
     }
 
-    public float func_35554_b(int i, int j)
+    public float func_35554_b(int i, int j, int k)
     {
-        return biomeCache.func_35722_b(i, j);
+        return func_40540_a(biomeCache.func_35722_b(i, k), j);
+    }
+
+    public float func_40540_a(float f, int i)
+    {
+        return f;
+    }
+
+    public float[] func_40539_b(int i, int j, int k, int l)
+    {
+        field_40541_b = getTemperatures(field_40541_b, i, j, k, l);
+        return field_40541_b;
     }
 
     public float[] getTemperatures(float af[], int i, int j, int k, int l)
@@ -205,12 +225,4 @@ public class WorldChunkManager
     {
         biomeCache.func_35724_a();
     }
-
-    private GenLayer field_34903_b;
-    private GenLayer field_34902_c;
-    private GenLayer temperatureLayer;
-    private GenLayer rainfallLayer;
-    private BiomeCache biomeCache;
-    private List biomesToSpawnIn;
-    public BiomeGenBase field_4195_d[];
 }

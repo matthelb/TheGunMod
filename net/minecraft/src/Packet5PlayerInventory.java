@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,11 @@ import java.io.*;
 
 public class Packet5PlayerInventory extends Packet
 {
+
+    public int entityID;
+    public int slot;
+    public int itemID;
+    public int itemDamage;
 
     public Packet5PlayerInventory()
     {
@@ -43,9 +48,4 @@ public class Packet5PlayerInventory extends Packet
     {
         return 8;
     }
-
-    public int entityID;
-    public int slot;
-    public int itemID;
-    public int itemDamage;
 }

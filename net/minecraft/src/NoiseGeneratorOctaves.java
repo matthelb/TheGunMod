@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,9 @@ import java.util.Random;
 public class NoiseGeneratorOctaves extends NoiseGenerator
 {
 
+    private NoiseGeneratorPerlin generatorCollection[];
+    private int octaves;
+
     public NoiseGeneratorOctaves(Random random, int i)
     {
         octaves = i;
@@ -21,19 +24,6 @@ public class NoiseGeneratorOctaves extends NoiseGenerator
             generatorCollection[j] = new NoiseGeneratorPerlin(random);
         }
 
-    }
-
-    public double func_806_a(double d, double d1)
-    {
-        double d2 = 0.0D;
-        double d3 = 1.0D;
-        for(int i = 0; i < octaves; i++)
-        {
-            d2 += generatorCollection[i].func_801_a(d * d3, d1 * d3) / d3;
-            d3 /= 2D;
-        }
-
-        return d2;
     }
 
     public double[] generateNoiseOctaves(double ad[], int i, int j, int k, int l, int i1, int j1, 
@@ -76,7 +66,4 @@ public class NoiseGeneratorOctaves extends NoiseGenerator
     {
         return generateNoiseOctaves(ad, i, 10, j, k, 1, l, d, 1.0D, d1);
     }
-
-    private NoiseGeneratorPerlin generatorCollection[];
-    private int octaves;
 }

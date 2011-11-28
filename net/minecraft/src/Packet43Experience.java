@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,10 @@ import java.io.*;
 public class Packet43Experience extends Packet
 {
 
+    public float experience;
+    public int experienceTotal;
+    public int experienceLevel;
+
     public Packet43Experience()
     {
     }
@@ -19,16 +23,16 @@ public class Packet43Experience extends Packet
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {
-        experience = datainputstream.readByte();
-        experienceLevel = datainputstream.readByte();
+        experience = datainputstream.readFloat();
+        experienceLevel = datainputstream.readShort();
         experienceTotal = datainputstream.readShort();
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
         throws IOException
     {
-        dataoutputstream.writeByte(experience);
-        dataoutputstream.writeByte(experienceLevel);
+        dataoutputstream.writeFloat(experience);
+        dataoutputstream.writeShort(experienceLevel);
         dataoutputstream.writeShort(experienceTotal);
     }
 
@@ -41,8 +45,4 @@ public class Packet43Experience extends Packet
     {
         return 4;
     }
-
-    public int experience;
-    public int experienceTotal;
-    public int experienceLevel;
 }

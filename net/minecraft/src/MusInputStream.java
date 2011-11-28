@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,9 +14,15 @@ import java.net.URL;
 class MusInputStream extends InputStream
 {
 
+    private int hash;
+    private InputStream inputStream;
+    byte buffer[];
+    final CodecMus codec; /* synthetic field */
+
     public MusInputStream(CodecMus codecmus, URL url, InputStream inputstream)
     {
         codec = codecmus;
+//        super();
         buffer = new byte[1];
         inputStream = inputstream;
         String s = url.getPath();
@@ -38,11 +44,14 @@ class MusInputStream extends InputStream
 
     public int read(byte abyte0[], int i, int j)
     {
-        try {
-			j = inputStream.read(abyte0, i, j);
-		} catch (IOException e) {
-			return 0;
-		}
+        try
+        {
+            j = inputStream.read(abyte0, i, j);
+        }
+        catch (IOException e)
+        {
+            return 0;
+        }
         for(int k = 0; k < j; k++)
         {
             byte byte0 = abyte0[i + k] ^= hash >> 8;
@@ -51,9 +60,4 @@ class MusInputStream extends InputStream
 
         return j;
     }
-
-    private int hash;
-    private InputStream inputStream;
-    byte buffer[];
-    final CodecMus codec; /* synthetic field */
 }

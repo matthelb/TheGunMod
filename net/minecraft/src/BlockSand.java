@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.Random;
 
 public class BlockSand extends Block
 {
+
+    public static boolean fallInstantly = false;
 
     public BlockSand(int i, int j)
     {
@@ -50,6 +52,7 @@ public class BlockSand extends Block
                     world.setBlockWithNotify(i, j, k, blockID);
                 }
             } else
+            if(!world.multiplayerWorld)
             {
                 EntityFallingSand entityfallingsand = new EntityFallingSand(world, (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, blockID);
                 world.entityJoinedWorld(entityfallingsand);
@@ -80,7 +83,5 @@ public class BlockSand extends Block
         }
         return material == Material.lava;
     }
-
-    public static boolean fallInstantly = false;
 
 }

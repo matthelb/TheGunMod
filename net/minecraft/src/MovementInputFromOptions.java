@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,8 @@ package net.minecraft.src;
 
 public class MovementInputFromOptions extends MovementInput
 {
+
+    private GameSettings gameSettings;
 
     public MovementInputFromOptions(GameSettings gamesettings)
     {
@@ -44,6 +46,4 @@ public class MovementInputFromOptions extends MovementInput
             moveForward *= 0.29999999999999999D;
         }
     }
-
-    private GameSettings gameSettings;
 }

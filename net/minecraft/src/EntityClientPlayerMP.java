@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -16,6 +16,20 @@ import net.minecraft.client.Minecraft;
 
 public class EntityClientPlayerMP extends EntityPlayerSP
 {
+
+    public NetClientHandler sendQueue;
+    private int inventoryUpdateTickCounter;
+    private boolean field_21093_bH;
+    private double oldPosX;
+    private double field_9378_bz;
+    private double oldPosY;
+    private double oldPosZ;
+    private float oldRotationYaw;
+    private float oldRotationPitch;
+    private boolean field_9382_bF;
+    private boolean field_35227_cs;
+    private boolean wasSneaking;
+    private int field_12242_bI;
 
     public EntityClientPlayerMP(Minecraft minecraft, World world, Session session, NetClientHandler netclienthandler)
     {
@@ -40,8 +54,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
 
     public void onUpdate()
     {
-        worldObj.getClass();
-        if(!worldObj.blockExists(MathHelper.floor_double(posX), 128 / 2, MathHelper.floor_double(posZ)))
+        if(!worldObj.blockExists(MathHelper.floor_double(posX), worldObj.field_35472_c / 2, MathHelper.floor_double(posZ)))
         {
             return;
         } else
@@ -147,7 +160,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         sendQueue.addToSendQueue(new Packet14BlockDig(4, 0, 0, 0, 0));
     }
 
-    private void sendInventoryChanged()
+    public void sendInventoryChanged()
     {
     }
 
@@ -169,13 +182,12 @@ public class EntityClientPlayerMP extends EntityPlayerSP
     public void respawnPlayer()
     {
         sendInventoryChanged();
-        worldObj.getClass();
-        sendQueue.addToSendQueue(new Packet9Respawn((byte)dimension, (byte)worldObj.difficultySetting, worldObj.getWorldSeed(), 128, 0));
+        sendQueue.addToSendQueue(new Packet9Respawn((byte)dimension, (byte)worldObj.difficultySetting, worldObj.getWorldSeed(), worldObj.field_35472_c, 0));
     }
 
     protected void damageEntity(DamageSource damagesource, int i)
     {
-        health -= i;
+        setEntityHealth(getEntityHealth() - i);
     }
 
     public void closeScreen()
@@ -192,7 +204,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
             super.setHealth(i);
         } else
         {
-            health = i;
+            setEntityHealth(i);
             field_21093_bH = true;
         }
     }
@@ -220,18 +232,4 @@ public class EntityClientPlayerMP extends EntityPlayerSP
             super.addStat(statbase, i);
         }
     }
-
-    public NetClientHandler sendQueue;
-    private int inventoryUpdateTickCounter;
-    private boolean field_21093_bH;
-    private double oldPosX;
-    private double field_9378_bz;
-    private double oldPosY;
-    private double oldPosZ;
-    private float oldRotationYaw;
-    private float oldRotationPitch;
-    private boolean field_9382_bF;
-    private boolean field_35227_cs;
-    private boolean wasSneaking;
-    private int field_12242_bI;
 }

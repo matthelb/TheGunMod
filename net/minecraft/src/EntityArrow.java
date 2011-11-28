@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,19 @@ import java.util.Random;
 
 public class EntityArrow extends Entity
 {
+
+    private int xTile;
+    private int yTile;
+    private int zTile;
+    private int inTile;
+    private int inData;
+    private boolean inGround;
+    public boolean doesArrowBelongToPlayer;
+    public int arrowShake;
+    public Entity shootingEntity;
+    private int ticksInGround;
+    private int ticksInAir;
+    public boolean arrowCritical;
 
     public EntityArrow(World world)
     {
@@ -212,15 +225,23 @@ public class EntityArrow extends Entity
                 int j1 = (int)Math.ceil((double)f1 * 2D);
                 if(arrowCritical)
                 {
-                    j1 = (j1 * 3) / 2 + 1;
+                    j1 += rand.nextInt(j1 / 2 + 2);
                 }
-                if(movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeArrowDamage(this, shootingEntity), j1))
+                DamageSource damagesource = null;
+                if(shootingEntity == null)
+                {
+                    damagesource = DamageSource.causeArrowDamage(this, this);
+                } else
+                {
+                    damagesource = DamageSource.causeArrowDamage(this, shootingEntity);
+                }
+                if(movingobjectposition.entityHit.attackEntityFrom(damagesource, j1))
                 {
                     if(movingobjectposition.entityHit instanceof EntityLiving)
                     {
                         ((EntityLiving)movingobjectposition.entityHit).field_35172_bP++;
                     }
-                    worldObj.playSoundAtEntity(this, "random.drr", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
+                    worldObj.playSoundAtEntity(this, "random.bowhit", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
                     setEntityDead();
                 } else
                 {
@@ -245,7 +266,7 @@ public class EntityArrow extends Entity
                 posX -= (motionX / (double)f2) * 0.05000000074505806D;
                 posY -= (motionY / (double)f2) * 0.05000000074505806D;
                 posZ -= (motionZ / (double)f2) * 0.05000000074505806D;
-                worldObj.playSoundAtEntity(this, "random.drr", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
+                worldObj.playSoundAtEntity(this, "random.bowhit", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
                 inGround = true;
                 arrowShake = 7;
                 arrowCritical = false;
@@ -331,17 +352,4 @@ public class EntityArrow extends Entity
     {
         return 0.0F;
     }
-
-    private int xTile;
-    private int yTile;
-    private int zTile;
-    private int inTile;
-    private int inData;
-    private boolean inGround;
-    public boolean doesArrowBelongToPlayer;
-    public int arrowShake;
-    public Entity shootingEntity;
-    private int ticksInGround;
-    private int ticksInAir;
-    public boolean arrowCritical;
 }

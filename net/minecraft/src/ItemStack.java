@@ -1,17 +1,25 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
+import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, Item, StatList, EntityPlayer, 
-//            NBTTagCompound, World, Entity, EntityLiving, 
-//            EnumAction
+//            Block, Item, NBTTagCompound, StatList, 
+//            EntityPlayer, EnchantmentHelper, EntityLiving, World, 
+//            NBTTagList, Enchantment, Entity, EnumAction, 
+//            EnumRarity
 
 public final class ItemStack
 {
+
+    public int stackSize;
+    public int animationsToGo;
+    public int itemID;
+    public NBTTagCompound field_40715_d;
+    private int itemDamage;
 
     public ItemStack(Block block)
     {
@@ -65,8 +73,13 @@ public final class ItemStack
 
     public ItemStack splitStack(int i)
     {
+        ItemStack itemstack = new ItemStack(itemID, i, itemDamage);
+        if(field_40715_d != null)
+        {
+            itemstack.field_40715_d = (NBTTagCompound)field_40715_d.func_40195_b();
+        }
         stackSize -= i;
-        return new ItemStack(itemID, i, itemDamage);
+        return itemstack;
     }
 
     public Item getItem()
@@ -109,6 +122,10 @@ public final class ItemStack
         nbttagcompound.setShort("id", (short)itemID);
         nbttagcompound.setByte("Count", (byte)stackSize);
         nbttagcompound.setShort("Damage", (short)itemDamage);
+        if(field_40715_d != null)
+        {
+            nbttagcompound.setTag("tag", field_40715_d);
+        }
         return nbttagcompound;
     }
 
@@ -117,6 +134,10 @@ public final class ItemStack
         itemID = nbttagcompound.getShort("id");
         stackSize = nbttagcompound.getByte("Count");
         itemDamage = nbttagcompound.getShort("Damage");
+        if(nbttagcompound.hasKey("tag"))
+        {
+            field_40715_d = nbttagcompound.getCompoundTag("tag");
+        }
     }
 
     public int getMaxStackSize()
@@ -164,18 +185,27 @@ public final class ItemStack
         return Item.itemsList[itemID].getMaxDamage();
     }
 
-    public void damageItem(int i, Entity entity)
+    public void damageItem(int i, EntityLiving entityliving)
     {
         if(!isItemStackDamageable())
         {
             return;
         }
+        if(i > 0 && (entityliving instanceof EntityPlayer))
+        {
+            int j = EnchantmentHelper.getUnbreakingModifier(((EntityPlayer)entityliving).inventory);
+            if(j > 0 && entityliving.worldObj.rand.nextInt(j + 1) > 0)
+            {
+                return;
+            }
+        }
         itemDamage += i;
         if(itemDamage > getMaxDamage())
         {
-            if(entity instanceof EntityPlayer)
+            entityliving.func_41005_b(this);
+            if(entityliving instanceof EntityPlayer)
             {
-                ((EntityPlayer)entity).addStat(StatList.objectBreakStats[itemID], 1);
+                ((EntityPlayer)entityliving).addStat(StatList.objectBreakStats[itemID], 1);
             }
             stackSize--;
             if(stackSize < 0)
@@ -225,7 +255,16 @@ public final class ItemStack
 
     public ItemStack copy()
     {
-        return new ItemStack(itemID, stackSize, itemDamage);
+        ItemStack itemstack = new ItemStack(itemID, stackSize, itemDamage);
+        if(field_40715_d != null)
+        {
+            itemstack.field_40715_d = (NBTTagCompound)field_40715_d.func_40195_b();
+            if(!itemstack.field_40715_d.equals(field_40715_d))
+            {
+                return itemstack;
+            }
+        }
+        return itemstack;
     }
 
     public static boolean areItemStacksEqual(ItemStack itemstack, ItemStack itemstack1)
@@ -253,17 +292,20 @@ public final class ItemStack
         {
             return false;
         }
-        return itemDamage == itemstack.itemDamage;
+        if(itemDamage != itemstack.itemDamage)
+        {
+            return false;
+        }
+        if(field_40715_d == null && itemstack.field_40715_d != null)
+        {
+            return false;
+        }
+        return field_40715_d == null || field_40715_d.equals(itemstack.field_40715_d);
     }
 
     public boolean isItemEqual(ItemStack itemstack)
     {
         return itemID == itemstack.itemID && itemDamage == itemstack.itemDamage;
-    }
-
-    public String getItemName()
-    {
-        return Item.itemsList[itemID].getItemNameIS(this);
     }
 
     public static ItemStack copyItemStack(ItemStack itemstack)
@@ -311,8 +353,103 @@ public final class ItemStack
         getItem().onPlayerStoppedUsing(this, world, entityplayer, i);
     }
 
-    public int stackSize;
-    public int animationsToGo;
-    public int itemID;
-    private int itemDamage;
+    public boolean func_40710_n()
+    {
+        return field_40715_d != null;
+    }
+
+    public NBTTagCompound func_40709_o()
+    {
+        return field_40715_d;
+    }
+
+    public NBTTagList func_40714_p()
+    {
+        if(field_40715_d == null)
+        {
+            return null;
+        } else
+        {
+            return (NBTTagList)field_40715_d.func_40196_b("ench");
+        }
+    }
+
+    public void func_40706_d(NBTTagCompound nbttagcompound)
+    {
+        if(Item.itemsList[itemID].getItemStackLimit() != 1)
+        {
+            throw new IllegalArgumentException("Cannot add tag data to a stackable item");
+        } else
+        {
+            field_40715_d = nbttagcompound;
+            return;
+        }
+    }
+
+    public List func_40712_q()
+    {
+        ArrayList arraylist = new ArrayList();
+        Item item = Item.itemsList[itemID];
+        arraylist.add(item.func_40397_d(this));
+        item.func_40404_a(this, arraylist);
+        if(func_40710_n())
+        {
+            NBTTagList nbttaglist = func_40714_p();
+            if(nbttaglist != null)
+            {
+                for(int i = 0; i < nbttaglist.tagCount(); i++)
+                {
+                    short word0 = ((NBTTagCompound)nbttaglist.tagAt(i)).getShort("id");
+                    short word1 = ((NBTTagCompound)nbttaglist.tagAt(i)).getShort("lvl");
+                    if(Enchantment.enchantmentsList[word0] != null)
+                    {
+                        arraylist.add(Enchantment.enchantmentsList[word0].getTranslatedName(word1));
+                    }
+                }
+
+            }
+        }
+        return arraylist;
+    }
+
+    public boolean func_40713_r()
+    {
+        return getItem().func_40403_e(this);
+    }
+
+    public EnumRarity func_40707_s()
+    {
+        return getItem().func_40398_f(this);
+    }
+
+    public boolean func_40708_t()
+    {
+        if(!getItem().func_40401_i(this))
+        {
+            return false;
+        }
+        return !func_40711_u();
+    }
+
+    public void addEnchantment(Enchantment enchantment, int i)
+    {
+        if(field_40715_d == null)
+        {
+            func_40706_d(new NBTTagCompound());
+        }
+        if(!field_40715_d.hasKey("ench"))
+        {
+            field_40715_d.setTag("ench", new NBTTagList("ench"));
+        }
+        NBTTagList nbttaglist = (NBTTagList)field_40715_d.func_40196_b("ench");
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        nbttagcompound.setShort("id", (short)enchantment.effectId);
+        nbttagcompound.setShort("lvl", (byte)i);
+        nbttaglist.setTag(nbttagcompound);
+    }
+
+    public boolean func_40711_u()
+    {
+        return field_40715_d != null && field_40715_d.hasKey("ench");
+    }
 }

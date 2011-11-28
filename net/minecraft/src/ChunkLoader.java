@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,11 +10,14 @@ import java.util.*;
 // Referenced classes of package net.minecraft.src:
 //            IChunkLoader, CompressedStreamTools, NBTTagCompound, Chunk, 
 //            World, WorldInfo, NibbleArray, NBTTagList, 
-//            Entity, TileEntity, EntityList
+//            Entity, TileEntity, NextTickListEntry, EntityList
 
 public class ChunkLoader
     implements IChunkLoader
 {
+
+    private File saveDir;
+    private boolean createIfNecessary;
 
     public ChunkLoader(File file, boolean flag)
     {
@@ -177,6 +180,25 @@ label0:
         }
 
         nbttagcompound.setTag("TileEntities", nbttaglist1);
+        List list = world.func_41081_a(chunk, false);
+        if(list != null)
+        {
+            long l = world.getWorldTime();
+            NBTTagList nbttaglist2 = new NBTTagList();
+            NBTTagCompound nbttagcompound3;
+            for(Iterator iterator2 = list.iterator(); iterator2.hasNext(); nbttaglist2.setTag(nbttagcompound3))
+            {
+                NextTickListEntry nextticklistentry = (NextTickListEntry)iterator2.next();
+                nbttagcompound3 = new NBTTagCompound();
+                nbttagcompound3.setInteger("i", nextticklistentry.blockID);
+                nbttagcompound3.setInteger("x", nextticklistentry.xCoord);
+                nbttagcompound3.setInteger("y", nextticklistentry.yCoord);
+                nbttagcompound3.setInteger("z", nextticklistentry.zCoord);
+                nbttagcompound3.setInteger("t", (int)(nextticklistentry.scheduledTime - l));
+            }
+
+            nbttagcompound.setTag("TileTicks", nbttaglist2);
+        }
     }
 
     public static Chunk loadChunkIntoWorldFromCompound(World world, NBTTagCompound nbttagcompound)
@@ -185,30 +207,24 @@ label0:
         int j = nbttagcompound.getInteger("zPos");
         Chunk chunk = new Chunk(world, i, j);
         chunk.blocks = nbttagcompound.getByteArray("Blocks");
-        world.getClass();
-        chunk.data = new NibbleArray(nbttagcompound.getByteArray("Data"), 7);
-        world.getClass();
-        chunk.skylightMap = new NibbleArray(nbttagcompound.getByteArray("SkyLight"), 7);
-        world.getClass();
-        chunk.blocklightMap = new NibbleArray(nbttagcompound.getByteArray("BlockLight"), 7);
+        chunk.data = new NibbleArray(nbttagcompound.getByteArray("Data"), world.field_35473_a);
+        chunk.skylightMap = new NibbleArray(nbttagcompound.getByteArray("SkyLight"), world.field_35473_a);
+        chunk.blocklightMap = new NibbleArray(nbttagcompound.getByteArray("BlockLight"), world.field_35473_a);
         chunk.heightMap = nbttagcompound.getByteArray("HeightMap");
         chunk.isTerrainPopulated = nbttagcompound.getBoolean("TerrainPopulated");
         if(!chunk.data.isValid())
         {
-            world.getClass();
-            chunk.data = new NibbleArray(chunk.blocks.length, 7);
+            chunk.data = new NibbleArray(chunk.blocks.length, world.field_35473_a);
         }
         if(chunk.heightMap == null || !chunk.skylightMap.isValid())
         {
             chunk.heightMap = new byte[256];
-            world.getClass();
-            chunk.skylightMap = new NibbleArray(chunk.blocks.length, 7);
+            chunk.skylightMap = new NibbleArray(chunk.blocks.length, world.field_35473_a);
             chunk.generateSkylightMap();
         }
         if(!chunk.blocklightMap.isValid())
         {
-            world.getClass();
-            chunk.blocklightMap = new NibbleArray(chunk.blocks.length, 7);
+            chunk.blocklightMap = new NibbleArray(chunk.blocks.length, world.field_35473_a);
             chunk.func_1014_a();
         }
         NBTTagList nbttaglist = nbttagcompound.getTagList("Entities");
@@ -240,6 +256,19 @@ label0:
             }
 
         }
+        if(nbttagcompound.hasKey("TileTicks"))
+        {
+            NBTTagList nbttaglist2 = nbttagcompound.getTagList("TileTicks");
+            if(nbttaglist2 != null)
+            {
+                for(int i1 = 0; i1 < nbttaglist2.tagCount(); i1++)
+                {
+                    NBTTagCompound nbttagcompound3 = (NBTTagCompound)nbttaglist2.tagAt(i1);
+                    world.func_41083_e(nbttagcompound3.getInteger("x"), nbttagcompound3.getInteger("y"), nbttagcompound3.getInteger("z"), nbttagcompound3.getInteger("i"), nbttagcompound3.getInteger("t"));
+                }
+
+            }
+        }
         return chunk;
     }
 
@@ -255,7 +284,4 @@ label0:
         throws IOException
     {
     }
-
-    private File saveDir;
-    private boolean createIfNecessary;
 }

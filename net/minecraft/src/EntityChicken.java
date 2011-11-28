@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,14 @@ import java.util.Random;
 public class EntityChicken extends EntityAnimal
 {
 
+    public boolean field_753_a;
+    public float field_752_b;
+    public float destPos;
+    public float field_757_d;
+    public float field_756_e;
+    public float field_755_h;
+    public int timeUntilNextEgg;
+
     public EntityChicken(World world)
     {
         super(world);
@@ -21,8 +29,12 @@ public class EntityChicken extends EntityAnimal
         field_755_h = 1.0F;
         texture = "/mob/chicken.png";
         setSize(0.3F, 0.7F);
-        health = 4;
         timeUntilNextEgg = rand.nextInt(6000) + 6000;
+    }
+
+    public int getMaxHealth()
+    {
+        return 4;
     }
 
     public void onLivingUpdate()
@@ -49,7 +61,7 @@ public class EntityChicken extends EntityAnimal
             motionY *= 0.59999999999999998D;
         }
         field_752_b += field_755_h * 2.0F;
-        if(!worldObj.multiplayerWorld && --timeUntilNextEgg <= 0)
+        if(!func_40127_l() && !worldObj.multiplayerWorld && --timeUntilNextEgg <= 0)
         {
             worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             dropItem(Item.egg.shiftedIndex, 1);
@@ -91,15 +103,15 @@ public class EntityChicken extends EntityAnimal
         return Item.feather.shiftedIndex;
     }
 
-    protected void dropFewItems(boolean flag)
+    protected void dropFewItems(boolean flag, int i)
     {
-        int i = rand.nextInt(3);
-        for(int j = 0; j < i; j++)
+        int j = rand.nextInt(3) + rand.nextInt(1 + i);
+        for(int k = 0; k < j; k++)
         {
             dropItem(Item.feather.shiftedIndex, 1);
         }
 
-        if(fire > 0)
+        if(isBurning())
         {
             dropItem(Item.chickenCooked.shiftedIndex, 1);
         } else
@@ -108,11 +120,8 @@ public class EntityChicken extends EntityAnimal
         }
     }
 
-    public boolean field_753_a;
-    public float field_752_b;
-    public float destPos;
-    public float field_757_d;
-    public float field_756_e;
-    public float field_755_h;
-    public int timeUntilNextEgg;
+    protected EntityAnimal func_40145_a(EntityAnimal entityanimal)
+    {
+        return new EntityChicken(worldObj);
+    }
 }

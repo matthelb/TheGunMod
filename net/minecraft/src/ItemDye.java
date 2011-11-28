@@ -1,19 +1,28 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Item, ItemStack, EntityPlayer, World, 
-//            Block, BlockSapling, BlockFlower, BlockMushroom, 
-//            BlockStem, BlockCrops, BlockGrass, BlockTallGrass, 
-//            EntitySheep, BlockCloth, EntityLiving
+//            Item, MathHelper, ItemStack, EntityPlayer, 
+//            World, Block, BlockSapling, BlockFlower, 
+//            BlockMushroom, BlockStem, BlockCrops, BlockGrass, 
+//            BlockTallGrass, EntitySheep, BlockCloth, EntityLiving
 
 public class ItemDye extends Item
 {
+
+    public static final String dyeColorNames[] = {
+        "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", 
+        "lime", "yellow", "lightBlue", "magenta", "orange", "white"
+    };
+    public static final int dyeColors[] = {
+        0x1e1b1b, 0xb3312c, 0x3b511a, 0x51301a, 0x253192, 0x7b2fbe, 0x287697, 0x287697, 0x434343, 0xd88198, 
+        0x41cd34, 0xdecf2a, 0x6689d3, 0xc354cd, 0xeb8844, 0xf0f0f0
+    };
 
     public ItemDye(int i)
     {
@@ -24,13 +33,14 @@ public class ItemDye extends Item
 
     public int getIconFromDamage(int i)
     {
-        int j = i;
+        int j = MathHelper.func_41084_a(i, 0, 15);
         return iconIndex + (j % 8) * 16 + j / 8;
     }
 
     public String getItemNameIS(ItemStack itemstack)
     {
-        return (new StringBuilder()).append(super.getItemName()).append(".").append(dyeColorNames[itemstack.getItemDamage()]).toString();
+        int i = MathHelper.func_41084_a(itemstack.getItemDamage(), 0, 15);
+        return (new StringBuilder()).append(super.getItemName()).append(".").append(dyeColorNames[i]).toString();
     }
 
     public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
@@ -137,14 +147,5 @@ label0:
             }
         }
     }
-
-    public static final String dyeColorNames[] = {
-        "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", 
-        "lime", "yellow", "lightBlue", "magenta", "orange", "white"
-    };
-    public static final int dyeColors[] = {
-        0x1e1b1b, 0xb3312c, 0x3b511a, 0x51301a, 0x253192, 0x7b2fbe, 0x287697, 0x287697, 0x434343, 0xd88198, 
-        0x41cd34, 0xdecf2a, 0x6689d3, 0xc354cd, 0xeb8844, 0xf0f0f0
-    };
 
 }

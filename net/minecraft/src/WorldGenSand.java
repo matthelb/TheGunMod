@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,9 @@ import java.util.Random;
 
 public class WorldGenSand extends WorldGenerator
 {
+
+    private int sandID;
+    private int field_35263_b;
 
     public WorldGenSand(int i, int j)
     {
@@ -52,7 +55,4 @@ public class WorldGenSand extends WorldGenerator
 
         return true;
     }
-
-    private int sandID;
-    private int field_35263_b;
 }

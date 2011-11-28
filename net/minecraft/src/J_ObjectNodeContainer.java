@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,10 +13,14 @@ class J_ObjectNodeContainer
     implements J_NodeContainer
 {
 
+    final J_JsonObjectNodeBuilder nodeBuilder; /* synthetic field */
+    final J_JsonListenerToJdomAdapter field_27295_b; /* synthetic field */
+
     J_ObjectNodeContainer(J_JsonListenerToJdomAdapter j_jsonlistenertojdomadapter, J_JsonObjectNodeBuilder j_jsonobjectnodebuilder)
     {
         field_27295_b = j_jsonlistenertojdomadapter;
         nodeBuilder = j_jsonobjectnodebuilder;
+//        super();
     }
 
     public void func_27290_a(J_JsonNodeBuilder j_jsonnodebuilder)
@@ -28,7 +32,4 @@ class J_ObjectNodeContainer
     {
         nodeBuilder.func_27237_a(j_jsonfieldbuilder);
     }
-
-    final J_JsonObjectNodeBuilder nodeBuilder; /* synthetic field */
-    final J_JsonListenerToJdomAdapter field_27295_b; /* synthetic field */
 }

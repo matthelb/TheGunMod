@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,14 @@ package net.minecraft.src;
 
 public class ModelCreeper extends ModelBase
 {
+
+    public ModelRenderer head;
+    public ModelRenderer unusedCreeperHeadwear;
+    public ModelRenderer body;
+    public ModelRenderer leg1;
+    public ModelRenderer leg2;
+    public ModelRenderer leg3;
+    public ModelRenderer leg4;
 
     public ModelCreeper()
     {
@@ -62,12 +70,4 @@ public class ModelCreeper extends ModelBase
         leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + 3.141593F) * 1.4F * f1;
         leg4.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
     }
-
-    public ModelRenderer head;
-    public ModelRenderer unusedCreeperHeadwear;
-    public ModelRenderer body;
-    public ModelRenderer leg1;
-    public ModelRenderer leg2;
-    public ModelRenderer leg3;
-    public ModelRenderer leg4;
 }

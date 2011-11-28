@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,8 @@ package net.minecraft.src;
 
 public class RecipesIngots
 {
+
+    private Object recipeItems[][];
 
     public RecipesIngots()
     {
@@ -40,7 +42,11 @@ public class RecipesIngots
             });
         }
 
+        craftingmanager.addRecipe(new ItemStack(Item.ingotGold), new Object[] {
+            "###", "###", "###", Character.valueOf('#'), Item.goldNugget
+        });
+        craftingmanager.addRecipe(new ItemStack(Item.goldNugget, 9), new Object[] {
+            "#", Character.valueOf('#'), Item.ingotGold
+        });
     }
-
-    private Object recipeItems[][];
 }

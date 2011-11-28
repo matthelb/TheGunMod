@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,13 +8,51 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            WorldGenClay, WorldGenSand, Block, WorldGenMinable, 
-//            WorldGenFlowers, BlockFlower, WorldGenReed, WorldGenCactus, 
-//            World, WorldGenerator, BiomeGenBase, WorldGenTallGrass, 
-//            BlockTallGrass, WorldGenDeadBush, BlockDeadBush, WorldGenPumpkin, 
-//            WorldGenLiquids
+//            WorldGenFlowers, BlockFlower, WorldGenBigMushroom, WorldGenReed, 
+//            WorldGenCactus, MapGenWaterlily, World, WorldGenerator, 
+//            BiomeGenBase, WorldGenTallGrass, BlockTallGrass, WorldGenDeadBush, 
+//            BlockDeadBush, WorldGenPumpkin, WorldGenLiquids
 
 public class BiomeDecorator
 {
+
+    protected World currentWorld;
+    protected Random decoRNG;
+    protected int chunk_X;
+    protected int chunk_Z;
+    protected BiomeGenBase biome;
+    protected WorldGenerator clayGen;
+    protected WorldGenerator sandGen;
+    protected WorldGenerator gravelAsSandGen;
+    protected WorldGenerator dirtGen;
+    protected WorldGenerator gravelGen;
+    protected WorldGenerator coalGen;
+    protected WorldGenerator ironGen;
+    protected WorldGenerator goldGen;
+    protected WorldGenerator redstoneGen;
+    protected WorldGenerator diamondGen;
+    protected WorldGenerator lapisGen;
+    protected WorldGenerator plantYellowGen;
+    protected WorldGenerator plantRedGen;
+    protected WorldGenerator mushroomBrownGen;
+    protected WorldGenerator mushroomRedGen;
+    protected WorldGenerator field_40720_u;
+    protected WorldGenerator reedGen;
+    protected WorldGenerator cactusGen;
+    protected WorldGenerator waterlilyGen;
+    protected int waterlilyPerChunk;
+    protected int treesPerChunk;
+    protected int flowersPerChunk;
+    protected int grassPerChunk;
+    protected int deadBushPerChunk;
+    protected int mushroomsPerChunk;
+    protected int reedsPerChunk;
+    protected int cactiPerChunk;
+    protected int sandPerChunk;
+    protected int sandPerChunk2;
+    protected int clayPerChunk;
+    protected int field_40718_J;
+    public boolean generateFluid;
 
     public BiomeDecorator(BiomeGenBase biomegenbase)
     {
@@ -29,12 +67,15 @@ public class BiomeDecorator
         redstoneGen = new WorldGenMinable(Block.oreRedstone.blockID, 7);
         diamondGen = new WorldGenMinable(Block.oreDiamond.blockID, 7);
         lapisGen = new WorldGenMinable(Block.oreLapis.blockID, 6);
-        plantYellowGen1 = new WorldGenFlowers(Block.plantYellow.blockID);
-        plantYellowGen2 = new WorldGenFlowers(Block.plantYellow.blockID);
+        plantYellowGen = new WorldGenFlowers(Block.plantYellow.blockID);
+        plantRedGen = new WorldGenFlowers(Block.plantRed.blockID);
         mushroomBrownGen = new WorldGenFlowers(Block.mushroomBrown.blockID);
         mushroomRedGen = new WorldGenFlowers(Block.mushroomRed.blockID);
+        field_40720_u = new WorldGenBigMushroom();
         reedGen = new WorldGenReed();
         cactusGen = new WorldGenCactus();
+        waterlilyGen = new MapGenWaterlily();
+        waterlilyPerChunk = 0;
         treesPerChunk = 0;
         flowersPerChunk = 2;
         grassPerChunk = 1;
@@ -45,6 +86,8 @@ public class BiomeDecorator
         sandPerChunk = 1;
         sandPerChunk2 = 3;
         clayPerChunk = 1;
+        field_40718_J = 0;
+        generateFluid = true;
         biome = biomegenbase;
     }
 
@@ -66,28 +109,28 @@ public class BiomeDecorator
         }
     }
 
-    private void decorate_do()
+    protected void decorate_do()
     {
         generateOres();
         for(int i = 0; i < sandPerChunk2; i++)
         {
             int i1 = chunk_X + decoRNG.nextInt(16) + 8;
-            int i5 = chunk_Z + decoRNG.nextInt(16) + 8;
-            sandGen.generate(currentWorld, decoRNG, i1, currentWorld.getTopSolidOrLiquidBlock(i1, i5), i5);
+            int k5 = chunk_Z + decoRNG.nextInt(16) + 8;
+            sandGen.generate(currentWorld, decoRNG, i1, currentWorld.getTopSolidOrLiquidBlock(i1, k5), k5);
         }
 
         for(int j = 0; j < clayPerChunk; j++)
         {
             int j1 = chunk_X + decoRNG.nextInt(16) + 8;
-            int j5 = chunk_Z + decoRNG.nextInt(16) + 8;
-            clayGen.generate(currentWorld, decoRNG, j1, currentWorld.getTopSolidOrLiquidBlock(j1, j5), j5);
+            int l5 = chunk_Z + decoRNG.nextInt(16) + 8;
+            clayGen.generate(currentWorld, decoRNG, j1, currentWorld.getTopSolidOrLiquidBlock(j1, l5), l5);
         }
 
         for(int k = 0; k < sandPerChunk; k++)
         {
             int k1 = chunk_X + decoRNG.nextInt(16) + 8;
-            int k5 = chunk_Z + decoRNG.nextInt(16) + 8;
-            sandGen.generate(currentWorld, decoRNG, k1, currentWorld.getTopSolidOrLiquidBlock(k1, k5), k5);
+            int i6 = chunk_Z + decoRNG.nextInt(16) + 8;
+            sandGen.generate(currentWorld, decoRNG, k1, currentWorld.getTopSolidOrLiquidBlock(k1, i6), i6);
         }
 
         int l = treesPerChunk;
@@ -97,137 +140,143 @@ public class BiomeDecorator
         }
         for(int l1 = 0; l1 < l; l1++)
         {
-            int l5 = chunk_X + decoRNG.nextInt(16) + 8;
-            int k9 = chunk_Z + decoRNG.nextInt(16) + 8;
+            int j6 = chunk_X + decoRNG.nextInt(16) + 8;
+            int k10 = chunk_Z + decoRNG.nextInt(16) + 8;
             WorldGenerator worldgenerator = biome.getRandomWorldGenForTrees(decoRNG);
             worldgenerator.func_517_a(1.0D, 1.0D, 1.0D);
-            worldgenerator.generate(currentWorld, decoRNG, l5, currentWorld.getHeightValue(l5, k9), k9);
+            worldgenerator.generate(currentWorld, decoRNG, j6, currentWorld.getHeightValue(j6, k10), k10);
         }
 
-        for(int i2 = 0; i2 < flowersPerChunk; i2++)
+        for(int i2 = 0; i2 < field_40718_J; i2++)
         {
-            int i6 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int l9 = decoRNG.nextInt(128);
-            int j13 = chunk_Z + decoRNG.nextInt(16) + 8;
-            plantYellowGen1.generate(currentWorld, decoRNG, i6, l9, j13);
-            if(decoRNG.nextInt(4) == 0)
-            {
-                int j6 = chunk_X + decoRNG.nextInt(16) + 8;
-                currentWorld.getClass();
-                int i10 = decoRNG.nextInt(128);
-                int k13 = chunk_Z + decoRNG.nextInt(16) + 8;
-                plantYellowGen2.generate(currentWorld, decoRNG, j6, i10, k13);
-            }
+            int k6 = chunk_X + decoRNG.nextInt(16) + 8;
+            int l10 = chunk_Z + decoRNG.nextInt(16) + 8;
+            field_40720_u.generate(currentWorld, decoRNG, k6, currentWorld.getHeightValue(k6, l10), l10);
         }
 
-        for(int j2 = 0; j2 < grassPerChunk; j2++)
-        {
-            int k6 = 1;
-            int j10 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int l13 = decoRNG.nextInt(128);
-            int i16 = chunk_Z + decoRNG.nextInt(16) + 8;
-            (new WorldGenTallGrass(Block.tallGrass.blockID, k6)).generate(currentWorld, decoRNG, j10, l13, i16);
-        }
-
-        for(int k2 = 0; k2 < deadBushPerChunk; k2++)
+        for(int j2 = 0; j2 < flowersPerChunk; j2++)
         {
             int l6 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int k10 = decoRNG.nextInt(128);
-            int i14 = chunk_Z + decoRNG.nextInt(16) + 8;
-            (new WorldGenDeadBush(Block.deadBush.blockID)).generate(currentWorld, decoRNG, l6, k10, i14);
-        }
-
-        for(int l2 = 0; l2 < mushroomsPerChunk; l2++)
-        {
+            int i11 = decoRNG.nextInt(currentWorld.field_35472_c);
+            int l14 = chunk_Z + decoRNG.nextInt(16) + 8;
+            plantYellowGen.generate(currentWorld, decoRNG, l6, i11, l14);
             if(decoRNG.nextInt(4) == 0)
             {
                 int i7 = chunk_X + decoRNG.nextInt(16) + 8;
-                int l10 = chunk_Z + decoRNG.nextInt(16) + 8;
-                int j14 = currentWorld.getHeightValue(i7, l10);
-                mushroomBrownGen.generate(currentWorld, decoRNG, i7, j14, l10);
+                int j11 = decoRNG.nextInt(currentWorld.field_35472_c);
+                int i15 = chunk_Z + decoRNG.nextInt(16) + 8;
+                plantRedGen.generate(currentWorld, decoRNG, i7, j11, i15);
+            }
+        }
+
+        for(int k2 = 0; k2 < grassPerChunk; k2++)
+        {
+            int j7 = 1;
+            int k11 = chunk_X + decoRNG.nextInt(16) + 8;
+            int j15 = decoRNG.nextInt(currentWorld.field_35472_c);
+            int l17 = chunk_Z + decoRNG.nextInt(16) + 8;
+            (new WorldGenTallGrass(Block.tallGrass.blockID, j7)).generate(currentWorld, decoRNG, k11, j15, l17);
+        }
+
+        for(int l2 = 0; l2 < deadBushPerChunk; l2++)
+        {
+            int k7 = chunk_X + decoRNG.nextInt(16) + 8;
+            int l11 = decoRNG.nextInt(currentWorld.field_35472_c);
+            int k15 = chunk_Z + decoRNG.nextInt(16) + 8;
+            (new WorldGenDeadBush(Block.deadBush.blockID)).generate(currentWorld, decoRNG, k7, l11, k15);
+        }
+
+        for(int i3 = 0; i3 < waterlilyPerChunk; i3++)
+        {
+            int l7 = chunk_X + decoRNG.nextInt(16) + 8;
+            int i12 = chunk_Z + decoRNG.nextInt(16) + 8;
+            int l15;
+            for(l15 = decoRNG.nextInt(currentWorld.field_35472_c); l15 > 0 && currentWorld.getBlockId(l7, l15 - 1, i12) == 0; l15--) { }
+            waterlilyGen.generate(currentWorld, decoRNG, l7, l15, i12);
+        }
+
+        for(int j3 = 0; j3 < mushroomsPerChunk; j3++)
+        {
+            if(decoRNG.nextInt(4) == 0)
+            {
+                int i8 = chunk_X + decoRNG.nextInt(16) + 8;
+                int j12 = chunk_Z + decoRNG.nextInt(16) + 8;
+                int i16 = currentWorld.getHeightValue(i8, j12);
+                mushroomBrownGen.generate(currentWorld, decoRNG, i8, i16, j12);
             }
             if(decoRNG.nextInt(8) == 0)
             {
-                int j7 = chunk_X + decoRNG.nextInt(16) + 8;
-                int i11 = chunk_Z + decoRNG.nextInt(16) + 8;
-                currentWorld.getClass();
-                int k14 = decoRNG.nextInt(128);
-                mushroomRedGen.generate(currentWorld, decoRNG, j7, k14, i11);
+                int j8 = chunk_X + decoRNG.nextInt(16) + 8;
+                int k12 = chunk_Z + decoRNG.nextInt(16) + 8;
+                int j16 = decoRNG.nextInt(currentWorld.field_35472_c);
+                mushroomRedGen.generate(currentWorld, decoRNG, j8, j16, k12);
             }
         }
 
         if(decoRNG.nextInt(4) == 0)
         {
-            int i3 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int k7 = decoRNG.nextInt(128);
-            int j11 = chunk_Z + decoRNG.nextInt(16) + 8;
-            mushroomBrownGen.generate(currentWorld, decoRNG, i3, k7, j11);
+            int k3 = chunk_X + decoRNG.nextInt(16) + 8;
+            int k8 = decoRNG.nextInt(currentWorld.field_35472_c);
+            int l12 = chunk_Z + decoRNG.nextInt(16) + 8;
+            mushroomBrownGen.generate(currentWorld, decoRNG, k3, k8, l12);
         }
         if(decoRNG.nextInt(8) == 0)
         {
-            int j3 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int l7 = decoRNG.nextInt(128);
-            int k11 = chunk_Z + decoRNG.nextInt(16) + 8;
-            mushroomRedGen.generate(currentWorld, decoRNG, j3, l7, k11);
+            int l3 = chunk_X + decoRNG.nextInt(16) + 8;
+            int l8 = decoRNG.nextInt(currentWorld.field_35472_c);
+            int i13 = chunk_Z + decoRNG.nextInt(16) + 8;
+            mushroomRedGen.generate(currentWorld, decoRNG, l3, l8, i13);
         }
-        for(int k3 = 0; k3 < reedsPerChunk; k3++)
+        for(int i4 = 0; i4 < reedsPerChunk; i4++)
         {
-            int i8 = chunk_X + decoRNG.nextInt(16) + 8;
-            int l11 = chunk_Z + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int l14 = decoRNG.nextInt(128);
-            reedGen.generate(currentWorld, decoRNG, i8, l14, l11);
+            int i9 = chunk_X + decoRNG.nextInt(16) + 8;
+            int j13 = chunk_Z + decoRNG.nextInt(16) + 8;
+            int k16 = decoRNG.nextInt(currentWorld.field_35472_c);
+            reedGen.generate(currentWorld, decoRNG, i9, k16, j13);
         }
 
-        for(int l3 = 0; l3 < 10; l3++)
+        for(int j4 = 0; j4 < 10; j4++)
         {
-            int j8 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int i12 = decoRNG.nextInt(128);
-            int i15 = chunk_Z + decoRNG.nextInt(16) + 8;
-            reedGen.generate(currentWorld, decoRNG, j8, i12, i15);
+            int j9 = chunk_X + decoRNG.nextInt(16) + 8;
+            int k13 = decoRNG.nextInt(currentWorld.field_35472_c);
+            int l16 = chunk_Z + decoRNG.nextInt(16) + 8;
+            reedGen.generate(currentWorld, decoRNG, j9, k13, l16);
         }
 
         if(decoRNG.nextInt(32) == 0)
         {
-            int i4 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int k8 = decoRNG.nextInt(128);
-            int j12 = chunk_Z + decoRNG.nextInt(16) + 8;
-            (new WorldGenPumpkin()).generate(currentWorld, decoRNG, i4, k8, j12);
+            int k4 = chunk_X + decoRNG.nextInt(16) + 8;
+            int k9 = decoRNG.nextInt(currentWorld.field_35472_c);
+            int l13 = chunk_Z + decoRNG.nextInt(16) + 8;
+            (new WorldGenPumpkin()).generate(currentWorld, decoRNG, k4, k9, l13);
         }
-        for(int j4 = 0; j4 < cactiPerChunk; j4++)
+        for(int l4 = 0; l4 < cactiPerChunk; l4++)
         {
-            int l8 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int k12 = decoRNG.nextInt(128);
-            int j15 = chunk_Z + decoRNG.nextInt(16) + 8;
-            cactusGen.generate(currentWorld, decoRNG, l8, k12, j15);
+            int l9 = chunk_X + decoRNG.nextInt(16) + 8;
+            int i14 = decoRNG.nextInt(currentWorld.field_35472_c);
+            int i17 = chunk_Z + decoRNG.nextInt(16) + 8;
+            cactusGen.generate(currentWorld, decoRNG, l9, i14, i17);
         }
 
-        for(int k4 = 0; k4 < 50; k4++)
+        if(generateFluid)
         {
-            int i9 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int l12 = decoRNG.nextInt(decoRNG.nextInt(128 - 8) + 8);
-            int k15 = chunk_Z + decoRNG.nextInt(16) + 8;
-            (new WorldGenLiquids(Block.waterMoving.blockID)).generate(currentWorld, decoRNG, i9, l12, k15);
-        }
+            for(int i5 = 0; i5 < 50; i5++)
+            {
+                int i10 = chunk_X + decoRNG.nextInt(16) + 8;
+                int j14 = decoRNG.nextInt(decoRNG.nextInt(currentWorld.field_35472_c - 8) + 8);
+                int j17 = chunk_Z + decoRNG.nextInt(16) + 8;
+                (new WorldGenLiquids(Block.waterMoving.blockID)).generate(currentWorld, decoRNG, i10, j14, j17);
+            }
 
-        for(int l4 = 0; l4 < 20; l4++)
-        {
-            int j9 = chunk_X + decoRNG.nextInt(16) + 8;
-            currentWorld.getClass();
-            int i13 = decoRNG.nextInt(decoRNG.nextInt(decoRNG.nextInt(128 - 16) + 8) + 8);
-            int l15 = chunk_Z + decoRNG.nextInt(16) + 8;
-            (new WorldGenLiquids(Block.lavaMoving.blockID)).generate(currentWorld, decoRNG, j9, i13, l15);
-        }
+            for(int j5 = 0; j5 < 20; j5++)
+            {
+                int j10 = chunk_X + decoRNG.nextInt(16) + 8;
+                int k14 = decoRNG.nextInt(decoRNG.nextInt(decoRNG.nextInt(currentWorld.field_35472_c - 16) + 8) + 8);
+                int k17 = chunk_Z + decoRNG.nextInt(16) + 8;
+                (new WorldGenLiquids(Block.lavaMoving.blockID)).generate(currentWorld, decoRNG, j10, k14, k17);
+            }
 
+        }
     }
 
     protected void genStandardOre1(int i, WorldGenerator worldgenerator, int j, int k)
@@ -256,55 +305,13 @@ public class BiomeDecorator
 
     protected void generateOres()
     {
-        currentWorld.getClass();
-        genStandardOre1(20, dirtGen, 0, 128);
-        currentWorld.getClass();
-        genStandardOre1(10, gravelGen, 0, 128);
-        currentWorld.getClass();
-        genStandardOre1(20, coalGen, 0, 128);
-        currentWorld.getClass();
-        genStandardOre1(20, ironGen, 0, 128 / 2);
-        currentWorld.getClass();
-        genStandardOre1(2, goldGen, 0, 128 / 4);
-        currentWorld.getClass();
-        genStandardOre1(8, redstoneGen, 0, 128 / 8);
-        currentWorld.getClass();
-        genStandardOre1(1, diamondGen, 0, 128 / 8);
-        currentWorld.getClass();
-        currentWorld.getClass();
-        genStandardOre2(1, lapisGen, 128 / 8, 128 / 8);
+        genStandardOre1(20, dirtGen, 0, currentWorld.field_35472_c);
+        genStandardOre1(10, gravelGen, 0, currentWorld.field_35472_c);
+        genStandardOre1(20, coalGen, 0, currentWorld.field_35472_c);
+        genStandardOre1(20, ironGen, 0, currentWorld.field_35472_c / 2);
+        genStandardOre1(2, goldGen, 0, currentWorld.field_35472_c / 4);
+        genStandardOre1(8, redstoneGen, 0, currentWorld.field_35472_c / 8);
+        genStandardOre1(1, diamondGen, 0, currentWorld.field_35472_c / 8);
+        genStandardOre2(1, lapisGen, currentWorld.field_35472_c / 8, currentWorld.field_35472_c / 8);
     }
-
-    private World currentWorld;
-    private Random decoRNG;
-    private int chunk_X;
-    private int chunk_Z;
-    private BiomeGenBase biome;
-    protected WorldGenerator clayGen;
-    protected WorldGenerator sandGen;
-    protected WorldGenerator gravelAsSandGen;
-    protected WorldGenerator dirtGen;
-    protected WorldGenerator gravelGen;
-    protected WorldGenerator coalGen;
-    protected WorldGenerator ironGen;
-    protected WorldGenerator goldGen;
-    protected WorldGenerator redstoneGen;
-    protected WorldGenerator diamondGen;
-    protected WorldGenerator lapisGen;
-    protected WorldGenerator plantYellowGen1;
-    protected WorldGenerator plantYellowGen2;
-    protected WorldGenerator mushroomBrownGen;
-    protected WorldGenerator mushroomRedGen;
-    protected WorldGenerator reedGen;
-    protected WorldGenerator cactusGen;
-    protected int treesPerChunk;
-    protected int flowersPerChunk;
-    protected int grassPerChunk;
-    protected int deadBushPerChunk;
-    protected int mushroomsPerChunk;
-    protected int reedsPerChunk;
-    protected int cactiPerChunk;
-    protected int sandPerChunk;
-    protected int sandPerChunk2;
-    protected int clayPerChunk;
 }

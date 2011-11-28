@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -18,6 +18,11 @@ public class EntityCow extends EntityAnimal
         super(world);
         texture = "/mob/cow.png";
         setSize(0.9F, 1.3F);
+    }
+
+    public int getMaxHealth()
+    {
+        return 10;
     }
 
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
@@ -55,18 +60,18 @@ public class EntityCow extends EntityAnimal
         return Item.leather.shiftedIndex;
     }
 
-    protected void dropFewItems(boolean flag)
+    protected void dropFewItems(boolean flag, int i)
     {
-        int i = rand.nextInt(3);
-        for(int j = 0; j < i; j++)
+        int j = rand.nextInt(3) + rand.nextInt(1 + i);
+        for(int k = 0; k < j; k++)
         {
             dropItem(Item.leather.shiftedIndex, 1);
         }
 
-        i = rand.nextInt(3) + 1;
-        for(int k = 0; k < i; k++)
+        j = rand.nextInt(3) + 1 + rand.nextInt(1 + i);
+        for(int l = 0; l < j; l++)
         {
-            if(fire > 0)
+            if(isBurning())
             {
                 dropItem(Item.beefCooked.shiftedIndex, 1);
             } else
@@ -86,7 +91,12 @@ public class EntityCow extends EntityAnimal
             return true;
         } else
         {
-            return false;
+            return super.interact(entityplayer);
         }
+    }
+
+    protected EntityAnimal func_40145_a(EntityAnimal entityanimal)
+    {
+        return new EntityCow(worldObj);
     }
 }

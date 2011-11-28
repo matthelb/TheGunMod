@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,21 @@ import java.util.Random;
 
 public class EntitySquid extends EntityWaterMob
 {
+
+    public float field_21089_a;
+    public float field_21088_b;
+    public float field_21087_c;
+    public float field_21086_f;
+    public float field_21085_g;
+    public float field_21084_h;
+    public float field_21083_i;
+    public float field_21082_j;
+    private float randomMotionSpeed;
+    private float field_21080_l;
+    private float field_21079_m;
+    private float randomMotionVecX;
+    private float randomMotionVecY;
+    private float randomMotionVecZ;
 
     public EntitySquid(World world)
     {
@@ -34,6 +49,11 @@ public class EntitySquid extends EntityWaterMob
         texture = "/mob/squid.png";
         setSize(0.95F, 0.95F);
         field_21080_l = (1.0F / (rand.nextFloat() + 1.0F)) * 0.2F;
+    }
+
+    public int getMaxHealth()
+    {
+        return 10;
     }
 
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
@@ -71,10 +91,10 @@ public class EntitySquid extends EntityWaterMob
         return 0;
     }
 
-    protected void dropFewItems(boolean flag)
+    protected void dropFewItems(boolean flag, int i)
     {
-        int i = rand.nextInt(3) + 1;
-        for(int j = 0; j < i; j++)
+        int j = rand.nextInt(3 + i) + 1;
+        for(int k = 0; k < j; k++)
         {
             entityDropItem(new ItemStack(Item.dyePowder, 1, 0), 0.0F);
         }
@@ -83,7 +103,7 @@ public class EntitySquid extends EntityWaterMob
 
     public boolean interact(EntityPlayer entityplayer)
     {
-        return false;
+        return super.interact(entityplayer);
     }
 
     public boolean isInWater()
@@ -159,6 +179,11 @@ public class EntitySquid extends EntityWaterMob
 
     protected void updateEntityActionState()
     {
+        entityAge++;
+        if(entityAge > 100)
+        {
+            randomMotionVecX = randomMotionVecY = randomMotionVecZ = 0.0F;
+        } else
         if(rand.nextInt(50) == 0 || !inWater || randomMotionVecX == 0.0F && randomMotionVecY == 0.0F && randomMotionVecZ == 0.0F)
         {
             float f = rand.nextFloat() * 3.141593F * 2.0F;
@@ -169,18 +194,8 @@ public class EntitySquid extends EntityWaterMob
         despawnEntity();
     }
 
-    public float field_21089_a;
-    public float field_21088_b;
-    public float field_21087_c;
-    public float field_21086_f;
-    public float field_21085_g;
-    public float field_21084_h;
-    public float field_21083_i;
-    public float field_21082_j;
-    private float randomMotionSpeed;
-    private float field_21080_l;
-    private float field_21079_m;
-    private float randomMotionVecX;
-    private float randomMotionVecY;
-    private float randomMotionVecZ;
+    public boolean getCanSpawnHere()
+    {
+        return posY > 45D && posY < (double)worldObj.field_35470_e && super.getCanSpawnHere();
+    }
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,8 @@ import java.util.Map;
 public final class J_JsonStringNode extends J_JsonNode
     implements Comparable
 {
+
+    private final String field_27224_a;
 
     J_JsonStringNode(String s)
     {
@@ -81,6 +83,4 @@ public final class J_JsonStringNode extends J_JsonNode
     {
         return func_27223_a((J_JsonStringNode)obj);
     }
-
-    private final String field_27224_a;
 }

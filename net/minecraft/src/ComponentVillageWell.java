@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,9 @@ import java.util.Random;
 
 public class ComponentVillageWell extends ComponentVillage
 {
+
+    private final boolean field_35104_a = true;
+    private int field_35103_b;
 
     public ComponentVillageWell(int i, Random random, int j, int k)
     {
@@ -81,7 +84,4 @@ public class ComponentVillageWell extends ComponentVillage
 
         return true;
     }
-
-    private final boolean field_35104_a = true;
-    private int field_35103_b;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,16 +11,29 @@ import net.minecraft.client.Minecraft;
 //            EntityPlayer, MouseFilter, Session, MovementInput, 
 //            PlayerController, AchievementList, StatFileWriter, GuiAchievement, 
 //            World, SoundManager, Potion, PotionEffect, 
-//            AxisAlignedBB, FoodStats, PlayerCapabilities, ItemStack, 
-//            Item, NBTTagCompound, GuiEditSign, GuiChest, 
-//            GuiCrafting, GuiFurnace, GuiDispenser, EntityCrit2FX, 
-//            EffectRenderer, EntityPickupFX, InventoryPlayer, DamageSource, 
-//            GuiIngame, StatBase, Achievement, MathHelper, 
-//            TileEntitySign, IInventory, TileEntityFurnace, TileEntityDispenser, 
+//            AxisAlignedBB, FoodStats, PlayerCapabilities, GuiWinGame, 
+//            ItemStack, Item, NBTTagCompound, GuiEditSign, 
+//            GuiChest, GuiCrafting, GuiEnchantment, GuiFurnace, 
+//            GuiBrewingStand, GuiDispenser, EntityCrit2FX, EffectRenderer, 
+//            EntityPickupFX, InventoryPlayer, DamageSource, GuiIngame, 
+//            StatBase, Achievement, MathHelper, TileEntitySign, 
+//            IInventory, TileEntityFurnace, TileEntityBrewingStand, TileEntityDispenser, 
 //            Entity
 
 public class EntityPlayerSP extends EntityPlayer
 {
+
+    public MovementInput movementInput;
+    protected Minecraft mc;
+    protected int sprintToggleTimer;
+    public int sprintingTicksLeft;
+    public float renderArmYaw;
+    public float renderArmPitch;
+    public float prevRenderArmYaw;
+    public float prevRenderArmPitch;
+    private MouseFilter field_21903_bJ;
+    private MouseFilter field_21904_bK;
+    private MouseFilter field_21902_bL;
 
     public EntityPlayerSP(Minecraft minecraft, World world, Session session, int i)
     {
@@ -107,7 +120,16 @@ public class EntityPlayerSP extends EntityPlayer
                 {
                     timeUntilPortal = 10;
                     mc.sndManager.playSoundFX("portal.travel", 1.0F, rand.nextFloat() * 0.4F + 0.8F);
-                    mc.usePortal();
+                    byte byte0 = 0;
+                    if(dimension == -1)
+                    {
+                        byte0 = 0;
+                    } else
+                    {
+                        byte0 = -1;
+                    }
+                    mc.usePortal(byte0);
+                    triggerAchievement(AchievementList.portal);
                 }
             }
             inPortal = false;
@@ -153,7 +175,7 @@ public class EntityPlayerSP extends EntityPlayer
         pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, boundingBox.minY + 0.5D, posZ - (double)width * 0.34999999999999998D);
         pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, boundingBox.minY + 0.5D, posZ + (double)width * 0.34999999999999998D);
         boolean flag2 = (float)getFoodStats().getFoodLevel() > 6F;
-        if(onGround && !flag1 && movementInput.moveForward >= f && !isSprinting() && flag2 && !isUsingItem())
+        if(onGround && !flag1 && movementInput.moveForward >= f && !isSprinting() && flag2 && !isUsingItem() && !isPotionActive(Potion.potionBlindness))
         {
             if(sprintToggleTimer == 0)
             {
@@ -163,6 +185,10 @@ public class EntityPlayerSP extends EntityPlayer
                 setSprinting(true);
                 sprintToggleTimer = 0;
             }
+        }
+        if(isSneaking())
+        {
+            sprintToggleTimer = 0;
         }
         if(isSprinting() && (movementInput.moveForward < f || isCollidedHorizontally || !flag2))
         {
@@ -194,6 +220,23 @@ public class EntityPlayerSP extends EntityPlayer
         if(onGround && capabilities.isFlying)
         {
             capabilities.isFlying = false;
+        }
+    }
+
+    public void func_40182_b(int i)
+    {
+        if(!worldObj.multiplayerWorld)
+        {
+            if(dimension == 1 && i == 1)
+            {
+                triggerAchievement(AchievementList.theEnd2);
+                mc.displayGuiScreen(new GuiWinGame());
+            } else
+            {
+                triggerAchievement(AchievementList.theEnd);
+                mc.sndManager.playSoundFX("portal.travel", 1.0F, rand.nextFloat() * 0.4F + 0.8F);
+                mc.usePortal(1);
+            }
         }
     }
 
@@ -254,9 +297,19 @@ public class EntityPlayerSP extends EntityPlayer
         mc.displayGuiScreen(new GuiCrafting(inventory, worldObj, i, j, k));
     }
 
+    public void func_40181_c(int i, int j, int k)
+    {
+        mc.displayGuiScreen(new GuiEnchantment(inventory, worldObj, i, j, k));
+    }
+
     public void displayGUIFurnace(TileEntityFurnace tileentityfurnace)
     {
         mc.displayGuiScreen(new GuiFurnace(inventory, tileentityfurnace));
+    }
+
+    public void func_40180_a(TileEntityBrewingStand tileentitybrewingstand)
+    {
+        mc.displayGuiScreen(new GuiBrewingStand(inventory, tileentitybrewingstand));
     }
 
     public void displayGUIDispenser(TileEntityDispenser tileentitydispenser)
@@ -267,6 +320,12 @@ public class EntityPlayerSP extends EntityPlayer
     public void onCriticalHit(Entity entity)
     {
         mc.effectRenderer.addEffect(new EntityCrit2FX(mc.theWorld, entity));
+    }
+
+    public void func_40183_c(Entity entity)
+    {
+        EntityCrit2FX entitycrit2fx = new EntityCrit2FX(mc.theWorld, entity, "magicCrit");
+        mc.effectRenderer.addEffect(entitycrit2fx);
     }
 
     public void onItemPickup(Entity entity, int i)
@@ -290,18 +349,18 @@ public class EntityPlayerSP extends EntityPlayer
 
     public void setHealth(int i)
     {
-        int j = health - i;
+        int j = getEntityHealth() - i;
         if(j <= 0)
         {
-            health = i;
+            setEntityHealth(i);
             if(j < 0)
             {
                 heartsLife = heartsHalvesLife / 2;
             }
         } else
         {
-            field_9346_af = j;
-            prevHealth = health;
+            naturalArmorRating = j;
+            setEntityHealth(getEntityHealth());
             heartsLife = heartsHalvesLife;
             damageEntity(DamageSource.generic, j);
             hurtTime = maxHurtTime = 10;
@@ -310,7 +369,7 @@ public class EntityPlayerSP extends EntityPlayer
 
     public void respawnPlayer()
     {
-        mc.respawn(false, 0);
+        mc.respawn(false, 0, false);
     }
 
     public void func_6420_o()
@@ -418,22 +477,10 @@ public class EntityPlayerSP extends EntityPlayer
         }
     }
 
-    public void setXPStats(int i, int j, int k)
+    public void setXPStats(float f, int i, int j)
     {
-        currentXP = i;
-        totalXP = j;
-        playerLevel = k;
+        currentXP = f;
+        totalXP = i;
+        playerLevel = j;
     }
-
-    public MovementInput movementInput;
-    protected Minecraft mc;
-    protected int sprintToggleTimer;
-    public int sprintingTicksLeft;
-    public float renderArmYaw;
-    public float renderArmPitch;
-    public float prevRenderArmYaw;
-    public float prevRenderArmPitch;
-    private MouseFilter field_21903_bJ;
-    private MouseFilter field_21904_bK;
-    private MouseFilter field_21902_bL;
 }

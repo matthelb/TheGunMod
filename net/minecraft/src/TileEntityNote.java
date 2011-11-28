@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 public class TileEntityNote extends TileEntity
 {
+
+    public byte note;
+    public boolean previousRedstoneState;
 
     public TileEntityNote()
     {
@@ -69,7 +72,4 @@ public class TileEntityNote extends TileEntity
         }
         world.playNoteAt(i, j, k, byte0, note);
     }
-
-    public byte note;
-    public boolean previousRedstoneState;
 }

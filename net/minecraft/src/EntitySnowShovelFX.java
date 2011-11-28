@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,8 @@ package net.minecraft.src;
 
 public class EntitySnowShovelFX extends EntityFX
 {
+
+    float snowDigParticleScale;
 
     public EntitySnowShovelFX(World world, double d, double d1, double d2, 
             double d3, double d4, double d5)
@@ -60,7 +62,7 @@ public class EntitySnowShovelFX extends EntityFX
         {
             setEntityDead();
         }
-        particleTextureIndex = 7 - (particleAge * 8) / particleMaxAge;
+        func_40099_c(7 - (particleAge * 8) / particleMaxAge);
         motionY -= 0.029999999999999999D;
         moveEntity(motionX, motionY, motionZ);
         motionX *= 0.99000000953674316D;
@@ -72,6 +74,4 @@ public class EntitySnowShovelFX extends EntityFX
             motionZ *= 0.69999998807907104D;
         }
     }
-
-    float snowDigParticleScale;
 }

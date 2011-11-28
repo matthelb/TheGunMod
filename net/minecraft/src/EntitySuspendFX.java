@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -19,7 +19,7 @@ public class EntitySuspendFX extends EntityFX
         particleRed = 0.4F;
         particleGreen = 0.4F;
         particleBlue = 0.7F;
-        particleTextureIndex = 0;
+        func_40099_c(0);
         setSize(0.01F, 0.01F);
         particleScale = particleScale * (rand.nextFloat() * 0.6F + 0.2F);
         motionX = d3 * 0.0D;

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,12 +12,16 @@ import java.io.*;
 public class NBTTagShort extends NBTBase
 {
 
-    public NBTTagShort()
+    public short shortValue;
+
+    public NBTTagShort(String s)
     {
+        super(s);
     }
 
-    public NBTTagShort(short word0)
+    public NBTTagShort(String s, short word0)
     {
+        super(s);
         shortValue = word0;
     }
 
@@ -43,5 +47,20 @@ public class NBTTagShort extends NBTBase
         return (new StringBuilder()).append("").append(shortValue).toString();
     }
 
-    public short shortValue;
+    public NBTBase func_40195_b()
+    {
+        return new NBTTagShort(getKey(), shortValue);
+    }
+
+    public boolean equals(Object obj)
+    {
+        if(super.equals(obj))
+        {
+            NBTTagShort nbttagshort = (NBTTagShort)obj;
+            return shortValue == nbttagshort.shortValue;
+        } else
+        {
+            return false;
+        }
+    }
 }

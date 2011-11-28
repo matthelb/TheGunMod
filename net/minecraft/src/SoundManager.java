@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -19,6 +19,16 @@ import paulscode.sound.libraries.LibraryLWJGLOpenAL;
 
 public class SoundManager
 {
+
+    private static SoundSystem sndSystem;
+    private SoundPool soundPoolSounds;
+    private SoundPool soundPoolStreaming;
+    private SoundPool soundPoolMusic;
+    private int latestSoundID;
+    private GameSettings options;
+    private static boolean loaded = false;
+    private Random rand;
+    private int ticksBeforeMusic;
 
     public SoundManager()
     {
@@ -238,15 +248,5 @@ public class SoundManager
             sndSystem.play(s1);
         }
     }
-
-    private static SoundSystem sndSystem;
-    private SoundPool soundPoolSounds;
-    private SoundPool soundPoolStreaming;
-    private SoundPool soundPoolMusic;
-    private int latestSoundID;
-    private GameSettings options;
-    private static boolean loaded = false;
-    private Random rand;
-    private int ticksBeforeMusic;
 
 }

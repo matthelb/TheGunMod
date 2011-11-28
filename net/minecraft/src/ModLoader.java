@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -43,6 +43,7 @@ import java.util.zip.ZipInputStream;
 import javax.imageio.ImageIO;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 // Referenced classes of package net.minecraft.src:
 //            Achievement, StatBase, StatCollector, BaseMod, 
@@ -50,9 +51,9 @@ import org.lwjgl.input.Keyboard;
 //            ItemStack, CraftingManager, FurnaceRecipes, BiomeGenBase, 
 //            EnumCreatureType, SpawnListEntry, EntityLiving, EntityRendererProxy, 
 //            EntityList, TileEntityRenderer, RenderPlayer, RenderEngine, 
-//            BiomeGenHell, BiomeGenSky, TileEntity, RenderBlocks, 
-//            GameSettings, StatList, StatCrafting, BlockPistonMoving, 
-//            IRecipe, TexturePackList, TexturePackBase, EntityPlayer, 
+//            BiomeGenHell, BiomeGenEnd, TileEntity, RenderBlocks, 
+//            GameSettings, StatList, StatCrafting, IRecipe, 
+//            TexturePackList, TexturePackBase, EntityPlayer, Profiler, 
 //            World, KeyBinding, IChunkProvider, ModTextureStatic, 
 //            ItemBlock, TileEntitySpecialRenderer, MLProp, IInventory, 
 //            UnexpectedThrowable, GuiScreen, IBlockAccess
@@ -60,13 +61,53 @@ import org.lwjgl.input.Keyboard;
 public final class ModLoader
 {
 
+    private static final List animList = new LinkedList();
+    private static final Map blockModels = new HashMap();
+    private static final Map blockSpecialInv = new HashMap();
+    private static final File cfgdir;
+    private static final File cfgfile;
+    public static Level cfgLoggingLevel;
+    private static Map classMap = null;
+    private static long clock = 0L;
+    public static final boolean DEBUG = false;
+    private static Field field_animList = null;
+    private static Field field_armorList = null;
+    private static Field field_modifiers = null;
+    private static Field field_TileEntityRenderers = null;
+    private static boolean hasInit = false;
+    private static int highestEntityId = 3000;
+    private static final Map inGameHooks = new HashMap();
+    private static final Map inGUIHooks = new HashMap();
+    private static Minecraft instance = null;
+    private static int itemSpriteIndex = 0;
+    private static int itemSpritesLeft = 0;
+    private static final Map keyList = new HashMap();
+    private static final File logfile = new File(Minecraft.getMinecraftDir(), "ModLoader.txt");
+    private static final Logger logger = Logger.getLogger("ModLoader");
+    private static FileHandler logHandler = null;
+    private static Method method_RegisterEntityID = null;
+    private static Method method_RegisterTileEntity = null;
+    private static final File modDir = new File(Minecraft.getMinecraftDir(), "/mods/");
+    private static final LinkedList modList = new LinkedList();
+    private static int nextBlockModelID = 1000;
+    private static final Map overrides = new HashMap();
+    public static final Properties props = new Properties();
+    private static BiomeGenBase standardBiomes[];
+    private static int terrainSpriteIndex = 0;
+    private static int terrainSpritesLeft = 0;
+    private static String texPack = null;
+    private static boolean texturesAdded = false;
+    private static final boolean usedItemSprites[] = new boolean[256];
+    private static final boolean usedTerrainSprites[] = new boolean[256];
+    public static final String VERSION = "ModLoader 1.0.0";
+
     public static void AddAchievementDesc(Achievement achievement, String s, String s1)
     {
         try
         {
-            if(achievement.statName.contains("."))
+            if(achievement.getDescription().contains("."))
             {
-                String as[] = achievement.statName.split("\\.");
+                String as[] = achievement.getDescription().split("\\.");
                 if(as.length == 2)
                 {
                     String s2 = as[1];
@@ -225,8 +266,8 @@ public final class ModLoader
             if(basemod != null)
             {
                 modList.add(basemod);
-                logger.fine((new StringBuilder("Mod Loaded: \"")).append(basemod.toString()).append("\" from ").append(s).toString());
-                System.out.println((new StringBuilder("Mod Loaded: ")).append(basemod.toString()).toString());
+                logger.fine((new StringBuilder("Mod Initialized: \"")).append(basemod.toString()).append("\" from ").append(s).toString());
+                System.out.println((new StringBuilder("Mod Initialized: ")).append(basemod.toString()).toString());
             }
         }
         catch(Throwable throwable)
@@ -260,9 +301,10 @@ public final class ModLoader
         if(obj instanceof ItemStack)
         {
             ItemStack itemstack = (ItemStack)obj;
-            if(itemstack.getItemName() != null)
+            String s2 = Item.itemsList[itemstack.itemID].getItemNameIS(itemstack);
+            if(s2 != null)
             {
-                s1 = (new StringBuilder(String.valueOf(itemstack.getItemName()))).append(".name").toString();
+                s1 = (new StringBuilder(String.valueOf(s2))).append(".name").toString();
             }
         } else
         {
@@ -563,8 +605,8 @@ public final class ModLoader
     private static void init()
     {
         hasInit = true;
-        String s = "1111111111111111111111111111111111111101111111011111111111111111111111111111111111111111111111111111110111110111111111000110001111111101100000110000000100000011000000010000001100000000000000110000000000000000000000000000000000000000000000001100000000000000";
-        String s1 = "1111111111111111111111111111110111111111111111111111111111111111111111111111000111111111111111111111111111111111111111111111111111111111110011111111111110000000111111000000000011111100000000001111000000000111111000000000001101000000000001111111111111111111";
+        String s = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111110111111111111111000111111111111101111111110000000100111111000000010000111100000000000000110000000000000000000000000000000000000000000000001111111111111111";
+        String s1 = "1111111111111111111111111111110111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110111111111111100000001111111111000000001111000000000111111000000000001111111000000001111111111111111111";
         for(int i = 0; i < 256; i++)
         {
             usedItemSprites[i] = s.charAt(i) == '1';
@@ -601,7 +643,7 @@ public final class ModLoader
                 if((afield[j].getModifiers() & 8) != 0 && class1.isAssignableFrom(net.minecraft.src.BiomeGenBase.class))
                 {
                     BiomeGenBase biomegenbase = (BiomeGenBase)afield[j].get(null);
-                    if(!(biomegenbase instanceof BiomeGenHell) && !(biomegenbase instanceof BiomeGenSky))
+                    if(!(biomegenbase instanceof BiomeGenHell) && !(biomegenbase instanceof BiomeGenEnd))
                     {
                         linkedlist.add(biomegenbase);
                     }
@@ -684,25 +726,34 @@ public final class ModLoader
                 logHandler.setFormatter(new SimpleFormatter());
                 logger.addHandler(logHandler);
             }
-            logger.fine("ModLoader Beta 1.8.1 Initializing...");
-            System.out.println("ModLoader Beta 1.8.1 Initializing...");
+            logger.fine("ModLoader 1.0.0 Initializing...");
+            System.out.println("ModLoader 1.0.0 Initializing...");
             File file = new File((net.minecraft.src.ModLoader.class).getProtectionDomain().getCodeSource().getLocation().toURI());
             modDir.mkdirs();
-            readFromModFolder(modDir);
             readFromClassPath(file);
-            System.out.println("Done.");
-            props.setProperty("loggingLevel", cfgLoggingLevel.getName());
-            props.setProperty("grassFix", Boolean.toString(RenderBlocks.cfgGrassFix));
+            readFromModFolder(modDir);
+            sortModList();
             for(Iterator iterator = modList.iterator(); iterator.hasNext();)
             {
                 BaseMod basemod = (BaseMod)iterator.next();
-                basemod.ModsLoaded();
-                if(!props.containsKey(basemod.getClass().getName()))
+                basemod.load();
+                logger.fine((new StringBuilder("Mod Loaded: \"")).append(basemod.toString()).append("\"").toString());
+                System.out.println((new StringBuilder("Mod Loaded: ")).append(basemod.toString()).toString());
+                if(!props.containsKey(basemod.getClass().getSimpleName()))
                 {
-                    props.setProperty(basemod.getClass().getName(), "on");
+                    props.setProperty(basemod.getClass().getSimpleName(), "on");
                 }
             }
 
+            BaseMod basemod1;
+            for(Iterator iterator1 = modList.iterator(); iterator1.hasNext(); basemod1.ModsLoaded())
+            {
+                basemod1 = (BaseMod)iterator1.next();
+            }
+
+            System.out.println("Done.");
+            props.setProperty("loggingLevel", cfgLoggingLevel.getName());
+            props.setProperty("grassFix", Boolean.toString(RenderBlocks.cfgGrassFix));
             instance.gameSettings.keyBindings = RegisterAllKeys(instance.gameSettings.keyBindings);
             instance.gameSettings.loadOptions();
             initStats();
@@ -718,6 +769,128 @@ public final class ModLoader
             }
             throw new RuntimeException(throwable);
         }
+    }
+
+    private static void sortModList()
+        throws Exception
+    {
+        HashMap hashmap = new HashMap();
+        BaseMod basemod;
+        for(Iterator iterator = getLoadedMods().iterator(); iterator.hasNext(); hashmap.put(basemod.getClass().getSimpleName(), basemod))
+        {
+            basemod = (BaseMod)iterator.next();
+        }
+
+        LinkedList linkedlist = new LinkedList();
+        for(int i = 0; linkedlist.size() != modList.size(); i++)
+        {
+            if(i > 10)
+            {
+                break;
+            }
+            Iterator iterator1 = modList.iterator();
+label0:
+            while(iterator1.hasNext()) 
+            {
+                BaseMod basemod1 = (BaseMod)iterator1.next();
+                if(linkedlist.contains(basemod1))
+                {
+                    continue;
+                }
+                String s = basemod1.getPriorities();
+                if(s == null || s.length() == 0 || s.indexOf(':') == -1)
+                {
+                    linkedlist.add(basemod1);
+                    continue;
+                }
+                if(i <= 0)
+                {
+                    continue;
+                }
+                int j = -1;
+                int k = 0x80000000;
+                int l = 0x7fffffff;
+                String as[];
+                if(s.indexOf(';') > 0)
+                {
+                    as = s.split(";");
+                } else
+                {
+                    as = (new String[] {
+                        s
+                    });
+                }
+                for(int i1 = 0; i1 < as.length; i1++)
+                {
+                    String s1 = as[i1];
+                    if(s1.indexOf(':') == -1)
+                    {
+                        continue;
+                    }
+                    String as1[] = s1.split(":");
+                    String s2 = as1[0];
+                    String s3 = as1[1];
+                    if(!s2.contentEquals("before") && !s2.contentEquals("after"))
+                    {
+                        continue;
+                    }
+                    if(s3.contentEquals("*"))
+                    {
+                        if(s2.contentEquals("before"))
+                        {
+                            j = 0;
+                        } else
+                        if(s2.contentEquals("after"))
+                        {
+                            j = linkedlist.size();
+                        }
+                        break;
+                    }
+                    if(!hashmap.containsKey(s3))
+                    {
+                        throw new Exception(String.format("%s is missing dependency: %s", new Object[] {
+                            basemod1, s3
+                        }));
+                    }
+                    BaseMod basemod2 = (BaseMod)hashmap.get(s3);
+                    if(!linkedlist.contains(basemod2))
+                    {
+                        continue label0;
+                    }
+                    int j1 = linkedlist.indexOf(basemod2);
+                    if(s2.contentEquals("before"))
+                    {
+                        j = j1;
+                        if(j < l)
+                        {
+                            l = j;
+                        } else
+                        {
+                            j = l;
+                        }
+                    } else
+                    if(s2.contentEquals("after"))
+                    {
+                        j = j1 + 1;
+                        if(j > k)
+                        {
+                            k = j;
+                        } else
+                        {
+                            j = k;
+                        }
+                    }
+                }
+
+                if(j != -1)
+                {
+                    linkedlist.add(j, basemod1);
+                }
+            }
+        }
+
+        modList.clear();
+        modList.addAll(linkedlist);
     }
 
     private static void initStats()
@@ -739,10 +912,10 @@ public final class ModLoader
             if(!StatList.oneShotStats.containsKey(Integer.valueOf(0x1020000 + j)) && Item.itemsList[j] != null)
             {
                 String s1 = StringTranslate.getInstance().translateKeyFormat("stat.useItem", new Object[] {
-                    Item.itemsList[j].getStatName()
+                    Boolean.valueOf(Item.itemsList[j].hasContainerItem())
                 });
                 StatList.objectUseStats[j] = (new StatCrafting(0x1020000 + j, s1, j)).registerStat();
-                if(j >= BlockPistonMoving.blocksList.length)
+                if(j >= Block.blocksList.length)
                 {
                     StatList.itemStats.add(StatList.objectUseStats[j]);
                 }
@@ -750,7 +923,7 @@ public final class ModLoader
             if(!StatList.oneShotStats.containsKey(Integer.valueOf(0x1030000 + j)) && Item.itemsList[j] != null && Item.itemsList[j].isDamageable())
             {
                 String s2 = StringTranslate.getInstance().translateKeyFormat("stat.breakItem", new Object[] {
-                    Item.itemsList[j].getStatName()
+                    Boolean.valueOf(Item.itemsList[j].hasContainerItem())
                 });
                 StatList.objectBreakStats[j] = (new StatCrafting(0x1030000 + j, s2, j)).registerStat();
             }
@@ -775,7 +948,7 @@ public final class ModLoader
             if(!StatList.oneShotStats.containsKey(Integer.valueOf(0x1010000 + k)) && Item.itemsList[k] != null)
             {
                 String s3 = StringTranslate.getInstance().translateKeyFormat("stat.craftItem", new Object[] {
-                    Item.itemsList[k].getStatName()
+                    Boolean.valueOf(Item.itemsList[k].hasContainerItem())
                 });
                 StatList.objectCraftStats[k] = (new StatCrafting(0x1010000 + k, s3, k)).registerStat();
             }
@@ -872,6 +1045,9 @@ public final class ModLoader
 
     public static void OnTick(float f, Minecraft minecraft)
     {
+        Profiler.endSection();
+        Profiler.endSection();
+        Profiler.startSection("modtick");
         if(!hasInit)
         {
             init();
@@ -901,7 +1077,7 @@ public final class ModLoader
             }
 
         }
-        if(minecraft.currentScreen != null)
+        if(minecraft.standardGalacticFontRenderer != null)
         {
             for(Iterator iterator1 = inGUIHooks.entrySet().iterator(); iterator1.hasNext();)
             {
@@ -921,7 +1097,15 @@ public final class ModLoader
                 for(Iterator iterator3 = ((Map)entry.getValue()).entrySet().iterator(); iterator3.hasNext();)
                 {
                     java.util.Map.Entry entry3 = (java.util.Map.Entry)iterator3.next();
-                    boolean flag = Keyboard.isKeyDown(((KeyBinding)entry3.getKey()).keyCode);
+                    int i = ((KeyBinding)entry3.getKey()).keyCode;
+                    boolean flag;
+                    if(i < 0)
+                    {
+                        flag = Mouse.isButtonDown(i += 100);
+                    } else
+                    {
+                        flag = Keyboard.isKeyDown(i);
+                    }
                     boolean aflag[] = (boolean[])entry3.getValue();
                     boolean flag1 = aflag[1];
                     aflag[1] = flag;
@@ -935,6 +1119,9 @@ public final class ModLoader
 
         }
         clock = l;
+        Profiler.endSection();
+        Profiler.startSection("render");
+        Profiler.startSection("gameRenderer");
     }
 
     public static void OpenGUI(EntityPlayer entityplayer, GuiScreen guiscreen)
@@ -945,7 +1132,7 @@ public final class ModLoader
             logger.fine("Initialized");
         }
         Minecraft minecraft = getMinecraftInstance();
-        if(minecraft.thePlayer != entityplayer)
+        if(minecraft.renderViewEntity != entityplayer)
         {
             return;
         }
@@ -1045,6 +1232,7 @@ public final class ModLoader
             throw new IllegalArgumentException("folder must be a Directory.");
         }
         File afile[] = file.listFiles();
+        Arrays.sort(afile);
         if(classloader instanceof URLClassLoader)
         {
             for(int i = 0; i < afile.length; i++)
@@ -1624,46 +1812,6 @@ public final class ModLoader
     private ModLoader()
     {
     }
-
-    private static final List animList = new LinkedList();
-    private static final Map blockModels = new HashMap();
-    private static final Map blockSpecialInv = new HashMap();
-    private static final File cfgdir;
-    private static final File cfgfile;
-    public static Level cfgLoggingLevel;
-    private static Map classMap = null;
-    private static long clock = 0L;
-    public static final boolean DEBUG = false;
-    private static Field field_animList = null;
-    private static Field field_armorList = null;
-    private static Field field_modifiers = null;
-    private static Field field_TileEntityRenderers = null;
-    private static boolean hasInit = false;
-    private static int highestEntityId = 3000;
-    private static final Map inGameHooks = new HashMap();
-    private static final Map inGUIHooks = new HashMap();
-    private static Minecraft instance = null;
-    private static int itemSpriteIndex = 0;
-    private static int itemSpritesLeft = 0;
-    private static final Map keyList = new HashMap();
-    private static final File logfile = new File(Minecraft.getMinecraftDir(), "ModLoader.txt");
-    private static final Logger logger = Logger.getLogger("ModLoader");
-    private static FileHandler logHandler = null;
-    private static Method method_RegisterEntityID = null;
-    private static Method method_RegisterTileEntity = null;
-    private static final File modDir = new File(Minecraft.getMinecraftDir(), "/mods/");
-    private static final LinkedList modList = new LinkedList();
-    private static int nextBlockModelID = 1000;
-    private static final Map overrides = new HashMap();
-    public static final Properties props = new Properties();
-    private static BiomeGenBase standardBiomes[];
-    private static int terrainSpriteIndex = 0;
-    private static int terrainSpritesLeft = 0;
-    private static String texPack = null;
-    private static boolean texturesAdded = false;
-    private static final boolean usedItemSprites[] = new boolean[256];
-    private static final boolean usedTerrainSprites[] = new boolean[256];
-    public static final String VERSION = "ModLoader Beta 1.8.1";
 
     static 
     {

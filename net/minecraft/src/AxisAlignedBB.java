@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,15 @@ import java.util.List;
 
 public class AxisAlignedBB
 {
+
+    private static List boundingBoxes = new ArrayList();
+    private static int numBoundingBoxesInUse = 0;
+    public double minX;
+    public double minY;
+    public double minZ;
+    public double maxX;
+    public double maxY;
+    public double maxZ;
 
     public static AxisAlignedBB getBoundingBox(double d, double d1, double d2, double d3, 
             double d4, double d5)
@@ -396,14 +405,5 @@ public class AxisAlignedBB
     {
         return (new StringBuilder()).append("box[").append(minX).append(", ").append(minY).append(", ").append(minZ).append(" -> ").append(maxX).append(", ").append(maxY).append(", ").append(maxZ).append("]").toString();
     }
-
-    private static List boundingBoxes = new ArrayList();
-    private static int numBoundingBoxesInUse = 0;
-    public double minX;
-    public double minY;
-    public double minZ;
-    public double maxX;
-    public double maxY;
-    public double maxZ;
 
 }

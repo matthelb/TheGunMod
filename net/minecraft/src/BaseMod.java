@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,8 +9,8 @@ import java.util.Random;
 import net.minecraft.client.Minecraft;
 
 // Referenced classes of package net.minecraft.src:
-//            World, ItemStack, KeyBinding, GuiScreen, 
-//            RenderBlocks, Block, IBlockAccess, EntityPlayer, 
+//            World, ItemStack, KeyBinding, EntityPlayer, 
+//            GuiScreen, RenderBlocks, Block, IBlockAccess, 
 //            IInventory
 
 public abstract class BaseMod
@@ -43,38 +43,38 @@ public abstract class BaseMod
     {
     }
 
+    public String getName()
+    {
+        return getClass().getSimpleName();
+    }
+
+    public String getPriorities()
+    {
+        return "";
+    }
+
+    public abstract String getVersion();
+
     public void KeyboardEvent(KeyBinding keybinding)
     {
     }
+
+    public abstract void load();
 
     public void ModsLoaded()
     {
     }
 
-    public boolean OnTickInGame(float f, Minecraft minecraft)
+    public void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
     {
-        return OnTickInGame(minecraft);
     }
 
-    /**
-     * @deprecated Method OnTickInGame is deprecated
-     */
-
-    public boolean OnTickInGame(Minecraft minecraft)
+    public boolean OnTickInGame(float f, Minecraft minecraft)
     {
         return false;
     }
 
     public boolean OnTickInGUI(float f, Minecraft minecraft, GuiScreen guiscreen)
-    {
-        return OnTickInGUI(minecraft, guiscreen);
-    }
-
-    /**
-     * @deprecated Method OnTickInGUI is deprecated
-     */
-
-    public boolean OnTickInGUI(Minecraft minecraft, GuiScreen guiscreen)
     {
         return false;
     }
@@ -100,14 +100,8 @@ public abstract class BaseMod
     {
     }
 
-    public void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
-    {
-    }
-
     public String toString()
     {
-        return (new StringBuilder(String.valueOf(getClass().getName()))).append(" ").append(Version()).toString();
+        return (new StringBuilder(String.valueOf(getName()))).append(' ').append(getVersion()).toString();
     }
-
-    public abstract String Version();
 }

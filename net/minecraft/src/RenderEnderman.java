@@ -1,19 +1,21 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 // Referenced classes of package net.minecraft.src:
-//            RenderLiving, ModelEnderman, EntityEnderman, Block, 
-//            RenderBlocks, EntityLiving, Entity
+//            RenderLiving, ModelEnderman, EntityEnderman, OpenGlHelper, 
+//            Block, RenderBlocks, EntityLiving, Entity
 
 public class RenderEnderman extends RenderLiving
 {
+
+    private ModelEnderman endermanModel;
+    private Random rnd;
 
     public RenderEnderman()
     {
@@ -50,10 +52,10 @@ public class RenderEnderman extends RenderLiving
             GL11.glRotatef(20F, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
             GL11.glScalef(f1, -f1, f1);
-            int i = entityenderman.func_35115_a(f);
+            int i = entityenderman.getEntityBrightnessForRender(f);
             int j = i % 0x10000;
             int k = i / 0x10000;
-            GL13.glMultiTexCoord2f(33985 /*GL_TEXTURE1_ARB*/, (float)j / 1.0F, (float)k / 1.0F);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)j / 1.0F, (float)k / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             loadTexture("/terrain.png");
@@ -63,11 +65,11 @@ public class RenderEnderman extends RenderLiving
         }
     }
 
-    protected boolean renderEyes(EntityEnderman entityenderman, int i, float f)
+    protected int renderEyes(EntityEnderman entityenderman, int i, float f)
     {
         if(i != 0)
         {
-            return false;
+            return -1;
         } else
         {
             loadTexture("/mob/enderman_eyes.png");
@@ -79,15 +81,15 @@ public class RenderEnderman extends RenderLiving
             int j = 61680;
             int k = j % 0x10000;
             int l = j / 0x10000;
-            GL13.glMultiTexCoord2f(33985 /*GL_TEXTURE1_ARB*/, (float)k / 1.0F, (float)l / 1.0F);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)k / 1.0F, (float)l / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glEnable(2896 /*GL_LIGHTING*/);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, f1);
-            return true;
+            return 1;
         }
     }
 
-    protected boolean shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
         return renderEyes((EntityEnderman)entityliving, i, f);
     }
@@ -108,7 +110,4 @@ public class RenderEnderman extends RenderLiving
     {
         renderEnderman((EntityEnderman)entity, d, d1, d2, f, f1);
     }
-
-    private ModelEnderman endermanModel;
-    private Random rnd;
 }

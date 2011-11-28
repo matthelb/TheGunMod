@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -41,24 +41,31 @@ public class BlockTorch extends Block
 
     private boolean func_31032_h(World world, int i, int j, int k)
     {
-        return world.isBlockNormalCube(i, j, k) || world.getBlockId(i, j, k) == Block.fence.blockID;
+        if(world.func_41082_b(i, j, k, true))
+        {
+            return true;
+        } else
+        {
+            int l = world.getBlockId(i, j, k);
+            return l == Block.fence.blockID || l == Block.netherFence.blockID;
+        }
     }
 
     public boolean canPlaceBlockAt(World world, int i, int j, int k)
     {
-        if(world.isBlockNormalCube(i - 1, j, k))
+        if(world.func_41082_b(i - 1, j, k, true))
         {
             return true;
         }
-        if(world.isBlockNormalCube(i + 1, j, k))
+        if(world.func_41082_b(i + 1, j, k, true))
         {
             return true;
         }
-        if(world.isBlockNormalCube(i, j, k - 1))
+        if(world.func_41082_b(i, j, k - 1, true))
         {
             return true;
         }
-        if(world.isBlockNormalCube(i, j, k + 1))
+        if(world.func_41082_b(i, j, k + 1, true))
         {
             return true;
         }
@@ -72,19 +79,19 @@ public class BlockTorch extends Block
         {
             i1 = 5;
         }
-        if(l == 2 && world.isBlockNormalCube(i, j, k + 1))
+        if(l == 2 && world.func_41082_b(i, j, k + 1, true))
         {
             i1 = 4;
         }
-        if(l == 3 && world.isBlockNormalCube(i, j, k - 1))
+        if(l == 3 && world.func_41082_b(i, j, k - 1, true))
         {
             i1 = 3;
         }
-        if(l == 4 && world.isBlockNormalCube(i + 1, j, k))
+        if(l == 4 && world.func_41082_b(i + 1, j, k, true))
         {
             i1 = 2;
         }
-        if(l == 5 && world.isBlockNormalCube(i - 1, j, k))
+        if(l == 5 && world.func_41082_b(i - 1, j, k, true))
         {
             i1 = 1;
         }
@@ -102,19 +109,19 @@ public class BlockTorch extends Block
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if(world.isBlockNormalCube(i - 1, j, k))
+        if(world.func_41082_b(i - 1, j, k, true))
         {
             world.setBlockMetadataWithNotify(i, j, k, 1);
         } else
-        if(world.isBlockNormalCube(i + 1, j, k))
+        if(world.func_41082_b(i + 1, j, k, true))
         {
             world.setBlockMetadataWithNotify(i, j, k, 2);
         } else
-        if(world.isBlockNormalCube(i, j, k - 1))
+        if(world.func_41082_b(i, j, k - 1, true))
         {
             world.setBlockMetadataWithNotify(i, j, k, 3);
         } else
-        if(world.isBlockNormalCube(i, j, k + 1))
+        if(world.func_41082_b(i, j, k + 1, true))
         {
             world.setBlockMetadataWithNotify(i, j, k, 4);
         } else
@@ -131,19 +138,19 @@ public class BlockTorch extends Block
         {
             int i1 = world.getBlockMetadata(i, j, k);
             boolean flag = false;
-            if(!world.isBlockNormalCube(i - 1, j, k) && i1 == 1)
+            if(!world.func_41082_b(i - 1, j, k, true) && i1 == 1)
             {
                 flag = true;
             }
-            if(!world.isBlockNormalCube(i + 1, j, k) && i1 == 2)
+            if(!world.func_41082_b(i + 1, j, k, true) && i1 == 2)
             {
                 flag = true;
             }
-            if(!world.isBlockNormalCube(i, j, k - 1) && i1 == 3)
+            if(!world.func_41082_b(i, j, k - 1, true) && i1 == 3)
             {
                 flag = true;
             }
-            if(!world.isBlockNormalCube(i, j, k + 1) && i1 == 4)
+            if(!world.func_41082_b(i, j, k + 1, true) && i1 == 4)
             {
                 flag = true;
             }
@@ -153,7 +160,7 @@ public class BlockTorch extends Block
             }
             if(flag)
             {
-                dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+                dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
                 world.setBlockWithNotify(i, j, k, 0);
             }
         }
@@ -163,8 +170,11 @@ public class BlockTorch extends Block
     {
         if(!canPlaceBlockAt(world, i, j, k))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
-            world.setBlockWithNotify(i, j, k, 0);
+            if(world.getBlockId(i, j, k) == blockID)
+            {
+                dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
+                world.setBlockWithNotify(i, j, k, 0);
+            }
             return false;
         } else
         {

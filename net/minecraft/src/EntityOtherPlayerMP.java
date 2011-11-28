@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,15 @@ package net.minecraft.src;
 
 public class EntityOtherPlayerMP extends EntityPlayer
 {
+
+    private boolean field_35218_b;
+    private int otherPlayerMPPosRotationIncrements;
+    private double otherPlayerMPX;
+    private double otherPlayerMPY;
+    private double otherPlayerMPZ;
+    private double otherPlayerMPYaw;
+    private double otherPlayerMPPitch;
+    float field_20924_a;
 
     public EntityOtherPlayerMP(World world, String s)
     {
@@ -106,11 +115,11 @@ public class EntityOtherPlayerMP extends EntityPlayer
         {
             f = 0.1F;
         }
-        if(!onGround || health <= 0)
+        if(!onGround || getEntityHealth() <= 0)
         {
             f = 0.0F;
         }
-        if(onGround || health <= 0)
+        if(onGround || getEntityHealth() <= 0)
         {
             f1 = 0.0F;
         }
@@ -142,13 +151,4 @@ public class EntityOtherPlayerMP extends EntityPlayer
     {
         return 1.82F;
     }
-
-    private boolean field_35218_b;
-    private int otherPlayerMPPosRotationIncrements;
-    private double otherPlayerMPX;
-    private double otherPlayerMPY;
-    private double otherPlayerMPZ;
-    private double otherPlayerMPYaw;
-    private double otherPlayerMPPitch;
-    float field_20924_a;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,11 @@ package net.minecraft.src;
 
 public class TextureLavaFX extends TextureFX
 {
+
+    protected float field_1147_g[];
+    protected float field_1146_h[];
+    protected float field_1145_i[];
+    protected float field_1144_j[];
 
     public TextureLavaFX()
     {
@@ -89,9 +94,4 @@ public class TextureLavaFX extends TextureFX
         }
 
     }
-
-    protected float field_1147_g[];
-    protected float field_1146_h[];
-    protected float field_1145_i[];
-    protected float field_1144_j[];
 }

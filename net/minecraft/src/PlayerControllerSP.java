@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,14 @@ import net.minecraft.client.Minecraft;
 
 public class PlayerControllerSP extends PlayerController
 {
+
+    private int curBlockX;
+    private int curBlockY;
+    private int curBlockZ;
+    private float curBlockDamage;
+    private float prevBlockDamage;
+    private float field_1069_h;
+    private int blockHitWait;
 
     public PlayerControllerSP(Minecraft minecraft)
     {
@@ -146,9 +154,9 @@ public class PlayerControllerSP extends PlayerController
         return 4F;
     }
 
-    public void func_717_a(World world)
+    public void onWorldChange(World world)
     {
-        super.func_717_a(world);
+        super.onWorldChange(world);
     }
 
     public EntityPlayer createPlayer(World world)
@@ -183,12 +191,4 @@ public class PlayerControllerSP extends PlayerController
     {
         return true;
     }
-
-    private int curBlockX;
-    private int curBlockY;
-    private int curBlockZ;
-    private float curBlockDamage;
-    private float prevBlockDamage;
-    private float field_1069_h;
-    private int blockHitWait;
 }

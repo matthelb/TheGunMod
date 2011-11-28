@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,10 @@ package net.minecraft.src;
 
 public class TexturedQuad
 {
+
+    public PositionTextureVertex vertexPositions[];
+    public int nVertices;
+    private boolean invertNormal;
 
     public TexturedQuad(PositionTextureVertex apositiontexturevertex[])
     {
@@ -22,8 +26,8 @@ public class TexturedQuad
     public TexturedQuad(PositionTextureVertex apositiontexturevertex[], int i, int j, int k, int l, float f, float f1)
     {
         this(apositiontexturevertex);
-        float f2 = 0.1F / f;
-        float f3 = 0.1F / f1;
+        float f2 = 0.0F / f;
+        float f3 = 0.0F / f1;
         apositiontexturevertex[0] = apositiontexturevertex[0].setTexturePosition((float)k / f - f2, (float)j / f1 + f3);
         apositiontexturevertex[1] = apositiontexturevertex[1].setTexturePosition((float)i / f + f2, (float)j / f1 + f3);
         apositiontexturevertex[2] = apositiontexturevertex[2].setTexturePosition((float)i / f + f2, (float)l / f1 - f3);
@@ -62,8 +66,4 @@ public class TexturedQuad
 
         tessellator.draw();
     }
-
-    public PositionTextureVertex vertexPositions[];
-    public int nVertices;
-    private boolean invertNormal;
 }

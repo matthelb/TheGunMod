@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,11 @@ import java.io.*;
 
 public class Packet28EntityVelocity extends Packet
 {
+
+    public int entityId;
+    public int motionX;
+    public int motionY;
+    public int motionZ;
 
     public Packet28EntityVelocity()
     {
@@ -81,9 +86,4 @@ public class Packet28EntityVelocity extends Packet
     {
         return 10;
     }
-
-    public int entityId;
-    public int motionX;
-    public int motionY;
-    public int motionZ;
 }

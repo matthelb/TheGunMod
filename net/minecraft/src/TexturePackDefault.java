@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,9 @@ import org.lwjgl.opengl.GL11;
 
 public class TexturePackDefault extends TexturePackBase
 {
+
+    private int texturePackName;
+    private BufferedImage texturePackThumbnail;
 
     public TexturePackDefault()
     {
@@ -53,7 +56,4 @@ public class TexturePackDefault extends TexturePackBase
             GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, minecraft.renderEngine.getTexture("/gui/unknown_pack.png"));
         }
     }
-
-    private int texturePackName;
-    private BufferedImage texturePackThumbnail;
 }

@@ -1,31 +1,107 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Entity, IInventory, ItemStack, World, 
-//            Item, EntityItem, Block, MathHelper, 
-//            BlockRail, Vec3D, AxisAlignedBB, NBTTagCompound, 
-//            NBTTagList, EntityLiving, EntityPlayer, InventoryPlayer, 
-//            DamageSource
+//            Entity, IInventory, ItemStack, DataWatcher, 
+//            World, Item, EntityItem, Block, 
+//            MathHelper, BlockRail, Vec3D, AxisAlignedBB, 
+//            NBTTagCompound, NBTTagList, EntityLiving, EntityPlayer, 
+//            InventoryPlayer, DamageSource
 
 public class EntityMinecart extends Entity
     implements IInventory
 {
 
+    private ItemStack cargoItems[];
+    private int fuel;
+    private boolean field_856_i;
+    public int minecartType;
+    public double pushX;
+    public double pushZ;
+    private static final int field_855_j[][][] = {
+        {
+            {
+                0, 0, -1
+            }, {
+                0, 0, 1
+            }
+        }, {
+            {
+                -1, 0, 0
+            }, {
+                1, 0, 0
+            }
+        }, {
+            {
+                -1, -1, 0
+            }, {
+                1, 0, 0
+            }
+        }, {
+            {
+                -1, 0, 0
+            }, {
+                1, -1, 0
+            }
+        }, {
+            {
+                0, 0, -1
+            }, {
+                0, -1, 1
+            }
+        }, {
+            {
+                0, -1, -1
+            }, {
+                0, 0, 1
+            }
+        }, {
+            {
+                0, 0, 1
+            }, {
+                1, 0, 0
+            }
+        }, {
+            {
+                0, 0, 1
+            }, {
+                -1, 0, 0
+            }
+        }, {
+            {
+                0, 0, -1
+            }, {
+                -1, 0, 0
+            }
+        }, {
+            {
+                0, 0, -1
+            }, {
+                1, 0, 0
+            }
+        }
+    };
+    private int minecartPosRotationIncrements;
+    private double minecartX;
+    private double minecartY;
+    private double minecartZ;
+    private double minecartYaw;
+    private double minecartPitch;
+    private double velocityX;
+    private double velocityY;
+    private double velocityZ;
+
     public EntityMinecart(World world)
     {
         super(world);
         cargoItems = new ItemStack[36];
-        minecartCurrentDamage = 0;
-        minecartTimeSinceHit = 0;
-        minecartRockDirection = 1;
+        fuel = 0;
         field_856_i = false;
         preventEntitySpawning = true;
         setSize(0.98F, 0.7F);
@@ -39,6 +115,10 @@ public class EntityMinecart extends Entity
 
     protected void entityInit()
     {
+        dataWatcher.addObject(16, new Byte((byte)0));
+        dataWatcher.addObject(17, new Integer(0));
+        dataWatcher.addObject(18, new Integer(1));
+        dataWatcher.addObject(19, new Integer(0));
     }
 
     public AxisAlignedBB getCollisionBox(Entity entity)
@@ -81,11 +161,11 @@ public class EntityMinecart extends Entity
         {
             return true;
         }
-        minecartRockDirection = -minecartRockDirection;
-        minecartTimeSinceHit = 10;
+        func_41029_h(-func_41030_m());
+        func_41028_c(10);
         setBeenAttacked();
-        minecartCurrentDamage += i * 10;
-        if(minecartCurrentDamage > 40)
+        func_41024_b(func_41025_i() + i * 10);
+        if(func_41025_i() > 40)
         {
             if(riddenByEntity != null)
             {
@@ -140,10 +220,9 @@ label0:
 
     public void performHurtAnimation()
     {
-        System.out.println("Animating hurt");
-        minecartRockDirection = -minecartRockDirection;
-        minecartTimeSinceHit = 10;
-        minecartCurrentDamage += minecartCurrentDamage * 10;
+        func_41029_h(-func_41030_m());
+        func_41028_c(10);
+        func_41024_b(func_41025_i() + func_41025_i() * 10);
     }
 
     public boolean canBeCollidedWith()
@@ -190,25 +269,29 @@ label0:
 
     public void onUpdate()
     {
-        if(minecartTimeSinceHit > 0)
+        if(func_41023_l() > 0)
         {
-            minecartTimeSinceHit--;
+            func_41028_c(func_41023_l() - 1);
         }
-        if(minecartCurrentDamage > 0)
+        if(func_41025_i() > 0)
         {
-            minecartCurrentDamage--;
+            func_41024_b(func_41025_i() - 1);
         }
-        if(worldObj.multiplayerWorld && minecartPosRotationIncrements > 0)
+        if(func_41026_g() && rand.nextInt(4) == 0)
+        {
+            worldObj.spawnParticle("largesmoke", posX, posY + 0.80000000000000004D, posZ, 0.0D, 0.0D, 0.0D);
+        }
+        if(worldObj.multiplayerWorld)
         {
             if(minecartPosRotationIncrements > 0)
             {
                 double d = posX + (minecartX - posX) / (double)minecartPosRotationIncrements;
                 double d1 = posY + (minecartY - posY) / (double)minecartPosRotationIncrements;
                 double d3 = posZ + (minecartZ - posZ) / (double)minecartPosRotationIncrements;
-                double d4;
-                for(d4 = minecartYaw - (double)rotationYaw; d4 < -180D; d4 += 360D) { }
-                for(; d4 >= 180D; d4 -= 360D) { }
-                rotationYaw += d4 / (double)minecartPosRotationIncrements;
+                double d5;
+                for(d5 = minecartYaw - (double)rotationYaw; d5 < -180D; d5 += 360D) { }
+                for(; d5 >= 180D; d5 -= 360D) { }
+                rotationYaw += d5 / (double)minecartPosRotationIncrements;
                 rotationPitch += (minecartPitch - (double)rotationPitch) / (double)minecartPosRotationIncrements;
                 minecartPosRotationIncrements--;
                 setPosition(d, d1, d3);
@@ -232,20 +315,19 @@ label0:
             j--;
         }
         double d2 = 0.40000000000000002D;
-        boolean flag = false;
-        double d5 = 0.0078125D;
+        double d4 = 0.0078125D;
         int l = worldObj.getBlockId(i, j, k);
         if(BlockRail.isRailBlock(l))
         {
             Vec3D vec3d = func_514_g(posX, posY, posZ);
             int i1 = worldObj.getBlockMetadata(i, j, k);
             posY = j;
+            boolean flag = false;
             boolean flag1 = false;
-            boolean flag2 = false;
             if(l == Block.railPowered.blockID)
             {
-                flag1 = (i1 & 8) != 0;
-                flag2 = !flag1;
+                flag = (i1 & 8) != 0;
+                flag1 = !flag;
             }
             if(((BlockRail)Block.blocksList[l]).getIsPowered())
             {
@@ -257,19 +339,19 @@ label0:
             }
             if(i1 == 2)
             {
-                motionX -= d5;
+                motionX -= d4;
             }
             if(i1 == 3)
             {
-                motionX += d5;
+                motionX += d4;
             }
             if(i1 == 4)
             {
-                motionZ += d5;
+                motionZ += d4;
             }
             if(i1 == 5)
             {
-                motionZ -= d5;
+                motionZ -= d4;
             }
             int ai[][] = field_855_j[i1];
             double d9 = ai[1][0] - ai[0][0];
@@ -284,7 +366,7 @@ label0:
             double d13 = Math.sqrt(motionX * motionX + motionZ * motionZ);
             motionX = (d13 * d9) / d11;
             motionZ = (d13 * d10) / d11;
-            if(flag2)
+            if(flag1)
             {
                 double d16 = Math.sqrt(motionX * motionX + motionZ * motionZ);
                 if(d16 < 0.029999999999999999D)
@@ -369,7 +451,6 @@ label0:
                     double d27 = MathHelper.sqrt_double(pushX * pushX + pushZ * pushZ);
                     if(d27 > 0.01D)
                     {
-                        flag = true;
                         pushX /= d27;
                         pushZ /= d27;
                         double d29 = 0.040000000000000001D;
@@ -427,7 +508,7 @@ label0:
                     }
                 }
             }
-            if(flag1)
+            if(flag)
             {
                 double d31 = Math.sqrt(motionX * motionX + motionZ * motionZ);
                 if(d31 > 0.01D)
@@ -526,17 +607,21 @@ label0:
         }
         if(riddenByEntity != null && riddenByEntity.isDead)
         {
+            if(riddenByEntity.ridingEntity == this)
+            {
+                riddenByEntity.ridingEntity = null;
+            }
             riddenByEntity = null;
         }
-        if(flag && rand.nextInt(4) == 0)
+        if(fuel > 0)
         {
             fuel--;
-            if(fuel < 0)
-            {
-                pushX = pushZ = 0.0D;
-            }
-            worldObj.spawnParticle("largesmoke", posX, posY + 0.80000000000000004D, posZ, 0.0D, 0.0D, 0.0D);
         }
+        if(fuel <= 0)
+        {
+            pushX = pushZ = 0.0D;
+        }
+        func_41027_b(fuel > 0);
     }
 
     public Vec3D func_515_a(double d, double d1, double d2, double d3)
@@ -748,9 +833,10 @@ label0:
             {
                 double d4 = entity.posX - posX;
                 double d5 = entity.posZ - posZ;
-                double d6 = d4 * entity.motionZ + d5 * entity.prevPosX;
-                d6 *= d6;
-                if(d6 > 5D)
+                Vec3D vec3d = Vec3D.createVector(d4, 0.0D, d5).normalize();
+                Vec3D vec3d1 = Vec3D.createVector(MathHelper.cos((rotationYaw * 3.141593F) / 180F), 0.0D, MathHelper.sin((rotationYaw * 3.141593F) / 180F)).normalize();
+                double d6 = Math.abs(vec3d.dotProduct(vec3d1));
+                if(d6 < 0.80000001192092896D)
                 {
                     return;
                 }
@@ -761,16 +847,16 @@ label0:
                     motionX *= 0.20000000298023224D;
                     motionZ *= 0.20000000298023224D;
                     addVelocity(entity.motionX - d, 0.0D, entity.motionZ - d1);
-                    entity.motionX *= 0.69999998807907104D;
-                    entity.motionZ *= 0.69999998807907104D;
+                    entity.motionX *= 0.94999998807907104D;
+                    entity.motionZ *= 0.94999998807907104D;
                 } else
                 if(((EntityMinecart)entity).minecartType != 2 && minecartType == 2)
                 {
                     entity.motionX *= 0.20000000298023224D;
                     entity.motionZ *= 0.20000000298023224D;
                     entity.addVelocity(motionX + d, 0.0D, motionZ + d1);
-                    motionX *= 0.69999998807907104D;
-                    motionZ *= 0.69999998807907104D;
+                    motionX *= 0.94999998807907104D;
+                    motionZ *= 0.94999998807907104D;
                 } else
                 {
                     d7 /= 2D;
@@ -874,7 +960,7 @@ label0:
                 {
                     entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 }
-                fuel += 1200;
+                fuel += 3600;
             }
             pushX = posX - entityplayer.posX;
             pushZ = posZ - entityplayer.posZ;
@@ -903,13 +989,29 @@ label0:
         velocityZ = motionZ = d2;
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
         if(isDead)
         {
             return false;
         }
         return entityplayer.getDistanceSqToEntity(this) <= 64D;
+    }
+
+    protected boolean func_41026_g()
+    {
+        return (dataWatcher.getWatchableObjectByte(16) & 1) != 0;
+    }
+
+    protected void func_41027_b(boolean flag)
+    {
+        if(flag)
+        {
+            dataWatcher.updateObject(16, Byte.valueOf((byte)(dataWatcher.getWatchableObjectByte(16) | 1)));
+        } else
+        {
+            dataWatcher.updateObject(16, Byte.valueOf((byte)(dataWatcher.getWatchableObjectByte(16) & -2)));
+        }
     }
 
     public void openChest()
@@ -920,86 +1022,34 @@ label0:
     {
     }
 
-    private ItemStack cargoItems[];
-    public int minecartCurrentDamage;
-    public int minecartTimeSinceHit;
-    public int minecartRockDirection;
-    private boolean field_856_i;
-    public int minecartType;
-    public int fuel;
-    public double pushX;
-    public double pushZ;
-    private static final int field_855_j[][][] = {
-        {
-            {
-                0, 0, -1
-            }, {
-                0, 0, 1
-            }
-        }, {
-            {
-                -1, 0, 0
-            }, {
-                1, 0, 0
-            }
-        }, {
-            {
-                -1, -1, 0
-            }, {
-                1, 0, 0
-            }
-        }, {
-            {
-                -1, 0, 0
-            }, {
-                1, -1, 0
-            }
-        }, {
-            {
-                0, 0, -1
-            }, {
-                0, -1, 1
-            }
-        }, {
-            {
-                0, -1, -1
-            }, {
-                0, 0, 1
-            }
-        }, {
-            {
-                0, 0, 1
-            }, {
-                1, 0, 0
-            }
-        }, {
-            {
-                0, 0, 1
-            }, {
-                -1, 0, 0
-            }
-        }, {
-            {
-                0, 0, -1
-            }, {
-                -1, 0, 0
-            }
-        }, {
-            {
-                0, 0, -1
-            }, {
-                1, 0, 0
-            }
-        }
-    };
-    private int minecartPosRotationIncrements;
-    private double minecartX;
-    private double minecartY;
-    private double minecartZ;
-    private double minecartYaw;
-    private double minecartPitch;
-    private double velocityX;
-    private double velocityY;
-    private double velocityZ;
+    public void func_41024_b(int i)
+    {
+        dataWatcher.updateObject(19, Integer.valueOf(i));
+    }
+
+    public int func_41025_i()
+    {
+        return dataWatcher.getWatchableObjectInt(19);
+    }
+
+    public void func_41028_c(int i)
+    {
+        dataWatcher.updateObject(17, Integer.valueOf(i));
+    }
+
+    public int func_41023_l()
+    {
+        return dataWatcher.getWatchableObjectInt(17);
+    }
+
+    public void func_41029_h(int i)
+    {
+        dataWatcher.updateObject(18, Integer.valueOf(i));
+    }
+
+    public int func_41030_m()
+    {
+        return dataWatcher.getWatchableObjectInt(18);
+    }
 
 }

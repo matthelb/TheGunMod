@@ -1,17 +1,19 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            MapGenBase, MathHelper, Block, BlockGrass, 
-//            World
+//            MapGenBase, World, MathHelper, Block, 
+//            BlockGrass, WorldChunkManager, BiomeGenBase
 
 public class MapGenRavine extends MapGenBase
 {
+
+    private float field_35627_a[];
 
     public MapGenRavine()
     {
@@ -22,47 +24,32 @@ public class MapGenRavine extends MapGenBase
             double d1, double d2, float f, float f1, float f2, 
             int k, int i1, double d3)
     {
-        Random random;
-        double d4;
-        double d5;
-        float f3;
-        float f4;
-        boolean flag;
-label0:
+        Random random = new Random(l);
+        double d4 = i * 16 + 8;
+        double d5 = j * 16 + 8;
+        float f3 = 0.0F;
+        float f4 = 0.0F;
+        if(i1 <= 0)
         {
-            random = new Random(l);
-            d4 = i * 16 + 8;
-            d5 = j * 16 + 8;
-            f3 = 0.0F;
-            f4 = 0.0F;
-            if(i1 <= 0)
-            {
-                int j1 = field_1306_a * 16 - 16;
-                i1 = j1 - random.nextInt(j1 / 4);
-            }
-            flag = false;
-            if(k == -1)
-            {
-                k = i1 / 2;
-                flag = true;
-            }
-            float f5 = 1.0F;
-            int k1 = 0;
-            do
-            {
-                worldObj.getClass();
-                if(k1 >= 128)
-                {
-                    break label0;
-                }
-                if(k1 == 0 || random.nextInt(3) == 0)
-                {
-                    f5 = 1.0F + random.nextFloat() * random.nextFloat() * 1.0F;
-                }
-                field_35627_a[k1] = f5 * f5;
-                k1++;
-            } while(true);
+            int j1 = field_1306_a * 16 - 16;
+            i1 = j1 - random.nextInt(j1 / 4);
         }
+        boolean flag = false;
+        if(k == -1)
+        {
+            k = i1 / 2;
+            flag = true;
+        }
+        float f5 = 1.0F;
+        for(int k1 = 0; k1 < worldObj.field_35472_c; k1++)
+        {
+            if(k1 == 0 || random.nextInt(3) == 0)
+            {
+                f5 = 1.0F + random.nextFloat() * random.nextFloat() * 1.0F;
+            }
+            field_35627_a[k1] = f5 * f5;
+        }
+
         for(; k < i1; k++)
         {
             double d6 = 1.5D + (double)(MathHelper.sin(((float)k * 3.141593F) / (float)i1) * f * 1.0F);
@@ -85,11 +72,11 @@ label0:
             {
                 continue;
             }
-            double d8 = d - d4;
-            double d9 = d2 - d5;
-            double d10 = i1 - k;
+            double d8a = d - d4;
+            double d9a = d2 - d5;
+            double d10a = i1 - k;
             double d11 = f + 2.0F + 16F;
-            if((d8 * d8 + d9 * d9) - d10 * d10 > d11 * d11)
+            if((d8a * d8a + d9a * d9a) - d10a * d10a > d11 * d11)
             {
                 return;
             }
@@ -97,11 +84,11 @@ label0:
             {
                 continue;
             }
-            d8 = MathHelper.floor_double(d - d6) - i * 16 - 1;
+            int d8 = MathHelper.floor_double(d - d6) - i * 16 - 1;
             int l1 = (MathHelper.floor_double(d + d6) - i * 16) + 1;
-            d9 = MathHelper.floor_double(d1 - d7) - 1;
+            int d9 = MathHelper.floor_double(d1 - d7) - 1;
             int i2 = MathHelper.floor_double(d1 + d7) + 1;
-            d10 = MathHelper.floor_double(d2 - d6) - j * 16 - 1;
+            int d10 = MathHelper.floor_double(d2 - d6) - j * 16 - 1;
             int j2 = (MathHelper.floor_double(d2 + d6) - j * 16) + 1;
             if(d8 < 0)
             {
@@ -115,11 +102,9 @@ label0:
             {
                 d9 = 1;
             }
-            worldObj.getClass();
-            if(i2 > 128 - 8)
+            if(i2 > worldObj.field_35472_c - 8)
             {
-                worldObj.getClass();
-                i2 = 128 - 8;
+                i2 = worldObj.field_35472_c - 8;
             }
             if(d10 < 0)
             {
@@ -130,20 +115,14 @@ label0:
                 j2 = 16;
             }
             boolean flag1 = false;
-            for(int k2 = (int) d8; !flag1 && k2 < l1; k2++)
+            for(int k2 = d8; !flag1 && k2 < l1; k2++)
             {
-                for(int i3 = (int) d10; !flag1 && i3 < j2; i3++)
+                for(int i3 = d10; !flag1 && i3 < j2; i3++)
                 {
                     for(int j3 = i2 + 1; !flag1 && j3 >= d9 - 1; j3--)
                     {
-                        worldObj.getClass();
-                        int k3 = (k2 * 16 + i3) * 128 + j3;
-                        if(j3 < 0)
-                        {
-                            continue;
-                        }
-                        worldObj.getClass();
-                        if(j3 >= 128)
+                        int k3 = (k2 * 16 + i3) * worldObj.field_35472_c + j3;
+                        if(j3 < 0 || j3 >= worldObj.field_35472_c)
                         {
                             continue;
                         }
@@ -153,7 +132,7 @@ label0:
                         }
                         if(j3 != d9 - 1 && k2 != d8 && k2 != l1 - 1 && i3 != d10 && i3 != j2 - 1)
                         {
-                            j3 = (int) d9;
+                            j3 = d9;
                         }
                     }
 
@@ -165,15 +144,14 @@ label0:
             {
                 continue;
             }
-            for(int l2 = (int) d8; l2 < l1; l2++)
+            for(int l2 = d8; l2 < l1; l2++)
             {
                 double d12 = (((double)(l2 + i * 16) + 0.5D) - d) / d6;
-label1:
-                for(int l3 = (int) d10; l3 < j2; l3++)
+label0:
+                for(int l3 = d10; l3 < j2; l3++)
                 {
                     double d13 = (((double)(l3 + j * 16) + 0.5D) - d2) / d6;
-                    worldObj.getClass();
-                    int i4 = (l2 * 16 + l3) * 128 + i2;
+                    int i4 = (l2 * 16 + l3) * worldObj.field_35472_c + i2;
                     boolean flag2 = false;
                     if(d12 * d12 + d13 * d13 >= 1.0D)
                     {
@@ -184,7 +162,7 @@ label1:
                     {
                         if(j4 < d9)
                         {
-                            continue label1;
+                            continue label0;
                         }
                         double d14 = (((double)j4 + 0.5D) - d1) / d7;
                         if((d12 * d12 + d13 * d13) * (double)field_35627_a[j4] + (d14 * d14) / 6D < 1.0D)
@@ -204,7 +182,7 @@ label1:
                                     abyte0[i4] = 0;
                                     if(flag2 && abyte0[i4 - 1] == Block.dirt.blockID)
                                     {
-                                        abyte0[i4 - 1] = (byte)Block.grass.blockID;
+                                        abyte0[i4 - 1] = worldObj.getWorldChunkManager().getBiomeGenAt(l2 + i * 16, l3 + j * 16).topBlock;
                                     }
                                 }
                             }
@@ -243,6 +221,4 @@ label1:
         }
 
     }
-
-    private float field_35627_a[];
 }

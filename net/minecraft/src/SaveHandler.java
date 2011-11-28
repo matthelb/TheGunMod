@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,12 +10,19 @@ import java.util.logging.Logger;
 
 // Referenced classes of package net.minecraft.src:
 //            ISaveHandler, MinecraftException, WorldProviderHell, ChunkLoader, 
-//            CompressedStreamTools, NBTTagCompound, WorldInfo, WorldProvider, 
-//            IChunkLoader
+//            WorldProviderEnd, CompressedStreamTools, NBTTagCompound, WorldInfo, 
+//            WorldProvider, IChunkLoader
 
 public class SaveHandler
     implements ISaveHandler
 {
+
+    private static final Logger logger = Logger.getLogger("Minecraft");
+    private final File saveDirectory;
+    private final File playersDirectory;
+    private final File mapDataDir;
+    private final long now = System.currentTimeMillis();
+    private final String field_40531_f;
 
     public SaveHandler(File file, String s, boolean flag)
     {
@@ -24,6 +31,7 @@ public class SaveHandler
         playersDirectory = new File(saveDirectory, "players");
         mapDataDir = new File(saveDirectory, "data");
         mapDataDir.mkdirs();
+        field_40531_f = s;
         if(flag)
         {
             playersDirectory.mkdirs();
@@ -89,6 +97,12 @@ public class SaveHandler
             File file = new File(saveDirectory, "DIM-1");
             file.mkdirs();
             return new ChunkLoader(file, true);
+        }
+        if(worldprovider instanceof WorldProviderEnd)
+        {
+            File file1 = new File(saveDirectory, "DIM1");
+            file1.mkdirs();
+            return new ChunkLoader(file1, true);
         } else
         {
             return new ChunkLoader(saveDirectory, true);
@@ -197,10 +211,9 @@ public class SaveHandler
         return new File(mapDataDir, (new StringBuilder()).append(s).append(".dat").toString());
     }
 
-    private static final Logger logger = Logger.getLogger("Minecraft");
-    private final File saveDirectory;
-    private final File playersDirectory;
-    private final File mapDataDir;
-    private final long now = System.currentTimeMillis();
+    public String func_40530_d()
+    {
+        return field_40531_f;
+    }
 
 }

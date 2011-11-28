@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ import java.io.*;
 
 public class Packet6SpawnPosition extends Packet
 {
+
+    public int xPosition;
+    public int yPosition;
+    public int zPosition;
 
     public Packet6SpawnPosition()
     {
@@ -41,8 +45,4 @@ public class Packet6SpawnPosition extends Packet
     {
         return 12;
     }
-
-    public int xPosition;
-    public int yPosition;
-    public int zPosition;
 }

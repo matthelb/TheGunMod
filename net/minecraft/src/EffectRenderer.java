@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,11 +8,17 @@ import java.util.*;
 import org.lwjgl.opengl.GL11;
 
 // Referenced classes of package net.minecraft.src:
-//            EntityFX, Entity, MathHelper, RenderEngine, 
-//            Tessellator, Block, EntityDiggingFX, World
+//            EntityFX, ActiveRenderInfo, Entity, RenderEngine, 
+//            Tessellator, MathHelper, Block, EntityDiggingFX, 
+//            World
 
 public class EffectRenderer
 {
+
+    protected World worldObj;
+    private List fxLayers[];
+    private RenderEngine renderer;
+    private Random rand;
 
     public EffectRenderer(World world, RenderEngine renderengine)
     {
@@ -60,11 +66,11 @@ public class EffectRenderer
 
     public void renderParticles(Entity entity, float f)
     {
-        float f1 = MathHelper.cos((entity.rotationYaw * 3.141593F) / 180F);
-        float f2 = MathHelper.sin((entity.rotationYaw * 3.141593F) / 180F);
-        float f3 = -f2 * MathHelper.sin((entity.rotationPitch * 3.141593F) / 180F);
-        float f4 = f1 * MathHelper.sin((entity.rotationPitch * 3.141593F) / 180F);
-        float f5 = MathHelper.cos((entity.rotationPitch * 3.141593F) / 180F);
+        float f1 = ActiveRenderInfo.field_41070_d;
+        float f2 = ActiveRenderInfo.field_41068_f;
+        float f3 = ActiveRenderInfo.field_41069_g;
+        float f4 = ActiveRenderInfo.field_41078_h;
+        float f5 = ActiveRenderInfo.field_41071_e;
         EntityFX.interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)f;
         EntityFX.interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)f;
         EntityFX.interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)f;
@@ -94,7 +100,7 @@ public class EffectRenderer
             for(int k = 0; k < fxLayers[i].size(); k++)
             {
                 EntityFX entityfx = (EntityFX)fxLayers[i].get(k);
-                tessellator.setBrightness(entityfx.func_35115_a(f));
+                tessellator.setBrightness(entityfx.getEntityBrightnessForRender(f));
                 entityfx.renderParticle(tessellator, f, f1, f5, f2, f3, f4);
             }
 
@@ -119,7 +125,7 @@ public class EffectRenderer
         for(int i = 0; i < fxLayers[byte0].size(); i++)
         {
             EntityFX entityfx = (EntityFX)fxLayers[byte0].get(i);
-            tessellator.setBrightness(entityfx.func_35115_a(f));
+            tessellator.setBrightness(entityfx.getEntityBrightnessForRender(f));
             entityfx.renderParticle(tessellator, f, f1, f5, f2, f3, f4);
         }
 
@@ -198,16 +204,11 @@ public class EffectRenderer
         {
             d = (double)i + block.maxX + (double)f;
         }
-        addEffect((new EntityDiggingFX(worldObj, d, d1, d2, 0.0D, 0.0D, 0.0D, block, l, worldObj.getBlockMetadata(i, j, k))).func_4041_a(i, j, k).func_407_b(0.2F).func_405_d(0.6F));
+        addEffect((new EntityDiggingFX(worldObj, d, d1, d2, 0.0D, 0.0D, 0.0D, block, l, worldObj.getBlockMetadata(i, j, k))).func_4041_a(i, j, k).multiplyVelocity(0.2F).func_405_d(0.6F));
     }
 
     public String getStatistics()
     {
         return (new StringBuilder()).append("").append(fxLayers[0].size() + fxLayers[1].size() + fxLayers[2].size()).toString();
     }
-
-    protected World worldObj;
-    private List fxLayers[];
-    private RenderEngine renderer;
-    private Random rand;
 }

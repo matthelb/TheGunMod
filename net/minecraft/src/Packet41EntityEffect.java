@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,11 @@ import java.io.*;
 public class Packet41EntityEffect extends Packet
 {
 
+    public int entityId;
+    public byte effectId;
+    public byte effectAmp;
+    public short duration;
+
     public Packet41EntityEffect()
     {
     }
@@ -21,7 +26,7 @@ public class Packet41EntityEffect extends Packet
     {
         entityId = datainputstream.readInt();
         effectId = datainputstream.readByte();
-        field_35260_c = datainputstream.readByte();
+        effectAmp = datainputstream.readByte();
         duration = datainputstream.readShort();
     }
 
@@ -30,7 +35,7 @@ public class Packet41EntityEffect extends Packet
     {
         dataoutputstream.writeInt(entityId);
         dataoutputstream.writeByte(effectId);
-        dataoutputstream.writeByte(field_35260_c);
+        dataoutputstream.writeByte(effectAmp);
         dataoutputstream.writeShort(duration);
     }
 
@@ -43,9 +48,4 @@ public class Packet41EntityEffect extends Packet
     {
         return 8;
     }
-
-    public int entityId;
-    public byte effectId;
-    public byte field_35260_c;
-    public short duration;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,20 @@ import java.util.Map;
 
 public class StatsSyncher
 {
+
+    private volatile boolean isBusy;
+    private volatile Map field_27437_b;
+    private volatile Map field_27436_c;
+    private StatFileWriter statFileWriter;
+    private File unsentDataFile;
+    private File dataFile;
+    private File unsentTempFile;
+    private File tempFile;
+    private File unsentOldFile;
+    private File oldFile;
+    private Session theSession;
+    private int field_27427_l;
+    private int field_27426_m;
 
     public StatsSyncher(Session session, StatFileWriter statfilewriter, File file)
     {
@@ -270,18 +284,4 @@ public class StatsSyncher
     {
         return statssyncher.unsentOldFile;
     }
-
-    private volatile boolean isBusy;
-    private volatile Map field_27437_b;
-    private volatile Map field_27436_c;
-    private StatFileWriter statFileWriter;
-    private File unsentDataFile;
-    private File dataFile;
-    private File unsentTempFile;
-    private File tempFile;
-    private File unsentOldFile;
-    private File oldFile;
-    private Session theSession;
-    private int field_27427_l;
-    private int field_27426_m;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ package net.minecraft.src;
 
 public class ItemMinecart extends Item
 {
+
+    public int minecartType;
 
     public ItemMinecart(int i, int j)
     {
@@ -35,6 +37,4 @@ public class ItemMinecart extends Item
             return false;
         }
     }
-
-    public int minecartType;
 }

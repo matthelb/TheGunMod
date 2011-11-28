@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ package net.minecraft.src;
 
 public final class J_JsonNodeDoesNotMatchPathElementsException extends J_JsonNodeDoesNotMatchJsonNodeSelectorException
 {
+
+    private static final J_JsonFormatter field_27320_a = new J_CompactJsonFormatter();
 
     static J_JsonNodeDoesNotMatchPathElementsException func_27319_a(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, Object aobj[], J_JsonRootNode j_jsonrootnode)
     {
@@ -52,7 +54,5 @@ public final class J_JsonNodeDoesNotMatchPathElementsException extends J_JsonNod
 
         return stringbuilder.toString();
     }
-
-    private static final J_JsonFormatter field_27320_a = new J_CompactJsonFormatter();
 
 }

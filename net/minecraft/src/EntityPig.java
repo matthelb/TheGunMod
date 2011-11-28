@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -20,8 +20,14 @@ public class EntityPig extends EntityAnimal
         setSize(0.9F, 0.9F);
     }
 
+    public int getMaxHealth()
+    {
+        return 10;
+    }
+
     protected void entityInit()
     {
+        super.entityInit();
         dataWatcher.addObject(16, Byte.valueOf((byte)0));
     }
 
@@ -54,19 +60,25 @@ public class EntityPig extends EntityAnimal
 
     public boolean interact(EntityPlayer entityplayer)
     {
-        if(getSaddled() && !worldObj.multiplayerWorld && (riddenByEntity == null || riddenByEntity == entityplayer))
+        if(!super.interact(entityplayer))
         {
-            entityplayer.mountEntity(this);
-            return true;
+            if(getSaddled() && !worldObj.multiplayerWorld && (riddenByEntity == null || riddenByEntity == entityplayer))
+            {
+                entityplayer.mountEntity(this);
+                return true;
+            } else
+            {
+                return false;
+            }
         } else
         {
-            return false;
+            return true;
         }
     }
 
     protected int getDropItemId()
     {
-        if(fire > 0)
+        if(isBurning())
         {
             return Item.porkCooked.shiftedIndex;
         } else
@@ -113,5 +125,10 @@ public class EntityPig extends EntityAnimal
         {
             ((EntityPlayer)riddenByEntity).triggerAchievement(AchievementList.flyPig);
         }
+    }
+
+    protected EntityAnimal func_40145_a(EntityAnimal entityanimal)
+    {
+        return new EntityPig(worldObj);
     }
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,12 @@ import java.io.*;
 
 public class Packet61DoorChange extends Packet
 {
+
+    public int sfxID;
+    public int auxData;
+    public int posX;
+    public int posY;
+    public int posZ;
 
     public Packet61DoorChange()
     {
@@ -45,10 +51,4 @@ public class Packet61DoorChange extends Packet
     {
         return 20;
     }
-
-    public int sfxID;
-    public int auxData;
-    public int posX;
-    public int posY;
-    public int posZ;
 }

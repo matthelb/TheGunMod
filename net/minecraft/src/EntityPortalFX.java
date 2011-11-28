@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,11 @@ import java.util.Random;
 
 public class EntityPortalFX extends EntityFX
 {
+
+    private float portalParticleScale;
+    private double portalPosX;
+    private double portalPosY;
+    private double portalPosZ;
 
     public EntityPortalFX(World world, double d, double d1, double d2, 
             double d3, double d4, double d5)
@@ -29,7 +34,7 @@ public class EntityPortalFX extends EntityFX
         particleRed *= 0.9F;
         particleMaxAge = (int)(Math.random() * 10D) + 40;
         noClip = true;
-        particleTextureIndex = (int)(Math.random() * 8D);
+        func_40099_c((int)(Math.random() * 8D));
     }
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
@@ -42,9 +47,9 @@ public class EntityPortalFX extends EntityFX
         super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
     }
 
-    public int func_35115_a(float f)
+    public int getEntityBrightnessForRender(float f)
     {
-        int i = super.func_35115_a(f);
+        int i = super.getEntityBrightnessForRender(f);
         float f1 = (float)particleAge / (float)particleMaxAge;
         f1 *= f1;
         f1 *= f1;
@@ -84,9 +89,4 @@ public class EntityPortalFX extends EntityFX
             setEntityDead();
         }
     }
-
-    private float portalParticleScale;
-    private double portalPosX;
-    private double portalPosY;
-    private double portalPosZ;
 }

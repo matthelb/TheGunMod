@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderTNTPrimed extends Render
 {
+
+    private RenderBlocks blockRenderer;
 
     public RenderTNTPrimed()
     {
@@ -64,6 +66,4 @@ public class RenderTNTPrimed extends Render
     {
         func_153_a((EntityTNTPrimed)entity, d, d1, d2, f, f1);
     }
-
-    private RenderBlocks blockRenderer;
 }

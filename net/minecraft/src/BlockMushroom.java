@@ -1,13 +1,13 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            BlockFlower, World, Block, BlockGrass, 
+//            BlockFlower, World, Block, BlockMycelium, 
 //            WorldGenBigMushroom, WorldGenerator
 
 public class BlockMushroom extends BlockFlower
@@ -23,7 +23,7 @@ public class BlockMushroom extends BlockFlower
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(random.nextInt(100) == 0)
+        if(random.nextInt(25) == 0)
         {
             byte byte0 = 4;
             int l = 5;
@@ -73,29 +73,19 @@ public class BlockMushroom extends BlockFlower
 
     public boolean canBlockStay(World world, int i, int j, int k)
     {
-label0:
+        if(j < 0 || j >= world.field_35472_c)
         {
-            if(j >= 0)
-            {
-                world.getClass();
-                if(j < 128)
-                {
-                    break label0;
-                }
-            }
             return false;
+        } else
+        {
+            int l = world.getBlockId(i, j - 1, k);
+            return l == Block.mycelium.blockID || world.getFullBlockLightValue(i, j, k) < 13 && canThisPlantGrowOnThisBlockID(l);
         }
-        return world.getFullBlockLightValue(i, j, k) < 13 && canThisPlantGrowOnThisBlockID(world.getBlockId(i, j - 1, k));
     }
 
     public boolean func_35293_c(World world, int i, int j, int k, Random random)
     {
-        int l = world.getBlockId(i, j - 1, k);
-        if(l != Block.dirt.blockID && l != Block.grass.blockID)
-        {
-            return false;
-        }
-        int i1 = world.getBlockMetadata(i, j, k);
+        int l = world.getBlockMetadata(i, j, k);
         world.setBlock(i, j, k, 0);
         WorldGenBigMushroom worldgenbigmushroom = null;
         if(blockID == Block.mushroomBrown.blockID)
@@ -108,7 +98,7 @@ label0:
         }
         if(worldgenbigmushroom == null || !worldgenbigmushroom.generate(world, random, i, j, k))
         {
-            world.setBlockAndMetadata(i, j, k, blockID, i1);
+            world.setBlockAndMetadata(i, j, k, blockID, l);
             return false;
         } else
         {

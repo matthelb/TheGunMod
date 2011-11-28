@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.Random;
 
 public class BlockStem extends BlockFlower
 {
+
+    private Block field_35297_a;
 
     protected BlockStem(int i, Block block)
     {
@@ -33,7 +35,7 @@ public class BlockStem extends BlockFlower
         if(world.getBlockLightValue(i, j + 1, k) >= 9)
         {
             float f = func_35295_j(world, i, j, k);
-            if(random.nextInt((int)(100F / f)) == 0)
+            if(random.nextInt((int)(25F / f) + 1) == 0)
             {
                 int l = world.getBlockMetadata(i, j, k);
                 if(l < 7)
@@ -193,9 +195,9 @@ public class BlockStem extends BlockFlower
         return iblockaccess.getBlockId(i, j, k + 1) != field_35297_a.blockID ? -1 : 3;
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f)
+    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        super.dropBlockAsItemWithChance(world, i, j, k, l, f);
+        super.dropBlockAsItemWithChance(world, i, j, k, l, f, i1);
         if(world.multiplayerWorld)
         {
             return;
@@ -209,7 +211,7 @@ public class BlockStem extends BlockFlower
         {
             item = Item.melonSeeds;
         }
-        for(int i1 = 0; i1 < 3; i1++)
+        for(int j1 = 0; j1 < 3; j1++)
         {
             if(world.rand.nextInt(15) <= l)
             {
@@ -225,7 +227,7 @@ public class BlockStem extends BlockFlower
 
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         if(i != 7);
         return -1;
@@ -235,6 +237,4 @@ public class BlockStem extends BlockFlower
     {
         return 1;
     }
-
-    private Block field_35297_a;
 }

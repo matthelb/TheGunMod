@@ -1,17 +1,19 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Entity, MathHelper, World, Block, 
-//            BlockPortal, Material
+//            World, WorldProvider, Entity, MathHelper, 
+//            Block, BlockPortal, Material
 
 public class Teleporter
 {
+
+    private Random random;
 
     public Teleporter()
     {
@@ -20,6 +22,34 @@ public class Teleporter
 
     public void placeInPortal(World world, Entity entity)
     {
+        if(world.worldProvider.worldType == 1)
+        {
+            int i = MathHelper.floor_double(entity.posX);
+            int j = MathHelper.floor_double(entity.posY) - 1;
+            int k = MathHelper.floor_double(entity.posZ);
+            int l = 1;
+            int i1 = 0;
+            for(int j1 = -2; j1 <= 2; j1++)
+            {
+                for(int k1 = -2; k1 <= 2; k1++)
+                {
+                    for(int l1 = -1; l1 < 3; l1++)
+                    {
+                        int i2 = i + k1 * l + j1 * i1;
+                        int j2 = j + l1;
+                        int k2 = (k + k1 * i1) - j1 * l;
+                        boolean flag = l1 < 0;
+                        world.setBlockWithNotify(i2, j2, k2, flag ? Block.obsidian.blockID : 0);
+                    }
+
+                }
+
+            }
+
+            entity.setLocationAndAngles(i, j, k, entity.rotationYaw, 0.0F);
+            entity.motionX = entity.motionY = entity.motionZ = 0.0D;
+            return;
+        }
         if(placeInExistingPortal(world, entity))
         {
             return;
@@ -46,8 +76,7 @@ public class Teleporter
             for(int j2 = i1 - c; j2 <= i1 + c; j2++)
             {
                 double d3 = ((double)j2 + 0.5D) - entity.posZ;
-                world.getClass();
-                for(int k2 = 128 - 1; k2 >= 0; k2--)
+                for(int k2 = world.field_35472_c - 1; k2 >= 0; k2--)
                 {
                     if(world.getBlockId(j1, k2, j2) != Block.portal.blockID)
                     {
@@ -120,8 +149,7 @@ public class Teleporter
             for(int j3 = k - byte0; j3 <= k + byte0; j3++)
             {
                 double d3 = ((double)j3 + 0.5D) - entity.posZ;
-                world.getClass();
-                for(int k4 = 128 - 1; k4 >= 0; k4--)
+                for(int k4 = world.field_35472_c - 1; k4 >= 0; k4--)
                 {
                     if(!world.isAirBlock(i2, k4, j3))
                     {
@@ -183,8 +211,7 @@ label0:
                 for(int k3 = k - byte0; k3 <= k + byte0; k3++)
                 {
                     double d4 = ((double)k3 + 0.5D) - entity.posZ;
-                    world.getClass();
-                    for(int l4 = 128 - 1; l4 >= 0; l4--)
+                    for(int l4 = world.field_35472_c - 1; l4 >= 0; l4--)
                     {
                         if(!world.isAirBlock(j2, l4, k3))
                         {
@@ -247,11 +274,9 @@ label1:
             {
                 i1 = 70;
             }
-            world.getClass();
-            if(i1 > 128 - 10)
+            if(i1 > world.field_35472_c - 10)
             {
-                world.getClass();
-                i1 = 128 - 10;
+                i1 = world.field_35472_c - 10;
             }
             i3 = i1;
             for(int i5 = -1; i5 <= 1; i5++)
@@ -305,6 +330,4 @@ label1:
 
         return true;
     }
-
-    private Random random;
 }

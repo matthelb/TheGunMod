@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ import java.io.*;
 
 public class Packet201PlayerInfo extends Packet
 {
+
+    public String playerName;
+    public boolean isConnected;
+    public int ping;
 
     public Packet201PlayerInfo()
     {
@@ -41,8 +45,4 @@ public class Packet201PlayerInfo extends Packet
     {
         return playerName.length() + 2 + 1 + 2;
     }
-
-    public String playerName;
-    public boolean isConnected;
-    public int ping;
 }

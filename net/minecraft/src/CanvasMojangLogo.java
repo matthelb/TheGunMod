@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,8 @@ import javax.imageio.ImageIO;
 
 class CanvasMojangLogo extends Canvas
 {
+
+    private BufferedImage logo;
 
     public CanvasMojangLogo()
     {
@@ -32,6 +34,4 @@ class CanvasMojangLogo extends Canvas
         super.paint(g);
         g.drawImage(logo, getWidth() / 2 - logo.getWidth() / 2, 32, null);
     }
-
-    private BufferedImage logo;
 }

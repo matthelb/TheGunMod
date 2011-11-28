@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,11 +9,16 @@ import net.minecraft.client.Minecraft;
 
 // Referenced classes of package net.minecraft.src:
 //            GuiScreen, StringTranslate, EnumOptions, GuiSmallButton, 
-//            GameSettings, GuiSlider, GuiButton, GuiVideoSettings, 
-//            GuiControls
+//            GameSettings, World, WorldInfo, StatCollector, 
+//            GuiSlider, GuiButton, GuiVideoSettings, GuiControls
 
 public class GuiOptions extends GuiScreen
 {
+
+    private GuiScreen parentScreen;
+    protected String screenTitle;
+    private GameSettings options;
+    private static EnumOptions relevantOptions[];
 
     public GuiOptions(GuiScreen guiscreen, GameSettings gamesettings)
     {
@@ -34,7 +39,13 @@ public class GuiOptions extends GuiScreen
             EnumOptions enumoptions = aenumoptions[k];
             if(!enumoptions.getEnumFloat())
             {
-                controlList.add(new GuiSmallButton(enumoptions.returnEnumOrdinal(), (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), enumoptions, options.getKeyBinding(enumoptions)));
+                GuiSmallButton guismallbutton = new GuiSmallButton(enumoptions.returnEnumOrdinal(), (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), enumoptions, options.getKeyBinding(enumoptions));
+                if(enumoptions == EnumOptions.DIFFICULTY && mc.theWorld != null && mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
+                {
+                    guismallbutton.enabled = false;
+                    guismallbutton.displayString = (new StringBuilder()).append(StatCollector.translateToLocal("options.difficulty")).append(": ").append(StatCollector.translateToLocal("options.difficulty.hardcore")).toString();
+                }
+                controlList.add(guismallbutton);
             } else
             {
                 controlList.add(new GuiSlider(enumoptions.returnEnumOrdinal(), (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), enumoptions, options.getKeyBinding(enumoptions), options.getOptionFloatValue(enumoptions)));
@@ -81,11 +92,6 @@ public class GuiOptions extends GuiScreen
         drawCenteredString(fontRenderer, screenTitle, width / 2, 20, 0xffffff);
         super.drawScreen(i, j, f);
     }
-
-    private GuiScreen parentScreen;
-    protected String screenTitle;
-    private GameSettings options;
-    private static EnumOptions relevantOptions[];
 
     static 
     {

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,18 @@ import java.util.Random;
 public class EntityFireball extends Entity
 {
 
+    private int xTile;
+    private int yTile;
+    private int zTile;
+    private int inTile;
+    private boolean inGround;
+    public EntityLiving shootingEntity;
+    private int ticksAlive;
+    private int ticksInAir;
+    public double accelerationX;
+    public double accelerationY;
+    public double accelerationZ;
+
     public EntityFireball(World world)
     {
         super(world);
@@ -23,7 +35,6 @@ public class EntityFireball extends Entity
         zTile = -1;
         inTile = 0;
         inGround = false;
-        shake = 0;
         ticksInAir = 0;
         setSize(1.0F, 1.0F);
     }
@@ -48,7 +59,6 @@ public class EntityFireball extends Entity
         zTile = -1;
         inTile = 0;
         inGround = false;
-        shake = 0;
         ticksInAir = 0;
         setSize(1.0F, 1.0F);
         setLocationAndAngles(d, d1, d2, rotationYaw, rotationPitch);
@@ -67,7 +77,6 @@ public class EntityFireball extends Entity
         zTile = -1;
         inTile = 0;
         inGround = false;
-        shake = 0;
         ticksInAir = 0;
         shootingEntity = entityliving;
         setSize(1.0F, 1.0F);
@@ -87,10 +96,10 @@ public class EntityFireball extends Entity
     public void onUpdate()
     {
         super.onUpdate();
-        fire = 10;
-        if(shake > 0)
+        func_40046_d(1);
+        if(!worldObj.multiplayerWorld && (shootingEntity == null || shootingEntity.isDead))
         {
-            shake--;
+            setEntityDead();
         }
         if(inGround)
         {
@@ -131,7 +140,7 @@ public class EntityFireball extends Entity
         for(int j = 0; j < list.size(); j++)
         {
             Entity entity1 = (Entity)list.get(j);
-            if(!entity1.canBeCollidedWith() || entity1 == shootingEntity && ticksInAir < 25)
+            if(!entity1.canBeCollidedWith() || entity1.func_41004_h(shootingEntity) && ticksInAir < 25)
             {
                 continue;
             }
@@ -156,15 +165,7 @@ public class EntityFireball extends Entity
         }
         if(movingobjectposition != null)
         {
-            if(!worldObj.multiplayerWorld)
-            {
-                if(movingobjectposition.entityHit != null)
-                {
-                    if(!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, shootingEntity), 0));
-                }
-                worldObj.newExplosion(null, posX, posY, posZ, 1.0F, true);
-            }
-            setEntityDead();
+            func_40071_a(movingobjectposition);
         }
         posX += motionX;
         posY += motionY;
@@ -198,13 +199,25 @@ public class EntityFireball extends Entity
         setPosition(posX, posY, posZ);
     }
 
+    protected void func_40071_a(MovingObjectPosition movingobjectposition)
+    {
+        if(!worldObj.multiplayerWorld)
+        {
+            if(movingobjectposition.entityHit != null)
+            {
+                if(!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, shootingEntity), 4));
+            }
+            worldObj.newExplosion(null, posX, posY, posZ, 1.0F, true);
+            setEntityDead();
+        }
+    }
+
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {
         nbttagcompound.setShort("xTile", (short)xTile);
         nbttagcompound.setShort("yTile", (short)yTile);
         nbttagcompound.setShort("zTile", (short)zTile);
         nbttagcompound.setByte("inTile", (byte)inTile);
-        nbttagcompound.setByte("shake", (byte)shake);
         nbttagcompound.setByte("inGround", (byte)(inGround ? 1 : 0));
     }
 
@@ -214,7 +227,6 @@ public class EntityFireball extends Entity
         yTile = nbttagcompound.getShort("yTile");
         zTile = nbttagcompound.getShort("zTile");
         inTile = nbttagcompound.getByte("inTile") & 0xff;
-        shake = nbttagcompound.getByte("shake") & 0xff;
         inGround = nbttagcompound.getByte("inGround") == 1;
     }
 
@@ -243,6 +255,10 @@ public class EntityFireball extends Entity
                 accelerationY = motionY * 0.10000000000000001D;
                 accelerationZ = motionZ * 0.10000000000000001D;
             }
+            if(damagesource.getEntity() instanceof EntityLiving)
+            {
+                shootingEntity = (EntityLiving)damagesource.getEntity();
+            }
             return true;
         } else
         {
@@ -255,16 +271,13 @@ public class EntityFireball extends Entity
         return 0.0F;
     }
 
-    private int xTile;
-    private int yTile;
-    private int zTile;
-    private int inTile;
-    private boolean inGround;
-    public int shake;
-    public EntityLiving shootingEntity;
-    private int ticksAlive;
-    private int ticksInAir;
-    public double accelerationX;
-    public double accelerationY;
-    public double accelerationZ;
+    public float getEntityBrightness(float f)
+    {
+        return 1.0F;
+    }
+
+    public int getEntityBrightnessForRender(float f)
+    {
+        return 0xf000f0;
+    }
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,16 @@ import java.io.*;
 
 public class Packet10Flying extends Packet
 {
+
+    public double xPosition;
+    public double yPosition;
+    public double zPosition;
+    public double stance;
+    public float yaw;
+    public float pitch;
+    public boolean onGround;
+    public boolean moving;
+    public boolean rotating;
 
     public Packet10Flying()
     {
@@ -42,14 +52,4 @@ public class Packet10Flying extends Packet
     {
         return 1;
     }
-
-    public double xPosition;
-    public double yPosition;
-    public double zPosition;
-    public double stance;
-    public float yaw;
-    public float pitch;
-    public boolean onGround;
-    public boolean moving;
-    public boolean rotating;
 }

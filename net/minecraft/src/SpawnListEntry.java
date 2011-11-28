@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ package net.minecraft.src;
 public class SpawnListEntry extends WeightedRandomChoice
 {
 
+    public Class entityClass;
+    public int field_35591_b;
+    public int field_35592_c;
+
     public SpawnListEntry(Class class1, int i, int j, int k)
     {
         super(i);
@@ -18,8 +22,4 @@ public class SpawnListEntry extends WeightedRandomChoice
         field_35591_b = j;
         field_35592_c = k;
     }
-
-    public Class entityClass;
-    public int field_35591_b;
-    public int field_35592_c;
 }

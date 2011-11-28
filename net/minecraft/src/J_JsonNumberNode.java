@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,9 @@ import java.util.regex.Pattern;
 
 final class J_JsonNumberNode extends J_JsonNode
 {
+
+    private static final Pattern field_27226_a = Pattern.compile("(-?)(0|([1-9]([0-9]*)))(\\.[0-9]+)?((e|E)(\\+|-)?[0-9]+)?");
+    private final String field_27225_b;
 
     J_JsonNumberNode(String s)
     {
@@ -76,8 +79,5 @@ final class J_JsonNumberNode extends J_JsonNode
     {
         return (new StringBuilder()).append("JsonNumberNode value:[").append(field_27225_b).append("]").toString();
     }
-
-    private static final Pattern field_27226_a = Pattern.compile("(-?)(0|([1-9]([0-9]*)))(\\.[0-9]+)?((e|E)(\\+|-)?[0-9]+)?");
-    private final String field_27225_b;
 
 }

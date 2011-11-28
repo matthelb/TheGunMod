@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -16,6 +16,12 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiEditSign extends GuiScreen
 {
+
+    protected String screenTitle;
+    private TileEntitySign entitySign;
+    private int updateCounter;
+    private int editLine;
+    private static final String allowedCharacters;
 
     public GuiEditSign(TileEntitySign tileentitysign)
     {
@@ -72,9 +78,10 @@ public class GuiEditSign extends GuiScreen
         {
             entitySign.signText[editLine] = entitySign.signText[editLine].substring(0, entitySign.signText[editLine].length() - 1);
         }
-        if(allowedCharacters.indexOf(c) >= 0 && this.entitySign.signText[this.editLine].length() < 15) {
-            this.entitySign.signText[this.editLine] = this.entitySign.signText[this.editLine] + c;
-         }
+        if(allowedCharacters.indexOf(c) >= 0 && entitySign.signText[editLine].length() < 15)
+        {
+            entitySign.signText[editLine] += c;
+        }
     }
 
     public void drawScreen(int i, int j, float f)
@@ -120,12 +127,6 @@ public class GuiEditSign extends GuiScreen
         GL11.glPopMatrix();
         super.drawScreen(i, j, f);
     }
-
-    protected String screenTitle;
-    private TileEntitySign entitySign;
-    private int updateCounter;
-    private int editLine;
-    private static final String allowedCharacters;
 
     static 
     {

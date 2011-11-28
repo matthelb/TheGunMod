@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 public class TextureFlamesFX extends TextureFX
 {
+
+    protected float field_1133_g[];
+    protected float field_1132_h[];
 
     public TextureFlamesFX(int i)
     {
@@ -90,7 +93,4 @@ public class TextureFlamesFX extends TextureFX
         }
 
     }
-
-    protected float field_1133_g[];
-    protected float field_1132_h[];
 }

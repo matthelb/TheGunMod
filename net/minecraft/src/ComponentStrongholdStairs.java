@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,11 +8,15 @@ import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            ComponentStronghold, EnumDoor, StructureBoundingBox, ComponentStrongholdStairs2, 
-//            StructureComponent, StructureStrongholdPieces, Block, World
+//            ComponentStronghold, EnumDoor, StructureBoundingBox, ComponentStrongholdCrossing, 
+//            StructureStrongholdPieces, ComponentStrongholdStairs2, StructureComponent, Block, 
+//            World
 
 public class ComponentStrongholdStairs extends ComponentStronghold
 {
+
+    private final boolean field_35036_a;
+    private final EnumDoor doorType;
 
     public ComponentStrongholdStairs(int i, Random random, int j, int k)
     {
@@ -44,6 +48,10 @@ public class ComponentStrongholdStairs extends ComponentStronghold
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
+        if(field_35036_a)
+        {
+            StructureStrongholdPieces.func_40751_a(net.minecraft.src.ComponentStrongholdCrossing.class);
+        }
         func_35028_a((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
     }
 
@@ -90,7 +98,4 @@ public class ComponentStrongholdStairs extends ComponentStronghold
             return true;
         }
     }
-
-    private final boolean field_35036_a;
-    private final EnumDoor doorType;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,9 @@ import java.util.Random;
 public class TileEntityDispenser extends TileEntity
     implements IInventory
 {
+
+    private ItemStack dispenserContents[];
+    private Random dispenserRandom;
 
     public TileEntityDispenser()
     {
@@ -130,7 +133,7 @@ public class TileEntityDispenser extends TileEntity
         return 64;
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
         if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
         {
@@ -146,7 +149,4 @@ public class TileEntityDispenser extends TileEntity
     public void closeChest()
     {
     }
-
-    private ItemStack dispenserContents[];
-    private Random dispenserRandom;
 }

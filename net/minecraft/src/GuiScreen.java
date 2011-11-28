@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -17,6 +17,15 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiScreen extends Gui
 {
+
+    protected Minecraft mc;
+    public int width;
+    public int height;
+    protected List controlList;
+    public boolean allowUserInput;
+    protected FontRenderer fontRenderer;
+    public GuiParticle guiParticles;
+    private GuiButton selectedButton;
 
     public GuiScreen()
     {
@@ -192,13 +201,4 @@ public class GuiScreen extends Gui
     public void selectNextField()
     {
     }
-
-    protected Minecraft mc;
-    public int width;
-    public int height;
-    protected List controlList;
-    public boolean allowUserInput;
-    protected FontRenderer fontRenderer;
-    public GuiParticle guiParticles;
-    private GuiButton selectedButton;
 }

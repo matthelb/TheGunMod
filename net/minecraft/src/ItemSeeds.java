@@ -1,21 +1,24 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            Item, EntityPlayer, World, Block, 
-//            ItemStack
+//            Item, EntityPlayer, World, ItemStack
 
 public class ItemSeeds extends Item
 {
 
-    public ItemSeeds(int i, int j)
+    private int blockType;
+    private int field_40438_b;
+
+    public ItemSeeds(int i, int j, int k)
     {
         super(i);
         blockType = j;
+        field_40438_b = k;
     }
 
     public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
@@ -29,7 +32,7 @@ public class ItemSeeds extends Item
             return false;
         }
         int i1 = world.getBlockId(i, j, k);
-        if(i1 == Block.tilledField.blockID && world.isAirBlock(i, j + 1, k))
+        if(i1 == field_40438_b && world.isAirBlock(i, j + 1, k))
         {
             world.setBlockWithNotify(i, j + 1, k, blockType);
             itemstack.stackSize--;
@@ -39,6 +42,4 @@ public class ItemSeeds extends Item
             return false;
         }
     }
-
-    private int blockType;
 }

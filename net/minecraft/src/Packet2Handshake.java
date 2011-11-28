@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import java.io.*;
 
 public class Packet2Handshake extends Packet
 {
+
+    public String username;
 
     public Packet2Handshake()
     {
@@ -42,6 +44,4 @@ public class Packet2Handshake extends Packet
     {
         return 4 + username.length() + 4;
     }
-
-    public String username;
 }

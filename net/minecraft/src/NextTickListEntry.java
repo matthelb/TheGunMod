@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,6 +8,14 @@ package net.minecraft.src;
 public class NextTickListEntry
     implements Comparable
 {
+
+    private static long nextTickEntryID = 0L;
+    public int xCoord;
+    public int yCoord;
+    public int zCoord;
+    public int blockID;
+    public long scheduledTime;
+    private long tickEntryID;
 
     public NextTickListEntry(int i, int j, int k, int l)
     {
@@ -62,13 +70,5 @@ public class NextTickListEntry
     {
         return comparer((NextTickListEntry)obj);
     }
-
-    private static long nextTickEntryID = 0L;
-    public int xCoord;
-    public int yCoord;
-    public int zCoord;
-    public int blockID;
-    public long scheduledTime;
-    private long tickEntryID;
 
 }

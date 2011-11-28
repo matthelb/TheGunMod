@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,16 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiAchievement extends Gui
 {
+
+    private Minecraft theGame;
+    private int achievementWindowWidth;
+    private int achievementWindowHeight;
+    private String achievementGetLocalText;
+    private String achievementStatName;
+    private Achievement theAchievement;
+    private long achievementTime;
+    private RenderItem itemRender;
+    private boolean haveAchiement;
 
     public GuiAchievement(Minecraft minecraft)
     {
@@ -103,10 +113,7 @@ public class GuiAchievement extends Gui
             theGame.fontRenderer.drawString(achievementGetLocalText, i + 30, j + 7, -256);
             theGame.fontRenderer.drawString(achievementStatName, i + 30, j + 18, -1);
         }
-        GL11.glPushMatrix();
-        GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
-        RenderHelper.enableStandardItemLighting();
-        GL11.glPopMatrix();
+        RenderHelper.func_41089_c();
         GL11.glDisable(2896 /*GL_LIGHTING*/);
         GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
         GL11.glEnable(2903 /*GL_COLOR_MATERIAL*/);
@@ -116,14 +123,4 @@ public class GuiAchievement extends Gui
         GL11.glDepthMask(true);
         GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
     }
-
-    private Minecraft theGame;
-    private int achievementWindowWidth;
-    private int achievementWindowHeight;
-    private String achievementGetLocalText;
-    private String achievementStatName;
-    private Achievement theAchievement;
-    private long achievementTime;
-    private RenderItem itemRender;
-    private boolean haveAchiement;
 }

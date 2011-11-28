@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,11 +10,13 @@ import java.util.Random;
 //            BlockContainer, Material, Block, World, 
 //            IBlockAccess, TileEntityDispenser, EntityPlayer, ItemStack, 
 //            ModLoader, Item, EntityArrow, EntityEgg, 
-//            EntitySnowball, EntityItem, EntityLiving, MathHelper, 
-//            TileEntity
+//            EntitySnowball, ItemPotion, EntityPotion, EntityItem, 
+//            EntityLiving, MathHelper, TileEntity
 
 public class BlockDispenser extends BlockContainer
 {
+
+    private Random random;
 
     protected BlockDispenser(int i)
     {
@@ -28,7 +30,7 @@ public class BlockDispenser extends BlockContainer
         return 4;
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Block.dispenser.blockID;
     }
@@ -149,15 +151,22 @@ public class BlockDispenser extends BlockContainer
                     if(itemstack.itemID == Item.egg.shiftedIndex)
                     {
                         EntityEgg entityegg = new EntityEgg(world, d, d1, d2);
-                        entityegg.setEggHeading(i1, 0.10000000149011612D, j1, 1.1F, 6F);
+                        entityegg.setThrowableHeading(i1, 0.10000000149011612D, j1, 1.1F, 6F);
                         world.entityJoinedWorld(entityegg);
                         world.playAuxSFX(1002, i, j, k, 0);
                     } else
                     if(itemstack.itemID == Item.snowball.shiftedIndex)
                     {
                         EntitySnowball entitysnowball = new EntitySnowball(world, d, d1, d2);
-                        entitysnowball.setSnowballHeading(i1, 0.10000000149011612D, j1, 1.1F, 6F);
+                        entitysnowball.setThrowableHeading(i1, 0.10000000149011612D, j1, 1.1F, 6F);
                         world.entityJoinedWorld(entitysnowball);
+                        world.playAuxSFX(1002, i, j, k, 0);
+                    } else
+                    if(itemstack.itemID == Item.potion.shiftedIndex && ItemPotion.func_40433_c(itemstack.getItemDamage()))
+                    {
+                        EntityPotion entitypotion = new EntityPotion(world, d, d1, d2, itemstack.getItemDamage());
+                        entitypotion.setThrowableHeading(i1, 0.10000000149011612D, j1, 1.375F, 3F);
+                        world.entityJoinedWorld(entitypotion);
                         world.playAuxSFX(1002, i, j, k, 0);
                     } else
                     {
@@ -192,7 +201,7 @@ public class BlockDispenser extends BlockContainer
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k))
+        if(!world.multiplayerWorld && (world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k)))
         {
             dispenseItem(world, i, j, k, random);
         }
@@ -258,6 +267,4 @@ public class BlockDispenser extends BlockContainer
         }
         super.onBlockRemoval(world, i, j, k);
     }
-
-    private Random random;
 }

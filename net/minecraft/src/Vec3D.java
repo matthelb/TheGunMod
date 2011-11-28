@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,12 @@ import java.util.List;
 
 public class Vec3D
 {
+
+    private static List vectorList = new ArrayList();
+    private static int nextVector = 0;
+    public double xCoord;
+    public double yCoord;
+    public double zCoord;
 
     public static Vec3D createVectorHelper(double d, double d1, double d2)
     {
@@ -211,11 +217,5 @@ public class Vec3D
         yCoord = d1;
         zCoord = d2;
     }
-
-    private static List vectorList = new ArrayList();
-    private static int nextVector = 0;
-    public double xCoord;
-    public double yCoord;
-    public double zCoord;
 
 }

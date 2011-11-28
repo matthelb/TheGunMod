@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,12 @@ package net.minecraft.src;
 
 public class FoodStats
 {
+
+    private int foodLevel;
+    private float foodSaturationLevel;
+    private float foodExhaustionLevel;
+    private int foodTickTimer;
+    private int prevFoodLevel;
 
     public FoodStats()
     {
@@ -61,7 +67,7 @@ public class FoodStats
             foodTickTimer++;
             if(foodTickTimer >= 80)
             {
-                if(entityplayer.health > 10 || i >= 3 || entityplayer.health > 1 && i >= 2)
+                if(entityplayer.getEntityHealth() > 10 || i >= 3 || entityplayer.getEntityHealth() > 1 && i >= 2)
                 {
                     entityplayer.attackEntityFrom(DamageSource.starve, 1);
                 }
@@ -126,10 +132,4 @@ public class FoodStats
     {
         foodSaturationLevel = f;
     }
-
-    private int foodLevel;
-    private float foodSaturationLevel;
-    private float foodExhaustionLevel;
-    private int foodTickTimer;
-    private int prevFoodLevel;
 }

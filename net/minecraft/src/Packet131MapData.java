@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ import java.io.*;
 
 public class Packet131MapData extends Packet
 {
+
+    public short itemID;
+    public short uniqueID;
+    public byte itemData[];
 
     public Packet131MapData()
     {
@@ -44,8 +48,4 @@ public class Packet131MapData extends Packet
     {
         return 4 + itemData.length;
     }
-
-    public short itemID;
-    public short uniqueID;
-    public byte itemData[];
 }

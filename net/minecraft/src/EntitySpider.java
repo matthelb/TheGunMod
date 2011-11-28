@@ -1,14 +1,15 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            EntityMob, World, Entity, MathHelper, 
-//            Item, NBTTagCompound
+//            EntityMob, DataWatcher, World, Entity, 
+//            MathHelper, Item, EnumCreatureAttribute, PotionEffect, 
+//            Potion, NBTTagCompound
 
 public class EntitySpider extends EntityMob
 {
@@ -19,6 +20,31 @@ public class EntitySpider extends EntityMob
         texture = "/mob/spider.png";
         setSize(1.4F, 0.9F);
         moveSpeed = 0.8F;
+    }
+
+    protected void entityInit()
+    {
+        super.entityInit();
+        dataWatcher.addObject(16, new Byte((byte)0));
+    }
+
+    public void onLivingUpdate()
+    {
+        super.onLivingUpdate();
+    }
+
+    public void onUpdate()
+    {
+        super.onUpdate();
+        if(!worldObj.multiplayerWorld)
+        {
+            func_40148_a(isCollidedHorizontally);
+        }
+    }
+
+    public int getMaxHealth()
+    {
+        return 16;
     }
 
     public double getMountedYOffset()
@@ -37,7 +63,7 @@ public class EntitySpider extends EntityMob
         if(f < 0.5F)
         {
             double d = 16D;
-            return worldObj.getClosestPlayerToEntity(this, d);
+            return worldObj.getClosestVulnerablePlayerToEntity(this, d);
         } else
         {
             return null;
@@ -99,17 +125,60 @@ public class EntitySpider extends EntityMob
         return Item.silk.shiftedIndex;
     }
 
+    protected void dropFewItems(boolean flag, int i)
+    {
+        super.dropFewItems(flag, i);
+        if(flag && (rand.nextInt(3) == 0 || rand.nextInt(1 + i) > 0))
+        {
+            dropItem(Item.spiderEye.shiftedIndex, 1);
+        }
+    }
+
     public boolean isOnLadder()
     {
-        return isCollidedHorizontally;
+        return func_40149_l_();
     }
 
     public void setInWeb()
     {
     }
 
-    public float func_35188_k_()
+    public float spiderScaleAmount()
     {
         return 1.0F;
+    }
+
+    public EnumCreatureAttribute func_40124_t()
+    {
+        return EnumCreatureAttribute.ARTHROPOD;
+    }
+
+    public boolean func_40126_a(PotionEffect potioneffect)
+    {
+        if(potioneffect.getPotionID() == Potion.potionPoison.id)
+        {
+            return false;
+        } else
+        {
+            return super.func_40126_a(potioneffect);
+        }
+    }
+
+    public boolean func_40149_l_()
+    {
+        return (dataWatcher.getWatchableObjectByte(16) & 1) != 0;
+    }
+
+    public void func_40148_a(boolean flag)
+    {
+        byte byte0 = dataWatcher.getWatchableObjectByte(16);
+        if(flag)
+        {
+            byte0 |= 1;
+        } else
+        {
+            byte0 &= 0xfe;
+        }
+        dataWatcher.updateObject(16, Byte.valueOf(byte0));
     }
 }

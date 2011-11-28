@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,11 @@ import java.io.*;
 final class J_PositionTrackingPushbackReader
     implements J_ThingWithPosition
 {
+
+    private final PushbackReader field_27338_a;
+    private int field_27337_b;
+    private int field_27340_c;
+    private boolean field_27339_d;
 
     public J_PositionTrackingPushbackReader(Reader reader)
     {
@@ -94,9 +99,4 @@ final class J_PositionTrackingPushbackReader
     {
         return field_27340_c;
     }
-
-    private final PushbackReader field_27338_a;
-    private int field_27337_b;
-    private int field_27340_c;
-    private boolean field_27339_d;
 }

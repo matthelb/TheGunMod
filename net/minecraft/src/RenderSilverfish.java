@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.io.PrintStream;
 
 public class RenderSilverfish extends RenderLiving
 {
+
+    private int field_35450_c;
 
     public RenderSilverfish()
     {
@@ -36,9 +38,9 @@ public class RenderSilverfish extends RenderLiving
         super.doRenderLiving(entitysilverfish, d, d1, d2, f, f1);
     }
 
-    protected boolean shouldSilverfishRenderPass(EntitySilverfish entitysilverfish, int i, float f)
+    protected int shouldSilverfishRenderPass(EntitySilverfish entitysilverfish, int i, float f)
     {
-        return false;
+        return -1;
     }
 
     protected float getDeathMaxRotation(EntityLiving entityliving)
@@ -46,7 +48,7 @@ public class RenderSilverfish extends RenderLiving
         return getSilverfishDeathRotation((EntitySilverfish)entityliving);
     }
 
-    protected boolean shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
         return shouldSilverfishRenderPass((EntitySilverfish)entityliving, i, f);
     }
@@ -62,6 +64,4 @@ public class RenderSilverfish extends RenderLiving
     {
         renderSilverfish((EntitySilverfish)entity, d, d1, d2, f, f1);
     }
-
-    private int field_35450_c;
 }

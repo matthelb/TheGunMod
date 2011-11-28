@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,11 +11,16 @@ import java.util.Random;
 //            EntityMob, DataWatcher, NBTTagCompound, World, 
 //            EntityPlayer, InventoryPlayer, ItemStack, Block, 
 //            Vec3D, AxisAlignedBB, DamageSource, MathHelper, 
-//            Entity, Material, Item, BlockGrass, 
-//            BlockLeaves, BlockFlower
+//            Entity, Material, Item, EntityDamageSourceIndirect, 
+//            BlockGrass, BlockFlower, BlockMycelium
 
 public class EntityEnderman extends EntityMob
 {
+
+    private static boolean canCarryBlocks[];
+    public boolean isAttacking;
+    private int teleportDelay;
+    private int field_35185_e;
 
     public EntityEnderman(World world)
     {
@@ -25,9 +30,14 @@ public class EntityEnderman extends EntityMob
         field_35185_e = 0;
         texture = "/mob/enderman.png";
         moveSpeed = 0.2F;
-        attackStrength = 5;
+        attackStrength = 7;
         setSize(0.6F, 2.9F);
         stepHeight = 1.0F;
+    }
+
+    public int getMaxHealth()
+    {
+        return 40;
     }
 
     protected void entityInit()
@@ -48,12 +58,12 @@ public class EntityEnderman extends EntityMob
     {
         super.readEntityFromNBT(nbttagcompound);
         setCarried(nbttagcompound.getShort("carried"));
-        setCarryingData(nbttagcompound.getShort("carryingData"));
+        setCarryingData(nbttagcompound.getShort("carriedData"));
     }
 
     protected Entity findPlayerToAttack()
     {
-        EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 64D);
+        EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 64D);
         if(entityplayer != null)
         {
             if(shouldAttackPlayer(entityplayer))
@@ -71,9 +81,9 @@ public class EntityEnderman extends EntityMob
         return null;
     }
 
-    public int func_35115_a(float f)
+    public int getEntityBrightnessForRender(float f)
     {
-        return super.func_35115_a(f);
+        return super.getEntityBrightnessForRender(f);
     }
 
     public float getEntityBrightness(float f)
@@ -89,7 +99,7 @@ public class EntityEnderman extends EntityMob
             return false;
         }
         Vec3D vec3d = entityplayer.getLook(1.0F).normalize();
-        Vec3D vec3d1 = Vec3D.createVector(posX - entityplayer.posX, ((boundingBox.minY + (double)(height / 2.0F)) - entityplayer.posY) + (double)entityplayer.getEyeHeight(), posZ - entityplayer.posZ);
+        Vec3D vec3d1 = Vec3D.createVector(posX - entityplayer.posX, (boundingBox.minY + (double)(height / 2.0F)) - (entityplayer.posY + (double)entityplayer.getEyeHeight()), posZ - entityplayer.posZ);
         double d = vec3d1.lengthVector();
         vec3d1 = vec3d1.normalize();
         double d1 = vec3d.dotProduct(vec3d1);
@@ -109,7 +119,7 @@ public class EntityEnderman extends EntityMob
             attackEntityFrom(DamageSource.drown, 1);
         }
         isAttacking = entityToAttack != null;
-        moveSpeed = entityToAttack == null ? 0.3F : 4.5F;
+        moveSpeed = entityToAttack == null ? 0.3F : 6.5F;
         if(!worldObj.multiplayerWorld)
         {
             if(getCarried() == 0)
@@ -152,15 +162,21 @@ public class EntityEnderman extends EntityMob
             float f = getEntityBrightness(1.0F);
             if(f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
             {
-                fire = 300;
+                entityToAttack = null;
+                teleportRandomly();
             }
+        }
+        if(isWet())
+        {
+            entityToAttack = null;
+            teleportRandomly();
         }
         isJumping = false;
         if(entityToAttack != null)
         {
             faceEntity(entityToAttack, 100F, 100F);
         }
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.multiplayerWorld && isEntityAlive())
         {
             if(entityToAttack != null)
             {
@@ -260,22 +276,24 @@ public class EntityEnderman extends EntityMob
             worldObj.spawnParticle("portal", d7, d8, d9, f, f1, f2);
         }
 
+        worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
+        worldObj.playSoundAtEntity(this, "mob.endermen.portal", 1.0F, 1.0F);
         return true;
     }
 
     protected String getLivingSound()
     {
-        return "mob.zombie";
+        return "mob.endermen.idle";
     }
 
     protected String getHurtSound()
     {
-        return "mob.zombiehurt";
+        return "mob.endermen.hit";
     }
 
     protected String getDeathSound()
     {
-        return "mob.zombiedeath";
+        return "mob.endermen.death";
     }
 
     protected int getDropItemId()
@@ -283,15 +301,15 @@ public class EntityEnderman extends EntityMob
         return Item.enderPearl.shiftedIndex;
     }
 
-    protected void dropFewItems(boolean flag)
+    protected void dropFewItems(boolean flag, int i)
     {
-        int i = getDropItemId();
-        if(i > 0)
+        int j = getDropItemId();
+        if(j > 0)
         {
-            int j = rand.nextInt(2);
-            for(int k = 0; k < j; k++)
+            int k = rand.nextInt(2 + i);
+            for(int l = 0; l < k; l++)
             {
-                dropItem(i, 1);
+                dropItem(j, 1);
             }
 
         }
@@ -317,58 +335,41 @@ public class EntityEnderman extends EntityMob
         return dataWatcher.getWatchableObjectByte(17);
     }
 
-    private static boolean canCarryBlocks[];
-    public boolean isAttacking;
-    private int teleportDelay;
-    private int field_35185_e;
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    {
+        if(damagesource instanceof EntityDamageSourceIndirect)
+        {
+            for(int j = 0; j < 64; j++)
+            {
+                if(teleportRandomly())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        } else
+        {
+            return super.attackEntityFrom(damagesource, i);
+        }
+    }
 
     static 
     {
         canCarryBlocks = new boolean[256];
-        canCarryBlocks[Block.stone.blockID] = true;
         canCarryBlocks[Block.grass.blockID] = true;
         canCarryBlocks[Block.dirt.blockID] = true;
-        canCarryBlocks[Block.cobblestone.blockID] = true;
-        canCarryBlocks[Block.planks.blockID] = true;
         canCarryBlocks[Block.sand.blockID] = true;
         canCarryBlocks[Block.gravel.blockID] = true;
-        canCarryBlocks[Block.oreGold.blockID] = true;
-        canCarryBlocks[Block.oreIron.blockID] = true;
-        canCarryBlocks[Block.oreCoal.blockID] = true;
-        canCarryBlocks[Block.wood.blockID] = true;
-        canCarryBlocks[Block.leaves.blockID] = true;
-        canCarryBlocks[Block.sponge.blockID] = true;
-        canCarryBlocks[Block.glass.blockID] = true;
-        canCarryBlocks[Block.oreLapis.blockID] = true;
-        canCarryBlocks[Block.blockLapis.blockID] = true;
-        canCarryBlocks[Block.sandStone.blockID] = true;
-        canCarryBlocks[Block.cloth.blockID] = true;
         canCarryBlocks[Block.plantYellow.blockID] = true;
         canCarryBlocks[Block.plantRed.blockID] = true;
         canCarryBlocks[Block.mushroomBrown.blockID] = true;
         canCarryBlocks[Block.mushroomRed.blockID] = true;
-        canCarryBlocks[Block.blockGold.blockID] = true;
-        canCarryBlocks[Block.blockSteel.blockID] = true;
-        canCarryBlocks[Block.brick.blockID] = true;
         canCarryBlocks[Block.tnt.blockID] = true;
-        canCarryBlocks[Block.bookShelf.blockID] = true;
-        canCarryBlocks[Block.cobblestoneMossy.blockID] = true;
-        canCarryBlocks[Block.oreDiamond.blockID] = true;
-        canCarryBlocks[Block.blockDiamond.blockID] = true;
-        canCarryBlocks[Block.workbench.blockID] = true;
-        canCarryBlocks[Block.oreRedstone.blockID] = true;
-        canCarryBlocks[Block.oreRedstoneGlowing.blockID] = true;
-        canCarryBlocks[Block.ice.blockID] = true;
         canCarryBlocks[Block.cactus.blockID] = true;
         canCarryBlocks[Block.blockClay.blockID] = true;
         canCarryBlocks[Block.pumpkin.blockID] = true;
-        canCarryBlocks[Block.netherrack.blockID] = true;
-        canCarryBlocks[Block.slowSand.blockID] = true;
-        canCarryBlocks[Block.glowStone.blockID] = true;
-        canCarryBlocks[Block.pumpkinLantern.blockID] = true;
-        canCarryBlocks[Block.stoneBrick.blockID] = true;
-        canCarryBlocks[Block.mushroomCapBrown.blockID] = true;
-        canCarryBlocks[Block.mushroomCapRed.blockID] = true;
         canCarryBlocks[Block.melon.blockID] = true;
+        canCarryBlocks[Block.mycelium.blockID] = true;
     }
 }

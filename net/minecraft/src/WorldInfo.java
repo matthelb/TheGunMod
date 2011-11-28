@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,8 +12,28 @@ import java.util.List;
 public class WorldInfo
 {
 
+    private long randomSeed;
+    private int spawnX;
+    private int spawnY;
+    private int spawnZ;
+    private long worldTime;
+    private long lastTimePlayed;
+    private long sizeOnDisk;
+    private NBTTagCompound playerTag;
+    private int dimension;
+    private String levelName;
+    private int saveVersion;
+    private boolean raining;
+    private int rainTime;
+    private boolean thundering;
+    private int thunderTime;
+    private int gameType;
+    private boolean mapFeaturesEnabled;
+    private boolean hardcore;
+
     public WorldInfo(NBTTagCompound nbttagcompound)
     {
+        hardcore = false;
         randomSeed = nbttagcompound.getLong("RandomSeed");
         gameType = nbttagcompound.getInteger("GameType");
         if(nbttagcompound.hasKey("MapFeatures"))
@@ -35,6 +55,7 @@ public class WorldInfo
         raining = nbttagcompound.getBoolean("raining");
         thunderTime = nbttagcompound.getInteger("thunderTime");
         thundering = nbttagcompound.getBoolean("thundering");
+        hardcore = nbttagcompound.getBoolean("hardcore");
         if(nbttagcompound.hasKey("Player"))
         {
             playerTag = nbttagcompound.getCompoundTag("Player");
@@ -44,14 +65,17 @@ public class WorldInfo
 
     public WorldInfo(WorldSettings worldsettings, String s)
     {
-        randomSeed = worldsettings.func_35518_a();
-        gameType = worldsettings.func_35519_b();
-        mapFeaturesEnabled = worldsettings.func_35520_c();
+        hardcore = false;
+        randomSeed = worldsettings.getSeed();
+        gameType = worldsettings.getGameType();
+        mapFeaturesEnabled = worldsettings.isMapFeaturesEnabled();
         levelName = s;
+        hardcore = worldsettings.getHardcoreEnabled();
     }
 
     public WorldInfo(WorldInfo worldinfo)
     {
+        hardcore = false;
         randomSeed = worldinfo.randomSeed;
         gameType = worldinfo.gameType;
         mapFeaturesEnabled = worldinfo.mapFeaturesEnabled;
@@ -69,6 +93,7 @@ public class WorldInfo
         raining = worldinfo.raining;
         thunderTime = worldinfo.thunderTime;
         thundering = worldinfo.thundering;
+        hardcore = worldinfo.hardcore;
     }
 
     public NBTTagCompound getNBTTagCompound()
@@ -113,6 +138,7 @@ public class WorldInfo
         nbttagcompound.setBoolean("raining", raining);
         nbttagcompound.setInteger("thunderTime", thunderTime);
         nbttagcompound.setBoolean("thundering", thundering);
+        nbttagcompound.setBoolean("hardcore", hardcore);
         if(nbttagcompound1 != null)
         {
             nbttagcompound.setCompoundTag("Player", nbttagcompound1);
@@ -271,21 +297,8 @@ public class WorldInfo
         return mapFeaturesEnabled;
     }
 
-    private long randomSeed;
-    private int spawnX;
-    private int spawnY;
-    private int spawnZ;
-    private long worldTime;
-    private long lastTimePlayed;
-    private long sizeOnDisk;
-    private NBTTagCompound playerTag;
-    private int dimension;
-    private String levelName;
-    private int saveVersion;
-    private boolean raining;
-    private int rainTime;
-    private boolean thundering;
-    private int thunderTime;
-    private int gameType;
-    private boolean mapFeaturesEnabled;
+    public boolean isHardcoreModeEnabled()
+    {
+        return hardcore;
+    }
 }

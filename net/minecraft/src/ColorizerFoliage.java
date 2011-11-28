@@ -1,12 +1,14 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 public class ColorizerFoliage
 {
+
+    private static int foliageBuffer[] = new int[0x10000];
 
     public ColorizerFoliage()
     {
@@ -35,11 +37,9 @@ public class ColorizerFoliage
         return 0x80a755;
     }
 
-    public static int func_31073_c()
+    public static int getFoliageColorBasic()
     {
         return 0x48b518;
     }
-
-    private static int foliageBuffer[] = new int[0x10000];
 
 }

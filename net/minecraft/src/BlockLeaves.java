@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,12 +8,15 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockLeavesBase, Material, ColorizerFoliage, IBlockAccess, 
-//            WorldChunkManager, World, Block, EntityPlayer, 
-//            ItemStack, Item, ItemShears, StatList, 
-//            Entity
+//            WorldChunkManager, BiomeGenBase, World, Block, 
+//            EntityPlayer, ItemStack, Item, ItemShears, 
+//            StatList, Entity
 
 public class BlockLeaves extends BlockLeavesBase
 {
+
+    private int baseIndexInPNG;
+    int adjacentTreeBlocks[];
 
     protected BlockLeaves(int i, int j)
     {
@@ -40,7 +43,7 @@ public class BlockLeaves extends BlockLeavesBase
             return ColorizerFoliage.getFoliageColorBirch();
         } else
         {
-            return ColorizerFoliage.func_31073_c();
+            return ColorizerFoliage.getFoliageColorBasic();
         }
     }
 
@@ -56,9 +59,7 @@ public class BlockLeaves extends BlockLeavesBase
             return ColorizerFoliage.getFoliageColorBirch();
         } else
         {
-            double d = iblockaccess.getWorldChunkManager().func_35554_b(i, k);
-            double d1 = iblockaccess.getWorldChunkManager().func_35558_c(i, k);
-            return ColorizerFoliage.getFoliageColor(d, d1);
+            return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).func_40255_b(iblockaccess, i, j, k);
         }
     }
 
@@ -192,7 +193,7 @@ public class BlockLeaves extends BlockLeavesBase
 
     private void removeLeaves(World world, int i, int j, int k)
     {
-        dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+        dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
         world.setBlockWithNotify(i, j, k, 0);
     }
 
@@ -201,7 +202,7 @@ public class BlockLeaves extends BlockLeavesBase
         return random.nextInt(20) != 0 ? 0 : 1;
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Block.sapling.blockID;
     }
@@ -249,7 +250,4 @@ public class BlockLeaves extends BlockLeavesBase
     {
         super.onEntityWalking(world, i, j, k, entity);
     }
-
-    private int baseIndexInPNG;
-    int adjacentTreeBlocks[];
 }

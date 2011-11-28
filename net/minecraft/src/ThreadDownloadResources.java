@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,10 @@ import org.w3c.dom.*;
 
 public class ThreadDownloadResources extends Thread
 {
+
+    public File resourcesFolder;
+    private Minecraft mc;
+    private boolean closing;
 
     public ThreadDownloadResources(File file, Minecraft minecraft)
     {
@@ -158,8 +162,4 @@ public class ThreadDownloadResources extends Thread
     {
         closing = true;
     }
-
-    public File resourcesFolder;
-    private Minecraft mc;
-    private boolean closing;
 }

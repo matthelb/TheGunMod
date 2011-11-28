@@ -1,32 +1,38 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
 //            LayerIsland, GenLayerZoomFuzzy, GenLayerIsland, GenLayerZoom, 
-//            GenLayerRiverInit, GenLayerRiver, GenLayerSmooth, GenLayerVillageLandscape, 
-//            GenLayerTemperature, GenLayerDownfall, GenLayerSmoothZoom, GenLayerTemperatureMix, 
-//            GenLayerDownfallMix, GenLayerRiverMix, GenLayerZoomVoronoi
+//            GenLayerSnow, GenLayerMushroomIsland, GenLayerRiverInit, GenLayerRiver, 
+//            GenLayerSmooth, GenLayerVillageLandscape, GenLayerTemperature, GenLayerDownfall, 
+//            GenLayerShore, GenLayerSmoothZoom, GenLayerTemperatureMix, GenLayerDownfallMix, 
+//            GenLayerRiverMix, GenLayerZoomVoronoi
 
 public abstract class GenLayer
 {
 
+    private long worldGendSeed;
+    protected GenLayer parent;
+    private long chunkSeed;
+    private long baseSeed;
+
     public static GenLayer[] func_35497_a(long l)
     {
-    	GenLayer obj = new LayerIsland(1L);
+        GenLayer obj = new LayerIsland(1L);
         obj = new GenLayerZoomFuzzy(2000L, ((GenLayer) (obj)));
         obj = new GenLayerIsland(1L, ((GenLayer) (obj)));
         obj = new GenLayerZoom(2001L, ((GenLayer) (obj)));
         obj = new GenLayerIsland(2L, ((GenLayer) (obj)));
+        obj = new GenLayerSnow(2L, ((GenLayer) (obj)));
         obj = new GenLayerZoom(2002L, ((GenLayer) (obj)));
         obj = new GenLayerIsland(3L, ((GenLayer) (obj)));
         obj = new GenLayerZoom(2003L, ((GenLayer) (obj)));
-        obj = new GenLayerIsland(3L, ((GenLayer) (obj)));
-        obj = new GenLayerZoom(2004L, ((GenLayer) (obj)));
-        obj = new GenLayerIsland(3L, ((GenLayer) (obj)));
+        obj = new GenLayerIsland(4L, ((GenLayer) (obj)));
+        obj = new GenLayerMushroomIsland(5L, ((GenLayer) (obj)));
         byte byte0 = 4;
         GenLayer obj1 = obj;
         obj1 = GenLayerZoom.func_35515_a(1000L, ((GenLayer) (obj1)), 0);
@@ -47,6 +53,10 @@ public abstract class GenLayer
             {
                 obj2 = new GenLayerIsland(3L, ((GenLayer) (obj2)));
             }
+            if(i == 0)
+            {
+                obj2 = new GenLayerShore(1000L, ((GenLayer) (obj2)));
+            }
             obj3 = new GenLayerSmoothZoom(1000 + i, ((GenLayer) (obj3)));
             obj3 = new GenLayerTemperatureMix(((GenLayer) (obj3)), ((GenLayer) (obj2)), i);
             obj4 = new GenLayerSmoothZoom(1000 + i, ((GenLayer) (obj4)));
@@ -55,6 +65,7 @@ public abstract class GenLayer
 
         obj2 = new GenLayerSmooth(1000L, ((GenLayer) (obj2)));
         obj2 = new GenLayerRiverMix(100L, ((GenLayer) (obj2)), ((GenLayer) (obj1)));
+        GenLayerRiverMix genlayerrivermix = ((GenLayerRiverMix) (obj2));
         obj3 = GenLayerSmoothZoom.func_35517_a(1000L, ((GenLayer) (obj3)), 2);
         obj4 = GenLayerSmoothZoom.func_35517_a(1000L, ((GenLayer) (obj4)), 2);
         GenLayerZoomVoronoi genlayerzoomvoronoi = new GenLayerZoomVoronoi(10L, ((GenLayer) (obj2)));
@@ -63,7 +74,7 @@ public abstract class GenLayer
         ((GenLayer) (obj4)).func_35496_b(l);
         genlayerzoomvoronoi.func_35496_b(l);
         return (new GenLayer[] {
-            obj2, genlayerzoomvoronoi, obj3, obj4
+            obj2, genlayerzoomvoronoi, obj3, obj4, genlayerrivermix
         });
     }
 
@@ -119,9 +130,4 @@ public abstract class GenLayer
     }
 
     public abstract int[] func_35500_a(int i, int j, int k, int l);
-
-    private long worldGendSeed;
-    protected GenLayer parent;
-    private long chunkSeed;
-    private long baseSeed;
 }

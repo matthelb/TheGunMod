@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,16 @@ import java.util.*;
 
 public class Explosion
 {
+
+    public boolean isFlaming;
+    private Random ExplosionRNG;
+    private World worldObj;
+    public double explosionX;
+    public double explosionY;
+    public double explosionZ;
+    public Entity exploder;
+    public float explosionSize;
+    public Set destroyedBlockPositions;
 
     public Explosion(World world, Entity entity, double d, double d1, double d2, float f)
     {
@@ -60,17 +70,17 @@ label0:
                         {
                             continue label0;
                         }
-                        int j4 = MathHelper.floor_double(d5);
-                        int k4 = MathHelper.floor_double(d7);
-                        int l4 = MathHelper.floor_double(d9);
-                        int i5 = worldObj.getBlockId(j4, k4, l4);
-                        if(i5 > 0)
+                        int l2 = MathHelper.floor_double(d5);
+                        int i3 = MathHelper.floor_double(d7);
+                        int j3 = MathHelper.floor_double(d9);
+                        int k3 = worldObj.getBlockId(l2, i3, j3);
+                        if(k3 > 0)
                         {
-                            f1 -= (Block.blocksList[i5].getExplosionResistance(exploder) + 0.3F) * f2;
+                            f1 -= (Block.blocksList[k3].getExplosionResistance(exploder) + 0.3F) * f2;
                         }
                         if(f1 > 0.0F)
                         {
-                            destroyedBlockPositions.add(new ChunkPosition(j4, k4, l4));
+                            destroyedBlockPositions.add(new ChunkPosition(l2, i3, j3));
                         }
                         d5 += d * (double)f2;
                         d7 += d1 * (double)f2;
@@ -118,23 +128,6 @@ label0:
         explosionSize = f;
         ArrayList arraylist = new ArrayList();
         arraylist.addAll(destroyedBlockPositions);
-        if(isFlaming)
-        {
-            for(int l2 = arraylist.size() - 1; l2 >= 0; l2--)
-            {
-                ChunkPosition chunkposition = (ChunkPosition)arraylist.get(l2);
-                int i3 = chunkposition.x;
-                int j3 = chunkposition.y;
-                int k3 = chunkposition.z;
-                int l3 = worldObj.getBlockId(i3, j3, k3);
-                int i4 = worldObj.getBlockId(i3, j3 - 1, k3);
-                if(l3 == 0 && Block.opaqueCubeLookup[i4] && ExplosionRNG.nextInt(3) == 0)
-                {
-                    worldObj.setBlockWithNotify(i3, j3, k3, Block.fire.blockID);
-                }
-            }
-
-        }
     }
 
     public void doExplosionB(boolean flag)
@@ -146,15 +139,15 @@ label0:
         for(int i = arraylist.size() - 1; i >= 0; i--)
         {
             ChunkPosition chunkposition = (ChunkPosition)arraylist.get(i);
-            int j = chunkposition.x;
-            int k = chunkposition.y;
-            int l = chunkposition.z;
-            int i1 = worldObj.getBlockId(j, k, l);
+            int k = chunkposition.x;
+            int i1 = chunkposition.y;
+            int k1 = chunkposition.z;
+            int i2 = worldObj.getBlockId(k, i1, k1);
             if(flag)
             {
-                double d = (float)j + worldObj.rand.nextFloat();
-                double d1 = (float)k + worldObj.rand.nextFloat();
-                double d2 = (float)l + worldObj.rand.nextFloat();
+                double d = (float)k + worldObj.rand.nextFloat();
+                double d1 = (float)i1 + worldObj.rand.nextFloat();
+                double d2 = (float)k1 + worldObj.rand.nextFloat();
                 double d3 = d - explosionX;
                 double d4 = d1 - explosionY;
                 double d5 = d2 - explosionZ;
@@ -170,23 +163,30 @@ label0:
                 worldObj.spawnParticle("explode", (d + explosionX * 1.0D) / 2D, (d1 + explosionY * 1.0D) / 2D, (d2 + explosionZ * 1.0D) / 2D, d3, d4, d5);
                 worldObj.spawnParticle("smoke", d, d1, d2, d3, d4, d5);
             }
-            if(i1 > 0)
+            if(i2 > 0)
             {
-                Block.blocksList[i1].dropBlockAsItemWithChance(worldObj, j, k, l, worldObj.getBlockMetadata(j, k, l), 0.3F);
-                worldObj.setBlockWithNotify(j, k, l, 0);
-                Block.blocksList[i1].onBlockDestroyedByExplosion(worldObj, j, k, l);
+                Block.blocksList[i2].dropBlockAsItemWithChance(worldObj, k, i1, k1, worldObj.getBlockMetadata(k, i1, k1), 0.3F, 0);
+                worldObj.setBlockWithNotify(k, i1, k1, 0);
+                Block.blocksList[i2].onBlockDestroyedByExplosion(worldObj, k, i1, k1);
             }
         }
 
-    }
+        if(isFlaming)
+        {
+            for(int j = arraylist.size() - 1; j >= 0; j--)
+            {
+                ChunkPosition chunkposition1 = (ChunkPosition)arraylist.get(j);
+                int l = chunkposition1.x;
+                int j1 = chunkposition1.y;
+                int l1 = chunkposition1.z;
+                int j2 = worldObj.getBlockId(l, j1, l1);
+                int k2 = worldObj.getBlockId(l, j1 - 1, l1);
+                if(j2 == 0 && Block.opaqueCubeLookup[k2] && ExplosionRNG.nextInt(3) == 0)
+                {
+                    worldObj.setBlockWithNotify(l, j1, l1, Block.fire.blockID);
+                }
+            }
 
-    public boolean isFlaming;
-    private Random ExplosionRNG;
-    private World worldObj;
-    public double explosionX;
-    public double explosionY;
-    public double explosionZ;
-    public Entity exploder;
-    public float explosionSize;
-    public Set destroyedBlockPositions;
+        }
+    }
 }

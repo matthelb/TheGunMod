@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,10 +9,13 @@ import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            Container, Block, ItemStack, Item, 
-//            EntityPlayer, Slot, GuiContainerCreative, InventoryBasic
+//            ItemPotion, EntityPlayer, Slot, GuiContainerCreative, 
+//            InventoryBasic
 
 class ContainerCreative extends Container
 {
+
+    public List itemList;
 
     public ContainerCreative(EntityPlayer entityplayer)
     {
@@ -21,72 +24,83 @@ class ContainerCreative extends Container
             Block.cobblestone, Block.stone, Block.oreDiamond, Block.oreGold, Block.oreIron, Block.oreCoal, Block.oreLapis, Block.oreRedstone, Block.stoneBrick, Block.stoneBrick, 
             Block.stoneBrick, Block.blockClay, Block.blockDiamond, Block.blockGold, Block.blockSteel, Block.bedrock, Block.blockLapis, Block.brick, Block.cobblestoneMossy, Block.stairSingle, 
             Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.obsidian, Block.netherrack, Block.slowSand, Block.glowStone, Block.wood, 
-            Block.wood, Block.wood, Block.leaves, Block.dirt, Block.grass, Block.sand, Block.sandStone, Block.gravel, Block.web, Block.planks, 
-            Block.sapling, Block.sapling, Block.sapling, Block.deadBush, Block.sponge, Block.ice, Block.blockSnow, Block.plantYellow, Block.plantRed, Block.mushroomBrown, 
-            Block.mushroomRed, Block.reed, Block.cactus, Block.melon, Block.pumpkin, Block.pumpkinLantern, Block.vine, Block.fenceIron, Block.thinGlass, Block.chest, 
-            Block.workbench, Block.glass, Block.tnt, Block.bookShelf, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, 
-            Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, 
-            Block.dispenser, Block.stoneOvenIdle, Block.music, Block.jukebox, Block.pistonStickyBase, Block.pistonBase, Block.fence, Block.fenceGate, Block.ladder, Block.rail, 
-            Block.railPowered, Block.railDetector, Block.torchWood, Block.stairCompactPlanks, Block.stairCompactCobblestone, Block.stairsBrick, Block.stairsStoneBrickSmooth, Block.lever, Block.pressurePlateStone, Block.pressurePlatePlanks, 
-            Block.torchRedstoneActive, Block.button, Block.cake, Block.trapdoor
+            Block.wood, Block.wood, Block.leaves, Block.leaves, Block.leaves, Block.dirt, Block.grass, Block.sand, Block.sandStone, Block.gravel, 
+            Block.web, Block.planks, Block.sapling, Block.sapling, Block.sapling, Block.deadBush, Block.sponge, Block.ice, Block.blockSnow, Block.plantYellow, 
+            Block.plantRed, Block.mushroomBrown, Block.mushroomRed, Block.cactus, Block.melon, Block.pumpkin, Block.pumpkinLantern, Block.vine, Block.fenceIron, Block.thinGlass, 
+            Block.netherBrick, Block.netherFence, Block.stairsNetherBrick, Block.whiteStone, Block.mycelium, Block.waterlily, Block.tallGrass, Block.tallGrass, Block.chest, Block.workbench, 
+            Block.glass, Block.tnt, Block.bookShelf, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, 
+            Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.dispenser, 
+            Block.stoneOvenIdle, Block.music, Block.jukebox, Block.pistonStickyBase, Block.pistonBase, Block.fence, Block.fenceGate, Block.ladder, Block.rail, Block.railPowered, 
+            Block.railDetector, Block.torchWood, Block.stairCompactPlanks, Block.stairCompactCobblestone, Block.stairsBrick, Block.stairsStoneBrickSmooth, Block.lever, Block.pressurePlateStone, Block.pressurePlatePlanks, Block.torchRedstoneActive, 
+            Block.button, Block.trapdoor, Block.enchantmentTable
         };
         int i = 0;
         int j = 0;
         int k = 0;
         int l = 0;
         int i1 = 0;
-        for(int j1 = 0; j1 < ablock.length; j1++)
+        int j1 = 0;
+        int k1 = 1;
+        for(int l1 = 0; l1 < ablock.length; l1++)
         {
-            int i2 = 0;
-            if(ablock[j1] == Block.cloth)
+            int k2 = 0;
+            if(ablock[l1] == Block.cloth)
             {
-                i2 = i++;
+                k2 = i++;
             } else
-            if(ablock[j1] == Block.stairSingle)
+            if(ablock[l1] == Block.stairSingle)
             {
-                i2 = j++;
+                k2 = j++;
             } else
-            if(ablock[j1] == Block.wood)
+            if(ablock[l1] == Block.wood)
             {
-                i2 = k++;
+                k2 = k++;
             } else
-            if(ablock[j1] == Block.sapling)
+            if(ablock[l1] == Block.sapling)
             {
-                i2 = l++;
+                k2 = l++;
             } else
-            if(ablock[j1] == Block.stoneBrick)
+            if(ablock[l1] == Block.stoneBrick)
             {
-                i2 = i1++;
+                k2 = i1++;
+            } else
+            if(ablock[l1] == Block.tallGrass)
+            {
+                k2 = k1++;
+            } else
+            if(ablock[l1] == Block.leaves)
+            {
+                k2 = j1++;
             }
-            itemList.add(new ItemStack(ablock[j1], 1, i2));
+            itemList.add(new ItemStack(ablock[l1], 1, k2));
         }
 
-        for(int k1 = 256; k1 < Item.itemsList.length; k1++)
+        for(int i2 = 256; i2 < Item.itemsList.length; i2++)
         {
-            if(Item.itemsList[k1] != null)
+            if(Item.itemsList[i2] != null && Item.itemsList[i2].shiftedIndex != Item.potion.shiftedIndex)
             {
-                itemList.add(new ItemStack(Item.itemsList[k1]));
+                itemList.add(new ItemStack(Item.itemsList[i2]));
             }
         }
 
-        for(int l1 = 1; l1 < 16; l1++)
+        for(int j2 = 1; j2 < 16; j2++)
         {
-            itemList.add(new ItemStack(Item.dyePowder.shiftedIndex, 1, l1));
+            itemList.add(new ItemStack(Item.dyePowder.shiftedIndex, 1, j2));
         }
 
         InventoryPlayer inventoryplayer = entityplayer.inventory;
-        for(int j2 = 0; j2 < 9; j2++)
+        for(int l2 = 0; l2 < 9; l2++)
         {
-            for(int l2 = 0; l2 < 8; l2++)
+            for(int j3 = 0; j3 < 8; j3++)
             {
-                addSlot(new Slot(GuiContainerCreative.getInventory(), l2 + j2 * 8, 8 + l2 * 18, 18 + j2 * 18));
+                addSlot(new Slot(GuiContainerCreative.getInventory(), j3 + l2 * 8, 8 + j3 * 18, 18 + l2 * 18));
             }
 
         }
 
-        for(int k2 = 0; k2 < 9; k2++)
+        for(int i3 = 0; i3 < 9; i3++)
         {
-            addSlot(new Slot(inventoryplayer, k2, 8 + k2 * 18, 184));
+            addSlot(new Slot(inventoryplayer, i3, 8 + i3 * 18, 184));
         }
 
         func_35374_a(0.0F);
@@ -126,6 +140,4 @@ class ContainerCreative extends Container
     protected void func_35373_b(int i, int j, boolean flag, EntityPlayer entityplayer)
     {
     }
-
-    public List itemList;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,6 +8,8 @@ import java.util.Random;
 
 public class MathHelper
 {
+
+    private static float SIN_TABLE[];
 
     public MathHelper()
     {
@@ -39,6 +41,11 @@ public class MathHelper
         return f >= (float)i ? i : i - 1;
     }
 
+    public static int func_40346_b(double d)
+    {
+        return (int)(d + 1024D) - 1024;
+    }
+
     public static int floor_double(double d)
     {
         int i = (int)d;
@@ -59,6 +66,21 @@ public class MathHelper
     public static int abs_int(int i)
     {
         return i < 0 ? -i : i;
+    }
+
+    public static int func_41084_a(int i, int j, int k)
+    {
+        if(i < j)
+        {
+            return j;
+        }
+        if(i > k)
+        {
+            return k;
+        } else
+        {
+            return i;
+        }
     }
 
     public static double abs_max(double d, double d1)
@@ -100,8 +122,6 @@ public class MathHelper
             return random.nextInt((j - i) + 1) + i;
         }
     }
-
-    private static float SIN_TABLE[];
 
     static 
     {

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,10 +11,13 @@ import java.util.*;
 //            RecipesTools, RecipesWeapons, RecipesIngots, RecipesFood, 
 //            RecipesCrafting, RecipesArmor, RecipesDyes, ItemStack, 
 //            Item, Block, RecipeSorter, ShapedRecipes, 
-//            ShapelessRecipes, IRecipe, InventoryCrafting
+//            ShapelessRecipes, InventoryCrafting, IRecipe
 
 public class CraftingManager
 {
+
+    private static final CraftingManager instance = new CraftingManager();
+    private List recipes;
 
     public static final CraftingManager getInstance()
     {
@@ -39,6 +42,9 @@ public class CraftingManager
         });
         addRecipe(new ItemStack(Block.fence, 2), new Object[] {
             "###", "###", Character.valueOf('#'), Item.stick
+        });
+        addRecipe(new ItemStack(Block.netherFence, 6), new Object[] {
+            "###", "###", Character.valueOf('#'), Block.netherBrick
         });
         addRecipe(new ItemStack(Block.fenceGate, 1), new Object[] {
             "#W#", "#W#", Character.valueOf('#'), Item.stick, Character.valueOf('W'), Block.planks
@@ -125,6 +131,9 @@ public class CraftingManager
         addRecipe(new ItemStack(Item.bowlEmpty, 4), new Object[] {
             "# #", " # ", Character.valueOf('#'), Block.planks
         });
+        addRecipe(new ItemStack(Item.glassBottle, 3), new Object[] {
+            "# #", " # ", Character.valueOf('#'), Block.glass
+        });
         addRecipe(new ItemStack(Block.rail, 16), new Object[] {
             "X X", "X#X", "X X", Character.valueOf('X'), Item.ingotIron, Character.valueOf('#'), Item.stick
         });
@@ -136,6 +145,12 @@ public class CraftingManager
         });
         addRecipe(new ItemStack(Item.minecartEmpty, 1), new Object[] {
             "# #", "###", Character.valueOf('#'), Item.ingotIron
+        });
+        addRecipe(new ItemStack(Item.cauldron, 1), new Object[] {
+            "# #", "# #", "###", Character.valueOf('#'), Item.ingotIron
+        });
+        addRecipe(new ItemStack(Item.brewingStand, 1), new Object[] {
+            " B ", "###", Character.valueOf('#'), Block.cobblestone, Character.valueOf('B'), Item.blazeRod
         });
         addRecipe(new ItemStack(Block.pumpkinLantern, 1), new Object[] {
             "A", "B", Character.valueOf('A'), Block.pumpkin, Character.valueOf('B'), Block.torchWood
@@ -172,6 +187,9 @@ public class CraftingManager
         });
         addRecipe(new ItemStack(Block.stairsStoneBrickSmooth, 4), new Object[] {
             "#  ", "## ", "###", Character.valueOf('#'), Block.stoneBrick
+        });
+        addRecipe(new ItemStack(Block.stairsNetherBrick, 4), new Object[] {
+            "#  ", "## ", "###", Character.valueOf('#'), Block.netherBrick
         });
         addRecipe(new ItemStack(Item.painting, 1), new Object[] {
             "###", "#X#", "###", Character.valueOf('#'), Item.stick, Character.valueOf('X'), Block.cloth
@@ -218,6 +236,12 @@ public class CraftingManager
         });
         addRecipe(new ItemStack(Item.bed, 1), new Object[] {
             "###", "XXX", Character.valueOf('#'), Block.cloth, Character.valueOf('X'), Block.planks
+        });
+        addRecipe(new ItemStack(Block.enchantmentTable, 1), new Object[] {
+            " B ", "D#D", "###", Character.valueOf('#'), Block.obsidian, Character.valueOf('B'), Item.book, Character.valueOf('D'), Item.diamond
+        });
+        addShapelessRecipe(new ItemStack(Item.eyeOfEnder, 1), new Object[] {
+            Item.enderPearl, Item.blazePowder
         });
         Collections.sort(recipes, new RecipeSorter(this));
         System.out.println((new StringBuilder()).append(recipes.size()).append(" recipes").toString());
@@ -318,9 +342,43 @@ public class CraftingManager
 
     public ItemStack findMatchingRecipe(InventoryCrafting inventorycrafting)
     {
-        for(int i = 0; i < recipes.size(); i++)
+        int i = 0;
+        ItemStack itemstack = null;
+        ItemStack itemstack1 = null;
+        for(int j = 0; j < inventorycrafting.getSizeInventory(); j++)
         {
-            IRecipe irecipe = (IRecipe)recipes.get(i);
+            ItemStack itemstack2 = inventorycrafting.getStackInSlot(j);
+            if(itemstack2 == null)
+            {
+                continue;
+            }
+            if(i == 0)
+            {
+                itemstack = itemstack2;
+            }
+            if(i == 1)
+            {
+                itemstack1 = itemstack2;
+            }
+            i++;
+        }
+
+        if(i == 2 && itemstack.itemID == itemstack1.itemID && itemstack.stackSize == 1 && itemstack1.stackSize == 1 && Item.itemsList[itemstack.itemID].isDamageable())
+        {
+            Item item = Item.itemsList[itemstack.itemID];
+            int l = item.getMaxDamage() - itemstack.getItemDamageForDisplay();
+            int i1 = item.getMaxDamage() - itemstack1.getItemDamageForDisplay();
+            int j1 = l + i1 + (item.getMaxDamage() * 10) / 100;
+            int k1 = item.getMaxDamage() - j1;
+            if(k1 < 0)
+            {
+                k1 = 0;
+            }
+            return new ItemStack(itemstack.itemID, 1, k1);
+        }
+        for(int k = 0; k < recipes.size(); k++)
+        {
+            IRecipe irecipe = (IRecipe)recipes.get(k);
             if(irecipe.matches(inventorycrafting))
             {
                 return irecipe.getCraftingResult(inventorycrafting);
@@ -334,8 +392,5 @@ public class CraftingManager
     {
         return recipes;
     }
-
-    private static final CraftingManager instance = new CraftingManager();
-    private List recipes;
 
 }

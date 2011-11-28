@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,10 +9,13 @@ import org.lwjgl.opengl.GL11;
 
 // Referenced classes of package net.minecraft.src:
 //            Render, EntityPainting, EnumArt, Tessellator, 
-//            MathHelper, RenderManager, World, Entity
+//            MathHelper, RenderManager, World, OpenGlHelper, 
+//            Entity
 
 public class RenderPainting extends Render
 {
+
+    private Random rand;
 
     public RenderPainting()
     {
@@ -79,12 +82,12 @@ public class RenderPainting extends Render
                 tessellator.addVertexWithUV(f5, f6, f3, f13, f14);
                 tessellator.addVertexWithUV(f5, f7, f3, f13, f15);
                 tessellator.addVertexWithUV(f4, f7, f3, f12, f15);
-                tessellator.setNormal(0.0F, -1F, 0.0F);
+                tessellator.setNormal(0.0F, 1.0F, 0.0F);
                 tessellator.addVertexWithUV(f4, f6, f2, f16, f18);
                 tessellator.addVertexWithUV(f5, f6, f2, f17, f18);
                 tessellator.addVertexWithUV(f5, f6, f3, f17, f19);
                 tessellator.addVertexWithUV(f4, f6, f3, f16, f19);
-                tessellator.setNormal(0.0F, 1.0F, 0.0F);
+                tessellator.setNormal(0.0F, -1F, 0.0F);
                 tessellator.addVertexWithUV(f4, f7, f3, f16, f18);
                 tessellator.addVertexWithUV(f5, f7, f3, f17, f18);
                 tessellator.addVertexWithUV(f5, f7, f2, f17, f19);
@@ -127,8 +130,11 @@ public class RenderPainting extends Render
         {
             k = MathHelper.floor_double(entitypainting.posZ + (double)(f / 16F));
         }
-        float f2 = renderManager.worldObj.getLightBrightness(i, j, k);
-        GL11.glColor3f(f2, f2, f2);
+        int l = renderManager.worldObj.getLightBrightnessForSkyBlocks(i, j, k, 0);
+        int i1 = l % 0x10000;
+        int j1 = l / 0x10000;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, i1, j1);
+        GL11.glColor3f(1.0F, 1.0F, 1.0F);
     }
 
     public void doRender(Entity entity, double d, double d1, double d2, 
@@ -136,6 +142,4 @@ public class RenderPainting extends Render
     {
         func_158_a((EntityPainting)entity, d, d1, d2, f, f1);
     }
-
-    private Random rand;
 }

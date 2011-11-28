@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 public class GenLayerTemperatureMix extends GenLayer
 {
+
+    private GenLayer field_35505_b;
+    private int field_35506_c;
 
     public GenLayerTemperatureMix(GenLayer genlayer, GenLayer genlayer1, int i)
     {
@@ -31,7 +34,4 @@ public class GenLayerTemperatureMix extends GenLayer
 
         return ai2;
     }
-
-    private GenLayer field_35505_b;
-    private int field_35506_c;
 }

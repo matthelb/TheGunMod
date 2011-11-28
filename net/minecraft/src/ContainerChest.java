@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,9 @@ import java.util.List;
 
 public class ContainerChest extends Container
 {
+
+    private IInventory lowerChestInventory;
+    private int numRows;
 
     public ContainerChest(IInventory iinventory, IInventory iinventory1)
     {
@@ -46,7 +49,7 @@ public class ContainerChest extends Container
 
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return lowerChestInventory.canInteractWith(entityplayer);
+        return lowerChestInventory.isUseableByPlayer(entityplayer);
     }
 
     public ItemStack transferStackInSlot(int i)
@@ -84,7 +87,4 @@ public class ContainerChest extends Container
         super.onCraftGuiClosed(entityplayer);
         lowerChestInventory.closeChest();
     }
-
-    private IInventory lowerChestInventory;
-    private int numRows;
 }

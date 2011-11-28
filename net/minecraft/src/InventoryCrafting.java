@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ package net.minecraft.src;
 public class InventoryCrafting
     implements IInventory
 {
+
+    private ItemStack stackList[];
+    private int inventoryWidth;
+    private Container eventHandler;
 
     public InventoryCrafting(Container container, int i, int j)
     {
@@ -92,7 +96,7 @@ public class InventoryCrafting
     {
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
         return true;
     }
@@ -104,8 +108,4 @@ public class InventoryCrafting
     public void closeChest()
     {
     }
-
-    private ItemStack stackList[];
-    private int inventoryWidth;
-    private Container eventHandler;
 }

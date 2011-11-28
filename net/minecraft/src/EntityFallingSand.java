@@ -1,16 +1,19 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            Entity, MathHelper, World, BlockSand, 
-//            NBTTagCompound
+//            Entity, MathHelper, World, Block, 
+//            BlockPistonMoving, BlockSand, NBTTagCompound
 
 public class EntityFallingSand extends Entity
 {
+
+    public int blockID;
+    public int fallTime;
 
     public EntityFallingSand(World world)
     {
@@ -69,19 +72,26 @@ public class EntityFallingSand extends Entity
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posY);
         int k = MathHelper.floor_double(posZ);
-        if(worldObj.getBlockId(i, j, k) == blockID)
+        if(fallTime == 1 && worldObj.getBlockId(i, j, k) == blockID)
         {
             worldObj.setBlockWithNotify(i, j, k, 0);
+        } else
+        if(!worldObj.multiplayerWorld && fallTime == 1)
+        {
+            setEntityDead();
         }
         if(onGround)
         {
             motionX *= 0.69999998807907104D;
             motionZ *= 0.69999998807907104D;
             motionY *= -0.5D;
-            setEntityDead();
-            if((!worldObj.canBlockBePlacedAt(blockID, i, j, k, true, 1) || BlockSand.canFallBelow(worldObj, i, j - 1, k) || !worldObj.setBlockWithNotify(i, j, k, blockID)) && !worldObj.multiplayerWorld)
+            if(worldObj.getBlockId(i, j, k) != Block.pistonMoving.blockID)
             {
-                dropItem(blockID, 1);
+                setEntityDead();
+                if((!worldObj.canBlockBePlacedAt(blockID, i, j, k, true, 1) || BlockSand.canFallBelow(worldObj, i, j - 1, k) || !worldObj.setBlockWithNotify(i, j, k, blockID)) && !worldObj.multiplayerWorld)
+                {
+                    dropItem(blockID, 1);
+                }
             }
         } else
         if(fallTime > 100 && !worldObj.multiplayerWorld)
@@ -110,7 +120,4 @@ public class EntityFallingSand extends Entity
     {
         return worldObj;
     }
-
-    public int blockID;
-    public int fallTime;
 }

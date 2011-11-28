@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,6 +9,9 @@ import java.util.Properties;
 
 public class StringTranslate
 {
+
+    private static StringTranslate instance = new StringTranslate();
+    private Properties translateTable;
 
     private StringTranslate()
     {
@@ -44,8 +47,5 @@ public class StringTranslate
     {
         return translateTable.getProperty((new StringBuilder()).append(s).append(".name").toString(), "");
     }
-
-    private static StringTranslate instance = new StringTranslate();
-    private Properties translateTable;
 
 }

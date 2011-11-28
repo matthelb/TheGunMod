@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import java.util.Random;
 
 public class WorldGenHellLava extends WorldGenerator
 {
+
+    private int hellLavaID;
 
     public WorldGenHellLava(int i)
     {
@@ -78,6 +80,4 @@ public class WorldGenHellLava extends WorldGenerator
         }
         return true;
     }
-
-    private int hellLavaID;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,15 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiButton extends Gui
 {
+
+    protected int width;
+    protected int height;
+    public int xPosition;
+    public int yPosition;
+    public String displayString;
+    public int id;
+    public boolean enabled;
+    public boolean drawButton;
 
     public GuiButton(int i, int j, int k, String s)
     {
@@ -85,13 +94,4 @@ public class GuiButton extends Gui
     {
         return enabled && drawButton && i >= xPosition && j >= yPosition && i < xPosition + width && j < yPosition + height;
     }
-
-    protected int width;
-    protected int height;
-    public int xPosition;
-    public int yPosition;
-    public String displayString;
-    public int id;
-    public boolean enabled;
-    public boolean drawButton;
 }

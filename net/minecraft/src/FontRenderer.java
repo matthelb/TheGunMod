@@ -1,12 +1,13 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.IntBuffer;
+import java.util.Random;
 import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL11;
 
@@ -17,11 +18,20 @@ import org.lwjgl.opengl.GL11;
 public class FontRenderer
 {
 
+    private int charWidth[];
+    public int fontTextureName;
+    public int field_41063_b;
+    private int fontDisplayLists;
+    private IntBuffer buffer;
+    public Random field_41064_c;
+
     public FontRenderer(GameSettings gamesettings, String s, RenderEngine renderengine)
     {
         charWidth = new int[256];
         fontTextureName = 0;
+        field_41063_b = 8;
         buffer = GLAllocation.createDirectIntBuffer(1024 /*GL_FRONT_LEFT*/);
+        field_41064_c = new Random();
         BufferedImage bufferedimage;
         try
         {
@@ -142,6 +152,7 @@ public class FontRenderer
         {
             return;
         }
+        boolean flag1 = false;
         if(flag)
         {
             int l = k & 0xff000000;
@@ -165,12 +176,19 @@ public class FontRenderer
         {
             for(; s.length() > i1 + 1 && s.charAt(i1) == '\247'; i1 += 2)
             {
-                int j1 = "0123456789abcdef".indexOf(s.toLowerCase().charAt(i1 + 1));
-                if(j1 < 0 || j1 > 15)
+                char c = s.toLowerCase().charAt(i1 + 1);
+                if(c == 'k')
                 {
-                    j1 = 15;
+                    flag1 = true;
+                    continue;
                 }
-                buffer.put(fontDisplayLists + 256 + j1 + (flag ? 16 : 0));
+                flag1 = false;
+                int k1 = "0123456789abcdef".indexOf(c);
+                if(k1 < 0 || k1 > 15)
+                {
+                    k1 = 15;
+                }
+                buffer.put(fontDisplayLists + 256 + k1 + (flag ? 16 : 0));
                 if(buffer.remaining() == 0)
                 {
                     buffer.flip();
@@ -181,10 +199,22 @@ public class FontRenderer
 
             if(i1 < s.length())
             {
-                int k1 = ChatAllowedCharacters.allowedCharacters.indexOf(s.charAt(i1));
-                if(k1 >= 0)
+                int j1 = ChatAllowedCharacters.allowedCharacters.indexOf(s.charAt(i1));
+                if(j1 >= 0)
                 {
-                    buffer.put(fontDisplayLists + k1 + 32);
+                    if(flag1)
+                    {
+                        int l1 = 0;
+                        do
+                        {
+                            l1 = field_41064_c.nextInt(ChatAllowedCharacters.allowedCharacters.length());
+                        } while(charWidth[j1 + 32] != charWidth[l1 + 32]);
+                        buffer.put(fontDisplayLists + 256 + field_41064_c.nextInt(2) + 8 + (flag ? 16 : 0));
+                        buffer.put(fontDisplayLists + l1 + 32);
+                    } else
+                    {
+                        buffer.put(fontDisplayLists + j1 + 32);
+                    }
                 }
             }
             if(buffer.remaining() == 0)
@@ -226,6 +256,11 @@ public class FontRenderer
 
     public void drawSplitString(String s, int i, int j, int k, int l)
     {
+        func_40609_a(s, i, j, k, l, false);
+    }
+
+    public void func_40609_a(String s, int i, int j, int k, int l, boolean flag)
+    {
         String as[] = s.split("\n");
         if(as.length > 1)
         {
@@ -239,29 +274,40 @@ public class FontRenderer
         }
         String as1[] = s.split(" ");
         int j1 = 0;
+        String s1 = "";
         do
         {
             if(j1 >= as1.length)
             {
                 break;
             }
-            String s1;
-            for(s1 = (new StringBuilder()).append(as1[j1++]).append(" ").toString(); j1 < as1.length && getStringWidth((new StringBuilder()).append(s1).append(as1[j1]).toString()) < k; s1 = (new StringBuilder()).append(s1).append(as1[j1++]).append(" ").toString()) { }
+            String s2;
+            for(s2 = (new StringBuilder()).append(s1).append(as1[j1++]).append(" ").toString(); j1 < as1.length && getStringWidth((new StringBuilder()).append(s2).append(as1[j1]).toString()) < k; s2 = (new StringBuilder()).append(s2).append(as1[j1++]).append(" ").toString()) { }
             int k1;
-            for(; getStringWidth(s1) > k; s1 = s1.substring(k1))
+            for(; getStringWidth(s2) > k; s2 = (new StringBuilder()).append(s1).append(s2.substring(k1)).toString())
             {
-                for(k1 = 0; getStringWidth(s1.substring(0, k1 + 1)) <= k; k1++) { }
-                if(s1.substring(0, k1).trim().length() > 0)
+                for(k1 = 0; getStringWidth(s2.substring(0, k1 + 1)) <= k; k1++) { }
+                if(s2.substring(0, k1).trim().length() <= 0)
                 {
-                    drawString(s1.substring(0, k1), i, j, l);
-                    j += 8;
+                    continue;
                 }
+                String s3 = s2.substring(0, k1);
+                if(s3.lastIndexOf("\247") >= 0)
+                {
+                    s1 = (new StringBuilder()).append("\247").append(s3.charAt(s3.lastIndexOf("\247") + 1)).toString();
+                }
+                renderString(s3, i, j, l, flag);
+                j += field_41063_b;
             }
 
-            if(s1.trim().length() > 0)
+            if(getStringWidth(s2.trim()) > 0)
             {
-                drawString(s1, i, j, l);
-                j += 8;
+                if(s2.lastIndexOf("\247") >= 0)
+                {
+                    s1 = (new StringBuilder()).append("\247").append(s2.charAt(s2.lastIndexOf("\247") + 1)).toString();
+                }
+                renderString(s2, i, j, l, flag);
+                j += field_41063_b;
             }
         } while(true);
     }
@@ -296,24 +342,19 @@ public class FontRenderer
                 for(j1 = 0; getStringWidth(s1.substring(0, j1 + 1)) <= i; j1++) { }
                 if(s1.substring(0, j1).trim().length() > 0)
                 {
-                    i1 += 8;
+                    i1 += field_41063_b;
                 }
             }
 
             if(s1.trim().length() > 0)
             {
-                i1 += 8;
+                i1 += field_41063_b;
             }
         } while(true);
-        if(i1 < 8)
+        if(i1 < field_41063_b)
         {
-            i1 += 8;
+            i1 += field_41063_b;
         }
         return i1;
     }
-
-    private int charWidth[];
-    public int fontTextureName;
-    private int fontDisplayLists;
-    private IntBuffer buffer;
 }

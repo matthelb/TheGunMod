@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,40 @@ import org.lwjgl.opengl.GL11;
 
 public class WorldRenderer
 {
+
+    public World worldObj;
+    private int glRenderList;
+    private static Tessellator tessellator;
+    public static int chunksUpdated = 0;
+    public int posX;
+    public int posY;
+    public int posZ;
+    public int sizeWidth;
+    public int sizeHeight;
+    public int sizeDepth;
+    public int posXMinus;
+    public int posYMinus;
+    public int posZMinus;
+    public int posXClip;
+    public int posYClip;
+    public int posZClip;
+    public boolean isInFrustum;
+    public boolean skipRenderPass[];
+    public int posXPlus;
+    public int posYPlus;
+    public int posZPlus;
+    public float rendererRadius;
+    public boolean needsUpdate;
+    public AxisAlignedBB rendererBoundingBox;
+    public int chunkIndex;
+    public boolean isVisible;
+    public boolean isWaitingOnOcclusionQuery;
+    public int glOcclusionQuery;
+    public boolean isChunkLit;
+    private boolean isInitialized;
+    public List tileEntityRenderers;
+    private List tileEntities;
+    private int bytesDrawn;
 
     public WorldRenderer(World world, List list, int i, int j, int k, int l, int i1)
     {
@@ -94,6 +128,7 @@ public class WorldRenderer
         int l1 = 1;
         ChunkCache chunkcache = new ChunkCache(worldObj, i - l1, j - l1, k - l1, l + l1, i1 + l1, j1 + l1);
         RenderBlocks renderblocks = new RenderBlocks(chunkcache);
+        bytesDrawn = 0;
         int i2 = 0;
         do
         {
@@ -159,7 +194,7 @@ public class WorldRenderer
 
             if(flag2)
             {
-                tessellator.draw();
+                bytesDrawn += tessellator.draw();
                 GL11.glPopMatrix();
                 GL11.glEndList();
                 tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
@@ -252,39 +287,6 @@ public class WorldRenderer
     {
         needsUpdate = true;
     }
-
-    public World worldObj;
-    private int glRenderList;
-    private static Tessellator tessellator;
-    public static int chunksUpdated = 0;
-    public int posX;
-    public int posY;
-    public int posZ;
-    public int sizeWidth;
-    public int sizeHeight;
-    public int sizeDepth;
-    public int posXMinus;
-    public int posYMinus;
-    public int posZMinus;
-    public int posXClip;
-    public int posYClip;
-    public int posZClip;
-    public boolean isInFrustum;
-    public boolean skipRenderPass[];
-    public int posXPlus;
-    public int posYPlus;
-    public int posZPlus;
-    public float rendererRadius;
-    public boolean needsUpdate;
-    public AxisAlignedBB rendererBoundingBox;
-    public int chunkIndex;
-    public boolean isVisible;
-    public boolean isWaitingOnOcclusionQuery;
-    public int glOcclusionQuery;
-    public boolean isChunkLit;
-    private boolean isInitialized;
-    public List tileEntityRenderers;
-    private List tileEntities;
 
     static 
     {

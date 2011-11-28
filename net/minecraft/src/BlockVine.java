@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,9 +8,9 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, Material, IBlockAccess, World, 
-//            ModelBed, ColorizerFoliage, WorldChunkManager, EntityPlayer, 
-//            ItemStack, Item, ItemShears, StatList, 
-//            AxisAlignedBB
+//            Direction, ColorizerFoliage, WorldChunkManager, BiomeGenBase, 
+//            EntityPlayer, ItemStack, Item, ItemShears, 
+//            StatList, AxisAlignedBB
 
 public class BlockVine extends Block
 {
@@ -151,7 +151,7 @@ public class BlockVine extends Block
             for(int j1 = 0; j1 <= 3; j1++)
             {
                 int k1 = 1 << j1;
-                if((l & k1) != 0 && !canBePlacedOn(world.getBlockId(i + ModelBed.field_35871_a[j1], j, k + ModelBed.field_35870_b[j1])) && (world.getBlockId(i, j + 1, k) != blockID || (world.getBlockMetadata(i, j + 1, k) & k1) == 0))
+                if((l & k1) != 0 && !canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[j1], j, k + Direction.field_35870_b[j1])) && (world.getBlockId(i, j + 1, k) != blockID || (world.getBlockMetadata(i, j + 1, k) & k1) == 0))
                 {
                     i1 &= ~k1;
                 }
@@ -171,50 +171,44 @@ public class BlockVine extends Block
 
     public int getBlockColor()
     {
-        return ColorizerFoliage.func_31073_c();
+        return ColorizerFoliage.getFoliageColorBasic();
     }
 
     public int getRenderColor(int i)
     {
-        return ColorizerFoliage.func_31073_c();
+        return ColorizerFoliage.getFoliageColorBasic();
     }
 
     public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
     {
-        double d = iblockaccess.getWorldChunkManager().func_35554_b(i, k);
-        double d1 = iblockaccess.getWorldChunkManager().func_35558_c(i, k);
-        return ColorizerFoliage.getFoliageColor(d, d1);
+        return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).func_40255_b(iblockaccess, i, j, k);
     }
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
         if(!world.multiplayerWorld && !canVineStay(world, i, j, k))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
         }
     }
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-label0:
+        if(!world.multiplayerWorld && world.rand.nextInt(4) == 0)
         {
-            if(world.multiplayerWorld || world.rand.nextInt(16) != 0)
-            {
-                break label0;
-            }
             byte byte0 = 4;
             int l = 5;
             boolean flag = false;
             int i1 = i - byte0;
-label1:
+label0:
             do
             {
                 if(i1 > i + byte0)
                 {
                     break;
                 }
-label2:
+label1:
                 for(int j1 = k - byte0; j1 <= k + byte0; j1++)
                 {
                     int l1 = j - 1;
@@ -222,12 +216,12 @@ label2:
                     {
                         if(l1 > j + 1)
                         {
-                            continue label2;
+                            continue label1;
                         }
                         if(world.getBlockId(i1, l1, j1) == blockID && --l <= 0)
                         {
                             flag = true;
-                            break label1;
+                            break label0;
                         }
                         l1++;
                     } while(true);
@@ -237,65 +231,60 @@ label2:
             } while(true);
             i1 = world.getBlockMetadata(i, j, k);
             int k1 = world.rand.nextInt(6);
-            int i2 = ModelBed.field_35869_d[k1];
-            if(k1 == 1)
+            int i2 = Direction.field_35869_d[k1];
+            if(k1 == 1 && j < world.field_35472_c - 1 && world.isAirBlock(i, j + 1, k))
             {
-                world.getClass();
-                if(j < 128 - 1 && world.isAirBlock(i, j + 1, k))
+                if(flag)
                 {
-                    if(flag)
+                    return;
+                }
+                int j2 = world.rand.nextInt(16) & i1;
+                if(j2 > 0)
+                {
+                    for(int i3 = 0; i3 <= 3; i3++)
                     {
-                        return;
+                        if(!canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i3], j + 1, k + Direction.field_35870_b[i3])))
+                        {
+                            j2 &= ~(1 << i3);
+                        }
                     }
-                    int j2 = world.rand.nextInt(16) & i1;
+
                     if(j2 > 0)
                     {
-                        for(int i3 = 0; i3 <= 3; i3++)
-                        {
-                            if(!canBePlacedOn(world.getBlockId(i + ModelBed.field_35871_a[i3], j + 1, k + ModelBed.field_35870_b[i3])))
-                            {
-                                j2 &= ~(1 << i3);
-                            }
-                        }
-
-                        if(j2 > 0)
-                        {
-                            world.setBlockAndMetadataWithNotify(i, j + 1, k, blockID, j2);
-                        }
+                        world.setBlockAndMetadataWithNotify(i, j + 1, k, blockID, j2);
                     }
-                    break label0;
                 }
-            }
+            } else
             if(k1 >= 2 && k1 <= 5 && (i1 & 1 << i2) == 0)
             {
                 if(flag)
                 {
                     return;
                 }
-                int k2 = world.getBlockId(i + ModelBed.field_35871_a[i2], j, k + ModelBed.field_35870_b[i2]);
+                int k2 = world.getBlockId(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2]);
                 if(k2 == 0 || Block.blocksList[k2] == null)
                 {
                     int j3 = i2 + 1 & 3;
                     int i4 = i2 + 3 & 3;
-                    if((i1 & 1 << j3) != 0 && canBePlacedOn(world.getBlockId(i + ModelBed.field_35871_a[i2] + ModelBed.field_35871_a[j3], j, k + ModelBed.field_35870_b[i2] + ModelBed.field_35870_b[j3])))
+                    if((i1 & 1 << j3) != 0 && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i2] + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[j3])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + ModelBed.field_35871_a[i2], j, k + ModelBed.field_35870_b[i2], blockID, 1 << j3);
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2], blockID, 1 << j3);
                     } else
-                    if((i1 & 1 << i4) != 0 && canBePlacedOn(world.getBlockId(i + ModelBed.field_35871_a[i2] + ModelBed.field_35871_a[i4], j, k + ModelBed.field_35870_b[i2] + ModelBed.field_35870_b[i4])))
+                    if((i1 & 1 << i4) != 0 && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i2] + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[i4])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + ModelBed.field_35871_a[i2], j, k + ModelBed.field_35870_b[i2], blockID, 1 << i4);
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2], blockID, 1 << i4);
                     } else
-                    if((i1 & 1 << j3) != 0 && world.isAirBlock(i + ModelBed.field_35871_a[i2] + ModelBed.field_35871_a[j3], j, k + ModelBed.field_35870_b[i2] + ModelBed.field_35870_b[j3]) && canBePlacedOn(world.getBlockId(i + ModelBed.field_35871_a[j3], j, k + ModelBed.field_35870_b[j3])))
+                    if((i1 & 1 << j3) != 0 && world.isAirBlock(i + Direction.field_35871_a[i2] + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[j3]) && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[j3])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + ModelBed.field_35871_a[i2] + ModelBed.field_35871_a[j3], j, k + ModelBed.field_35870_b[i2] + ModelBed.field_35870_b[j3], blockID, 1 << (i2 + 2 & 3));
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2] + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[j3], blockID, 1 << (i2 + 2 & 3));
                     } else
-                    if((i1 & 1 << i4) != 0 && world.isAirBlock(i + ModelBed.field_35871_a[i2] + ModelBed.field_35871_a[i4], j, k + ModelBed.field_35870_b[i2] + ModelBed.field_35870_b[i4]) && canBePlacedOn(world.getBlockId(i + ModelBed.field_35871_a[i4], j, k + ModelBed.field_35870_b[i4])))
+                    if((i1 & 1 << i4) != 0 && world.isAirBlock(i + Direction.field_35871_a[i2] + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[i4]) && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i4])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + ModelBed.field_35871_a[i2] + ModelBed.field_35871_a[i4], j, k + ModelBed.field_35870_b[i2] + ModelBed.field_35870_b[i4], blockID, 1 << (i2 + 2 & 3));
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2] + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[i4], blockID, 1 << (i2 + 2 & 3));
                     } else
-                    if(canBePlacedOn(world.getBlockId(i + ModelBed.field_35871_a[i2], j + 1, k + ModelBed.field_35870_b[i2])))
+                    if(canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i2], j + 1, k + Direction.field_35870_b[i2])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + ModelBed.field_35871_a[i2], j, k + ModelBed.field_35870_b[i2], blockID, 0);
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2], blockID, 0);
                     }
                 } else
                 if(Block.blocksList[k2].blockMaterial.getIsOpaque() && Block.blocksList[k2].renderAsNormalBlock())
@@ -354,7 +343,7 @@ label2:
         }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return 0;
     }
@@ -369,7 +358,7 @@ label2:
         if(!world.multiplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
         {
             entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
-            dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.vine, 1, l));
+            dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.vine, 1, 0));
         } else
         {
             super.harvestBlock(world, entityplayer, i, j, k, l);

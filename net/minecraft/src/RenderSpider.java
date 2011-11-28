@@ -1,14 +1,14 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 // Referenced classes of package net.minecraft.src:
-//            RenderLiving, ModelSpider, EntitySpider, EntityLiving
+//            RenderLiving, ModelSpider, OpenGlHelper, EntitySpider, 
+//            EntityLiving
 
 public class RenderSpider extends RenderLiving
 {
@@ -24,15 +24,11 @@ public class RenderSpider extends RenderLiving
         return 180F;
     }
 
-    protected boolean setSpiderEyeBrightness(EntitySpider entityspider, int i, float f)
+    protected int setSpiderEyeBrightness(EntitySpider entityspider, int i, float f)
     {
         if(i != 0)
         {
-            return false;
-        }
-        if(i != 0)
-        {
-            return false;
+            return -1;
         } else
         {
             loadTexture("/mob/spider_eyes.png");
@@ -43,16 +39,16 @@ public class RenderSpider extends RenderLiving
             int j = 61680;
             int k = j % 0x10000;
             int l = j / 0x10000;
-            GL13.glMultiTexCoord2f(33985 /*GL_TEXTURE1_ARB*/, (float)k / 1.0F, (float)l / 1.0F);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)k / 1.0F, (float)l / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, f1);
-            return true;
+            return 1;
         }
     }
 
     protected void scaleSpider(EntitySpider entityspider, float f)
     {
-        float f1 = entityspider.func_35188_k_();
+        float f1 = entityspider.spiderScaleAmount();
         GL11.glScalef(f1, f1, f1);
     }
 
@@ -66,7 +62,7 @@ public class RenderSpider extends RenderLiving
         return setSpiderDeathMaxRotation((EntitySpider)entityliving);
     }
 
-    protected boolean shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
         return setSpiderEyeBrightness((EntitySpider)entityliving, i, f);
     }

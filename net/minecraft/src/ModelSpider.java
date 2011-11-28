@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,18 @@ package net.minecraft.src;
 
 public class ModelSpider extends ModelBase
 {
+
+    public ModelRenderer spiderHead;
+    public ModelRenderer spiderNeck;
+    public ModelRenderer spiderBody;
+    public ModelRenderer spiderLeg1;
+    public ModelRenderer spiderLeg2;
+    public ModelRenderer spiderLeg3;
+    public ModelRenderer spiderLeg4;
+    public ModelRenderer spiderLeg5;
+    public ModelRenderer spiderLeg6;
+    public ModelRenderer spiderLeg7;
+    public ModelRenderer spiderLeg8;
 
     public ModelSpider()
     {
@@ -114,16 +126,4 @@ public class ModelSpider extends ModelBase
         spiderLeg7.rotateAngleZ += f16;
         spiderLeg8.rotateAngleZ += -f16;
     }
-
-    public ModelRenderer spiderHead;
-    public ModelRenderer spiderNeck;
-    public ModelRenderer spiderBody;
-    public ModelRenderer spiderLeg1;
-    public ModelRenderer spiderLeg2;
-    public ModelRenderer spiderLeg3;
-    public ModelRenderer spiderLeg4;
-    public ModelRenderer spiderLeg5;
-    public ModelRenderer spiderLeg6;
-    public ModelRenderer spiderLeg7;
-    public ModelRenderer spiderLeg8;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,27 @@ import org.lwjgl.opengl.GL11;
 
 public abstract class GuiSlot
 {
+
+    private final Minecraft mc;
+    private final int width;
+    private final int height;
+    protected final int top;
+    protected final int bottom;
+    private final int right;
+    private final int left = 0;
+    protected final int slotHeight;
+    private int scrollUpButtonID;
+    private int scrollDownButtonID;
+    protected int field_35409_k;
+    protected int field_35408_l;
+    private float initialClickY;
+    private float scrollMultiplier;
+    private float amountScrolled;
+    private int selectedElement;
+    private long lastClicked;
+    private boolean field_25123_p;
+    private boolean field_27262_q;
+    private int field_27261_r;
 
     public GuiSlot(Minecraft minecraft, int i, int j, int k, int l, int i1)
     {
@@ -145,40 +166,40 @@ public abstract class GuiSlot
                 boolean flag = true;
                 if(j >= top && j <= bottom)
                 {
-                    int j1 = width / 2 - 110;
-                    int k1 = width / 2 + 110;
-                    int i2 = ((j - top - field_27261_r) + (int)amountScrolled) - 4;
-                    int k2 = i2 / slotHeight;
-                    if(i >= j1 && i <= k1 && k2 >= 0 && i2 >= 0 && k2 < k)
+                    int k1 = width / 2 - 110;
+                    int l1 = width / 2 + 110;
+                    int j2 = ((j - top - field_27261_r) + (int)amountScrolled) - 4;
+                    int l2 = j2 / slotHeight;
+                    if(i >= k1 && i <= l1 && l2 >= 0 && j2 >= 0 && l2 < k)
                     {
-                        boolean flag1 = k2 == selectedElement && System.currentTimeMillis() - lastClicked < 250L;
-                        elementClicked(k2, flag1);
-                        selectedElement = k2;
+                        boolean flag1 = l2 == selectedElement && System.currentTimeMillis() - lastClicked < 250L;
+                        elementClicked(l2, flag1);
+                        selectedElement = l2;
                         lastClicked = System.currentTimeMillis();
                     } else
-                    if(i >= j1 && i <= k1 && i2 < 0)
+                    if(i >= k1 && i <= l1 && j2 < 0)
                     {
-                        func_27255_a(i - j1, ((j - top) + (int)amountScrolled) - 4);
+                        func_27255_a(i - k1, ((j - top) + (int)amountScrolled) - 4);
                         flag = false;
                     }
                     if(i >= l && i <= i1)
                     {
                         scrollMultiplier = -1F;
-                        int i3 = getContentHeight() - (bottom - top - 4);
-                        if(i3 < 1)
+                        int j3 = getContentHeight() - (bottom - top - 4);
+                        if(j3 < 1)
                         {
-                            i3 = 1;
+                            j3 = 1;
                         }
-                        int l3 = (int)((float)((bottom - top) * (bottom - top)) / (float)getContentHeight());
-                        if(l3 < 32)
+                        int i4 = (int)((float)((bottom - top) * (bottom - top)) / (float)getContentHeight());
+                        if(i4 < 32)
                         {
-                            l3 = 32;
+                            i4 = 32;
                         }
-                        if(l3 > bottom - top - 8)
+                        if(i4 > bottom - top - 8)
                         {
-                            l3 = bottom - top - 8;
+                            i4 = bottom - top - 8;
                         }
-                        scrollMultiplier /= (float)(bottom - top - l3) / (float)i3;
+                        scrollMultiplier /= (float)(bottom - top - i4) / (float)j3;
                     } else
                     {
                         scrollMultiplier = 1.0F;
@@ -202,6 +223,26 @@ public abstract class GuiSlot
             }
         } else
         {
+            do
+            {
+                if(!Mouse.next())
+                {
+                    break;
+                }
+                int j1 = Mouse.getEventDWheel();
+                if(j1 != 0)
+                {
+                    if(j1 > 0)
+                    {
+                        j1 = -1;
+                    } else
+                    if(j1 < 0)
+                    {
+                        j1 = 1;
+                    }
+                    amountScrolled += (j1 * slotHeight) / 2;
+                }
+            } while(true);
             initialClickY = -1F;
         }
         bindAmountScrolled();
@@ -218,41 +259,41 @@ public abstract class GuiSlot
         tessellator.addVertexWithUV(right, top, 0.0D, (float)right / f1, (float)(top + (int)amountScrolled) / f1);
         tessellator.addVertexWithUV(left, top, 0.0D, (float)left / f1, (float)(top + (int)amountScrolled) / f1);
         tessellator.draw();
-        int l1 = width / 2 - 92 - 16;
-        int j2 = (top + 4) - (int)amountScrolled;
+        int i2 = width / 2 - 92 - 16;
+        int k2 = (top + 4) - (int)amountScrolled;
         if(field_27262_q)
         {
-            func_27260_a(l1, j2, tessellator);
+            func_27260_a(i2, k2, tessellator);
         }
-        for(int l2 = 0; l2 < k; l2++)
+        for(int i3 = 0; i3 < k; i3++)
         {
-            int j3 = j2 + l2 * slotHeight + field_27261_r;
-            int i4 = slotHeight - 4;
-            if(j3 > bottom || j3 + i4 < top)
+            int k3 = k2 + i3 * slotHeight + field_27261_r;
+            int j4 = slotHeight - 4;
+            if(k3 > bottom || k3 + j4 < top)
             {
                 continue;
             }
-            if(field_25123_p && isSelected(l2))
+            if(field_25123_p && isSelected(i3))
             {
-                int k4 = width / 2 - 110;
-                int i5 = width / 2 + 110;
+                int l4 = width / 2 - 110;
+                int j5 = width / 2 + 110;
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                 GL11.glDisable(3553 /*GL_TEXTURE_2D*/);
                 tessellator.startDrawingQuads();
                 tessellator.setColorOpaque_I(0x808080);
-                tessellator.addVertexWithUV(k4, j3 + i4 + 2, 0.0D, 0.0D, 1.0D);
-                tessellator.addVertexWithUV(i5, j3 + i4 + 2, 0.0D, 1.0D, 1.0D);
-                tessellator.addVertexWithUV(i5, j3 - 2, 0.0D, 1.0D, 0.0D);
-                tessellator.addVertexWithUV(k4, j3 - 2, 0.0D, 0.0D, 0.0D);
+                tessellator.addVertexWithUV(l4, k3 + j4 + 2, 0.0D, 0.0D, 1.0D);
+                tessellator.addVertexWithUV(j5, k3 + j4 + 2, 0.0D, 1.0D, 1.0D);
+                tessellator.addVertexWithUV(j5, k3 - 2, 0.0D, 1.0D, 0.0D);
+                tessellator.addVertexWithUV(l4, k3 - 2, 0.0D, 0.0D, 0.0D);
                 tessellator.setColorOpaque_I(0);
-                tessellator.addVertexWithUV(k4 + 1, j3 + i4 + 1, 0.0D, 0.0D, 1.0D);
-                tessellator.addVertexWithUV(i5 - 1, j3 + i4 + 1, 0.0D, 1.0D, 1.0D);
-                tessellator.addVertexWithUV(i5 - 1, j3 - 1, 0.0D, 1.0D, 0.0D);
-                tessellator.addVertexWithUV(k4 + 1, j3 - 1, 0.0D, 0.0D, 0.0D);
+                tessellator.addVertexWithUV(l4 + 1, k3 + j4 + 1, 0.0D, 0.0D, 1.0D);
+                tessellator.addVertexWithUV(j5 - 1, k3 + j4 + 1, 0.0D, 1.0D, 1.0D);
+                tessellator.addVertexWithUV(j5 - 1, k3 - 1, 0.0D, 1.0D, 0.0D);
+                tessellator.addVertexWithUV(l4 + 1, k3 - 1, 0.0D, 0.0D, 0.0D);
                 tessellator.draw();
                 GL11.glEnable(3553 /*GL_TEXTURE_2D*/);
             }
-            drawSlot(l2, l1, j3, i4, tessellator);
+            drawSlot(i3, i2, k3, j4, tessellator);
         }
 
         GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
@@ -280,22 +321,22 @@ public abstract class GuiSlot
         tessellator.addVertexWithUV(right, bottom - byte0, 0.0D, 1.0D, 0.0D);
         tessellator.addVertexWithUV(left, bottom - byte0, 0.0D, 0.0D, 0.0D);
         tessellator.draw();
-        int k3 = getContentHeight() - (bottom - top - 4);
-        if(k3 > 0)
+        int l3 = getContentHeight() - (bottom - top - 4);
+        if(l3 > 0)
         {
-            int j4 = ((bottom - top) * (bottom - top)) / getContentHeight();
-            if(j4 < 32)
+            int k4 = ((bottom - top) * (bottom - top)) / getContentHeight();
+            if(k4 < 32)
             {
-                j4 = 32;
+                k4 = 32;
             }
-            if(j4 > bottom - top - 8)
+            if(k4 > bottom - top - 8)
             {
-                j4 = bottom - top - 8;
+                k4 = bottom - top - 8;
             }
-            int l4 = ((int)amountScrolled * (bottom - top - j4)) / k3 + top;
-            if(l4 < top)
+            int i5 = ((int)amountScrolled * (bottom - top - k4)) / l3 + top;
+            if(i5 < top)
             {
-                l4 = top;
+                i5 = top;
             }
             tessellator.startDrawingQuads();
             tessellator.setColorRGBA_I(0, 255);
@@ -306,17 +347,17 @@ public abstract class GuiSlot
             tessellator.draw();
             tessellator.startDrawingQuads();
             tessellator.setColorRGBA_I(0x808080, 255);
-            tessellator.addVertexWithUV(l, l4 + j4, 0.0D, 0.0D, 1.0D);
-            tessellator.addVertexWithUV(i1, l4 + j4, 0.0D, 1.0D, 1.0D);
-            tessellator.addVertexWithUV(i1, l4, 0.0D, 1.0D, 0.0D);
-            tessellator.addVertexWithUV(l, l4, 0.0D, 0.0D, 0.0D);
+            tessellator.addVertexWithUV(l, i5 + k4, 0.0D, 0.0D, 1.0D);
+            tessellator.addVertexWithUV(i1, i5 + k4, 0.0D, 1.0D, 1.0D);
+            tessellator.addVertexWithUV(i1, i5, 0.0D, 1.0D, 0.0D);
+            tessellator.addVertexWithUV(l, i5, 0.0D, 0.0D, 0.0D);
             tessellator.draw();
             tessellator.startDrawingQuads();
             tessellator.setColorRGBA_I(0xc0c0c0, 255);
-            tessellator.addVertexWithUV(l, (l4 + j4) - 1, 0.0D, 0.0D, 1.0D);
-            tessellator.addVertexWithUV(i1 - 1, (l4 + j4) - 1, 0.0D, 1.0D, 1.0D);
-            tessellator.addVertexWithUV(i1 - 1, l4, 0.0D, 1.0D, 0.0D);
-            tessellator.addVertexWithUV(l, l4, 0.0D, 0.0D, 0.0D);
+            tessellator.addVertexWithUV(l, (i5 + k4) - 1, 0.0D, 0.0D, 1.0D);
+            tessellator.addVertexWithUV(i1 - 1, (i5 + k4) - 1, 0.0D, 1.0D, 1.0D);
+            tessellator.addVertexWithUV(i1 - 1, i5, 0.0D, 1.0D, 0.0D);
+            tessellator.addVertexWithUV(l, i5, 0.0D, 0.0D, 0.0D);
             tessellator.draw();
         }
         func_27257_b(i, j);
@@ -341,25 +382,4 @@ public abstract class GuiSlot
         tessellator.addVertexWithUV(0.0D, i, 0.0D, 0.0D, (float)i / f);
         tessellator.draw();
     }
-
-    private final Minecraft mc;
-    private final int width;
-    private final int height;
-    protected final int top;
-    protected final int bottom;
-    private final int right;
-    private final int left = 0;
-    protected final int slotHeight;
-    private int scrollUpButtonID;
-    private int scrollDownButtonID;
-    protected int field_35409_k;
-    protected int field_35408_l;
-    private float initialClickY;
-    private float scrollMultiplier;
-    private float amountScrolled;
-    private int selectedElement;
-    private long lastClicked;
-    private boolean field_25123_p;
-    private boolean field_27262_q;
-    private int field_27261_r;
 }

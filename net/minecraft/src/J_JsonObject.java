@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import java.util.*;
 
 final class J_JsonObject extends J_JsonRootNode
 {
+
+    private final Map field_27222_a;
 
     J_JsonObject(Map map)
     {
@@ -62,6 +64,4 @@ final class J_JsonObject extends J_JsonRootNode
     {
         return (new StringBuilder()).append("JsonObject fields:[").append(field_27222_a).append("]").toString();
     }
-
-    private final Map field_27222_a;
 }

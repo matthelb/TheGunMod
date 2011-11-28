@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,10 @@ import java.util.*;
 
 public class DataWatcher
 {
+
+    private static final HashMap dataTypes;
+    private final Map watchedObjects = new HashMap();
+    private boolean objectChanged;
 
     public DataWatcher()
     {
@@ -43,6 +47,11 @@ public class DataWatcher
     public byte getWatchableObjectByte(int i)
     {
         return ((Byte)((WatchableObject)watchedObjects.get(Integer.valueOf(i))).getObject()).byteValue();
+    }
+
+    public short func_41062_b(int i)
+    {
+        return ((Short)((WatchableObject)watchedObjects.get(Integer.valueOf(i))).getObject()).shortValue();
     }
 
     public int getWatchableObjectInt(int i)
@@ -220,10 +229,6 @@ public class DataWatcher
             throw new NoClassDefFoundError(classnotfoundexception.getMessage());
         }
     }
-
-    private static final HashMap dataTypes;
-    private final Map watchedObjects = new HashMap();
-    private boolean objectChanged;
 
     static 
     {

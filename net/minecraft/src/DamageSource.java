@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,25 @@ package net.minecraft.src;
 
 public class DamageSource
 {
+
+    public static DamageSource inFire = (new DamageSource("inFire")).func_40546_j();
+    public static DamageSource onFire = (new DamageSource("onFire")).setDamageBypassesArmor().func_40546_j();
+    public static DamageSource lava = (new DamageSource("lava")).func_40546_j();
+    public static DamageSource inWall = (new DamageSource("inWall")).setDamageBypassesArmor();
+    public static DamageSource drown = (new DamageSource("drown")).setDamageBypassesArmor();
+    public static DamageSource starve = (new DamageSource("starve")).setDamageBypassesArmor();
+    public static DamageSource cactus = new DamageSource("cactus");
+    public static DamageSource fall = (new DamageSource("fall")).setDamageBypassesArmor();
+    public static DamageSource outOfWorld = (new DamageSource("outOfWorld")).setDamageBypassesArmor().setDamageAllowedInCreativeMode();
+    public static DamageSource generic = (new DamageSource("generic")).setDamageBypassesArmor();
+    public static DamageSource explosion = new DamageSource("explosion");
+    public static DamageSource magic = (new DamageSource("magic")).setDamageBypassesArmor();
+    private boolean isBlockable;
+    private boolean isDamageAllowedInCreativeMode;
+    private float hungerDamage;
+    private boolean field_40549_q;
+    private boolean field_40548_r;
+    public String damageType;
 
     public static DamageSource causeMobDamage(EntityLiving entityliving)
     {
@@ -24,17 +43,33 @@ public class DamageSource
 
     public static DamageSource causeArrowDamage(EntityArrow entityarrow, Entity entity)
     {
-        return new EntityDamageSourceIndirect("arrow", entityarrow, entity);
+        return (new EntityDamageSourceIndirect("arrow", entityarrow, entity)).func_40544_c();
     }
 
     public static DamageSource causeFireballDamage(EntityFireball entityfireball, Entity entity)
     {
-        return new EntityDamageSourceIndirect("fireball", entityfireball, entity);
+        return (new EntityDamageSourceIndirect("fireball", entityfireball, entity)).func_40546_j().func_40544_c();
     }
 
     public static DamageSource causeThrownDamage(Entity entity, Entity entity1)
     {
-        return new EntityDamageSourceIndirect("thrown", entity, entity1);
+        return (new EntityDamageSourceIndirect("thrown", entity, entity1)).func_40544_c();
+    }
+
+    public static DamageSource func_40542_b(Entity entity, Entity entity1)
+    {
+        return (new EntityDamageSourceIndirect("indirectMagic", entity, entity1)).setDamageBypassesArmor();
+    }
+
+    public boolean func_40547_b()
+    {
+        return field_40548_r;
+    }
+
+    public DamageSource func_40544_c()
+    {
+        field_40548_r = true;
+        return this;
     }
 
     public boolean unblockable()
@@ -42,25 +77,25 @@ public class DamageSource
         return isBlockable;
     }
 
-    public float func_35533_c()
+    public float getHungerDamage()
     {
         return hungerDamage;
     }
 
     public boolean canHarmInCreative()
     {
-        return field_35544_o;
+        return isDamageAllowedInCreativeMode;
     }
 
     protected DamageSource(String s)
     {
         isBlockable = false;
-        field_35544_o = false;
+        isDamageAllowedInCreativeMode = false;
         hungerDamage = 0.3F;
-        field_35546_m = s;
+        damageType = s;
     }
 
-    public Entity func_35526_e()
+    public Entity getSourceOfDamage()
     {
         return getEntity();
     }
@@ -70,34 +105,33 @@ public class DamageSource
         return null;
     }
 
-    private DamageSource func_35528_f()
+    protected DamageSource setDamageBypassesArmor()
     {
         isBlockable = true;
         hungerDamage = 0.0F;
         return this;
     }
 
-    private DamageSource func_35531_g()
+    protected DamageSource setDamageAllowedInCreativeMode()
     {
-        field_35544_o = true;
+        isDamageAllowedInCreativeMode = true;
         return this;
     }
 
-    public static DamageSource inFire = new DamageSource("inFire");
-    public static DamageSource onFire = (new DamageSource("onFire")).func_35528_f();
-    public static DamageSource lava = new DamageSource("lava");
-    public static DamageSource inWall = (new DamageSource("inWall")).func_35528_f();
-    public static DamageSource drown = (new DamageSource("drown")).func_35528_f();
-    public static DamageSource starve = (new DamageSource("starve")).func_35528_f();
-    public static DamageSource cactus = new DamageSource("cactus");
-    public static DamageSource fall = new DamageSource("fall");
-    public static DamageSource outOfWorld = (new DamageSource("outOfWorld")).func_35528_f().func_35531_g();
-    public static DamageSource generic = (new DamageSource("generic")).func_35528_f();
-    public static DamageSource explosion = new DamageSource("explosion");
-    public static DamageSource magic = (new DamageSource("magic")).func_35528_f();
-    private boolean isBlockable;
-    private boolean field_35544_o;
-    private float hungerDamage;
-    public String field_35546_m;
+    protected DamageSource func_40546_j()
+    {
+        field_40549_q = true;
+        return this;
+    }
+
+    public boolean func_40543_k()
+    {
+        return field_40549_q;
+    }
+
+    public String func_40545_l()
+    {
+        return damageType;
+    }
 
 }

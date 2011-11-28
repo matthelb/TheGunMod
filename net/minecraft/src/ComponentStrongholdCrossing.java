@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,12 @@ import java.util.Random;
 public class ComponentStrongholdCrossing extends ComponentStronghold
 {
 
+    protected final EnumDoor field_35044_a;
+    private boolean field_35042_b;
+    private boolean field_35043_c;
+    private boolean field_35040_d;
+    private boolean field_35041_e;
+
     public ComponentStrongholdCrossing(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
@@ -23,27 +29,34 @@ public class ComponentStrongholdCrossing extends ComponentStronghold
         field_35042_b = random.nextBoolean();
         field_35043_c = random.nextBoolean();
         field_35040_d = random.nextBoolean();
-        field_35041_e = random.nextBoolean();
+        field_35041_e = random.nextInt(3) > 0;
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
+        int i = 3;
+        int j = 5;
+        if(coordBaseMode == 1 || coordBaseMode == 2)
+        {
+            i = 8 - i;
+            j = 8 - j;
+        }
         func_35028_a((ComponentStrongholdStairs2)structurecomponent, list, random, 5, 1);
         if(field_35042_b)
         {
-            func_35032_b((ComponentStrongholdStairs2)structurecomponent, list, random, 3, 1);
+            func_35032_b((ComponentStrongholdStairs2)structurecomponent, list, random, i, 1);
         }
         if(field_35043_c)
         {
-            func_35032_b((ComponentStrongholdStairs2)structurecomponent, list, random, 5, 7);
+            func_35032_b((ComponentStrongholdStairs2)structurecomponent, list, random, j, 7);
         }
         if(field_35040_d)
         {
-            func_35029_c((ComponentStrongholdStairs2)structurecomponent, list, random, 3, 1);
+            func_35029_c((ComponentStrongholdStairs2)structurecomponent, list, random, i, 1);
         }
         if(field_35041_e)
         {
-            func_35029_c((ComponentStrongholdStairs2)structurecomponent, list, random, 5, 7);
+            func_35029_c((ComponentStrongholdStairs2)structurecomponent, list, random, j, 7);
         }
     }
 
@@ -100,10 +113,4 @@ public class ComponentStrongholdCrossing extends ComponentStronghold
         placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 6, 5, 6, structureboundingbox);
         return true;
     }
-
-    protected final EnumDoor field_35044_a;
-    private boolean field_35042_b;
-    private boolean field_35043_c;
-    private boolean field_35040_d;
-    private boolean field_35041_e;
 }

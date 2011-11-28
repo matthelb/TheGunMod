@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,12 @@ import java.util.*;
 
 public class Packet60Explosion extends Packet
 {
+
+    public double explosionX;
+    public double explosionY;
+    public double explosionZ;
+    public float explosionSize;
+    public Set destroyedBlockPositions;
 
     public Packet60Explosion()
     {
@@ -72,10 +78,4 @@ public class Packet60Explosion extends Packet
     {
         return 32 + destroyedBlockPositions.size() * 3;
     }
-
-    public double explosionX;
-    public double explosionY;
-    public double explosionZ;
-    public float explosionSize;
-    public Set destroyedBlockPositions;
 }

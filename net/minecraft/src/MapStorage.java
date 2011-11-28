@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,11 +9,16 @@ import java.lang.reflect.Constructor;
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            MapDataBase, ISaveHandler, CompressedStreamTools, NBTTagCompound, 
+//            WorldSavedData, ISaveHandler, CompressedStreamTools, NBTTagCompound, 
 //            NBTBase, NBTTagShort
 
 public class MapStorage
 {
+
+    private ISaveHandler saveHandler;
+    private Map loadedDataMap;
+    private List loadedDataList;
+    private Map idCounts;
 
     public MapStorage(ISaveHandler isavehandler)
     {
@@ -24,12 +29,12 @@ public class MapStorage
         loadIdCounts();
     }
 
-    public MapDataBase loadData(Class class1, String s)
+    public WorldSavedData loadData(Class class1, String s)
     {
-        MapDataBase mapdatabase = (MapDataBase)loadedDataMap.get(s);
-        if(mapdatabase != null)
+        WorldSavedData worldsaveddata = (WorldSavedData)loadedDataMap.get(s);
+        if(worldsaveddata != null)
         {
-            return mapdatabase;
+            return worldsaveddata;
         }
         if(saveHandler != null)
         {
@@ -40,7 +45,7 @@ public class MapStorage
                 {
                     try
                     {
-                        mapdatabase = (MapDataBase)class1.getConstructor(new Class[] {
+                        worldsaveddata = (WorldSavedData)class1.getConstructor(new Class[] {
                             java.lang.String.class
                         }).newInstance(new Object[] {
                             s
@@ -53,7 +58,7 @@ public class MapStorage
                     FileInputStream fileinputstream = new FileInputStream(file);
                     NBTTagCompound nbttagcompound = CompressedStreamTools.loadGzippedCompoundFromOutputStream(fileinputstream);
                     fileinputstream.close();
-                    mapdatabase.readFromNBT(nbttagcompound.getCompoundTag("data"));
+                    worldsaveddata.readFromNBT(nbttagcompound.getCompoundTag("data"));
                 }
             }
             catch(Exception exception)
@@ -61,17 +66,17 @@ public class MapStorage
                 exception.printStackTrace();
             }
         }
-        if(mapdatabase != null)
+        if(worldsaveddata != null)
         {
-            loadedDataMap.put(s, mapdatabase);
-            loadedDataList.add(mapdatabase);
+            loadedDataMap.put(s, worldsaveddata);
+            loadedDataList.add(worldsaveddata);
         }
-        return mapdatabase;
+        return worldsaveddata;
     }
 
-    public void setData(String s, MapDataBase mapdatabase)
+    public void setData(String s, WorldSavedData worldsaveddata)
     {
-        if(mapdatabase == null)
+        if(worldsaveddata == null)
         {
             throw new RuntimeException("Can't set null data");
         }
@@ -79,25 +84,25 @@ public class MapStorage
         {
             loadedDataList.remove(loadedDataMap.remove(s));
         }
-        loadedDataMap.put(s, mapdatabase);
-        loadedDataList.add(mapdatabase);
+        loadedDataMap.put(s, worldsaveddata);
+        loadedDataList.add(worldsaveddata);
     }
 
     public void saveAllData()
     {
         for(int i = 0; i < loadedDataList.size(); i++)
         {
-            MapDataBase mapdatabase = (MapDataBase)loadedDataList.get(i);
-            if(mapdatabase.isDirty())
+            WorldSavedData worldsaveddata = (WorldSavedData)loadedDataList.get(i);
+            if(worldsaveddata.isDirty())
             {
-                saveData(mapdatabase);
-                mapdatabase.setDirty(false);
+                saveData(worldsaveddata);
+                worldsaveddata.setDirty(false);
             }
         }
 
     }
 
-    private void saveData(MapDataBase mapdatabase)
+    private void saveData(WorldSavedData worldsaveddata)
     {
         if(saveHandler == null)
         {
@@ -105,11 +110,11 @@ public class MapStorage
         }
         try
         {
-            File file = saveHandler.getMapFile(mapdatabase.field_28168_a);
+            File file = saveHandler.getMapFile(worldsaveddata.mapName);
             if(file != null)
             {
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
-                mapdatabase.writeToNBT(nbttagcompound);
+                worldsaveddata.writeToNBT(nbttagcompound);
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                 nbttagcompound1.setCompoundTag("data", nbttagcompound);
                 FileOutputStream fileoutputstream = new FileOutputStream(file);
@@ -194,7 +199,7 @@ public class MapStorage
                 }
 
                 DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(file));
-                CompressedStreamTools.func_1139_a(nbttagcompound, dataoutputstream);
+                CompressedStreamTools.writeTo(nbttagcompound, dataoutputstream);
                 dataoutputstream.close();
             }
         }
@@ -204,9 +209,4 @@ public class MapStorage
         }
         return short1.shortValue();
     }
-
-    private ISaveHandler saveHandler;
-    private Map loadedDataMap;
-    private List loadedDataList;
-    private Map idCounts;
 }

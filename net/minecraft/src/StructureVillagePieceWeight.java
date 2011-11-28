@@ -1,12 +1,17 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 public class StructureVillagePieceWeight
 {
+
+    public Class villagePieceClass;
+    public final int villagePieceWeight;
+    public int villagePiecesSpawned;
+    public int villagePiecesLimit;
 
     public StructureVillagePieceWeight(Class class1, int i, int j)
     {
@@ -24,9 +29,4 @@ public class StructureVillagePieceWeight
     {
         return villagePiecesLimit == 0 || villagePiecesSpawned < villagePiecesLimit;
     }
-
-    public Class villagePieceClass;
-    public final int villagePieceWeight;
-    public int villagePiecesSpawned;
-    public int villagePiecesLimit;
 }

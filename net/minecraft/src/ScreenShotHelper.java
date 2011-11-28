@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -16,6 +16,11 @@ import org.lwjgl.opengl.GL11;
 
 public class ScreenShotHelper
 {
+
+    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+    private static ByteBuffer buffer;
+    private static byte pixelData[];
+    private static int imageData[];
 
     public static String saveScreenshot(File file, int i, int j)
     {
@@ -77,10 +82,5 @@ public class ScreenShotHelper
             return (new StringBuilder()).append("Failed to save: ").append(exception).toString();
         }
     }
-
-    private static DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
-    private static ByteBuffer buffer;
-    private static byte pixelData[];
-    private static int imageData[];
 
 }

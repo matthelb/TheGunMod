@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,9 @@ package net.minecraft.src;
 
 public class SlotCrafting extends Slot
 {
+
+    private final IInventory craftMatrix;
+    private EntityPlayer thePlayer;
 
     public SlotCrafting(EntityPlayer entityplayer, IInventory iinventory, IInventory iinventory1, int i, int j, int k)
     {
@@ -58,6 +61,14 @@ public class SlotCrafting extends Slot
         if(itemstack.itemID == Item.swordWood.shiftedIndex)
         {
             thePlayer.addStat(AchievementList.buildSword, 1);
+        } else
+        if(itemstack.itemID == Block.enchantmentTable.blockID)
+        {
+            thePlayer.addStat(AchievementList.enchantments, 1);
+        } else
+        if(itemstack.itemID == Block.bookShelf.blockID)
+        {
+            thePlayer.addStat(AchievementList.bookcase, 1);
         }
         ModLoader.TakenFromCrafting(thePlayer, itemstack, craftMatrix);
         for(int i = 0; i < craftMatrix.getSizeInventory(); i++)
@@ -74,7 +85,4 @@ public class SlotCrafting extends Slot
         }
 
     }
-
-    private final IInventory craftMatrix;
-    private EntityPlayer thePlayer;
 }

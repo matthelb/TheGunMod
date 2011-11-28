@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,8 @@ import java.util.Random;
 
 public class ComponentStrongholdPrison extends ComponentStronghold
 {
+
+    protected final EnumDoor field_35064_a;
 
     public ComponentStrongholdPrison(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -64,6 +66,4 @@ public class ComponentStrongholdPrison extends ComponentStronghold
             return true;
         }
     }
-
-    protected final EnumDoor field_35064_a;
 }

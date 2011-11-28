@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,9 +12,12 @@ import java.io.File;
 class ThreadStatSyncherReceive extends Thread
 {
 
+    final StatsSyncher syncher; /* synthetic field */
+
     ThreadStatSyncherReceive(StatsSyncher statssyncher)
     {
         syncher = statssyncher;
+//        super();
     }
 
     public void run()
@@ -39,6 +42,4 @@ class ThreadStatSyncherReceive extends Thread
             StatsSyncher.setBusy(syncher, false);
         }
     }
-
-    final StatsSyncher syncher; /* synthetic field */
 }

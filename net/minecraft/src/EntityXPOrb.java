@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,13 +14,18 @@ import java.util.Random;
 public class EntityXPOrb extends Entity
 {
 
+    public int xpColor;
+    public int xpOrbAge;
+    public int unusedPickupCooldown;
+    private int xpOrbHealth;
+    private int xpValue;
+
     public EntityXPOrb(World world, double d, double d1, double d2, 
             int i)
     {
         super(world);
         xpOrbAge = 0;
         xpOrbHealth = 5;
-        unusedRadius = (float)(Math.random() * 3.1415926535897931D * 2D);
         setSize(0.5F, 0.5F);
         yOffset = height / 2.0F;
         setPosition(d, d1, d2);
@@ -41,7 +46,6 @@ public class EntityXPOrb extends Entity
         super(world);
         xpOrbAge = 0;
         xpOrbHealth = 5;
-        unusedRadius = (float)(Math.random() * 3.1415926535897931D * 2D);
         setSize(0.25F, 0.25F);
         yOffset = height / 2.0F;
     }
@@ -50,9 +54,9 @@ public class EntityXPOrb extends Entity
     {
     }
 
-    public int func_35115_a(float f)
+    public int getEntityBrightnessForRender(float f)
     {
-        float f1 = 0.75F;
+        float f1 = 0.5F;
         if(f1 < 0.0F)
         {
             f1 = 0.0F;
@@ -61,7 +65,7 @@ public class EntityXPOrb extends Entity
         {
             f1 = 1.0F;
         }
-        int i = super.func_35115_a(f);
+        int i = super.getEntityBrightnessForRender(f);
         int j = i & 0xff;
         int k = i >> 16 & 0xff;
         j += (int)(f1 * 15F * 16F);
@@ -126,7 +130,7 @@ public class EntityXPOrb extends Entity
         {
             motionY *= -0.89999997615814209D;
         }
-        xpColour++;
+        xpColor++;
         xpOrbAge++;
         if(xpOrbAge >= 6000)
         {
@@ -178,7 +182,7 @@ public class EntityXPOrb extends Entity
         if(unusedPickupCooldown == 0 && entityplayer.xpCooldown == 0)
         {
             entityplayer.xpCooldown = 2;
-            worldObj.playSoundAtEntity(this, "random.pop", 0.2F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F));
+            worldObj.playSoundAtEntity(this, "random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
             entityplayer.onItemPickup(this, 1);
             entityplayer.increaseXP(xpValue);
             setEntityDead();
@@ -271,11 +275,4 @@ public class EntityXPOrb extends Entity
         }
         return i < 3 ? 1 : 3;
     }
-
-    public int xpColour;
-    public int xpOrbAge;
-    public int unusedPickupCooldown;
-    private int xpOrbHealth;
-    private int xpValue;
-    public float unusedRadius;
 }

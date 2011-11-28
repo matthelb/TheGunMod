@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -25,7 +25,7 @@ public interface IInventory
 
     public abstract void onInventoryChanged();
 
-    public abstract boolean canInteractWith(EntityPlayer entityplayer);
+    public abstract boolean isUseableByPlayer(EntityPlayer entityplayer);
 
     public abstract void openChest();
 

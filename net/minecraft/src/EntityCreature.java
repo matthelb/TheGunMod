@@ -1,23 +1,28 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            EntityLiving, World, Entity, AxisAlignedBB, 
-//            MathHelper, PathEntity, Vec3D
+//            EntityLiving, Profiler, World, Entity, 
+//            AxisAlignedBB, MathHelper, PathEntity, Vec3D
 
 public abstract class EntityCreature extends EntityLiving
 {
+
+    private PathEntity pathToEntity;
+    protected Entity entityToAttack;
+    protected boolean hasAttacked;
+    protected int fleeingTick;
 
     public EntityCreature(World world)
     {
         super(world);
         hasAttacked = false;
-        findNewPathTick = 0;
+        fleeingTick = 0;
     }
 
     protected boolean isMovementCeased()
@@ -27,9 +32,10 @@ public abstract class EntityCreature extends EntityLiving
 
     protected void updateEntityActionState()
     {
-        if(findNewPathTick > 0)
+        Profiler.startSection("ai");
+        if(fleeingTick > 0)
         {
-            findNewPathTick--;
+            fleeingTick--;
         }
         hasAttacked = isMovementCeased();
         float f = 16F;
@@ -55,11 +61,12 @@ public abstract class EntityCreature extends EntityLiving
                 attackBlockedEntity(entityToAttack, f1);
             }
         }
+        Profiler.endSection();
         if(!hasAttacked && entityToAttack != null && (pathToEntity == null || rand.nextInt(20) == 0))
         {
             pathToEntity = worldObj.getPathToEntity(this, entityToAttack, f);
         } else
-        if(!hasAttacked && (pathToEntity == null && rand.nextInt(80) == 0 || findNewPathTick > 0 || rand.nextInt(80) == 0))
+        if(!hasAttacked && (pathToEntity == null && rand.nextInt(180) == 0 || rand.nextInt(120) == 0 || fleeingTick > 0) && entityAge < 100)
         {
             updateWanderPath();
         }
@@ -73,6 +80,7 @@ public abstract class EntityCreature extends EntityLiving
             pathToEntity = null;
             return;
         }
+        Profiler.startSection("followpath");
         Vec3D vec3d = pathToEntity.getPosition(this);
         for(double d = width * 2.0F; vec3d != null && vec3d.squareDistanceTo(posX, vec3d.yCoord, posZ) < d * d;)
         {
@@ -134,10 +142,12 @@ public abstract class EntityCreature extends EntityLiving
         {
             isJumping = true;
         }
+        Profiler.endSection();
     }
 
     protected void updateWanderPath()
     {
+        Profiler.startSection("stroll");
         boolean flag = false;
         int i = -1;
         int j = -1;
@@ -163,6 +173,7 @@ public abstract class EntityCreature extends EntityLiving
         {
             pathToEntity = worldObj.getEntityPathToXYZ(this, i, j, k, 10F);
         }
+        Profiler.endSection();
     }
 
     protected void attackEntity(Entity entity, float f)
@@ -214,15 +225,10 @@ public abstract class EntityCreature extends EntityLiving
     protected float func_35166_t_()
     {
         float f = super.func_35166_t_();
-        if(findNewPathTick > 0)
+        if(fleeingTick > 0)
         {
             f *= 2.0F;
         }
         return f;
     }
-
-    private PathEntity pathToEntity;
-    protected Entity entityToAttack;
-    protected boolean hasAttacked;
-    protected int findNewPathTick;
 }

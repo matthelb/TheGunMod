@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,8 @@ import java.util.regex.Pattern;
 class ChunkFolderPattern
     implements FileFilter
 {
+
+    public static final Pattern folderRegexPattern = Pattern.compile("[0-9a-z]|([0-9a-z][0-9a-z])");
 
     private ChunkFolderPattern()
     {
@@ -36,7 +38,5 @@ class ChunkFolderPattern
     {
         this();
     }
-
-    public static final Pattern folderRegexPattern = Pattern.compile("[0-9a-z]|([0-9a-z][0-9a-z])");
 
 }

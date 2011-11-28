@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ package net.minecraft.src;
 public class InventoryLargeChest
     implements IInventory
 {
+
+    private String name;
+    private IInventory upperChest;
+    private IInventory lowerChest;
 
     public InventoryLargeChest(String s, IInventory iinventory, IInventory iinventory1)
     {
@@ -81,9 +85,9 @@ public class InventoryLargeChest
         lowerChest.onInventoryChanged();
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
-        return upperChest.canInteractWith(entityplayer) && lowerChest.canInteractWith(entityplayer);
+        return upperChest.isUseableByPlayer(entityplayer) && lowerChest.isUseableByPlayer(entityplayer);
     }
 
     public void openChest()
@@ -97,8 +101,4 @@ public class InventoryLargeChest
         upperChest.closeChest();
         lowerChest.closeChest();
     }
-
-    private String name;
-    private IInventory upperChest;
-    private IInventory lowerChest;
 }

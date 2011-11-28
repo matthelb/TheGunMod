@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -21,9 +21,34 @@ public enum EnumOptions
     DIFFICULTY("DIFFICULTY", 11, "options.difficulty", false, false),
     GRAPHICS("GRAPHICS", 12, "options.graphics", false, false),
     AMBIENT_OCCLUSION("AMBIENT_OCCLUSION", 13, "options.ao", false, true),
-    GUI_SCALE("GUI_SCALE", 14, "options.guiScale", false, false);
+    GUI_SCALE("GUI_SCALE", 14, "options.guiScale", false, false),
+    RENDER_CLOUDS("RENDER_CLOUDS", 15, "options.renderClouds", false, true),
+    PARTICLES("PARTICLES", 16, "options.particles", false, false);
 /*
-    public static EnumOptions[] values()
+    public static final EnumOptions MUSIC;
+    public static final EnumOptions SOUND;
+    public static final EnumOptions INVERT_MOUSE;
+    public static final EnumOptions SENSITIVITY;
+    public static final EnumOptions FOV;
+    public static final EnumOptions GAMMA;
+    public static final EnumOptions RENDER_DISTANCE;
+    public static final EnumOptions VIEW_BOBBING;
+    public static final EnumOptions ANAGLYPH;
+    public static final EnumOptions ADVANCED_OPENGL;
+    public static final EnumOptions FRAMERATE_LIMIT;
+    public static final EnumOptions DIFFICULTY;
+    public static final EnumOptions GRAPHICS;
+    public static final EnumOptions AMBIENT_OCCLUSION;
+    public static final EnumOptions GUI_SCALE;
+    public static final EnumOptions RENDER_CLOUDS;
+    public static final EnumOptions PARTICLES;
+*/
+    private final boolean enumFloat;
+    private final boolean enumBoolean;
+    private final String enumString;
+    private static final EnumOptions allOptions[]; /* synthetic field */
+/*
+    public static final EnumOptions[] values()
     {
         return (EnumOptions[])allOptions.clone();
     }
@@ -51,6 +76,7 @@ public enum EnumOptions
 
     private EnumOptions(String s, int i, String s1, boolean flag, boolean flag1)
     {
+//        super(s, i);
         enumString = s1;
         enumFloat = flag;
         enumBoolean = flag1;
@@ -75,30 +101,10 @@ public enum EnumOptions
     {
         return enumString;
     }
-/*
-    public static final EnumOptions MUSIC;
-    public static final EnumOptions SOUND;
-    public static final EnumOptions INVERT_MOUSE;
-    public static final EnumOptions SENSITIVITY;
-    public static final EnumOptions FOV;
-    public static final EnumOptions GAMMA;
-    public static final EnumOptions RENDER_DISTANCE;
-    public static final EnumOptions VIEW_BOBBING;
-    public static final EnumOptions ANAGLYPH;
-    public static final EnumOptions ADVANCED_OPENGL;
-    public static final EnumOptions FRAMERATE_LIMIT;
-    public static final EnumOptions DIFFICULTY;
-    public static final EnumOptions GRAPHICS;
-    public static final EnumOptions AMBIENT_OCCLUSION;
-    public static final EnumOptions GUI_SCALE;
-*/
-    private final boolean enumFloat;
-    private final boolean enumBoolean;
-    private final String enumString;
-//    private static final EnumOptions allOptions[]; /* synthetic field */
-/*
+
     static 
     {
+/*
         MUSIC = new EnumOptions("MUSIC", 0, "options.music", true, false);
         SOUND = new EnumOptions("SOUND", 1, "options.sound", true, false);
         INVERT_MOUSE = new EnumOptions("INVERT_MOUSE", 2, "options.invertMouse", false, true);
@@ -114,10 +120,12 @@ public enum EnumOptions
         GRAPHICS = new EnumOptions("GRAPHICS", 12, "options.graphics", false, false);
         AMBIENT_OCCLUSION = new EnumOptions("AMBIENT_OCCLUSION", 13, "options.ao", false, true);
         GUI_SCALE = new EnumOptions("GUI_SCALE", 14, "options.guiScale", false, false);
+        RENDER_CLOUDS = new EnumOptions("RENDER_CLOUDS", 15, "options.renderClouds", false, true);
+        PARTICLES = new EnumOptions("PARTICLES", 16, "options.particles", false, false);
+*/
         allOptions = (new EnumOptions[] {
             MUSIC, SOUND, INVERT_MOUSE, SENSITIVITY, FOV, GAMMA, RENDER_DISTANCE, VIEW_BOBBING, ANAGLYPH, ADVANCED_OPENGL, 
-            FRAMERATE_LIMIT, DIFFICULTY, GRAPHICS, AMBIENT_OCCLUSION, GUI_SCALE
+            FRAMERATE_LIMIT, DIFFICULTY, GRAPHICS, AMBIENT_OCCLUSION, GUI_SCALE, RENDER_CLOUDS, PARTICLES
         });
     }
-*/
 }

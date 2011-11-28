@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,13 +8,23 @@ import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            EntityFlying, IMob, DataWatcher, World, 
-//            MathHelper, Entity, AxisAlignedBB, EntityFireball, 
-//            Vec3D, Item
+//            EntityFlying, IMob, DamageSource, EntityPlayer, 
+//            AchievementList, DataWatcher, World, MathHelper, 
+//            Entity, AxisAlignedBB, EntityFireball, Vec3D, 
+//            Item
 
 public class EntityGhast extends EntityFlying
     implements IMob
 {
+
+    public int courseChangeCooldown;
+    public double waypointX;
+    public double waypointY;
+    public double waypointZ;
+    private Entity targetedEntity;
+    private int aggroCooldown;
+    public int prevAttackCounter;
+    public int attackCounter;
 
     public EntityGhast(World world)
     {
@@ -30,10 +40,28 @@ public class EntityGhast extends EntityFlying
         field_35171_bJ = 5;
     }
 
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    {
+        if("fireball".equals(damagesource.func_40545_l()) && (damagesource.getEntity() instanceof EntityPlayer))
+        {
+            super.attackEntityFrom(damagesource, 1000);
+            ((EntityPlayer)damagesource.getEntity()).triggerAchievement(AchievementList.ghast);
+            return true;
+        } else
+        {
+            return super.attackEntityFrom(damagesource, i);
+        }
+    }
+
     protected void entityInit()
     {
         super.entityInit();
         dataWatcher.addObject(16, Byte.valueOf((byte)0));
+    }
+
+    public int getMaxHealth()
+    {
+        return 10;
     }
 
     public void onUpdate()
@@ -82,7 +110,7 @@ public class EntityGhast extends EntityFlying
         }
         if(targetedEntity == null || aggroCooldown-- <= 0)
         {
-            targetedEntity = worldObj.getClosestPlayerToEntity(this, 100D);
+            targetedEntity = worldObj.getClosestVulnerablePlayerToEntity(this, 100D);
             if(targetedEntity != null)
             {
                 aggroCooldown = 20;
@@ -99,12 +127,12 @@ public class EntityGhast extends EntityFlying
             {
                 if(attackCounter == 10)
                 {
-                    worldObj.playSoundAtEntity(this, "mob.ghast.charge", getSoundVolume(), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+                    worldObj.playAuxSFXAtEntity(null, 1007, (int)posX, (int)posY, (int)posZ, 0);
                 }
                 attackCounter++;
                 if(attackCounter == 20)
                 {
-                    worldObj.playSoundAtEntity(this, "mob.ghast.fireball", getSoundVolume(), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+                    worldObj.playAuxSFXAtEntity(null, 1008, (int)posX, (int)posY, (int)posZ, 0);
                     EntityFireball entityfireball = new EntityFireball(worldObj, this, d5, d6, d7);
                     double d8 = 4D;
                     Vec3D vec3d = getLook(1.0F);
@@ -176,6 +204,22 @@ public class EntityGhast extends EntityFlying
         return Item.gunpowder.shiftedIndex;
     }
 
+    protected void dropFewItems(boolean flag, int i)
+    {
+        int j = rand.nextInt(2) + rand.nextInt(1 + i);
+        for(int k = 0; k < j; k++)
+        {
+            dropItem(Item.ghastTear.shiftedIndex, 1);
+        }
+
+        j = rand.nextInt(3) + rand.nextInt(1 + i);
+        for(int l = 0; l < j; l++)
+        {
+            dropItem(Item.gunpowder.shiftedIndex, 1);
+        }
+
+    }
+
     protected float getSoundVolume()
     {
         return 10F;
@@ -190,13 +234,4 @@ public class EntityGhast extends EntityFlying
     {
         return 1;
     }
-
-    public int courseChangeCooldown;
-    public double waypointX;
-    public double waypointY;
-    public double waypointZ;
-    private Entity targetedEntity;
-    private int aggroCooldown;
-    public int prevAttackCounter;
-    public int attackCounter;
 }

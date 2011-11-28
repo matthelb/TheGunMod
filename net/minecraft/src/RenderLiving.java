@@ -1,21 +1,22 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
-import java.util.Random;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 // Referenced classes of package net.minecraft.src:
-//            Render, ModelBase, EntityLiving, MathHelper, 
-//            EntityArrow, ModelRenderer, Entity, RenderManager, 
-//            Tessellator, FontRenderer
+//            Render, ModelBase, EntityLiving, OpenGlHelper, 
+//            MathHelper, RenderManager, Tessellator, FontRenderer, 
+//            Entity
 
 public class RenderLiving extends Render
 {
+
+    protected ModelBase mainModel;
+    protected ModelBase renderPassModel;
 
     public RenderLiving(ModelBase modelbase, float f)
     {
@@ -43,6 +44,11 @@ public class RenderLiving extends Render
         {
             renderPassModel.isRiding = mainModel.isRiding;
         }
+        mainModel.field_40301_k = entityliving.func_40127_l();
+        if(renderPassModel != null)
+        {
+            renderPassModel.field_40301_k = mainModel.field_40301_k;
+        }
         try
         {
             float f2 = entityliving.prevRenderYawOffset + (entityliving.renderYawOffset - entityliving.prevRenderYawOffset) * f1;
@@ -58,33 +64,71 @@ public class RenderLiving extends Render
             GL11.glTranslatef(0.0F, -24F * f6 - 0.0078125F, 0.0F);
             float f7 = entityliving.field_705_Q + (entityliving.field_704_R - entityliving.field_705_Q) * f1;
             float f8 = entityliving.field_703_S - entityliving.field_704_R * (1.0F - f1);
+            if(entityliving.func_40127_l())
+            {
+                f8 *= 3F;
+            }
             if(f7 > 1.0F)
             {
                 f7 = 1.0F;
             }
-            loadDownloadableImageTexture(entityliving.skinUrl, entityliving.getEntityTexture());
             GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
             mainModel.setLivingAnimations(entityliving, f8, f7, f1);
-            mainModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+            func_40270_a(entityliving, f8, f7, f5, f3 - f2, f4, f6);
             for(int i = 0; i < 4; i++)
             {
-                if(shouldRenderPass(entityliving, i, f1))
+                int j = shouldRenderPass(entityliving, i, f1);
+                if(j <= 0)
                 {
-                    renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
-                    GL11.glDisable(3042 /*GL_BLEND*/);
-                    GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
+                    continue;
                 }
+                renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+                if(j == 15)
+                {
+                    float f10 = (float)entityliving.ticksExisted + f1;
+                    loadTexture("%blur%/misc/glint.png");
+                    GL11.glEnable(3042 /*GL_BLEND*/);
+                    float f12 = 0.5F;
+                    GL11.glColor4f(f12, f12, f12, 1.0F);
+                    GL11.glDepthFunc(514);
+                    GL11.glDepthMask(false);
+                    for(int i1 = 0; i1 < 2; i1++)
+                    {
+                        GL11.glDisable(2896 /*GL_LIGHTING*/);
+                        float f15 = 0.76F;
+                        GL11.glColor4f(0.5F * f15, 0.25F * f15, 0.8F * f15, 1.0F);
+                        GL11.glBlendFunc(768, 1);
+                        GL11.glMatrixMode(5890 /*GL_TEXTURE*/);
+                        GL11.glLoadIdentity();
+                        float f17 = f10 * (0.001F + (float)i1 * 0.003F) * 20F;
+                        float f18 = 0.3333333F;
+                        GL11.glScalef(f18, f18, f18);
+                        GL11.glRotatef(30F - (float)i1 * 60F, 0.0F, 0.0F, 1.0F);
+                        GL11.glTranslatef(0.0F, f17, 0.0F);
+                        GL11.glMatrixMode(5888 /*GL_MODELVIEW0_ARB*/);
+                        renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+                    }
+
+                    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+                    GL11.glMatrixMode(5890 /*GL_TEXTURE*/);
+                    GL11.glDepthMask(true);
+                    GL11.glLoadIdentity();
+                    GL11.glMatrixMode(5888 /*GL_MODELVIEW0_ARB*/);
+                    GL11.glEnable(2896 /*GL_LIGHTING*/);
+                    GL11.glDisable(3042 /*GL_BLEND*/);
+                    GL11.glDepthFunc(515);
+                }
+                GL11.glDisable(3042 /*GL_BLEND*/);
+                GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
             }
 
             renderEquippedItems(entityliving, f1);
             float f9 = entityliving.getEntityBrightness(f1);
-            int j = getColorMultiplier(entityliving, f9, f1);
-            GL13.glClientActiveTexture(33985 /*GL_TEXTURE1_ARB*/);
-            GL13.glActiveTexture(33985 /*GL_TEXTURE1_ARB*/);
+            int k = getColorMultiplier(entityliving, f9, f1);
+            OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapEnabled);
             GL11.glDisable(3553 /*GL_TEXTURE_2D*/);
-            GL13.glClientActiveTexture(33984 /*GL_TEXTURE0_ARB*/);
-            GL13.glActiveTexture(33984 /*GL_TEXTURE0_ARB*/);
-            if((j >> 24 & 0xff) > 0 || entityliving.hurtTime > 0 || entityliving.deathTime > 0)
+            OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapDisabled);
+            if((k >> 24 & 0xff) > 0 || entityliving.hurtTime > 0 || entityliving.deathTime > 0)
             {
                 GL11.glDisable(3553 /*GL_TEXTURE_2D*/);
                 GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
@@ -95,9 +139,9 @@ public class RenderLiving extends Render
                 {
                     GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
                     mainModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
-                    for(int k = 0; k < 4; k++)
+                    for(int l = 0; l < 4; l++)
                     {
-                        if(inheritRenderPass(entityliving, k, f1))
+                        if(inheritRenderPass(entityliving, l, f1) >= 0)
                         {
                             GL11.glColor4f(f9, 0.0F, 0.0F, 0.4F);
                             renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
@@ -105,19 +149,19 @@ public class RenderLiving extends Render
                     }
 
                 }
-                if((j >> 24 & 0xff) > 0)
+                if((k >> 24 & 0xff) > 0)
                 {
-                    float f10 = (float)(j >> 16 & 0xff) / 255F;
-                    float f11 = (float)(j >> 8 & 0xff) / 255F;
-                    float f12 = (float)(j & 0xff) / 255F;
-                    float f13 = (float)(j >> 24 & 0xff) / 255F;
-                    GL11.glColor4f(f10, f11, f12, f13);
+                    float f11 = (float)(k >> 16 & 0xff) / 255F;
+                    float f13 = (float)(k >> 8 & 0xff) / 255F;
+                    float f14 = (float)(k & 0xff) / 255F;
+                    float f16 = (float)(k >> 24 & 0xff) / 255F;
+                    GL11.glColor4f(f11, f13, f14, f16);
                     mainModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
-                    for(int l = 0; l < 4; l++)
+                    for(int j1 = 0; j1 < 4; j1++)
                     {
-                        if(inheritRenderPass(entityliving, l, f1))
+                        if(inheritRenderPass(entityliving, j1, f1) >= 0)
                         {
-                            GL11.glColor4f(f10, f11, f12, f13);
+                            GL11.glColor4f(f11, f13, f14, f16);
                             renderPassModel.render(entityliving, f8, f7, f5, f3 - f2, f4, f6);
                         }
                     }
@@ -134,14 +178,18 @@ public class RenderLiving extends Render
         {
             exception.printStackTrace();
         }
-        GL13.glClientActiveTexture(33985 /*GL_TEXTURE1_ARB*/);
-        GL13.glActiveTexture(33985 /*GL_TEXTURE1_ARB*/);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapEnabled);
         GL11.glEnable(3553 /*GL_TEXTURE_2D*/);
-        GL13.glClientActiveTexture(33984 /*GL_TEXTURE0_ARB*/);
-        GL13.glActiveTexture(33984 /*GL_TEXTURE0_ARB*/);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapDisabled);
         GL11.glEnable(2884 /*GL_CULL_FACE*/);
         GL11.glPopMatrix();
         passSpecialRender(entityliving, d, d1, d2);
+    }
+
+    protected void func_40270_a(EntityLiving entityliving, float f, float f1, float f2, float f3, float f4, float f5)
+    {
+        loadDownloadableImageTexture(entityliving.skinUrl, entityliving.getEntityTexture());
+        mainModel.render(entityliving, f, f1, f2, f3, f4, f5);
     }
 
     protected void renderLivingAt(EntityLiving entityliving, double d, double d1, double d2)
@@ -176,50 +224,16 @@ public class RenderLiving extends Render
 
     protected void renderEquippedItems(EntityLiving entityliving, float f)
     {
-        if(entityliving.field_35172_bP > 0)
-        {
-            EntityArrow entityarrow = new EntityArrow(entityliving.worldObj, entityliving.posX, entityliving.posY, entityliving.posZ);
-            Random random = new Random(entityliving.entityId);
-            for(int i = 0; i < entityliving.field_35172_bP; i++)
-            {
-                GL11.glPushMatrix();
-                ModelRenderer modelrenderer = mainModel.func_35393_a(random);
-                modelrenderer.postRender(0.0625F);
-                float f1 = random.nextFloat();
-                float f2 = random.nextFloat();
-                float f3 = random.nextFloat();
-                float f4 = (modelrenderer.field_35977_i + (modelrenderer.field_35973_l - modelrenderer.field_35977_i) * f1) / 16F;
-                float f5 = (modelrenderer.field_35975_j + (modelrenderer.field_35974_m - modelrenderer.field_35975_j) * f2) / 16F;
-                float f6 = (modelrenderer.field_35976_k + (modelrenderer.field_35972_n - modelrenderer.field_35976_k) * f3) / 16F;
-                GL11.glTranslatef(f4, f5, f6);
-                f1 = f1 * 2.0F - 1.0F;
-                f2 = f2 * 2.0F - 1.0F;
-                f3 = f3 * 2.0F - 1.0F;
-                f1 *= -1F;
-                f2 *= -1F;
-                f3 *= -1F;
-                float f7 = MathHelper.sqrt_float(f1 * f1 + f3 * f3);
-                entityarrow.prevRotationYaw = entityarrow.rotationYaw = (float)((Math.atan2(f1, f3) * 180D) / 3.1415927410125732D);
-                entityarrow.prevRotationPitch = entityarrow.rotationPitch = (float)((Math.atan2(f2, f7) * 180D) / 3.1415927410125732D);
-                double d = 0.0D;
-                double d1 = 0.0D;
-                double d2 = 0.0D;
-                float f8 = 0.0F;
-                renderManager.renderEntityWithPosYaw(entityarrow, d, d1, d2, f8, f);
-                GL11.glPopMatrix();
-            }
-
-        }
     }
 
-    protected boolean inheritRenderPass(EntityLiving entityliving, int i, float f)
+    protected int inheritRenderPass(EntityLiving entityliving, int i, float f)
     {
         return shouldRenderPass(entityliving, i, f);
     }
 
-    protected boolean shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
-        return false;
+        return -1;
     }
 
     protected float getDeathMaxRotation(EntityLiving entityliving)
@@ -293,7 +307,4 @@ public class RenderLiving extends Render
     {
         doRenderLiving((EntityLiving)entity, d, d1, d2, f, f1);
     }
-
-    protected ModelBase mainModel;
-    protected ModelBase renderPassModel;
 }

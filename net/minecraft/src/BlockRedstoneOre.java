@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,10 +8,12 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, Material, World, Item, 
-//            EntityPlayer, Entity
+//            ItemStack, EntityPlayer, Entity
 
 public class BlockRedstoneOre extends Block
 {
+
+    private boolean glowing;
 
     public BlockRedstoneOre(int i, int j, boolean flag)
     {
@@ -63,9 +65,14 @@ public class BlockRedstoneOre extends Block
         }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Item.redstone.shiftedIndex;
+    }
+
+    public int func_40198_a(int i, Random random)
+    {
+        return quantityDropped(random) + random.nextInt(i + 1);
     }
 
     public int quantityDropped(Random random)
@@ -122,5 +129,8 @@ public class BlockRedstoneOre extends Block
 
     }
 
-    private boolean glowing;
+    protected ItemStack func_41049_c_(int i)
+    {
+        return new ItemStack(Block.oreRedstone);
+    }
 }

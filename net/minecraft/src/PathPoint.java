@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,17 @@ package net.minecraft.src;
 
 public class PathPoint
 {
+
+    public final int xCoord;
+    public final int yCoord;
+    public final int zCoord;
+    private final int hash;
+    int index;
+    float totalPathDistance;
+    float distanceToNext;
+    float distanceToTarget;
+    PathPoint previous;
+    public boolean isFirst;
 
     public PathPoint(int i, int j, int k)
     {
@@ -60,15 +71,4 @@ public class PathPoint
     {
         return (new StringBuilder()).append(xCoord).append(", ").append(yCoord).append(", ").append(zCoord).toString();
     }
-
-    public final int xCoord;
-    public final int yCoord;
-    public final int zCoord;
-    private final int hash;
-    int index;
-    float totalPathDistance;
-    float distanceToNext;
-    float distanceToTarget;
-    PathPoint previous;
-    public boolean isFirst;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,11 @@ import org.lwjgl.opengl.GL11;
 
 public class MapItemRenderer
 {
+
+    private int intArray[];
+    private int bufferedImage;
+    private GameSettings gameSettings;
+    private FontRenderer fontRenderer;
 
     public MapItemRenderer(FontRenderer fontrenderer, GameSettings gamesettings, RenderEngine renderengine)
     {
@@ -32,7 +37,7 @@ public class MapItemRenderer
     {
         for(int i = 0; i < 16384 /*GL_LIGHT0*/; i++)
         {
-            byte byte0 = mapdata.field_28176_f[i];
+            byte byte0 = mapdata.colors[i];
             if(byte0 / 4 == 0)
             {
                 intArray[i] = (i + i / 128 & 1) * 8 + 16 << 24;
@@ -71,6 +76,7 @@ public class MapItemRenderer
         float f = 0.0F;
         GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, bufferedImage);
         GL11.glEnable(3042 /*GL_BLEND*/);
+        GL11.glBlendFunc(1, 771);
         GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV((float)(j + 0) + f, (float)(k + 128) - f, -0.0099999997764825821D, 0.0D, 1.0D);
@@ -81,7 +87,7 @@ public class MapItemRenderer
         GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
         GL11.glDisable(3042 /*GL_BLEND*/);
         renderengine.bindTexture(renderengine.getTexture("/misc/mapicons.png"));
-        for(Iterator iterator = mapdata.field_28173_i.iterator(); iterator.hasNext(); GL11.glPopMatrix())
+        for(Iterator iterator = mapdata.playersVisibleOnMap.iterator(); iterator.hasNext(); GL11.glPopMatrix())
         {
             MapCoord mapcoord = (MapCoord)iterator.next();
             GL11.glPushMatrix();
@@ -104,12 +110,7 @@ public class MapItemRenderer
         GL11.glPushMatrix();
         GL11.glTranslatef(0.0F, 0.0F, -0.04F);
         GL11.glScalef(1.0F, 1.0F, 1.0F);
-        fontRenderer.drawString(mapdata.field_28168_a, j, k, 0xff000000);
+        fontRenderer.drawString(mapdata.mapName, j, k, 0xff000000);
         GL11.glPopMatrix();
     }
-
-    private int intArray[];
-    private int bufferedImage;
-    private GameSettings gameSettings;
-    private FontRenderer fontRenderer;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,11 @@ import java.util.Random;
 
 public class TileEntityMobSpawner extends TileEntity
 {
+
+    public int delay;
+    private String mobID;
+    public double yaw;
+    public double yaw2;
 
     public TileEntityMobSpawner()
     {
@@ -45,10 +50,10 @@ public class TileEntityMobSpawner extends TileEntity
             return;
         }
         double d = (float)xCoord + worldObj.rand.nextFloat();
-        double d2 = (float)yCoord + worldObj.rand.nextFloat();
-        double d4 = (float)zCoord + worldObj.rand.nextFloat();
-        worldObj.spawnParticle("smoke", d, d2, d4, 0.0D, 0.0D, 0.0D);
-        worldObj.spawnParticle("flame", d, d2, d4, 0.0D, 0.0D, 0.0D);
+        double d1 = (float)yCoord + worldObj.rand.nextFloat();
+        double d2 = (float)zCoord + worldObj.rand.nextFloat();
+        worldObj.spawnParticle("smoke", d, d1, d2, 0.0D, 0.0D, 0.0D);
+        worldObj.spawnParticle("flame", d, d1, d2, 0.0D, 0.0D, 0.0D);
         for(yaw += 1000F / ((float)delay + 200F); yaw > 360D;)
         {
             yaw -= 360D;
@@ -84,26 +89,17 @@ public class TileEntityMobSpawner extends TileEntity
                 {
                     continue;
                 }
-                double d6 = (double)xCoord + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * 4D;
-                double d7 = (yCoord + worldObj.rand.nextInt(3)) - 1;
-                double d8 = (double)zCoord + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * 4D;
-                entityliving.setLocationAndAngles(d6, d7, d8, worldObj.rand.nextFloat() * 360F, 0.0F);
-                if(!entityliving.getCanSpawnHere())
+                double d3 = (double)xCoord + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * 4D;
+                double d4 = (yCoord + worldObj.rand.nextInt(3)) - 1;
+                double d5 = (double)zCoord + (worldObj.rand.nextDouble() - worldObj.rand.nextDouble()) * 4D;
+                entityliving.setLocationAndAngles(d3, d4, d5, worldObj.rand.nextFloat() * 360F, 0.0F);
+                if(entityliving.getCanSpawnHere())
                 {
-                    continue;
+                    worldObj.entityJoinedWorld(entityliving);
+                    worldObj.playAuxSFX(2004, xCoord, yCoord, zCoord, 0);
+                    entityliving.spawnExplosionParticle();
+                    updateDelay();
                 }
-                worldObj.entityJoinedWorld(entityliving);
-                for(int k = 0; k < 20; k++)
-                {
-                    double d1 = (double)xCoord + 0.5D + ((double)worldObj.rand.nextFloat() - 0.5D) * 2D;
-                    double d3 = (double)yCoord + 0.5D + ((double)worldObj.rand.nextFloat() - 0.5D) * 2D;
-                    double d5 = (double)zCoord + 0.5D + ((double)worldObj.rand.nextFloat() - 0.5D) * 2D;
-                    worldObj.spawnParticle("smoke", d1, d3, d5, 0.0D, 0.0D, 0.0D);
-                    worldObj.spawnParticle("flame", d1, d3, d5, 0.0D, 0.0D, 0.0D);
-                }
-
-                entityliving.spawnExplosionParticle();
-                updateDelay();
             }
 
         }
@@ -128,9 +124,4 @@ public class TileEntityMobSpawner extends TileEntity
         nbttagcompound.setString("EntityId", mobID);
         nbttagcompound.setShort("Delay", (short)delay);
     }
-
-    public int delay;
-    private String mobID;
-    public double yaw;
-    public double yaw2;
 }

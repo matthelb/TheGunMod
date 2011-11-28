@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,10 +12,14 @@ import java.util.Map;
 class ThreadStatSyncherSend extends Thread
 {
 
+    final Map field_27233_a; /* synthetic field */
+    final StatsSyncher syncher; /* synthetic field */
+
     ThreadStatSyncherSend(StatsSyncher statssyncher, Map map)
     {
         syncher = statssyncher;
         field_27233_a = map;
+//        super();
     }
 
     public void run()
@@ -33,7 +37,4 @@ class ThreadStatSyncherSend extends Thread
             StatsSyncher.setBusy(syncher, false);
         }
     }
-
-    final Map field_27233_a; /* synthetic field */
-    final StatsSyncher syncher; /* synthetic field */
 }

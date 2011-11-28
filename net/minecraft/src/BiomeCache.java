@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,20 +8,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
-//            PlayerList, BiomeCacheBlock, WorldChunkManager, BiomeGenBase
+//            LongHashMap, BiomeCacheBlock, WorldChunkManager, BiomeGenBase
 
 public class BiomeCache
 {
 
+    private final WorldChunkManager chunkmanager;
+    private long field_35729_b;
+    private LongHashMap field_35730_c;
+    private List field_35728_d;
+
     public BiomeCache(WorldChunkManager worldchunkmanager)
     {
         field_35729_b = 0L;
-        field_35730_c = new PlayerList();
+        field_35730_c = new LongHashMap();
         field_35728_d = new ArrayList();
         chunkmanager = worldchunkmanager;
     }
 
-    private BiomeCacheBlock getBiomeCacheBlock(int i, int j)
+    public BiomeCacheBlock getBiomeCacheBlock(int i, int j)
     {
         i >>= 4;
         j >>= 4;
@@ -83,9 +88,4 @@ public class BiomeCache
     {
         return biomecache.chunkmanager;
     }
-
-    private final WorldChunkManager chunkmanager;
-    private long field_35729_b;
-    private PlayerList field_35730_c;
-    private List field_35728_d;
 }

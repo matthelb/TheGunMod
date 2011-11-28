@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,10 +14,18 @@ import java.util.Random;
 public class EntityCreeper extends EntityMob
 {
 
+    int timeSinceIgnited;
+    int lastActiveTime;
+
     public EntityCreeper(World world)
     {
         super(world);
         texture = "/mob/creeper.png";
+    }
+
+    public int getMaxHealth()
+    {
+        return 20;
     }
 
     protected void entityInit()
@@ -178,7 +186,4 @@ public class EntityCreeper extends EntityMob
         super.onStruckByLightning(entitylightningbolt);
         dataWatcher.updateObject(17, Byte.valueOf((byte)1));
     }
-
-    int timeSinceIgnited;
-    int lastActiveTime;
 }

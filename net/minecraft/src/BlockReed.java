@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -78,7 +78,7 @@ public class BlockReed extends Block
     {
         if(!canBlockStay(world, i, j, k))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
         }
     }
@@ -93,7 +93,7 @@ public class BlockReed extends Block
         return null;
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Item.reed.shiftedIndex;
     }

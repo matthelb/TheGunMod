@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,10 +14,14 @@ class SorterStatsItem
     implements Comparator
 {
 
+    final GuiStats statsGUI; /* synthetic field */
+    final GuiSlotStatsItem slotStatsItemGUI; /* synthetic field */
+
     SorterStatsItem(GuiSlotStatsItem guislotstatsitem, GuiStats guistats)
     {
         slotStatsItemGUI = guislotstatsitem;
         statsGUI = guistats;
+//        super();
     }
 
     public int func_27371_a(StatCrafting statcrafting, StatCrafting statcrafting1)
@@ -65,7 +69,4 @@ class SorterStatsItem
     {
         return func_27371_a((StatCrafting)obj, (StatCrafting)obj1);
     }
-
-    final GuiStats statsGUI; /* synthetic field */
-    final GuiSlotStatsItem slotStatsItemGUI; /* synthetic field */
 }

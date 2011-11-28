@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -22,9 +22,9 @@ public interface ISaveFormat
 
     public abstract WorldInfo getWorldInfo(String s);
 
-    public abstract void func_22172_c(String s);
+    public abstract void deleteWorldDirectory(String s);
 
-    public abstract void func_22170_a(String s, String s1);
+    public abstract void renameWorld(String s, String s1);
 
     public abstract boolean isOldMapFormat(String s);
 

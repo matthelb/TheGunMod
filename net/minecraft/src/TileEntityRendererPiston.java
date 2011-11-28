@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntityRendererPiston extends TileEntitySpecialRenderer
 {
+
+    private RenderBlocks field_31071_b;
 
     public TileEntityRendererPiston()
     {
@@ -43,18 +45,18 @@ public class TileEntityRendererPiston extends TileEntitySpecialRenderer
             tessellator.setColorOpaque(1, 1, 1);
             if(block == Block.pistonExtension && tileentitypiston.func_31008_a(f) < 0.5F)
             {
-                field_31071_b.func_31079_a(block, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord, false);
+                field_31071_b.renderPistonExtensionAllFaces(block, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord, false);
             } else
             if(tileentitypiston.func_31012_k() && !tileentitypiston.func_31015_b())
             {
                 Block.pistonExtension.func_31052_a_(((BlockPistonBase)block).func_31040_i());
-                field_31071_b.func_31079_a(Block.pistonExtension, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord, tileentitypiston.func_31008_a(f) < 0.5F);
+                field_31071_b.renderPistonExtensionAllFaces(Block.pistonExtension, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord, tileentitypiston.func_31008_a(f) < 0.5F);
                 Block.pistonExtension.func_31051_a();
                 tessellator.setTranslationD((float)d - (float)tileentitypiston.xCoord, (float)d1 - (float)tileentitypiston.yCoord, (float)d2 - (float)tileentitypiston.zCoord);
-                field_31071_b.func_31078_d(block, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord);
+                field_31071_b.renderPistonBaseAllFaces(block, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord);
             } else
             {
-                field_31071_b.func_31075_a(block, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord);
+                field_31071_b.renderBlockAllFaces(block, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord);
             }
             tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
             tessellator.draw();
@@ -72,6 +74,4 @@ public class TileEntityRendererPiston extends TileEntitySpecialRenderer
     {
         func_31070_a((TileEntityPiston)tileentity, d, d1, d2, f);
     }
-
-    private RenderBlocks field_31071_b;
 }

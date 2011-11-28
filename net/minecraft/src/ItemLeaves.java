@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -39,7 +39,7 @@ public class ItemLeaves extends ItemBlock
             return ColorizerFoliage.getFoliageColorBirch();
         } else
         {
-            return ColorizerFoliage.func_31073_c();
+            return ColorizerFoliage.getFoliageColorBasic();
         }
     }
 }

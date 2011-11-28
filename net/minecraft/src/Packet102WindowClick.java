@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,13 @@ import java.io.*;
 
 public class Packet102WindowClick extends Packet
 {
+
+    public int window_Id;
+    public int inventorySlot;
+    public int mouseClick;
+    public short action;
+    public ItemStack itemStack;
+    public boolean holdingShift;
 
     public Packet102WindowClick()
     {
@@ -39,16 +46,7 @@ public class Packet102WindowClick extends Packet
         mouseClick = datainputstream.readByte();
         action = datainputstream.readShort();
         holdingShift = datainputstream.readBoolean();
-        short word0 = datainputstream.readShort();
-        if(word0 >= 0)
-        {
-            byte byte0 = datainputstream.readByte();
-            short word1 = datainputstream.readShort();
-            itemStack = new ItemStack(word0, byte0, word1);
-        } else
-        {
-            itemStack = null;
-        }
+        itemStack = func_40187_b(datainputstream);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
@@ -59,26 +57,11 @@ public class Packet102WindowClick extends Packet
         dataoutputstream.writeByte(mouseClick);
         dataoutputstream.writeShort(action);
         dataoutputstream.writeBoolean(holdingShift);
-        if(itemStack == null)
-        {
-            dataoutputstream.writeShort(-1);
-        } else
-        {
-            dataoutputstream.writeShort(itemStack.itemID);
-            dataoutputstream.writeByte(itemStack.stackSize);
-            dataoutputstream.writeShort(itemStack.getItemDamage());
-        }
+        writeItemStack(itemStack, dataoutputstream);
     }
 
     public int getPacketSize()
     {
         return 11;
     }
-
-    public int window_Id;
-    public int inventorySlot;
-    public int mouseClick;
-    public short action;
-    public ItemStack itemStack;
-    public boolean holdingShift;
 }

@@ -1,9 +1,10 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
+import java.io.PrintStream;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
@@ -145,7 +146,13 @@ label0:
 
         world.setBlockWithNotify(i, j, k, Block.mobSpawner.blockID);
         TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getBlockTileEntity(i, j, k);
-        tileentitymobspawner.setMobID(pickMobSpawner(random));
+        if(tileentitymobspawner != null)
+        {
+            tileentitymobspawner.setMobID(pickMobSpawner(random));
+        } else
+        {
+            System.err.println((new StringBuilder()).append("Failed to fetch mob spawner entity at (").append(i).append(", ").append(j).append(", ").append(k).append(")").toString());
+        }
         return true;
     }
 

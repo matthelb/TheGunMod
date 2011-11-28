@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,8 +11,10 @@ import net.minecraft.client.MinecraftApplet;
 // Referenced classes of package net.minecraft.src:
 //            PanelCrashReport, UnexpectedThrowable
 
-public final class MinecraftImpl extends Minecraft
+public class MinecraftImpl extends Minecraft
 {
+
+    final Frame mcFrame; /* synthetic field */
 
     public MinecraftImpl(Component component, Canvas canvas, MinecraftApplet minecraftapplet, int i, int j, boolean flag, Frame frame)
     {
@@ -26,6 +28,4 @@ public final class MinecraftImpl extends Minecraft
         mcFrame.add(new PanelCrashReport(unexpectedthrowable), "Center");
         mcFrame.validate();
     }
-
-    final Frame mcFrame; /* synthetic field */
 }

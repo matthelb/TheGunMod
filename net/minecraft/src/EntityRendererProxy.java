@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import net.minecraft.client.Minecraft;
 
 public class EntityRendererProxy extends EntityRenderer
 {
+
+    private Minecraft game;
 
     public EntityRendererProxy(Minecraft minecraft)
     {
@@ -23,6 +25,4 @@ public class EntityRendererProxy extends EntityRenderer
         super.updateCameraAndRender(f);
         ModLoader.OnTick(f, game);
     }
-
-    private Minecraft game;
 }

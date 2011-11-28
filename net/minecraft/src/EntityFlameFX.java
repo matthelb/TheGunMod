@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import java.util.Random;
 
 public class EntityFlameFX extends EntityFX
 {
+
+    private float field_672_a;
 
     public EntityFlameFX(World world, double d, double d1, double d2, 
             double d3, double d4, double d5)
@@ -26,7 +28,7 @@ public class EntityFlameFX extends EntityFX
         particleRed = particleGreen = particleBlue = 1.0F;
         particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D)) + 4;
         noClip = true;
-        particleTextureIndex = 48;
+        func_40099_c(48);
     }
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
@@ -36,7 +38,7 @@ public class EntityFlameFX extends EntityFX
         super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
     }
 
-    public int func_35115_a(float f)
+    public int getEntityBrightnessForRender(float f)
     {
         float f1 = ((float)particleAge + f) / (float)particleMaxAge;
         if(f1 < 0.0F)
@@ -47,7 +49,7 @@ public class EntityFlameFX extends EntityFX
         {
             f1 = 1.0F;
         }
-        int i = super.func_35115_a(f);
+        int i = super.getEntityBrightnessForRender(f);
         int j = i & 0xff;
         int k = i >> 16 & 0xff;
         j += (int)(f1 * 15F * 16F);
@@ -92,6 +94,4 @@ public class EntityFlameFX extends EntityFX
             motionZ *= 0.69999998807907104D;
         }
     }
-
-    private float field_672_a;
 }

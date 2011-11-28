@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,11 +8,14 @@ import net.minecraft.client.Minecraft;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, World, ItemStack, EntityPlayer, 
-//            InventoryPlayer, EntityPlayerSP, WorldProvider, Container, 
-//            Entity
+//            InventoryPlayer, PlayerControllerCreative, EntityPlayerSP, WorldProvider, 
+//            Container, Entity
 
 public abstract class PlayerController
 {
+
+    protected final Minecraft mc;
+    public boolean isInTestMode;
 
     public PlayerController(Minecraft minecraft)
     {
@@ -20,7 +23,7 @@ public abstract class PlayerController
         mc = minecraft;
     }
 
-    public void func_717_a(World world)
+    public void onWorldChange(World world)
     {
     }
 
@@ -84,6 +87,7 @@ public abstract class PlayerController
 
     public void func_6473_b(EntityPlayer entityplayer)
     {
+        PlayerControllerCreative.func_35645_e(entityplayer);
     }
 
     public abstract boolean sendPlaceBlock(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l);
@@ -114,6 +118,10 @@ public abstract class PlayerController
         entityplayer.craftingInventory = entityplayer.inventorySlots;
     }
 
+    public void func_40593_a(int i, int j)
+    {
+    }
+
     public boolean func_35643_e()
     {
         return false;
@@ -139,7 +147,7 @@ public abstract class PlayerController
         return false;
     }
 
-    public boolean func_35636_i()
+    public boolean extendedReach()
     {
         return false;
     }
@@ -151,7 +159,4 @@ public abstract class PlayerController
     public void func_35639_a(ItemStack itemstack)
     {
     }
-
-    protected final Minecraft mc;
-    public boolean isInTestMode;
 }

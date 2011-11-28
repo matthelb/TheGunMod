@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,26 @@ import java.util.Random;
 
 public class Particle
 {
+
+    private static Random rand = new Random();
+    public double posX;
+    public double posY;
+    public double prevPosX;
+    public double prevPosY;
+    public double velocityX;
+    public double velocityY;
+    public double accelScale;
+    public boolean isDead;
+    public int timeTick;
+    public int timeLimit;
+    public double tintRed;
+    public double tintGreen;
+    public double tintBlue;
+    public double tintAlpha;
+    public double prevTintRed;
+    public double prevTintGreen;
+    public double prevTintBlue;
+    public double prevTintAlpha;
 
     public void update(GuiParticle guiparticle)
     {
@@ -46,25 +66,5 @@ public class Particle
     {
         isDead = true;
     }
-
-    private static Random rand = new Random();
-    public double posX;
-    public double posY;
-    public double prevPosX;
-    public double prevPosY;
-    public double velocityX;
-    public double velocityY;
-    public double accelScale;
-    public boolean isDead;
-    public int timeTick;
-    public int timeLimit;
-    public double tintRed;
-    public double tintGreen;
-    public double tintBlue;
-    public double tintAlpha;
-    public double prevTintRed;
-    public double prevTintGreen;
-    public double prevTintBlue;
-    public double prevTintAlpha;
 
 }

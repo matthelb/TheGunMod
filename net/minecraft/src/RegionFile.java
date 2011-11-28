@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,15 @@ import java.util.zip.*;
 
 public class RegionFile
 {
+
+    private static final byte emptySector[] = new byte[4096];
+    private final File fileName;
+    private RandomAccessFile dataFile;
+    private final int offsets[] = new int[1024];
+    private final int chunkTimestamps[] = new int[1024];
+    private ArrayList sectorFree;
+    private int sizeDelta;
+    private long lastModified;
 
     public RegionFile(File file)
     {
@@ -87,13 +96,6 @@ public class RegionFile
         }
     }
 
-    public synchronized int getSizeDelta()
-    {
-        int i = sizeDelta;
-        sizeDelta = 0;
-        return i;
-    }
-
     private void debug(String s)
     {
     }
@@ -151,14 +153,14 @@ public class RegionFile
             {
                 byte abyte0[] = new byte[j1 - 1];
                 dataFile.read(abyte0);
-                DataInputStream datainputstream = new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(abyte0)));
+                DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(abyte0))));
                 return datainputstream;
             }
             if(byte0 == 2)
             {
                 byte abyte1[] = new byte[j1 - 1];
                 dataFile.read(abyte1);
-                DataInputStream datainputstream1 = new DataInputStream(new InflaterInputStream(new ByteArrayInputStream(abyte1)));
+                DataInputStream datainputstream1 = new DataInputStream(new BufferedInputStream(new InflaterInputStream(new ByteArrayInputStream(abyte1))));
                 return datainputstream1;
             } else
             {
@@ -321,14 +323,5 @@ public class RegionFile
     {
         dataFile.close();
     }
-
-    private static final byte emptySector[] = new byte[4096];
-    private final File fileName;
-    private RandomAccessFile dataFile;
-    private final int offsets[] = new int[1024];
-    private final int chunkTimestamps[] = new int[1024];
-    private ArrayList sectorFree;
-    private int sizeDelta;
-    private long lastModified;
 
 }

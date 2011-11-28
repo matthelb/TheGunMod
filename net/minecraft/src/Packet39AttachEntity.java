@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,9 @@ import java.io.*;
 
 public class Packet39AttachEntity extends Packet
 {
+
+    public int entityId;
+    public int vehicleEntityId;
 
     public Packet39AttachEntity()
     {
@@ -39,7 +42,4 @@ public class Packet39AttachEntity extends Packet
     {
         nethandler.handleAttachEntity(this);
     }
-
-    public int entityId;
-    public int vehicleEntityId;
 }

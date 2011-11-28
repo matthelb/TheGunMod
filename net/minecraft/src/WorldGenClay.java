@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,9 @@ import java.util.Random;
 
 public class WorldGenClay extends WorldGenerator
 {
+
+    private int clayBlockId;
+    private int numberOfBlocks;
 
     public WorldGenClay(int i)
     {
@@ -51,7 +54,4 @@ public class WorldGenClay extends WorldGenerator
 
         return true;
     }
-
-    private int clayBlockId;
-    private int numberOfBlocks;
 }

@@ -1,16 +1,22 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, Material, World, IBlockAccess
+//            Block, Material, IBlockAccess, ItemStack, 
+//            World
 
 public class BlockStep extends Block
 {
+
+    public static final String field_22037_a[] = {
+        "stone", "sand", "wood", "cobble", "brick", "smoothStoneBrick"
+    };
+    private boolean blockType;
 
     public BlockStep(int i, boolean flag)
     {
@@ -19,6 +25,9 @@ public class BlockStep extends Block
         if(!flag)
         {
             setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
+        } else
+        {
+            opaqueCubeLookup[i] = true;
         }
         setLightOpacity(255);
     }
@@ -70,25 +79,9 @@ public class BlockStep extends Block
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if(this != Block.stairSingle)
-        {
-            super.onBlockAdded(world, i, j, k);
-        }
-        int l = world.getBlockId(i, j - 1, k);
-        int i1 = world.getBlockMetadata(i, j, k);
-        int j1 = world.getBlockMetadata(i, j - 1, k);
-        if(i1 != j1)
-        {
-            return;
-        }
-        if(l == stairSingle.blockID)
-        {
-            world.setBlockWithNotify(i, j, k, 0);
-            world.setBlockAndMetadataWithNotify(i, j - 1, k, Block.stairDouble.blockID, i1);
-        }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Block.stairSingle.blockID;
     }
@@ -131,9 +124,9 @@ public class BlockStep extends Block
         }
     }
 
-    public static final String field_22037_a[] = {
-        "stone", "sand", "wood", "cobble", "brick", "smoothStoneBrick"
-    };
-    private boolean blockType;
+    protected ItemStack func_41049_c_(int i)
+    {
+        return new ItemStack(Block.stairSingle.blockID, 1, i);
+    }
 
 }

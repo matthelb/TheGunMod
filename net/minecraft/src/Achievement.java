@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,14 @@ import java.util.List;
 
 public class Achievement extends StatBase
 {
+
+    public final int displayColumn;
+    public final int displayRow;
+    public final Achievement parentAchievement;
+    private final String achievementDescription;
+    private IStatStringFormat statStringFormatter;
+    public final ItemStack theItemStack;
+    private boolean isSpecial;
 
     public Achievement(int i, String s, int j, int k, Item item, Achievement achievement)
     {
@@ -104,12 +112,4 @@ public class Achievement extends StatBase
     {
         return setIndependent();
     }
-
-    public final int displayColumn;
-    public final int displayRow;
-    public final Achievement parentAchievement;
-    private final String achievementDescription;
-    private IStatStringFormat statStringFormatter;
-    public final ItemStack theItemStack;
-    private boolean isSpecial;
 }

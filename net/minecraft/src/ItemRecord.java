@@ -1,16 +1,19 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
+import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            Item, World, Block, BlockJukeBox, 
-//            ItemStack, EntityPlayer
+//            ItemStack, EnumRarity, EntityPlayer
 
 public class ItemRecord extends Item
 {
+
+    public final String recordName;
 
     protected ItemRecord(int i, String s)
     {
@@ -39,5 +42,13 @@ public class ItemRecord extends Item
         }
     }
 
-    public final String recordName;
+    public void func_40404_a(ItemStack itemstack, List list)
+    {
+        list.add((new StringBuilder()).append("C418 - ").append(recordName).toString());
+    }
+
+    public EnumRarity func_40398_f(ItemStack itemstack)
+    {
+        return EnumRarity.rare;
+    }
 }

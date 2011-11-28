@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -22,7 +22,7 @@ public class EntityRainFX extends EntityFX
         particleRed = 1.0F;
         particleGreen = 1.0F;
         particleBlue = 1.0F;
-        particleTextureIndex = 19 + rand.nextInt(4);
+        func_40099_c(19 + rand.nextInt(4));
         setSize(0.01F, 0.01F);
         particleGravity = 0.06F;
         particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));

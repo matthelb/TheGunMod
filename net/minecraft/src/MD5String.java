@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,8 @@ import java.security.NoSuchAlgorithmException;
 
 public class MD5String
 {
+
+    private String field_27370_a;
 
     public MD5String(String s)
     {
@@ -30,6 +32,4 @@ public class MD5String
             throw new RuntimeException(nosuchalgorithmexception);
         }
     }
-
-    private String field_27370_a;
 }

@@ -1,12 +1,19 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 public class StructureBoundingBox
 {
+
+    public int minX;
+    public int minY;
+    public int minZ;
+    public int maxX;
+    public int maxY;
+    public int maxZ;
 
     public StructureBoundingBox()
     {
@@ -119,15 +126,23 @@ public class StructureBoundingBox
         return (maxZ - minZ) + 1;
     }
 
+    public int func_40597_e()
+    {
+        return minX + ((maxX - minX) + 1) / 2;
+    }
+
+    public int func_40596_f()
+    {
+        return minY + ((maxY - minY) + 1) / 2;
+    }
+
+    public int func_40598_g()
+    {
+        return minZ + ((maxZ - minZ) + 1) / 2;
+    }
+
     public String toString()
     {
         return (new StringBuilder()).append("(").append(minX).append(", ").append(minY).append(", ").append(minZ).append("; ").append(maxX).append(", ").append(maxY).append(", ").append(maxZ).append(")").toString();
     }
-
-    public int minX;
-    public int minY;
-    public int minZ;
-    public int maxX;
-    public int maxY;
-    public int maxZ;
 }

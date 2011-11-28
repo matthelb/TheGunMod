@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,11 @@ import net.minecraft.client.Minecraft;
 
 public abstract class TexturePackBase
 {
+
+    public String texturePackFileName;
+    public String firstDescriptionLine;
+    public String secondDescriptionLine;
+    public String field_6488_d;
 
     public TexturePackBase()
     {
@@ -40,9 +45,4 @@ public abstract class TexturePackBase
     {
         return (net.minecraft.src.TexturePackBase.class).getResourceAsStream(s);
     }
-
-    public String texturePackFileName;
-    public String firstDescriptionLine;
-    public String secondDescriptionLine;
-    public String field_6488_d;
 }

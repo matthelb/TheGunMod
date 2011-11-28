@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -38,7 +38,7 @@ public class EntityExplodeFX extends EntityFX
         {
             setEntityDead();
         }
-        particleTextureIndex = 7 - (particleAge * 8) / particleMaxAge;
+        func_40099_c(7 - (particleAge * 8) / particleMaxAge);
         motionY += 0.0040000000000000001D;
         moveEntity(motionX, motionY, motionZ);
         motionX *= 0.89999997615814209D;

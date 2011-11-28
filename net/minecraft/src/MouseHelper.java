@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,12 @@ import org.lwjgl.input.Mouse;
 
 public class MouseHelper
 {
+
+    private Component windowComponent;
+    private Cursor cursor;
+    public int deltaX;
+    public int deltaY;
+    private int field_1115_e;
 
     public MouseHelper(Component component)
     {
@@ -52,10 +58,4 @@ public class MouseHelper
         deltaX = Mouse.getDX();
         deltaY = Mouse.getDY();
     }
-
-    private Component windowComponent;
-    private Cursor cursor;
-    public int deltaX;
-    public int deltaY;
-    private int field_1115_e;
 }

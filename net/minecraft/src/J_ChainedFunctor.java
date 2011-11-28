@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,9 @@ package net.minecraft.src;
 final class J_ChainedFunctor
     implements J_Functor
 {
+
+    private final J_JsonNodeSelector parentJsonNodeSelector;
+    private final J_JsonNodeSelector childJsonNodeSelector;
 
     J_ChainedFunctor(J_JsonNodeSelector j_jsonnodeselector, J_JsonNodeSelector j_jsonnodeselector1)
     {
@@ -55,7 +58,4 @@ final class J_ChainedFunctor
     {
         return (new StringBuilder()).append(parentJsonNodeSelector.toString()).append(", with ").append(childJsonNodeSelector.toString()).toString();
     }
-
-    private final J_JsonNodeSelector parentJsonNodeSelector;
-    private final J_JsonNodeSelector childJsonNodeSelector;
 }

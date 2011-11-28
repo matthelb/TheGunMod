@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 
 public class Gui
 {
+
+    protected float zLevel;
 
     public Gui()
     {
@@ -90,11 +92,11 @@ public class Gui
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.setColorRGBA_F(f1, f2, f3, f);
-        tessellator.addVertex(k, j, 0.0D);
-        tessellator.addVertex(i, j, 0.0D);
+        tessellator.addVertex(k, j, zLevel);
+        tessellator.addVertex(i, j, zLevel);
         tessellator.setColorRGBA_F(f5, f6, f7, f4);
-        tessellator.addVertex(i, l, 0.0D);
-        tessellator.addVertex(k, l, 0.0D);
+        tessellator.addVertex(i, l, zLevel);
+        tessellator.addVertex(k, l, zLevel);
         tessellator.draw();
         GL11.glShadeModel(7424 /*GL_FLAT*/);
         GL11.glDisable(3042 /*GL_BLEND*/);
@@ -124,6 +126,4 @@ public class Gui
         tessellator.addVertexWithUV(i + 0, j + 0, zLevel, (float)(k + 0) * f, (float)(l + 0) * f1);
         tessellator.draw();
     }
-
-    protected float zLevel;
 }

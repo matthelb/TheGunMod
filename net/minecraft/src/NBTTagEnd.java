@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,7 @@ public class NBTTagEnd extends NBTBase
 
     public NBTTagEnd()
     {
+        super(null);
     }
 
     void readTagContents(DataInput datainput)
@@ -34,5 +35,15 @@ public class NBTTagEnd extends NBTBase
     public String toString()
     {
         return "END";
+    }
+
+    public NBTBase func_40195_b()
+    {
+        return new NBTTagEnd();
+    }
+
+    public boolean equals(Object obj)
+    {
+        return super.equals(obj);
     }
 }

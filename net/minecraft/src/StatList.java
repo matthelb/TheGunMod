@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,41 @@ import java.util.*;
 
 public class StatList
 {
+
+    protected static Map oneShotStats = new HashMap();
+    public static List field_25188_a = new ArrayList();
+    public static List generalStats = new ArrayList();
+    public static List itemStats = new ArrayList();
+    public static List objectMineStats = new ArrayList();
+    public static StatBase startGameStat = (new StatBasic(1000, StatCollector.translateToLocal("stat.startGame"))).initIndependentStat().registerStat();
+    public static StatBase createWorldStat = (new StatBasic(1001, StatCollector.translateToLocal("stat.createWorld"))).initIndependentStat().registerStat();
+    public static StatBase loadWorldStat = (new StatBasic(1002, StatCollector.translateToLocal("stat.loadWorld"))).initIndependentStat().registerStat();
+    public static StatBase joinMultiplayerStat = (new StatBasic(1003, StatCollector.translateToLocal("stat.joinMultiplayer"))).initIndependentStat().registerStat();
+    public static StatBase leaveGameStat = (new StatBasic(1004, StatCollector.translateToLocal("stat.leaveGame"))).initIndependentStat().registerStat();
+    public static StatBase minutesPlayedStat;
+    public static StatBase distanceWalkedStat;
+    public static StatBase distanceSwumStat;
+    public static StatBase distanceFallenStat;
+    public static StatBase distanceClimbedStat;
+    public static StatBase distanceFlownStat;
+    public static StatBase distanceDoveStat;
+    public static StatBase distanceByMinecartStat;
+    public static StatBase distanceByBoatStat;
+    public static StatBase distanceByPigStat;
+    public static StatBase jumpStat = (new StatBasic(2010, StatCollector.translateToLocal("stat.jump"))).initIndependentStat().registerStat();
+    public static StatBase dropStat = (new StatBasic(2011, StatCollector.translateToLocal("stat.drop"))).initIndependentStat().registerStat();
+    public static StatBase damageDealtStat = (new StatBasic(2020, StatCollector.translateToLocal("stat.damageDealt"))).registerStat();
+    public static StatBase damageTakenStat = (new StatBasic(2021, StatCollector.translateToLocal("stat.damageTaken"))).registerStat();
+    public static StatBase deathsStat = (new StatBasic(2022, StatCollector.translateToLocal("stat.deaths"))).registerStat();
+    public static StatBase mobKillsStat = (new StatBasic(2023, StatCollector.translateToLocal("stat.mobKills"))).registerStat();
+    public static StatBase playerKillsStat = (new StatBasic(2024, StatCollector.translateToLocal("stat.playerKills"))).registerStat();
+    public static StatBase fishCaughtStat = (new StatBasic(2025, StatCollector.translateToLocal("stat.fishCaught"))).registerStat();
+    public static StatBase mineBlockStatArray[] = initMinableStats("stat.mineBlock", 0x1000000);
+    public static StatBase objectCraftStats[];
+    public static StatBase objectUseStats[];
+    public static StatBase objectBreakStats[];
+    private static boolean blockStatsInitialized = false;
+    private static boolean itemStatsInitialized = false;
 
     public StatList()
     {
@@ -180,41 +215,6 @@ public class StatList
         return (StatBase)oneShotStats.get(Integer.valueOf(i));
     }
 
-    protected static Map oneShotStats = new HashMap();
-    public static List field_25188_a = new ArrayList();
-    public static List generalStats = new ArrayList();
-    public static List itemStats = new ArrayList();
-    public static List objectMineStats = new ArrayList();
-    public static StatBase startGameStat = (new StatBasic(1000, StatCollector.translateToLocal("stat.startGame"))).initIndependentStat().registerStat();
-    public static StatBase createWorldStat = (new StatBasic(1001, StatCollector.translateToLocal("stat.createWorld"))).initIndependentStat().registerStat();
-    public static StatBase loadWorldStat = (new StatBasic(1002, StatCollector.translateToLocal("stat.loadWorld"))).initIndependentStat().registerStat();
-    public static StatBase joinMultiplayerStat = (new StatBasic(1003, StatCollector.translateToLocal("stat.joinMultiplayer"))).initIndependentStat().registerStat();
-    public static StatBase leaveGameStat = (new StatBasic(1004, StatCollector.translateToLocal("stat.leaveGame"))).initIndependentStat().registerStat();
-    public static StatBase minutesPlayedStat;
-    public static StatBase distanceWalkedStat;
-    public static StatBase distanceSwumStat;
-    public static StatBase distanceFallenStat;
-    public static StatBase distanceClimbedStat;
-    public static StatBase distanceFlownStat;
-    public static StatBase distanceDoveStat;
-    public static StatBase distanceByMinecartStat;
-    public static StatBase distanceByBoatStat;
-    public static StatBase distanceByPigStat;
-    public static StatBase jumpStat = (new StatBasic(2010, StatCollector.translateToLocal("stat.jump"))).initIndependentStat().registerStat();
-    public static StatBase dropStat = (new StatBasic(2011, StatCollector.translateToLocal("stat.drop"))).initIndependentStat().registerStat();
-    public static StatBase damageDealtStat = (new StatBasic(2020, StatCollector.translateToLocal("stat.damageDealt"))).registerStat();
-    public static StatBase damageTakenStat = (new StatBasic(2021, StatCollector.translateToLocal("stat.damageTaken"))).registerStat();
-    public static StatBase deathsStat = (new StatBasic(2022, StatCollector.translateToLocal("stat.deaths"))).registerStat();
-    public static StatBase mobKillsStat = (new StatBasic(2023, StatCollector.translateToLocal("stat.mobKills"))).registerStat();
-    public static StatBase playerKillsStat = (new StatBasic(2024, StatCollector.translateToLocal("stat.playerKills"))).registerStat();
-    public static StatBase fishCaughtStat = (new StatBasic(2025, StatCollector.translateToLocal("stat.fishCaught"))).registerStat();
-    public static StatBase mineBlockStatArray[] = initMinableStats("stat.mineBlock", 0x1000000);
-    public static StatBase objectCraftStats[];
-    public static StatBase objectUseStats[];
-    public static StatBase objectBreakStats[];
-    private static boolean blockStatsInitialized = false;
-    private static boolean itemStatsInitialized = false;
-
     static 
     {
         minutesPlayedStat = (new StatBasic(1100, StatCollector.translateToLocal("stat.playOneMinute"), StatBase.timeStatType)).initIndependentStat().registerStat();
@@ -227,6 +227,6 @@ public class StatList
         distanceByMinecartStat = (new StatBasic(2006, StatCollector.translateToLocal("stat.minecartOneCm"), StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByBoatStat = (new StatBasic(2007, StatCollector.translateToLocal("stat.boatOneCm"), StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByPigStat = (new StatBasic(2008, StatCollector.translateToLocal("stat.pigOneCm"), StatBase.distanceStatType)).initIndependentStat().registerStat();
-        //AchievementList.func_27374_a();
+        AchievementList.func_27374_a();
     }
 }

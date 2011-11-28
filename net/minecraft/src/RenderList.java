@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,16 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderList
 {
+
+    private int field_1242_a;
+    private int field_1241_b;
+    private int field_1240_c;
+    private double field_1239_d;
+    private double field_1238_e;
+    private double field_1237_f;
+    private IntBuffer field_1236_g;
+    private boolean field_1235_h;
+    private boolean field_1234_i;
 
     public RenderList()
     {
@@ -78,14 +88,4 @@ public class RenderList
         field_1235_h = false;
         field_1234_i = false;
     }
-
-    private int field_1242_a;
-    private int field_1241_b;
-    private int field_1240_c;
-    private double field_1239_d;
-    private double field_1238_e;
-    private double field_1237_f;
-    private IntBuffer field_1236_g;
-    private boolean field_1235_h;
-    private boolean field_1234_i;
 }

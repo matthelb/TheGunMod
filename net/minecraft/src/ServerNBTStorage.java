@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,13 @@ package net.minecraft.src;
 
 public class ServerNBTStorage
 {
+
+    public String name;
+    public String host;
+    public String playerCount;
+    public String motd;
+    public long lag;
+    public boolean polled;
 
     public ServerNBTStorage(String s, String s1)
     {
@@ -30,11 +37,4 @@ public class ServerNBTStorage
     {
         return new ServerNBTStorage(nbttagcompound.getString("name"), nbttagcompound.getString("ip"));
     }
-
-    public String name;
-    public String host;
-    public String playerCount;
-    public String motd;
-    public long lag;
-    public boolean polled;
 }

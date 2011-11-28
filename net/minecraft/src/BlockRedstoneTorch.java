@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,9 @@ import java.util.*;
 
 public class BlockRedstoneTorch extends BlockTorch
 {
+
+    private boolean torchActive;
+    private static List torchUpdates = new ArrayList();
 
     public int getBlockTextureFromSideAndMetadata(int i, int j)
     {
@@ -180,7 +183,7 @@ public class BlockRedstoneTorch extends BlockTorch
         }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Block.torchRedstoneActive.blockID;
     }
@@ -222,8 +225,5 @@ public class BlockRedstoneTorch extends BlockTorch
             world.spawnParticle("reddust", d, d1, d2, 0.0D, 0.0D, 0.0D);
         }
     }
-
-    private boolean torchActive;
-    private static List torchUpdates = new ArrayList();
 
 }

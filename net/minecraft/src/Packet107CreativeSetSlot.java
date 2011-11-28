@@ -1,27 +1,28 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
+//            Packet, NetHandler, ItemStack
 
 public class Packet107CreativeSetSlot extends Packet
 {
+
+    public int slot;
+    public ItemStack itemStack;
 
     public Packet107CreativeSetSlot()
     {
     }
 
-    public Packet107CreativeSetSlot(int i, int j, int k, int l)
+    public Packet107CreativeSetSlot(int i, ItemStack itemstack)
     {
         slot = i;
-        itemId = j;
-        quantity = k;
-        metadata = l;
+        itemStack = itemstack;
     }
 
     public void processPacket(NetHandler nethandler)
@@ -33,27 +34,18 @@ public class Packet107CreativeSetSlot extends Packet
         throws IOException
     {
         slot = datainputstream.readShort();
-        itemId = datainputstream.readShort();
-        quantity = datainputstream.readShort();
-        metadata = datainputstream.readShort();
+        itemStack = func_40187_b(datainputstream);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
         throws IOException
     {
         dataoutputstream.writeShort(slot);
-        dataoutputstream.writeShort(itemId);
-        dataoutputstream.writeShort(quantity);
-        dataoutputstream.writeShort(metadata);
+        writeItemStack(itemStack, dataoutputstream);
     }
 
     public int getPacketSize()
     {
         return 8;
     }
-
-    public int slot;
-    public int itemId;
-    public int quantity;
-    public int metadata;
 }

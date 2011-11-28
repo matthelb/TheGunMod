@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -19,7 +19,12 @@ public class EntityCaveSpider extends EntitySpider
         setSize(0.7F, 0.5F);
     }
 
-    public float func_35188_k_()
+    public int getMaxHealth()
+    {
+        return 12;
+    }
+
+    public float spiderScaleAmount()
     {
         return 0.7F;
     }

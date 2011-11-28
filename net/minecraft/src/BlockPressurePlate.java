@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,8 @@ import java.util.Random;
 
 public class BlockPressurePlate extends Block
 {
+
+    private EnumMobType triggerMobType;
 
     protected BlockPressurePlate(int i, int j, EnumMobType enummobtype, Material material)
     {
@@ -62,7 +64,7 @@ public class BlockPressurePlate extends Block
         }
         if(flag)
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
         }
     }
@@ -200,6 +202,4 @@ public class BlockPressurePlate extends Block
     {
         return 1;
     }
-
-    private EnumMobType triggerMobType;
 }

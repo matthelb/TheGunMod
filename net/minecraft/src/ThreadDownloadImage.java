@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,11 +14,16 @@ import javax.imageio.ImageIO;
 class ThreadDownloadImage extends Thread
 {
 
+    final String location; /* synthetic field */
+    final ImageBuffer buffer; /* synthetic field */
+    final ThreadDownloadImageData imageData; /* synthetic field */
+
     ThreadDownloadImage(ThreadDownloadImageData threaddownloadimagedata, String s, ImageBuffer imagebuffer)
     {
         imageData = threaddownloadimagedata;
         location = s;
         buffer = imagebuffer;
+//        super();
     }
 
     public void run()
@@ -52,8 +57,4 @@ class ThreadDownloadImage extends Thread
             httpurlconnection.disconnect();
         }
     }
-
-    final String location; /* synthetic field */
-    final ImageBuffer buffer; /* synthetic field */
-    final ThreadDownloadImageData imageData; /* synthetic field */
 }

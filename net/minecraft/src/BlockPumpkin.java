@@ -1,16 +1,19 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
+import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, Material, World, EntityLiving, 
-//            MathHelper
+//            Block, Material, World, EntitySnowman, 
+//            EntityLiving, MathHelper
 
 public class BlockPumpkin extends Block
 {
+
+    private boolean blockType;
 
     protected BlockPumpkin(int i, int j, boolean flag)
     {
@@ -78,6 +81,23 @@ public class BlockPumpkin extends Block
     public void onBlockAdded(World world, int i, int j, int k)
     {
         super.onBlockAdded(world, i, j, k);
+        if(world.getBlockId(i, j - 1, k) == Block.blockSnow.blockID && world.getBlockId(i, j - 2, k) == Block.blockSnow.blockID)
+        {
+            if(!world.multiplayerWorld)
+            {
+                world.setBlockWithNotify(i, j, k, 0);
+                world.setBlockWithNotify(i, j - 1, k, 0);
+                world.setBlockWithNotify(i, j - 2, k, 0);
+                EntitySnowman entitysnowman = new EntitySnowman(world);
+                entitysnowman.setLocationAndAngles((double)i + 0.5D, (double)j - 1.95D, (double)k + 0.5D, 0.0F, 0.0F);
+                world.entityJoinedWorld(entitysnowman);
+            }
+            for(int l = 0; l < 120; l++)
+            {
+                world.spawnParticle("snowshovel", (double)i + world.rand.nextDouble(), (double)(j - 2) + world.rand.nextDouble() * 2.5D, (double)k + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+            }
+
+        }
     }
 
     public boolean canPlaceBlockAt(World world, int i, int j, int k)
@@ -91,6 +111,4 @@ public class BlockPumpkin extends Block
         int l = MathHelper.floor_double((double)((entityliving.rotationYaw * 4F) / 360F) + 2.5D) & 3;
         world.setBlockMetadataWithNotify(i, j, k, l);
     }
-
-    private boolean blockType;
 }

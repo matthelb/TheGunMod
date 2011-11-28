@@ -1,12 +1,17 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 public class ClippingHelper
 {
+
+    public float frustum[][];
+    public float projectionMatrix[];
+    public float modelviewMatrix[];
+    public float clippingMatrix[];
 
     public ClippingHelper()
     {
@@ -28,9 +33,4 @@ public class ClippingHelper
 
         return true;
     }
-
-    public float frustum[][];
-    public float projectionMatrix[];
-    public float modelviewMatrix[];
-    public float clippingMatrix[];
 }

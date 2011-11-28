@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,8 @@ import java.util.Random;
 
 public class BlockStairs extends Block
 {
+
+    private Block modelBlock;
 
     protected BlockStairs(int i, Block block)
     {
@@ -124,16 +126,6 @@ public class BlockStairs extends Block
         return modelBlock.getRenderBlockPass();
     }
 
-    public int idDropped(int i, Random random)
-    {
-        return modelBlock.idDropped(i, random);
-    }
-
-    public int quantityDropped(Random random)
-    {
-        return modelBlock.quantityDropped(random);
-    }
-
     public int getBlockTextureFromSideAndMetadata(int i, int j)
     {
         return modelBlock.getBlockTextureFromSideAndMetadata(i, 0);
@@ -185,11 +177,6 @@ public class BlockStairs extends Block
         modelBlock.onBlockRemoval(world, i, j, k);
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f)
-    {
-        modelBlock.dropBlockAsItemWithChance(world, i, j, k, l, f);
-    }
-
     public void onEntityWalking(World world, int i, int j, int k, Entity entity)
     {
         modelBlock.onEntityWalking(world, i, j, k, entity);
@@ -230,6 +217,4 @@ public class BlockStairs extends Block
             world.setBlockMetadataWithNotify(i, j, k, 0);
         }
     }
-
-    private Block modelBlock;
 }

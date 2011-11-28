@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,10 +8,20 @@ package net.minecraft.src;
 // Referenced classes of package net.minecraft.src:
 //            WorldChunkManager, ChunkProviderGenerate, World, WorldInfo, 
 //            Block, BlockGrass, MathHelper, Vec3D, 
-//            WorldProviderHell, WorldProviderSurface, WorldProviderSky, IChunkProvider
+//            WorldProviderHell, WorldProviderSurface, WorldProviderEnd, IChunkProvider, 
+//            ChunkCoordinates
 
 public abstract class WorldProvider
 {
+
+    public World worldObj;
+    public WorldChunkManager worldChunkMgr;
+    public boolean isNether;
+    public boolean isHellWorld;
+    public boolean hasNoSky;
+    public float lightBrightnessTable[];
+    public int worldType;
+    private float colorsSunriseSunset[];
 
     public WorldProvider()
     {
@@ -75,6 +85,11 @@ public abstract class WorldProvider
         return f1;
     }
 
+    public int func_40470_b(long l, float f)
+    {
+        return (int)(l / 24000L) % 8;
+    }
+
     public float[] calcSunriseSunsetColors(float f, float f1)
     {
         float f2 = 0.4F;
@@ -133,7 +148,7 @@ public abstract class WorldProvider
         }
         if(i == 1)
         {
-            return new WorldProviderSky();
+            return new WorldProviderEnd();
         } else
         {
             return null;
@@ -142,8 +157,7 @@ public abstract class WorldProvider
 
     public float getCloudHeight()
     {
-        worldObj.getClass();
-        return 128F;
+        return (float)worldObj.field_35472_c;
     }
 
     public boolean func_28112_c()
@@ -151,12 +165,8 @@ public abstract class WorldProvider
         return true;
     }
 
-    public World worldObj;
-    public WorldChunkManager worldChunkMgr;
-    public boolean isNether;
-    public boolean isHellWorld;
-    public boolean hasNoSky;
-    public float lightBrightnessTable[];
-    public int worldType;
-    private float colorsSunriseSunset[];
+    public ChunkCoordinates func_40469_f()
+    {
+        return null;
+    }
 }

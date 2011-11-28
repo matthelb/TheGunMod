@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -16,7 +16,7 @@ public class EntitySplashFX extends EntityRainFX
     {
         super(world, d, d1, d2);
         particleGravity = 0.04F;
-        particleTextureIndex++;
+        func_40099_c(func_40100_q() + 1);
         if(d4 == 0.0D && (d3 != 0.0D || d5 != 0.0D))
         {
             motionX = d3;

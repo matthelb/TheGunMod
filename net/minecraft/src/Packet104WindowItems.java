@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,9 @@ import java.io.*;
 
 public class Packet104WindowItems extends Packet
 {
+
+    public int windowId;
+    public ItemStack itemStack[];
 
     public Packet104WindowItems()
     {
@@ -24,13 +27,7 @@ public class Packet104WindowItems extends Packet
         itemStack = new ItemStack[word0];
         for(int i = 0; i < word0; i++)
         {
-            short word1 = datainputstream.readShort();
-            if(word1 >= 0)
-            {
-                byte byte0 = datainputstream.readByte();
-                short word2 = datainputstream.readShort();
-                itemStack[i] = new ItemStack(word1, byte0, word2);
-            }
+            itemStack[i] = func_40187_b(datainputstream);
         }
 
     }
@@ -42,15 +39,7 @@ public class Packet104WindowItems extends Packet
         dataoutputstream.writeShort(itemStack.length);
         for(int i = 0; i < itemStack.length; i++)
         {
-            if(itemStack[i] == null)
-            {
-                dataoutputstream.writeShort(-1);
-            } else
-            {
-                dataoutputstream.writeShort((short)itemStack[i].itemID);
-                dataoutputstream.writeByte((byte)itemStack[i].stackSize);
-                dataoutputstream.writeShort((short)itemStack[i].getItemDamage());
-            }
+            writeItemStack(itemStack[i], dataoutputstream);
         }
 
     }
@@ -64,7 +53,4 @@ public class Packet104WindowItems extends Packet
     {
         return 3 + itemStack.length * 5;
     }
-
-    public int windowId;
-    public ItemStack itemStack[];
 }

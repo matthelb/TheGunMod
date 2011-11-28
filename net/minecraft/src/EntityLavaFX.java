@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import java.util.Random;
 
 public class EntityLavaFX extends EntityFX
 {
+
+    private float lavaParticleScale;
 
     public EntityLavaFX(World world, double d, double d1, double d2)
     {
@@ -24,10 +26,10 @@ public class EntityLavaFX extends EntityFX
         lavaParticleScale = particleScale;
         particleMaxAge = (int)(16D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
         noClip = false;
-        particleTextureIndex = 49;
+        func_40099_c(49);
     }
 
-    public int func_35115_a(float f)
+    public int getEntityBrightnessForRender(float f)
     {
         float f1 = ((float)particleAge + f) / (float)particleMaxAge;
         if(f1 < 0.0F)
@@ -38,7 +40,7 @@ public class EntityLavaFX extends EntityFX
         {
             f1 = 1.0F;
         }
-        int i = super.func_35115_a(f);
+        int i = super.getEntityBrightnessForRender(f);
         char c = '\360';
         int j = i >> 16 & 0xff;
         return c | j << 16;
@@ -81,6 +83,4 @@ public class EntityLavaFX extends EntityFX
             motionZ *= 0.69999998807907104D;
         }
     }
-
-    private float lavaParticleScale;
 }

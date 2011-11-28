@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,16 +13,16 @@ import java.util.List;
 public class Session
 {
 
+    public static List registeredBlocksList;
+    public String username;
+    public String sessionId;
+    public String mpPassParameter;
+
     public Session(String s, String s1)
     {
         username = s;
         sessionId = s1;
     }
-
-    public static List registeredBlocksList;
-    public String username;
-    public String sessionId;
-    public String mpPassParameter;
 
     static 
     {

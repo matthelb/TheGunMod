@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import net.minecraft.client.Minecraft;
 
 public class GuiConflictWarning extends GuiScreen
 {
+
+    private int updateCounter;
 
     public GuiConflictWarning()
     {
@@ -51,6 +53,4 @@ public class GuiConflictWarning extends GuiScreen
         drawString(fontRenderer, "To prevent level corruption, the current game has quit.", width / 2 - 140, (height / 4 - 60) + 60 + 45, 0xa0a0a0);
         super.drawScreen(i, j, f);
     }
-
-    private int updateCounter;
 }

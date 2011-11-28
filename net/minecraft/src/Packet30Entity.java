@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,14 @@ import java.io.*;
 
 public class Packet30Entity extends Packet
 {
+
+    public int entityId;
+    public byte xPosition;
+    public byte yPosition;
+    public byte zPosition;
+    public byte yaw;
+    public byte pitch;
+    public boolean rotating;
 
     public Packet30Entity()
     {
@@ -38,12 +46,4 @@ public class Packet30Entity extends Packet
     {
         return 4;
     }
-
-    public int entityId;
-    public byte xPosition;
-    public byte yPosition;
-    public byte zPosition;
-    public byte yaw;
-    public byte pitch;
-    public boolean rotating;
 }

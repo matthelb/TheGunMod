@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -27,7 +27,7 @@ public class BlockSapling extends BlockFlower
             return;
         }
         super.updateTick(world, i, j, k, random);
-        if(world.getBlockLightValue(i, j + 1, k) >= 9 && random.nextInt(30) == 0)
+        if(world.getBlockLightValue(i, j + 1, k) >= 9 && random.nextInt(7) == 0)
         {
             int l = world.getBlockMetadata(i, j, k);
             if((l & 8) == 0)
@@ -63,17 +63,17 @@ public class BlockSapling extends BlockFlower
         Object obj = null;
         if(l == 1)
         {
-            obj = new WorldGenTaiga2();
+            obj = new WorldGenTaiga2(true);
         } else
         if(l == 2)
         {
-            obj = new WorldGenForest();
+            obj = new WorldGenForest(true);
         } else
         {
-            obj = new WorldGenTrees();
+            obj = new WorldGenTrees(true);
             if(random.nextInt(10) == 0)
             {
-                obj = new WorldGenBigTree();
+                obj = new WorldGenBigTree(true);
             }
         }
         if(!((WorldGenerator) (obj)).generate(world, random, i, j, k))

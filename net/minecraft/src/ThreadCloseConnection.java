@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,9 +11,12 @@ package net.minecraft.src;
 class ThreadCloseConnection extends Thread
 {
 
+    final NetworkManager networkManager; /* synthetic field */
+
     ThreadCloseConnection(NetworkManager networkmanager)
     {
         networkManager = networkmanager;
+//        super();
     }
 
     public void run()
@@ -32,6 +35,4 @@ class ThreadCloseConnection extends Thread
             exception.printStackTrace();
         }
     }
-
-    final NetworkManager networkManager; /* synthetic field */
 }

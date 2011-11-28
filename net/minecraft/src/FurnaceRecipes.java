@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,9 @@ import java.util.Map;
 
 public class FurnaceRecipes
 {
+
+    private static final FurnaceRecipes smeltingBase = new FurnaceRecipes();
+    private Map smeltingList;
 
     public static final FurnaceRecipes smelting()
     {
@@ -33,6 +36,9 @@ public class FurnaceRecipes
         addSmelting(Item.clay.shiftedIndex, new ItemStack(Item.brick));
         addSmelting(Block.cactus.blockID, new ItemStack(Item.dyePowder, 1, 2));
         addSmelting(Block.wood.blockID, new ItemStack(Item.coal, 1, 1));
+        addSmelting(Block.oreCoal.blockID, new ItemStack(Item.coal));
+        addSmelting(Block.oreRedstone.blockID, new ItemStack(Item.redstone));
+        addSmelting(Block.oreLapis.blockID, new ItemStack(Item.dyePowder, 1, 4));
     }
 
     public void addSmelting(int i, ItemStack itemstack)
@@ -49,8 +55,5 @@ public class FurnaceRecipes
     {
         return smeltingList;
     }
-
-    private static final FurnaceRecipes smeltingBase = new FurnaceRecipes();
-    private Map smeltingList;
 
 }

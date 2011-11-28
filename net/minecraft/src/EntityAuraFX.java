@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -20,7 +20,7 @@ public class EntityAuraFX extends EntityFX
         particleRed = f;
         particleGreen = f;
         particleBlue = f;
-        particleTextureIndex = 0;
+        func_40099_c(0);
         setSize(0.02F, 0.02F);
         particleScale = particleScale * (rand.nextFloat() * 0.6F + 0.5F);
         motionX *= 0.019999999552965164D;

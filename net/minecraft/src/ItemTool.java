@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,11 @@ package net.minecraft.src;
 
 public class ItemTool extends Item
 {
+
+    private Block blocksEffectiveAgainst[];
+    protected float efficiencyOnProperMaterial;
+    private int damageVsEntity;
+    protected EnumToolMaterial toolMaterial;
 
     protected ItemTool(int i, int j, EnumToolMaterial enumtoolmaterial, Block ablock[])
     {
@@ -59,8 +64,8 @@ public class ItemTool extends Item
         return true;
     }
 
-    private Block blocksEffectiveAgainst[];
-    private float efficiencyOnProperMaterial;
-    private int damageVsEntity;
-    protected EnumToolMaterial toolMaterial;
+    public int getItemEnchantability()
+    {
+        return toolMaterial.getEnchantability();
+    }
 }

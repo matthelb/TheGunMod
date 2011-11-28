@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,11 +9,17 @@ import org.lwjgl.opengl.GL11;
 // Referenced classes of package net.minecraft.src:
 //            ModelBiped, RenderBlocks, RenderManager, RenderEngine, 
 //            Block, BlockFire, Entity, Tessellator, 
-//            AxisAlignedBB, EntityLiving, MathHelper, World, 
-//            GameSettings, ModelBase, FontRenderer
+//            AxisAlignedBB, EntityLiving, EntityAnimal, MathHelper, 
+//            World, GameSettings, ModelBase, FontRenderer
 
 public abstract class Render
 {
+
+    protected RenderManager renderManager;
+    private ModelBase modelBase;
+    protected RenderBlocks renderBlocks;
+    protected float shadowSize;
+    protected float field_194_c;
 
     public Render()
     {
@@ -125,7 +131,16 @@ public abstract class Render
         float f2 = shadowSize;
         if(entity instanceof EntityLiving)
         {
-            f2 *= ((EntityLiving)entity).func_35159_aC();
+            EntityLiving entityliving = (EntityLiving)entity;
+            f2 *= entityliving.func_35159_aC();
+            if(entityliving instanceof EntityAnimal)
+            {
+                EntityAnimal entityanimal = (EntityAnimal)entityliving;
+                if(entityanimal.func_40127_l())
+                {
+                    f2 *= 0.5F;
+                }
+            }
         }
         double d3 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)f1;
         double d4 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)f1 + (double)entity.getShadowSize();
@@ -303,10 +318,4 @@ public abstract class Render
     {
         return renderManager.getFontRenderer();
     }
-
-    protected RenderManager renderManager;
-    private ModelBase modelBase;
-    protected RenderBlocks renderBlocks;
-    protected float shadowSize;
-    protected float field_194_c;
 }

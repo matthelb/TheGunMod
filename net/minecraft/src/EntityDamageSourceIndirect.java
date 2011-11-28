@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,16 +11,16 @@ package net.minecraft.src;
 public class EntityDamageSourceIndirect extends EntityDamageSource
 {
 
+    private Entity damageSourceProjectile;
+
     public EntityDamageSourceIndirect(String s, Entity entity, Entity entity1)
     {
         super(s, entity);
-        field_35553_n = entity1;
+        damageSourceProjectile = entity1;
     }
 
     public Entity getEntity()
     {
-        return field_35553_n;
+        return damageSourceProjectile;
     }
-
-    private Entity field_35553_n;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,13 @@ import java.util.List;
 
 public class ContainerWorkbench extends Container
 {
+
+    public InventoryCrafting craftMatrix;
+    public IInventory craftResult;
+    private World worldObj;
+    private int posX;
+    private int posY;
+    private int posZ;
 
     public ContainerWorkbench(InventoryPlayer inventoryplayer, World world, int i, int j, int k)
     {
@@ -131,11 +138,4 @@ public class ContainerWorkbench extends Container
         }
         return itemstack;
     }
-
-    public InventoryCrafting craftMatrix;
-    public IInventory craftResult;
-    private World worldObj;
-    private int posX;
-    private int posY;
-    private int posZ;
 }

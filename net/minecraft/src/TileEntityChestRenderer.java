@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,9 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntityChestRenderer extends TileEntitySpecialRenderer
 {
+
+    private ModelChest field_35377_b;
+    private ModelChest field_35378_c;
 
     public TileEntityChestRenderer()
     {
@@ -32,7 +35,7 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
             i = tileentitychest.getBlockMetadata();
             if(block != null && i == 0)
             {
-                ((BlockChest)block).func_35306_h(tileentitychest.worldObj, tileentitychest.xCoord, tileentitychest.yCoord, tileentitychest.zCoord);
+                ((BlockChest)block).unifyAdjacentChests(tileentitychest.worldObj, tileentitychest.xCoord, tileentitychest.yCoord, tileentitychest.zCoord);
                 i = tileentitychest.getBlockMetadata();
             }
             tileentitychest.func_35147_g();
@@ -115,7 +118,4 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
     {
         func_35376_a((TileEntityChest)tileentity, d, d1, d2, f);
     }
-
-    private ModelChest field_35377_b;
-    private ModelChest field_35378_c;
 }

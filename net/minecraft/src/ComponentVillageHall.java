@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,8 @@ import java.util.Random;
 
 public class ComponentVillageHall extends ComponentVillage
 {
+
+    private int field_35079_a;
 
     public ComponentVillageHall(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -124,8 +126,12 @@ public class ComponentVillageHall extends ComponentVillage
 
         }
 
+        func_40044_a(world, structureboundingbox, 4, 1, 2, 2);
         return true;
     }
 
-    private int field_35079_a;
+    protected int func_40043_a(int i)
+    {
+        return i != 0 ? 0 : 4;
+    }
 }

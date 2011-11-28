@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,7 +8,7 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockContainer, Material, World, TileEntityPiston, 
-//            Block, PistonBlockTextures, AxisAlignedBB, IBlockAccess, 
+//            Block, Facing, AxisAlignedBB, IBlockAccess, 
 //            TileEntity, EntityPlayer
 
 public class BlockPistonMoving extends BlockContainer
@@ -78,12 +78,12 @@ public class BlockPistonMoving extends BlockContainer
         }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return 0;
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f)
+    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
         if(world.multiplayerWorld)
         {
@@ -95,7 +95,7 @@ public class BlockPistonMoving extends BlockContainer
             return;
         } else
         {
-            Block.blocksList[tileentitypiston.getStoredBlockID()].dropBlockAsItem(world, i, j, k, tileentitypiston.getBlockMetadata());
+            Block.blocksList[tileentitypiston.getStoredBlockID()].dropBlockAsItem(world, i, j, k, tileentitypiston.getBlockMetadata(), 0);
             return;
         }
     }
@@ -145,12 +145,12 @@ public class BlockPistonMoving extends BlockContainer
                 f = 1.0F - f;
             }
             int l = tileentitypiston.func_31009_d();
-            minX = block.minX - (double)((float)PistonBlockTextures.offsetsXForSide[l] * f);
-            minY = block.minY - (double)((float)PistonBlockTextures.offsetsYForSide[l] * f);
-            minZ = block.minZ - (double)((float)PistonBlockTextures.offsetsZForSide[l] * f);
-            maxX = block.maxX - (double)((float)PistonBlockTextures.offsetsXForSide[l] * f);
-            maxY = block.maxY - (double)((float)PistonBlockTextures.offsetsYForSide[l] * f);
-            maxZ = block.maxZ - (double)((float)PistonBlockTextures.offsetsZForSide[l] * f);
+            minX = block.minX - (double)((float)Facing.offsetsXForSide[l] * f);
+            minY = block.minY - (double)((float)Facing.offsetsYForSide[l] * f);
+            minZ = block.minZ - (double)((float)Facing.offsetsZForSide[l] * f);
+            maxX = block.maxX - (double)((float)Facing.offsetsXForSide[l] * f);
+            maxY = block.maxY - (double)((float)Facing.offsetsYForSide[l] * f);
+            maxZ = block.maxZ - (double)((float)Facing.offsetsZForSide[l] * f);
         }
     }
 
@@ -166,12 +166,12 @@ public class BlockPistonMoving extends BlockContainer
             return null;
         } else
         {
-            axisalignedbb.minX -= (float)PistonBlockTextures.offsetsXForSide[i1] * f;
-            axisalignedbb.maxX -= (float)PistonBlockTextures.offsetsXForSide[i1] * f;
-            axisalignedbb.minY -= (float)PistonBlockTextures.offsetsYForSide[i1] * f;
-            axisalignedbb.maxY -= (float)PistonBlockTextures.offsetsYForSide[i1] * f;
-            axisalignedbb.minZ -= (float)PistonBlockTextures.offsetsZForSide[i1] * f;
-            axisalignedbb.maxZ -= (float)PistonBlockTextures.offsetsZForSide[i1] * f;
+            axisalignedbb.minX -= (float)Facing.offsetsXForSide[i1] * f;
+            axisalignedbb.maxX -= (float)Facing.offsetsXForSide[i1] * f;
+            axisalignedbb.minY -= (float)Facing.offsetsYForSide[i1] * f;
+            axisalignedbb.maxY -= (float)Facing.offsetsYForSide[i1] * f;
+            axisalignedbb.minZ -= (float)Facing.offsetsZForSide[i1] * f;
+            axisalignedbb.maxZ -= (float)Facing.offsetsZForSide[i1] * f;
             return axisalignedbb;
         }
     }

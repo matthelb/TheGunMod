@@ -1,23 +1,48 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
+import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            IChunkProvider, MapGenCavesHell, NoiseGeneratorOctaves, Block, 
-//            MapGenBase, Chunk, BlockSand, WorldGenHellLava, 
-//            WorldGenFire, WorldGenGlowStone1, WorldGenGlowStone2, WorldGenFlowers, 
-//            BlockFlower, World, IProgressUpdate
+//            IChunkProvider, MapGenNetherBridge, MapGenCavesHell, NoiseGeneratorOctaves, 
+//            World, Block, MapGenBase, Chunk, 
+//            BlockSand, WorldGenHellLava, WorldGenFire, WorldGenGlowStone1, 
+//            WorldGenGlowStone2, WorldGenFlowers, BlockFlower, EnumCreatureType, 
+//            ChunkCoordIntPair, WorldChunkManager, BiomeGenBase, IProgressUpdate, 
+//            ChunkPosition
 
 public class ChunkProviderHell
     implements IChunkProvider
 {
 
+    private Random hellRNG;
+    private NoiseGeneratorOctaves field_4169_i;
+    private NoiseGeneratorOctaves field_4168_j;
+    private NoiseGeneratorOctaves field_4167_k;
+    private NoiseGeneratorOctaves field_4166_l;
+    private NoiseGeneratorOctaves field_4165_m;
+    public NoiseGeneratorOctaves field_4177_a;
+    public NoiseGeneratorOctaves field_4176_b;
+    private World worldObj;
+    private double field_4163_o[];
+    public MapGenNetherBridge field_40378_c;
+    private double field_4162_p[];
+    private double gravelNoise[];
+    private double field_4160_r[];
+    private MapGenBase field_4159_s;
+    double field_4175_c[];
+    double field_4174_d[];
+    double field_4173_e[];
+    double field_4172_f[];
+    double field_4171_g[];
+
     public ChunkProviderHell(World world, long l)
     {
+        field_40378_c = new MapGenNetherBridge();
         field_4162_p = new double[256];
         gravelNoise = new double[256];
         field_4160_r = new double[256];
@@ -38,95 +63,75 @@ public class ChunkProviderHell
         byte byte0 = 4;
         byte byte1 = 32;
         int k = byte0 + 1;
-        worldObj.getClass();
-        int l = 128 / 8 + 1;
+        int l = worldObj.field_35472_c / 8 + 1;
         int i1 = byte0 + 1;
         field_4163_o = func_4057_a(field_4163_o, i * byte0, 0, j * byte0, k, l, i1);
-label0:
         for(int j1 = 0; j1 < byte0; j1++)
         {
-            int k1 = 0;
-            do
+            for(int k1 = 0; k1 < byte0; k1++)
             {
-label1:
+                for(int l1 = 0; l1 < worldObj.field_35472_c / 8; l1++)
                 {
-                    if(k1 >= byte0)
+                    double d = 0.125D;
+                    double d1 = field_4163_o[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 0)];
+                    double d2 = field_4163_o[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 0)];
+                    double d3 = field_4163_o[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 0)];
+                    double d4 = field_4163_o[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 0)];
+                    double d5 = (field_4163_o[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 1)] - d1) * d;
+                    double d6 = (field_4163_o[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 1)] - d2) * d;
+                    double d7 = (field_4163_o[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 1)] - d3) * d;
+                    double d8 = (field_4163_o[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 1)] - d4) * d;
+                    for(int i2 = 0; i2 < 8; i2++)
                     {
-                        continue label0;
-                    }
-                    int l1 = 0;
-                    do
-                    {
-                        worldObj.getClass();
-                        if(l1 >= 128 / 8)
+                        double d9 = 0.25D;
+                        double d10 = d1;
+                        double d11 = d2;
+                        double d12 = (d3 - d1) * d9;
+                        double d13 = (d4 - d2) * d9;
+                        for(int j2 = 0; j2 < 4; j2++)
                         {
-                            break label1;
-                        }
-                        double d = 0.125D;
-                        double d1 = field_4163_o[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 0)];
-                        double d2 = field_4163_o[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 0)];
-                        double d3 = field_4163_o[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 0)];
-                        double d4 = field_4163_o[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 0)];
-                        double d5 = (field_4163_o[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 1)] - d1) * d;
-                        double d6 = (field_4163_o[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 1)] - d2) * d;
-                        double d7 = (field_4163_o[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 1)] - d3) * d;
-                        double d8 = (field_4163_o[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 1)] - d4) * d;
-                        for(int i2 = 0; i2 < 8; i2++)
-                        {
-                            double d9 = 0.25D;
-                            double d10 = d1;
-                            double d11 = d2;
-                            double d12 = (d3 - d1) * d9;
-                            double d13 = (d4 - d2) * d9;
-                            for(int j2 = 0; j2 < 4; j2++)
+                            int k2 = j2 + j1 * 4 << worldObj.field_35471_b | 0 + k1 * 4 << worldObj.field_35473_a | l1 * 8 + i2;
+                            int l2 = 1 << worldObj.field_35473_a;
+                            double d14 = 0.25D;
+                            double d15 = d10;
+                            double d16 = (d11 - d10) * d14;
+                            for(int i3 = 0; i3 < 4; i3++)
                             {
-                                worldObj.getClass();
-                                worldObj.getClass();
-                                int k2 = j2 + j1 * 4 << 11 | 0 + k1 * 4 << 7 | l1 * 8 + i2;
-                                worldObj.getClass();
-                                int l2 = 1 << 7;
-                                double d14 = 0.25D;
-                                double d15 = d10;
-                                double d16 = (d11 - d10) * d14;
-                                for(int i3 = 0; i3 < 4; i3++)
+                                int j3 = 0;
+                                if(l1 * 8 + i2 < byte1)
                                 {
-                                    int j3 = 0;
-                                    if(l1 * 8 + i2 < byte1)
-                                    {
-                                        j3 = Block.lavaStill.blockID;
-                                    }
-                                    if(d15 > 0.0D)
-                                    {
-                                        j3 = Block.netherrack.blockID;
-                                    }
-                                    abyte0[k2] = (byte)j3;
-                                    k2 += l2;
-                                    d15 += d16;
+                                    j3 = Block.lavaStill.blockID;
                                 }
-
-                                d10 += d12;
-                                d11 += d13;
+                                if(d15 > 0.0D)
+                                {
+                                    j3 = Block.netherrack.blockID;
+                                }
+                                abyte0[k2] = (byte)j3;
+                                k2 += l2;
+                                d15 += d16;
                             }
 
-                            d1 += d5;
-                            d2 += d6;
-                            d3 += d7;
-                            d4 += d8;
+                            d10 += d12;
+                            d11 += d13;
                         }
 
-                        l1++;
-                    } while(true);
+                        d1 += d5;
+                        d2 += d6;
+                        d3 += d7;
+                        d4 += d8;
+                    }
+
                 }
-                k1++;
-            } while(true);
+
+            }
+
         }
 
     }
 
     public void func_4058_b(int i, int j, byte abyte0[])
     {
-        worldObj.getClass();
-        int k = 128 - 64;
+        int k = worldObj.field_35472_c - 64;
         double d = 0.03125D;
         field_4162_p = field_4166_l.generateNoiseOctaves(field_4162_p, i * 16, j * 16, 0, 16, 16, 1, d, d, 1.0D);
         gravelNoise = field_4166_l.generateNoiseOctaves(gravelNoise, i * 16, 109, j * 16, 16, 1, 16, d, 1.0D, d);
@@ -141,13 +146,10 @@ label1:
                 int k1 = -1;
                 byte byte0 = (byte)Block.netherrack.blockID;
                 byte byte1 = (byte)Block.netherrack.blockID;
-                worldObj.getClass();
-                for(int l1 = 127; l1 >= 0; l1--)
+                for(int l1 = worldObj.field_35469_d; l1 >= 0; l1--)
                 {
-                    worldObj.getClass();
-                    int i2 = (i1 * 16 + l) * 128 + l1;
-                    worldObj.getClass();
-                    if(l1 >= 127 - hellRNG.nextInt(5))
+                    int i2 = (i1 * 16 + l) * worldObj.field_35472_c + l1;
+                    if(l1 >= worldObj.field_35469_d - hellRNG.nextInt(5))
                     {
                         abyte0[i2] = (byte)Block.bedrock.blockID;
                         continue;
@@ -230,11 +232,11 @@ label1:
     public Chunk provideChunk(int i, int j)
     {
         hellRNG.setSeed((long)i * 0x4f9939f508L + (long)j * 0x1ef1565bd5L);
-        worldObj.getClass();
-        byte abyte0[] = new byte[16 * 128 * 16];
+        byte abyte0[] = new byte[16 * worldObj.field_35472_c * 16];
         generateNetherTerrain(i, j, abyte0);
         func_4058_b(i, j, abyte0);
         field_4159_s.generate(this, worldObj, i, j, abyte0);
+        field_40378_c.generate(this, worldObj, i, j, abyte0);
         Chunk chunk = new Chunk(worldObj, abyte0, i, j);
         return chunk;
     }
@@ -365,11 +367,11 @@ label1:
         BlockSand.fallInstantly = true;
         int k = i * 16;
         int l = j * 16;
+        field_40378_c.generateStructuresInChunk(worldObj, hellRNG, i, j);
         for(int i1 = 0; i1 < 8; i1++)
         {
             int k1 = k + hellRNG.nextInt(16) + 8;
-            worldObj.getClass();
-            int i3 = hellRNG.nextInt(128 - 8) + 4;
+            int i3 = hellRNG.nextInt(worldObj.field_35472_c - 8) + 4;
             int k4 = l + hellRNG.nextInt(16) + 8;
             (new WorldGenHellLava(Block.lavaMoving.blockID)).generate(worldObj, hellRNG, k1, i3, k4);
         }
@@ -378,8 +380,7 @@ label1:
         for(int l1 = 0; l1 < j1; l1++)
         {
             int j3 = k + hellRNG.nextInt(16) + 8;
-            worldObj.getClass();
-            int l4 = hellRNG.nextInt(128 - 8) + 4;
+            int l4 = hellRNG.nextInt(worldObj.field_35472_c - 8) + 4;
             int i6 = l + hellRNG.nextInt(16) + 8;
             (new WorldGenFire()).generate(worldObj, hellRNG, j3, l4, i6);
         }
@@ -388,8 +389,7 @@ label1:
         for(int i2 = 0; i2 < j1; i2++)
         {
             int k3 = k + hellRNG.nextInt(16) + 8;
-            worldObj.getClass();
-            int i5 = hellRNG.nextInt(128 - 8) + 4;
+            int i5 = hellRNG.nextInt(worldObj.field_35472_c - 8) + 4;
             int j6 = l + hellRNG.nextInt(16) + 8;
             (new WorldGenGlowStone1()).generate(worldObj, hellRNG, k3, i5, j6);
         }
@@ -397,8 +397,7 @@ label1:
         for(int j2 = 0; j2 < 10; j2++)
         {
             int l3 = k + hellRNG.nextInt(16) + 8;
-            worldObj.getClass();
-            int j5 = hellRNG.nextInt(128);
+            int j5 = hellRNG.nextInt(worldObj.field_35472_c);
             int k6 = l + hellRNG.nextInt(16) + 8;
             (new WorldGenGlowStone2()).generate(worldObj, hellRNG, l3, j5, k6);
         }
@@ -406,16 +405,14 @@ label1:
         if(hellRNG.nextInt(1) == 0)
         {
             int k2 = k + hellRNG.nextInt(16) + 8;
-            worldObj.getClass();
-            int i4 = hellRNG.nextInt(128);
+            int i4 = hellRNG.nextInt(worldObj.field_35472_c);
             int k5 = l + hellRNG.nextInt(16) + 8;
             (new WorldGenFlowers(Block.mushroomBrown.blockID)).generate(worldObj, hellRNG, k2, i4, k5);
         }
         if(hellRNG.nextInt(1) == 0)
         {
             int l2 = k + hellRNG.nextInt(16) + 8;
-            worldObj.getClass();
-            int j4 = hellRNG.nextInt(128);
+            int j4 = hellRNG.nextInt(worldObj.field_35472_c);
             int l5 = l + hellRNG.nextInt(16) + 8;
             (new WorldGenFlowers(Block.mushroomRed.blockID)).generate(worldObj, hellRNG, l2, j4, l5);
         }
@@ -442,23 +439,29 @@ label1:
         return "HellRandomLevelSource";
     }
 
-    private Random hellRNG;
-    private NoiseGeneratorOctaves field_4169_i;
-    private NoiseGeneratorOctaves field_4168_j;
-    private NoiseGeneratorOctaves field_4167_k;
-    private NoiseGeneratorOctaves field_4166_l;
-    private NoiseGeneratorOctaves field_4165_m;
-    public NoiseGeneratorOctaves field_4177_a;
-    public NoiseGeneratorOctaves field_4176_b;
-    private World worldObj;
-    private double field_4163_o[];
-    private double field_4162_p[];
-    private double gravelNoise[];
-    private double field_4160_r[];
-    private MapGenBase field_4159_s;
-    double field_4175_c[];
-    double field_4174_d[];
-    double field_4173_e[];
-    double field_4172_f[];
-    double field_4171_g[];
+    public List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    {
+        if(enumcreaturetype == EnumCreatureType.monster && field_40378_c.func_40483_a(i, j, k))
+        {
+            return field_40378_c.func_40485_b();
+        }
+        WorldChunkManager worldchunkmanager = worldObj.getWorldChunkManager();
+        if(worldchunkmanager == null)
+        {
+            return null;
+        }
+        BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAtChunkCoord(new ChunkCoordIntPair(i >> 4, k >> 4));
+        if(biomegenbase == null)
+        {
+            return null;
+        } else
+        {
+            return biomegenbase.getSpawnableList(enumcreaturetype);
+        }
+    }
+
+    public ChunkPosition func_40376_a(World world, String s, int i, int j, int k)
+    {
+        return null;
+    }
 }

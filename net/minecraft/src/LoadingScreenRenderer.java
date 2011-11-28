@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -16,10 +16,16 @@ public class LoadingScreenRenderer
     implements IProgressUpdate
 {
 
+    private String field_1004_a;
+    private Minecraft mc;
+    private String currentlyDisplayedText;
+    private long field_1006_d;
+    private boolean field_1005_e;
+
     public LoadingScreenRenderer(Minecraft minecraft)
     {
         field_1004_a = "";
-        field_1007_c = "";
+        currentlyDisplayedText = "";
         field_1006_d = System.currentTimeMillis();
         field_1005_e = false;
         mc = minecraft;
@@ -31,10 +37,10 @@ public class LoadingScreenRenderer
         func_597_c(s);
     }
 
-    public void func_594_b(String s)
+    public void displaySavingString(String s)
     {
         field_1005_e = true;
-        func_597_c(field_1007_c);
+        func_597_c(currentlyDisplayedText);
     }
 
     public void func_597_c(String s)
@@ -50,7 +56,7 @@ public class LoadingScreenRenderer
             }
         } else
         {
-            field_1007_c = s;
+            currentlyDisplayedText = s;
             ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
             GL11.glClear(256);
             GL11.glMatrixMode(5889 /*GL_PROJECTION*/);
@@ -145,7 +151,7 @@ public class LoadingScreenRenderer
             tessellator.draw();
             GL11.glEnable(3553 /*GL_TEXTURE_2D*/);
         }
-        mc.fontRenderer.drawStringWithShadow(field_1007_c, (j - mc.fontRenderer.getStringWidth(field_1007_c)) / 2, k / 2 - 4 - 16, 0xffffff);
+        mc.fontRenderer.drawStringWithShadow(currentlyDisplayedText, (j - mc.fontRenderer.getStringWidth(currentlyDisplayedText)) / 2, k / 2 - 4 - 16, 0xffffff);
         mc.fontRenderer.drawStringWithShadow(field_1004_a, (j - mc.fontRenderer.getStringWidth(field_1004_a)) / 2, (k / 2 - 4) + 8, 0xffffff);
         Display.update();
         try
@@ -154,10 +160,4 @@ public class LoadingScreenRenderer
         }
         catch(Exception exception) { }
     }
-
-    private String field_1004_a;
-    private Minecraft mc;
-    private String field_1007_c;
-    private long field_1006_d;
-    private boolean field_1005_e;
 }

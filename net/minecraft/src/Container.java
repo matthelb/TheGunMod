@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,13 @@ import java.util.*;
 
 public abstract class Container
 {
+
+    public List inventoryItemStacks;
+    public List inventorySlots;
+    public int windowId;
+    private short field_20917_a;
+    protected List crafters;
+    private Set field_20918_b;
 
     public Container()
     {
@@ -49,6 +56,11 @@ public abstract class Container
 
         }
 
+    }
+
+    public boolean func_40233_a(EntityPlayer entityplayer, int i)
+    {
+        return false;
     }
 
     public Slot getSlot(int i)
@@ -334,11 +346,4 @@ public abstract class Container
         }
         return flag1;
     }
-
-    public List inventoryItemStacks;
-    public List inventorySlots;
-    public int windowId;
-    private short field_20917_a;
-    protected List crafters;
-    private Set field_20918_b;
 }

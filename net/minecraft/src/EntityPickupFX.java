@@ -1,18 +1,23 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
 
 // Referenced classes of package net.minecraft.src:
-//            EntityFX, Entity, MathHelper, RenderManager, 
-//            World, Tessellator
+//            EntityFX, Entity, MathHelper, OpenGlHelper, 
+//            RenderManager, World, Tessellator
 
 public class EntityPickupFX extends EntityFX
 {
+
+    private Entity field_675_a;
+    private Entity field_679_o;
+    private int age;
+    private int maxAge;
+    private float field_676_r;
 
     public EntityPickupFX(World world, Entity entity, Entity entity1, float f)
     {
@@ -41,10 +46,10 @@ public class EntityPickupFX extends EntityFX
         int i = MathHelper.floor_double(d6);
         int j = MathHelper.floor_double(d7 + (double)(yOffset / 2.0F));
         int k = MathHelper.floor_double(d8);
-        int l = func_35115_a(f);
+        int l = getEntityBrightnessForRender(f);
         int i1 = l % 0x10000;
         int j1 = l / 0x10000;
-        GL13.glMultiTexCoord2f(33985 /*GL_TEXTURE1_ARB*/, (float)i1 / 1.0F, (float)j1 / 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)i1 / 1.0F, (float)j1 / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         d6 -= interpPosX;
         d7 -= interpPosY;
@@ -65,10 +70,4 @@ public class EntityPickupFX extends EntityFX
     {
         return 3;
     }
-
-    private Entity field_675_a;
-    private Entity field_679_o;
-    private int age;
-    private int maxAge;
-    private float field_676_r;
 }

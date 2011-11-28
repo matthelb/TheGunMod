@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ package net.minecraft.src;
 
 public class ItemBlock extends Item
 {
+
+    private int blockID;
 
     public ItemBlock(int i)
     {
@@ -66,8 +68,7 @@ public class ItemBlock extends Item
         {
             return false;
         }
-        world.getClass();
-        if(j == 128 - 1 && Block.blocksList[blockID].blockMaterial.isSolid())
+        if(j == world.field_35472_c - 1 && Block.blocksList[blockID].blockMaterial.isSolid())
         {
             return false;
         }
@@ -100,6 +101,4 @@ public class ItemBlock extends Item
     {
         return Block.blocksList[blockID].getBlockName();
     }
-
-    private int blockID;
 }

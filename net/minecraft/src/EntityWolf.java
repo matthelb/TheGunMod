@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,14 @@ import java.util.*;
 public class EntityWolf extends EntityAnimal
 {
 
+    private boolean looksWithInterest;
+    private float field_25048_b;
+    private float field_25054_c;
+    private boolean isWolfShaking;
+    private boolean field_25052_g;
+    private float timeWolfIsShaking;
+    private float prevTimeWolfIsShaking;
+
     public EntityWolf(World world)
     {
         super(world);
@@ -22,7 +30,11 @@ public class EntityWolf extends EntityAnimal
         texture = "/mob/wolf.png";
         setSize(0.8F, 0.8F);
         moveSpeed = 1.1F;
-        health = 8;
+    }
+
+    public int getMaxHealth()
+    {
+        return !isWolfTamed() ? 8 : 20;
     }
 
     protected void entityInit()
@@ -30,7 +42,7 @@ public class EntityWolf extends EntityAnimal
         super.entityInit();
         dataWatcher.addObject(16, Byte.valueOf((byte)0));
         dataWatcher.addObject(17, "");
-        dataWatcher.addObject(18, new Integer(health));
+        dataWatcher.addObject(18, new Integer(getEntityHealth()));
     }
 
     protected boolean canTriggerWalking()
@@ -82,7 +94,7 @@ public class EntityWolf extends EntityAnimal
 
     protected boolean canDespawn()
     {
-        return !isWolfTamed();
+        return isWolfAngry();
     }
 
     protected String getLivingSound()
@@ -159,7 +171,7 @@ public class EntityWolf extends EntityAnimal
         }
         if(!worldObj.multiplayerWorld)
         {
-            dataWatcher.updateObject(18, Integer.valueOf(health));
+            dataWatcher.updateObject(18, Integer.valueOf(getEntityHealth()));
         }
     }
 
@@ -440,7 +452,7 @@ public class EntityWolf extends EntityAnimal
                         setIsTamed(true);
                         setPathToEntity(null);
                         setIsSitting(true);
-                        health = 20;
+                        setEntityHealth(20);
                         setOwner(entityplayer.username);
                         showHeartsOrSmokeFX(true);
                         worldObj.setEntityState(this, (byte)7);
@@ -479,7 +491,7 @@ public class EntityWolf extends EntityAnimal
                 return true;
             }
         }
-        return false;
+        return super.interact(entityplayer);
     }
 
     void showHeartsOrSmokeFX(boolean flag)
@@ -601,11 +613,8 @@ public class EntityWolf extends EntityAnimal
         }
     }
 
-    private boolean looksWithInterest;
-    private float field_25048_b;
-    private float field_25054_c;
-    private boolean isWolfShaking;
-    private boolean field_25052_g;
-    private float timeWolfIsShaking;
-    private float prevTimeWolfIsShaking;
+    protected EntityAnimal func_40145_a(EntityAnimal entityanimal)
+    {
+        return new EntityWolf(worldObj);
+    }
 }

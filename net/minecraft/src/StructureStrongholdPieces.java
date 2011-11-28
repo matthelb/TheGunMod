@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,12 +9,18 @@ import java.util.*;
 // Referenced classes of package net.minecraft.src:
 //            StructureStrongholdPieceWeight, ComponentStrongholdStraight, ComponentStrongholdPrison, ComponentStrongholdLeftTurn, 
 //            ComponentStrongholdRightTurn, ComponentStrongholdRoomCrossing, ComponentStrongholdStairsStraight, ComponentStrongholdStairs, 
-//            ComponentStrongholdCrossing, ComponentStrongholdLibrary, ComponentStrongholdStairs2, ComponentStrongholdCorridor, 
-//            StructureBoundingBox, StructureStrongholdPieceWeight2, StructureStrongholdStones, ComponentStronghold, 
-//            StructureComponent
+//            ComponentStrongholdCrossing, ComponentStrongholdChestCorridor, ComponentStrongholdLibrary, ComponentStrongholdPortalRoom, 
+//            ComponentStrongholdStairs2, ComponentStrongholdCorridor, StructureBoundingBox, StructureStrongholdPieceWeight2, 
+//            StructureStrongholdPieceWeight3, StructureStrongholdStones, ComponentStronghold, StructureComponent
 
 public class StructureStrongholdPieces
 {
+
+    private static final StructureStrongholdPieceWeight pieceWeightArray[];
+    private static List structurePieceList;
+    private static Class field_40752_d;
+    static int totalWeight = 0;
+    private static final StructureStrongholdStones field_35854_d = new StructureStrongholdStones(null);
 
     public StructureStrongholdPieces()
     {
@@ -32,6 +38,7 @@ public class StructureStrongholdPieces
             structurePieceList.add(structurestrongholdpieceweight);
         }
 
+        field_40752_d = null;
     }
 
     private static boolean canAddStructurePieces()
@@ -51,9 +58,8 @@ public class StructureStrongholdPieces
         return flag;
     }
 
-    private static ComponentStronghold getStrongholdComponentFromWeightedPiece(StructureStrongholdPieceWeight structurestrongholdpieceweight, List list, Random random, int i, int j, int k, int l, int i1)
+    private static ComponentStronghold getStrongholdComponentFromWeightedPiece(Class class1, List list, Random random, int i, int j, int k, int l, int i1)
     {
-        Class class1 = structurestrongholdpieceweight.pieceClass;
         Object obj = null;
         if(class1 == (net.minecraft.src.ComponentStrongholdStraight.class))
         {
@@ -87,54 +93,85 @@ public class StructureStrongholdPieces
         {
             obj = ComponentStrongholdCrossing.func_35039_a(list, random, i, j, k, l, i1);
         } else
+        if(class1 == (net.minecraft.src.ComponentStrongholdChestCorridor.class))
+        {
+            obj = ComponentStrongholdChestCorridor.func_40010_a(list, random, i, j, k, l, i1);
+        } else
         if(class1 == (net.minecraft.src.ComponentStrongholdLibrary.class))
         {
             obj = ComponentStrongholdLibrary.func_35055_a(list, random, i, j, k, l, i1);
+        } else
+        if(class1 == (net.minecraft.src.ComponentStrongholdPortalRoom.class))
+        {
+            obj = ComponentStrongholdPortalRoom.func_40014_a(list, random, i, j, k, l, i1);
         }
         return ((ComponentStronghold) (obj));
     }
 
-    private static ComponentStronghold func_35847_b(ComponentStrongholdStairs2 var0, List var1, Random var2, int var3, int var4, int var5, int var6, int var7) {
-        if(!canAddStructurePieces()) {
-           return null;
-        } else {
-           int var8 = 0;
-
-           while(var8 < 5) {
-              ++var8;
-              int var9 = var2.nextInt(totalWeight);
-              Iterator var10 = structurePieceList.iterator();
-
-              while(var10.hasNext()) {
-                 StructureStrongholdPieceWeight var11 = (StructureStrongholdPieceWeight)var10.next();
-                 var9 -= var11.pieceWeight;
-                 if(var9 < 0) {
-                    if(!var11.canSpawnMoreStructuresOfType(var7) || var11 == var0.field_35038_a) {
-                       break;
-                    }
-
-                    ComponentStronghold var12 = getStrongholdComponentFromWeightedPiece(var11, var1, var2, var3, var4, var5, var6, var7);
-                    if(var12 != null) {
-                       ++var11.instancesSpawned;
-                       var0.field_35038_a = var11;
-                       if(!var11.canSpawnMoreStructures()) {
-                          structurePieceList.remove(var11);
-                       }
-
-                       return var12;
-                    }
-                 }
-              }
-           }
-
-           StructureBoundingBox var13 = ComponentStrongholdCorridor.func_35051_a(var1, var2, var3, var4, var5, var6);
-           if(var13 != null && var13.minY > 1) {
-              return new ComponentStrongholdCorridor(var7, var2, var13, var6);
-           } else {
-              return null;
-           }
+    private static ComponentStronghold func_35847_b(ComponentStrongholdStairs2 var0, List var1, Random var2, int var3, int var4, int var5, int var6, int var7)
+    {
+        if(!canAddStructurePieces())
+        {
+            return null;
         }
-     }
+        else
+        {
+            if(field_40752_d != null)
+            {
+                ComponentStronghold var8 = getStrongholdComponentFromWeightedPiece(field_40752_d, var1, var2, var3, var4, var5, var6, var7);
+                field_40752_d = null;
+                if(var8 != null)
+                {
+                    return var8;
+                }
+            }
+
+            int var13 = 0;
+
+            while(var13 < 5)
+            {
+                ++var13;
+                int var9 = var2.nextInt(totalWeight);
+                Iterator var10 = structurePieceList.iterator();
+
+                while(var10.hasNext())
+                {
+                    StructureStrongholdPieceWeight var11 = (StructureStrongholdPieceWeight)var10.next();
+                    var9 -= var11.pieceWeight;
+                    if(var9 < 0)
+                    {
+                        if(!var11.canSpawnMoreStructuresOfType(var7) || var11 == var0.field_35038_a)
+                        {
+                            break;
+                        }
+
+                        ComponentStronghold var12 = getStrongholdComponentFromWeightedPiece(var11.pieceClass, var1, var2, var3, var4, var5, var6, var7);
+                        if(var12 != null)
+                        {
+                            ++var11.instancesSpawned;
+                            var0.field_35038_a = var11;
+                            if(!var11.canSpawnMoreStructures())
+                            {
+                                structurePieceList.remove(var11);
+                            }
+
+                            return var12;
+                        }
+                    }
+                }
+            }
+
+            StructureBoundingBox var14 = ComponentStrongholdCorridor.func_35051_a(var1, var2, var3, var4, var5, var6);
+            if(var14 != null && var14.minY > 1)
+            {
+                return new ComponentStrongholdCorridor(var7, var2, var14, var6);
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
 
     private static StructureComponent func_35848_c(ComponentStrongholdStairs2 componentstrongholdstairs2, List list, Random random, int i, int j, int k, int l, int i1)
     {
@@ -160,20 +197,21 @@ public class StructureStrongholdPieces
         return func_35848_c(componentstrongholdstairs2, list, random, i, j, k, l, i1);
     }
 
+    static Class func_40751_a(Class class1)
+    {
+        return field_40752_d = class1;
+    }
+
     static StructureStrongholdStones getStrongholdStones()
     {
         return field_35854_d;
     }
 
-    private static final StructureStrongholdPieceWeight pieceWeightArray[];
-    private static List structurePieceList;
-    static int totalWeight = 0;
-    private static final StructureStrongholdStones field_35854_d = new StructureStrongholdStones(null);
-
     static 
     {
         pieceWeightArray = (new StructureStrongholdPieceWeight[] {
-            new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdStraight.class, 40, 0), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdPrison.class, 5, 5), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdLeftTurn.class, 20, 0), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdRightTurn.class, 20, 0), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdRoomCrossing.class, 10, 6), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdStairsStraight.class, 5, 10), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdStairs.class, 5, 10), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdCrossing.class, 5, 4), new StructureStrongholdPieceWeight2(net.minecraft.src.ComponentStrongholdLibrary.class, 10, 1)
+            new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdStraight.class, 40, 0), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdPrison.class, 5, 5), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdLeftTurn.class, 20, 0), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdRightTurn.class, 20, 0), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdRoomCrossing.class, 10, 6), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdStairsStraight.class, 5, 5), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdStairs.class, 5, 5), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdCrossing.class, 5, 4), new StructureStrongholdPieceWeight(net.minecraft.src.ComponentStrongholdChestCorridor.class, 5, 4), new StructureStrongholdPieceWeight2(net.minecraft.src.ComponentStrongholdLibrary.class, 10, 2), 
+            new StructureStrongholdPieceWeight3(net.minecraft.src.ComponentStrongholdPortalRoom.class, 20, 1)
         });
     }
 }

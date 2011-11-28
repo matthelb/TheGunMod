@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,15 @@ import java.util.zip.Inflater;
 
 public class Packet51MapChunk extends Packet
 {
+
+    public int xPosition;
+    public int yPosition;
+    public int zPosition;
+    public int xSize;
+    public int ySize;
+    public int zSize;
+    public byte chunk[];
+    private int chunkSize;
 
     public Packet51MapChunk()
     {
@@ -70,13 +79,4 @@ public class Packet51MapChunk extends Packet
     {
         return 17 + chunkSize;
     }
-
-    public int xPosition;
-    public int yPosition;
-    public int zPosition;
-    public int xSize;
-    public int ySize;
-    public int zSize;
-    public byte chunk[];
-    private int chunkSize;
 }

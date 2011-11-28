@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,10 +11,21 @@ import java.util.Map;
 // Referenced classes of package net.minecraft.src:
 //            NBTTagCompound, World, Block, TileEntityFurnace, 
 //            TileEntityChest, TileEntityRecordPlayer, TileEntityDispenser, TileEntitySign, 
-//            TileEntityMobSpawner, TileEntityNote, TileEntityPiston
+//            TileEntityMobSpawner, TileEntityNote, TileEntityPiston, TileEntityBrewingStand, 
+//            TileEntityEnchantmentTable, TileEntityEndPortal
 
 public class TileEntity
 {
+
+    private static Map nameToClassMap = new HashMap();
+    private static Map classToNameMap = new HashMap();
+    public World worldObj;
+    public int xCoord;
+    public int yCoord;
+    public int zCoord;
+    protected boolean tileEntityInvalid;
+    public int blockMetadata;
+    public Block field_35146_o;
 
     public TileEntity()
     {
@@ -158,16 +169,6 @@ public class TileEntity
         }
     }
 
-    private static Map nameToClassMap = new HashMap();
-    private static Map classToNameMap = new HashMap();
-    public World worldObj;
-    public int xCoord;
-    public int yCoord;
-    public int zCoord;
-    protected boolean tileEntityInvalid;
-    public int blockMetadata;
-    public Block field_35146_o;
-
     static 
     {
         addMapping(net.minecraft.src.TileEntityFurnace.class, "Furnace");
@@ -178,5 +179,8 @@ public class TileEntity
         addMapping(net.minecraft.src.TileEntityMobSpawner.class, "MobSpawner");
         addMapping(net.minecraft.src.TileEntityNote.class, "Music");
         addMapping(net.minecraft.src.TileEntityPiston.class, "Piston");
+        addMapping(net.minecraft.src.TileEntityBrewingStand.class, "Cauldron");
+        addMapping(net.minecraft.src.TileEntityEnchantmentTable.class, "EnchantTable");
+        addMapping(net.minecraft.src.TileEntityEndPortal.class, "Airportal");
     }
 }

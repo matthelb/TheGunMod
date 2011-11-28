@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderCreeper extends RenderLiving
 {
+
+    private ModelBase field_27008_a;
 
     public RenderCreeper()
     {
@@ -62,7 +64,7 @@ public class RenderCreeper extends RenderLiving
         return i << 24 | c << 16 | c1 << 8 | c2;
     }
 
-    protected boolean func_27006_a(EntityCreeper entitycreeper, int i, float f)
+    protected int func_27006_a(EntityCreeper entitycreeper, int i, float f)
     {
         if(entitycreeper.getPowered())
         {
@@ -82,7 +84,7 @@ public class RenderCreeper extends RenderLiving
                 GL11.glColor4f(f4, f4, f4, 1.0F);
                 GL11.glDisable(2896 /*GL_LIGHTING*/);
                 GL11.glBlendFunc(1, 1);
-                return true;
+                return 1;
             }
             if(i == 2)
             {
@@ -93,12 +95,12 @@ public class RenderCreeper extends RenderLiving
                 GL11.glDisable(3042 /*GL_BLEND*/);
             }
         }
-        return false;
+        return -1;
     }
 
-    protected boolean func_27007_b(EntityCreeper entitycreeper, int i, float f)
+    protected int func_27007_b(EntityCreeper entitycreeper, int i, float f)
     {
-        return false;
+        return -1;
     }
 
     protected void preRenderCallback(EntityLiving entityliving, float f)
@@ -111,15 +113,13 @@ public class RenderCreeper extends RenderLiving
         return updateCreeperColorMultiplier((EntityCreeper)entityliving, f, f1);
     }
 
-    protected boolean shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
         return func_27006_a((EntityCreeper)entityliving, i, f);
     }
 
-    protected boolean inheritRenderPass(EntityLiving entityliving, int i, float f)
+    protected int inheritRenderPass(EntityLiving entityliving, int i, float f)
     {
         return func_27007_b((EntityCreeper)entityliving, i, f);
     }
-
-    private ModelBase field_27008_a;
 }

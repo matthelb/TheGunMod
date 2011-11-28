@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,11 @@ package net.minecraft.src;
 public class TileEntityFurnace extends TileEntity
     implements IInventory
 {
+
+    private ItemStack furnaceItemStacks[];
+    public int furnaceBurnTime;
+    public int currentItemBurnTime;
+    public int furnaceCookTime;
 
     public TileEntityFurnace()
     {
@@ -270,13 +275,17 @@ public class TileEntityFurnace extends TileEntity
         if(i == Block.sapling.blockID)
         {
             return 100;
+        }
+        if(i == Item.blazeRod.shiftedIndex)
+        {
+            return 2400;
         } else
         {
             return ModLoader.AddAllFuel(i, itemstack.getItemDamage());
         }
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
         if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
         {
@@ -292,9 +301,4 @@ public class TileEntityFurnace extends TileEntity
     public void closeChest()
     {
     }
-
-    private ItemStack furnaceItemStacks[];
-    public int furnaceBurnTime;
-    public int currentItemBurnTime;
-    public int furnaceCookTime;
 }

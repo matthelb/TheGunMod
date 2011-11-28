@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,18 +8,19 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            EntityCreature, IMob, World, DamageSource, 
-//            Entity, AxisAlignedBB, MathHelper, EnumSkyBlock, 
-//            NBTTagCompound
+//            Potion, PotionEffect, Entity, AxisAlignedBB, 
+//            MathHelper, EnumSkyBlock, NBTTagCompound
 
 public abstract class EntityMob extends EntityCreature
     implements IMob
 {
 
+    protected int attackStrength;
+
     public EntityMob(World world)
     {
         super(world);
         attackStrength = 2;
-        health = 20;
         field_35171_bJ = 5;
     }
 
@@ -44,7 +45,7 @@ public abstract class EntityMob extends EntityCreature
 
     protected Entity findPlayerToAttack()
     {
-        EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 16D);
+        EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 16D);
         if(entityplayer != null && canEntityBeSeen(entityplayer))
         {
             return entityplayer;
@@ -76,7 +77,16 @@ public abstract class EntityMob extends EntityCreature
 
     protected boolean attackEntityAsMob(Entity entity)
     {
-        return entity.attackEntityFrom(DamageSource.causeMobDamage(this), attackStrength);
+        int i = attackStrength;
+        if(isPotionActive(Potion.potionDamageBoost))
+        {
+            i += 3 << getActivePotionEffect(Potion.potionDamageBoost).getAmplifier();
+        }
+        if(isPotionActive(Potion.potionWeakness))
+        {
+            i -= 2 << getActivePotionEffect(Potion.potionWeakness).getAmplifier();
+        }
+        return entity.attackEntityFrom(DamageSource.causeMobDamage(this), i);
     }
 
     protected void attackEntity(Entity entity, float f)
@@ -103,7 +113,7 @@ public abstract class EntityMob extends EntityCreature
         super.readEntityFromNBT(nbttagcompound);
     }
 
-    public boolean getCanSpawnHere()
+    protected boolean func_40147_Y()
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
@@ -120,8 +130,11 @@ public abstract class EntityMob extends EntityCreature
             l = worldObj.getBlockLightValue(i, j, k);
             worldObj.skylightSubtracted = i1;
         }
-        return l <= rand.nextInt(8) && super.getCanSpawnHere();
+        return l <= rand.nextInt(8);
     }
 
-    protected int attackStrength;
+    public boolean getCanSpawnHere()
+    {
+        return func_40147_Y() && super.getCanSpawnHere();
+    }
 }

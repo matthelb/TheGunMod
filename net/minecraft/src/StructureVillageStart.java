@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.*;
 
 class StructureVillageStart extends StructureStart
 {
+
+    private boolean hasMoreThanTwoComponents;
 
     public StructureVillageStart(World world, Random random, int i, int j)
     {
@@ -59,6 +61,4 @@ class StructureVillageStart extends StructureStart
     {
         return hasMoreThanTwoComponents;
     }
-
-    private boolean hasMoreThanTwoComponents;
 }

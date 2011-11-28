@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,10 +9,12 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            StructureComponent, StructureBoundingBox, StructureVillagePieces, World, 
-//            ComponentVillageStartPiece
+//            EntityVillager, ComponentVillageStartPiece
 
 abstract class ComponentVillage extends StructureComponent
 {
+
+    private int field_39009_a;
 
     protected ComponentVillage(int i)
     {
@@ -67,8 +69,7 @@ abstract class ComponentVillage extends StructureComponent
             {
                 if(structureboundingbox.isVecInside(l, 64, k))
                 {
-                    world.getClass();
-                    i += Math.max(world.getTopSolidOrLiquidBlock(l, k), 63);
+                    i += Math.max(world.getTopSolidOrLiquidBlock(l, k), world.field_35470_e);
                     j++;
                 }
             }
@@ -87,5 +88,38 @@ abstract class ComponentVillage extends StructureComponent
     protected static boolean canVillageGoDeeper(StructureBoundingBox structureboundingbox)
     {
         return structureboundingbox != null && structureboundingbox.minY > 10;
+    }
+
+    protected void func_40044_a(World world, StructureBoundingBox structureboundingbox, int i, int j, int k, int l)
+    {
+        if(field_39009_a >= l)
+        {
+            return;
+        }
+        int i1 = field_39009_a;
+        do
+        {
+            if(i1 >= l)
+            {
+                break;
+            }
+            int j1 = getXWithOffset(i + i1, k);
+            int k1 = getYWithOffset(j);
+            int l1 = getZWithOffset(i + i1, k);
+            if(!structureboundingbox.isVecInside(j1, k1, l1))
+            {
+                break;
+            }
+            field_39009_a++;
+            EntityVillager entityvillager = new EntityVillager(world, func_40043_a(i1));
+            entityvillager.setLocationAndAngles((double)j1 + 0.5D, k1, (double)l1 + 0.5D, 0.0F, 0.0F);
+            world.entityJoinedWorld(entityvillager);
+            i1++;
+        } while(true);
+    }
+
+    protected int func_40043_a(int i)
+    {
+        return 0;
     }
 }

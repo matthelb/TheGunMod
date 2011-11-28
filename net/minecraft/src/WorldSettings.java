@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,29 +8,36 @@ package net.minecraft.src;
 public final class WorldSettings
 {
 
-    public WorldSettings(long l, int i, boolean flag)
+    private final long worldSeed;
+    private final int worldType;
+    private final boolean mapFeaturesEnabled;
+    private final boolean hardcoreEnabled;
+
+    public WorldSettings(long l, int i, boolean flag, boolean flag1)
     {
-        field_35523_a = l;
-        field_35521_b = i;
-        field_35522_c = flag;
+        worldSeed = l;
+        worldType = i;
+        mapFeaturesEnabled = flag;
+        hardcoreEnabled = flag1;
     }
 
-    public long func_35518_a()
+    public long getSeed()
     {
-        return field_35523_a;
+        return worldSeed;
     }
 
-    public int func_35519_b()
+    public int getGameType()
     {
-        return field_35521_b;
+        return worldType;
     }
 
-    public boolean func_35520_c()
+    public boolean getHardcoreEnabled()
     {
-        return field_35522_c;
+        return hardcoreEnabled;
     }
 
-    private final long field_35523_a;
-    private final int field_35521_b;
-    private final boolean field_35522_c;
+    public boolean isMapFeaturesEnabled()
+    {
+        return mapFeaturesEnabled;
+    }
 }

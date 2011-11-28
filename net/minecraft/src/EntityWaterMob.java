@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -40,6 +40,11 @@ public abstract class EntityWaterMob extends EntityCreature
     public int getTalkInterval()
     {
         return 120;
+    }
+
+    protected boolean canDespawn()
+    {
+        return true;
     }
 
     protected int func_36001_a(EntityPlayer entityplayer)

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,14 +13,6 @@ import java.util.List;
 
 public class AchievementList
 {
-
-    public AchievementList()
-    {
-    }
-
-    public static void func_27374_a()
-    {
-    }
 
     public static int minDisplayColumn;
     public static int minDisplayRow;
@@ -44,6 +36,24 @@ public class AchievementList
     public static Achievement killCow;
     public static Achievement flyPig;
     public static Achievement snipeSkeleton;
+    public static Achievement diamonds;
+    public static Achievement portal;
+    public static Achievement ghast;
+    public static Achievement blazeRod;
+    public static Achievement potion;
+    public static Achievement theEnd;
+    public static Achievement theEnd2;
+    public static Achievement enchantments;
+    public static Achievement overkill;
+    public static Achievement bookcase;
+
+    public AchievementList()
+    {
+    }
+
+    public static void func_27374_a()
+    {
+    }
 
     static 
     {
@@ -65,6 +75,16 @@ public class AchievementList
         killCow = (new Achievement(14, "killCow", 7, -3, Item.leather, buildSword)).registerAchievement();
         flyPig = (new Achievement(15, "flyPig", 8, -4, Item.saddle, killCow)).setSpecial().registerAchievement();
         snipeSkeleton = (new Achievement(16, "snipeSkeleton", 7, 0, Item.bow, killEnemy)).setSpecial().registerAchievement();
+        diamonds = (new Achievement(17, "diamonds", -1, 5, Item.diamond, acquireIron)).registerAchievement();
+        portal = (new Achievement(18, "portal", -1, 7, Block.obsidian, diamonds)).registerAchievement();
+        ghast = (new Achievement(19, "ghast", -4, 8, Item.ghastTear, portal)).setSpecial().registerAchievement();
+        blazeRod = (new Achievement(20, "blazeRod", 0, 9, Item.blazeRod, portal)).registerAchievement();
+        potion = (new Achievement(21, "potion", 2, 8, Item.potion, blazeRod)).registerAchievement();
+        theEnd = (new Achievement(22, "theEnd", 3, 10, Item.eyeOfEnder, blazeRod)).setSpecial().registerAchievement();
+        theEnd2 = (new Achievement(23, "theEnd2", 4, 13, Block.field_41050_bK, theEnd)).setSpecial().registerAchievement();
+        enchantments = (new Achievement(24, "enchantments", -4, 4, Block.enchantmentTable, diamonds)).registerAchievement();
+        overkill = (new Achievement(25, "overkill", -4, 1, Item.swordDiamond, enchantments)).setSpecial().registerAchievement();
+        bookcase = (new Achievement(26, "bookcase", -3, 6, Block.bookShelf, enchantments)).registerAchievement();
         System.out.println((new StringBuilder()).append(achievementList.size()).append(" achievements").toString());
     }
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,14 @@ import net.minecraft.client.Minecraft;
 
 public class TexturePackList
 {
+
+    private List availableTexturePacks;
+    private TexturePackBase defaultTexturePack;
+    public TexturePackBase selectedTexturePack;
+    private Map field_6538_d;
+    private Minecraft mc;
+    private File texturePackDir;
+    private String currentTexturePack;
 
     public TexturePackList(Minecraft minecraft, File file)
     {
@@ -108,12 +116,4 @@ public class TexturePackList
     {
         return new ArrayList(availableTexturePacks);
     }
-
-    private List availableTexturePacks;
-    private TexturePackBase defaultTexturePack;
-    public TexturePackBase selectedTexturePack;
-    private Map field_6538_d;
-    private Minecraft mc;
-    private File texturePackDir;
-    private String currentTexturePack;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,10 +8,14 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, Material, BlockLeaves, BlockTallGrass, 
-//            World, IBlockAccess, BlockPortal, AxisAlignedBB
+//            World, WorldProviderEnd, IBlockAccess, WorldProvider, 
+//            BlockPortal, AxisAlignedBB
 
 public class BlockFire extends Block
 {
+
+    private int chanceToEncourageFire[];
+    private int abilityToCatchFire[];
 
     protected BlockFire(int i, int j)
     {
@@ -74,6 +78,10 @@ public class BlockFire extends Block
     public void updateTick(World world, int i, int j, int k, Random random)
     {
         boolean flag = world.getBlockId(i, j - 1, k) == Block.netherrack.blockID;
+        if((world.worldProvider instanceof WorldProviderEnd) && world.getBlockId(i, j - 1, k) == Block.bedrock.blockID)
+        {
+            flag = true;
+        }
         if(!canPlaceBlockAt(world, i, j, k))
         {
             world.setBlockWithNotify(i, j, k, 0);
@@ -256,7 +264,7 @@ public class BlockFire extends Block
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if(world.getBlockId(i, j - 1, k) == Block.obsidian.blockID && Block.portal.tryToCreatePortal(world, i, j, k))
+        if(world.worldProvider.worldType <= 0 && world.getBlockId(i, j - 1, k) == Block.obsidian.blockID && Block.portal.tryToCreatePortal(world, i, j, k))
         {
             return;
         }
@@ -346,7 +354,4 @@ public class BlockFire extends Block
             }
         }
     }
-
-    private int chanceToEncourageFire[];
-    private int abilityToCatchFire[];
 }

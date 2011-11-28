@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ import java.util.Random;
 
 public class MapGenBase
 {
+
+    protected int field_1306_a;
+    protected Random rand;
+    protected World worldObj;
 
     public MapGenBase()
     {
@@ -42,8 +46,4 @@ public class MapGenBase
     protected void recursiveGenerate(World world, int i, int j, int k, int l, byte abyte0[])
     {
     }
-
-    protected int field_1306_a;
-    protected Random rand;
-    protected World worldObj;
 }

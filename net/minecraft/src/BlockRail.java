@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.Random;
 
 public class BlockRail extends Block
 {
+
+    private final boolean isPowered;
 
     public static final boolean isRailBlockAt(World world, int i, int j, int k)
     {
@@ -104,7 +106,7 @@ public class BlockRail extends Block
     {
         if(!world.multiplayerWorld)
         {
-            func_4031_h(world, i, j, k, true);
+            refreshTrackShape(world, i, j, k, true);
         }
     }
 
@@ -143,13 +145,13 @@ public class BlockRail extends Block
         }
         if(flag)
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
         } else
         if(blockID == Block.railPowered.blockID)
         {
             boolean flag1 = world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k);
-            flag1 = flag1 || func_27044_a(world, i, j, k, i1, true, 0) || func_27044_a(world, i, j, k, i1, false, 0);
+            flag1 = flag1 || isNeighborRailPowered(world, i, j, k, i1, true, 0) || isNeighborRailPowered(world, i, j, k, i1, false, 0);
             boolean flag2 = false;
             if(flag1 && (i1 & 8) == 0)
             {
@@ -172,23 +174,23 @@ public class BlockRail extends Block
         } else
         if(l > 0 && Block.blocksList[l].canProvidePower() && !isPowered && RailLogic.getNAdjacentTracks(new RailLogic(this, world, i, j, k)) == 3)
         {
-            func_4031_h(world, i, j, k, false);
+            refreshTrackShape(world, i, j, k, false);
         }
     }
 
-    private void func_4031_h(World world, int i, int j, int k, boolean flag)
+    private void refreshTrackShape(World world, int i, int j, int k, boolean flag)
     {
         if(world.multiplayerWorld)
         {
             return;
         } else
         {
-            (new RailLogic(this, world, i, j, k)).func_792_a(world.isBlockIndirectlyGettingPowered(i, j, k), flag);
+            (new RailLogic(this, world, i, j, k)).refreshTrackShape(world.isBlockIndirectlyGettingPowered(i, j, k), flag);
             return;
         }
     }
 
-    private boolean func_27044_a(World world, int i, int j, int k, int l, boolean flag, int i1)
+    private boolean isNeighborRailPowered(World world, int i, int j, int k, int l, boolean flag, int i1)
     {
         if(i1 >= 8)
         {
@@ -270,14 +272,14 @@ public class BlockRail extends Block
             j1 = 0;
             break;
         }
-        if(func_27043_a(world, i, j, k, flag, i1, j1))
+        if(isRailPassingPower(world, i, j, k, flag, i1, j1))
         {
             return true;
         }
-        return flag1 && func_27043_a(world, i, j - 1, k, flag, i1, j1);
+        return flag1 && isRailPassingPower(world, i, j - 1, k, flag, i1, j1);
     }
 
-    private boolean func_27043_a(World world, int i, int j, int k, boolean flag, int l, int i1)
+    private boolean isRailPassingPower(World world, int i, int j, int k, boolean flag, int l, int i1)
     {
         int j1 = world.getBlockId(i, j, k);
         if(j1 == Block.railPowered.blockID)
@@ -299,7 +301,7 @@ public class BlockRail extends Block
                     return true;
                 } else
                 {
-                    return func_27044_a(world, i, j, k, k1, flag, l + 1);
+                    return isNeighborRailPowered(world, i, j, k, k1, flag, l + 1);
                 }
             }
         }
@@ -315,6 +317,4 @@ public class BlockRail extends Block
     {
         return blockrail.isPowered;
     }
-
-    private final boolean isPowered;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import java.io.*;
 
 public class Packet29DestroyEntity extends Packet
 {
+
+    public int entityId;
 
     public Packet29DestroyEntity()
     {
@@ -37,6 +39,4 @@ public class Packet29DestroyEntity extends Packet
     {
         return 4;
     }
-
-    public int entityId;
 }

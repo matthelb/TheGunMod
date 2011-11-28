@@ -1,15 +1,18 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            ItemTool, Block, EnumToolMaterial, Material
+//            ItemTool, Block, EnumToolMaterial, Material, 
+//            ItemStack
 
 public class ItemPickaxe extends ItemTool
 {
+
+    private static Block blocksEffectiveAgainst[];
 
     protected ItemPickaxe(int i, EnumToolMaterial enumtoolmaterial)
     {
@@ -49,13 +52,23 @@ public class ItemPickaxe extends ItemTool
         return block.blockMaterial == Material.iron;
     }
 
-    private static Block blocksEffectiveAgainst[];
+    public float getStrVsBlock(ItemStack itemstack, Block block)
+    {
+        if(block != null && (block.blockMaterial == Material.iron || block.blockMaterial == Material.rock))
+        {
+            return efficiencyOnProperMaterial;
+        } else
+        {
+            return super.getStrVsBlock(itemstack, block);
+        }
+    }
 
     static 
     {
         blocksEffectiveAgainst = (new Block[] {
             Block.cobblestone, Block.stairDouble, Block.stairSingle, Block.stone, Block.sandStone, Block.cobblestoneMossy, Block.oreIron, Block.blockSteel, Block.oreCoal, Block.blockGold, 
-            Block.oreGold, Block.oreDiamond, Block.blockDiamond, Block.ice, Block.netherrack, Block.oreLapis, Block.blockLapis
+            Block.oreGold, Block.oreDiamond, Block.blockDiamond, Block.ice, Block.netherrack, Block.oreLapis, Block.blockLapis, Block.oreRedstone, Block.oreRedstoneGlowing, Block.rail, 
+            Block.railDetector, Block.railPowered
         });
     }
 }

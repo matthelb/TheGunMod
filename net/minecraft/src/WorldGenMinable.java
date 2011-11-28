@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,9 @@ import java.util.Random;
 
 public class WorldGenMinable extends WorldGenerator
 {
+
+    private int minableBlockId;
+    private int numberOfBlocks;
 
     public WorldGenMinable(int i, int j)
     {
@@ -72,7 +75,4 @@ public class WorldGenMinable extends WorldGenerator
 
         return true;
     }
-
-    private int minableBlockId;
-    private int numberOfBlocks;
 }

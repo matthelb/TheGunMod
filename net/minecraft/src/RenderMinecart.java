@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL11;
 public class RenderMinecart extends Render
 {
 
+    protected ModelBase modelMinecart;
+
     public RenderMinecart()
     {
         shadowSize = 0.5F;
@@ -24,12 +26,18 @@ public class RenderMinecart extends Render
             float f, float f1)
     {
         GL11.glPushMatrix();
+        long l = (long)entityminecart.entityId * 0x1d66f537L;
+        l = l * l * 0x105cb26d1L + l * 0x181c9L;
+        float f2 = (((float)(l >> 16 & 7L) + 0.5F) / 8F - 0.5F) * 0.004F;
+        float f3 = (((float)(l >> 20 & 7L) + 0.5F) / 8F - 0.5F) * 0.004F;
+        float f4 = (((float)(l >> 24 & 7L) + 0.5F) / 8F - 0.5F) * 0.004F;
+        GL11.glTranslatef(f2, f3, f4);
         double d3 = entityminecart.lastTickPosX + (entityminecart.posX - entityminecart.lastTickPosX) * (double)f1;
         double d4 = entityminecart.lastTickPosY + (entityminecart.posY - entityminecart.lastTickPosY) * (double)f1;
         double d5 = entityminecart.lastTickPosZ + (entityminecart.posZ - entityminecart.lastTickPosZ) * (double)f1;
         double d6 = 0.30000001192092896D;
         Vec3D vec3d = entityminecart.func_514_g(d3, d4, d5);
-        float f2 = entityminecart.prevRotationPitch + (entityminecart.rotationPitch - entityminecart.prevRotationPitch) * f1;
+        float f5 = entityminecart.prevRotationPitch + (entityminecart.rotationPitch - entityminecart.prevRotationPitch) * f1;
         if(vec3d != null)
         {
             Vec3D vec3d1 = entityminecart.func_515_a(d3, d4, d5, d6);
@@ -50,27 +58,27 @@ public class RenderMinecart extends Render
             {
                 vec3d3 = vec3d3.normalize();
                 f = (float)((Math.atan2(vec3d3.zCoord, vec3d3.xCoord) * 180D) / 3.1415926535897931D);
-                f2 = (float)(Math.atan(vec3d3.yCoord) * 73D);
+                f5 = (float)(Math.atan(vec3d3.yCoord) * 73D);
             }
         }
         GL11.glTranslatef((float)d, (float)d1, (float)d2);
         GL11.glRotatef(180F - f, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(-f2, 0.0F, 0.0F, 1.0F);
-        float f3 = (float)entityminecart.minecartTimeSinceHit - f1;
-        float f4 = (float)entityminecart.minecartCurrentDamage - f1;
-        if(f4 < 0.0F)
+        GL11.glRotatef(-f5, 0.0F, 0.0F, 1.0F);
+        float f6 = (float)entityminecart.func_41023_l() - f1;
+        float f7 = (float)entityminecart.func_41025_i() - f1;
+        if(f7 < 0.0F)
         {
-            f4 = 0.0F;
+            f7 = 0.0F;
         }
-        if(f3 > 0.0F)
+        if(f6 > 0.0F)
         {
-            GL11.glRotatef(((MathHelper.sin(f3) * f3 * f4) / 10F) * (float)entityminecart.minecartRockDirection, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(((MathHelper.sin(f6) * f6 * f7) / 10F) * (float)entityminecart.func_41030_m(), 1.0F, 0.0F, 0.0F);
         }
         if(entityminecart.minecartType != 0)
         {
             loadTexture("/terrain.png");
-            float f5 = 0.75F;
-            GL11.glScalef(f5, f5, f5);
+            float f8 = 0.75F;
+            GL11.glScalef(f8, f8, f8);
             if(entityminecart.minecartType == 1)
             {
                 GL11.glTranslatef(-0.5F, 0.0F, 0.5F);
@@ -78,6 +86,7 @@ public class RenderMinecart extends Render
                 (new RenderBlocks()).renderBlockOnInventory(Block.chest, 0, entityminecart.getEntityBrightness(f1));
                 GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
                 GL11.glTranslatef(0.5F, 0.0F, -0.5F);
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             } else
             if(entityminecart.minecartType == 2)
             {
@@ -86,8 +95,9 @@ public class RenderMinecart extends Render
                 (new RenderBlocks()).renderBlockOnInventory(Block.stoneOvenIdle, 0, entityminecart.getEntityBrightness(f1));
                 GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
                 GL11.glTranslatef(0.0F, -0.3125F, 0.0F);
+                GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             }
-            GL11.glScalef(1.0F / f5, 1.0F / f5, 1.0F / f5);
+            GL11.glScalef(1.0F / f8, 1.0F / f8, 1.0F / f8);
         }
         loadTexture("/item/cart.png");
         GL11.glScalef(-1F, -1F, 1.0F);
@@ -100,6 +110,4 @@ public class RenderMinecart extends Render
     {
         func_152_a((EntityMinecart)entity, d, d1, d2, f, f1);
     }
-
-    protected ModelBase modelMinecart;
 }

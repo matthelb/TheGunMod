@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,12 +13,16 @@ package net.minecraft.src;
 public class ItemSword extends Item
 {
 
+    private int weaponDamage;
+    private final EnumToolMaterial field_40439_b;
+
     public ItemSword(int i, EnumToolMaterial enumtoolmaterial)
     {
         super(i);
+        field_40439_b = enumtoolmaterial;
         maxStackSize = 1;
         setMaxDamage(enumtoolmaterial.getMaxUses());
-        weaponDamage = 4 + enumtoolmaterial.getDamageVsEntity() * 2;
+        weaponDamage = 4 + enumtoolmaterial.getDamageVsEntity();
     }
 
     public float getStrVsBlock(ItemStack itemstack, Block block)
@@ -69,5 +73,8 @@ public class ItemSword extends Item
         return block.blockID == Block.web.blockID;
     }
 
-    private int weaponDamage;
+    public int getItemEnchantability()
+    {
+        return field_40439_b.getEnchantability();
+    }
 }

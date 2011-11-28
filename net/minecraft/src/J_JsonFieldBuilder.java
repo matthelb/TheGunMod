@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 final class J_JsonFieldBuilder
 {
+
+    private J_JsonNodeBuilder field_27306_a;
+    private J_JsonNodeBuilder field_27305_b;
 
     private J_JsonFieldBuilder()
     {
@@ -41,7 +44,4 @@ final class J_JsonFieldBuilder
     {
         return field_27305_b.buildNode();
     }
-
-    private J_JsonNodeBuilder field_27306_a;
-    private J_JsonNodeBuilder field_27305_b;
 }

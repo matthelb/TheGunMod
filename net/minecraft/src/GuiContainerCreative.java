@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -18,6 +18,11 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiContainerCreative extends GuiContainer
 {
+
+    private static InventoryBasic inventory = new InventoryBasic("tmp", 72);
+    private float field_35312_g;
+    private boolean field_35313_h;
+    private boolean field_35314_i;
 
     public GuiContainerCreative(EntityPlayer entityplayer)
     {
@@ -121,8 +126,11 @@ public class GuiContainerCreative extends GuiContainer
         if(!mc.playerController.isInCreativeMode())
         {
             mc.displayGuiScreen(new GuiInventory(mc.thePlayer));
+        } else
+        {
+            super.initGui();
+            controlList.clear();
         }
-        controlList.clear();
     }
 
     protected void drawGuiContainerForegroundLayer()
@@ -161,8 +169,8 @@ public class GuiContainerCreative extends GuiContainer
     public void drawScreen(int i, int j, float f)
     {
         boolean flag = Mouse.isButtonDown(0);
-        int k = (width - xSize) / 2;
-        int l = (height - ySize) / 2;
+        int k = field_40216_e;
+        int l = field_40215_f;
         int i1 = k + 155;
         int j1 = l + 17;
         int k1 = i1 + 14;
@@ -192,19 +200,20 @@ public class GuiContainerCreative extends GuiContainer
         super.drawScreen(i, j, f);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(2896 /*GL_LIGHTING*/);
-        int i2 = mc.renderEngine.getTexture("/gui/allitems.png");
-        mc.renderEngine.bindTexture(i2);
-        drawTexturedModalRect(k + 154, l + 17 + (int)((float)(l1 - j1 - 17) * field_35312_g), 0, 208, 16, 16);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f)
+    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        int i = mc.renderEngine.getTexture("/gui/allitems.png");
-        mc.renderEngine.bindTexture(i);
-        int j = (width - xSize) / 2;
-        int k = (height - ySize) / 2;
-        drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
+        int k = mc.renderEngine.getTexture("/gui/allitems.png");
+        mc.renderEngine.bindTexture(k);
+        int l = field_40216_e;
+        int i1 = field_40215_f;
+        drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
+        int j1 = l + 155;
+        int k1 = i1 + 17;
+        int l1 = k1 + 160 + 2;
+        drawTexturedModalRect(l + 154, i1 + 17 + (int)((float)(l1 - k1 - 17) * field_35312_g), 0, 208, 16, 16);
     }
 
     protected void actionPerformed(GuiButton guibutton)
@@ -223,10 +232,5 @@ public class GuiContainerCreative extends GuiContainer
     {
         return inventory;
     }
-
-    private static InventoryBasic inventory = new InventoryBasic("tmp", 72);
-    private float field_35312_g;
-    private boolean field_35313_h;
-    private boolean field_35314_i;
 
 }

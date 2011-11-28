@@ -1,9 +1,10 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
+import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
@@ -11,11 +12,38 @@ import java.util.Random;
 //            MapGenMineshaft, MapGenRavine, NoiseGeneratorOctaves, World, 
 //            WorldChunkManager, Block, BiomeGenBase, Chunk, 
 //            MapGenBase, MathHelper, BlockSand, WorldGenLakes, 
-//            WorldGenDungeons, SpawnerAnimals, IProgressUpdate
+//            WorldGenDungeons, SpawnerAnimals, ChunkCoordIntPair, IProgressUpdate, 
+//            EnumCreatureType, ChunkPosition
 
 public class ChunkProviderGenerate
     implements IChunkProvider
 {
+
+    private Random rand;
+    private NoiseGeneratorOctaves noiseGen1;
+    private NoiseGeneratorOctaves noiseGen2;
+    private NoiseGeneratorOctaves noiseGen3;
+    private NoiseGeneratorOctaves noiseGen4;
+    public NoiseGeneratorOctaves noiseGen5;
+    public NoiseGeneratorOctaves noiseGen6;
+    public NoiseGeneratorOctaves mobSpawnerNoise;
+    private World worldObj;
+    private final boolean mapFeaturesEnabled;
+    private double field_4180_q[];
+    private double stoneNoise[];
+    private MapGenBase caveGenerator;
+    public MapGenStronghold strongholdGenerator;
+    public MapGenVillage villageGenerator;
+    public MapGenMineshaft mineshaftGenerator;
+    private MapGenBase ravineGenerator;
+    private BiomeGenBase biomesForGeneration[];
+    double noise3[];
+    double noise1[];
+    double noise2[];
+    double noise5[];
+    double noise6[];
+    float field_35388_l[];
+    int unusedIntArray32x32[][];
 
     public ChunkProviderGenerate(World world, long l, boolean flag)
     {
@@ -29,74 +57,70 @@ public class ChunkProviderGenerate
         worldObj = world;
         mapFeaturesEnabled = flag;
         rand = new Random(l);
-        field_912_k = new NoiseGeneratorOctaves(rand, 16);
-        field_911_l = new NoiseGeneratorOctaves(rand, 16);
-        field_910_m = new NoiseGeneratorOctaves(rand, 8);
-        field_908_o = new NoiseGeneratorOctaves(rand, 4);
-        field_922_a = new NoiseGeneratorOctaves(rand, 10);
-        field_921_b = new NoiseGeneratorOctaves(rand, 16);
+        noiseGen1 = new NoiseGeneratorOctaves(rand, 16);
+        noiseGen2 = new NoiseGeneratorOctaves(rand, 16);
+        noiseGen3 = new NoiseGeneratorOctaves(rand, 8);
+        noiseGen4 = new NoiseGeneratorOctaves(rand, 4);
+        noiseGen5 = new NoiseGeneratorOctaves(rand, 10);
+        noiseGen6 = new NoiseGeneratorOctaves(rand, 16);
         mobSpawnerNoise = new NoiseGeneratorOctaves(rand, 8);
     }
 
     public void generateTerrain(int i, int j, byte abyte0[])
     {
         byte byte0 = 4;
-        worldObj.getClass();
-        int k = 128 / 8;
-        worldObj.getClass();
-        byte byte1 = 63;
-        int l = byte0 + 1;
-        worldObj.getClass();
-        int i1 = 128 / 8 + 1;
-        int j1 = byte0 + 1;
-        biomesForGeneration = worldObj.getWorldChunkManager().func_35557_b(biomesForGeneration, i * 4 - 2, j * 4 - 2, l + 5, j1 + 5);
-        field_4180_q = initializeNoiseField(field_4180_q, i * byte0, 0, j * byte0, l, i1, j1);
-        for(int k1 = 0; k1 < byte0; k1++)
+        int k = worldObj.field_35472_c / 8;
+        int l = worldObj.field_35470_e;
+        int i1 = byte0 + 1;
+        int j1 = worldObj.field_35472_c / 8 + 1;
+        int k1 = byte0 + 1;
+        biomesForGeneration = worldObj.getWorldChunkManager().func_35557_b(biomesForGeneration, i * 4 - 2, j * 4 - 2, i1 + 5, k1 + 5);
+        field_4180_q = initializeNoiseField(field_4180_q, i * byte0, 0, j * byte0, i1, j1, k1);
+        for(int l1 = 0; l1 < byte0; l1++)
         {
-            for(int l1 = 0; l1 < byte0; l1++)
+            for(int i2 = 0; i2 < byte0; i2++)
             {
-                for(int i2 = 0; i2 < k; i2++)
+                for(int j2 = 0; j2 < k; j2++)
                 {
                     double d = 0.125D;
-                    double d1 = field_4180_q[((k1 + 0) * j1 + (l1 + 0)) * i1 + (i2 + 0)];
-                    double d2 = field_4180_q[((k1 + 0) * j1 + (l1 + 1)) * i1 + (i2 + 0)];
-                    double d3 = field_4180_q[((k1 + 1) * j1 + (l1 + 0)) * i1 + (i2 + 0)];
-                    double d4 = field_4180_q[((k1 + 1) * j1 + (l1 + 1)) * i1 + (i2 + 0)];
-                    double d5 = (field_4180_q[((k1 + 0) * j1 + (l1 + 0)) * i1 + (i2 + 1)] - d1) * d;
-                    double d6 = (field_4180_q[((k1 + 0) * j1 + (l1 + 1)) * i1 + (i2 + 1)] - d2) * d;
-                    double d7 = (field_4180_q[((k1 + 1) * j1 + (l1 + 0)) * i1 + (i2 + 1)] - d3) * d;
-                    double d8 = (field_4180_q[((k1 + 1) * j1 + (l1 + 1)) * i1 + (i2 + 1)] - d4) * d;
-                    for(int j2 = 0; j2 < 8; j2++)
+                    double d1 = field_4180_q[((l1 + 0) * k1 + (i2 + 0)) * j1 + (j2 + 0)];
+                    double d2 = field_4180_q[((l1 + 0) * k1 + (i2 + 1)) * j1 + (j2 + 0)];
+                    double d3 = field_4180_q[((l1 + 1) * k1 + (i2 + 0)) * j1 + (j2 + 0)];
+                    double d4 = field_4180_q[((l1 + 1) * k1 + (i2 + 1)) * j1 + (j2 + 0)];
+                    double d5 = (field_4180_q[((l1 + 0) * k1 + (i2 + 0)) * j1 + (j2 + 1)] - d1) * d;
+                    double d6 = (field_4180_q[((l1 + 0) * k1 + (i2 + 1)) * j1 + (j2 + 1)] - d2) * d;
+                    double d7 = (field_4180_q[((l1 + 1) * k1 + (i2 + 0)) * j1 + (j2 + 1)] - d3) * d;
+                    double d8 = (field_4180_q[((l1 + 1) * k1 + (i2 + 1)) * j1 + (j2 + 1)] - d4) * d;
+                    for(int k2 = 0; k2 < 8; k2++)
                     {
                         double d9 = 0.25D;
                         double d10 = d1;
                         double d11 = d2;
                         double d12 = (d3 - d1) * d9;
                         double d13 = (d4 - d2) * d9;
-                        for(int k2 = 0; k2 < 4; k2++)
+                        for(int l2 = 0; l2 < 4; l2++)
                         {
-                            worldObj.getClass();
-                            worldObj.getClass();
-                            int l2 = k2 + k1 * 4 << 11 | 0 + l1 * 4 << 7 | i2 * 8 + j2;
-                            worldObj.getClass();
-                            int i3 = 1 << 7;
+                            int i3 = l2 + l1 * 4 << worldObj.field_35471_b | 0 + i2 * 4 << worldObj.field_35473_a | j2 * 8 + k2;
+                            int j3 = 1 << worldObj.field_35473_a;
+                            i3 -= j3;
                             double d14 = 0.25D;
                             double d15 = d10;
                             double d16 = (d11 - d10) * d14;
-                            for(int j3 = 0; j3 < 4; j3++)
+                            d15 -= d16;
+                            for(int k3 = 0; k3 < 4; k3++)
                             {
-                                int k3 = 0;
-                                if(i2 * 8 + j2 < byte1)
+                                if((d15 += d16) > 0.0D)
                                 {
-                                    k3 = Block.waterStill.blockID;
+                                    abyte0[i3 += j3] = (byte)Block.stone.blockID;
+                                    continue;
                                 }
-                                if(d15 > 0.0D)
+                                if(j2 * 8 + k2 < l)
                                 {
-                                    k3 = Block.stone.blockID;
+                                    abyte0[i3 += j3] = (byte)Block.waterStill.blockID;
+                                } else
+                                {
+                                    abyte0[i3 += j3] = 0;
                                 }
-                                abyte0[l2] = (byte)k3;
-                                l2 += i3;
-                                d15 += d16;
                             }
 
                             d10 += d12;
@@ -119,75 +143,80 @@ public class ChunkProviderGenerate
 
     public void replaceBlocksForBiome(int i, int j, byte abyte0[], BiomeGenBase abiomegenbase[])
     {
-        worldObj.getClass();
-        byte byte0 = 63;
+        int k = worldObj.field_35470_e;
         double d = 0.03125D;
-        stoneNoise = field_908_o.generateNoiseOctaves(stoneNoise, i * 16, j * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
-        for(int k = 0; k < 16; k++)
+        stoneNoise = noiseGen4.generateNoiseOctaves(stoneNoise, i * 16, j * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
+        float af[] = worldObj.getWorldChunkManager().func_40539_b(i * 16, j * 16, 16, 16);
+        for(int l = 0; l < 16; l++)
         {
-            for(int l = 0; l < 16; l++)
+            for(int i1 = 0; i1 < 16; i1++)
             {
-                BiomeGenBase biomegenbase = abiomegenbase[l + k * 16];
-                int i1 = (int)(stoneNoise[k + l * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
-                int j1 = -1;
-                byte byte1 = biomegenbase.topBlock;
-                byte byte2 = biomegenbase.fillerBlock;
-                worldObj.getClass();
-                for(int k1 = 127; k1 >= 0; k1--)
+                float f = af[i1 + l * 16];
+                BiomeGenBase biomegenbase = abiomegenbase[i1 + l * 16];
+                int j1 = (int)(stoneNoise[l + i1 * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
+                int k1 = -1;
+                byte byte0 = biomegenbase.topBlock;
+                byte byte1 = biomegenbase.fillerBlock;
+                for(int l1 = worldObj.field_35469_d; l1 >= 0; l1--)
                 {
-                    worldObj.getClass();
-                    int l1 = (l * 16 + k) * 128 + k1;
-                    if(k1 <= 0 + rand.nextInt(5))
+                    int i2 = (i1 * 16 + l) * worldObj.field_35472_c + l1;
+                    if(l1 <= 0 + rand.nextInt(5))
                     {
-                        abyte0[l1] = (byte)Block.bedrock.blockID;
+                        abyte0[i2] = (byte)Block.bedrock.blockID;
                         continue;
                     }
-                    byte byte3 = abyte0[l1];
-                    if(byte3 == 0)
+                    byte byte2 = abyte0[i2];
+                    if(byte2 == 0)
                     {
-                        j1 = -1;
+                        k1 = -1;
                         continue;
                     }
-                    if(byte3 != Block.stone.blockID)
+                    if(byte2 != Block.stone.blockID)
                     {
                         continue;
                     }
-                    if(j1 == -1)
+                    if(k1 == -1)
                     {
-                        if(i1 <= 0)
+                        if(j1 <= 0)
                         {
-                            byte1 = 0;
-                            byte2 = (byte)Block.stone.blockID;
+                            byte0 = 0;
+                            byte1 = (byte)Block.stone.blockID;
                         } else
-                        if(k1 >= byte0 - 4 && k1 <= byte0 + 1)
+                        if(l1 >= k - 4 && l1 <= k + 1)
                         {
-                            byte1 = biomegenbase.topBlock;
-                            byte2 = biomegenbase.fillerBlock;
+                            byte0 = biomegenbase.topBlock;
+                            byte1 = biomegenbase.fillerBlock;
                         }
-                        if(k1 < byte0 && byte1 == 0)
+                        if(l1 < k && byte0 == 0)
                         {
-                            byte1 = (byte)Block.waterStill.blockID;
+                            if(f < 0.15F)
+                            {
+                                byte0 = (byte)Block.ice.blockID;
+                            } else
+                            {
+                                byte0 = (byte)Block.waterStill.blockID;
+                            }
                         }
-                        j1 = i1;
-                        if(k1 >= byte0 - 1)
+                        k1 = j1;
+                        if(l1 >= k - 1)
                         {
-                            abyte0[l1] = byte1;
+                            abyte0[i2] = byte0;
                         } else
                         {
-                            abyte0[l1] = byte2;
+                            abyte0[i2] = byte1;
                         }
                         continue;
                     }
-                    if(j1 <= 0)
+                    if(k1 <= 0)
                     {
                         continue;
                     }
-                    j1--;
-                    abyte0[l1] = byte2;
-                    if(j1 == 0 && byte2 == Block.sand.blockID)
+                    k1--;
+                    abyte0[i2] = byte1;
+                    if(k1 == 0 && byte1 == Block.sand.blockID)
                     {
-                        j1 = rand.nextInt(4);
-                        byte2 = (byte)Block.sandStone.blockID;
+                        k1 = rand.nextInt(4);
+                        byte1 = (byte)Block.sandStone.blockID;
                     }
                 }
 
@@ -205,20 +234,19 @@ public class ChunkProviderGenerate
     public Chunk provideChunk(int i, int j)
     {
         rand.setSeed((long)i * 0x4f9939f508L + (long)j * 0x1ef1565bd5L);
-        worldObj.getClass();
-        byte abyte0[] = new byte[16 * 128 * 16];
+        byte abyte0[] = new byte[16 * worldObj.field_35472_c * 16];
         Chunk chunk = new Chunk(worldObj, abyte0, i, j);
         generateTerrain(i, j, abyte0);
         biomesForGeneration = worldObj.getWorldChunkManager().loadBlockGeneratorData(biomesForGeneration, i * 16, j * 16, 16, 16);
         replaceBlocksForBiome(i, j, abyte0, biomesForGeneration);
         caveGenerator.generate(this, worldObj, i, j, abyte0);
+        ravineGenerator.generate(this, worldObj, i, j, abyte0);
         if(mapFeaturesEnabled)
         {
-            strongholdGenerator.generate(this, worldObj, i, j, abyte0);
             mineshaftGenerator.generate(this, worldObj, i, j, abyte0);
             villageGenerator.generate(this, worldObj, i, j, abyte0);
+            strongholdGenerator.generate(this, worldObj, i, j, abyte0);
         }
-        ravineGenerator.generate(this, worldObj, i, j, abyte0);
         chunk.generateSkylightMap();
         return chunk;
     }
@@ -245,11 +273,11 @@ public class ChunkProviderGenerate
         }
         double d = 684.41200000000003D;
         double d1 = 684.41200000000003D;
-        field_4182_g = field_922_a.func_4109_a(field_4182_g, i, k, l, j1, 1.121D, 1.121D, 0.5D);
-        field_4181_h = field_921_b.func_4109_a(field_4181_h, i, k, l, j1, 200D, 200D, 0.5D);
-        field_4185_d = field_910_m.generateNoiseOctaves(field_4185_d, i, j, k, l, i1, j1, d / 80D, d1 / 160D, d / 80D);
-        field_4184_e = field_912_k.generateNoiseOctaves(field_4184_e, i, j, k, l, i1, j1, d, d1, d);
-        field_4183_f = field_911_l.generateNoiseOctaves(field_4183_f, i, j, k, l, i1, j1, d, d1, d);
+        noise5 = noiseGen5.func_4109_a(noise5, i, k, l, j1, 1.121D, 1.121D, 0.5D);
+        noise6 = noiseGen6.func_4109_a(noise6, i, k, l, j1, 200D, 200D, 0.5D);
+        noise3 = noiseGen3.generateNoiseOctaves(noise3, i, j, k, l, i1, j1, d / 80D, d1 / 160D, d / 80D);
+        noise1 = noiseGen1.generateNoiseOctaves(noise1, i, j, k, l, i1, j1, d, d1, d);
+        noise2 = noiseGen2.generateNoiseOctaves(noise2, i, j, k, l, i1, j1, d, d1, d);
         i = k = 0;
         int i2 = 0;
         int j2 = 0;
@@ -283,7 +311,7 @@ public class ChunkProviderGenerate
                 f2 /= f3;
                 f1 = f1 * 0.9F + 0.1F;
                 f2 = (f2 * 4F - 1.0F) / 8F;
-                double d2 = field_4181_h[j2] / 8000D;
+                double d2 = noise6[j2] / 8000D;
                 if(d2 < 0.0D)
                 {
                     d2 = -d2 * 0.29999999999999999D;
@@ -315,15 +343,14 @@ public class ChunkProviderGenerate
                     d3 = (d3 * (double)i1) / 16D;
                     double d5 = (double)i1 / 2D + d3 * 4D;
                     double d6 = 0.0D;
-                    worldObj.getClass();
-                    double d7 = (((double)k3 - d5) * 12D * 128D) / 128D / d4;
+                    double d7 = (((double)k3 - d5) * 12D * 128D) / (double)worldObj.field_35472_c / d4;
                     if(d7 < 0.0D)
                     {
                         d7 *= 4D;
                     }
-                    double d8 = field_4184_e[i2] / 512D;
-                    double d9 = field_4183_f[i2] / 512D;
-                    double d10 = (field_4185_d[i2] / 10D + 1.0D) / 2D;
+                    double d8 = noise1[i2] / 512D;
+                    double d9 = noise2[i2] / 512D;
+                    double d10 = (noise3[i2] / 10D + 1.0D) / 2D;
                     if(d10 < 0.0D)
                     {
                         d6 = d8;
@@ -370,41 +397,56 @@ public class ChunkProviderGenerate
         boolean flag = false;
         if(mapFeaturesEnabled)
         {
-            strongholdGenerator.generateStructuresInChunk(worldObj, rand, i, j);
             mineshaftGenerator.generateStructuresInChunk(worldObj, rand, i, j);
             flag = villageGenerator.generateStructuresInChunk(worldObj, rand, i, j);
+            strongholdGenerator.generateStructuresInChunk(worldObj, rand, i, j);
         }
         if(!flag && rand.nextInt(4) == 0)
         {
             int i1 = k + rand.nextInt(16) + 8;
-            worldObj.getClass();
-            int i2 = rand.nextInt(128);
-            int i3 = l + rand.nextInt(16) + 8;
-            (new WorldGenLakes(Block.waterStill.blockID)).generate(worldObj, rand, i1, i2, i3);
+            int j2 = rand.nextInt(worldObj.field_35472_c);
+            int k3 = l + rand.nextInt(16) + 8;
+            (new WorldGenLakes(Block.waterStill.blockID)).generate(worldObj, rand, i1, j2, k3);
         }
         if(!flag && rand.nextInt(8) == 0)
         {
             int j1 = k + rand.nextInt(16) + 8;
-            worldObj.getClass();
-            int j2 = rand.nextInt(rand.nextInt(128 - 8) + 8);
-            int j3 = l + rand.nextInt(16) + 8;
-            worldObj.getClass();
-            if(j2 < 63 || rand.nextInt(10) == 0)
+            int k2 = rand.nextInt(rand.nextInt(worldObj.field_35472_c - 8) + 8);
+            int l3 = l + rand.nextInt(16) + 8;
+            if(k2 < worldObj.field_35470_e || rand.nextInt(10) == 0)
             {
-                (new WorldGenLakes(Block.lavaStill.blockID)).generate(worldObj, rand, j1, j2, j3);
+                (new WorldGenLakes(Block.lavaStill.blockID)).generate(worldObj, rand, j1, k2, l3);
             }
         }
         for(int k1 = 0; k1 < 8; k1++)
         {
-            int k2 = k + rand.nextInt(16) + 8;
-            worldObj.getClass();
-            int k3 = rand.nextInt(128);
-            int l3 = l + rand.nextInt(16) + 8;
-            if(!(new WorldGenDungeons()).generate(worldObj, rand, k2, k3, l3));
+            int i3 = k + rand.nextInt(16) + 8;
+            int i4 = rand.nextInt(worldObj.field_35472_c);
+            int k4 = l + rand.nextInt(16) + 8;
+            if(!(new WorldGenDungeons()).generate(worldObj, rand, i3, i4, k4));
         }
 
         biomegenbase.func_35477_a(worldObj, rand, k, l);
         SpawnerAnimals.func_35957_a(worldObj, biomegenbase, k + 8, l + 8, 16, 16, rand);
+        k += 8;
+        l += 8;
+        for(int i2 = 0; i2 < 16; i2++)
+        {
+            for(int j3 = 0; j3 < 16; j3++)
+            {
+                int j4 = worldObj.func_35461_e(k + i2, l + j3);
+                if(worldObj.func_40471_p(i2 + k, j4 - 1, j3 + l))
+                {
+                    worldObj.setBlockWithNotify(i2 + k, j4 - 1, j3 + l, Block.ice.blockID);
+                }
+                if(worldObj.func_40478_r(i2 + k, j4, j3 + l))
+                {
+                    worldObj.setBlockWithNotify(i2 + k, j4, j3 + l, Block.snow.blockID);
+                }
+            }
+
+        }
+
         BlockSand.fallInstantly = false;
     }
 
@@ -428,29 +470,31 @@ public class ChunkProviderGenerate
         return "RandomLevelSource";
     }
 
-    private Random rand;
-    private NoiseGeneratorOctaves field_912_k;
-    private NoiseGeneratorOctaves field_911_l;
-    private NoiseGeneratorOctaves field_910_m;
-    private NoiseGeneratorOctaves field_908_o;
-    public NoiseGeneratorOctaves field_922_a;
-    public NoiseGeneratorOctaves field_921_b;
-    public NoiseGeneratorOctaves mobSpawnerNoise;
-    private World worldObj;
-    private final boolean mapFeaturesEnabled;
-    private double field_4180_q[];
-    private double stoneNoise[];
-    private MapGenBase caveGenerator;
-    public MapGenStronghold strongholdGenerator;
-    public MapGenVillage villageGenerator;
-    public MapGenMineshaft mineshaftGenerator;
-    private MapGenBase ravineGenerator;
-    private BiomeGenBase biomesForGeneration[];
-    double field_4185_d[];
-    double field_4184_e[];
-    double field_4183_f[];
-    double field_4182_g[];
-    double field_4181_h[];
-    float field_35388_l[];
-    int unusedIntArray32x32[][];
+    public List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    {
+        WorldChunkManager worldchunkmanager = worldObj.getWorldChunkManager();
+        if(worldchunkmanager == null)
+        {
+            return null;
+        }
+        BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAtChunkCoord(new ChunkCoordIntPair(i >> 4, k >> 4));
+        if(biomegenbase == null)
+        {
+            return null;
+        } else
+        {
+            return biomegenbase.getSpawnableList(enumcreaturetype);
+        }
+    }
+
+    public ChunkPosition func_40376_a(World world, String s, int i, int j, int k)
+    {
+        if("Stronghold".equals(s) && strongholdGenerator != null)
+        {
+            return strongholdGenerator.func_40484_a(world, i, j, k);
+        } else
+        {
+            return null;
+        }
+    }
 }

@@ -1197,7 +1197,7 @@ public class ClassWriter implements ClassVisitor {
             }
 
             // because the data encode the size of the argument
-            // we don't need to test if these size are equals
+            // we don't need to guns if these size are equals
             int resultPosition = result.intVal;
             for (int p = 0; p < length; p++) {
                 if (data[position + p] != data[resultPosition + p]) {

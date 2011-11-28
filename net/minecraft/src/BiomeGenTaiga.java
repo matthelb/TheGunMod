@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -29,7 +29,7 @@ public class BiomeGenTaiga extends BiomeGenBase
             return new WorldGenTaiga1();
         } else
         {
-            return new WorldGenTaiga2();
+            return new WorldGenTaiga2(false);
         }
     }
 }

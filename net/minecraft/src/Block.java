@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,33 +10,194 @@ import java.util.Random;
 // Referenced classes of package net.minecraft.src:
 //            Material, IBlockAccess, AxisAlignedBB, EntityPlayer, 
 //            World, ItemStack, EntityItem, Vec3D, 
-//            MovingObjectPosition, StatList, StatCollector, StepSound, 
-//            StepSoundStone, StepSoundSand, BlockStone, BlockGrass, 
-//            BlockDirt, BlockSapling, BlockFlowing, BlockStationary, 
-//            BlockSand, BlockGravel, BlockOre, BlockLog, 
-//            BlockLeaves, BlockSponge, BlockGlass, BlockDispenser, 
-//            BlockSandStone, BlockNote, BlockBed, BlockRail, 
-//            BlockDetectorRail, BlockPistonBase, BlockWeb, BlockTallGrass, 
-//            BlockDeadBush, BlockPistonExtension, BlockCloth, BlockPistonMoving, 
-//            BlockFlower, BlockMushroom, BlockOreStorage, BlockStep, 
-//            BlockTNT, BlockBookshelf, BlockObsidian, BlockTorch, 
-//            BlockFire, BlockMobSpawner, BlockStairs, BlockChest, 
-//            BlockRedstoneWire, BlockWorkbench, BlockCrops, BlockFarmland, 
-//            BlockFurnace, BlockSign, TileEntitySign, BlockDoor, 
-//            BlockLadder, BlockLever, BlockPressurePlate, EnumMobType, 
-//            BlockRedstoneOre, BlockRedstoneTorch, BlockButton, BlockSnow, 
-//            BlockIce, BlockSnowBlock, BlockCactus, BlockClay, 
-//            BlockReed, BlockJukeBox, BlockFence, BlockPumpkin, 
-//            BlockNetherrack, BlockSoulSand, BlockGlowStone, BlockPortal, 
-//            BlockCake, BlockRedstoneRepeater, BlockLockedChest, BlockTrapDoor, 
-//            BlockSilverfish, BlockStoneBrick, BlockMushroomCap, BlockPane, 
-//            BlockMelon, BlockStem, BlockVine, BlockFenceGate, 
-//            Item, ItemCloth, ItemLog, ItemSlab, 
-//            ItemSapling, ItemLeaves, ItemVine, ItemPiston, 
-//            ItemBlock, Entity, EntityLiving
+//            MovingObjectPosition, StatList, EnchantmentHelper, Item, 
+//            StatCollector, StepSound, StepSoundStone, StepSoundSand, 
+//            BlockStone, BlockGrass, BlockDirt, BlockSapling, 
+//            BlockFlowing, BlockStationary, BlockSand, BlockGravel, 
+//            BlockOre, BlockLog, BlockLeaves, BlockSponge, 
+//            BlockGlass, BlockDispenser, BlockSandStone, BlockNote, 
+//            BlockBed, BlockRail, BlockDetectorRail, BlockPistonBase, 
+//            BlockWeb, BlockTallGrass, BlockDeadBush, BlockPistonExtension, 
+//            BlockCloth, BlockPistonMoving, BlockFlower, BlockMushroom, 
+//            BlockOreStorage, BlockStep, BlockTNT, BlockBookshelf, 
+//            BlockObsidian, BlockTorch, BlockFire, BlockMobSpawner, 
+//            BlockStairs, BlockChest, BlockRedstoneWire, BlockWorkbench, 
+//            BlockCrops, BlockFarmland, BlockFurnace, BlockSign, 
+//            TileEntitySign, BlockDoor, BlockLadder, BlockLever, 
+//            BlockPressurePlate, EnumMobType, BlockRedstoneOre, BlockRedstoneTorch, 
+//            BlockButton, BlockSnow, BlockIce, BlockSnowBlock, 
+//            BlockCactus, BlockClay, BlockReed, BlockJukeBox, 
+//            BlockFence, BlockPumpkin, BlockNetherrack, BlockSoulSand, 
+//            BlockGlowStone, BlockPortal, BlockCake, BlockRedstoneRepeater, 
+//            BlockLockedChest, BlockTrapDoor, BlockSilverfish, BlockStoneBrick, 
+//            BlockMushroomCap, BlockPane, BlockMelon, BlockStem, 
+//            BlockVine, BlockFenceGate, BlockMycelium, BlockLilyPad, 
+//            BlockNetherStalk, BlockEnchantmentTable, BlockBrewingStand, BlockCauldron, 
+//            BlockEndPortal, BlockEndPortalFrame, BlockDragonEgg, ItemCloth, 
+//            ItemMetadata, ItemSlab, ItemSapling, ItemLeaves, 
+//            ItemColored, ItemLilyPad, ItemPiston, ItemBlock, 
+//            Entity, EntityLiving
 
 public class Block
 {
+
+    public static final StepSound soundPowderFootstep;
+    public static final StepSound soundWoodFootstep;
+    public static final StepSound soundGravelFootstep;
+    public static final StepSound soundGrassFootstep;
+    public static final StepSound soundStoneFootstep;
+    public static final StepSound soundMetalFootstep;
+    public static final StepSound soundGlassFootstep;
+    public static final StepSound soundClothFootstep;
+    public static final StepSound soundSandFootstep;
+    public static final Block blocksList[];
+    public static final boolean tickOnLoad[] = new boolean[256];
+    public static final boolean opaqueCubeLookup[] = new boolean[256];
+    public static final boolean isBlockContainer[] = new boolean[256];
+    public static final int lightOpacity[] = new int[256];
+    public static final boolean canBlockGrass[];
+    public static final int lightValue[] = new int[256];
+    public static final boolean requiresSelfNotify[] = new boolean[256];
+    public static boolean useNeighborBrightness[];
+    public static final Block stone;
+    public static final BlockGrass grass;
+    public static final Block dirt;
+    public static final Block cobblestone;
+    public static final Block planks;
+    public static final Block sapling;
+    public static final Block bedrock;
+    public static final Block waterMoving;
+    public static final Block waterStill;
+    public static final Block lavaMoving;
+    public static final Block lavaStill;
+    public static final Block sand;
+    public static final Block gravel;
+    public static final Block oreGold;
+    public static final Block oreIron;
+    public static final Block oreCoal;
+    public static final Block wood;
+    public static final BlockLeaves leaves;
+    public static final Block sponge;
+    public static final Block glass;
+    public static final Block oreLapis;
+    public static final Block blockLapis;
+    public static final Block dispenser;
+    public static final Block sandStone;
+    public static final Block music;
+    public static final Block bed;
+    public static final Block railPowered;
+    public static final Block railDetector;
+    public static final Block pistonStickyBase;
+    public static final Block web;
+    public static final BlockTallGrass tallGrass;
+    public static final BlockDeadBush deadBush;
+    public static final Block pistonBase;
+    public static final BlockPistonExtension pistonExtension;
+    public static final Block cloth;
+    public static final BlockPistonMoving pistonMoving;
+    public static final BlockFlower plantYellow;
+    public static final BlockFlower plantRed;
+    public static final BlockFlower mushroomBrown;
+    public static final BlockFlower mushroomRed;
+    public static final Block blockGold;
+    public static final Block blockSteel;
+    public static final Block stairDouble;
+    public static final Block stairSingle;
+    public static final Block brick;
+    public static final Block tnt;
+    public static final Block bookShelf;
+    public static final Block cobblestoneMossy;
+    public static final Block obsidian;
+    public static final Block torchWood;
+    public static final BlockFire fire;
+    public static final Block mobSpawner;
+    public static final Block stairCompactPlanks;
+    public static final Block chest;
+    public static final Block redstoneWire;
+    public static final Block oreDiamond;
+    public static final Block blockDiamond;
+    public static final Block workbench;
+    public static final Block crops;
+    public static final Block tilledField;
+    public static final Block stoneOvenIdle;
+    public static final Block stoneOvenActive;
+    public static final Block signPost;
+    public static final Block doorWood;
+    public static final Block ladder;
+    public static final Block rail;
+    public static final Block stairCompactCobblestone;
+    public static final Block signWall;
+    public static final Block lever;
+    public static final Block pressurePlateStone;
+    public static final Block doorSteel;
+    public static final Block pressurePlatePlanks;
+    public static final Block oreRedstone;
+    public static final Block oreRedstoneGlowing;
+    public static final Block torchRedstoneIdle;
+    public static final Block torchRedstoneActive;
+    public static final Block button;
+    public static final Block snow;
+    public static final Block ice;
+    public static final Block blockSnow;
+    public static final Block cactus;
+    public static final Block blockClay;
+    public static final Block reed;
+    public static final Block jukebox;
+    public static final Block fence;
+    public static final Block pumpkin;
+    public static final Block netherrack;
+    public static final Block slowSand;
+    public static final Block glowStone;
+    public static final BlockPortal portal;
+    public static final Block pumpkinLantern;
+    public static final Block cake;
+    public static final Block redstoneRepeaterIdle;
+    public static final Block redstoneRepeaterActive;
+    public static final Block lockedChest;
+    public static final Block trapdoor;
+    public static final Block silverfish;
+    public static final Block stoneBrick;
+    public static final Block mushroomCapBrown;
+    public static final Block mushroomCapRed;
+    public static final Block fenceIron;
+    public static final Block thinGlass;
+    public static final Block melon;
+    public static final Block pumpkinStem;
+    public static final Block melonStem;
+    public static final Block vine;
+    public static final Block fenceGate;
+    public static final Block stairsBrick;
+    public static final Block stairsStoneBrickSmooth;
+    public static final BlockMycelium mycelium;
+    public static final Block waterlily;
+    public static final Block netherBrick;
+    public static final Block netherFence;
+    public static final Block stairsNetherBrick;
+    public static final Block netherStalk;
+    public static final Block enchantmentTable;
+    public static final Block brewingStand;
+    public static final Block cauldron;
+    public static final Block endPortal;
+    public static final Block endPortalFrame;
+    public static final Block whiteStone;
+    public static final Block field_41050_bK;
+    public int blockIndexInTexture;
+    public final int blockID;
+    protected float blockHardness;
+    protected float blockResistance;
+    protected boolean blockConstructorCalled;
+    protected boolean enableStats;
+    public double minX;
+    public double minY;
+    public double minZ;
+    public double maxX;
+    public double maxY;
+    public double maxZ;
+    public StepSound stepSound;
+    public float blockParticleGravity;
+    public final Material blockMaterial;
+    public float slipperiness;
+    private String blockName;
 
     protected Block(int i, Material material)
     {
@@ -278,7 +439,7 @@ public class Block
         return 1;
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return blockID;
     }
@@ -298,28 +459,28 @@ public class Block
         }
     }
 
-    public final void dropBlockAsItem(World world, int i, int j, int k, int l)
+    public final void dropBlockAsItem(World world, int i, int j, int k, int l, int i1)
     {
-        dropBlockAsItemWithChance(world, i, j, k, l, 1.0F);
+        dropBlockAsItemWithChance(world, i, j, k, l, 1.0F, i1);
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f)
+    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
         if(world.multiplayerWorld)
         {
             return;
         }
-        int i1 = quantityDropped(world.rand);
-        for(int j1 = 0; j1 < i1; j1++)
+        int j1 = func_40198_a(i1, world.rand);
+        for(int k1 = 0; k1 < j1; k1++)
         {
             if(world.rand.nextFloat() > f)
             {
                 continue;
             }
-            int k1 = idDropped(l, world.rand);
-            if(k1 > 0)
+            int l1 = idDropped(l, world.rand, i1);
+            if(l1 > 0)
             {
-                dropBlockAsItem_do(world, i, j, k, new ItemStack(k1, 1, damageDropped(l)));
+                dropBlockAsItem_do(world, i, j, k, new ItemStack(l1, 1, damageDropped(l)));
             }
         }
 
@@ -565,7 +726,33 @@ public class Block
     {
         entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
         entityplayer.addExhaustion(0.025F);
-        dropBlockAsItem(world, i, j, k, l);
+        if(renderAsNormalBlock() && !isBlockContainer[blockID] && EnchantmentHelper.getSilkTouchModifier(entityplayer.inventory))
+        {
+            ItemStack itemstack = func_41049_c_(l);
+            if(itemstack != null)
+            {
+                dropBlockAsItem_do(world, i, j, k, itemstack);
+            }
+        } else
+        {
+            int i1 = EnchantmentHelper.getFortuneModifier(entityplayer.inventory);
+            dropBlockAsItem(world, i, j, k, l, i1);
+        }
+    }
+
+    protected ItemStack func_41049_c_(int i)
+    {
+        int j = 0;
+        if(blockID >= 0 && blockID < Item.itemsList.length && Item.itemsList[blockID].getHasSubtypes())
+        {
+            j = i;
+        }
+        return new ItemStack(blockID, 1, j);
+    }
+
+    public int func_40198_a(int i, Random random)
+    {
+        return quantityDropped(random);
     }
 
     public boolean canBlockStay(World world, int i, int j, int k)
@@ -613,7 +800,7 @@ public class Block
         return blockMaterial.getMaterialMobility();
     }
 
-    public float func_35276_e(IBlockAccess iblockaccess, int i, int j, int k)
+    public float getAmbientOcclusionLightValue(IBlockAccess iblockaccess, int i, int j, int k)
     {
         return iblockaccess.isBlockNormalCube(i, j, k) ? 0.2F : 1.0F;
     }
@@ -630,150 +817,6 @@ public class Block
         }
     }
 
-    public static final StepSound soundPowderFootstep;
-    public static final StepSound soundWoodFootstep;
-    public static final StepSound soundGravelFootstep;
-    public static final StepSound soundGrassFootstep;
-    public static final StepSound soundStoneFootstep;
-    public static final StepSound soundMetalFootstep;
-    public static final StepSound soundGlassFootstep;
-    public static final StepSound soundClothFootstep;
-    public static final StepSound soundSandFootstep;
-    public static final Block blocksList[] = new Block[256];
-    public static final boolean tickOnLoad[] = new boolean[256];
-    public static final boolean opaqueCubeLookup[] = new boolean[256];
-    public static final boolean isBlockContainer[] = new boolean[256];
-    public static final int lightOpacity[] = new int[256];
-    public static final boolean canBlockGrass[] = new boolean[256];
-    public static final int lightValue[] = new int[256];
-    public static final boolean requiresSelfNotify[] = new boolean[256];
-    public static final Block stone;
-    public static final BlockGrass grass;
-    public static final Block dirt;
-    public static final Block cobblestone;
-    public static final Block planks;
-    public static final Block sapling;
-    public static final Block bedrock;
-    public static final Block waterMoving;
-    public static final Block waterStill;
-    public static final Block lavaMoving;
-    public static final Block lavaStill;
-    public static final Block sand;
-    public static final Block gravel;
-    public static final Block oreGold;
-    public static final Block oreIron;
-    public static final Block oreCoal;
-    public static final Block wood;
-    public static final BlockLeaves leaves;
-    public static final Block sponge;
-    public static final Block glass;
-    public static final Block oreLapis;
-    public static final Block blockLapis;
-    public static final Block dispenser;
-    public static final Block sandStone;
-    public static final Block music;
-    public static final Block bed;
-    public static final Block railPowered;
-    public static final Block railDetector;
-    public static final Block pistonStickyBase;
-    public static final Block web;
-    public static final BlockTallGrass tallGrass;
-    public static final BlockDeadBush deadBush;
-    public static final Block pistonBase;
-    public static final BlockPistonExtension pistonExtension;
-    public static final Block cloth;
-    public static final BlockPistonMoving pistonMoving;
-    public static final BlockFlower plantYellow;
-    public static final BlockFlower plantRed;
-    public static final BlockFlower mushroomBrown;
-    public static final BlockFlower mushroomRed;
-    public static final Block blockGold;
-    public static final Block blockSteel;
-    public static final Block stairDouble;
-    public static final Block stairSingle;
-    public static final Block brick;
-    public static final Block tnt;
-    public static final Block bookShelf;
-    public static final Block cobblestoneMossy;
-    public static final Block obsidian;
-    public static final Block torchWood;
-    public static final BlockFire fire;
-    public static final Block mobSpawner;
-    public static final Block stairCompactPlanks;
-    public static final Block chest;
-    public static final Block redstoneWire;
-    public static final Block oreDiamond;
-    public static final Block blockDiamond;
-    public static final Block workbench;
-    public static final Block crops;
-    public static final Block tilledField;
-    public static final Block stoneOvenIdle;
-    public static final Block stoneOvenActive;
-    public static final Block signPost;
-    public static final Block doorWood;
-    public static final Block ladder;
-    public static final Block rail;
-    public static final Block stairCompactCobblestone;
-    public static final Block signWall;
-    public static final Block lever;
-    public static final Block pressurePlateStone;
-    public static final Block doorSteel;
-    public static final Block pressurePlatePlanks;
-    public static final Block oreRedstone;
-    public static final Block oreRedstoneGlowing;
-    public static final Block torchRedstoneIdle;
-    public static final Block torchRedstoneActive;
-    public static final Block button;
-    public static final Block snow;
-    public static final Block ice;
-    public static final Block blockSnow;
-    public static final Block cactus;
-    public static final Block blockClay;
-    public static final Block reed;
-    public static final Block jukebox;
-    public static final Block fence;
-    public static final Block pumpkin;
-    public static final Block netherrack;
-    public static final Block slowSand;
-    public static final Block glowStone;
-    public static final BlockPortal portal;
-    public static final Block pumpkinLantern;
-    public static final Block cake;
-    public static final Block redstoneRepeaterIdle;
-    public static final Block redstoneRepeaterActive;
-    public static final Block lockedChest;
-    public static final Block trapdoor;
-    public static final Block silverfish;
-    public static final Block stoneBrick;
-    public static final Block mushroomCapBrown;
-    public static final Block mushroomCapRed;
-    public static final Block fenceIron;
-    public static final Block thinGlass;
-    public static final Block melon;
-    public static final Block pumpkinStem;
-    public static final Block melonStem;
-    public static final Block vine;
-    public static final Block fenceGate;
-    public static final Block stairsBrick;
-    public static final Block stairsStoneBrickSmooth;
-    public int blockIndexInTexture;
-    public final int blockID;
-    protected float blockHardness;
-    protected float blockResistance;
-    protected boolean blockConstructorCalled;
-    protected boolean enableStats;
-    public double minX;
-    public double minY;
-    public double minZ;
-    public double maxX;
-    public double maxY;
-    public double maxZ;
-    public StepSound stepSound;
-    public float blockParticleGravity;
-    public final Material blockMaterial;
-    public float slipperiness;
-    private String blockName;
-
     static 
     {
         soundPowderFootstep = new StepSound("stone", 1.0F, 1.0F);
@@ -785,6 +828,9 @@ public class Block
         soundGlassFootstep = new StepSoundStone("stone", 1.0F, 1.0F);
         soundClothFootstep = new StepSound("cloth", 1.0F, 1.0F);
         soundSandFootstep = new StepSoundSand("sand", 1.0F, 1.0F);
+        blocksList = new Block[256];
+        canBlockGrass = new boolean[256];
+        useNeighborBrightness = new boolean[256];
         stone = (new BlockStone(1, 1)).setHardness(1.5F).setResistance(10F).setStepSound(soundStoneFootstep).setBlockName("stone");
         grass = (BlockGrass)(new BlockGrass(2)).setHardness(0.6F).setStepSound(soundGrassFootstep).setBlockName("grass");
         dirt = (new BlockDirt(3, 2)).setHardness(0.5F).setStepSound(soundGravelFootstep).setBlockName("dirt");
@@ -833,7 +879,7 @@ public class Block
         tnt = (new BlockTNT(46, 8)).setHardness(0.0F).setStepSound(soundGrassFootstep).setBlockName("tnt");
         bookShelf = (new BlockBookshelf(47, 35)).setHardness(1.5F).setStepSound(soundWoodFootstep).setBlockName("bookshelf");
         cobblestoneMossy = (new Block(48, 36, Material.rock)).setHardness(2.0F).setResistance(10F).setStepSound(soundStoneFootstep).setBlockName("stoneMoss");
-        obsidian = (new BlockObsidian(49, 37)).setHardness(10F).setResistance(2000F).setStepSound(soundStoneFootstep).setBlockName("obsidian");
+        obsidian = (new BlockObsidian(49, 37)).setHardness(50F).setResistance(2000F).setStepSound(soundStoneFootstep).setBlockName("obsidian");
         torchWood = (new BlockTorch(50, 80)).setHardness(0.0F).setLightValue(0.9375F).setStepSound(soundWoodFootstep).setBlockName("torch").setRequiresSelfNotify();
         fire = (BlockFire)(new BlockFire(51, 31)).setHardness(0.0F).setLightValue(1.0F).setStepSound(soundWoodFootstep).setBlockName("fire").disableStats();
         mobSpawner = (new BlockMobSpawner(52, 65)).setHardness(5F).setStepSound(soundMetalFootstep).setBlockName("mobSpawner").disableStats();
@@ -862,7 +908,7 @@ public class Block
         torchRedstoneIdle = (new BlockRedstoneTorch(75, 115, false)).setHardness(0.0F).setStepSound(soundWoodFootstep).setBlockName("notGate").setRequiresSelfNotify();
         torchRedstoneActive = (new BlockRedstoneTorch(76, 99, true)).setHardness(0.0F).setLightValue(0.5F).setStepSound(soundWoodFootstep).setBlockName("notGate").setRequiresSelfNotify();
         button = (new BlockButton(77, stone.blockIndexInTexture)).setHardness(0.5F).setStepSound(soundStoneFootstep).setBlockName("button").setRequiresSelfNotify();
-        snow = (new BlockSnow(78, 66)).setHardness(0.1F).setStepSound(soundClothFootstep).setBlockName("snow");
+        snow = (new BlockSnow(78, 66)).setHardness(0.1F).setStepSound(soundClothFootstep).setBlockName("snow").setLightOpacity(0);
         ice = (new BlockIce(79, 67)).setHardness(0.5F).setLightOpacity(3).setStepSound(soundGlassFootstep).setBlockName("ice");
         blockSnow = (new BlockSnowBlock(80, 66)).setHardness(0.2F).setStepSound(soundClothFootstep).setBlockName("snow");
         cactus = (new BlockCactus(81, 70)).setHardness(0.4F).setStepSound(soundClothFootstep).setBlockName("cactus");
@@ -873,7 +919,7 @@ public class Block
         pumpkin = (new BlockPumpkin(86, 102, false)).setHardness(1.0F).setStepSound(soundWoodFootstep).setBlockName("pumpkin").setRequiresSelfNotify();
         netherrack = (new BlockNetherrack(87, 103)).setHardness(0.4F).setStepSound(soundStoneFootstep).setBlockName("hellrock");
         slowSand = (new BlockSoulSand(88, 104)).setHardness(0.5F).setStepSound(soundSandFootstep).setBlockName("hellsand");
-        glowStone = (new BlockGlowStone(89, 105, Material.rock)).setHardness(0.3F).setStepSound(soundGlassFootstep).setLightValue(1.0F).setBlockName("lightgem");
+        glowStone = (new BlockGlowStone(89, 105, Material.glass)).setHardness(0.3F).setStepSound(soundGlassFootstep).setLightValue(1.0F).setBlockName("lightgem");
         portal = (BlockPortal)(new BlockPortal(90, 14)).setHardness(-1F).setStepSound(soundGlassFootstep).setLightValue(0.75F).setBlockName("portal");
         pumpkinLantern = (new BlockPumpkin(91, 102, true)).setHardness(1.0F).setStepSound(soundWoodFootstep).setLightValue(1.0F).setBlockName("litpumpkin").setRequiresSelfNotify();
         cake = (new BlockCake(92, 121)).setHardness(0.5F).setStepSound(soundClothFootstep).setBlockName("cake").disableStats().setRequiresSelfNotify();
@@ -885,8 +931,8 @@ public class Block
         stoneBrick = (new BlockStoneBrick(98)).setHardness(1.5F).setResistance(10F).setStepSound(soundStoneFootstep).setBlockName("stonebricksmooth");
         mushroomCapBrown = (new BlockMushroomCap(99, Material.wood, 142, 0)).setHardness(0.2F).setStepSound(soundWoodFootstep).setBlockName("mushroom").setRequiresSelfNotify();
         mushroomCapRed = (new BlockMushroomCap(100, Material.wood, 142, 1)).setHardness(0.2F).setStepSound(soundWoodFootstep).setBlockName("mushroom").setRequiresSelfNotify();
-        fenceIron = (new BlockPane(101, 85, 85, Material.iron)).setHardness(5F).setResistance(10F).setStepSound(soundMetalFootstep).setBlockName("fenceIron");
-        thinGlass = (new BlockPane(102, 49, 148, Material.glass)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("thinGlass");
+        fenceIron = (new BlockPane(101, 85, 85, Material.iron, true)).setHardness(5F).setResistance(10F).setStepSound(soundMetalFootstep).setBlockName("fenceIron");
+        thinGlass = (new BlockPane(102, 49, 148, Material.glass, false)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("thinGlass");
         melon = (new BlockMelon(103)).setHardness(1.0F).setStepSound(soundWoodFootstep).setBlockName("melon");
         pumpkinStem = (new BlockStem(104, pumpkin)).setHardness(0.0F).setStepSound(soundWoodFootstep).setBlockName("pumpkinStem").setRequiresSelfNotify();
         melonStem = (new BlockStem(105, melon)).setHardness(0.0F).setStepSound(soundWoodFootstep).setBlockName("pumpkinStem").setRequiresSelfNotify();
@@ -894,23 +940,57 @@ public class Block
         fenceGate = (new BlockFenceGate(107, 4)).setHardness(2.0F).setResistance(5F).setStepSound(soundWoodFootstep).setBlockName("fenceGate").setRequiresSelfNotify();
         stairsBrick = (new BlockStairs(108, brick)).setBlockName("stairsBrick").setRequiresSelfNotify();
         stairsStoneBrickSmooth = (new BlockStairs(109, stoneBrick)).setBlockName("stairsStoneBrickSmooth").setRequiresSelfNotify();
+        mycelium = (BlockMycelium)(new BlockMycelium(110)).setHardness(0.6F).setStepSound(soundGrassFootstep).setBlockName("mycel");
+        waterlily = (new BlockLilyPad(111, 76)).setHardness(0.0F).setStepSound(soundGrassFootstep).setBlockName("waterlily");
+        netherBrick = (new Block(112, 224, Material.rock)).setHardness(2.0F).setResistance(10F).setStepSound(soundStoneFootstep).setBlockName("netherBrick");
+        netherFence = (new BlockFence(113, 224, Material.rock)).setHardness(2.0F).setResistance(10F).setStepSound(soundStoneFootstep).setBlockName("netherFence");
+        stairsNetherBrick = (new BlockStairs(114, netherBrick)).setBlockName("stairsNetherBrick").setRequiresSelfNotify();
+        netherStalk = (new BlockNetherStalk(115)).setBlockName("netherStalk").setRequiresSelfNotify();
+        enchantmentTable = (new BlockEnchantmentTable(116)).setHardness(5F).setResistance(2000F).setBlockName("enchantmentTable");
+        brewingStand = (new BlockBrewingStand(117)).setHardness(0.5F).setLightValue(0.125F).setBlockName("brewingStand").setRequiresSelfNotify();
+        cauldron = (new BlockCauldron(118)).setHardness(2.0F).setBlockName("cauldron").setRequiresSelfNotify();
+        endPortal = (new BlockEndPortal(119, Material.portal)).setHardness(-1F).setResistance(6000000F);
+        endPortalFrame = (new BlockEndPortalFrame(120)).setStepSound(soundGlassFootstep).setLightValue(0.125F).setHardness(-1F).setBlockName("endPortalFrame").setRequiresSelfNotify().setResistance(6000000F);
+        whiteStone = (new Block(121, 175, Material.rock)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setBlockName("whiteStone");
+        field_41050_bK = (new BlockDragonEgg(122, 167)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setLightValue(0.125F).setBlockName("dragonEgg");
         Item.itemsList[cloth.blockID] = (new ItemCloth(cloth.blockID - 256)).setItemName("cloth");
-        Item.itemsList[wood.blockID] = (new ItemLog(wood.blockID - 256, wood)).setItemName("log");
-        Item.itemsList[stoneBrick.blockID] = (new ItemLog(stoneBrick.blockID - 256, stoneBrick)).setItemName("stonebricksmooth");
+        Item.itemsList[wood.blockID] = (new ItemMetadata(wood.blockID - 256, wood)).setItemName("log");
+        Item.itemsList[stoneBrick.blockID] = (new ItemMetadata(stoneBrick.blockID - 256, stoneBrick)).setItemName("stonebricksmooth");
         Item.itemsList[stairSingle.blockID] = (new ItemSlab(stairSingle.blockID - 256)).setItemName("stoneSlab");
         Item.itemsList[sapling.blockID] = (new ItemSapling(sapling.blockID - 256)).setItemName("sapling");
         Item.itemsList[leaves.blockID] = (new ItemLeaves(leaves.blockID - 256)).setItemName("leaves");
-        Item.itemsList[vine.blockID] = new ItemVine(vine.blockID - 256, false);
-        Item.itemsList[tallGrass.blockID] = new ItemVine(tallGrass.blockID - 256, true);
+        Item.itemsList[vine.blockID] = new ItemColored(vine.blockID - 256, false);
+        Item.itemsList[tallGrass.blockID] = (new ItemColored(tallGrass.blockID - 256, true)).func_41033_a(new String[] {
+            "shrub", "grass", "fern"
+        });
+        Item.itemsList[waterlily.blockID] = new ItemLilyPad(waterlily.blockID - 256);
         Item.itemsList[pistonBase.blockID] = new ItemPiston(pistonBase.blockID - 256);
         Item.itemsList[pistonStickyBase.blockID] = new ItemPiston(pistonStickyBase.blockID - 256);
         for(int i = 0; i < 256; i++)
         {
-            if(blocksList[i] != null && Item.itemsList[i] == null)
+            if(blocksList[i] == null)
+            {
+                continue;
+            }
+            if(Item.itemsList[i] == null)
             {
                 Item.itemsList[i] = new ItemBlock(i - 256);
                 blocksList[i].initializeBlock();
             }
+            boolean flag = false;
+            if(i > 0 && blocksList[i].getRenderType() == 10)
+            {
+                flag = true;
+            }
+            if(i > 0 && (blocksList[i] instanceof BlockStep))
+            {
+                flag = true;
+            }
+            if(i == tilledField.blockID)
+            {
+                flag = true;
+            }
+            useNeighborBrightness[i] = flag;
         }
 
         canBlockGrass[0] = true;

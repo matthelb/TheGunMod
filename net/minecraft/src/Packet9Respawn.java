@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,12 @@ import java.io.*;
 
 public class Packet9Respawn extends Packet
 {
+
+    public long mapSeed;
+    public int respawnDimension;
+    public int difficulty;
+    public int worldHeight;
+    public int creativeMode;
 
     public Packet9Respawn()
     {
@@ -54,10 +60,4 @@ public class Packet9Respawn extends Packet
     {
         return 13;
     }
-
-    public long mapSeed;
-    public int respawnDimension;
-    public int difficulty;
-    public int worldHeight;
-    public int creativeMode;
 }

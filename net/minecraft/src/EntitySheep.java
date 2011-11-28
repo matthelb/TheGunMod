@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,11 +14,52 @@ import java.util.Random;
 public class EntitySheep extends EntityAnimal
 {
 
+    public static final float fleeceColorTable[][] = {
+        {
+            1.0F, 1.0F, 1.0F
+        }, {
+            0.95F, 0.7F, 0.2F
+        }, {
+            0.9F, 0.5F, 0.85F
+        }, {
+            0.6F, 0.7F, 0.95F
+        }, {
+            0.9F, 0.9F, 0.2F
+        }, {
+            0.5F, 0.8F, 0.1F
+        }, {
+            0.95F, 0.7F, 0.8F
+        }, {
+            0.3F, 0.3F, 0.3F
+        }, {
+            0.6F, 0.6F, 0.6F
+        }, {
+            0.3F, 0.6F, 0.7F
+        }, {
+            0.7F, 0.4F, 0.9F
+        }, {
+            0.2F, 0.4F, 0.8F
+        }, {
+            0.5F, 0.4F, 0.3F
+        }, {
+            0.4F, 0.5F, 0.2F
+        }, {
+            0.8F, 0.3F, 0.3F
+        }, {
+            0.1F, 0.1F, 0.1F
+        }
+    };
+
     public EntitySheep(World world)
     {
         super(world);
         texture = "/mob/sheep.png";
         setSize(0.9F, 1.3F);
+    }
+
+    public int getMaxHealth()
+    {
+        return 8;
     }
 
     protected void entityInit()
@@ -27,7 +68,7 @@ public class EntitySheep extends EntityAnimal
         dataWatcher.addObject(16, new Byte((byte)0));
     }
 
-    protected void dropFewItems(boolean flag)
+    protected void dropFewItems(boolean flag, int i)
     {
         if(!getSheared())
         {
@@ -60,7 +101,7 @@ public class EntitySheep extends EntityAnimal
             }
             itemstack.damageItem(1, entityplayer);
         }
-        return false;
+        return super.interact(entityplayer);
     }
 
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
@@ -142,40 +183,18 @@ public class EntitySheep extends EntityAnimal
         return random.nextInt(500) != 0 ? 0 : 6;
     }
 
-    public static final float fleeceColorTable[][] = {
+    protected EntityAnimal func_40145_a(EntityAnimal entityanimal)
+    {
+        EntitySheep entitysheep = (EntitySheep)entityanimal;
+        EntitySheep entitysheep1 = new EntitySheep(worldObj);
+        if(rand.nextBoolean())
         {
-            1.0F, 1.0F, 1.0F
-        }, {
-            0.95F, 0.7F, 0.2F
-        }, {
-            0.9F, 0.5F, 0.85F
-        }, {
-            0.6F, 0.7F, 0.95F
-        }, {
-            0.9F, 0.9F, 0.2F
-        }, {
-            0.5F, 0.8F, 0.1F
-        }, {
-            0.95F, 0.7F, 0.8F
-        }, {
-            0.3F, 0.3F, 0.3F
-        }, {
-            0.6F, 0.6F, 0.6F
-        }, {
-            0.3F, 0.6F, 0.7F
-        }, {
-            0.7F, 0.4F, 0.9F
-        }, {
-            0.2F, 0.4F, 0.8F
-        }, {
-            0.5F, 0.4F, 0.3F
-        }, {
-            0.4F, 0.5F, 0.2F
-        }, {
-            0.8F, 0.3F, 0.3F
-        }, {
-            0.1F, 0.1F, 0.1F
+            entitysheep1.setFleeceColor(getFleeceColor());
+        } else
+        {
+            entitysheep1.setFleeceColor(entitysheep.getFleeceColor());
         }
-    };
+        return entitysheep1;
+    }
 
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,32 @@ import java.util.*;
 
 public class NetworkManager
 {
+
+    public static final Object threadSyncObject = new Object();
+    public static int numReadThreads;
+    public static int numWriteThreads;
+    private Object sendQueueLock;
+    private Socket networkSocket;
+    private final SocketAddress remoteSocketAddress;
+    private DataInputStream socketInputStream;
+    private DataOutputStream socketOutputStream;
+    private boolean isRunning;
+    private List readPackets;
+    private List dataPackets;
+    private List chunkDataPackets;
+    private NetHandler netHandler;
+    private boolean isServerTerminating;
+    private Thread writeThread;
+    private Thread readThread;
+    private boolean isTerminating;
+    private String terminationReason;
+    private Object field_20101_t[];
+    private int timeSinceLastRead;
+    private int sendQueueByteLength;
+    public static int field_28145_d[] = new int[256];
+    public static int field_28144_e[] = new int[256];
+    public int chunkDataSendCounter;
+    private int field_20100_w;
 
     public NetworkManager(Socket socket, String s, NetHandler nethandler)
         throws IOException
@@ -245,7 +271,7 @@ public class NetworkManager
         return networkmanager.socketOutputStream;
     }
 
-    static boolean func_28138_e(NetworkManager networkmanager)
+    static boolean getIsTerminating(NetworkManager networkmanager)
     {
         return networkmanager.isTerminating;
     }
@@ -264,31 +290,5 @@ public class NetworkManager
     {
         return networkmanager.writeThread;
     }
-
-    public static final Object threadSyncObject = new Object();
-    public static int numReadThreads;
-    public static int numWriteThreads;
-    private Object sendQueueLock;
-    private Socket networkSocket;
-    private final SocketAddress remoteSocketAddress;
-    private DataInputStream socketInputStream;
-    private DataOutputStream socketOutputStream;
-    private boolean isRunning;
-    private List readPackets;
-    private List dataPackets;
-    private List chunkDataPackets;
-    private NetHandler netHandler;
-    private boolean isServerTerminating;
-    private Thread writeThread;
-    private Thread readThread;
-    private boolean isTerminating;
-    private String terminationReason;
-    private Object field_20101_t[];
-    private int timeSinceLastRead;
-    private int sendQueueByteLength;
-    public static int field_28145_d[] = new int[256];
-    public static int field_28144_e[] = new int[256];
-    public int chunkDataSendCounter;
-    private int field_20100_w;
 
 }

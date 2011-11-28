@@ -1,10 +1,11 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, IBlockAccess, World, Material, 
@@ -13,10 +14,25 @@ import java.util.ArrayList;
 public class BlockPane extends Block
 {
 
-    protected BlockPane(int i, int j, int k, Material material)
+    private int field_35300_a;
+    private final boolean field_40213_b;
+
+    protected BlockPane(int i, int j, int k, Material material, boolean flag)
     {
         super(i, j, material);
         field_35300_a = k;
+        field_40213_b = flag;
+    }
+
+    public int idDropped(int i, Random random, int j)
+    {
+        if(!field_40213_b)
+        {
+            return 0;
+        } else
+        {
+            return super.idDropped(i, random, j);
+        }
     }
 
     public boolean isOpaqueCube()
@@ -137,6 +153,4 @@ public class BlockPane extends Block
     {
         return Block.opaqueCubeLookup[i] || i == blockID || i == Block.glass.blockID;
     }
-
-    private int field_35300_a;
 }

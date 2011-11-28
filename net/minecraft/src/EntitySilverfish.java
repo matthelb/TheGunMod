@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,10 +9,12 @@ import java.util.Random;
 // Referenced classes of package net.minecraft.src:
 //            EntityMob, World, EntityDamageSource, Entity, 
 //            AxisAlignedBB, DamageSource, MathHelper, Block, 
-//            PistonBlockTextures, BlockSilverfish, NBTTagCompound
+//            Facing, BlockSilverfish, EnumCreatureAttribute, NBTTagCompound
 
 public class EntitySilverfish extends EntityMob
 {
+
+    private int field_35189_a;
 
     public EntitySilverfish(World world)
     {
@@ -20,7 +22,12 @@ public class EntitySilverfish extends EntityMob
         texture = "/mob/silverfish.png";
         setSize(0.3F, 0.7F);
         moveSpeed = 0.6F;
-        attackStrength = 0;
+        attackStrength = 1;
+    }
+
+    public int getMaxHealth()
+    {
+        return 8;
     }
 
     protected boolean canTriggerWalking()
@@ -31,22 +38,22 @@ public class EntitySilverfish extends EntityMob
     protected Entity findPlayerToAttack()
     {
         double d = 8D;
-        return worldObj.getClosestPlayerToEntity(this, d);
+        return worldObj.getClosestVulnerablePlayerToEntity(this, d);
     }
 
     protected String getLivingSound()
     {
-        return "mob.spider";
+        return "mob.silverfish.say";
     }
 
     protected String getHurtSound()
     {
-        return "mob.spider";
+        return "mob.silverfish.hit";
     }
 
     protected String getDeathSound()
     {
-        return "mob.spiderdeath";
+        return "mob.silverfish.kill";
     }
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
@@ -65,6 +72,11 @@ public class EntitySilverfish extends EntityMob
             attackTime = 20;
             entity.attackEntityFrom(DamageSource.causeMobDamage(this), attackStrength);
         }
+    }
+
+    protected void func_41002_a(int i, int j, int k, int l)
+    {
+        worldObj.playSoundAtEntity(this, "mob.silverfish.step", 1.0F, 1.0F);
     }
 
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
@@ -138,10 +150,10 @@ public class EntitySilverfish extends EntityMob
             int l = MathHelper.floor_double(posY + 0.5D);
             int j1 = MathHelper.floor_double(posZ);
             int k1 = rand.nextInt(6);
-            int i2 = worldObj.getBlockId(j + PistonBlockTextures.offsetsXForSide[k1], l + PistonBlockTextures.offsetsYForSide[k1], j1 + PistonBlockTextures.offsetsZForSide[k1]);
+            int i2 = worldObj.getBlockId(j + Facing.offsetsXForSide[k1], l + Facing.offsetsYForSide[k1], j1 + Facing.offsetsZForSide[k1]);
             if(BlockSilverfish.getPosingIdByMetadata(i2))
             {
-                worldObj.setBlockAndMetadataWithNotify(j + PistonBlockTextures.offsetsXForSide[k1], l + PistonBlockTextures.offsetsYForSide[k1], j1 + PistonBlockTextures.offsetsZForSide[k1], Block.silverfish.blockID, BlockSilverfish.func_35304_f(i2));
+                worldObj.setBlockAndMetadataWithNotify(j + Facing.offsetsXForSide[k1], l + Facing.offsetsYForSide[k1], j1 + Facing.offsetsZForSide[k1], Block.silverfish.blockID, BlockSilverfish.func_35304_f(i2));
                 spawnExplosionParticle();
                 setEntityDead();
             } else
@@ -166,5 +178,25 @@ public class EntitySilverfish extends EntityMob
         }
     }
 
-    private int field_35189_a;
+    protected boolean func_40147_Y()
+    {
+        return true;
+    }
+
+    public boolean getCanSpawnHere()
+    {
+        if(super.getCanSpawnHere())
+        {
+            EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 5D);
+            return entityplayer == null;
+        } else
+        {
+            return false;
+        }
+    }
+
+    public EnumCreatureAttribute func_40124_t()
+    {
+        return EnumCreatureAttribute.ARTHROPOD;
+    }
 }

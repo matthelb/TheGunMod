@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -72,8 +72,9 @@ public class EmptyChunk extends Chunk
         return 0;
     }
 
-    public void setBlockMetadata(int i, int j, int k, int l)
+    public boolean setBlockMetadata(int i, int j, int k, int l)
     {
+        return false;
     }
 
     public int getSavedLightValue(EnumSkyBlock enumskyblock, int i, int j, int k)

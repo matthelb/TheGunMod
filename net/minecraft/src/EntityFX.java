@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,20 @@ import java.util.Random;
 
 public class EntityFX extends Entity
 {
+
+    private int particleTextureIndex;
+    protected float particleTextureJitterX;
+    protected float particleTextureJitterY;
+    protected int particleAge;
+    protected int particleMaxAge;
+    protected float particleScale;
+    protected float particleGravity;
+    protected float particleRed;
+    protected float particleGreen;
+    protected float particleBlue;
+    public static double interpPosX;
+    public static double interpPosY;
+    public static double interpPosZ;
 
     public EntityFX(World world, double d, double d1, double d2, 
             double d3, double d4, double d5)
@@ -38,7 +52,7 @@ public class EntityFX extends Entity
         particleAge = 0;
     }
 
-    public EntityFX func_407_b(float f)
+    public EntityFX multiplyVelocity(float f)
     {
         motionX *= f;
         motionY = (motionY - 0.10000000149011612D) * (double)f + 0.10000000149011612D;
@@ -51,6 +65,28 @@ public class EntityFX extends Entity
         setSize(0.2F * f, 0.2F * f);
         particleScale *= f;
         return this;
+    }
+
+    public void func_40097_b(float f, float f1, float f2)
+    {
+        particleRed = f;
+        particleGreen = f1;
+        particleBlue = f2;
+    }
+
+    public float func_40098_n()
+    {
+        return particleRed;
+    }
+
+    public float func_40101_o()
+    {
+        return particleGreen;
+    }
+
+    public float func_40102_p()
+    {
+        return particleBlue;
     }
 
     protected boolean canTriggerWalking()
@@ -114,17 +150,13 @@ public class EntityFX extends Entity
     {
     }
 
-    protected int particleTextureIndex;
-    protected float particleTextureJitterX;
-    protected float particleTextureJitterY;
-    protected int particleAge;
-    protected int particleMaxAge;
-    protected float particleScale;
-    protected float particleGravity;
-    protected float particleRed;
-    protected float particleGreen;
-    protected float particleBlue;
-    public static double interpPosX;
-    public static double interpPosY;
-    public static double interpPosZ;
+    public void func_40099_c(int i)
+    {
+        particleTextureIndex = i;
+    }
+
+    public int func_40100_q()
+    {
+        return particleTextureIndex;
+    }
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,15 @@ import org.lwjgl.opengl.GL11;
 
 public class ModelWolf extends ModelBase
 {
+
+    public ModelRenderer wolfHeadMain;
+    public ModelRenderer wolfBody;
+    public ModelRenderer wolfLeg1;
+    public ModelRenderer wolfLeg2;
+    public ModelRenderer wolfLeg3;
+    public ModelRenderer wolfLeg4;
+    ModelRenderer wolfTail;
+    ModelRenderer wolfMane;
 
     public ModelWolf()
     {
@@ -41,32 +50,44 @@ public class ModelWolf extends ModelBase
         wolfTail = new ModelRenderer(this, 9, 18);
         wolfTail.addBox(-1F, 0.0F, -1F, 2, 8, 2, f);
         wolfTail.setRotationPoint(-1F, 12F, 8F);
-        wolfRightEar = new ModelRenderer(this, 16, 14);
-        wolfRightEar.addBox(-3F, -5F, 0.0F, 2, 2, 1, f);
-        wolfRightEar.setRotationPoint(-1F, f1, -7F);
-        wolfLeftEar = new ModelRenderer(this, 16, 14);
-        wolfLeftEar.addBox(1.0F, -5F, 0.0F, 2, 2, 1, f);
-        wolfLeftEar.setRotationPoint(-1F, f1, -7F);
-        wolfSnout = new ModelRenderer(this, 0, 10);
-        wolfSnout.addBox(-2F, 0.0F, -5F, 3, 3, 4, f);
-        wolfSnout.setRotationPoint(-0.5F, f1, -7F);
+        wolfHeadMain.setTextureOffset(16, 14).addBox(-3F, -5F, 0.0F, 2, 2, 1, f);
+        wolfHeadMain.setTextureOffset(16, 14).addBox(1.0F, -5F, 0.0F, 2, 2, 1, f);
+        wolfHeadMain.setTextureOffset(0, 10).addBox(-1.5F, 0.0F, -5F, 3, 3, 4, f);
     }
 
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
     {
         super.render(entity, f, f1, f2, f3, f4, f5);
         setRotationAngles(f, f1, f2, f3, f4, f5);
-        wolfHeadMain.renderWithRotation(f5);
-        wolfBody.render(f5);
-        wolfLeg1.render(f5);
-        wolfLeg2.render(f5);
-        wolfLeg3.render(f5);
-        wolfLeg4.render(f5);
-        wolfRightEar.renderWithRotation(f5);
-        wolfLeftEar.renderWithRotation(f5);
-        wolfSnout.renderWithRotation(f5);
-        wolfTail.renderWithRotation(f5);
-        wolfMane.render(f5);
+        if(field_40301_k)
+        {
+            float f6 = 2.0F;
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.0F, 5F * f5, 2.0F * f5);
+            wolfHeadMain.renderWithRotation(f5);
+            GL11.glPopMatrix();
+            GL11.glPushMatrix();
+            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+            GL11.glTranslatef(0.0F, 24F * f5, 0.0F);
+            wolfBody.render(f5);
+            wolfLeg1.render(f5);
+            wolfLeg2.render(f5);
+            wolfLeg3.render(f5);
+            wolfLeg4.render(f5);
+            wolfTail.renderWithRotation(f5);
+            wolfMane.render(f5);
+            GL11.glPopMatrix();
+        } else
+        {
+            wolfHeadMain.renderWithRotation(f5);
+            wolfBody.render(f5);
+            wolfLeg1.render(f5);
+            wolfLeg2.render(f5);
+            wolfLeg3.render(f5);
+            wolfLeg4.render(f5);
+            wolfTail.renderWithRotation(f5);
+            wolfMane.render(f5);
+        }
     }
 
     public void setLivingAnimations(EntityLiving entityliving, float f, float f1, float f2)
@@ -113,9 +134,6 @@ public class ModelWolf extends ModelBase
         }
         float f3 = entitywolf.getInterestedAngle(f2) + entitywolf.getShakeAngle(f2, 0.0F);
         wolfHeadMain.rotateAngleZ = f3;
-        wolfRightEar.rotateAngleZ = f3;
-        wolfLeftEar.rotateAngleZ = f3;
-        wolfSnout.rotateAngleZ = f3;
         wolfMane.rotateAngleZ = entitywolf.getShakeAngle(f2, -0.08F);
         wolfBody.rotateAngleZ = entitywolf.getShakeAngle(f2, -0.16F);
         wolfTail.rotateAngleZ = entitywolf.getShakeAngle(f2, -0.2F);
@@ -131,24 +149,6 @@ public class ModelWolf extends ModelBase
         super.setRotationAngles(f, f1, f2, f3, f4, f5);
         wolfHeadMain.rotateAngleX = f4 / 57.29578F;
         wolfHeadMain.rotateAngleY = f3 / 57.29578F;
-        wolfRightEar.rotateAngleY = wolfHeadMain.rotateAngleY;
-        wolfRightEar.rotateAngleX = wolfHeadMain.rotateAngleX;
-        wolfLeftEar.rotateAngleY = wolfHeadMain.rotateAngleY;
-        wolfLeftEar.rotateAngleX = wolfHeadMain.rotateAngleX;
-        wolfSnout.rotateAngleY = wolfHeadMain.rotateAngleY;
-        wolfSnout.rotateAngleX = wolfHeadMain.rotateAngleX;
         wolfTail.rotateAngleX = f2;
     }
-
-    public ModelRenderer wolfHeadMain;
-    public ModelRenderer wolfBody;
-    public ModelRenderer wolfLeg1;
-    public ModelRenderer wolfLeg2;
-    public ModelRenderer wolfLeg3;
-    public ModelRenderer wolfLeg4;
-    ModelRenderer wolfRightEar;
-    ModelRenderer wolfLeftEar;
-    ModelRenderer wolfSnout;
-    ModelRenderer wolfTail;
-    ModelRenderer wolfMane;
 }

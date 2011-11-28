@@ -1,14 +1,14 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            MapGenBase, MathHelper, Block, BlockGrass, 
-//            World
+//            MapGenBase, MathHelper, World, Block, 
+//            BlockGrass, WorldChunkManager, BiomeGenBase
 
 public class MapGenCaves extends MapGenBase
 {
@@ -77,11 +77,11 @@ public class MapGenCaves extends MapGenBase
             {
                 continue;
             }
-            double d8 = d - d4;
-            double d9 = d2 - d5;
-            double d10 = i1 - k;
+            double d8a = d - d4;
+            double d9a = d2 - d5;
+            double d10a = i1 - k;
             double d11 = f + 2.0F + 16F;
-            if((d8 * d8 + d9 * d9) - d10 * d10 > d11 * d11)
+            if((d8a * d8a + d9a * d9a) - d10a * d10a > d11 * d11)
             {
                 return;
             }
@@ -89,11 +89,11 @@ public class MapGenCaves extends MapGenBase
             {
                 continue;
             }
-            d8 = MathHelper.floor_double(d - d6) - i * 16 - 1;
+            int d8 = MathHelper.floor_double(d - d6) - i * 16 - 1;
             int l1 = (MathHelper.floor_double(d + d6) - i * 16) + 1;
-            d9 = MathHelper.floor_double(d1 - d7) - 1;
+            int d9 = MathHelper.floor_double(d1 - d7) - 1;
             int i2 = MathHelper.floor_double(d1 + d7) + 1;
-            d10 = MathHelper.floor_double(d2 - d6) - j * 16 - 1;
+            int d10 = MathHelper.floor_double(d2 - d6) - j * 16 - 1;
             int j2 = (MathHelper.floor_double(d2 + d6) - j * 16) + 1;
             if(d8 < 0)
             {
@@ -107,11 +107,9 @@ public class MapGenCaves extends MapGenBase
             {
                 d9 = 1;
             }
-            worldObj.getClass();
-            if(i2 > 128 - 8)
+            if(i2 > worldObj.field_35472_c - 8)
             {
-                worldObj.getClass();
-                i2 = 128 - 8;
+                i2 = worldObj.field_35472_c - 8;
             }
             if(d10 < 0)
             {
@@ -122,20 +120,14 @@ public class MapGenCaves extends MapGenBase
                 j2 = 16;
             }
             boolean flag2 = false;
-            for(int k2 = (int) d8; !flag2 && k2 < l1; k2++)
+            for(int k2 = d8; !flag2 && k2 < l1; k2++)
             {
-                for(int i3 = (int) d10; !flag2 && i3 < j2; i3++)
+                for(int i3 = d10; !flag2 && i3 < j2; i3++)
                 {
                     for(int j3 = i2 + 1; !flag2 && j3 >= d9 - 1; j3--)
                     {
-                        worldObj.getClass();
-                        int k3 = (k2 * 16 + i3) * 128 + j3;
-                        if(j3 < 0)
-                        {
-                            continue;
-                        }
-                        worldObj.getClass();
-                        if(j3 >= 128)
+                        int k3 = (k2 * 16 + i3) * worldObj.field_35472_c + j3;
+                        if(j3 < 0 || j3 >= worldObj.field_35472_c)
                         {
                             continue;
                         }
@@ -145,7 +137,7 @@ public class MapGenCaves extends MapGenBase
                         }
                         if(j3 != d9 - 1 && k2 != d8 && k2 != l1 - 1 && i3 != d10 && i3 != j2 - 1)
                         {
-                            j3 = (int) d9;
+                            j3 = d9;
                         }
                     }
 
@@ -157,15 +149,14 @@ public class MapGenCaves extends MapGenBase
             {
                 continue;
             }
-            for(int l2 = (int) d8; l2 < l1; l2++)
+            for(int l2 = d8; l2 < l1; l2++)
             {
                 double d12 = (((double)(l2 + i * 16) + 0.5D) - d) / d6;
 label0:
-                for(int l3 = (int) d10; l3 < j2; l3++)
+                for(int l3 = d10; l3 < j2; l3++)
                 {
                     double d13 = (((double)(l3 + j * 16) + 0.5D) - d2) / d6;
-                    worldObj.getClass();
-                    int i4 = (l2 * 16 + l3) * 128 + i2;
+                    int i4 = (l2 * 16 + l3) * worldObj.field_35472_c + i2;
                     boolean flag3 = false;
                     if(d12 * d12 + d13 * d13 >= 1.0D)
                     {
@@ -196,7 +187,7 @@ label0:
                                     abyte0[i4] = 0;
                                     if(flag3 && abyte0[i4 - 1] == Block.dirt.blockID)
                                     {
-                                        abyte0[i4 - 1] = (byte)Block.grass.blockID;
+                                        abyte0[i4 - 1] = worldObj.getWorldChunkManager().getBiomeGenAt(l2 + i * 16, l3 + j * 16).topBlock;
                                     }
                                 }
                             }
@@ -226,8 +217,7 @@ label0:
         for(int j1 = 0; j1 < i1; j1++)
         {
             double d = i * 16 + rand.nextInt(16);
-            world.getClass();
-            double d1 = rand.nextInt(rand.nextInt(128 - 8) + 8);
+            double d1 = rand.nextInt(rand.nextInt(world.field_35472_c - 8) + 8);
             double d2 = j * 16 + rand.nextInt(16);
             int k1 = 1;
             if(rand.nextInt(4) == 0)

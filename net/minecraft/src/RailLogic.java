@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,9 +13,18 @@ import java.util.List;
 class RailLogic
 {
 
+    private World worldObj;
+    private int trackX;
+    private int trackY;
+    private int trackZ;
+    private final boolean isPoweredRail;
+    private List connectedTracks;
+    final BlockRail rail; /* synthetic field */
+
     public RailLogic(BlockRail blockrail, World world, int i, int j, int k)
     {
         rail = blockrail;
+//        super();
         connectedTracks = new ArrayList();
         worldObj = world;
         trackX = i;
@@ -89,7 +98,7 @@ class RailLogic
         }
     }
 
-    private void func_785_b()
+    private void refreshConnectedTracks()
     {
         for(int i = 0; i < connectedTracks.size(); i++)
         {
@@ -187,7 +196,7 @@ class RailLogic
         return i;
     }
 
-    private boolean handleKeyPress(RailLogic raillogic)
+    private boolean canConnectTo(RailLogic raillogic)
     {
         if(isConnectedTo(raillogic))
         {
@@ -205,7 +214,7 @@ class RailLogic
         return raillogic.trackY != trackY || chunkposition.y != trackY ? true : true;
     }
 
-    private void func_788_d(RailLogic raillogic)
+    private void connectToNeighbor(RailLogic raillogic)
     {
         connectedTracks.add(new ChunkPosition(raillogic.trackX, raillogic.trackY, raillogic.trackZ));
         boolean flag = isInTrack(trackX, trackY, trackZ - 1);
@@ -274,7 +283,7 @@ class RailLogic
         worldObj.setBlockMetadataWithNotify(trackX, trackY, trackZ, i);
     }
 
-    private boolean func_786_c(int i, int j, int k)
+    private boolean canConnectFrom(int i, int j, int k)
     {
         RailLogic raillogic = getMinecartTrackLogic(new ChunkPosition(i, j, k));
         if(raillogic == null)
@@ -282,17 +291,17 @@ class RailLogic
             return false;
         } else
         {
-            raillogic.func_785_b();
-            return raillogic.handleKeyPress(this);
+            raillogic.refreshConnectedTracks();
+            return raillogic.canConnectTo(this);
         }
     }
 
-    public void func_792_a(boolean flag, boolean flag1)
+    public void refreshTrackShape(boolean flag, boolean flag1)
     {
-        boolean flag2 = func_786_c(trackX, trackY, trackZ - 1);
-        boolean flag3 = func_786_c(trackX, trackY, trackZ + 1);
-        boolean flag4 = func_786_c(trackX - 1, trackY, trackZ);
-        boolean flag5 = func_786_c(trackX + 1, trackY, trackZ);
+        boolean flag2 = canConnectFrom(trackX, trackY, trackZ - 1);
+        boolean flag3 = canConnectFrom(trackX, trackY, trackZ + 1);
+        boolean flag4 = canConnectFrom(trackX - 1, trackY, trackZ);
+        boolean flag5 = canConnectFrom(trackX + 1, trackY, trackZ);
         byte byte0 = -1;
         if((flag2 || flag3) && !flag4 && !flag5)
         {
@@ -414,10 +423,10 @@ class RailLogic
                 {
                     continue;
                 }
-                raillogic.func_785_b();
-                if(raillogic.handleKeyPress(this))
+                raillogic.refreshConnectedTracks();
+                if(raillogic.canConnectTo(this))
                 {
-                    raillogic.func_788_d(this);
+                    raillogic.connectToNeighbor(this);
                 }
             }
 
@@ -428,12 +437,4 @@ class RailLogic
     {
         return raillogic.getAdjacentTracks();
     }
-
-    private World worldObj;
-    private int trackX;
-    private int trackY;
-    private int trackZ;
-    private final boolean isPoweredRail;
-    private List connectedTracks;
-    final BlockRail rail; /* synthetic field */
 }

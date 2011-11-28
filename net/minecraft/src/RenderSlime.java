@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,13 +12,15 @@ import org.lwjgl.opengl.GL11;
 public class RenderSlime extends RenderLiving
 {
 
+    private ModelBase scaleAmount;
+
     public RenderSlime(ModelBase modelbase, ModelBase modelbase1, float f)
     {
         super(modelbase, f);
         scaleAmount = modelbase1;
     }
 
-    protected boolean renderSlimePassModel(EntitySlime entityslime, int i, float f)
+    protected int func_40287_a(EntitySlime entityslime, int i, float f)
     {
         if(i == 0)
         {
@@ -26,14 +28,14 @@ public class RenderSlime extends RenderLiving
             GL11.glEnable(2977 /*GL_NORMALIZE*/);
             GL11.glEnable(3042 /*GL_BLEND*/);
             GL11.glBlendFunc(770, 771);
-            return true;
+            return 1;
         }
         if(i == 1)
         {
             GL11.glDisable(3042 /*GL_BLEND*/);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         }
-        return false;
+        return -1;
     }
 
     protected void scaleSlime(EntitySlime entityslime, float f)
@@ -50,10 +52,8 @@ public class RenderSlime extends RenderLiving
         scaleSlime((EntitySlime)entityliving, f);
     }
 
-    protected boolean shouldRenderPass(EntityLiving entityliving, int i, float f)
+    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
     {
-        return renderSlimePassModel((EntitySlime)entityliving, i, f);
+        return func_40287_a((EntitySlime)entityliving, i, f);
     }
-
-    private ModelBase scaleAmount;
 }

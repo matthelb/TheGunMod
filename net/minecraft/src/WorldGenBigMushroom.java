@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,10 +8,12 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            WorldGenerator, World, Block, BlockLeaves, 
-//            BlockFlower
+//            BlockGrass, BlockMycelium, BlockFlower
 
 public class WorldGenBigMushroom extends WorldGenerator
 {
+
+    private int field_35266_a;
 
     public WorldGenBigMushroom(int i)
     {
@@ -26,26 +28,15 @@ public class WorldGenBigMushroom extends WorldGenerator
 
     public boolean generate(World world, Random random, int i, int j, int k)
     {
-        int l;
-        int i1;
-        boolean flag;
-label0:
+        int l = random.nextInt(2);
+        if(field_35266_a >= 0)
         {
-            l = random.nextInt(2);
-            if(field_35266_a >= 0)
-            {
-                l = field_35266_a;
-            }
-            i1 = random.nextInt(3) + 4;
-            flag = true;
-            if(j >= 1)
-            {
-                world.getClass();
-                if(j + i1 + 1 <= 128)
-                {
-                    break label0;
-                }
-            }
+            l = field_35266_a;
+        }
+        int i1 = random.nextInt(3) + 4;
+        boolean flag = true;
+        if(j < 1 || j + i1 + 1 > world.field_35472_c)
+        {
             return false;
         }
         for(int j1 = j; j1 <= j + 1 + i1; j1++)
@@ -55,24 +46,21 @@ label0:
             {
                 byte0 = 0;
             }
-            for(int j2 = i - byte0; j2 <= i + byte0 && flag; j2++)
+            for(int i2 = i - byte0; i2 <= i + byte0 && flag; i2++)
             {
-                for(int i3 = k - byte0; i3 <= k + byte0 && flag; i3++)
+                for(int l2 = k - byte0; l2 <= k + byte0 && flag; l2++)
                 {
-                    if(j1 >= 0)
+                    if(j1 >= 0 && j1 < world.field_35472_c)
                     {
-                        world.getClass();
-                        if(j1 < 128)
+                        int k3 = world.getBlockId(i2, j1, l2);
+                        if(k3 != 0 && k3 != Block.leaves.blockID)
                         {
-                            int k3 = world.getBlockId(j2, j1, i3);
-                            if(k3 != 0 && k3 != Block.leaves.blockID)
-                            {
-                                flag = false;
-                            }
-                            continue;
+                            flag = false;
                         }
+                    } else
+                    {
+                        flag = false;
                     }
-                    flag = false;
                 }
 
             }
@@ -83,94 +71,99 @@ label0:
         {
             return false;
         }
+        int k1 = world.getBlockId(i, j - 1, k);
+        if(k1 != Block.dirt.blockID && k1 != Block.grass.blockID && k1 != Block.mycelium.blockID)
+        {
+            return false;
+        }
         if(!Block.mushroomBrown.canPlaceBlockAt(world, i, j, k))
         {
             return false;
         }
         world.setBlock(i, j - 1, k, Block.dirt.blockID);
-        int k1 = j + i1;
+        int l1 = j + i1;
         if(l == 1)
         {
-            k1 = (j + i1) - 3;
+            l1 = (j + i1) - 3;
         }
-        for(int l1 = k1; l1 <= j + i1; l1++)
+        for(int j2 = l1; j2 <= j + i1; j2++)
         {
-            int k2 = 1;
-            if(l1 < j + i1)
+            int i3 = 1;
+            if(j2 < j + i1)
             {
-                k2++;
+                i3++;
             }
             if(l == 0)
             {
-                k2 = 3;
+                i3 = 3;
             }
-            for(int j3 = i - k2; j3 <= i + k2; j3++)
+            for(int l3 = i - i3; l3 <= i + i3; l3++)
             {
-                for(int l3 = k - k2; l3 <= k + k2; l3++)
+                for(int i4 = k - i3; i4 <= k + i3; i4++)
                 {
-                    int i4 = 5;
-                    if(j3 == i - k2)
+                    int j4 = 5;
+                    if(l3 == i - i3)
                     {
-                        i4--;
+                        j4--;
                     }
-                    if(j3 == i + k2)
+                    if(l3 == i + i3)
                     {
-                        i4++;
+                        j4++;
                     }
-                    if(l3 == k - k2)
+                    if(i4 == k - i3)
                     {
-                        i4 -= 3;
+                        j4 -= 3;
                     }
-                    if(l3 == k + k2)
+                    if(i4 == k + i3)
                     {
-                        i4 += 3;
+                        j4 += 3;
                     }
-                    if(l == 0 || l1 < j + i1)
+                    if(l == 0 || j2 < j + i1)
                     {
-                        if((j3 == i - k2 || j3 == i + k2) && (l3 == k - k2 || l3 == k + k2))
+                        if((l3 == i - i3 || l3 == i + i3) && (i4 == k - i3 || i4 == k + i3))
                         {
                             continue;
                         }
-                        if(j3 == i - (k2 - 1) && l3 == k - k2)
+                        if(l3 == i - (i3 - 1) && i4 == k - i3)
                         {
-                            i4 = 1;
+                            j4 = 1;
                         }
-                        if(j3 == i - k2 && l3 == k - (k2 - 1))
+                        if(l3 == i - i3 && i4 == k - (i3 - 1))
                         {
-                            i4 = 1;
+                            j4 = 1;
                         }
-                        if(j3 == i + (k2 - 1) && l3 == k - k2)
+                        if(l3 == i + (i3 - 1) && i4 == k - i3)
                         {
-                            i4 = 3;
+                            j4 = 3;
                         }
-                        if(j3 == i + k2 && l3 == k - (k2 - 1))
+                        if(l3 == i + i3 && i4 == k - (i3 - 1))
                         {
-                            i4 = 3;
+                            j4 = 3;
                         }
-                        if(j3 == i - (k2 - 1) && l3 == k + k2)
+                        if(l3 == i - (i3 - 1) && i4 == k + i3)
                         {
-                            i4 = 7;
+                            j4 = 7;
                         }
-                        if(j3 == i - k2 && l3 == k + (k2 - 1))
+                        if(l3 == i - i3 && i4 == k + (i3 - 1))
                         {
-                            i4 = 7;
+                            j4 = 7;
                         }
-                        if(j3 == i + (k2 - 1) && l3 == k + k2)
+                        if(l3 == i + (i3 - 1) && i4 == k + i3)
                         {
-                            i4 = 9;
+                            j4 = 9;
                         }
-                        if(j3 == i + k2 && l3 == k + (k2 - 1))
+                        if(l3 == i + i3 && i4 == k + (i3 - 1))
                         {
-                            i4 = 9;
+                            j4 = 9;
                         }
                     }
-                    if(i4 == 5 && l1 < j + i1)
+                    if(j4 == 5 && j2 < j + i1)
                     {
-                        i4 = 0;
+                        j4 = 0;
                     }
-                    if((i4 != 0 || j >= (j + i1) - 1) && !Block.opaqueCubeLookup[world.getBlockId(j3, l1, l3)])
+                    if((j4 != 0 || j >= (j + i1) - 1) && !Block.opaqueCubeLookup[world.getBlockId(l3, j2, i4)])
                     {
-                        world.setBlockAndMetadata(j3, l1, l3, Block.mushroomCapBrown.blockID + l, i4);
+                        world.setBlockAndMetadata(l3, j2, i4, Block.mushroomCapBrown.blockID + l, j4);
                     }
                 }
 
@@ -178,17 +171,15 @@ label0:
 
         }
 
-        for(int i2 = 0; i2 < i1; i2++)
+        for(int k2 = 0; k2 < i1; k2++)
         {
-            int l2 = world.getBlockId(i, j + i2, k);
-            if(!Block.opaqueCubeLookup[l2])
+            int j3 = world.getBlockId(i, j + k2, k);
+            if(!Block.opaqueCubeLookup[j3])
             {
-                world.setBlockAndMetadata(i, j + i2, k, Block.mushroomCapBrown.blockID + l, 10);
+                world.setBlockAndMetadata(i, j + k2, k, Block.mushroomCapBrown.blockID + l, 10);
             }
         }
 
         return true;
     }
-
-    private int field_35266_a;
 }

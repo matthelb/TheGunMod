@@ -1,12 +1,16 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 public class MouseFilter
 {
+
+    private float field_22388_a;
+    private float field_22387_b;
+    private float field_22389_c;
 
     public MouseFilter()
     {
@@ -24,8 +28,4 @@ public class MouseFilter
         field_22387_b += f;
         return f;
     }
-
-    private float field_22388_a;
-    private float field_22387_b;
-    private float field_22389_c;
 }

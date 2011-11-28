@@ -1,9 +1,10 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
+import org.lwjgl.opengl.GL11;
 
 // Referenced classes of package net.minecraft.src:
 //            ModelBase, ModelRenderer, MathHelper, Entity
@@ -11,8 +12,19 @@ package net.minecraft.src;
 public class ModelQuadruped extends ModelBase
 {
 
+    public ModelRenderer head;
+    public ModelRenderer body;
+    public ModelRenderer leg1;
+    public ModelRenderer leg2;
+    public ModelRenderer leg3;
+    public ModelRenderer leg4;
+    protected float field_40331_g;
+    protected float field_40332_n;
+
     public ModelQuadruped(int i, float f)
     {
+        field_40331_g = 8F;
+        field_40332_n = 4F;
         head = new ModelRenderer(this, 0, 0);
         head.addBox(-4F, -4F, -8F, 8, 8, 8, f);
         head.setRotationPoint(0.0F, 18 - i, -6F);
@@ -36,12 +48,31 @@ public class ModelQuadruped extends ModelBase
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
     {
         setRotationAngles(f, f1, f2, f3, f4, f5);
-        head.render(f5);
-        body.render(f5);
-        leg1.render(f5);
-        leg2.render(f5);
-        leg3.render(f5);
-        leg4.render(f5);
+        if(field_40301_k)
+        {
+            float f6 = 2.0F;
+            GL11.glPushMatrix();
+            GL11.glTranslatef(0.0F, field_40331_g * f5, field_40332_n * f5);
+            head.render(f5);
+            GL11.glPopMatrix();
+            GL11.glPushMatrix();
+            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
+            GL11.glTranslatef(0.0F, 24F * f5, 0.0F);
+            body.render(f5);
+            leg1.render(f5);
+            leg2.render(f5);
+            leg3.render(f5);
+            leg4.render(f5);
+            GL11.glPopMatrix();
+        } else
+        {
+            head.render(f5);
+            body.render(f5);
+            leg1.render(f5);
+            leg2.render(f5);
+            leg3.render(f5);
+            leg4.render(f5);
+        }
     }
 
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
@@ -54,11 +85,4 @@ public class ModelQuadruped extends ModelBase
         leg3.rotateAngleX = MathHelper.cos(f * 0.6662F + 3.141593F) * 1.4F * f1;
         leg4.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
     }
-
-    public ModelRenderer head;
-    public ModelRenderer body;
-    public ModelRenderer leg1;
-    public ModelRenderer leg2;
-    public ModelRenderer leg3;
-    public ModelRenderer leg4;
 }

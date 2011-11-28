@@ -1,12 +1,18 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
+// Referenced classes of package net.minecraft.src:
+//            ChunkPosition
+
 public class ChunkCoordIntPair
 {
+
+    public final int chunkXPos;
+    public final int chunkZPos;
 
     public ChunkCoordIntPair(int i, int j)
     {
@@ -35,6 +41,23 @@ public class ChunkCoordIntPair
         return chunkcoordintpair.chunkXPos == chunkXPos && chunkcoordintpair.chunkZPos == chunkZPos;
     }
 
-    public final int chunkXPos;
-    public final int chunkZPos;
+    public int func_40735_a()
+    {
+        return (chunkXPos << 4) + 8;
+    }
+
+    public int func_40736_b()
+    {
+        return (chunkZPos << 4) + 8;
+    }
+
+    public ChunkPosition func_40737_a(int i)
+    {
+        return new ChunkPosition(func_40735_a(), i, func_40736_b());
+    }
+
+    public String toString()
+    {
+        return (new StringBuilder()).append("[").append(chunkXPos).append(", ").append(chunkZPos).append("]").toString();
+    }
 }

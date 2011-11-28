@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.*;
 
 public class MapGenVillage extends MapGenStructure
 {
+
+    public static List villageSpawnBiomes;
 
     public MapGenVillage()
     {
@@ -55,8 +57,6 @@ public class MapGenVillage extends MapGenStructure
     {
         return new StructureVillageStart(worldObj, rand, i, j);
     }
-
-    public static List villageSpawnBiomes;
 
     static 
     {

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ import java.io.ByteArrayOutputStream;
 
 class RegionFileChunkBuffer extends ByteArrayOutputStream
 {
+
+    private int chunkX;
+    private int chunkZ;
+    final RegionFile regionFile; /* synthetic field */
 
     public RegionFileChunkBuffer(RegionFile regionfile, int i, int j)
     {
@@ -24,8 +28,4 @@ class RegionFileChunkBuffer extends ByteArrayOutputStream
     {
         regionFile.write(chunkX, chunkZ, buf, count);
     }
-
-    private int chunkX;
-    private int chunkZ;
-    final RegionFile regionFile; /* synthetic field */
 }

@@ -1,13 +1,14 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            EntityMob, World, MathHelper, Item
+//            EntityMob, World, MathHelper, Item, 
+//            EnumCreatureAttribute
 
 public class EntityZombie extends EntityMob
 {
@@ -17,7 +18,17 @@ public class EntityZombie extends EntityMob
         super(world);
         texture = "/mob/zombie.png";
         moveSpeed = 0.5F;
-        attackStrength = 5;
+        attackStrength = 4;
+    }
+
+    public int getMaxHealth()
+    {
+        return 20;
+    }
+
+    protected int func_40119_ar()
+    {
+        return 2;
     }
 
     public void onLivingUpdate()
@@ -27,7 +38,7 @@ public class EntityZombie extends EntityMob
             float f = getEntityBrightness(1.0F);
             if(f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
             {
-                fire = 300;
+                func_40046_d(8);
             }
         }
         super.onLivingUpdate();
@@ -51,5 +62,10 @@ public class EntityZombie extends EntityMob
     protected int getDropItemId()
     {
         return Item.rottenFlesh.shiftedIndex;
+    }
+
+    public EnumCreatureAttribute func_40124_t()
+    {
+        return EnumCreatureAttribute.UNDEAD;
     }
 }

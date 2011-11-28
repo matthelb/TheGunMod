@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,12 @@ package net.minecraft.src;
 
 public class MovementInput
 {
+
+    public float moveStrafe;
+    public float moveForward;
+    public boolean field_1177_c;
+    public boolean jump;
+    public boolean sneak;
 
     public MovementInput()
     {
@@ -23,10 +29,4 @@ public class MovementInput
     public void updatePlayerMoveState(EntityPlayer entityplayer)
     {
     }
-
-    public float moveStrafe;
-    public float moveForward;
-    public boolean field_1177_c;
-    public boolean jump;
-    public boolean sneak;
 }

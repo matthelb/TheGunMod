@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,11 @@ import org.lwjgl.opengl.GL11;
 
 public class EntityLargeExplodeFX extends EntityFX
 {
+
+    private int field_35130_a;
+    private int field_35129_ay;
+    private RenderEngine field_35128_az;
+    private float field_35131_aA;
 
     public EntityLargeExplodeFX(RenderEngine renderengine, World world, double d, double d1, double d2, double d3, double d4, double d5)
     {
@@ -60,7 +65,7 @@ public class EntityLargeExplodeFX extends EntityFX
         }
     }
 
-    public int func_35115_a(float f)
+    public int getEntityBrightnessForRender(float f)
     {
         return 61680;
     }
@@ -81,9 +86,4 @@ public class EntityLargeExplodeFX extends EntityFX
     {
         return 3;
     }
-
-    private int field_35130_a;
-    private int field_35129_ay;
-    private RenderEngine field_35128_az;
-    private float field_35131_aA;
 }

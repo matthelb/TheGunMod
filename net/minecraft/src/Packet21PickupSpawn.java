@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,17 @@ import java.io.*;
 
 public class Packet21PickupSpawn extends Packet
 {
+
+    public int entityId;
+    public int xPosition;
+    public int yPosition;
+    public int zPosition;
+    public byte rotation;
+    public byte pitch;
+    public byte roll;
+    public int itemID;
+    public int count;
+    public int itemDamage;
 
     public Packet21PickupSpawn()
     {
@@ -70,15 +81,4 @@ public class Packet21PickupSpawn extends Packet
     {
         return 24;
     }
-
-    public int entityId;
-    public int xPosition;
-    public int yPosition;
-    public int zPosition;
-    public byte rotation;
-    public byte pitch;
-    public byte roll;
-    public int itemID;
-    public int count;
-    public int itemDamage;
 }

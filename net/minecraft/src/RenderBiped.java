@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,15 +9,25 @@ import org.lwjgl.opengl.GL11;
 // Referenced classes of package net.minecraft.src:
 //            RenderLiving, EntityLiving, ModelBiped, ModelRenderer, 
 //            ItemStack, Block, RenderBlocks, Item, 
-//            RenderManager, ItemRenderer
+//            RenderManager, ItemRenderer, ItemPotion
 
 public class RenderBiped extends RenderLiving
 {
 
+    protected ModelBiped modelBipedMain;
+    protected float field_40296_d;
+
     public RenderBiped(ModelBiped modelbiped, float f)
+    {
+        this(modelbiped, f, 1.0F);
+        modelBipedMain = modelbiped;
+    }
+
+    public RenderBiped(ModelBiped modelbiped, float f, float f1)
     {
         super(modelbiped, f);
         modelBipedMain = modelbiped;
+        field_40296_d = f1;
     }
 
     protected void renderEquippedItems(EntityLiving entityliving, float f)
@@ -63,10 +73,12 @@ public class RenderBiped extends RenderLiving
                 GL11.glRotatef(-90F, 1.0F, 0.0F, 0.0F);
                 GL11.glRotatef(20F, 0.0F, 0.0F, 1.0F);
             }
-            renderManager.itemRenderer.renderItem(entityliving, itemstack);
+            renderManager.itemRenderer.renderItem(entityliving, itemstack, 0);
+            if(itemstack.itemID == Item.potion.shiftedIndex)
+            {
+                renderManager.itemRenderer.renderItem(entityliving, itemstack, 1);
+            }
             GL11.glPopMatrix();
         }
     }
-
-    protected ModelBiped modelBipedMain;
 }

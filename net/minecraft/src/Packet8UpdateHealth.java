@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ import java.io.*;
 
 public class Packet8UpdateHealth extends Packet
 {
+
+    public int healthMP;
+    public int food;
+    public float foodSaturation;
 
     public Packet8UpdateHealth()
     {
@@ -41,8 +45,4 @@ public class Packet8UpdateHealth extends Packet
     {
         return 8;
     }
-
-    public int healthMP;
-    public int food;
-    public float foodSaturation;
 }

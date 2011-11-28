@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,18 +10,39 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 
 // Referenced classes of package net.minecraft.src:
-//            GuiScreen, GuiTextField, StringTranslate, GuiButton, 
-//            ChatAllowedCharacters, MathHelper, ISaveFormat, PlayerControllerTest, 
-//            PlayerControllerSP, WorldSettings
+//            GuiScreen, StatCollector, GuiTextField, StringTranslate, 
+//            GuiButton, ChatAllowedCharacters, MathHelper, ISaveFormat, 
+//            PlayerControllerCreative, PlayerControllerSP, WorldSettings
 
 public class GuiCreateWorld extends GuiScreen
 {
+
+    private GuiScreen parentGuiScreen;
+    private GuiTextField textboxWorldName;
+    private GuiTextField textboxSeed;
+    private String folderName;
+    private String field_35364_f;
+    private boolean field_35365_g;
+    private boolean field_40232_h;
+    private boolean createClicked;
+    private boolean field_35368_i;
+    private GuiButton field_35366_j;
+    private GuiButton field_35367_k;
+    private GuiButton field_35372_s;
+    private GuiButton field_35371_t;
+    private String field_35370_u;
+    private String field_35369_v;
+    private String field_41048_x;
+    private String field_41047_y;
 
     public GuiCreateWorld(GuiScreen guiscreen)
     {
         field_35364_f = "survival";
         field_35365_g = true;
+        field_40232_h = false;
         parentGuiScreen = guiscreen;
+        field_41048_x = "";
+        field_41047_y = StatCollector.translateToLocal("selectWorld.newWorld");
     }
 
     public void updateScreen()
@@ -44,15 +65,15 @@ public class GuiCreateWorld extends GuiScreen
         controlList.add(field_35371_t = new GuiButton(5, width / 2 + 5, 100, 150, 20, stringtranslate.translateKey("selectWorld.mapType")));
         field_35371_t.drawButton = false;
         field_35371_t.enabled = false;
-        textboxWorldName = new GuiTextField(this, fontRenderer, width / 2 - 100, 60, 200, 20, stringtranslate.translateKey("selectWorld.newWorld"));
+        textboxWorldName = new GuiTextField(this, fontRenderer, width / 2 - 100, 60, 200, 20, field_41047_y);
         textboxWorldName.isFocused = true;
         textboxWorldName.setMaxStringLength(32);
-        textboxSeed = new GuiTextField(this, fontRenderer, width / 2 - 100, 60, 200, 20, "");
-        func_22129_j();
+        textboxSeed = new GuiTextField(this, fontRenderer, width / 2 - 100, 60, 200, 20, field_41048_x);
+        makeUseableName();
         func_35363_g();
     }
 
-    private void func_22129_j()
+    private void makeUseableName()
     {
         folderName = textboxWorldName.getText().trim();
         char ac[] = ChatAllowedCharacters.allowedCharactersArray;
@@ -78,11 +99,14 @@ public class GuiCreateWorld extends GuiScreen
         field_35370_u = stringtranslate.translateKey((new StringBuilder()).append("selectWorld.gameMode.").append(field_35364_f).append(".line1").toString());
         field_35369_v = stringtranslate.translateKey((new StringBuilder()).append("selectWorld.gameMode.").append(field_35364_f).append(".line2").toString());
         field_35372_s.displayString = (new StringBuilder()).append(stringtranslate.translateKey("selectWorld.mapFeatures")).append(" ").toString();
-        if(this.field_35365_g) {
-            this.field_35372_s.displayString = this.field_35372_s.displayString + stringtranslate.translateKey("options.on");
-         } else {
-            this.field_35372_s.displayString = this.field_35372_s.displayString + stringtranslate.translateKey("options.off");
-         }
+        if(field_35365_g)
+        {
+            field_35372_s.displayString += stringtranslate.translateKey("options.on");
+        }
+        else
+        {
+            field_35372_s.displayString += stringtranslate.translateKey("options.off");
+        }
         field_35371_t.displayString = (new StringBuilder()).append(stringtranslate.translateKey("selectWorld.mapType")).append(" ").append(stringtranslate.translateKey("selectWorld.mapType.normal")).toString();
         return;
     }
@@ -137,12 +161,12 @@ public class GuiCreateWorld extends GuiScreen
             if(field_35364_f.equals("creative"))
             {
                 i = 1;
-                mc.playerController = new PlayerControllerTest(mc);
+                mc.playerController = new PlayerControllerCreative(mc);
             } else
             {
                 mc.playerController = new PlayerControllerSP(mc);
             }
-            mc.startWorld(folderName, textboxWorldName.getText(), new WorldSettings(l, i, field_35365_g));
+            mc.startWorld(folderName, textboxWorldName.getText(), new WorldSettings(l, i, field_35365_g, field_40232_h));
             mc.displayGuiScreen(null);
         } else
         if(guibutton.id == 3)
@@ -165,10 +189,22 @@ public class GuiCreateWorld extends GuiScreen
         {
             if(field_35364_f.equals("survival"))
             {
+                field_40232_h = false;
+                field_35364_f = "hardcore";
+                field_40232_h = true;
+                func_35363_g();
+            } else
+            if(field_35364_f.equals("hardcore"))
+            {
+                field_40232_h = false;
                 field_35364_f = "creative";
+                func_35363_g();
+                field_40232_h = false;
             } else
             {
                 field_35364_f = "survival";
+                func_35363_g();
+                field_40232_h = false;
             }
             func_35363_g();
         } else
@@ -184,17 +220,19 @@ public class GuiCreateWorld extends GuiScreen
         if(textboxWorldName.isFocused && !field_35368_i)
         {
             textboxWorldName.textboxKeyTyped(c, i);
+            field_41047_y = textboxWorldName.getText();
         } else
         if(textboxSeed.isFocused && field_35368_i)
         {
             textboxSeed.textboxKeyTyped(c, i);
+            field_41048_x = textboxSeed.getText();
         }
         if(c == '\r')
         {
             actionPerformed((GuiButton)controlList.get(0));
         }
         ((GuiButton)controlList.get(0)).enabled = textboxWorldName.getText().length() > 0;
-        func_22129_j();
+        makeUseableName();
     }
 
     protected void mouseClicked(int i, int j, int k)
@@ -243,19 +281,4 @@ public class GuiCreateWorld extends GuiScreen
             textboxSeed.setFocused(false);
         }
     }
-
-    private GuiScreen parentGuiScreen;
-    private GuiTextField textboxWorldName;
-    private GuiTextField textboxSeed;
-    private String folderName;
-    private String field_35364_f;
-    private boolean field_35365_g;
-    private boolean createClicked;
-    private boolean field_35368_i;
-    private GuiButton field_35366_j;
-    private GuiButton field_35367_k;
-    private GuiButton field_35372_s;
-    private GuiButton field_35371_t;
-    private String field_35370_u;
-    private String field_35369_v;
 }

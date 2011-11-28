@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 public class EntityCritFX extends EntityFX
 {
+
+    private boolean field_35136_ay;
+    float field_35137_a;
 
     public EntityCritFX(World world, double d, double d1, double d2, 
             double d3, double d4, double d5)
@@ -35,7 +38,7 @@ public class EntityCritFX extends EntityFX
         particleMaxAge = (int)(6D / (Math.random() * 0.80000000000000004D + 0.59999999999999998D));
         particleMaxAge *= f;
         noClip = false;
-        particleTextureIndex = 65;
+        func_40099_c(65);
         onUpdate();
     }
 
@@ -80,7 +83,4 @@ public class EntityCritFX extends EntityFX
             motionZ *= 0.69999998807907104D;
         }
     }
-
-    private boolean field_35136_ay;
-    float field_35137_a;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,16 @@ import java.util.Random;
 
 public class ItemFood extends Item
 {
+
+    public final int field_35430_a = 32;
+    private final int healAmount;
+    private final float saturationModifier;
+    private final boolean isWolfsFavoriteMeat;
+    private boolean field_35431_bw;
+    private int potionId;
+    private int potionDuration;
+    private int potionAmplifier;
+    private float potionEffectProbability;
 
     public ItemFood(int i, int j, float f, boolean flag)
     {
@@ -30,6 +40,7 @@ public class ItemFood extends Item
     {
         itemstack.stackSize--;
         entityplayer.getFoodStats().addStatsFrom(this);
+        world.playSoundAtEntity(entityplayer, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
         if(!world.multiplayerWorld && potionId > 0 && world.rand.nextFloat() < potionEffectProbability)
         {
             entityplayer.addPotionEffect(new PotionEffect(potionId, potionDuration * 20, potionAmplifier));
@@ -90,14 +101,4 @@ public class ItemFood extends Item
     {
         return super.setItemName(s);
     }
-
-    public final int field_35430_a = 32;
-    private final int healAmount;
-    private final float saturationModifier;
-    private final boolean isWolfsFavoriteMeat;
-    private boolean field_35431_bw;
-    private int potionId;
-    private int potionDuration;
-    private int potionAmplifier;
-    private float potionEffectProbability;
 }

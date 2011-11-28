@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 public class GuiUnused extends GuiScreen
 {
+
+    private String message1;
+    private String message2;
 
     public void initGui()
     {
@@ -26,7 +29,4 @@ public class GuiUnused extends GuiScreen
     protected void keyTyped(char c, int i)
     {
     }
-
-    private String message1;
-    private String message2;
 }

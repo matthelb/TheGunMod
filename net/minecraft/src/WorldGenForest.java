@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,78 +13,58 @@ import java.util.Random;
 public class WorldGenForest extends WorldGenerator
 {
 
-    public WorldGenForest()
+    public WorldGenForest(boolean flag)
     {
+        super(flag);
     }
 
     public boolean generate(World world, Random random, int i, int j, int k)
     {
-        int l;
-        boolean flag;
-label0:
+        int l = random.nextInt(3) + 5;
+        boolean flag = true;
+        if(j < 1 || j + l + 1 > world.field_35472_c)
         {
-            l = random.nextInt(3) + 5;
-            flag = true;
-            if(j >= 1)
-            {
-                world.getClass();
-                if(j + l + 1 <= 128)
-                {
-                    break label0;
-                }
-            }
             return false;
         }
-label1:
+        for(int i1 = j; i1 <= j + 1 + l; i1++)
         {
-            for(int i1 = j; i1 <= j + 1 + l; i1++)
+            byte byte0 = 1;
+            if(i1 == j)
             {
-                byte byte0 = 1;
-                if(i1 == j)
+                byte0 = 0;
+            }
+            if(i1 >= (j + 1 + l) - 2)
+            {
+                byte0 = 2;
+            }
+            for(int i2 = i - byte0; i2 <= i + byte0 && flag; i2++)
+            {
+                for(int l2 = k - byte0; l2 <= k + byte0 && flag; l2++)
                 {
-                    byte0 = 0;
-                }
-                if(i1 >= (j + 1 + l) - 2)
-                {
-                    byte0 = 2;
-                }
-                for(int i2 = i - byte0; i2 <= i + byte0 && flag; i2++)
-                {
-                    for(int l2 = k - byte0; l2 <= k + byte0 && flag; l2++)
+                    if(i1 >= 0 && i1 < world.field_35472_c)
                     {
-                        if(i1 >= 0)
+                        int j3 = world.getBlockId(i2, i1, l2);
+                        if(j3 != 0 && j3 != Block.leaves.blockID)
                         {
-                            world.getClass();
-                            if(i1 < 128)
-                            {
-                                int j3 = world.getBlockId(i2, i1, l2);
-                                if(j3 != 0 && j3 != Block.leaves.blockID)
-                                {
-                                    flag = false;
-                                }
-                                continue;
-                            }
+                            flag = false;
                         }
+                    } else
+                    {
                         flag = false;
                     }
-
                 }
 
             }
 
-            if(!flag)
-            {
-                return false;
-            }
-            int j1 = world.getBlockId(i, j - 1, k);
-            if(j1 == Block.grass.blockID || j1 == Block.dirt.blockID)
-            {
-                world.getClass();
-                if(j < 128 - l - 1)
-                {
-                    break label1;
-                }
-            }
+        }
+
+        if(!flag)
+        {
+            return false;
+        }
+        int j1 = world.getBlockId(i, j - 1, k);
+        if(j1 != Block.grass.blockID && j1 != Block.dirt.blockID || j >= world.field_35472_c - l - 1)
+        {
             return false;
         }
         world.setBlock(i, j - 1, k, Block.dirt.blockID);
@@ -100,7 +80,7 @@ label1:
                     int j4 = i4 - k;
                     if((Math.abs(l3) != i3 || Math.abs(j4) != i3 || random.nextInt(2) != 0 && j2 != 0) && !Block.opaqueCubeLookup[world.getBlockId(k3, k1, i4)])
                     {
-                        world.setBlockAndMetadata(k3, k1, i4, Block.leaves.blockID, 2);
+                        func_41060_a(world, k3, k1, i4, Block.leaves.blockID, 2);
                     }
                 }
 
@@ -113,7 +93,7 @@ label1:
             int k2 = world.getBlockId(i, j + l1, k);
             if(k2 == 0 || k2 == Block.leaves.blockID)
             {
-                world.setBlockAndMetadata(i, j + l1, k, Block.wood.blockID, 2);
+                func_41060_a(world, i, j + l1, k, Block.wood.blockID, 2);
             }
         }
 

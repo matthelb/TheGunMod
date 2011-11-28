@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,15 +9,20 @@ import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
 //            MapGenStructure, BiomeGenBase, ChunkCoordIntPair, World, 
-//            WorldChunkManager, ChunkPosition, StructureStrongholdStart, StructureStart
+//            WorldChunkManager, ChunkPosition, StructureStrongholdStart, ComponentStrongholdStairs2, 
+//            StructureStart
 
 public class MapGenStronghold extends MapGenStructure
 {
 
+    private BiomeGenBase allowedBiomeGenBases[];
+    private boolean ranBiomeCheck;
+    private ChunkCoordIntPair structureCoords[];
+
     public MapGenStronghold()
     {
         allowedBiomeGenBases = (new BiomeGenBase[] {
-            BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.hills, BiomeGenBase.swampland
+            BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.hills, BiomeGenBase.swampland, BiomeGenBase.taiga, BiomeGenBase.icePlains, BiomeGenBase.iceMountains
         });
         structureCoords = new ChunkCoordIntPair[3];
     }
@@ -71,12 +76,27 @@ public class MapGenStronghold extends MapGenStructure
         return false;
     }
 
-    protected StructureStart getStructureStart(int i, int j)
+    protected List func_40482_a()
     {
-        return new StructureStrongholdStart(worldObj, rand, i, j);
+        ArrayList arraylist = new ArrayList();
+        ChunkCoordIntPair achunkcoordintpair[] = structureCoords;
+        int i = achunkcoordintpair.length;
+        for(int j = 0; j < i; j++)
+        {
+            ChunkCoordIntPair chunkcoordintpair = achunkcoordintpair[j];
+            if(chunkcoordintpair != null)
+            {
+                arraylist.add(chunkcoordintpair.func_40737_a(64));
+            }
+        }
+
+        return arraylist;
     }
 
-    private BiomeGenBase allowedBiomeGenBases[];
-    private boolean ranBiomeCheck;
-    private ChunkCoordIntPair structureCoords[];
+    protected StructureStart getStructureStart(int i, int j)
+    {
+        StructureStrongholdStart structurestrongholdstart;
+        for(structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, i, j); structurestrongholdstart.func_40560_b().isEmpty() || ((ComponentStrongholdStairs2)structurestrongholdstart.func_40560_b().get(0)).field_40009_b == null; structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, i, j)) { }
+        return structurestrongholdstart;
+    }
 }

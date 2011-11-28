@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,8 +15,17 @@ import java.util.*;
 public class NBTTagCompound extends NBTBase
 {
 
+    private Map tagMap;
+
     public NBTTagCompound()
     {
+        super("");
+        tagMap = new HashMap();
+    }
+
+    public NBTTagCompound(String s)
+    {
+        super(s);
         tagMap = new HashMap();
     }
 
@@ -57,42 +66,42 @@ public class NBTTagCompound extends NBTBase
 
     public void setByte(String s, byte byte0)
     {
-        tagMap.put(s, (new NBTTagByte(byte0)).setKey(s));
+        tagMap.put(s, new NBTTagByte(s, byte0));
     }
 
     public void setShort(String s, short word0)
     {
-        tagMap.put(s, (new NBTTagShort(word0)).setKey(s));
+        tagMap.put(s, new NBTTagShort(s, word0));
     }
 
     public void setInteger(String s, int i)
     {
-        tagMap.put(s, (new NBTTagInt(i)).setKey(s));
+        tagMap.put(s, new NBTTagInt(s, i));
     }
 
     public void setLong(String s, long l)
     {
-        tagMap.put(s, (new NBTTagLong(l)).setKey(s));
+        tagMap.put(s, new NBTTagLong(s, l));
     }
 
     public void setFloat(String s, float f)
     {
-        tagMap.put(s, (new NBTTagFloat(f)).setKey(s));
+        tagMap.put(s, new NBTTagFloat(s, f));
     }
 
     public void setDouble(String s, double d)
     {
-        tagMap.put(s, (new NBTTagDouble(d)).setKey(s));
+        tagMap.put(s, new NBTTagDouble(s, d));
     }
 
     public void setString(String s, String s1)
     {
-        tagMap.put(s, (new NBTTagString(s1)).setKey(s));
+        tagMap.put(s, new NBTTagString(s, s1));
     }
 
     public void setByteArray(String s, byte abyte0[])
     {
-        tagMap.put(s, (new NBTTagByteArray(abyte0)).setKey(s));
+        tagMap.put(s, new NBTTagByteArray(s, abyte0));
     }
 
     public void setCompoundTag(String s, NBTTagCompound nbttagcompound)
@@ -103,6 +112,11 @@ public class NBTTagCompound extends NBTBase
     public void setBoolean(String s, boolean flag)
     {
         setByte(s, ((byte)(flag ? 1 : 0)));
+    }
+
+    public NBTBase func_40196_b(String s)
+    {
+        return (NBTBase)tagMap.get(s);
     }
 
     public boolean hasKey(String s)
@@ -202,7 +216,7 @@ public class NBTTagCompound extends NBTBase
     {
         if(!tagMap.containsKey(s))
         {
-            return new NBTTagCompound();
+            return new NBTTagCompound(s);
         } else
         {
             return (NBTTagCompound)tagMap.get(s);
@@ -213,7 +227,7 @@ public class NBTTagCompound extends NBTBase
     {
         if(!tagMap.containsKey(s))
         {
-            return new NBTTagList();
+            return new NBTTagList(s);
         } else
         {
             return (NBTTagList)tagMap.get(s);
@@ -230,5 +244,27 @@ public class NBTTagCompound extends NBTBase
         return (new StringBuilder()).append("").append(tagMap.size()).append(" entries").toString();
     }
 
-    private Map tagMap;
+    public NBTBase func_40195_b()
+    {
+        NBTTagCompound nbttagcompound = new NBTTagCompound(getKey());
+        String s;
+        for(Iterator iterator = tagMap.keySet().iterator(); iterator.hasNext(); nbttagcompound.setTag(s, ((NBTBase)tagMap.get(s)).func_40195_b()))
+        {
+            s = (String)iterator.next();
+        }
+
+        return nbttagcompound;
+    }
+
+    public boolean equals(Object obj)
+    {
+        if(super.equals(obj))
+        {
+            NBTTagCompound nbttagcompound = (NBTTagCompound)obj;
+            return tagMap.entrySet().equals(nbttagcompound.tagMap.entrySet());
+        } else
+        {
+            return false;
+        }
+    }
 }

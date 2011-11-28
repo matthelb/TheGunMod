@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,9 @@ import net.minecraft.client.Minecraft;
 
 public class GuiIngameMenu extends GuiScreen
 {
+
+    private int updateCounter2;
+    private int updateCounter;
 
     public GuiIngameMenu()
     {
@@ -88,7 +91,4 @@ public class GuiIngameMenu extends GuiScreen
         drawCenteredString(fontRenderer, "Game menu", width / 2, 40, 0xffffff);
         super.drawScreen(i, j, f);
     }
-
-    private int updateCounter2;
-    private int updateCounter;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 public class SignModel extends ModelBase
 {
+
+    public ModelRenderer signBoard;
+    public ModelRenderer signStick;
 
     public SignModel()
     {
@@ -24,7 +27,4 @@ public class SignModel extends ModelBase
         signBoard.render(0.0625F);
         signStick.render(0.0625F);
     }
-
-    public ModelRenderer signBoard;
-    public ModelRenderer signStick;
 }

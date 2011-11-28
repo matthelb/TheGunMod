@@ -1,14 +1,14 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            MapGenBase, MathHelper, Block, BlockGrass, 
-//            World
+//            MapGenBase, MathHelper, World, Block, 
+//            BlockGrass
 
 public class MapGenCavesHell extends MapGenBase
 {
@@ -77,11 +77,11 @@ public class MapGenCavesHell extends MapGenBase
             {
                 continue;
             }
-            double d8 = d - d4;
-            double d9 = d2 - d5;
-            double d10 = l - k;
+            double d8a = d - d4;
+            double d9a = d2 - d5;
+            double d10a = l - k;
             double d11 = f + 2.0F + 16F;
-            if((d8 * d8 + d9 * d9) - d10 * d10 > d11 * d11)
+            if((d8a * d8a + d9a * d9a) - d10a * d10a > d11 * d11)
             {
                 return;
             }
@@ -89,11 +89,11 @@ public class MapGenCavesHell extends MapGenBase
             {
                 continue;
             }
-            d8 = MathHelper.floor_double(d - d6) - i * 16 - 1;
+            int d8 = MathHelper.floor_double(d - d6) - i * 16 - 1;
             int k1 = (MathHelper.floor_double(d + d6) - i * 16) + 1;
-            d9 = MathHelper.floor_double(d1 - d7) - 1;
+            int d9 = MathHelper.floor_double(d1 - d7) - 1;
             int l1 = MathHelper.floor_double(d1 + d7) + 1;
-            d10 = MathHelper.floor_double(d2 - d6) - j * 16 - 1;
+            int d10 = MathHelper.floor_double(d2 - d6) - j * 16 - 1;
             int i2 = (MathHelper.floor_double(d2 + d6) - j * 16) + 1;
             if(d8 < 0)
             {
@@ -107,11 +107,9 @@ public class MapGenCavesHell extends MapGenBase
             {
                 d9 = 1;
             }
-            worldObj.getClass();
-            if(l1 > 128 - 8)
+            if(l1 > worldObj.field_35472_c - 8)
             {
-                worldObj.getClass();
-                l1 = 128 - 8;
+                l1 = worldObj.field_35472_c - 8;
             }
             if(d10 < 0)
             {
@@ -122,20 +120,14 @@ public class MapGenCavesHell extends MapGenBase
                 i2 = 16;
             }
             boolean flag2 = false;
-            for(int j2 = (int) d8; !flag2 && j2 < k1; j2++)
+            for(int j2 = d8; !flag2 && j2 < k1; j2++)
             {
-                for(int l2 = (int) d10; !flag2 && l2 < i2; l2++)
+                for(int l2 = d10; !flag2 && l2 < i2; l2++)
                 {
                     for(int i3 = l1 + 1; !flag2 && i3 >= d9 - 1; i3--)
                     {
-                        worldObj.getClass();
-                        int j3 = (j2 * 16 + l2) * 128 + i3;
-                        if(i3 < 0)
-                        {
-                            continue;
-                        }
-                        worldObj.getClass();
-                        if(i3 >= 128)
+                        int j3 = (j2 * 16 + l2) * worldObj.field_35472_c + i3;
+                        if(i3 < 0 || i3 >= worldObj.field_35472_c)
                         {
                             continue;
                         }
@@ -145,7 +137,7 @@ public class MapGenCavesHell extends MapGenBase
                         }
                         if(i3 != d9 - 1 && j2 != d8 && j2 != k1 - 1 && l2 != d10 && l2 != i2 - 1)
                         {
-                            i3 = (int) d9;
+                            i3 = d9;
                         }
                     }
 
@@ -157,14 +149,13 @@ public class MapGenCavesHell extends MapGenBase
             {
                 continue;
             }
-            for(int k2 = (int) d8; k2 < k1; k2++)
+            for(int k2 = d8; k2 < k1; k2++)
             {
                 double d12 = (((double)(k2 + i * 16) + 0.5D) - d) / d6;
-                for(int k3 = (int) d10; k3 < i2; k3++)
+                for(int k3 = d10; k3 < i2; k3++)
                 {
                     double d13 = (((double)(k3 + j * 16) + 0.5D) - d2) / d6;
-                    worldObj.getClass();
-                    int l3 = (k2 * 16 + k3) * 128 + l1;
+                    int l3 = (k2 * 16 + k3) * worldObj.field_35472_c + l1;
                     for(int i4 = l1 - 1; i4 >= d9; i4--)
                     {
                         double d14 = (((double)i4 + 0.5D) - d1) / d7;
@@ -201,8 +192,7 @@ public class MapGenCavesHell extends MapGenBase
         for(int j1 = 0; j1 < i1; j1++)
         {
             double d = i * 16 + rand.nextInt(16);
-            world.getClass();
-            double d1 = rand.nextInt(128);
+            double d1 = rand.nextInt(world.field_35472_c);
             double d2 = j * 16 + rand.nextInt(16);
             int k1 = 1;
             if(rand.nextInt(4) == 0)

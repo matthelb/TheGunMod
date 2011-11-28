@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,12 @@ import java.io.*;
 
 public class Packet26EntityExpOrb extends Packet
 {
+
+    public int entityId;
+    public int posX;
+    public int posY;
+    public int posZ;
+    public int count;
 
     public Packet26EntityExpOrb()
     {
@@ -54,10 +60,4 @@ public class Packet26EntityExpOrb extends Packet
     {
         return 18;
     }
-
-    public int entityId;
-    public int posX;
-    public int posY;
-    public int posZ;
-    public int count;
 }

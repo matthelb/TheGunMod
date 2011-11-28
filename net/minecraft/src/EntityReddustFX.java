@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,8 @@ package net.minecraft.src;
 
 public class EntityReddustFX extends EntityFX
 {
+
+    float reddustParticleScale;
 
     public EntityReddustFX(World world, double d, double d1, double d2, 
             float f, float f1, float f2)
@@ -64,7 +66,7 @@ public class EntityReddustFX extends EntityFX
         {
             setEntityDead();
         }
-        particleTextureIndex = 7 - (particleAge * 8) / particleMaxAge;
+        func_40099_c(7 - (particleAge * 8) / particleMaxAge);
         moveEntity(motionX, motionY, motionZ);
         if(posY == prevPosY)
         {
@@ -80,6 +82,4 @@ public class EntityReddustFX extends EntityFX
             motionZ *= 0.69999998807907104D;
         }
     }
-
-    float reddustParticleScale;
 }

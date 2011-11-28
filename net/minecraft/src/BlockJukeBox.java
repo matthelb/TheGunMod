@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -94,14 +94,14 @@ public class BlockJukeBox extends BlockContainer
         super.onBlockRemoval(world, i, j, k);
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f)
+    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
         if(world.multiplayerWorld)
         {
             return;
         } else
         {
-            super.dropBlockAsItemWithChance(world, i, j, k, l, f);
+            super.dropBlockAsItemWithChance(world, i, j, k, l, f, 0);
             return;
         }
     }

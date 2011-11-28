@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,12 +8,16 @@ import java.util.ArrayList;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, Material, PistonBlockTextures, EntityPlayer, 
+//            Block, Material, Facing, EntityPlayer, 
 //            World, TileEntityPiston, BlockPistonMoving, IBlockAccess, 
-//            MathHelper, BlockPistonExtension, EntityLiving, AxisAlignedBB
+//            MathHelper, BlockContainer, BlockPistonExtension, EntityLiving, 
+//            AxisAlignedBB
 
 public class BlockPistonBase extends Block
 {
+
+    private boolean isSticky;
+    private static boolean ignoreUpdates;
 
     public BlockPistonBase(int i, int j, boolean flag)
     {
@@ -45,7 +49,7 @@ public class BlockPistonBase extends Block
                 return blockIndexInTexture;
             }
         }
-        return i != PistonBlockTextures.field_31057_a[k] ? 108 : 109;
+        return i != Facing.field_31057_a[k] ? 108 : 109;
     }
 
     public int getRenderType()
@@ -67,7 +71,7 @@ public class BlockPistonBase extends Block
     {
         int l = determineOrientation(world, i, j, k, (EntityPlayer)entityliving);
         world.setBlockMetadataWithNotify(i, j, k, l);
-        if(!world.multiplayerWorld)
+        if(!world.multiplayerWorld && !ignoreUpdates)
         {
             updatePistonState(world, i, j, k);
         }
@@ -83,7 +87,7 @@ public class BlockPistonBase extends Block
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if(!world.multiplayerWorld && world.getBlockTileEntity(i, j, k) == null)
+        if(!world.multiplayerWorld && world.getBlockTileEntity(i, j, k) == null && !ignoreUpdates)
         {
             updatePistonState(world, i, j, k);
         }
@@ -172,11 +176,14 @@ public class BlockPistonBase extends Block
             {
                 world.setBlockMetadataWithNotify(i, j, k, j1 | 8);
                 world.playSoundEffect((double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D, "tile.piston.out", 0.5F, world.rand.nextFloat() * 0.25F + 0.6F);
+            } else
+            {
+                world.setBlockMetadata(i, j, k, j1);
             }
         } else
         if(l == 1)
         {
-            TileEntity tileentity = world.getBlockTileEntity(i + PistonBlockTextures.offsetsXForSide[j1], j + PistonBlockTextures.offsetsYForSide[j1], k + PistonBlockTextures.offsetsZForSide[j1]);
+            TileEntity tileentity = world.getBlockTileEntity(i + Facing.offsetsXForSide[j1], j + Facing.offsetsYForSide[j1], k + Facing.offsetsZForSide[j1]);
             if(tileentity != null && (tileentity instanceof TileEntityPiston))
             {
                 ((TileEntityPiston)tileentity).clearPistonTileEntity();
@@ -185,9 +192,9 @@ public class BlockPistonBase extends Block
             world.setBlockTileEntity(i, j, k, BlockPistonMoving.getNewTileEntity(blockID, j1, j1, false, true));
             if(isSticky)
             {
-                int k1 = i + PistonBlockTextures.offsetsXForSide[j1] * 2;
-                int l1 = j + PistonBlockTextures.offsetsYForSide[j1] * 2;
-                int i2 = k + PistonBlockTextures.offsetsZForSide[j1] * 2;
+                int k1 = i + Facing.offsetsXForSide[j1] * 2;
+                int l1 = j + Facing.offsetsYForSide[j1] * 2;
+                int i2 = k + Facing.offsetsZForSide[j1] * 2;
                 int j2 = world.getBlockId(k1, l1, i2);
                 int k2 = world.getBlockMetadata(k1, l1, i2);
                 boolean flag = false;
@@ -208,25 +215,25 @@ public class BlockPistonBase extends Block
                 }
                 if(!flag && j2 > 0 && canPushBlock(j2, world, k1, l1, i2, false) && (Block.blocksList[j2].getMobilityFlag() == 0 || j2 == Block.pistonBase.blockID || j2 == Block.pistonStickyBase.blockID))
                 {
+                    i += Facing.offsetsXForSide[j1];
+                    j += Facing.offsetsYForSide[j1];
+                    k += Facing.offsetsZForSide[j1];
+                    world.setBlockAndMetadata(i, j, k, Block.pistonMoving.blockID, k2);
+                    world.setBlockTileEntity(i, j, k, BlockPistonMoving.getNewTileEntity(j2, k2, j1, false, false));
                     ignoreUpdates = false;
                     world.setBlockWithNotify(k1, l1, i2, 0);
                     ignoreUpdates = true;
-                    i += PistonBlockTextures.offsetsXForSide[j1];
-                    j += PistonBlockTextures.offsetsYForSide[j1];
-                    k += PistonBlockTextures.offsetsZForSide[j1];
-                    world.setBlockAndMetadata(i, j, k, Block.pistonMoving.blockID, k2);
-                    world.setBlockTileEntity(i, j, k, BlockPistonMoving.getNewTileEntity(j2, k2, j1, false, false));
                 } else
                 if(!flag)
                 {
                     ignoreUpdates = false;
-                    world.setBlockWithNotify(i + PistonBlockTextures.offsetsXForSide[j1], j + PistonBlockTextures.offsetsYForSide[j1], k + PistonBlockTextures.offsetsZForSide[j1], 0);
+                    world.setBlockWithNotify(i + Facing.offsetsXForSide[j1], j + Facing.offsetsYForSide[j1], k + Facing.offsetsZForSide[j1], 0);
                     ignoreUpdates = true;
                 }
             } else
             {
                 ignoreUpdates = false;
-                world.setBlockWithNotify(i + PistonBlockTextures.offsetsXForSide[j1], j + PistonBlockTextures.offsetsYForSide[j1], k + PistonBlockTextures.offsetsZForSide[j1], 0);
+                world.setBlockWithNotify(i + Facing.offsetsXForSide[j1], j + Facing.offsetsYForSide[j1], k + Facing.offsetsZForSide[j1], 0);
                 ignoreUpdates = true;
             }
             world.playSoundEffect((double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D, "tile.piston.in", 0.5F, world.rand.nextFloat() * 0.15F + 0.6F);
@@ -354,33 +361,23 @@ public class BlockPistonBase extends Block
                 return false;
             }
         }
-        TileEntity tileentity = world.getBlockTileEntity(j, k, l);
-        return tileentity == null;
+        return !(Block.blocksList[i] instanceof BlockContainer);
     }
 
     private static boolean canExtend(World world, int i, int j, int k, int l)
     {
-        int i1 = i + PistonBlockTextures.offsetsXForSide[l];
-        int j1 = j + PistonBlockTextures.offsetsYForSide[l];
-        int k1 = k + PistonBlockTextures.offsetsZForSide[l];
+        int i1 = i + Facing.offsetsXForSide[l];
+        int j1 = j + Facing.offsetsYForSide[l];
+        int k1 = k + Facing.offsetsZForSide[l];
         int l1 = 0;
-label0:
         do
         {
-label1:
+            if(l1 >= 13)
             {
-                if(l1 >= 13)
-                {
-                    break label0;
-                }
-                if(j1 > 0)
-                {
-                    world.getClass();
-                    if(j1 < 128 - 1)
-                    {
-                        break label1;
-                    }
-                }
+                break;
+            }
+            if(j1 <= 0 || j1 >= world.field_35472_c - 1)
+            {
                 return false;
             }
             int i2 = world.getBlockId(i1, j1, k1);
@@ -400,9 +397,9 @@ label1:
             {
                 return false;
             }
-            i1 += PistonBlockTextures.offsetsXForSide[l];
-            j1 += PistonBlockTextures.offsetsYForSide[l];
-            k1 += PistonBlockTextures.offsetsZForSide[l];
+            i1 += Facing.offsetsXForSide[l];
+            j1 += Facing.offsetsYForSide[l];
+            k1 += Facing.offsetsZForSide[l];
             l1++;
         } while(true);
         return true;
@@ -410,27 +407,18 @@ label1:
 
     private boolean tryExtend(World world, int i, int j, int k, int l)
     {
-        int i1 = i + PistonBlockTextures.offsetsXForSide[l];
-        int j1 = j + PistonBlockTextures.offsetsYForSide[l];
-        int k1 = k + PistonBlockTextures.offsetsZForSide[l];
+        int i1 = i + Facing.offsetsXForSide[l];
+        int j1 = j + Facing.offsetsYForSide[l];
+        int k1 = k + Facing.offsetsZForSide[l];
         int l1 = 0;
-label0:
         do
         {
-label1:
+            if(l1 >= 13)
             {
-                if(l1 >= 13)
-                {
-                    break label0;
-                }
-                if(j1 > 0)
-                {
-                    world.getClass();
-                    if(j1 < 128 - 1)
-                    {
-                        break label1;
-                    }
-                }
+                break;
+            }
+            if(j1 <= 0 || j1 >= world.field_35472_c - 1)
+            {
                 return false;
             }
             int j2 = world.getBlockId(i1, j1, k1);
@@ -444,7 +432,7 @@ label1:
             }
             if(Block.blocksList[j2].getMobilityFlag() == 1)
             {
-                Block.blocksList[j2].dropBlockAsItem(world, i1, j1, k1, world.getBlockMetadata(i1, j1, k1));
+                Block.blocksList[j2].dropBlockAsItem(world, i1, j1, k1, world.getBlockMetadata(i1, j1, k1), 0);
                 world.setBlockWithNotify(i1, j1, k1, 0);
                 break;
             }
@@ -452,17 +440,17 @@ label1:
             {
                 return false;
             }
-            i1 += PistonBlockTextures.offsetsXForSide[l];
-            j1 += PistonBlockTextures.offsetsYForSide[l];
-            k1 += PistonBlockTextures.offsetsZForSide[l];
+            i1 += Facing.offsetsXForSide[l];
+            j1 += Facing.offsetsYForSide[l];
+            k1 += Facing.offsetsZForSide[l];
             l1++;
         } while(true);
         int l2;
         for(; i1 != i || j1 != j || k1 != k; k1 = l2)
         {
-            int i2 = i1 - PistonBlockTextures.offsetsXForSide[l];
-            int k2 = j1 - PistonBlockTextures.offsetsYForSide[l];
-            l2 = k1 - PistonBlockTextures.offsetsZForSide[l];
+            int i2 = i1 - Facing.offsetsXForSide[l];
+            int k2 = j1 - Facing.offsetsYForSide[l];
+            l2 = k1 - Facing.offsetsZForSide[l];
             int i3 = world.getBlockId(i2, k2, l2);
             int j3 = world.getBlockMetadata(i2, k2, l2);
             if(i3 == blockID && i2 == i && k2 == j && l2 == k)
@@ -480,7 +468,4 @@ label1:
 
         return true;
     }
-
-    private boolean isSticky;
-    private boolean ignoreUpdates;
 }

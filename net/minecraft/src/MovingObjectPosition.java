@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,14 @@ package net.minecraft.src;
 
 public class MovingObjectPosition
 {
+
+    public EnumMovingObjectType typeOfHit;
+    public int blockX;
+    public int blockY;
+    public int blockZ;
+    public int sideHit;
+    public Vec3D hitVec;
+    public Entity entityHit;
 
     public MovingObjectPosition(int i, int j, int k, int l, Vec3D vec3d)
     {
@@ -27,12 +35,4 @@ public class MovingObjectPosition
         entityHit = entity;
         hitVec = Vec3D.createVector(entity.posX, entity.posY, entity.posZ);
     }
-
-    public EnumMovingObjectType typeOfHit;
-    public int blockX;
-    public int blockY;
-    public int blockZ;
-    public int sideHit;
-    public Vec3D hitVec;
-    public Entity entityHit;
 }

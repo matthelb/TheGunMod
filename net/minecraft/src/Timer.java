@@ -1,12 +1,23 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 public class Timer
 {
+
+    float ticksPerSecond;
+    private double lastHRTime;
+    public int elapsedTicks;
+    public float renderPartialTicks;
+    public float timerSpeed;
+    public float elapsedPartialTicks;
+    private long lastSyncSysClock;
+    private long lastSyncHRClock;
+    private long field_28132_i;
+    private double timeSyncAdjustment;
 
     public Timer(float f)
     {
@@ -67,15 +78,4 @@ public class Timer
         }
         renderPartialTicks = elapsedPartialTicks;
     }
-
-    float ticksPerSecond;
-    private double lastHRTime;
-    public int elapsedTicks;
-    public float renderPartialTicks;
-    public float timerSpeed;
-    public float elapsedPartialTicks;
-    private long lastSyncSysClock;
-    private long lastSyncHRClock;
-    private long field_28132_i;
-    private double timeSyncAdjustment;
 }

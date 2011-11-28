@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import java.io.*;
 
 public class Packet16BlockItemSwitch extends Packet
 {
+
+    public int id;
 
     public Packet16BlockItemSwitch()
     {
@@ -42,6 +44,4 @@ public class Packet16BlockItemSwitch extends Packet
     {
         return 2;
     }
-
-    public int id;
 }

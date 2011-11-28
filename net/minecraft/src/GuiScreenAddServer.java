@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,11 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiScreenAddServer extends GuiScreen
 {
+
+    private GuiScreen field_35362_a;
+    private GuiTextField field_35360_b;
+    private GuiTextField field_35361_c;
+    private ServerNBTStorage field_35359_d;
 
     public GuiScreenAddServer(GuiScreen guiscreen, ServerNBTStorage servernbtstorage)
     {
@@ -114,9 +119,4 @@ public class GuiScreenAddServer extends GuiScreen
         field_35360_b.drawTextBox();
         super.drawScreen(i, j, f);
     }
-
-    private GuiScreen field_35362_a;
-    private GuiTextField field_35360_b;
-    private GuiTextField field_35361_c;
-    private ServerNBTStorage field_35359_d;
 }

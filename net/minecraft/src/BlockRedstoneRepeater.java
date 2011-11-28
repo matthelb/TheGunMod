@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,14 @@ import java.util.Random;
 
 public class BlockRedstoneRepeater extends Block
 {
+
+    public static final double repeaterTorchOffset[] = {
+        -0.0625D, 0.0625D, 0.1875D, 0.3125D
+    };
+    private static final int repeaterState[] = {
+        1, 2, 3, 4
+    };
+    private final boolean isRepeaterPowered;
 
     protected BlockRedstoneRepeater(int i, boolean flag)
     {
@@ -127,7 +135,7 @@ public class BlockRedstoneRepeater extends Block
     {
         if(!canBlockStay(world, i, j, k))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
             return;
         }
@@ -199,12 +207,21 @@ public class BlockRedstoneRepeater extends Block
         world.notifyBlocksOfNeighborChange(i, j + 1, k, blockID);
     }
 
+    public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
+    {
+        if(isRepeaterPowered)
+        {
+            world.notifyBlocksOfNeighborChange(i, j + 1, k, blockID);
+        }
+        super.onBlockDestroyedByPlayer(world, i, j, k, l);
+    }
+
     public boolean isOpaqueCube()
     {
         return false;
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Item.redstoneRepeater.shiftedIndex;
     }
@@ -265,13 +282,5 @@ public class BlockRedstoneRepeater extends Block
         }
         world.spawnParticle("reddust", d + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
     }
-
-    public static final double repeaterTorchOffset[] = {
-        -0.0625D, 0.0625D, 0.1875D, 0.3125D
-    };
-    private static final int repeaterState[] = {
-        1, 2, 3, 4
-    };
-    private final boolean isRepeaterPowered;
 
 }

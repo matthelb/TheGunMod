@@ -1,13 +1,13 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
 
 // Referenced classes of package net.minecraft.src:
-//            Render, Tessellator, RenderManager, EntityFish, 
+//            Render, Tessellator, RenderManager, EntityFishHook, 
 //            EntityPlayer, MathHelper, Vec3D, GameSettings, 
 //            Entity
 
@@ -18,7 +18,7 @@ public class RenderFish extends Render
     {
     }
 
-    public void doRenderFish(EntityFish entityfish, double d, double d1, double d2, 
+    public void doRenderFish(EntityFishHook entityfishhook, double d, double d1, double d2, 
             float f, float f1)
     {
         GL11.glPushMatrix();
@@ -47,33 +47,33 @@ public class RenderFish extends Render
         tessellator.draw();
         GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
         GL11.glPopMatrix();
-        if(entityfish.angler != null)
+        if(entityfishhook.angler != null)
         {
-            float f9 = ((entityfish.angler.prevRotationYaw + (entityfish.angler.rotationYaw - entityfish.angler.prevRotationYaw) * f1) * 3.141593F) / 180F;
+            float f9 = ((entityfishhook.angler.prevRotationYaw + (entityfishhook.angler.rotationYaw - entityfishhook.angler.prevRotationYaw) * f1) * 3.141593F) / 180F;
             double d3 = MathHelper.sin(f9);
             double d5 = MathHelper.cos(f9);
-            float f11 = entityfish.angler.getSwingProgress(f1);
+            float f11 = entityfishhook.angler.getSwingProgress(f1);
             float f12 = MathHelper.sin(MathHelper.sqrt_float(f11) * 3.141593F);
             Vec3D vec3d = Vec3D.createVector(-0.5D, 0.029999999999999999D, 0.80000000000000004D);
-            vec3d.rotateAroundX((-(entityfish.angler.prevRotationPitch + (entityfish.angler.rotationPitch - entityfish.angler.prevRotationPitch) * f1) * 3.141593F) / 180F);
-            vec3d.rotateAroundY((-(entityfish.angler.prevRotationYaw + (entityfish.angler.rotationYaw - entityfish.angler.prevRotationYaw) * f1) * 3.141593F) / 180F);
+            vec3d.rotateAroundX((-(entityfishhook.angler.prevRotationPitch + (entityfishhook.angler.rotationPitch - entityfishhook.angler.prevRotationPitch) * f1) * 3.141593F) / 180F);
+            vec3d.rotateAroundY((-(entityfishhook.angler.prevRotationYaw + (entityfishhook.angler.rotationYaw - entityfishhook.angler.prevRotationYaw) * f1) * 3.141593F) / 180F);
             vec3d.rotateAroundY(f12 * 0.5F);
             vec3d.rotateAroundX(-f12 * 0.7F);
-            double d7 = entityfish.angler.prevPosX + (entityfish.angler.posX - entityfish.angler.prevPosX) * (double)f1 + vec3d.xCoord;
-            double d8 = entityfish.angler.prevPosY + (entityfish.angler.posY - entityfish.angler.prevPosY) * (double)f1 + vec3d.yCoord;
-            double d9 = entityfish.angler.prevPosZ + (entityfish.angler.posZ - entityfish.angler.prevPosZ) * (double)f1 + vec3d.zCoord;
-            if(renderManager.options.thirdPersonView)
+            double d7 = entityfishhook.angler.prevPosX + (entityfishhook.angler.posX - entityfishhook.angler.prevPosX) * (double)f1 + vec3d.xCoord;
+            double d8 = entityfishhook.angler.prevPosY + (entityfishhook.angler.posY - entityfishhook.angler.prevPosY) * (double)f1 + vec3d.yCoord;
+            double d9 = entityfishhook.angler.prevPosZ + (entityfishhook.angler.posZ - entityfishhook.angler.prevPosZ) * (double)f1 + vec3d.zCoord;
+            if(renderManager.options.thirdPersonView > 0)
             {
-                float f10 = ((entityfish.angler.prevRenderYawOffset + (entityfish.angler.renderYawOffset - entityfish.angler.prevRenderYawOffset) * f1) * 3.141593F) / 180F;
+                float f10 = ((entityfishhook.angler.prevRenderYawOffset + (entityfishhook.angler.renderYawOffset - entityfishhook.angler.prevRenderYawOffset) * f1) * 3.141593F) / 180F;
                 double d4 = MathHelper.sin(f10);
                 double d6 = MathHelper.cos(f10);
-                d7 = (entityfish.angler.prevPosX + (entityfish.angler.posX - entityfish.angler.prevPosX) * (double)f1) - d6 * 0.34999999999999998D - d4 * 0.84999999999999998D;
-                d8 = (entityfish.angler.prevPosY + (entityfish.angler.posY - entityfish.angler.prevPosY) * (double)f1) - 0.45000000000000001D;
-                d9 = ((entityfish.angler.prevPosZ + (entityfish.angler.posZ - entityfish.angler.prevPosZ) * (double)f1) - d4 * 0.34999999999999998D) + d6 * 0.84999999999999998D;
+                d7 = (entityfishhook.angler.prevPosX + (entityfishhook.angler.posX - entityfishhook.angler.prevPosX) * (double)f1) - d6 * 0.34999999999999998D - d4 * 0.84999999999999998D;
+                d8 = (entityfishhook.angler.prevPosY + (entityfishhook.angler.posY - entityfishhook.angler.prevPosY) * (double)f1) - 0.45000000000000001D;
+                d9 = ((entityfishhook.angler.prevPosZ + (entityfishhook.angler.posZ - entityfishhook.angler.prevPosZ) * (double)f1) - d4 * 0.34999999999999998D) + d6 * 0.84999999999999998D;
             }
-            double d10 = entityfish.prevPosX + (entityfish.posX - entityfish.prevPosX) * (double)f1;
-            double d11 = entityfish.prevPosY + (entityfish.posY - entityfish.prevPosY) * (double)f1 + 0.25D;
-            double d12 = entityfish.prevPosZ + (entityfish.posZ - entityfish.prevPosZ) * (double)f1;
+            double d10 = entityfishhook.prevPosX + (entityfishhook.posX - entityfishhook.prevPosX) * (double)f1;
+            double d11 = entityfishhook.prevPosY + (entityfishhook.posY - entityfishhook.prevPosY) * (double)f1 + 0.25D;
+            double d12 = entityfishhook.prevPosZ + (entityfishhook.posZ - entityfishhook.prevPosZ) * (double)f1;
             double d13 = (float)(d7 - d10);
             double d14 = (float)(d8 - d11);
             double d15 = (float)(d9 - d12);
@@ -97,6 +97,6 @@ public class RenderFish extends Render
     public void doRender(Entity entity, double d, double d1, double d2, 
             float f, float f1)
     {
-        doRenderFish((EntityFish)entity, d, d1, d2, f, f1);
+        doRenderFish((EntityFishHook)entity, d, d1, d2, f, f1);
     }
 }

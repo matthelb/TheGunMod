@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,16 @@ import java.io.*;
 
 public class Packet23VehicleSpawn extends Packet
 {
+
+    public int entityId;
+    public int xPosition;
+    public int yPosition;
+    public int zPosition;
+    public int field_28047_e;
+    public int field_28046_f;
+    public int field_28045_g;
+    public int type;
+    public int field_28044_i;
 
     public Packet23VehicleSpawn()
     {
@@ -59,14 +69,4 @@ public class Packet23VehicleSpawn extends Packet
     {
         return 21 + field_28044_i <= 0 ? 0 : 6;
     }
-
-    public int entityId;
-    public int xPosition;
-    public int yPosition;
-    public int zPosition;
-    public int field_28047_e;
-    public int field_28046_f;
-    public int field_28045_g;
-    public int type;
-    public int field_28044_i;
 }

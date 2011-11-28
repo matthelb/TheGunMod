@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.*;
 
 public class ComponentMineshaftRoom extends StructureComponent
 {
+
+    private LinkedList field_35065_a;
 
     public ComponentMineshaftRoom(int i, Random random, int j, int k)
     {
@@ -107,6 +109,4 @@ public class ComponentMineshaftRoom extends StructureComponent
         randomlyRareFillWithBlocks(world, structureboundingbox, boundingBox.minX, boundingBox.minY + 4, boundingBox.minZ, boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ, 0, false);
         return true;
     }
-
-    private LinkedList field_35065_a;
 }

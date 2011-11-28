@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,14 +12,18 @@ import java.io.*;
 public class NBTTagString extends NBTBase
 {
 
-    public NBTTagString()
-    {
-    }
+    public String stringValue;
 
     public NBTTagString(String s)
     {
-        stringValue = s;
-        if(s == null)
+        super(s);
+    }
+
+    public NBTTagString(String s, String s1)
+    {
+        super(s);
+        stringValue = s1;
+        if(s1 == null)
         {
             throw new IllegalArgumentException("Empty string not allowed");
         } else
@@ -50,5 +54,20 @@ public class NBTTagString extends NBTBase
         return (new StringBuilder()).append("").append(stringValue).toString();
     }
 
-    public String stringValue;
+    public NBTBase func_40195_b()
+    {
+        return new NBTTagString(getKey(), stringValue);
+    }
+
+    public boolean equals(Object obj)
+    {
+        if(super.equals(obj))
+        {
+            NBTTagString nbttagstring = (NBTTagString)obj;
+            return stringValue == null && nbttagstring.stringValue == null || stringValue != null && stringValue.equals(nbttagstring.stringValue);
+        } else
+        {
+            return false;
+        }
+    }
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -21,7 +21,7 @@ public class CompressedStreamTools
     public static NBTTagCompound loadGzippedCompoundFromOutputStream(InputStream inputstream)
         throws IOException
     {
-        DataInputStream datainputstream = new DataInputStream(new GZIPInputStream(inputstream));
+        DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(inputstream)));
         try
         {
             NBTTagCompound nbttagcompound = func_1141_a(datainputstream);
@@ -39,12 +39,43 @@ public class CompressedStreamTools
         DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(outputstream));
         try
         {
-            func_1139_a(nbttagcompound, dataoutputstream);
+            writeTo(nbttagcompound, dataoutputstream);
         }
         finally
         {
             dataoutputstream.close();
         }
+    }
+
+    public static NBTTagCompound func_40592_a(byte abyte0[])
+        throws IOException
+    {
+        DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(abyte0))));
+        try
+        {
+            NBTTagCompound nbttagcompound = func_1141_a(datainputstream);
+            return nbttagcompound;
+        }
+        finally
+        {
+            datainputstream.close();
+        }
+    }
+
+    public static byte[] func_40591_a(NBTTagCompound nbttagcompound)
+        throws IOException
+    {
+        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+        DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(bytearrayoutputstream));
+        try
+        {
+            writeTo(nbttagcompound, dataoutputstream);
+        }
+        finally
+        {
+            dataoutputstream.close();
+        }
+        return bytearrayoutputstream.toByteArray();
     }
 
     public static void func_35621_a(NBTTagCompound nbttagcompound, File file)
@@ -76,7 +107,7 @@ public class CompressedStreamTools
         DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(file));
         try
         {
-            func_1139_a(nbttagcompound, dataoutputstream);
+            writeTo(nbttagcompound, dataoutputstream);
         }
         finally
         {
@@ -116,7 +147,7 @@ public class CompressedStreamTools
         }
     }
 
-    public static void func_1139_a(NBTTagCompound nbttagcompound, DataOutput dataoutput)
+    public static void writeTo(NBTTagCompound nbttagcompound, DataOutput dataoutput)
         throws IOException
     {
         NBTBase.writeTag(nbttagcompound, dataoutput);

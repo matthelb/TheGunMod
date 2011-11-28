@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,10 +8,42 @@ import java.nio.*;
 import org.lwjgl.opengl.*;
 
 // Referenced classes of package net.minecraft.src:
-//            GLAllocation
+//            GLAllocation, OpenGlHelper
 
 public class Tessellator
 {
+
+    private static boolean convertQuadsToTriangles = false;
+    private static boolean tryVBO = false;
+    private ByteBuffer byteBuffer;
+    private IntBuffer intBuffer;
+    private FloatBuffer floatBuffer;
+    private ShortBuffer shortBuffer;
+    private int rawBuffer[];
+    private int vertexCount;
+    private double textureU;
+    private double textureV;
+    private int brightness;
+    private int color;
+    private boolean hasColor;
+    private boolean hasTexture;
+    private boolean hasBrightness;
+    private boolean hasNormals;
+    private int rawBufferIndex;
+    private int addedVertices;
+    private boolean isColorDisabled;
+    private int drawMode;
+    private double xOffset;
+    private double yOffset;
+    private double zOffset;
+    private int normal;
+    public static final Tessellator instance = new Tessellator(0x200000);
+    private boolean isDrawing;
+    private boolean useVBO;
+    private IntBuffer vertexBuffers;
+    private int vboIndex;
+    private int vboCount;
+    private int bufferSize;
 
     private Tessellator(int i)
     {
@@ -41,7 +73,7 @@ public class Tessellator
         }
     }
 
-    public void draw()
+    public int draw()
     {
         if(!isDrawing)
         {
@@ -74,17 +106,17 @@ public class Tessellator
             }
             if(hasBrightness)
             {
-                GL13.glClientActiveTexture(33985 /*GL_TEXTURE1_ARB*/);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapEnabled);
                 if(useVBO)
                 {
-                    GL11.glTexCoordPointer(2, 5122 /*GL_SHORT*/, 32, 24L);
+                    GL11.glTexCoordPointer(2, 5122 /*GL_SHORT*/, 32, 28L);
                 } else
                 {
                     shortBuffer.position(14);
                     GL11.glTexCoordPointer(2, 32, shortBuffer);
                 }
                 GL11.glEnableClientState(32888 /*GL_TEXTURE_COORD_ARRAY_EXT*/);
-                GL13.glClientActiveTexture(33984 /*GL_TEXTURE0_ARB*/);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapDisabled);
             }
             if(hasColor)
             {
@@ -133,9 +165,9 @@ public class Tessellator
             }
             if(hasBrightness)
             {
-                GL13.glClientActiveTexture(33985 /*GL_TEXTURE1_ARB*/);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapEnabled);
                 GL11.glDisableClientState(32888 /*GL_TEXTURE_COORD_ARRAY_EXT*/);
-                GL13.glClientActiveTexture(33984 /*GL_TEXTURE0_ARB*/);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapDisabled);
             }
             if(hasColor)
             {
@@ -146,7 +178,9 @@ public class Tessellator
                 GL11.glDisableClientState(32885 /*GL_NORMAL_ARRAY_EXT*/);
             }
         }
+        int i = rawBufferIndex * 4;
         reset();
+        return i;
     }
 
     private void reset()
@@ -364,37 +398,5 @@ public class Tessellator
         yOffset += f1;
         zOffset += f2;
     }
-
-    private static boolean convertQuadsToTriangles = false;
-    private static boolean tryVBO = false;
-    private ByteBuffer byteBuffer;
-    private IntBuffer intBuffer;
-    private FloatBuffer floatBuffer;
-    private ShortBuffer shortBuffer;
-    private int rawBuffer[];
-    private int vertexCount;
-    private double textureU;
-    private double textureV;
-    private int brightness;
-    private int color;
-    private boolean hasColor;
-    private boolean hasTexture;
-    private boolean hasBrightness;
-    private boolean hasNormals;
-    private int rawBufferIndex;
-    private int addedVertices;
-    private boolean isColorDisabled;
-    private int drawMode;
-    private double xOffset;
-    private double yOffset;
-    private double zOffset;
-    private int normal;
-    public static final Tessellator instance = new Tessellator(0x200000);
-    private boolean isDrawing;
-    private boolean useVBO;
-    private IntBuffer vertexBuffers;
-    private int vboIndex;
-    private int vboCount;
-    private int bufferSize;
 
 }

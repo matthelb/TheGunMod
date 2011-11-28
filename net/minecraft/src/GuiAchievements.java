@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -18,6 +18,23 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiAchievements extends GuiScreen
 {
+
+    private static final int guiMapTop;
+    private static final int guiMapLeft;
+    private static final int guiMapBottom;
+    private static final int guiMapRight;
+    protected int achievementsPaneWidth;
+    protected int achievementsPaneHeight;
+    protected int mouseX;
+    protected int mouseY;
+    protected double field_27116_m;
+    protected double field_27115_n;
+    protected double guiMapX;
+    protected double guiMapY;
+    protected double field_27112_q;
+    protected double field_27111_r;
+    private int isMouseButtonDown;
+    private StatFileWriter statFileWriter;
 
     public GuiAchievements(StatFileWriter statfilewriter)
     {
@@ -257,10 +274,7 @@ public class GuiAchievements extends GuiScreen
 
         Achievement achievement = null;
         RenderItem renderitem = new RenderItem();
-        GL11.glPushMatrix();
-        GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
-        RenderHelper.enableStandardItemLighting();
-        GL11.glPopMatrix();
+        RenderHelper.func_41089_c();
         GL11.glDisable(2896 /*GL_LIGHTING*/);
         GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
         GL11.glEnable(2903 /*GL_COLOR_MATERIAL*/);
@@ -371,23 +385,6 @@ public class GuiAchievements extends GuiScreen
     {
         return true;
     }
-
-    private static final int guiMapTop;
-    private static final int guiMapLeft;
-    private static final int guiMapBottom;
-    private static final int guiMapRight;
-    protected int achievementsPaneWidth;
-    protected int achievementsPaneHeight;
-    protected int mouseX;
-    protected int mouseY;
-    protected double field_27116_m;
-    protected double field_27115_n;
-    protected double guiMapX;
-    protected double guiMapY;
-    protected double field_27112_q;
-    protected double field_27111_r;
-    private int isMouseButtonDown;
-    private StatFileWriter statFileWriter;
 
     static 
     {

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,11 @@ package net.minecraft.src;
 public class Frustrum
     implements ICamera
 {
+
+    private ClippingHelper clippingHelper;
+    private double xPosition;
+    private double yPosition;
+    private double zPosition;
 
     public Frustrum()
     {
@@ -33,9 +38,4 @@ public class Frustrum
     {
         return isBoxInFrustum(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.maxX, axisalignedbb.maxY, axisalignedbb.maxZ);
     }
-
-    private ClippingHelper clippingHelper;
-    private double xPosition;
-    private double yPosition;
-    private double zPosition;
 }

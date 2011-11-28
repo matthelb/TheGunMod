@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,44 @@ package net.minecraft.src;
 
 public class ModelSilverfish extends ModelBase
 {
+
+    private ModelRenderer silverfishBodyParts[];
+    private ModelRenderer silverfishWings[];
+    private float field_35399_c[];
+    private static final int silverfishBoxLength[][] = {
+        {
+            3, 2, 2
+        }, {
+            4, 3, 2
+        }, {
+            6, 4, 3
+        }, {
+            3, 3, 3
+        }, {
+            2, 2, 3
+        }, {
+            2, 1, 2
+        }, {
+            1, 1, 2
+        }
+    };
+    private static final int silverfishTexturePositions[][] = {
+        {
+            0, 0
+        }, {
+            0, 4
+        }, {
+            0, 9
+        }, {
+            0, 16
+        }, {
+            0, 22
+        }, {
+            11, 0
+        }, {
+            13, 4
+        }
+    };
 
     public ModelSilverfish()
     {
@@ -74,43 +112,5 @@ public class ModelSilverfish extends ModelBase
         silverfishWings[2].rotateAngleY = silverfishBodyParts[1].rotateAngleY;
         silverfishWings[2].rotationPointX = silverfishBodyParts[1].rotationPointX;
     }
-
-    private ModelRenderer silverfishBodyParts[];
-    private ModelRenderer silverfishWings[];
-    private float field_35399_c[];
-    private static final int silverfishBoxLength[][] = {
-        {
-            3, 2, 2
-        }, {
-            4, 3, 2
-        }, {
-            6, 4, 3
-        }, {
-            3, 3, 3
-        }, {
-            2, 2, 3
-        }, {
-            2, 1, 2
-        }, {
-            1, 1, 2
-        }
-    };
-    private static final int silverfishTexturePositions[][] = {
-        {
-            0, 0
-        }, {
-            0, 4
-        }, {
-            0, 9
-        }, {
-            0, 16
-        }, {
-            0, 22
-        }, {
-            11, 0
-        }, {
-            13, 4
-        }
-    };
 
 }

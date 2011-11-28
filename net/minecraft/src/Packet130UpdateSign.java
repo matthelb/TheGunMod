@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,11 @@ import java.io.*;
 
 public class Packet130UpdateSign extends Packet
 {
+
+    public int xPosition;
+    public int yPosition;
+    public int zPosition;
+    public String signLines[];
 
     public Packet130UpdateSign()
     {
@@ -68,9 +73,4 @@ public class Packet130UpdateSign extends Packet
 
         return i;
     }
-
-    public int xPosition;
-    public int yPosition;
-    public int zPosition;
-    public String signLines[];
 }

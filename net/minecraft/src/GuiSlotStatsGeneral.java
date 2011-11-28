@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.List;
 
 class GuiSlotStatsGeneral extends GuiSlot
 {
+
+    final GuiStats field_27276_a; /* synthetic field */
 
     public GuiSlotStatsGeneral(GuiStats guistats)
     {
@@ -51,6 +53,4 @@ class GuiSlotStatsGeneral extends GuiSlot
         String s = statbase.func_27084_a(GuiStats.getStatsFileWriter(field_27276_a).writeStat(statbase));
         field_27276_a.drawString(GuiStats.getFontRenderer2(field_27276_a), s, (j + 2 + 213) - GuiStats.getFontRenderer3(field_27276_a).getStringWidth(s), k + 1, i % 2 != 0 ? 0x909090 : 0xffffff);
     }
-
-    final GuiStats field_27276_a; /* synthetic field */
 }

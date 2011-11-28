@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -71,7 +71,7 @@ public class BlockSnow extends Block
     {
         if(!canPlaceBlockAt(world, i, j, k))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
             return false;
         } else
@@ -94,7 +94,7 @@ public class BlockSnow extends Block
         entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Item.snowball.shiftedIndex;
     }
@@ -108,7 +108,7 @@ public class BlockSnow extends Block
     {
         if(world.getSavedLightValue(EnumSkyBlock.Block, i, j, k) > 11)
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
         }
     }

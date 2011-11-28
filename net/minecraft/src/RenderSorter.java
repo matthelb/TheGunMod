@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.Comparator;
 public class RenderSorter
     implements Comparator
 {
+
+    private EntityLiving baseEntity;
 
     public RenderSorter(EntityLiving entityliving)
     {
@@ -49,6 +51,4 @@ public class RenderSorter
     {
         return doCompare((WorldRenderer)obj, (WorldRenderer)obj1);
     }
-
-    private EntityLiving baseEntity;
 }

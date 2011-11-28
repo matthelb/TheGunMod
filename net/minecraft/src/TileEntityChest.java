@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,17 @@ import java.util.Random;
 public class TileEntityChest extends TileEntity
     implements IInventory
 {
+
+    private ItemStack chestContents[];
+    public boolean field_35155_a;
+    public TileEntityChest field_35152_b;
+    public TileEntityChest field_35153_c;
+    public TileEntityChest field_35150_d;
+    public TileEntityChest field_35151_e;
+    public float field_35148_f;
+    public float field_35149_g;
+    public int field_35156_h;
+    private int field_35154_q;
 
     public TileEntityChest()
     {
@@ -109,7 +120,7 @@ public class TileEntityChest extends TileEntity
         return 64;
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
         if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
         {
@@ -182,19 +193,20 @@ public class TileEntityChest extends TileEntity
         if(field_35156_h > 0 && field_35148_f == 0.0F && field_35152_b == null && field_35150_d == null)
         {
             double d = (double)xCoord + 0.5D;
-            double d2 = (double)zCoord + 0.5D;
+            double d1 = (double)zCoord + 0.5D;
             if(field_35151_e != null)
             {
-                d2 += 0.5D;
+                d1 += 0.5D;
             }
             if(field_35153_c != null)
             {
                 d += 0.5D;
             }
-            worldObj.playSoundEffect(d, (double)yCoord + 0.5D, d2, "random.door_open", 1.0F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
+            worldObj.playSoundEffect(d, (double)yCoord + 0.5D, d1, "random.chestopen", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
         if(field_35156_h == 0 && field_35148_f > 0.0F || field_35156_h > 0 && field_35148_f < 1.0F)
         {
+            float f1 = field_35148_f;
             if(field_35156_h > 0)
             {
                 field_35148_f += f;
@@ -206,23 +218,24 @@ public class TileEntityChest extends TileEntity
             {
                 field_35148_f = 1.0F;
             }
+            float f2 = 0.5F;
+            if(field_35148_f < f2 && f1 >= f2 && field_35152_b == null && field_35150_d == null)
+            {
+                double d2 = (double)xCoord + 0.5D;
+                double d3 = (double)zCoord + 0.5D;
+                if(field_35151_e != null)
+                {
+                    d3 += 0.5D;
+                }
+                if(field_35153_c != null)
+                {
+                    d2 += 0.5D;
+                }
+                worldObj.playSoundEffect(d2, (double)yCoord + 0.5D, d3, "random.chestclosed", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
+            }
             if(field_35148_f < 0.0F)
             {
                 field_35148_f = 0.0F;
-                if(field_35152_b == null && field_35150_d == null)
-                {
-                    double d1 = (double)xCoord + 0.5D;
-                    double d3 = (double)zCoord + 0.5D;
-                    if(field_35151_e != null)
-                    {
-                        d3 += 0.5D;
-                    }
-                    if(field_35153_c != null)
-                    {
-                        d1 += 0.5D;
-                    }
-                    worldObj.playSoundEffect(d1, (double)yCoord + 0.5D, d3, "random.door_close", 1.0F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
-                }
             }
         }
     }
@@ -253,15 +266,4 @@ public class TileEntityChest extends TileEntity
         func_35147_g();
         super.invalidate();
     }
-
-    private ItemStack chestContents[];
-    public boolean field_35155_a;
-    public TileEntityChest field_35152_b;
-    public TileEntityChest field_35153_c;
-    public TileEntityChest field_35150_d;
-    public TileEntityChest field_35151_e;
-    public float field_35148_f;
-    public float field_35149_g;
-    public int field_35156_h;
-    private int field_35154_q;
 }

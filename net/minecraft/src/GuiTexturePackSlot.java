@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL11;
 
 class GuiTexturePackSlot extends GuiSlot
 {
+
+    final GuiTexturePacks parentTexturePackGui; /* synthetic field */
 
     public GuiTexturePackSlot(GuiTexturePacks guitexturepacks)
     {
@@ -74,6 +76,4 @@ class GuiTexturePackSlot extends GuiSlot
         parentTexturePackGui.drawString(GuiTexturePacks.func_22120_k(parentTexturePackGui), texturepackbase.firstDescriptionLine, j + 32 + 2, k + 12, 0x808080);
         parentTexturePackGui.drawString(GuiTexturePacks.func_22125_l(parentTexturePackGui), texturepackbase.secondDescriptionLine, j + 32 + 2, k + 12 + 10, 0x808080);
     }
-
-    final GuiTexturePacks parentTexturePackGui; /* synthetic field */
 }

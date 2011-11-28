@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,18 @@ package net.minecraft.src;
 
 public class GuiTextField extends Gui
 {
+
+    private final FontRenderer fontRenderer;
+    private final int xPos;
+    private final int yPos;
+    private final int width;
+    private final int height;
+    private String text;
+    private int maxStringLength;
+    private int cursorCounter;
+    public boolean isFocused;
+    public boolean isEnabled;
+    private GuiScreen parentGuiScreen;
 
     public GuiTextField(GuiScreen guiscreen, FontRenderer fontrenderer, int i, int j, int k, int l, String s)
     {
@@ -39,38 +51,44 @@ public class GuiTextField extends Gui
         cursorCounter++;
     }
 
-    public void textboxKeyTyped(char var1, int var2) {
-        if(this.isEnabled && this.isFocused) {
-           if(var1 == 9) {
-              this.parentGuiScreen.selectNextField();
-           }
-
-           if(var1 == 22) {
-              String var3 = GuiScreen.getClipboardString();
-              if(var3 == null) {
-                 var3 = "";
-              }
-
-              int var4 = 32 - this.text.length();
-              if(var4 > var3.length()) {
-                 var4 = var3.length();
-              }
-
-              if(var4 > 0) {
-                 this.text = this.text + var3.substring(0, var4);
-              }
-           }
-
-           if(var2 == 14 && this.text.length() > 0) {
-              this.text = this.text.substring(0, this.text.length() - 1);
-           }
-
-           if(ChatAllowedCharacters.allowedCharacters.indexOf(var1) >= 0 && (this.text.length() < this.maxStringLength || this.maxStringLength == 0)) {
-              this.text = this.text + var1;
-           }
-
+    public void textboxKeyTyped(char c, int i)
+    {
+        if(!isEnabled || !isFocused)
+        {
+            return;
         }
-     }
+        if(c == '\t')
+        {
+            parentGuiScreen.selectNextField();
+        }
+        if(c == '\026')
+        {
+            String s;
+            int j;
+            s = GuiScreen.getClipboardString();
+            if(s == null)
+            {
+                s = "";
+            }
+            j = 32 - text.length();
+            if(j > s.length())
+            {
+                j = s.length();
+            }
+            if(j > 0)
+            {
+                text += s.substring(0, j);
+            }
+        }
+        if(i == 14 && text.length() > 0)
+        {
+            text = text.substring(0, text.length() - 1);
+        }
+        if(ChatAllowedCharacters.allowedCharacters.indexOf(c) >= 0 && (text.length() < maxStringLength || maxStringLength == 0))
+        {
+            text += c;
+        }
+    }
 
     public void mouseClicked(int i, int j, int k)
     {
@@ -105,16 +123,4 @@ public class GuiTextField extends Gui
     {
         maxStringLength = i;
     }
-
-    private final FontRenderer fontRenderer;
-    private final int xPos;
-    private final int yPos;
-    private final int width;
-    private final int height;
-    private String text;
-    private int maxStringLength;
-    private int cursorCounter;
-    public boolean isFocused;
-    public boolean isEnabled;
-    private GuiScreen parentGuiScreen;
 }

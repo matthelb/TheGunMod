@@ -1,13 +1,13 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            BlockContainer, Material, Block, World, 
-//            TileEntityNote, EntityPlayer, TileEntity
+//            BlockContainer, Material, World, TileEntityNote, 
+//            EntityPlayer, TileEntity
 
 public class BlockNote extends BlockContainer
 {
@@ -24,9 +24,9 @@ public class BlockNote extends BlockContainer
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if(l > 0 && Block.blocksList[l].canProvidePower())
+        if(l > 0)
         {
-            boolean flag = world.isBlockGettingPowered(i, j, k);
+            boolean flag = world.isBlockIndirectlyGettingPowered(i, j, k);
             TileEntityNote tileentitynote = (TileEntityNote)world.getBlockTileEntity(i, j, k);
             if(tileentitynote != null && tileentitynote.previousRedstoneState != flag)
             {

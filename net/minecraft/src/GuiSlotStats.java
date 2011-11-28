@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,13 @@ import org.lwjgl.input.Mouse;
 
 abstract class GuiSlotStats extends GuiSlot
 {
+
+    protected int field_27268_b;
+    protected List field_27273_c;
+    protected Comparator field_27272_d;
+    protected int field_27271_e;
+    protected int field_27270_f;
+    final GuiStats field_27269_g; /* synthetic field */
 
     protected GuiSlotStats(GuiStats guistats)
     {
@@ -216,11 +223,4 @@ abstract class GuiSlotStats extends GuiSlot
         }
         Collections.sort(field_27273_c, field_27272_d);
     }
-
-    protected int field_27268_b;
-    protected List field_27273_c;
-    protected Comparator field_27272_d;
-    protected int field_27271_e;
-    protected int field_27270_f;
-    final GuiStats field_27269_g; /* synthetic field */
 }

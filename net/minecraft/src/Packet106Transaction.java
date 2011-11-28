@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,10 @@ import java.io.*;
 
 public class Packet106Transaction extends Packet
 {
+
+    public int windowId;
+    public short shortWindowId;
+    public boolean accepted;
 
     public Packet106Transaction()
     {
@@ -48,8 +52,4 @@ public class Packet106Transaction extends Packet
     {
         return 4;
     }
-
-    public int windowId;
-    public short shortWindowId;
-    public boolean accepted;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,13 @@ import java.util.*;
 
 public class EntityPainting extends Entity
 {
+
+    private int tickCounter1;
+    public int direction;
+    public int xPosition;
+    public int yPosition;
+    public int zPosition;
+    public EnumArt art;
 
     public EntityPainting(World world)
     {
@@ -288,11 +295,4 @@ public class EntityPainting extends Entity
             worldObj.entityJoinedWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
         }
     }
-
-    private int tickCounter1;
-    public int direction;
-    public int xPosition;
-    public int yPosition;
-    public int zPosition;
-    public EnumArt art;
 }

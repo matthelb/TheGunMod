@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -16,6 +16,11 @@ import org.lwjgl.opengl.GL11;
 
 public class TexturePackCustom extends TexturePackBase
 {
+
+    private ZipFile texturePackZipFile;
+    private int texturePackName;
+    private BufferedImage texturePackThumbnail;
+    private File texturePackFile;
 
     public TexturePackCustom(File file)
     {
@@ -135,9 +140,4 @@ public class TexturePackCustom extends TexturePackBase
         catch(Exception exception) { }
         return (net.minecraft.src.TexturePackBase.class).getResourceAsStream(s);
     }
-
-    private ZipFile texturePackZipFile;
-    private int texturePackName;
-    private BufferedImage texturePackThumbnail;
-    private File texturePackFile;
 }

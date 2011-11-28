@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,8 @@ import java.util.Random;
 
 public class ComponentVillagePathGen extends ComponentVillageRoadPiece
 {
+
+    private int field_35088_a;
 
     public ComponentVillagePathGen(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -120,6 +122,4 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
 
         return true;
     }
-
-    private int field_35088_a;
 }

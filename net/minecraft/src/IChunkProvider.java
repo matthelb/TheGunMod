@@ -1,12 +1,14 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
+import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
-//            Chunk, IProgressUpdate
+//            Chunk, IProgressUpdate, EnumCreatureType, World, 
+//            ChunkPosition
 
 public interface IChunkProvider
 {
@@ -26,4 +28,8 @@ public interface IChunkProvider
     public abstract boolean canSave();
 
     public abstract String makeString();
+
+    public abstract List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k);
+
+    public abstract ChunkPosition func_40376_a(World world, String s, int i, int j, int k);
 }

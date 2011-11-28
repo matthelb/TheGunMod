@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,26 +8,34 @@ import java.io.*;
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            MCHash, PacketCounter, Packet0KeepAlive, Packet1Login, 
-//            Packet2Handshake, Packet3Chat, Packet4UpdateTime, Packet5PlayerInventory, 
-//            Packet6SpawnPosition, Packet7UseEntity, Packet8UpdateHealth, Packet9Respawn, 
-//            Packet10Flying, Packet11PlayerPosition, Packet12PlayerLook, Packet13PlayerLookMove, 
-//            Packet14BlockDig, Packet15Place, Packet16BlockItemSwitch, Packet17Sleep, 
-//            Packet18Animation, Packet19EntityAction, Packet20NamedEntitySpawn, Packet21PickupSpawn, 
-//            Packet22Collect, Packet23VehicleSpawn, Packet24MobSpawn, Packet25EntityPainting, 
-//            Packet26EntityExpOrb, Packet27Position, Packet28EntityVelocity, Packet29DestroyEntity, 
-//            Packet30Entity, Packet31RelEntityMove, Packet32EntityLook, Packet33RelEntityMoveLook, 
-//            Packet34EntityTeleport, Packet38EntityStatus, Packet39AttachEntity, Packet40EntityMetadata, 
-//            Packet41EntityEffect, Packet42RemoveEntityEffect, Packet43Experience, Packet50PreChunk, 
-//            Packet51MapChunk, Packet52MultiBlockChange, Packet53BlockChange, Packet54PlayNoteBlock, 
-//            Packet60Explosion, Packet61DoorChange, Packet70Bed, Packet71Weather, 
-//            Packet100OpenWindow, Packet101CloseWindow, Packet102WindowClick, Packet103SetSlot, 
-//            Packet104WindowItems, Packet105UpdateProgressbar, Packet106Transaction, Packet107CreativeSetSlot, 
+//            IntHashMap, PacketCount, ItemStack, Item, 
+//            CompressedStreamTools, Packet0KeepAlive, Packet1Login, Packet2Handshake, 
+//            Packet3Chat, Packet4UpdateTime, Packet5PlayerInventory, Packet6SpawnPosition, 
+//            Packet7UseEntity, Packet8UpdateHealth, Packet9Respawn, Packet10Flying, 
+//            Packet11PlayerPosition, Packet12PlayerLook, Packet13PlayerLookMove, Packet14BlockDig, 
+//            Packet15Place, Packet16BlockItemSwitch, Packet17Sleep, Packet18Animation, 
+//            Packet19EntityAction, Packet20NamedEntitySpawn, Packet21PickupSpawn, Packet22Collect, 
+//            Packet23VehicleSpawn, Packet24MobSpawn, Packet25EntityPainting, Packet26EntityExpOrb, 
+//            Packet27Position, Packet28EntityVelocity, Packet29DestroyEntity, Packet30Entity, 
+//            Packet31RelEntityMove, Packet32EntityLook, Packet33RelEntityMoveLook, Packet34EntityTeleport, 
+//            Packet38EntityStatus, Packet39AttachEntity, Packet40EntityMetadata, Packet41EntityEffect, 
+//            Packet42RemoveEntityEffect, Packet43Experience, Packet50PreChunk, Packet51MapChunk, 
+//            Packet52MultiBlockChange, Packet53BlockChange, Packet54PlayNoteBlock, Packet60Explosion, 
+//            Packet61DoorChange, Packet70Bed, Packet71Weather, Packet100OpenWindow, 
+//            Packet101CloseWindow, Packet102WindowClick, Packet103SetSlot, Packet104WindowItems, 
+//            Packet105UpdateProgressbar, Packet106Transaction, Packet107CreativeSetSlot, Packet108EnchantItem, 
 //            Packet130UpdateSign, Packet131MapData, Packet200Statistic, Packet201PlayerInfo, 
-//            Packet254ServerPing, Packet255KickDisconnect, NetHandler
+//            Packet254ServerPing, Packet255KickDisconnect, NetHandler, NBTTagCompound
 
 public abstract class Packet
 {
+
+    public static IntHashMap packetIdToClassMap = new IntHashMap();
+    private static Map packetClassToIdMap = new HashMap();
+    private static Set clientPacketIdList = new HashSet();
+    private static Set serverPacketIdList = new HashSet();
+    public final long creationTimeMillis = System.currentTimeMillis();
+    public boolean isChunkDataPacket;
 
     public Packet()
     {
@@ -110,15 +118,7 @@ public abstract class Packet
             System.out.println("Reached end of stream");
             return null;
         }
-        PacketCounter packetcounter = (PacketCounter)totalPacketsCount.lookup(i);
-        if(packetcounter == null)
-        {
-            packetcounter = new PacketCounter(null);
-            totalPacketsCount.addKey(i, packetcounter);
-        }
-        packetcounter.addPacket(packet.getPacketSize());
-        packetStats++;
-        if(packetStats % 1000 != 0);
+        PacketCount.func_40561_a(i, packet.getPacketSize());
         return packet;
     }
 
@@ -174,6 +174,71 @@ public abstract class Packet
 
     public abstract int getPacketSize();
 
+    protected ItemStack func_40187_b(DataInputStream datainputstream)
+        throws IOException
+    {
+        ItemStack itemstack = null;
+        short word0 = datainputstream.readShort();
+        if(word0 >= 0)
+        {
+            byte byte0 = datainputstream.readByte();
+            short word1 = datainputstream.readShort();
+            itemstack = new ItemStack(word0, byte0, word1);
+            if(Item.itemsList[word0].isDamageable())
+            {
+                itemstack.field_40715_d = func_40186_c(datainputstream);
+            }
+        }
+        return itemstack;
+    }
+
+    protected void writeItemStack(ItemStack itemstack, DataOutputStream dataoutputstream)
+        throws IOException
+    {
+        if(itemstack == null)
+        {
+            dataoutputstream.writeShort(-1);
+        } else
+        {
+            dataoutputstream.writeShort(itemstack.itemID);
+            dataoutputstream.writeByte(itemstack.stackSize);
+            dataoutputstream.writeShort(itemstack.getItemDamage());
+            if(itemstack.getItem().isDamageable())
+            {
+                func_40189_a(itemstack.field_40715_d, dataoutputstream);
+            }
+        }
+    }
+
+    protected NBTTagCompound func_40186_c(DataInputStream datainputstream)
+        throws IOException
+    {
+        short word0 = datainputstream.readShort();
+        if(word0 < 0)
+        {
+            return null;
+        } else
+        {
+            byte abyte0[] = new byte[word0];
+            datainputstream.readFully(abyte0);
+            return CompressedStreamTools.func_40592_a(abyte0);
+        }
+    }
+
+    protected void func_40189_a(NBTTagCompound nbttagcompound, DataOutputStream dataoutputstream)
+        throws IOException
+    {
+        if(nbttagcompound == null)
+        {
+            dataoutputstream.writeShort(-1);
+        } else
+        {
+            byte abyte0[] = CompressedStreamTools.func_40591_a(nbttagcompound);
+            dataoutputstream.writeShort((short)abyte0.length);
+            dataoutputstream.write(abyte0);
+        }
+    }
+
     static Class _mthclass$(String s)
     {
         try
@@ -185,15 +250,6 @@ public abstract class Packet
             throw new NoClassDefFoundError(classnotfoundexception.getMessage());
         }
     }
-
-    private static MCHash packetIdToClassMap = new MCHash();
-    private static Map packetClassToIdMap = new HashMap();
-    private static Set clientPacketIdList = new HashSet();
-    private static Set serverPacketIdList = new HashSet();
-    public final long creationTimeMillis = System.currentTimeMillis();
-    public boolean isChunkDataPacket;
-    private static MCHash totalPacketsCount = new MCHash();
-    private static int packetStats = 0;
 
     static 
     {
@@ -255,6 +311,7 @@ public abstract class Packet
         addIdClassMapping(105, true, false, net.minecraft.src.Packet105UpdateProgressbar.class);
         addIdClassMapping(106, true, true, net.minecraft.src.Packet106Transaction.class);
         addIdClassMapping(107, true, true, net.minecraft.src.Packet107CreativeSetSlot.class);
+        addIdClassMapping(108, false, true, net.minecraft.src.Packet108EnchantItem.class);
         addIdClassMapping(130, true, true, net.minecraft.src.Packet130UpdateSign.class);
         addIdClassMapping(131, true, false, net.minecraft.src.Packet131MapData.class);
         addIdClassMapping(200, true, false, net.minecraft.src.Packet200Statistic.class);

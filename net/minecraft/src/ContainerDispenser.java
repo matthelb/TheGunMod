@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.List;
 
 public class ContainerDispenser extends Container
 {
+
+    private TileEntityDispenser tileEntityDispenser;
 
     public ContainerDispenser(IInventory iinventory, TileEntityDispenser tileentitydispenser)
     {
@@ -43,7 +45,7 @@ public class ContainerDispenser extends Container
 
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return tileEntityDispenser.canInteractWith(entityplayer);
+        return tileEntityDispenser.isUseableByPlayer(entityplayer);
     }
 
     public ItemStack transferStackInSlot(int i)
@@ -82,6 +84,4 @@ public class ContainerDispenser extends Container
         }
         return itemstack;
     }
-
-    private TileEntityDispenser tileEntityDispenser;
 }

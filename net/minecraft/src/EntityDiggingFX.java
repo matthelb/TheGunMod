@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,13 +11,15 @@ package net.minecraft.src;
 public class EntityDiggingFX extends EntityFX
 {
 
+    private Block blockInstance;
+
     public EntityDiggingFX(World world, double d, double d1, double d2, 
             double d3, double d4, double d5, Block block, 
             int i, int j)
     {
         super(world, d, d1, d2, d3, d4, d5);
         blockInstance = block;
-        particleTextureIndex = block.getBlockTextureFromSideAndMetadata(0, j);
+        func_40099_c(block.getBlockTextureFromSideAndMetadata(0, j));
         particleGravity = block.blockParticleGravity;
         particleRed = particleGreen = particleBlue = 0.6F;
         particleScale /= 2.0F;
@@ -45,9 +47,9 @@ public class EntityDiggingFX extends EntityFX
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
     {
-        float f6 = ((float)(particleTextureIndex % 16) + particleTextureJitterX / 4F) / 16F;
+        float f6 = ((float)(func_40100_q() % 16) + particleTextureJitterX / 4F) / 16F;
         float f7 = f6 + 0.01560938F;
-        float f8 = ((float)(particleTextureIndex / 16) + particleTextureJitterY / 4F) / 16F;
+        float f8 = ((float)(func_40100_q() / 16) + particleTextureJitterY / 4F) / 16F;
         float f9 = f8 + 0.01560938F;
         float f10 = 0.1F * particleScale;
         float f11 = (float)((prevPosX + (posX - prevPosX) * (double)f) - interpPosX);
@@ -60,6 +62,4 @@ public class EntityDiggingFX extends EntityFX
         tessellator.addVertexWithUV(f11 + f1 * f10 + f4 * f10, f12 + f2 * f10, f13 + f3 * f10 + f5 * f10, f7, f8);
         tessellator.addVertexWithUV((f11 + f1 * f10) - f4 * f10, f12 - f2 * f10, (f13 + f3 * f10) - f5 * f10, f7, f9);
     }
-
-    private Block blockInstance;
 }

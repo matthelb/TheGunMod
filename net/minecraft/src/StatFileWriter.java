@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,11 @@ import java.util.*;
 
 public class StatFileWriter
 {
+
+    private Map field_25102_a;
+    private Map field_25101_b;
+    private boolean field_27189_c;
+    private StatsSyncher statsSyncher;
 
     public StatFileWriter(Session session, File file)
     {
@@ -233,9 +238,4 @@ public class StatFileWriter
         }
         statsSyncher.func_27425_c();
     }
-
-    private Map field_25102_a;
-    private Map field_25101_b;
-    private boolean field_27189_c;
-    private StatsSyncher statsSyncher;
 }

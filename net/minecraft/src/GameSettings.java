@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,65 @@ import org.lwjgl.input.Keyboard;
 public class GameSettings
 {
 
+    private static final String RENDER_DISTANCES[] = {
+        "options.renderDistance.far", "options.renderDistance.normal", "options.renderDistance.short", "options.renderDistance.tiny"
+    };
+    private static final String DIFFICULTIES[] = {
+        "options.difficulty.peaceful", "options.difficulty.easy", "options.difficulty.normal", "options.difficulty.hard"
+    };
+    private static final String GUISCALES[] = {
+        "options.guiScale.auto", "options.guiScale.small", "options.guiScale.normal", "options.guiScale.large"
+    };
+    private static final String field_41086_T[] = {
+        "options.particles.all", "options.particles.decreased", "options.particles.minimal"
+    };
+    private static final String LIMIT_FRAMERATES[] = {
+        "performance.max", "performance.balanced", "performance.powersaver"
+    };
+    public float musicVolume;
+    public float soundVolume;
+    public float mouseSensitivity;
+    public boolean invertMouse;
+    public int renderDistance;
+    public boolean viewBobbing;
+    public boolean anaglyph;
+    public boolean advancedOpengl;
+    public int limitFramerate;
+    public boolean fancyGraphics;
+    public boolean ambientOcclusion;
+    public boolean clouds;
+    public String skin;
+    public KeyBinding keyBindForward;
+    public KeyBinding keyBindLeft;
+    public KeyBinding keyBindBack;
+    public KeyBinding keyBindRight;
+    public KeyBinding keyBindJump;
+    public KeyBinding keyBindInventory;
+    public KeyBinding keyBindDrop;
+    public KeyBinding keyBindChat;
+    public KeyBinding keyBindSneak;
+    public KeyBinding keyBindAttack;
+    public KeyBinding keyBindUseItem;
+    public KeyBinding keyBindPlayerList;
+    public KeyBinding keyBindPickBlock;
+    public KeyBinding keyBindings[];
+    protected Minecraft mc;
+    private File optionsFile;
+    public int difficulty;
+    public boolean hideGUI;
+    public int thirdPersonView;
+    public boolean showDebugInfo;
+    public String lastServer;
+    public boolean noclip;
+    public boolean smoothCamera;
+    public boolean debugCamEnable;
+    public float noclipRate;
+    public float debugCamRate;
+    public float fovSetting;
+    public float gammaSetting;
+    public int guiScale;
+    public int field_41087_P;
+
     public GameSettings(Minecraft minecraft, File file)
     {
         musicVolume = 1.0F;
@@ -28,6 +87,7 @@ public class GameSettings
         limitFramerate = 1;
         fancyGraphics = true;
         ambientOcclusion = true;
+        clouds = true;
         skin = "Default";
         keyBindForward = new KeyBinding("key.forward", 17);
         keyBindLeft = new KeyBinding("key.left", 30);
@@ -48,17 +108,18 @@ public class GameSettings
         });
         difficulty = 2;
         hideGUI = false;
-        thirdPersonView = false;
+        thirdPersonView = 0;
         showDebugInfo = false;
         lastServer = "";
-        field_22275_C = false;
+        noclip = false;
         smoothCamera = false;
         debugCamEnable = false;
-        field_22272_F = 1.0F;
-        field_22271_G = 1.0F;
+        noclipRate = 1.0F;
+        debugCamRate = 1.0F;
         fovSetting = 0.0F;
         gammaSetting = 0.0F;
         guiScale = 0;
+        field_41087_P = 0;
         mc = minecraft;
         optionsFile = new File(file, "options.txt");
         loadOptions();
@@ -77,6 +138,7 @@ public class GameSettings
         limitFramerate = 1;
         fancyGraphics = true;
         ambientOcclusion = true;
+        clouds = true;
         skin = "Default";
         keyBindForward = new KeyBinding("key.forward", 17);
         keyBindLeft = new KeyBinding("key.left", 30);
@@ -97,17 +159,18 @@ public class GameSettings
         });
         difficulty = 2;
         hideGUI = false;
-        thirdPersonView = false;
+        thirdPersonView = 0;
         showDebugInfo = false;
         lastServer = "";
-        field_22275_C = false;
+        noclip = false;
         smoothCamera = false;
         debugCamEnable = false;
-        field_22272_F = 1.0F;
-        field_22271_G = 1.0F;
+        noclipRate = 1.0F;
+        debugCamRate = 1.0F;
         fovSetting = 0.0F;
         gammaSetting = 0.0F;
         guiScale = 0;
+        field_41087_P = 0;
     }
 
     public String getKeyBindingDescription(int i)
@@ -119,14 +182,19 @@ public class GameSettings
     public String getOptionDisplayString(int i)
     {
         int j = keyBindings[i].keyCode;
-        if(j < 0)
+        return func_41085_c(j);
+    }
+
+    public static String func_41085_c(int i)
+    {
+        if(i < 0)
         {
             return StatCollector.translateToLocalFormatted("key.mouseButton", new Object[] {
-                Integer.valueOf(j + 101)
+                Integer.valueOf(i + 101)
             });
         } else
         {
-            return Keyboard.getKeyName(j);
+            return Keyboard.getKeyName(i);
         }
     }
 
@@ -176,9 +244,17 @@ public class GameSettings
         {
             guiScale = guiScale + i & 3;
         }
+        if(enumoptions == EnumOptions.PARTICLES)
+        {
+            field_41087_P = (field_41087_P + i) % 3;
+        }
         if(enumoptions == EnumOptions.VIEW_BOBBING)
         {
             viewBobbing = !viewBobbing;
+        }
+        if(enumoptions == EnumOptions.RENDER_CLOUDS)
+        {
+            clouds = !clouds;
         }
         if(enumoptions == EnumOptions.ADVANCED_OPENGL)
         {
@@ -256,6 +332,9 @@ public class GameSettings
 
         case 5: // '\005'
             return ambientOcclusion;
+
+        case 6: // '\006'
+            return clouds;
         }
         return false;
     }
@@ -340,6 +419,10 @@ public class GameSettings
         {
             return (new StringBuilder()).append(s).append(stringtranslate.translateKey(GUISCALES[guiScale])).toString();
         }
+        if(enumoptions == EnumOptions.PARTICLES)
+        {
+            return (new StringBuilder()).append(s).append(stringtranslate.translateKey(field_41086_T[field_41087_P])).toString();
+        }
         if(enumoptions == EnumOptions.FRAMERATE_LIMIT)
         {
             return (new StringBuilder()).append(s).append(StatCollector.translateToLocal(LIMIT_FRAMERATES[limitFramerate])).toString();
@@ -405,6 +488,10 @@ public class GameSettings
                     {
                         guiScale = Integer.parseInt(as[1]);
                     }
+                    if(as[0].equals("particles"))
+                    {
+                        field_41087_P = Integer.parseInt(as[1]);
+                    }
                     if(as[0].equals("bobView"))
                     {
                         viewBobbing = as[1].equals("true");
@@ -432,6 +519,10 @@ public class GameSettings
                     if(as[0].equals("ao"))
                     {
                         ambientOcclusion = as[1].equals("true");
+                    }
+                    if(as[0].equals("clouds"))
+                    {
+                        clouds = as[1].equals("true");
                     }
                     if(as[0].equals("skin"))
                     {
@@ -495,6 +586,7 @@ public class GameSettings
             printwriter.println((new StringBuilder()).append("gamma:").append(gammaSetting).toString());
             printwriter.println((new StringBuilder()).append("viewDistance:").append(renderDistance).toString());
             printwriter.println((new StringBuilder()).append("guiScale:").append(guiScale).toString());
+            printwriter.println((new StringBuilder()).append("particles:").append(field_41087_P).toString());
             printwriter.println((new StringBuilder()).append("bobView:").append(viewBobbing).toString());
             printwriter.println((new StringBuilder()).append("anaglyph3d:").append(anaglyph).toString());
             printwriter.println((new StringBuilder()).append("advancedOpengl:").append(advancedOpengl).toString());
@@ -502,6 +594,7 @@ public class GameSettings
             printwriter.println((new StringBuilder()).append("difficulty:").append(difficulty).toString());
             printwriter.println((new StringBuilder()).append("fancyGraphics:").append(fancyGraphics).toString());
             printwriter.println((new StringBuilder()).append("ao:").append(ambientOcclusion).toString());
+            printwriter.println((new StringBuilder()).append("clouds:").append(clouds).toString());
             printwriter.println((new StringBuilder()).append("skin:").append(skin).toString());
             printwriter.println((new StringBuilder()).append("lastServer:").append(lastServer).toString());
             for(int i = 0; i < keyBindings.length; i++)
@@ -518,58 +611,9 @@ public class GameSettings
         }
     }
 
-    private static final String RENDER_DISTANCES[] = {
-        "options.renderDistance.far", "options.renderDistance.normal", "options.renderDistance.short", "options.renderDistance.tiny"
-    };
-    private static final String DIFFICULTIES[] = {
-        "options.difficulty.peaceful", "options.difficulty.easy", "options.difficulty.normal", "options.difficulty.hard"
-    };
-    private static final String GUISCALES[] = {
-        "options.guiScale.auto", "options.guiScale.small", "options.guiScale.normal", "options.guiScale.large"
-    };
-    private static final String LIMIT_FRAMERATES[] = {
-        "performance.max", "performance.balanced", "performance.powersaver"
-    };
-    public float musicVolume;
-    public float soundVolume;
-    public float mouseSensitivity;
-    public boolean invertMouse;
-    public int renderDistance;
-    public boolean viewBobbing;
-    public boolean anaglyph;
-    public boolean advancedOpengl;
-    public int limitFramerate;
-    public boolean fancyGraphics;
-    public boolean ambientOcclusion;
-    public String skin;
-    public KeyBinding keyBindForward;
-    public KeyBinding keyBindLeft;
-    public KeyBinding keyBindBack;
-    public KeyBinding keyBindRight;
-    public KeyBinding keyBindJump;
-    public KeyBinding keyBindInventory;
-    public KeyBinding keyBindDrop;
-    public KeyBinding keyBindChat;
-    public KeyBinding keyBindSneak;
-    public KeyBinding keyBindAttack;
-    public KeyBinding keyBindUseItem;
-    public KeyBinding keyBindPlayerList;
-    public KeyBinding keyBindPickBlock;
-    public KeyBinding keyBindings[];
-    protected Minecraft mc;
-    private File optionsFile;
-    public int difficulty;
-    public boolean hideGUI;
-    public boolean thirdPersonView;
-    public boolean showDebugInfo;
-    public String lastServer;
-    public boolean field_22275_C;
-    public boolean smoothCamera;
-    public boolean debugCamEnable;
-    public float field_22272_F;
-    public float field_22271_G;
-    public float fovSetting;
-    public float gammaSetting;
-    public int guiScale;
+    public boolean shouldRenderClouds()
+    {
+        return renderDistance < 2 && clouds;
+    }
 
 }

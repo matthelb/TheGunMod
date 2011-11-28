@@ -1,12 +1,16 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 public class NibbleArray
 {
+
+    public final byte data[];
+    private final int chunkSizeYShift;
+    private final int chunkSizeYZShift;
 
     public NibbleArray(int i, int j)
     {
@@ -54,8 +58,4 @@ public class NibbleArray
     {
         return data != null;
     }
-
-    public final byte data[];
-    private final int chunkSizeYShift;
-    private final int chunkSizeYZShift;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -191,10 +191,10 @@ public class BlockDoor extends Block
             {
                 if(!world.multiplayerWorld)
                 {
-                    dropBlockAsItem(world, i, j, k, i1);
+                    dropBlockAsItem(world, i, j, k, i1, 0);
                 }
             } else
-            if(l > 0 && Block.blocksList[l].canProvidePower())
+            if(l > 0)
             {
                 boolean flag1 = world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k);
                 onPoweredBlockChange(world, i, j, k, flag1);
@@ -202,7 +202,7 @@ public class BlockDoor extends Block
         }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         if((i & 8) != 0)
         {
@@ -236,8 +236,7 @@ public class BlockDoor extends Block
 
     public boolean canPlaceBlockAt(World world, int i, int j, int k)
     {
-        world.getClass();
-        if(j >= 128 - 1)
+        if(j >= world.field_35472_c - 1)
         {
             return false;
         } else

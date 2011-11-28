@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,12 @@ import net.minecraft.client.Minecraft;
 
 public class TextureWatchFX extends TextureFX
 {
+
+    private Minecraft mc;
+    private int watchIconImageData[];
+    private int dialImageData[];
+    private double field_4222_j;
+    private double field_4221_k;
 
     public TextureWatchFX(Minecraft minecraft)
     {
@@ -100,10 +106,4 @@ public class TextureWatchFX extends TextureFX
         }
 
     }
-
-    private Minecraft mc;
-    private int watchIconImageData[];
-    private int dialImageData[];
-    private double field_4222_j;
-    private double field_4221_k;
 }

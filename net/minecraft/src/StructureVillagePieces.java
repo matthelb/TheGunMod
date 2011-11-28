@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -107,48 +107,61 @@ public class StructureVillagePieces
         return ((ComponentVillage) (obj));
     }
 
-    private static ComponentVillage getNextVillageComponent(ComponentVillageStartPiece var0, List var1, Random var2, int var3, int var4, int var5, int var6, int var7) {
+    private static ComponentVillage getNextVillageComponent(ComponentVillageStartPiece var0, List var1, Random var2, int var3, int var4, int var5, int var6, int var7)
+    {
         int var8 = getAvailablePieceWeight(var0.structureVillageWeightedPieceList);
-        if(var8 <= 0) {
-           return null;
-        } else {
-           int var9 = 0;
-
-           while(var9 < 5) {
-              ++var9;
-              int var10 = var2.nextInt(var8);
-              Iterator var11 = var0.structureVillageWeightedPieceList.iterator();
-
-              while(var11.hasNext()) {
-                 StructureVillagePieceWeight var12 = (StructureVillagePieceWeight)var11.next();
-                 var10 -= var12.villagePieceWeight;
-                 if(var10 < 0) {
-                    if(!var12.canSpawnMoreVillagePiecesOfType(var7) || var12 == var0.structVillagePieceWeight && var0.structureVillageWeightedPieceList.size() > 1) {
-                       break;
-                    }
-
-                    ComponentVillage var13 = getVillageComponentFromWeightedPiece(var12, var1, var2, var3, var4, var5, var6, var7);
-                    if(var13 != null) {
-                       ++var12.villagePiecesSpawned;
-                       var0.structVillagePieceWeight = var12;
-                       if(!var12.canSpawnMoreVillagePieces()) {
-                          var0.structureVillageWeightedPieceList.remove(var12);
-                       }
-
-                       return var13;
-                    }
-                 }
-              }
-           }
-
-           StructureBoundingBox var14 = ComponentVillageTorch.func_35099_a(var1, var2, var3, var4, var5, var6);
-           if(var14 != null) {
-              return new ComponentVillageTorch(var7, var2, var14, var6);
-           } else {
-              return null;
-           }
+        if(var8 <= 0)
+        {
+            return null;
         }
-     }
+        else
+        {
+            int var9 = 0;
+
+            while(var9 < 5)
+            {
+                ++var9;
+                int var10 = var2.nextInt(var8);
+                Iterator var11 = var0.structureVillageWeightedPieceList.iterator();
+
+                while(var11.hasNext())
+                {
+                    StructureVillagePieceWeight var12 = (StructureVillagePieceWeight)var11.next();
+                    var10 -= var12.villagePieceWeight;
+                    if(var10 < 0)
+                    {
+                        if(!var12.canSpawnMoreVillagePiecesOfType(var7) || var12 == var0.structVillagePieceWeight && var0.structureVillageWeightedPieceList.size() > 1)
+                        {
+                            break;
+                        }
+
+                        ComponentVillage var13 = getVillageComponentFromWeightedPiece(var12, var1, var2, var3, var4, var5, var6, var7);
+                        if(var13 != null)
+                        {
+                            ++var12.villagePiecesSpawned;
+                            var0.structVillagePieceWeight = var12;
+                            if(!var12.canSpawnMoreVillagePieces())
+                            {
+                                var0.structureVillageWeightedPieceList.remove(var12);
+                            }
+
+                            return var13;
+                        }
+                    }
+                }
+            }
+
+            StructureBoundingBox var14 = ComponentVillageTorch.func_35099_a(var1, var2, var3, var4, var5, var6);
+            if(var14 != null)
+            {
+                return new ComponentVillageTorch(var7, var2, var14, var6);
+            }
+            else
+            {
+                return null;
+            }
+        }
+    }
 
     private static StructureComponent getNextVillageStructureComponent(ComponentVillageStartPiece componentvillagestartpiece, List list, Random random, int i, int j, int k, int l, int i1)
     {

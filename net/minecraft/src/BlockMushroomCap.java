@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,8 @@ import java.util.Random;
 
 public class BlockMushroomCap extends Block
 {
+
+    private int field_35292_a;
 
     public BlockMushroomCap(int i, Material material, int j, int k)
     {
@@ -43,6 +45,14 @@ public class BlockMushroomCap extends Block
         if((j == 3 || j == 6 || j == 9) && i == 5)
         {
             return blockIndexInTexture - 16 - field_35292_a;
+        }
+        if(j == 14)
+        {
+            return blockIndexInTexture - 16 - field_35292_a;
+        }
+        if(j == 15)
+        {
+            return blockIndexInTexture - 1;
         } else
         {
             return blockIndexInTexture;
@@ -59,10 +69,8 @@ public class BlockMushroomCap extends Block
         return i;
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Block.mushroomBrown.blockID + field_35292_a;
     }
-
-    private int field_35292_a;
 }

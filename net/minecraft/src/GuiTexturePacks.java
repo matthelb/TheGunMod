@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,11 @@ import org.lwjgl.Sys;
 
 public class GuiTexturePacks extends GuiScreen
 {
+
+    protected GuiScreen guiScreen;
+    private int field_6454_o;
+    private String fileLocation;
+    private GuiTexturePackSlot guiTexturePackSlot;
 
     public GuiTexturePacks(GuiScreen guiscreen)
     {
@@ -153,9 +158,4 @@ public class GuiTexturePacks extends GuiScreen
     {
         return guitexturepacks.fontRenderer;
     }
-
-    protected GuiScreen guiScreen;
-    private int field_6454_o;
-    private String fileLocation;
-    private GuiTexturePackSlot guiTexturePackSlot;
 }

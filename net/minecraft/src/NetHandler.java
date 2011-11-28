@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -20,7 +20,7 @@ package net.minecraft.src;
 //            Packet200Statistic, Packet17Sleep, Packet27Position, Packet70Bed, 
 //            Packet71Weather, Packet131MapData, Packet61DoorChange, Packet254ServerPing, 
 //            Packet41EntityEffect, Packet42RemoveEntityEffect, Packet201PlayerInfo, Packet0KeepAlive, 
-//            Packet43Experience, Packet107CreativeSetSlot, Packet26EntityExpOrb
+//            Packet43Experience, Packet107CreativeSetSlot, Packet26EntityExpOrb, Packet108EnchantItem
 
 public abstract class NetHandler
 {
@@ -326,5 +326,9 @@ public abstract class NetHandler
     public void handleXPOrb(Packet26EntityExpOrb packet26entityexporb)
     {
         registerPacket(packet26entityexporb);
+    }
+
+    public void func_40599_a(Packet108EnchantItem packet108enchantitem)
+    {
     }
 }

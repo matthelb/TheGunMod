@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -20,7 +20,7 @@ public class ItemMap extends ItemMapBase
         setMaxStackSize(1);
     }
 
-    public static MapData func_28013_a(short word0, World world)
+    public static MapData getMPMapData(short word0, World world)
     {
         String s = (new StringBuilder()).append("map_").append(word0).toString();
         MapData mapdata = (MapData)world.loadItemData(net.minecraft.src.MapData.class, (new StringBuilder()).append("map_").append(word0).toString());
@@ -34,7 +34,7 @@ public class ItemMap extends ItemMapBase
         return mapdata;
     }
 
-    public MapData func_28012_a(ItemStack itemstack, World world)
+    public MapData getMapData(ItemStack itemstack, World world)
     {
         String s = (new StringBuilder()).append("map_").append(itemstack.getItemDamage()).toString();
         MapData mapdata = (MapData)world.loadItemData(net.minecraft.src.MapData.class, (new StringBuilder()).append("map_").append(itemstack.getItemDamage()).toString());
@@ -43,10 +43,10 @@ public class ItemMap extends ItemMapBase
             itemstack.setItemDamage(world.getUniqueDataId("map"));
             String s1 = (new StringBuilder()).append("map_").append(itemstack.getItemDamage()).toString();
             mapdata = new MapData(s1);
-            mapdata.field_28180_b = world.getWorldInfo().getSpawnX();
-            mapdata.field_28179_c = world.getWorldInfo().getSpawnZ();
-            mapdata.field_28177_e = 3;
-            mapdata.field_28178_d = (byte)world.worldProvider.worldType;
+            mapdata.xCenter = world.getWorldInfo().getSpawnX();
+            mapdata.zCenter = world.getWorldInfo().getSpawnZ();
+            mapdata.scale = 3;
+            mapdata.dimension = (byte)world.worldProvider.worldType;
             mapdata.markDirty();
             world.setItemData(s1, mapdata);
         }
@@ -55,15 +55,15 @@ public class ItemMap extends ItemMapBase
 
     public void updateMapData(World world, Entity entity, MapData mapdata)
     {
-        if(world.worldProvider.worldType != mapdata.field_28178_d)
+        if(world.worldProvider.worldType != mapdata.dimension)
         {
             return;
         }
         char c = '\200';
         char c1 = '\200';
-        int i = 1 << mapdata.field_28177_e;
-        int j = mapdata.field_28180_b;
-        int k = mapdata.field_28179_c;
+        int i = 1 << mapdata.scale;
+        int j = mapdata.xCenter;
+        int k = mapdata.zCenter;
         int l = MathHelper.floor_double(entity.posX - (double)j) / i + c / 2;
         int i1 = MathHelper.floor_double(entity.posZ - (double)k) / i + c1 / 2;
         int j1 = 128 / i;
@@ -141,8 +141,8 @@ public class ItemMap extends ItemMapBase
                                         j6--;
                                         l6 = chunk.getBlockID(j5 + j4, j6 - 1, l5 + k4);
                                     }
-                                } while(!flag1);
-                                if(l6 != 0 && Block.blocksList[l6].blockMaterial.getIsLiquid())
+                                } while(j6 > 0 && !flag1);
+                                if(j6 > 0 && l6 != 0 && Block.blocksList[l6].blockMaterial.getIsLiquid())
                                 {
                                     int i7 = j6 - 1;
                                     int k7 = 0;
@@ -209,7 +209,7 @@ public class ItemMap extends ItemMapBase
                 {
                     continue;
                 }
-                byte byte1 = mapdata.field_28176_f[k1 + j2 * c];
+                byte byte1 = mapdata.colors[k1 + j2 * c];
                 byte byte2 = (byte)(j7 * 4 + byte0);
                 if(byte1 == byte2)
                 {
@@ -223,7 +223,7 @@ public class ItemMap extends ItemMapBase
                 {
                     i2 = j2;
                 }
-                mapdata.field_28176_f[k1 + j2 * c] = byte2;
+                mapdata.colors[k1 + j2 * c] = byte2;
             }
 
             if(l1 <= i2)
@@ -240,7 +240,7 @@ public class ItemMap extends ItemMapBase
         {
             return;
         }
-        MapData mapdata = func_28012_a(itemstack, world);
+        MapData mapdata = getMapData(itemstack, world);
         if(entity instanceof EntityPlayer)
         {
             EntityPlayer entityplayer = (EntityPlayer)entity;
@@ -258,10 +258,10 @@ public class ItemMap extends ItemMapBase
         String s = (new StringBuilder()).append("map_").append(itemstack.getItemDamage()).toString();
         MapData mapdata = new MapData(s);
         world.setItemData(s, mapdata);
-        mapdata.field_28180_b = MathHelper.floor_double(entityplayer.posX);
-        mapdata.field_28179_c = MathHelper.floor_double(entityplayer.posZ);
-        mapdata.field_28177_e = 3;
-        mapdata.field_28178_d = (byte)world.worldProvider.worldType;
+        mapdata.xCenter = MathHelper.floor_double(entityplayer.posX);
+        mapdata.zCenter = MathHelper.floor_double(entityplayer.posZ);
+        mapdata.scale = 3;
+        mapdata.dimension = (byte)world.worldProvider.worldType;
         mapdata.markDirty();
     }
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -22,17 +22,31 @@ import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL11;
 
 // Referenced classes of package net.minecraft.src:
-//            MCHash, GLAllocation, TexturePackList, TexturePackBase, 
+//            IntHashMap, GLAllocation, TexturePackList, TexturePackBase, 
 //            GameSettings, ThreadDownloadImageData, TextureFX, ImageBuffer
 
 public class RenderEngine
 {
 
+    public static boolean useMipmaps = false;
+    private HashMap textureMap;
+    private HashMap textureContentsMap;
+    private IntHashMap textureNameToImageMap;
+    private IntBuffer singleIntBuffer;
+    private ByteBuffer imageData;
+    private java.util.List textureList;
+    private Map urlToImageDataMap;
+    private GameSettings options;
+    public boolean clampTexture;
+    public boolean blurTexture;
+    private TexturePackList texturePack;
+    private BufferedImage missingTextureImage;
+
     public RenderEngine(TexturePackList texturepacklist, GameSettings gamesettings)
     {
         textureMap = new HashMap();
-        field_28151_c = new HashMap();
-        textureNameToImageMap = new MCHash();
+        textureContentsMap = new HashMap();
+        textureNameToImageMap = new IntHashMap();
         singleIntBuffer = GLAllocation.createDirectIntBuffer(1);
         imageData = GLAllocation.createDirectByteBuffer(0x1000000);
         textureList = new ArrayList();
@@ -53,7 +67,7 @@ public class RenderEngine
     public int[] getTextureContents(String s)
     {
         TexturePackBase texturepackbase = texturePack.selectedTexturePack;
-        int ai[] = (int[])field_28151_c.get(s);
+        int ai[] = (int[])textureContentsMap.get(s);
         if(ai != null)
         {
             return ai;
@@ -89,7 +103,7 @@ public class RenderEngine
                     ai1 = getImageContentsAndAllocate(readTextureImage(inputstream));
                 }
             }
-            field_28151_c.put(s, ai1);
+            textureContentsMap.put(s, ai1);
             return ai1;
         }
         catch(IOException ioexception)
@@ -97,7 +111,7 @@ public class RenderEngine
             ioexception.printStackTrace();
         }
         int ai2[] = getImageContentsAndAllocate(missingTextureImage);
-        field_28151_c.put(s, ai2);
+        textureContentsMap.put(s, ai2);
         return ai2;
     }
 
@@ -416,109 +430,31 @@ public class RenderEngine
 
     public void updateDynamicTextures()
     {
-        for(int i = 0; i < textureList.size(); i++)
+        int i = -1;
+        for(int j = 0; j < textureList.size(); j++)
         {
-            TextureFX texturefx = (TextureFX)textureList.get(i);
+            TextureFX texturefx = (TextureFX)textureList.get(j);
             texturefx.anaglyphEnabled = options.anaglyph;
             texturefx.onTick();
             imageData.clear();
             imageData.put(texturefx.imageData);
             imageData.position(0).limit(texturefx.imageData.length);
-            texturefx.bindImage(this);
+            if(texturefx.iconIndex != i)
+            {
+                texturefx.bindImage(this);
+                i = texturefx.iconIndex;
+            }
             for(int k = 0; k < texturefx.tileSize; k++)
             {
-label0:
-                for(int i1 = 0; i1 < texturefx.tileSize; i1++)
+                for(int l = 0; l < texturefx.tileSize; l++)
                 {
-                    GL11.glTexSubImage2D(3553 /*GL_TEXTURE_2D*/, 0, (texturefx.iconIndex % 16) * 16 + k * 16, (texturefx.iconIndex / 16) * 16 + i1 * 16, 16, 16, 6408 /*GL_RGBA*/, 5121 /*GL_UNSIGNED_BYTE*/, imageData);
-                    if(!useMipmaps)
-                    {
-                        continue;
-                    }
-                    int k1 = 1;
-                    do
-                    {
-                        if(k1 > 4)
-                        {
-                            continue label0;
-                        }
-                        int i2 = 16 >> k1 - 1;
-                        int k2 = 16 >> k1;
-                        for(int i3 = 0; i3 < k2; i3++)
-                        {
-                            for(int k3 = 0; k3 < k2; k3++)
-                            {
-                                int i4 = imageData.getInt((i3 * 2 + 0 + (k3 * 2 + 0) * i2) * 4);
-                                int k4 = imageData.getInt((i3 * 2 + 1 + (k3 * 2 + 0) * i2) * 4);
-                                int i5 = imageData.getInt((i3 * 2 + 1 + (k3 * 2 + 1) * i2) * 4);
-                                int k5 = imageData.getInt((i3 * 2 + 0 + (k3 * 2 + 1) * i2) * 4);
-                                int l5 = averageColor(averageColor(i4, k4), averageColor(i5, k5));
-                                imageData.putInt((i3 + k3 * k2) * 4, l5);
-                            }
-
-                        }
-
-                        GL11.glTexSubImage2D(3553 /*GL_TEXTURE_2D*/, k1, (texturefx.iconIndex % 16) * k2, (texturefx.iconIndex / 16) * k2, k2, k2, 6408 /*GL_RGBA*/, 5121 /*GL_UNSIGNED_BYTE*/, imageData);
-                        k1++;
-                    } while(true);
+                    GL11.glTexSubImage2D(3553 /*GL_TEXTURE_2D*/, 0, (texturefx.iconIndex % 16) * 16 + k * 16, (texturefx.iconIndex / 16) * 16 + l * 16, 16, 16, 6408 /*GL_RGBA*/, 5121 /*GL_UNSIGNED_BYTE*/, imageData);
                 }
 
             }
 
         }
 
-label1:
-        for(int j = 0; j < textureList.size(); j++)
-        {
-            TextureFX texturefx1 = (TextureFX)textureList.get(j);
-            if(texturefx1.textureId <= 0)
-            {
-                continue;
-            }
-            imageData.clear();
-            imageData.put(texturefx1.imageData);
-            imageData.position(0).limit(texturefx1.imageData.length);
-            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, texturefx1.textureId);
-            GL11.glTexSubImage2D(3553 /*GL_TEXTURE_2D*/, 0, 0, 0, 16, 16, 6408 /*GL_RGBA*/, 5121 /*GL_UNSIGNED_BYTE*/, imageData);
-            if(!useMipmaps)
-            {
-                continue;
-            }
-            int l = 1;
-            do
-            {
-                if(l > 4)
-                {
-                    continue label1;
-                }
-                int j1 = 16 >> l - 1;
-                int l1 = 16 >> l;
-                for(int j2 = 0; j2 < l1; j2++)
-                {
-                    for(int l2 = 0; l2 < l1; l2++)
-                    {
-                        int j3 = imageData.getInt((j2 * 2 + 0 + (l2 * 2 + 0) * j1) * 4);
-                        int l3 = imageData.getInt((j2 * 2 + 1 + (l2 * 2 + 0) * j1) * 4);
-                        int j4 = imageData.getInt((j2 * 2 + 1 + (l2 * 2 + 1) * j1) * 4);
-                        int l4 = imageData.getInt((j2 * 2 + 0 + (l2 * 2 + 1) * j1) * 4);
-                        int j5 = averageColor(averageColor(j3, l3), averageColor(j4, l4));
-                        imageData.putInt((j2 + l2 * l1) * 4, j5);
-                    }
-
-                }
-
-                GL11.glTexSubImage2D(3553 /*GL_TEXTURE_2D*/, l, 0, 0, l1, l1, 6408 /*GL_RGBA*/, 5121 /*GL_UNSIGNED_BYTE*/, imageData);
-                l++;
-            } while(true);
-        }
-
-    }
-
-    private int averageColor(int i, int j)
-    {
-        int k = (i & 0xff000000) >> 24 & 0xff;
-        int l = (j & 0xff000000) >> 24 & 0xff;
-        return ((k + l >> 1) << 24) + ((i & 0xfefefe) + (j & 0xfefefe) >> 1);
     }
 
     private int alphaBlend(int i, int j)
@@ -601,7 +537,7 @@ label1:
             }
         }
 
-        for(Iterator iterator3 = field_28151_c.keySet().iterator(); iterator3.hasNext();)
+        for(Iterator iterator3 = textureContentsMap.keySet().iterator(); iterator3.hasNext();)
         {
             String s1 = (String)iterator3.next();
             try
@@ -624,7 +560,7 @@ label1:
                 {
                     bufferedimage2 = readTextureImage(texturepackbase.getResourceAsStream(s1));
                 }
-                getImageContents(bufferedimage2, (int[])field_28151_c.get(s1));
+                getImageContents(bufferedimage2, (int[])textureContentsMap.get(s1));
                 blurTexture = false;
                 clampTexture = false;
             }
@@ -655,19 +591,5 @@ label1:
             return;
         }
     }
-
-    public static boolean useMipmaps = false;
-    private HashMap textureMap;
-    private HashMap field_28151_c;
-    private MCHash textureNameToImageMap;
-    private IntBuffer singleIntBuffer;
-    private ByteBuffer imageData;
-    private java.util.List textureList;
-    private Map urlToImageDataMap;
-    private GameSettings options;
-    public boolean clampTexture;
-    public boolean blurTexture;
-    private TexturePackList texturePack;
-    private BufferedImage missingTextureImage;
 
 }

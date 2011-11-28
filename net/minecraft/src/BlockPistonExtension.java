@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,11 +8,13 @@ import java.util.ArrayList;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, Material, World, PistonBlockTextures, 
+//            Block, Material, World, Facing, 
 //            BlockPistonBase, IBlockAccess, AxisAlignedBB
 
 public class BlockPistonExtension extends Block
 {
+
+    private int field_31053_a;
 
     public BlockPistonExtension(int i, int j)
     {
@@ -36,17 +38,17 @@ public class BlockPistonExtension extends Block
     {
         super.onBlockRemoval(world, i, j, k);
         int l = world.getBlockMetadata(i, j, k);
-        int j1 = PistonBlockTextures.field_31057_a[func_31050_c(l)];
-        i += PistonBlockTextures.offsetsXForSide[j1];
-        j += PistonBlockTextures.offsetsYForSide[j1];
-        k += PistonBlockTextures.offsetsZForSide[j1];
+        int j1 = Facing.field_31057_a[func_31050_c(l)];
+        i += Facing.offsetsXForSide[j1];
+        j += Facing.offsetsYForSide[j1];
+        k += Facing.offsetsZForSide[j1];
         int k1 = world.getBlockId(i, j, k);
         if(k1 == Block.pistonBase.blockID || k1 == Block.pistonStickyBase.blockID)
         {
             int i1 = world.getBlockMetadata(i, j, k);
             if(BlockPistonBase.isExtended(i1))
             {
-                Block.blocksList[k1].dropBlockAsItem(world, i, j, k, i1);
+                Block.blocksList[k1].dropBlockAsItem(world, i, j, k, i1, 0);
                 world.setBlockWithNotify(i, j, k, 0);
             }
         }
@@ -69,7 +71,7 @@ public class BlockPistonExtension extends Block
                 return blockIndexInTexture;
             }
         }
-        return i != PistonBlockTextures.field_31057_a[k] ? 108 : 107;
+        return i != Facing.field_31057_a[k] ? 108 : 107;
     }
 
     public int getRenderType()
@@ -186,13 +188,13 @@ public class BlockPistonExtension extends Block
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
         int i1 = func_31050_c(world.getBlockMetadata(i, j, k));
-        int j1 = world.getBlockId(i - PistonBlockTextures.offsetsXForSide[i1], j - PistonBlockTextures.offsetsYForSide[i1], k - PistonBlockTextures.offsetsZForSide[i1]);
+        int j1 = world.getBlockId(i - Facing.offsetsXForSide[i1], j - Facing.offsetsYForSide[i1], k - Facing.offsetsZForSide[i1]);
         if(j1 != Block.pistonBase.blockID && j1 != Block.pistonStickyBase.blockID)
         {
             world.setBlockWithNotify(i, j, k, 0);
         } else
         {
-            Block.blocksList[j1].onNeighborBlockChange(world, i - PistonBlockTextures.offsetsXForSide[i1], j - PistonBlockTextures.offsetsYForSide[i1], k - PistonBlockTextures.offsetsZForSide[i1], l);
+            Block.blocksList[j1].onNeighborBlockChange(world, i - Facing.offsetsXForSide[i1], j - Facing.offsetsYForSide[i1], k - Facing.offsetsZForSide[i1], l);
         }
     }
 
@@ -200,6 +202,4 @@ public class BlockPistonExtension extends Block
     {
         return i & 7;
     }
-
-    private int field_31053_a;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,9 @@ import net.minecraft.client.Minecraft;
 
 public class GuiConnecting extends GuiScreen
 {
+
+    private NetClientHandler clientHandler;
+    private boolean cancelled;
 
     public GuiConnecting(Minecraft minecraft, String s, int i)
     {
@@ -85,7 +88,4 @@ public class GuiConnecting extends GuiScreen
     {
         return guiconnecting.clientHandler;
     }
-
-    private NetClientHandler clientHandler;
-    private boolean cancelled;
 }

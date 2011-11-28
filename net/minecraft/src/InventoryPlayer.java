@@ -1,18 +1,25 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            IInventory, ItemStack, EntityPlayer, NBTTagCompound, 
-//            NBTTagList, Block, Material, ItemArmor, 
-//            Entity
+//            IInventory, ItemStack, EntityPlayer, PlayerCapabilities, 
+//            NBTTagCompound, NBTTagList, Block, Material, 
+//            ItemArmor, Entity
 
 public class InventoryPlayer
     implements IInventory
 {
+
+    public ItemStack mainInventory[];
+    public ItemStack armorInventory[];
+    public int currentItem;
+    public EntityPlayer player;
+    private ItemStack itemStack;
+    public boolean inventoryChanged;
 
     public InventoryPlayer(EntityPlayer entityplayer)
     {
@@ -47,6 +54,19 @@ public class InventoryPlayer
         return -1;
     }
 
+    private int func_41021_b(int i, int j)
+    {
+        for(int k = 0; k < mainInventory.length; k++)
+        {
+            if(mainInventory[k] != null && mainInventory[k].itemID == i && mainInventory[k].getItemDamage() == j)
+            {
+                return k;
+            }
+        }
+
+        return -1;
+    }
+
     private int storeItemStack(ItemStack itemstack)
     {
         for(int i = 0; i < mainInventory.length; i++)
@@ -73,12 +93,19 @@ public class InventoryPlayer
         return -1;
     }
 
-    public void setCurrentItem(int i, boolean flag)
+    public void setCurrentItem(int i, int j, boolean flag, boolean flag1)
     {
-        int j = getInventorySlotContainItem(i);
-        if(j >= 0 && j < 9)
+        int k = -1;
+        if(flag)
         {
-            currentItem = j;
+            k = func_41021_b(i, j);
+        } else
+        {
+            k = getInventorySlotContainItem(i);
+        }
+        if(k >= 0 && k < 9)
+        {
+            currentItem = k;
             return;
         } else
         {
@@ -104,36 +131,49 @@ public class InventoryPlayer
     {
         int i = itemstack.itemID;
         int j = itemstack.stackSize;
-        int k = storeItemStack(itemstack);
-        if(k < 0)
+        if(itemstack.getMaxStackSize() == 1)
         {
-            k = getFirstEmptyStack();
+            int k = getFirstEmptyStack();
+            if(k < 0)
+            {
+                return j;
+            }
+            if(mainInventory[k] == null)
+            {
+                mainInventory[k] = ItemStack.copyItemStack(itemstack);
+            }
+            return 0;
         }
-        if(k < 0)
+        int l = storeItemStack(itemstack);
+        if(l < 0)
+        {
+            l = getFirstEmptyStack();
+        }
+        if(l < 0)
         {
             return j;
         }
-        if(mainInventory[k] == null)
+        if(mainInventory[l] == null)
         {
-            mainInventory[k] = new ItemStack(i, 0, itemstack.getItemDamage());
+            mainInventory[l] = new ItemStack(i, 0, itemstack.getItemDamage());
         }
-        int l = j;
-        if(l > mainInventory[k].getMaxStackSize() - mainInventory[k].stackSize)
+        int i1 = j;
+        if(i1 > mainInventory[l].getMaxStackSize() - mainInventory[l].stackSize)
         {
-            l = mainInventory[k].getMaxStackSize() - mainInventory[k].stackSize;
+            i1 = mainInventory[l].getMaxStackSize() - mainInventory[l].stackSize;
         }
-        if(l > getInventoryStackLimit() - mainInventory[k].stackSize)
+        if(i1 > getInventoryStackLimit() - mainInventory[l].stackSize)
         {
-            l = getInventoryStackLimit() - mainInventory[k].stackSize;
+            i1 = getInventoryStackLimit() - mainInventory[l].stackSize;
         }
-        if(l == 0)
+        if(i1 == 0)
         {
             return j;
         } else
         {
-            j -= l;
-            mainInventory[k].stackSize += l;
-            mainInventory[k].animationsToGo = 5;
+            j -= i1;
+            mainInventory[l].stackSize += i1;
+            mainInventory[l].animationsToGo = 5;
             return j;
         }
     }
@@ -180,13 +220,25 @@ public class InventoryPlayer
                 i = itemstack.stackSize;
                 itemstack.stackSize = storePartialItemStack(itemstack);
             } while(itemstack.stackSize > 0 && itemstack.stackSize < i);
-            return itemstack.stackSize < i;
+            if(itemstack.stackSize == i && player.capabilities.depleteBuckets)
+            {
+                itemstack.stackSize = 0;
+                return true;
+            } else
+            {
+                return itemstack.stackSize < i;
+            }
         }
         int j = getFirstEmptyStack();
         if(j >= 0)
         {
             mainInventory[j] = ItemStack.copyItemStack(itemstack);
             mainInventory[j].animationsToGo = 5;
+            itemstack.stackSize = 0;
+            return true;
+        }
+        if(player.capabilities.depleteBuckets)
+        {
             itemstack.stackSize = 0;
             return true;
         } else
@@ -358,33 +410,25 @@ public class InventoryPlayer
     public int getTotalArmorValue()
     {
         int i = 0;
-        int j = 0;
-        int k = 0;
-        for(int l = 0; l < armorInventory.length; l++)
+        for(int j = 0; j < armorInventory.length; j++)
         {
-            if(armorInventory[l] != null && (armorInventory[l].getItem() instanceof ItemArmor))
+            if(armorInventory[j] != null && (armorInventory[j].getItem() instanceof ItemArmor))
             {
-                int i1 = armorInventory[l].getMaxDamage();
-                int j1 = armorInventory[l].getItemDamageForDisplay();
-                int k1 = i1 - j1;
-                j += k1;
-                k += i1;
-                int l1 = ((ItemArmor)armorInventory[l].getItem()).damageReduceAmount;
-                i += l1;
+                int k = ((ItemArmor)armorInventory[j].getItem()).damageReduceAmount;
+                i += k;
             }
         }
 
-        if(k == 0)
-        {
-            return 0;
-        } else
-        {
-            return ((i - 1) * j) / k + 1;
-        }
+        return i;
     }
 
     public void damageArmor(int i)
     {
+        i /= 4;
+        if(i < 1)
+        {
+            i = 1;
+        }
         for(int j = 0; j < armorInventory.length; j++)
         {
             if(armorInventory[j] == null || !(armorInventory[j].getItem() instanceof ItemArmor))
@@ -439,7 +483,7 @@ public class InventoryPlayer
         return itemStack;
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
         if(player.isDead)
         {
@@ -448,7 +492,7 @@ public class InventoryPlayer
         return entityplayer.getDistanceSqToEntity(player) <= 64D;
     }
 
-    public boolean func_28018_c(ItemStack itemstack)
+    public boolean getHasItemStack(ItemStack itemstack)
     {
         for(int i = 0; i < armorInventory.length; i++)
         {
@@ -477,10 +521,17 @@ public class InventoryPlayer
     {
     }
 
-    public ItemStack mainInventory[];
-    public ItemStack armorInventory[];
-    public int currentItem;
-    public EntityPlayer player;
-    private ItemStack itemStack;
-    public boolean inventoryChanged;
+    public void func_41022_a(InventoryPlayer inventoryplayer)
+    {
+        for(int i = 0; i < mainInventory.length; i++)
+        {
+            mainInventory[i] = ItemStack.copyItemStack(inventoryplayer.mainInventory[i]);
+        }
+
+        for(int j = 0; j < armorInventory.length; j++)
+        {
+            armorInventory[j] = ItemStack.copyItemStack(inventoryplayer.armorInventory[j]);
+        }
+
+    }
 }

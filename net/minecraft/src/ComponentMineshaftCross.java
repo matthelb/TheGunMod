@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,6 +13,9 @@ import java.util.Random;
 
 public class ComponentMineshaftCross extends StructureComponent
 {
+
+    private final int field_35073_a;
+    private final boolean field_35072_b;
 
     public ComponentMineshaftCross(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -138,7 +141,4 @@ public class ComponentMineshaftCross extends StructureComponent
         fillWithBlocks(world, structureboundingbox, boundingBox.maxX - 1, boundingBox.minY, boundingBox.maxZ - 1, boundingBox.maxX - 1, boundingBox.maxY, boundingBox.maxZ - 1, Block.planks.blockID, 0, false);
         return true;
     }
-
-    private final int field_35073_a;
-    private final boolean field_35072_b;
 }

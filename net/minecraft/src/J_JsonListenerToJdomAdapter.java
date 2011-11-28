@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,9 @@ import java.util.Stack;
 final class J_JsonListenerToJdomAdapter
     implements J_JsonListener
 {
+
+    private final Stack field_27210_a = new Stack();
+    private J_JsonNodeBuilder field_27209_b;
 
     J_JsonListenerToJdomAdapter()
     {
@@ -108,7 +111,4 @@ final class J_JsonListenerToJdomAdapter
     {
         ((J_NodeContainer)field_27210_a.peek()).func_27290_a(j_jsonnodebuilder);
     }
-
-    private final Stack field_27210_a = new Stack();
-    private J_JsonNodeBuilder field_27209_b;
 }

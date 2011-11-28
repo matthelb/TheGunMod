@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,13 @@ import java.util.List;
 
 public class GuiYesNo extends GuiScreen
 {
+
+    private GuiScreen parentScreen;
+    private String message1;
+    private String message2;
+    private String buttonText1;
+    private String buttonText2;
+    private int worldNumber;
 
     public GuiYesNo(GuiScreen guiscreen, String s, String s1, String s2, String s3, int i)
     {
@@ -40,11 +47,4 @@ public class GuiYesNo extends GuiScreen
         drawCenteredString(fontRenderer, message2, width / 2, 90, 0xffffff);
         super.drawScreen(i, j, f);
     }
-
-    private GuiScreen parentScreen;
-    private String message1;
-    private String message2;
-    private String buttonText1;
-    private String buttonText2;
-    private int worldNumber;
 }

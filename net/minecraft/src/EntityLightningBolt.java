@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,10 @@ import java.util.Random;
 
 public class EntityLightningBolt extends EntityWeatherEffect
 {
+
+    private int lightningState;
+    public long boltVertex;
+    private int boltLivingTime;
 
     public EntityLightningBolt(World world, double d, double d1, double d2)
     {
@@ -108,8 +112,4 @@ public class EntityLightningBolt extends EntityWeatherEffect
     {
         return lightningState >= 0;
     }
-
-    private int lightningState;
-    public long boltVertex;
-    private int boltLivingTime;
 }

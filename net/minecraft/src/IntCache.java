@@ -1,15 +1,20 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 public class IntCache
 {
+
+    private static int intCacheSize = 256;
+    private static List field_35271_b = new ArrayList();
+    private static List field_35272_c = new ArrayList();
+    private static List field_35269_d = new ArrayList();
+    private static List field_35270_e = new ArrayList();
 
     public IntCache()
     {
@@ -33,7 +38,6 @@ public class IntCache
         }
         if(i > intCacheSize)
         {
-            System.out.println((new StringBuilder()).append("New max size: ").append(i).toString());
             intCacheSize = i;
             field_35269_d.clear();
             field_35270_e.clear();
@@ -69,11 +73,5 @@ public class IntCache
         field_35270_e.clear();
         field_35272_c.clear();
     }
-
-    private static int intCacheSize = 256;
-    private static List field_35271_b = new ArrayList();
-    private static List field_35272_c = new ArrayList();
-    private static List field_35269_d = new ArrayList();
-    private static List field_35270_e = new ArrayList();
 
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,7 +8,7 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, Material, World, EntitySilverfish, 
-//            EntityPlayer
+//            ItemStack, EntityPlayer
 
 public class BlockSilverfish extends Block
 {
@@ -68,5 +68,19 @@ public class BlockSilverfish extends Block
             return 1;
         }
         return i != Block.stoneBrick.blockID ? 0 : 2;
+    }
+
+    protected ItemStack func_41049_c_(int i)
+    {
+        Block block = Block.stone;
+        if(i == 1)
+        {
+            block = Block.cobblestone;
+        }
+        if(i == 2)
+        {
+            block = Block.stoneBrick;
+        }
+        return new ItemStack(block);
     }
 }

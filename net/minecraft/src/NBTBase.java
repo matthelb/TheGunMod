@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,10 +14,7 @@ import java.io.*;
 public abstract class NBTBase
 {
 
-    public NBTBase()
-    {
-        key = null;
-    }
+    private String key;
 
     abstract void writeTagContents(DataOutput dataoutput)
         throws IOException;
@@ -26,6 +23,47 @@ public abstract class NBTBase
         throws IOException;
 
     public abstract byte getType();
+
+    protected NBTBase(String s)
+    {
+        if(s == null)
+        {
+            key = "";
+        } else
+        {
+            key = s;
+        }
+    }
+
+    public boolean equals(Object obj)
+    {
+        if(obj == null || !(obj instanceof NBTBase))
+        {
+            return false;
+        }
+        NBTBase nbtbase = (NBTBase)obj;
+        if(getType() != nbtbase.getType())
+        {
+            return false;
+        }
+        if(key == null && nbtbase.key != null || key != null && nbtbase.key == null)
+        {
+            return false;
+        }
+        return key == null || key.equals(nbtbase.key);
+    }
+
+    public NBTBase setKey(String s)
+    {
+        if(s == null)
+        {
+            key = "";
+        } else
+        {
+            key = s;
+        }
+        return this;
+    }
 
     public String getKey()
     {
@@ -38,12 +76,6 @@ public abstract class NBTBase
         }
     }
 
-    public NBTBase setKey(String s)
-    {
-        key = s;
-        return this;
-    }
-
     public static NBTBase readTag(DataInput datainput)
         throws IOException
     {
@@ -53,8 +85,8 @@ public abstract class NBTBase
             return new NBTTagEnd();
         } else
         {
-            NBTBase nbtbase = createTagOfType(byte0);
-            nbtbase.key = datainput.readUTF();
+            String s = datainput.readUTF();
+            NBTBase nbtbase = createTagOfType(byte0, s);
             nbtbase.readTagContents(datainput);
             return nbtbase;
         }
@@ -75,7 +107,7 @@ public abstract class NBTBase
         }
     }
 
-    public static NBTBase createTagOfType(byte byte0)
+    public static NBTBase createTagOfType(byte byte0, String s)
     {
         switch(byte0)
         {
@@ -83,34 +115,34 @@ public abstract class NBTBase
             return new NBTTagEnd();
 
         case 1: // '\001'
-            return new NBTTagByte();
+            return new NBTTagByte(s);
 
         case 2: // '\002'
-            return new NBTTagShort();
+            return new NBTTagShort(s);
 
         case 3: // '\003'
-            return new NBTTagInt();
+            return new NBTTagInt(s);
 
         case 4: // '\004'
-            return new NBTTagLong();
+            return new NBTTagLong(s);
 
         case 5: // '\005'
-            return new NBTTagFloat();
+            return new NBTTagFloat(s);
 
         case 6: // '\006'
-            return new NBTTagDouble();
+            return new NBTTagDouble(s);
 
         case 7: // '\007'
-            return new NBTTagByteArray();
+            return new NBTTagByteArray(s);
 
         case 8: // '\b'
-            return new NBTTagString();
+            return new NBTTagString(s);
 
         case 9: // '\t'
-            return new NBTTagList();
+            return new NBTTagList(s);
 
         case 10: // '\n'
-            return new NBTTagCompound();
+            return new NBTTagCompound(s);
         }
         return null;
     }
@@ -155,5 +187,5 @@ public abstract class NBTBase
         return "UNKNOWN";
     }
 
-    private String key;
+    public abstract NBTBase func_40195_b();
 }

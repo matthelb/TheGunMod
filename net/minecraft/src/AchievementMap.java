@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,9 @@ import java.util.Map;
 
 public class AchievementMap
 {
+
+    public static AchievementMap instance = new AchievementMap();
+    private Map guidMap;
 
     private AchievementMap()
     {
@@ -37,8 +40,5 @@ public class AchievementMap
     {
         return (String)instance.guidMap.get(Integer.valueOf(i));
     }
-
-    public static AchievementMap instance = new AchievementMap();
-    private Map guidMap;
 
 }

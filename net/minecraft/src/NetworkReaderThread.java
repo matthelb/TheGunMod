@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,8 @@ package net.minecraft.src;
 
 class NetworkReaderThread extends Thread
 {
+
+    final NetworkManager netManager; /* synthetic field */
 
     NetworkReaderThread(NetworkManager networkmanager, String s)
     {
@@ -23,23 +25,24 @@ class NetworkReaderThread extends Thread
         {
             NetworkManager.numReadThreads++;
         }
-        try {
-        while(NetworkManager.isRunning(netManager) && !NetworkManager.isServerTerminating(netManager)) 
+        try
         {
-            while(NetworkManager.readNetworkPacket(netManager)) ;
-            try
+            while(NetworkManager.isRunning(netManager) && !NetworkManager.isServerTerminating(netManager)) 
             {
-                sleep(2L);
+                while(NetworkManager.readNetworkPacket(netManager)) ;
+                try
+                {
+                    sleep(2L);
+                }
+                catch(InterruptedException interruptedexception) { }
             }
-            catch(InterruptedException interruptedexception) { }
         }
-        } finally {
-        synchronized(NetworkManager.threadSyncObject)
+        finally
         {
-            NetworkManager.numReadThreads--;
-        }
+            synchronized(NetworkManager.threadSyncObject)
+            {
+                NetworkManager.numReadThreads--;
+            }
         }
     }
-
-    final NetworkManager netManager; /* synthetic field */
 }

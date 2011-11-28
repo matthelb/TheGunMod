@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -9,15 +9,22 @@ import java.util.Random;
 // Referenced classes of package net.minecraft.src:
 //            EntityMob, DamageSource, EntityArrow, EntityPlayer, 
 //            AchievementList, World, MathHelper, Entity, 
-//            Item, ItemStack, NBTTagCompound
+//            Item, EnumCreatureAttribute, ItemStack, NBTTagCompound
 
 public class EntitySkeleton extends EntityMob
 {
+
+    private static final ItemStack defaultHeldItem;
 
     public EntitySkeleton(World world)
     {
         super(world);
         texture = "/mob/skeleton.png";
+    }
+
+    public int getMaxHealth()
+    {
+        return 20;
     }
 
     protected String getLivingSound()
@@ -43,7 +50,7 @@ public class EntitySkeleton extends EntityMob
     public void onDeath(DamageSource damagesource)
     {
         super.onDeath(damagesource);
-        if((damagesource.func_35526_e() instanceof EntityArrow) && (damagesource.getEntity() instanceof EntityPlayer))
+        if((damagesource.getSourceOfDamage() instanceof EntityArrow) && (damagesource.getEntity() instanceof EntityPlayer))
         {
             EntityPlayer entityplayer = (EntityPlayer)damagesource.getEntity();
             double d = entityplayer.posX - posX;
@@ -62,7 +69,7 @@ public class EntitySkeleton extends EntityMob
             float f = getEntityBrightness(1.0F);
             if(f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
             {
-                fire = 300;
+                func_40046_d(8);
             }
         }
         super.onLivingUpdate();
@@ -104,16 +111,16 @@ public class EntitySkeleton extends EntityMob
         return Item.arrow.shiftedIndex;
     }
 
-    protected void dropFewItems(boolean flag)
+    protected void dropFewItems(boolean flag, int i)
     {
-        int i = rand.nextInt(3);
-        for(int j = 0; j < i; j++)
+        int j = rand.nextInt(3 + i);
+        for(int k = 0; k < j; k++)
         {
             dropItem(Item.arrow.shiftedIndex, 1);
         }
 
-        i = rand.nextInt(3);
-        for(int k = 0; k < i; k++)
+        j = rand.nextInt(3 + i);
+        for(int l = 0; l < j; l++)
         {
             dropItem(Item.bone.shiftedIndex, 1);
         }
@@ -125,7 +132,10 @@ public class EntitySkeleton extends EntityMob
         return defaultHeldItem;
     }
 
-    private static final ItemStack defaultHeldItem;
+    public EnumCreatureAttribute func_40124_t()
+    {
+        return EnumCreatureAttribute.UNDEAD;
+    }
 
     static 
     {

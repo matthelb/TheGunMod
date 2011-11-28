@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.*;
 
 class GuiSlotStatsBlock extends GuiSlotStats
 {
+
+    final GuiStats field_27274_a; /* synthetic field */
 
     public GuiSlotStatsBlock(GuiStats guistats)
     {
@@ -98,6 +100,4 @@ class GuiSlotStatsBlock extends GuiSlotStats
             return "stat.mined";
         }
     }
-
-    final GuiStats field_27274_a; /* synthetic field */
 }

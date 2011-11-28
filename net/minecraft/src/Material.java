@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,43 @@ package net.minecraft.src;
 
 public class Material
 {
+
+    public static final Material air;
+    public static final Material grass;
+    public static final Material ground;
+    public static final Material wood;
+    public static final Material rock;
+    public static final Material iron;
+    public static final Material water;
+    public static final Material lava;
+    public static final Material leaves;
+    public static final Material plants;
+    public static final Material vine;
+    public static final Material sponge;
+    public static final Material cloth;
+    public static final Material fire;
+    public static final Material sand;
+    public static final Material circuits;
+    public static final Material glass;
+    public static final Material tnt;
+    public static final Material unused;
+    public static final Material ice;
+    public static final Material snow;
+    public static final Material craftedSnow;
+    public static final Material cactus;
+    public static final Material clay;
+    public static final Material pumpkin;
+    public static final Material field_41056_z;
+    public static final Material portal;
+    public static final Material cakeMaterial;
+    public static final Material web;
+    public static final Material piston;
+    private boolean canBurn;
+    private boolean groundCover;
+    private boolean isTranslucent;
+    public final MapColor materialMapColor;
+    private boolean canHarvest;
+    private int mobilityFlag;
 
     public Material(MapColor mapcolor)
     {
@@ -56,7 +93,7 @@ public class Material
         return this;
     }
 
-    public boolean getBurning()
+    public boolean getCanBurn()
     {
         return canBurn;
     }
@@ -105,42 +142,6 @@ public class Material
         return this;
     }
 
-    public static final Material air;
-    public static final Material grass;
-    public static final Material ground;
-    public static final Material wood;
-    public static final Material rock;
-    public static final Material iron;
-    public static final Material water;
-    public static final Material lava;
-    public static final Material leaves;
-    public static final Material plants;
-    public static final Material vine;
-    public static final Material sponge;
-    public static final Material cloth;
-    public static final Material fire;
-    public static final Material sand;
-    public static final Material circuits;
-    public static final Material glass;
-    public static final Material tnt;
-    public static final Material unused;
-    public static final Material ice;
-    public static final Material snow;
-    public static final Material craftedSnow;
-    public static final Material cactus;
-    public static final Material clay;
-    public static final Material pumpkin;
-    public static final Material portal;
-    public static final Material cakeMaterial;
-    public static final Material web;
-    public static final Material piston;
-    private boolean canBurn;
-    private boolean groundCover;
-    private boolean isTranslucent;
-    public final MapColor materialMapColor;
-    private boolean canHarvest;
-    private int mobilityFlag;
-
     static 
     {
         air = new MaterialTransparent(MapColor.airColor);
@@ -168,6 +169,7 @@ public class Material
         cactus = (new Material(MapColor.foliageColor)).setIsTranslucent().setNoPushMobility();
         clay = new Material(MapColor.clayColor);
         pumpkin = (new Material(MapColor.foliageColor)).setNoPushMobility();
+        field_41056_z = (new Material(MapColor.foliageColor)).setNoPushMobility();
         portal = (new MaterialPortal(MapColor.airColor)).setImmovableMobility();
         cakeMaterial = (new Material(MapColor.airColor)).setNoPushMobility();
         web = (new MaterialWeb(MapColor.clothColor)).setNoHarvest().setNoPushMobility();

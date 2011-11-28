@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,13 @@ import java.util.Random;
 
 public class ComponentVillageStartPiece extends ComponentVillageWell
 {
+
+    public WorldChunkManager worldChunkMngr;
+    public int field_35109_b;
+    public StructureVillagePieceWeight structVillagePieceWeight;
+    public ArrayList structureVillageWeightedPieceList;
+    public ArrayList field_35108_e;
+    public ArrayList field_35106_f;
 
     public ComponentVillageStartPiece(WorldChunkManager worldchunkmanager, int i, Random random, int j, int k, ArrayList arraylist, int l)
     {
@@ -27,11 +34,4 @@ public class ComponentVillageStartPiece extends ComponentVillageWell
     {
         return worldChunkMngr;
     }
-
-    public WorldChunkManager worldChunkMngr;
-    public int field_35109_b;
-    public StructureVillagePieceWeight structVillagePieceWeight;
-    public ArrayList structureVillageWeightedPieceList;
-    public ArrayList field_35108_e;
-    public ArrayList field_35106_f;
 }

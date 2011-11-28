@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,10 @@ import java.util.Random;
 
 public class BlockFlowing extends BlockFluid
 {
+
+    int numAdjacentSources;
+    boolean isOptimalFlowDirection[];
+    int flowCost[];
 
     protected BlockFlowing(int i, Material material)
     {
@@ -101,6 +105,12 @@ public class BlockFlowing extends BlockFluid
         }
         if(liquidCanDisplaceBlock(world, i, j - 1, k))
         {
+            if(blockMaterial == Material.lava && world.getBlockMaterial(i, j - 1, k) == Material.water)
+            {
+                world.setBlockWithNotify(i, j - 1, k, Block.stone.blockID);
+                triggerLavaMixEffects(world, i, j - 1, k);
+                return;
+            }
             if(l >= 8)
             {
                 world.setBlockAndMetadataWithNotify(i, j - 1, k, blockID, l);
@@ -152,7 +162,7 @@ public class BlockFlowing extends BlockFluid
                     triggerLavaMixEffects(world, i, j, k);
                 } else
                 {
-                    Block.blocksList[i1].dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k));
+                    Block.blocksList[i1].dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
                 }
             }
             world.setBlockAndMetadataWithNotify(i, j, k, blockID, l);
@@ -275,6 +285,10 @@ public class BlockFlowing extends BlockFluid
             return false;
         }
         Material material = Block.blocksList[l].blockMaterial;
+        if(material == Material.portal)
+        {
+            return true;
+        }
         return material.getIsSolid();
     }
 
@@ -320,8 +334,4 @@ public class BlockFlowing extends BlockFluid
             world.scheduleBlockUpdate(i, j, k, blockID, tickRate());
         }
     }
-
-    int numAdjacentSources;
-    boolean isOptimalFlowDirection[];
-    int flowCost[];
 }

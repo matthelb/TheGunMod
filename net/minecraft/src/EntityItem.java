@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,13 @@ import java.util.Random;
 
 public class EntityItem extends Entity
 {
+
+    public ItemStack item;
+    private int field_803_e;
+    public int age;
+    public int delayBeforeCanPickup;
+    private int health;
+    public float field_804_d;
 
     public EntityItem(World world, double d, double d1, double d2, 
             ItemStack itemstack)
@@ -153,6 +160,14 @@ public class EntityItem extends Entity
             {
                 entityplayer.triggerAchievement(AchievementList.killCow);
             }
+            if(item.itemID == Item.diamond.shiftedIndex)
+            {
+                entityplayer.triggerAchievement(AchievementList.diamonds);
+            }
+            if(item.itemID == Item.blazeRod.shiftedIndex)
+            {
+                entityplayer.triggerAchievement(AchievementList.blazeRod);
+            }
             ModLoader.OnItemPickup(entityplayer, item);
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
             entityplayer.onItemPickup(this, i);
@@ -162,11 +177,4 @@ public class EntityItem extends Entity
             }
         }
     }
-
-    public ItemStack item;
-    private int field_803_e;
-    public int age;
-    public int delayBeforeCanPickup;
-    private int health;
-    public float field_804_d;
 }

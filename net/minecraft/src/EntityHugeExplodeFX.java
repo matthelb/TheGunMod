@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,9 @@ import java.util.Random;
 
 public class EntityHugeExplodeFX extends EntityFX
 {
+
+    private int field_35139_a;
+    private int field_35138_ay;
 
     public EntityHugeExplodeFX(World world, double d, double d1, double d2, 
             double d3, double d4, double d5)
@@ -46,7 +49,4 @@ public class EntityHugeExplodeFX extends EntityFX
     {
         return 1;
     }
-
-    private int field_35139_a;
-    private int field_35138_ay;
 }

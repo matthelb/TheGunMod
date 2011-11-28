@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,8 @@ import java.util.List;
 public final class J_JsonObjectNodeBuilder
     implements J_JsonNodeBuilder
 {
+
+    private final List field_27238_a = new LinkedList();
 
     J_JsonObjectNodeBuilder()
     {
@@ -39,6 +41,4 @@ public final class J_JsonObjectNodeBuilder
     {
         return j_jsonobjectnodebuilder.field_27238_a;
     }
-
-    private final List field_27238_a = new LinkedList();
 }

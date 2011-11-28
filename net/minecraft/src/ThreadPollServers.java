@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,97 +13,57 @@ import java.net.*;
 class ThreadPollServers extends Thread
 {
 
+    final ServerNBTStorage server; /* synthetic field */
+    final GuiSlotServer serverSlotContainer; /* synthetic field */
+
     ThreadPollServers(GuiSlotServer guislotserver, ServerNBTStorage servernbtstorage)
     {
         serverSlotContainer = guislotserver;
         server = servernbtstorage;
+//        super();
     }
 
-    public void run() {
-        boolean var27 = false;
-
-        label183: {
-           label184: {
-              label185: {
-                 label186: {
-                    label187: {
-                       try {
-                          var27 = true;
-                          this.server.motd = "\u00a78Polling..";
-                          long var1 = System.nanoTime();
-                          GuiMultiplayer.pollServer(this.serverSlotContainer.field_35410_a, this.server);
-                          long var3 = System.nanoTime();
-                          this.server.lag = (var3 - var1) / 1000000L;
-                          var27 = false;
-                          break label183;
-                       } catch (UnknownHostException var35) {
-                          this.server.lag = -1L;
-                          this.server.motd = "\u00a74Can\'t resolve hostname";
-                          var27 = false;
-                       } catch (SocketTimeoutException var36) {
-                          this.server.lag = -1L;
-                          this.server.motd = "\u00a74Can\'t reach server";
-                          var27 = false;
-                          break label187;
-                       } catch (ConnectException var37) {
-                          this.server.lag = -1L;
-                          this.server.motd = "\u00a74Can\'t reach server";
-                          var27 = false;
-                          break label186;
-                       } catch (IOException var38) {
-                          this.server.lag = -1L;
-                          this.server.motd = "\u00a74Communication error";
-                          var27 = false;
-                          break label185;
-                       } catch (Exception var39) {
-                          this.server.lag = -1L;
-                          this.server.motd = "ERROR: " + var39.getClass();
-                          var27 = false;
-                          break label184;
-                       } finally {
-                          if(var27) {
-                             synchronized(GuiMultiplayer.getLock()) {
-                                GuiMultiplayer.decrementThreadsPending();
-                             }
-                          }
-                       }
-
-                       synchronized(GuiMultiplayer.getLock()) {
-                          GuiMultiplayer.decrementThreadsPending();
-                          return;
-                       }
-                    }
-
-                    synchronized(GuiMultiplayer.getLock()) {
-                       GuiMultiplayer.decrementThreadsPending();
-                       return;
-                    }
-                 }
-
-                 synchronized(GuiMultiplayer.getLock()) {
-                    GuiMultiplayer.decrementThreadsPending();
-                    return;
-                 }
-              }
-
-              synchronized(GuiMultiplayer.getLock()) {
-                 GuiMultiplayer.decrementThreadsPending();
-                 return;
-              }
-           }
-
-           synchronized(GuiMultiplayer.getLock()) {
-              GuiMultiplayer.decrementThreadsPending();
-              return;
-           }
+    public void run()
+    {
+        try
+        {
+            server.motd = "\2478Polling..";
+            long l = System.nanoTime();
+            GuiMultiplayer.pollServer(serverSlotContainer.field_35410_a, server);
+            long l1 = System.nanoTime();
+            server.lag = (l1 - l) / 0xf4240L;
         }
-
-        synchronized(GuiMultiplayer.getLock()) {
-           GuiMultiplayer.decrementThreadsPending();
+        catch(UnknownHostException unknownhostexception)
+        {
+            server.lag = -1L;
+            server.motd = "\2474Can't resolve hostname";
         }
-
-     }
-
-    final ServerNBTStorage server; /* synthetic field */
-    final GuiSlotServer serverSlotContainer; /* synthetic field */
+        catch(SocketTimeoutException sockettimeoutexception)
+        {
+            server.lag = -1L;
+            server.motd = "\2474Can't reach server";
+        }
+        catch(ConnectException connectexception)
+        {
+            server.lag = -1L;
+            server.motd = "\2474Can't reach server";
+        }
+        catch(IOException ioexception)
+        {
+            server.lag = -1L;
+            server.motd = "\2474Communication error";
+        }
+        catch(Exception exception)
+        {
+            server.lag = -1L;
+            server.motd = (new StringBuilder()).append("ERROR: ").append(exception.getClass()).toString();
+        }
+        finally
+        {
+            synchronized(GuiMultiplayer.getLock())
+            {
+                GuiMultiplayer.decrementThreadsPending();
+            }
+        }
+    }
 }

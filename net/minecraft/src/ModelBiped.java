@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,20 @@ package net.minecraft.src;
 
 public class ModelBiped extends ModelBase
 {
+
+    public ModelRenderer bipedHead;
+    public ModelRenderer bipedHeadwear;
+    public ModelRenderer bipedBody;
+    public ModelRenderer bipedRightArm;
+    public ModelRenderer bipedLeftArm;
+    public ModelRenderer bipedRightLeg;
+    public ModelRenderer bipedLeftLeg;
+    public ModelRenderer bipedEars;
+    public ModelRenderer bipedCloak;
+    public int field_1279_h;
+    public int field_1278_i;
+    public boolean isSneak;
+    public boolean field_40333_u;
 
     public ModelBiped()
     {
@@ -23,9 +37,10 @@ public class ModelBiped extends ModelBase
 
     public ModelBiped(float f, float f1)
     {
-        field_1279_h = false;
-        field_1278_i = false;
+        field_1279_h = 0;
+        field_1278_i = 0;
         isSneak = false;
+        field_40333_u = false;
         bipedCloak = new ModelRenderer(this, 0, 0);
         bipedCloak.addBox(-5F, 0.0F, -1F, 10, 16, 1, f);
         bipedEars = new ModelRenderer(this, 24, 0);
@@ -90,13 +105,13 @@ public class ModelBiped extends ModelBase
             bipedRightLeg.rotateAngleY = 0.3141593F;
             bipedLeftLeg.rotateAngleY = -0.3141593F;
         }
-        if(field_1279_h)
+        if(field_1279_h != 0)
         {
-            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - 0.3141593F;
+            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - 0.3141593F * (float)field_1279_h;
         }
-        if(field_1278_i)
+        if(field_1278_i != 0)
         {
-            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - 0.3141593F;
+            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - 0.3141593F * (float)field_1278_i;
         }
         bipedRightArm.rotateAngleY = 0.0F;
         bipedLeftArm.rotateAngleY = 0.0F;
@@ -115,9 +130,9 @@ public class ModelBiped extends ModelBase
             f6 *= f6;
             f6 *= f6;
             f6 = 1.0F - f6;
-            float f7 = MathHelper.sin(f6 * 3.141593F);
-            float f8 = MathHelper.sin(onGround * 3.141593F) * -(bipedHead.rotateAngleX - 0.7F) * 0.75F;
-            bipedRightArm.rotateAngleX -= (double)f7 * 1.2D + (double)f8;
+            float f8 = MathHelper.sin(f6 * 3.141593F);
+            float f10 = MathHelper.sin(onGround * 3.141593F) * -(bipedHead.rotateAngleX - 0.7F) * 0.75F;
+            bipedRightArm.rotateAngleX -= (double)f8 * 1.2D + (double)f10;
             bipedRightArm.rotateAngleY += bipedBody.rotateAngleY * 2.0F;
             bipedRightArm.rotateAngleZ = MathHelper.sin(onGround * 3.141593F) * -0.4F;
         }
@@ -146,6 +161,23 @@ public class ModelBiped extends ModelBase
         bipedLeftArm.rotateAngleZ -= MathHelper.cos(f2 * 0.09F) * 0.05F + 0.05F;
         bipedRightArm.rotateAngleX += MathHelper.sin(f2 * 0.067F) * 0.05F;
         bipedLeftArm.rotateAngleX -= MathHelper.sin(f2 * 0.067F) * 0.05F;
+        if(field_40333_u)
+        {
+            float f7 = 0.0F;
+            float f9 = 0.0F;
+            bipedRightArm.rotateAngleZ = 0.0F;
+            bipedLeftArm.rotateAngleZ = 0.0F;
+            bipedRightArm.rotateAngleY = -(0.1F - f7 * 0.6F) + bipedHead.rotateAngleY;
+            bipedLeftArm.rotateAngleY = (0.1F - f7 * 0.6F) + bipedHead.rotateAngleY + 0.4F;
+            bipedRightArm.rotateAngleX = -1.570796F + bipedHead.rotateAngleX;
+            bipedLeftArm.rotateAngleX = -1.570796F + bipedHead.rotateAngleX;
+            bipedRightArm.rotateAngleX -= f7 * 1.2F - f9 * 0.4F;
+            bipedLeftArm.rotateAngleX -= f7 * 1.2F - f9 * 0.4F;
+            bipedRightArm.rotateAngleZ += MathHelper.cos(f2 * 0.09F) * 0.05F + 0.05F;
+            bipedLeftArm.rotateAngleZ -= MathHelper.cos(f2 * 0.09F) * 0.05F + 0.05F;
+            bipedRightArm.rotateAngleX += MathHelper.sin(f2 * 0.067F) * 0.05F;
+            bipedLeftArm.rotateAngleX -= MathHelper.sin(f2 * 0.067F) * 0.05F;
+        }
     }
 
     public void renderEars(float f)
@@ -161,17 +193,4 @@ public class ModelBiped extends ModelBase
     {
         bipedCloak.render(f);
     }
-
-    public ModelRenderer bipedHead;
-    public ModelRenderer bipedHeadwear;
-    public ModelRenderer bipedBody;
-    public ModelRenderer bipedRightArm;
-    public ModelRenderer bipedLeftArm;
-    public ModelRenderer bipedRightLeg;
-    public ModelRenderer bipedLeftLeg;
-    public ModelRenderer bipedEars;
-    public ModelRenderer bipedCloak;
-    public boolean field_1279_h;
-    public boolean field_1278_i;
-    public boolean isSneak;
 }

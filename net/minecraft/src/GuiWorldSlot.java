@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,10 +10,12 @@ import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            GuiSlot, GuiSelectWorld, GuiButton, SaveFormatComparator, 
-//            MathHelper, Tessellator
+//            MathHelper, StatCollector, Tessellator
 
 class GuiWorldSlot extends GuiSlot
 {
+
+    final GuiSelectWorld parentWorldGui; /* synthetic field */
 
     public GuiWorldSlot(GuiSelectWorld guiselectworld)
     {
@@ -64,8 +66,7 @@ class GuiWorldSlot extends GuiSlot
         }
         String s1 = saveformatcomparator.getFileName();
         s1 = (new StringBuilder()).append(s1).append(" (").append(GuiSelectWorld.getDateFormatter(parentWorldGui).format(new Date(saveformatcomparator.getLastTimePlayed()))).toString();
-        long l1 = saveformatcomparator.getSizeOnDisk();
-        s1 = (new StringBuilder()).append(s1).append(", ").append((float)(((l1 / 1024L) * 100L) / 1024L) / 100F).append(" MB)").toString();
+        s1 = (new StringBuilder()).append(s1).append(")").toString();
         String s2 = "";
         if(saveformatcomparator.func_22161_d())
         {
@@ -74,10 +75,12 @@ class GuiWorldSlot extends GuiSlot
         {
             s2 = GuiSelectWorld.func_35315_i(parentWorldGui)[saveformatcomparator.getGameType()];
         }
+        if(saveformatcomparator.func_40594_g())
+        {
+            s2 = (new StringBuilder()).append("\2474").append(StatCollector.translateToLocal("gameMode.hardcore")).append("\2478").toString();
+        }
         parentWorldGui.drawString(parentWorldGui.fontRenderer, s, j + 2, k + 1, 0xffffff);
         parentWorldGui.drawString(parentWorldGui.fontRenderer, s1, j + 2, k + 12, 0x808080);
         parentWorldGui.drawString(parentWorldGui.fontRenderer, s2, j + 2, k + 12 + 10, 0x808080);
     }
-
-    final GuiSelectWorld parentWorldGui; /* synthetic field */
 }

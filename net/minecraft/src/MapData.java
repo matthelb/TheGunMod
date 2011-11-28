@@ -1,50 +1,60 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            MapDataBase, NBTTagCompound, MapInfo, EntityPlayer, 
+//            WorldSavedData, NBTTagCompound, MapInfo, EntityPlayer, 
 //            InventoryPlayer, MapCoord, ItemStack
 
-public class MapData extends MapDataBase
+public class MapData extends WorldSavedData
 {
+
+    public int xCenter;
+    public int zCenter;
+    public byte dimension;
+    public byte scale;
+    public byte colors[];
+    public int field_28175_g;
+    public List field_28174_h;
+    private Map field_28172_j;
+    public List playersVisibleOnMap;
 
     public MapData(String s)
     {
         super(s);
-        field_28176_f = new byte[16384];
+        colors = new byte[16384];
         field_28174_h = new ArrayList();
         field_28172_j = new HashMap();
-        field_28173_i = new ArrayList();
+        playersVisibleOnMap = new ArrayList();
     }
 
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
-        field_28178_d = nbttagcompound.getByte("dimension");
-        field_28180_b = nbttagcompound.getInteger("xCenter");
-        field_28179_c = nbttagcompound.getInteger("zCenter");
-        field_28177_e = nbttagcompound.getByte("scale");
-        if(field_28177_e < 0)
+        dimension = nbttagcompound.getByte("dimension");
+        xCenter = nbttagcompound.getInteger("xCenter");
+        zCenter = nbttagcompound.getInteger("zCenter");
+        scale = nbttagcompound.getByte("scale");
+        if(scale < 0)
         {
-            field_28177_e = 0;
+            scale = 0;
         }
-        if(field_28177_e > 4)
+        if(scale > 4)
         {
-            field_28177_e = 4;
+            scale = 4;
         }
         short word0 = nbttagcompound.getShort("width");
         short word1 = nbttagcompound.getShort("height");
         if(word0 == 128 && word1 == 128)
         {
-            field_28176_f = nbttagcompound.getByteArray("colors");
+            colors = nbttagcompound.getByteArray("colors");
         } else
         {
             byte abyte0[] = nbttagcompound.getByteArray("colors");
-            field_28176_f = new byte[16384];
+            colors = new byte[16384];
             int i = (128 - word0) / 2;
             int j = (128 - word1) / 2;
             for(int k = 0; k < word1; k++)
@@ -59,7 +69,7 @@ public class MapData extends MapDataBase
                     int j1 = i1 + i;
                     if(j1 >= 0 || j1 < 128)
                     {
-                        field_28176_f[j1 + l * 128] = abyte0[i1 + k * word0];
+                        colors[j1 + l * 128] = abyte0[i1 + k * word0];
                     }
                 }
 
@@ -70,13 +80,13 @@ public class MapData extends MapDataBase
 
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
-        nbttagcompound.setByte("dimension", field_28178_d);
-        nbttagcompound.setInteger("xCenter", field_28180_b);
-        nbttagcompound.setInteger("zCenter", field_28179_c);
-        nbttagcompound.setByte("scale", field_28177_e);
+        nbttagcompound.setByte("dimension", dimension);
+        nbttagcompound.setInteger("xCenter", xCenter);
+        nbttagcompound.setInteger("zCenter", zCenter);
+        nbttagcompound.setByte("scale", scale);
         nbttagcompound.setShort("width", (short)128);
         nbttagcompound.setShort("height", (short)128);
-        nbttagcompound.setByteArray("colors", field_28176_f);
+        nbttagcompound.setByteArray("colors", colors);
     }
 
     public void func_28169_a(EntityPlayer entityplayer, ItemStack itemstack)
@@ -87,18 +97,18 @@ public class MapData extends MapDataBase
             field_28172_j.put(entityplayer, mapinfo);
             field_28174_h.add(mapinfo);
         }
-        field_28173_i.clear();
+        playersVisibleOnMap.clear();
         for(int i = 0; i < field_28174_h.size(); i++)
         {
             MapInfo mapinfo1 = (MapInfo)field_28174_h.get(i);
-            if(mapinfo1.entityplayerObj.isDead || !mapinfo1.entityplayerObj.inventory.func_28018_c(itemstack))
+            if(mapinfo1.entityplayerObj.isDead || !mapinfo1.entityplayerObj.inventory.getHasItemStack(itemstack))
             {
                 field_28172_j.remove(mapinfo1.entityplayerObj);
                 field_28174_h.remove(mapinfo1);
                 continue;
             }
-            float f = (float)(mapinfo1.entityplayerObj.posX - (double)field_28180_b) / (float)(1 << field_28177_e);
-            float f1 = (float)(mapinfo1.entityplayerObj.posZ - (double)field_28179_c) / (float)(1 << field_28177_e);
+            float f = (float)(mapinfo1.entityplayerObj.posX - (double)xCenter) / (float)(1 << scale);
+            float f1 = (float)(mapinfo1.entityplayerObj.posZ - (double)zCenter) / (float)(1 << scale);
             int j = 64;
             int k = 64;
             if(f < (float)(-j) || f1 < (float)(-k) || f > (float)j || f1 > (float)k)
@@ -109,14 +119,14 @@ public class MapData extends MapDataBase
             byte byte1 = (byte)(int)((double)(f * 2.0F) + 0.5D);
             byte byte2 = (byte)(int)((double)(f1 * 2.0F) + 0.5D);
             byte byte3 = (byte)(int)((double)((entityplayer.rotationYaw * 16F) / 360F) + 0.5D);
-            if(field_28178_d < 0)
+            if(dimension < 0)
             {
                 int l = field_28175_g / 10;
                 byte3 = (byte)(l * l * 0x209a771 + l * 121 >> 15 & 0xf);
             }
-            if(mapinfo1.entityplayerObj.dimension == field_28178_d)
+            if(mapinfo1.entityplayerObj.dimension == dimension)
             {
-                field_28173_i.add(new MapCoord(this, byte0, byte1, byte2, byte3));
+                playersVisibleOnMap.add(new MapCoord(this, byte0, byte1, byte2, byte3));
             }
         }
 
@@ -148,33 +158,23 @@ public class MapData extends MapDataBase
             int k = abyte0[2] & 0xff;
             for(int l = 0; l < abyte0.length - 3; l++)
             {
-                field_28176_f[(l + k) * 128 + i] = abyte0[l + 3];
+                colors[(l + k) * 128 + i] = abyte0[l + 3];
             }
 
             markDirty();
         } else
         if(abyte0[0] == 1)
         {
-            field_28173_i.clear();
+            playersVisibleOnMap.clear();
             for(int j = 0; j < (abyte0.length - 1) / 3; j++)
             {
                 byte byte0 = (byte)(abyte0[j * 3 + 1] % 16);
                 byte byte1 = abyte0[j * 3 + 2];
                 byte byte2 = abyte0[j * 3 + 3];
                 byte byte3 = (byte)(abyte0[j * 3 + 1] / 16);
-                field_28173_i.add(new MapCoord(this, byte0, byte1, byte2, byte3));
+                playersVisibleOnMap.add(new MapCoord(this, byte0, byte1, byte2, byte3));
             }
 
         }
     }
-
-    public int field_28180_b;
-    public int field_28179_c;
-    public byte field_28178_d;
-    public byte field_28177_e;
-    public byte field_28176_f[];
-    public int field_28175_g;
-    public List field_28174_h;
-    private Map field_28172_j;
-    public List field_28173_i;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,8 @@ package net.minecraft.src;
 
 public class EntityTNTPrimed extends Entity
 {
+
+    public int fuse;
 
     public EntityTNTPrimed(World world)
     {
@@ -100,6 +102,4 @@ public class EntityTNTPrimed extends Entity
     {
         return 0.0F;
     }
-
-    public int fuse;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -19,83 +19,62 @@ public class WorldGenSwamp extends WorldGenerator
 
     public boolean generate(World world, Random random, int i, int j, int k)
     {
-        int l;
-        boolean flag;
-label0:
+        int l = random.nextInt(4) + 5;
+        for(; world.getBlockMaterial(i, j - 1, k) == Material.water; j--) { }
+        boolean flag = true;
+        if(j < 1 || j + l + 1 > world.field_35472_c)
         {
-            l = random.nextInt(4) + 5;
-            for(; world.getBlockMaterial(i, j - 1, k) == Material.water; j--) { }
-            flag = true;
-            if(j >= 1)
-            {
-                world.getClass();
-                if(j + l + 1 <= 128)
-                {
-                    break label0;
-                }
-            }
             return false;
         }
-label1:
+        for(int i1 = j; i1 <= j + 1 + l; i1++)
         {
-            for(int i1 = j; i1 <= j + 1 + l; i1++)
+            byte byte0 = 1;
+            if(i1 == j)
             {
-                byte byte0 = 1;
-                if(i1 == j)
+                byte0 = 0;
+            }
+            if(i1 >= (j + 1 + l) - 2)
+            {
+                byte0 = 3;
+            }
+            for(int j2 = i - byte0; j2 <= i + byte0 && flag; j2++)
+            {
+                for(int j3 = k - byte0; j3 <= k + byte0 && flag; j3++)
                 {
-                    byte0 = 0;
-                }
-                if(i1 >= (j + 1 + l) - 2)
-                {
-                    byte0 = 3;
-                }
-                for(int j2 = i - byte0; j2 <= i + byte0 && flag; j2++)
-                {
-                    for(int j3 = k - byte0; j3 <= k + byte0 && flag; j3++)
+                    if(i1 >= 0 && i1 < world.field_35472_c)
                     {
-                        if(i1 >= 0)
+                        int i4 = world.getBlockId(j2, i1, j3);
+                        if(i4 == 0 || i4 == Block.leaves.blockID)
                         {
-                            world.getClass();
-                            if(i1 < 128)
-                            {
-                                int i4 = world.getBlockId(j2, i1, j3);
-                                if(i4 == 0 || i4 == Block.leaves.blockID)
-                                {
-                                    continue;
-                                }
-                                if(i4 == Block.waterStill.blockID || i4 == Block.waterMoving.blockID)
-                                {
-                                    if(i1 > j)
-                                    {
-                                        flag = false;
-                                    }
-                                } else
-                                {
-                                    flag = false;
-                                }
-                                continue;
-                            }
+                            continue;
                         }
+                        if(i4 == Block.waterStill.blockID || i4 == Block.waterMoving.blockID)
+                        {
+                            if(i1 > j)
+                            {
+                                flag = false;
+                            }
+                        } else
+                        {
+                            flag = false;
+                        }
+                    } else
+                    {
                         flag = false;
                     }
-
                 }
 
             }
 
-            if(!flag)
-            {
-                return false;
-            }
-            int j1 = world.getBlockId(i, j - 1, k);
-            if(j1 == Block.grass.blockID || j1 == Block.dirt.blockID)
-            {
-                world.getClass();
-                if(j < 128 - l - 1)
-                {
-                    break label1;
-                }
-            }
+        }
+
+        if(!flag)
+        {
+            return false;
+        }
+        int j1 = world.getBlockId(i, j - 1, k);
+        if(j1 != Block.grass.blockID && j1 != Block.dirt.blockID || j >= world.field_35472_c - l - 1)
+        {
             return false;
         }
         world.setBlock(i, j - 1, k, Block.dirt.blockID);

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,8 @@ package net.minecraft.src;
 
 public class GenLayerVillageLandscape extends GenLayer
 {
+
+    private BiomeGenBase allowedBiomes[];
 
     public GenLayerVillageLandscape(long l, GenLayer genlayer)
     {
@@ -29,13 +31,28 @@ public class GenLayerVillageLandscape extends GenLayer
             for(int j1 = 0; j1 < k; j1++)
             {
                 func_35499_a(j1 + i, i1 + j);
-                ai1[j1 + i1 * k] = ai[j1 + i1 * k] <= 0 ? 0 : allowedBiomes[nextInt(allowedBiomes.length)].biomeID;
+                int k1 = ai[j1 + i1 * k];
+                if(k1 == 0)
+                {
+                    ai1[j1 + i1 * k] = 0;
+                    continue;
+                }
+                if(k1 == BiomeGenBase.mushroomIsland.biomeID)
+                {
+                    ai1[j1 + i1 * k] = k1;
+                    continue;
+                }
+                if(k1 == 1)
+                {
+                    ai1[j1 + i1 * k] = allowedBiomes[nextInt(allowedBiomes.length)].biomeID;
+                } else
+                {
+                    ai1[j1 + i1 * k] = BiomeGenBase.icePlains.biomeID;
+                }
             }
 
         }
 
         return ai1;
     }
-
-    private BiomeGenBase allowedBiomes[];
 }

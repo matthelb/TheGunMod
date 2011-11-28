@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -16,6 +16,15 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiStats extends GuiScreen
 {
+
+    private static RenderItem renderItem = new RenderItem();
+    protected GuiScreen parentGui;
+    protected String statsTitle;
+    private GuiSlotStatsGeneral slotGeneral;
+    private GuiSlotStatsItem slotItem;
+    private GuiSlotStatsBlock slotBlock;
+    private StatFileWriter statFileWriter;
+    private GuiSlot selectedSlot;
 
     public GuiStats(GuiScreen guiscreen, StatFileWriter statfilewriter)
     {
@@ -95,10 +104,7 @@ public class GuiStats extends GuiScreen
     {
         drawButtonBackground(i + 1, j + 1);
         GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-        GL11.glPushMatrix();
-        GL11.glRotatef(180F, 1.0F, 0.0F, 0.0F);
-        RenderHelper.enableStandardItemLighting();
-        GL11.glPopMatrix();
+        RenderHelper.func_41089_c();
         renderItem.drawItemIntoGui(fontRenderer, mc.renderEngine, k, 0, Item.itemsList[k].getIconFromDamage(0), i + 2, j + 2);
         RenderHelper.disableStandardItemLighting();
         GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
@@ -217,14 +223,5 @@ public class GuiStats extends GuiScreen
     {
         guistats.drawItemSprite(i, j, k);
     }
-
-    private static RenderItem renderItem = new RenderItem();
-    protected GuiScreen parentGui;
-    protected String statsTitle;
-    private GuiSlotStatsGeneral slotGeneral;
-    private GuiSlotStatsItem slotItem;
-    private GuiSlotStatsBlock slotBlock;
-    private StatFileWriter statFileWriter;
-    private GuiSlot selectedSlot;
 
 }

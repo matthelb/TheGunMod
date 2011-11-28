@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,10 @@ import java.util.regex.Pattern;
 class ChunkFile
     implements Comparable
 {
+
+    private final File chunkFile;
+    private final int xChunk;
+    private final int yChunk;
 
     public ChunkFile(File file)
     {
@@ -64,8 +68,4 @@ class ChunkFile
     {
         return compareChunks((ChunkFile)obj);
     }
-
-    private final File chunkFile;
-    private final int xChunk;
-    private final int yChunk;
 }

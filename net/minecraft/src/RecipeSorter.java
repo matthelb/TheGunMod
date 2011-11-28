@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,9 +13,12 @@ class RecipeSorter
     implements Comparator
 {
 
+    final CraftingManager craftingManager; /* synthetic field */
+
     RecipeSorter(CraftingManager craftingmanager)
     {
         craftingManager = craftingmanager;
+//        super();
     }
 
     public int compareRecipes(IRecipe irecipe, IRecipe irecipe1)
@@ -39,6 +42,4 @@ class RecipeSorter
     {
         return compareRecipes((IRecipe)obj, (IRecipe)obj1);
     }
-
-    final CraftingManager craftingManager; /* synthetic field */
 }

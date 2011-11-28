@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,9 @@ import org.lwjgl.opengl.GL11;
 
 public class GLAllocation
 {
+
+    private static List displayLists = new ArrayList();
+    private static List textureNames = new ArrayList();
 
     public GLAllocation()
     {
@@ -78,8 +81,5 @@ public class GLAllocation
     {
         return createDirectByteBuffer(i << 2).asFloatBuffer();
     }
-
-    private static List displayLists = new ArrayList();
-    private static List textureNames = new ArrayList();
 
 }

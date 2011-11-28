@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,8 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntityMobSpawnerRenderer extends TileEntitySpecialRenderer
 {
+
+    private Map entityHashMap;
 
     public TileEntityMobSpawnerRenderer()
     {
@@ -51,6 +53,4 @@ public class TileEntityMobSpawnerRenderer extends TileEntitySpecialRenderer
     {
         renderTileEntityMobSpawner((TileEntityMobSpawner)tileentity, d, d1, d2, f);
     }
-
-    private Map entityHashMap;
 }

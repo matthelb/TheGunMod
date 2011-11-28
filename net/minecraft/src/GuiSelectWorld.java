@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -13,10 +13,25 @@ import net.minecraft.client.Minecraft;
 // Referenced classes of package net.minecraft.src:
 //            GuiScreen, StringTranslate, GuiWorldSlot, ISaveFormat, 
 //            SaveFormatComparator, MathHelper, GuiButton, GuiYesNo, 
-//            GuiCreateWorld, GuiRenameWorld, PlayerControllerSP, PlayerControllerTest
+//            GuiCreateWorld, GuiRenameWorld, PlayerControllerSP, PlayerControllerCreative
 
 public class GuiSelectWorld extends GuiScreen
 {
+
+    private final DateFormat dateFormatter = new SimpleDateFormat();
+    protected GuiScreen parentScreen;
+    protected String screenTitle;
+    private boolean selected;
+    private int selectedWorld;
+    private List saveList;
+    private GuiWorldSlot worldSlotContainer;
+    private String field_22098_o;
+    private String field_22097_p;
+    private String field_35316_k[];
+    private boolean deleting;
+    private GuiButton buttonRename;
+    private GuiButton buttonSelect;
+    private GuiButton buttonDelete;
 
     public GuiSelectWorld(GuiScreen guiscreen)
     {
@@ -68,8 +83,8 @@ public class GuiSelectWorld extends GuiScreen
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
         controlList.add(buttonSelect = new GuiButton(1, width / 2 - 154, height - 52, 150, 20, stringtranslate.translateKey("selectWorld.select")));
-        controlList.add(buttonRename = new GuiButton(6, width / 2 - 154, height - 28, 70, 20, stringtranslate.translateKey("selectWorld.rename")));
-        controlList.add(buttonDelete = new GuiButton(2, width / 2 - 74, height - 28, 70, 20, stringtranslate.translateKey("selectWorld.delete")));
+        controlList.add(buttonDelete = new GuiButton(6, width / 2 - 154, height - 28, 70, 20, stringtranslate.translateKey("selectWorld.rename")));
+        controlList.add(buttonRename = new GuiButton(2, width / 2 - 74, height - 28, 70, 20, stringtranslate.translateKey("selectWorld.delete")));
         controlList.add(new GuiButton(3, width / 2 + 4, height - 52, 150, 20, stringtranslate.translateKey("selectWorld.create")));
         controlList.add(new GuiButton(0, width / 2 + 4, height - 28, 150, 20, stringtranslate.translateKey("gui.cancel")));
         buttonSelect.enabled = false;
@@ -133,7 +148,7 @@ public class GuiSelectWorld extends GuiScreen
             mc.playerController = new PlayerControllerSP(mc);
         } else
         {
-            mc.playerController = new PlayerControllerTest(mc);
+            mc.playerController = new PlayerControllerCreative(mc);
         }
         String s = getSaveFileName(i);
         if(s == null)
@@ -153,7 +168,7 @@ public class GuiSelectWorld extends GuiScreen
             {
                 ISaveFormat isaveformat = mc.getSaveLoader();
                 isaveformat.flushCache();
-                isaveformat.func_22172_c(getSaveFileName(i));
+                isaveformat.deleteWorldDirectory(getSaveFileName(i));
                 loadSaves();
             }
             mc.displayGuiScreen(this);
@@ -216,19 +231,4 @@ public class GuiSelectWorld extends GuiScreen
     {
         return guiselectworld.field_35316_k;
     }
-
-    private final DateFormat dateFormatter = new SimpleDateFormat();
-    protected GuiScreen parentScreen;
-    protected String screenTitle;
-    private boolean selected;
-    private int selectedWorld;
-    private List saveList;
-    private GuiWorldSlot worldSlotContainer;
-    private String field_22098_o;
-    private String field_22097_p;
-    private String field_35316_k[];
-    private boolean deleting;
-    private GuiButton buttonRename;
-    private GuiButton buttonSelect;
-    private GuiButton buttonDelete;
 }

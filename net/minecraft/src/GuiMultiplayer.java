@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -20,6 +20,22 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiMultiplayer extends GuiScreen
 {
+
+    private static int threadsPending = 0;
+    private static Object lock = new Object();
+    private GuiScreen parentScreen;
+    private GuiSlotServer serverSlotContainer;
+    private List serverList;
+    private int selectedServer;
+    private GuiButton buttonEdit;
+    private GuiButton buttonSelect;
+    private GuiButton buttonDelete;
+    private boolean deleteClicked;
+    private boolean addClicked;
+    private boolean editClicked;
+    private boolean directClicked;
+    private String field_35350_v;
+    private ServerNBTStorage tempServer;
 
     public GuiMultiplayer(GuiScreen guiscreen)
     {
@@ -473,21 +489,5 @@ public class GuiMultiplayer extends GuiScreen
     {
         return guimultiplayer.field_35350_v = s;
     }
-
-    private static int threadsPending = 0;
-    private static Object lock = new Object();
-    private GuiScreen parentScreen;
-    private GuiSlotServer serverSlotContainer;
-    private List serverList;
-    private int selectedServer;
-    private GuiButton buttonEdit;
-    private GuiButton buttonSelect;
-    private GuiButton buttonDelete;
-    private boolean deleteClicked;
-    private boolean addClicked;
-    private boolean editClicked;
-    private boolean directClicked;
-    private String field_35350_v;
-    private ServerNBTStorage tempServer;
 
 }

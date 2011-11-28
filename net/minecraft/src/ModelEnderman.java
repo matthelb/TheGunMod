@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,9 @@ package net.minecraft.src;
 
 public class ModelEnderman extends ModelBiped
 {
+
+    public boolean isCarrying;
+    public boolean isAttacking;
 
     public ModelEnderman()
     {
@@ -114,7 +117,4 @@ public class ModelEnderman extends ModelBiped
             bipedHead.rotationPointY -= f8 * 5F;
         }
     }
-
-    public boolean isCarrying;
-    public boolean isAttacking;
 }

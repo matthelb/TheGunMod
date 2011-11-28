@@ -1,18 +1,30 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.io.IOException;
+import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            IChunkProvider, Chunk, World, IChunkLoader, 
-//            IProgressUpdate
+//            IProgressUpdate, EnumCreatureType, ChunkPosition
 
 public class ChunkProviderLoadOrGenerate
     implements IChunkProvider
 {
+
+    private Chunk blankChunk;
+    private IChunkProvider chunkProvider;
+    private IChunkLoader chunkLoader;
+    private Chunk chunks[];
+    private World worldObj;
+    int lastQueriedChunkXPos;
+    int lastQueriedChunkZPos;
+    private Chunk lastQueriedChunk;
+    private int curChunkX;
+    private int curChunkY;
 
     public void setCurrentChunkOver(int i, int j)
     {
@@ -237,14 +249,13 @@ public class ChunkProviderLoadOrGenerate
         return (new StringBuilder()).append("ChunkCache: ").append(chunks.length).toString();
     }
 
-    private Chunk blankChunk;
-    private IChunkProvider chunkProvider;
-    private IChunkLoader chunkLoader;
-    private Chunk chunks[];
-    private World worldObj;
-    int lastQueriedChunkXPos;
-    int lastQueriedChunkZPos;
-    private Chunk lastQueriedChunk;
-    private int curChunkX;
-    private int curChunkY;
+    public List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    {
+        return chunkProvider.func_40377_a(enumcreaturetype, i, j, k);
+    }
+
+    public ChunkPosition func_40376_a(World world, String s, int i, int j, int k)
+    {
+        return chunkProvider.func_40376_a(world, s, i, j, k);
+    }
 }

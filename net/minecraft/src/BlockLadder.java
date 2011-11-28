@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -139,7 +139,7 @@ public class BlockLadder extends Block
         }
         if(!flag)
         {
-            dropBlockAsItem(world, i, j, k, i1);
+            dropBlockAsItem(world, i, j, k, i1, 0);
             world.setBlockWithNotify(i, j, k, 0);
         }
         super.onNeighborBlockChange(world, i, j, k, l);

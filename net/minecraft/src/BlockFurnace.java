@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -15,6 +15,10 @@ import java.util.Random;
 public class BlockFurnace extends BlockContainer
 {
 
+    private Random furnaceRand;
+    private final boolean isActive;
+    private static boolean keepFurnaceInventory = false;
+
     protected BlockFurnace(int i, boolean flag)
     {
         super(i, Material.rock);
@@ -23,7 +27,7 @@ public class BlockFurnace extends BlockContainer
         blockIndexInTexture = 45;
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return Block.stoneOvenIdle.blockID;
     }
@@ -245,9 +249,5 @@ label0:
         }
         super.onBlockRemoval(world, i, j, k);
     }
-
-    private Random furnaceRand;
-    private final boolean isActive;
-    private static boolean keepFurnaceInventory = false;
 
 }

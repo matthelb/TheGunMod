@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import java.util.Random;
 
 public class WorldGenDeadBush extends WorldGenerator
 {
+
+    private int deadBushID;
 
     public WorldGenDeadBush(int i)
     {
@@ -34,6 +36,4 @@ public class WorldGenDeadBush extends WorldGenerator
 
         return true;
     }
-
-    private int deadBushID;
 }

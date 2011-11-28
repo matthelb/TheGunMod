@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,10 +8,13 @@ import org.lwjgl.opengl.GL11;
 
 // Referenced classes of package net.minecraft.src:
 //            Render, RenderBlocks, EntityXPOrb, Tessellator, 
-//            MathHelper, RenderManager, Entity
+//            OpenGlHelper, MathHelper, RenderManager, Entity
 
 public class RenderXPOrb extends Render
 {
+
+    private RenderBlocks field_35439_b;
+    public boolean field_35440_a;
 
     public RenderXPOrb()
     {
@@ -36,9 +39,14 @@ public class RenderXPOrb extends Render
         float f6 = 1.0F;
         float f7 = 0.5F;
         float f8 = 0.25F;
-        float f9 = entityxporb.getEntityBrightness(f1) * 255F;
-        float f10 = ((float)entityxporb.xpColour + f1) / 2.0F;
-        int j = (int)((MathHelper.sin(f10 + 0.0F) + 1.0F) * 0.5F * f9);
+        int f9a = entityxporb.getEntityBrightnessForRender(f1);
+        float f10 = f9a % 0x10000;
+        int j = f9a / 0x10000;
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)f10 / 1.0F, (float)j / 1.0F);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+        float f9 = 255F;
+        f10 = ((float)entityxporb.xpColor + f1) / 2.0F;
+        j = (int)((MathHelper.sin(f10 + 0.0F) + 1.0F) * 0.5F * f9);
         int k = (int)f9;
         int l = (int)((MathHelper.sin(f10 + 4.18879F) + 1.0F) * 0.1F * f9);
         int i1 = j << 16 | k << 8 | l;
@@ -64,7 +72,4 @@ public class RenderXPOrb extends Render
     {
         func_35438_a((EntityXPOrb)entity, d, d1, d2, f, f1);
     }
-
-    private RenderBlocks field_35439_b;
-    public boolean field_35440_a;
 }

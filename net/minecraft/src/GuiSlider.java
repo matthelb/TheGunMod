@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,10 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiSlider extends GuiButton
 {
+
+    public float sliderValue;
+    public boolean dragging;
+    private EnumOptions idFloat;
 
     public GuiSlider(int i, int j, int k, EnumOptions enumoptions, String s, float f)
     {
@@ -80,8 +84,4 @@ public class GuiSlider extends GuiButton
     {
         dragging = false;
     }
-
-    public float sliderValue;
-    public boolean dragging;
-    private EnumOptions idFloat;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,12 @@ package net.minecraft.src;
 public class ShapedRecipes
     implements IRecipe
 {
+
+    private int recipeWidth;
+    private int recipeHeight;
+    private ItemStack recipeItems[];
+    private ItemStack recipeOutput;
+    public final int recipeOutputItemID;
 
     public ShapedRecipes(int i, int j, ItemStack aitemstack[], ItemStack itemstack)
     {
@@ -99,10 +105,4 @@ public class ShapedRecipes
     {
         return recipeWidth * recipeHeight;
     }
-
-    private int recipeWidth;
-    private int recipeHeight;
-    private ItemStack recipeItems[];
-    private ItemStack recipeOutput;
-    public final int recipeOutputItemID;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,9 @@ import org.lwjgl.opengl.GL11;
 
 public class ModTextureStatic extends TextureFX
 {
+
+    private boolean oldanaglyph;
+    private int pixels[];
 
     public ModTextureStatic(int i, int j, BufferedImage bufferedimage)
     {
@@ -146,7 +149,4 @@ public class ModTextureStatic extends TextureFX
 
         return bufferedimage1;
     }
-
-    private boolean oldanaglyph;
-    private int pixels[];
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,10 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiRenameWorld extends GuiScreen
 {
+
+    private GuiScreen parentGuiScreen;
+    private GuiTextField theGuiTextField;
+    private final String worldName;
 
     public GuiRenameWorld(GuiScreen guiscreen, String s)
     {
@@ -59,7 +63,7 @@ public class GuiRenameWorld extends GuiScreen
         if(guibutton.id == 0)
         {
             ISaveFormat isaveformat = mc.getSaveLoader();
-            isaveformat.func_22170_a(worldName, theGuiTextField.getText().trim());
+            isaveformat.renameWorld(worldName, theGuiTextField.getText().trim());
             mc.displayGuiScreen(parentGuiScreen);
         }
     }
@@ -89,8 +93,4 @@ public class GuiRenameWorld extends GuiScreen
         theGuiTextField.drawTextBox();
         super.drawScreen(i, j, f);
     }
-
-    private GuiScreen parentGuiScreen;
-    private GuiTextField theGuiTextField;
-    private final String worldName;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,6 +12,8 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderHelper
 {
+
+    private static FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);
 
     public RenderHelper()
     {
@@ -62,6 +64,13 @@ public class RenderHelper
         return colorBuffer;
     }
 
-    private static FloatBuffer colorBuffer = GLAllocation.createDirectFloatBuffer(16);
+    public static void func_41089_c()
+    {
+        GL11.glPushMatrix();
+        GL11.glRotatef(-30F, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(165F, 1.0F, 0.0F, 0.0F);
+        enableStandardItemLighting();
+        GL11.glPopMatrix();
+    }
 
 }

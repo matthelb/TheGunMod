@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,8 +12,29 @@ import java.util.Random;
 public class WorldGenBigTree extends WorldGenerator
 {
 
-    public WorldGenBigTree()
+    static final byte otherCoordPairs[] = {
+        2, 0, 0, 1, 2, 1
+    };
+    Random rand;
+    World worldObj;
+    int basePos[] = {
+        0, 0, 0
+    };
+    int heightLimit;
+    int height;
+    double heightAttenuation;
+    double field_875_h;
+    double field_874_i;
+    double field_873_j;
+    double field_872_k;
+    int trunkSize;
+    int heightLimitLimit;
+    int leafDistanceLimit;
+    int leafNodes[][];
+
+    public WorldGenBigTree(boolean flag)
     {
+        super(flag);
         rand = new Random();
         heightLimit = 0;
         heightAttenuation = 0.61799999999999999D;
@@ -137,7 +158,7 @@ public class WorldGenBigTree extends WorldGenerator
                         l1++;
                     } else
                     {
-                        worldObj.setBlock(ai1[0], ai1[1], ai1[2], l);
+                        func_41060_a(worldObj, ai1[0], ai1[1], ai1[2], l, 0);
                         l1++;
                     }
                 }
@@ -232,7 +253,7 @@ public class WorldGenBigTree extends WorldGenerator
             ai3[j] = MathHelper.floor_double((double)(ai[j] + k) + 0.5D);
             ai3[byte1] = MathHelper.floor_double((double)ai[byte1] + (double)k * d + 0.5D);
             ai3[byte2] = MathHelper.floor_double((double)ai[byte2] + (double)k * d1 + 0.5D);
-            worldObj.setBlock(ai3[0], ai3[1], ai3[2], i);
+            func_41060_a(worldObj, ai3[0], ai3[1], ai3[2], i, 0);
         }
 
     }
@@ -430,25 +451,5 @@ public class WorldGenBigTree extends WorldGenerator
             return true;
         }
     }
-
-    static final byte otherCoordPairs[] = {
-        2, 0, 0, 1, 2, 1
-    };
-    Random rand;
-    World worldObj;
-    int basePos[] = {
-        0, 0, 0
-    };
-    int heightLimit;
-    int height;
-    double heightAttenuation;
-    double field_875_h;
-    double field_874_i;
-    double field_873_j;
-    double field_872_k;
-    int trunkSize;
-    int heightLimitLimit;
-    int leafDistanceLimit;
-    int leafNodes[][];
 
 }

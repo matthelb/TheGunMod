@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,12 @@ import java.io.*;
 
 public class Packet14BlockDig extends Packet
 {
+
+    public int xPosition;
+    public int yPosition;
+    public int zPosition;
+    public int face;
+    public int status;
 
     public Packet14BlockDig()
     {
@@ -54,10 +60,4 @@ public class Packet14BlockDig extends Packet
     {
         return 11;
     }
-
-    public int xPosition;
-    public int yPosition;
-    public int zPosition;
-    public int face;
-    public int status;
 }

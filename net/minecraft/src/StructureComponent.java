@@ -1,18 +1,22 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            StructureBoundingBox, World, Block, Material, 
-//            StructurePieceBlockSelector, TileEntityChest, WeightedRandom, StructurePieceTreasure, 
-//            Item, ItemStack, ItemDoor
+//            StructureBoundingBox, ChunkPosition, World, Block, 
+//            Material, StructurePieceBlockSelector, TileEntityChest, WeightedRandom, 
+//            StructurePieceTreasure, Item, ItemStack, ItemDoor
 
 public abstract class StructureComponent
 {
+
+    protected StructureBoundingBox boundingBox;
+    protected int coordBaseMode;
+    protected int field_35026_i;
 
     protected StructureComponent(int i)
     {
@@ -48,6 +52,11 @@ public abstract class StructureComponent
         }
 
         return null;
+    }
+
+    public ChunkPosition func_40008_a_()
+    {
+        return new ChunkPosition(boundingBox.func_40597_e(), boundingBox.func_40596_f(), boundingBox.func_40598_g());
     }
 
     protected boolean isLiquidInStructureBoundingBox(World world, StructureBoundingBox structureboundingbox)
@@ -193,7 +202,7 @@ public abstract class StructureComponent
                 }
             }
         } else
-        if(i == Block.stairCompactCobblestone.blockID || i == Block.stairCompactPlanks.blockID)
+        if(i == Block.stairCompactCobblestone.blockID || i == Block.stairCompactPlanks.blockID || i == Block.stairsNetherBrick.blockID || i == Block.stairsStoneBrickSmooth.blockID)
         {
             if(coordBaseMode == 0)
             {
@@ -511,20 +520,11 @@ public abstract class StructureComponent
         {
             return;
         }
-        do
+        for(; !world.isAirBlock(l, i1, j1) && i1 < world.field_35469_d; i1++)
         {
-            if(world.isAirBlock(l, i1, j1))
-            {
-                break;
-            }
-            world.getClass();
-            if(i1 >= 127)
-            {
-                break;
-            }
             world.setBlockAndMetadata(l, i1, j1, 0, 0);
-            i1++;
-        } while(true);
+        }
+
     }
 
     protected void fillCurrentPositionBlocksDownwards(World world, int i, int j, int k, int l, int i1, StructureBoundingBox structureboundingbox)
@@ -590,8 +590,4 @@ public abstract class StructureComponent
             ItemDoor.placeDoorBlock(world, i1, j1, k1, l, Block.doorWood);
         }
     }
-
-    protected StructureBoundingBox boundingBox;
-    protected int coordBaseMode;
-    protected int field_35026_i;
 }

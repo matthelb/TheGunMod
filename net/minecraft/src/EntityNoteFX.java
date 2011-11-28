@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -10,6 +10,8 @@ package net.minecraft.src;
 
 public class EntityNoteFX extends EntityFX
 {
+
+    float noteParticleScale;
 
     public EntityNoteFX(World world, double d, double d1, double d2, 
             double d3, double d4, double d5)
@@ -33,7 +35,7 @@ public class EntityNoteFX extends EntityFX
         noteParticleScale = particleScale;
         particleMaxAge = 6;
         noClip = false;
-        particleTextureIndex = 64;
+        func_40099_c(64);
     }
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
@@ -75,6 +77,4 @@ public class EntityNoteFX extends EntityFX
             motionZ *= 0.69999998807907104D;
         }
     }
-
-    float noteParticleScale;
 }

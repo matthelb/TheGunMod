@@ -1,22 +1,27 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            Path, MCHash, PathPoint, Entity, 
+//            Path, IntHashMap, PathPoint, Entity, 
 //            AxisAlignedBB, MathHelper, IBlockAccess, Block, 
 //            BlockDoor, Material, PathEntity
 
-public class Pathfinder
+public class PathFinder
 {
 
-    public Pathfinder(IBlockAccess iblockaccess)
+    private IBlockAccess worldMap;
+    private Path path;
+    private IntHashMap pointMap;
+    private PathPoint pathOptions[];
+
+    public PathFinder(IBlockAccess iblockaccess)
     {
         path = new Path();
-        pointMap = new MCHash();
+        pointMap = new IntHashMap();
         pathOptions = new PathPoint[32];
         worldMap = iblockaccess;
     }
@@ -238,9 +243,4 @@ public class Pathfinder
 
         return new PathEntity(apathpoint);
     }
-
-    private IBlockAccess worldMap;
-    private Path path;
-    private MCHash pointMap;
-    private PathPoint pathOptions[];
 }

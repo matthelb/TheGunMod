@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -54,22 +54,19 @@ public class BlockFarmland extends Block
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(random.nextInt(5) == 0)
+        if(isWaterNearby(world, i, j, k) || world.canLightningStrikeAt(i, j + 1, k))
         {
-            if(isWaterNearby(world, i, j, k) || world.canLightningStrikeAt(i, j + 1, k))
+            world.setBlockMetadataWithNotify(i, j, k, 7);
+        } else
+        {
+            int l = world.getBlockMetadata(i, j, k);
+            if(l > 0)
             {
-                world.setBlockMetadataWithNotify(i, j, k, 7);
+                world.setBlockMetadataWithNotify(i, j, k, l - 1);
             } else
+            if(!isCropsNearby(world, i, j, k))
             {
-                int l = world.getBlockMetadata(i, j, k);
-                if(l > 0)
-                {
-                    world.setBlockMetadataWithNotify(i, j, k, l - 1);
-                } else
-                if(!isCropsNearby(world, i, j, k))
-                {
-                    world.setBlockWithNotify(i, j, k, Block.dirt.blockID);
-                }
+                world.setBlockWithNotify(i, j, k, Block.dirt.blockID);
             }
         }
     }
@@ -132,8 +129,8 @@ public class BlockFarmland extends Block
         }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
-        return Block.dirt.idDropped(0, random);
+        return Block.dirt.idDropped(0, random, j);
     }
 }

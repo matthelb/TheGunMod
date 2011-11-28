@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -14,6 +14,11 @@ import org.lwjgl.opengl.GL11;
 
 public class ModTextureAnimation extends TextureFX
 {
+
+    private final int tickRate;
+    private final byte images[][];
+    private int index;
+    private int ticks;
 
     public ModTextureAnimation(int i, int j, BufferedImage bufferedimage, int k)
     {
@@ -83,9 +88,4 @@ public class ModTextureAnimation extends TextureFX
         }
         ticks++;
     }
-
-    private final int tickRate;
-    private final byte images[][];
-    private int index;
-    private int ticks;
 }

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -8,11 +8,23 @@ import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, Material, World, WorldProvider, 
-//            EntityPlayer, ChunkCoordinates, EnumStatus, ModelBed, 
+//            EntityPlayer, ChunkCoordinates, EnumStatus, Direction, 
 //            Item, IBlockAccess
 
 public class BlockBed extends Block
 {
+
+    public static final int headBlockToFootBlockMap[][] = {
+        {
+            0, 1
+        }, {
+            -1, 0
+        }, {
+            0, -1
+        }, {
+            1, 0
+        }
+    };
 
     public BlockBed(int i)
     {
@@ -95,6 +107,10 @@ public class BlockBed extends Block
         if(enumstatus == EnumStatus.NOT_POSSIBLE_NOW)
         {
             entityplayer.addChatMessage("tile.bed.noSleep");
+        } else
+        if(enumstatus == EnumStatus.NOT_SAFE)
+        {
+            entityplayer.addChatMessage("tile.bed.notSafe");
         }
         return true;
     }
@@ -106,7 +122,7 @@ public class BlockBed extends Block
             return Block.planks.blockIndexInTexture;
         }
         int k = getDirectionFromMetadata(j);
-        int l = ModelBed.bedDirection[k][i];
+        int l = Direction.bedDirection[k][i];
         if(isBlockFootOfBed(j))
         {
             if(l == 2)
@@ -170,12 +186,12 @@ public class BlockBed extends Block
             world.setBlockWithNotify(i, j, k, 0);
             if(!world.multiplayerWorld)
             {
-                dropBlockAsItem(world, i, j, k, i1);
+                dropBlockAsItem(world, i, j, k, i1, 0);
             }
         }
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         if(isBlockFootOfBed(i))
         {
@@ -253,11 +269,11 @@ public class BlockBed extends Block
         return null;
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f)
+    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
         if(!isBlockFootOfBed(l))
         {
-            super.dropBlockAsItemWithChance(world, i, j, k, l, f);
+            super.dropBlockAsItemWithChance(world, i, j, k, l, f, 0);
         }
     }
 
@@ -265,17 +281,5 @@ public class BlockBed extends Block
     {
         return 1;
     }
-
-    public static final int headBlockToFootBlockMap[][] = {
-        {
-            0, 1
-        }, {
-            -1, 0
-        }, {
-            0, -1
-        }, {
-            1, 0
-        }
-    };
 
 }

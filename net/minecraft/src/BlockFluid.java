@@ -1,14 +1,15 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, Material, World, IBlockAccess, 
-//            Vec3D, AxisAlignedBB, Entity
+//            Block, Material, IBlockAccess, WorldChunkManager, 
+//            BiomeGenBase, World, Vec3D, AxisAlignedBB, 
+//            Entity
 
 public abstract class BlockFluid extends Block
 {
@@ -29,7 +30,14 @@ public abstract class BlockFluid extends Block
 
     public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
     {
-        return 0xffffff;
+        if(blockMaterial == Material.water)
+        {
+            BiomeGenBase biomegenbase = iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k);
+            return biomegenbase.field_40256_A;
+        } else
+        {
+            return 0xffffff;
+        }
     }
 
     public static float getFluidHeightPercent(int i)
@@ -143,7 +151,7 @@ public abstract class BlockFluid extends Block
         return 4;
     }
 
-    public int idDropped(int i, Random random)
+    public int idDropped(int i, Random random, int j)
     {
         return 0;
     }
@@ -327,44 +335,44 @@ public abstract class BlockFluid extends Block
                     continue;
                 }
                 float f = 0.0625F;
-                double d3 = (float)i + random.nextFloat();
-                double d4 = (float)j + random.nextFloat();
-                double d5 = (float)k + random.nextFloat();
+                double d6 = (float)i + random.nextFloat();
+                double d7 = (float)j + random.nextFloat();
+                double d8 = (float)k + random.nextFloat();
                 if(k1 == 0)
                 {
-                    d3 = (float)i - f;
+                    d6 = (float)i - f;
                 }
                 if(k1 == 1)
                 {
-                    d3 = (float)(i + 1) + f;
+                    d6 = (float)(i + 1) + f;
                 }
                 if(k1 == 2)
                 {
-                    d5 = (float)k - f;
+                    d8 = (float)k - f;
                 }
                 if(k1 == 3)
                 {
-                    d5 = (float)(k + 1) + f;
+                    d8 = (float)(k + 1) + f;
                 }
-                double d6 = 0.0D;
-                double d7 = 0.0D;
+                double d9 = 0.0D;
+                double d10 = 0.0D;
                 if(k1 == 0)
                 {
-                    d6 = -f;
+                    d9 = -f;
                 }
                 if(k1 == 1)
                 {
-                    d6 = f;
+                    d9 = f;
                 }
                 if(k1 == 2)
                 {
-                    d7 = -f;
+                    d10 = -f;
                 }
                 if(k1 == 3)
                 {
-                    d7 = f;
+                    d10 = f;
                 }
-                world.spawnParticle("splash", d3, d4, d5, d6, 0.0D, d7);
+                world.spawnParticle("splash", d6, d7, d8, d9, 0.0D, d10);
             }
 
         }
@@ -379,9 +387,22 @@ public abstract class BlockFluid extends Block
         if(blockMaterial == Material.lava && world.getBlockMaterial(i, j + 1, k) == Material.air && !world.isBlockOpaqueCube(i, j + 1, k) && random.nextInt(100) == 0)
         {
             double d = (float)i + random.nextFloat();
-            double d1 = (double)j + maxY;
-            double d2 = (float)k + random.nextFloat();
-            world.spawnParticle("lava", d, d1, d2, 0.0D, 0.0D, 0.0D);
+            double d2 = (double)j + maxY;
+            double d4 = (float)k + random.nextFloat();
+            world.spawnParticle("lava", d, d2, d4, 0.0D, 0.0D, 0.0D);
+        }
+        if(random.nextInt(10) == 0 && world.isBlockNormalCube(i, j - 1, k) && !world.getBlockMaterial(i, j - 2, k).getIsSolid())
+        {
+            double d1 = (float)i + random.nextFloat();
+            double d3 = (double)j - 1.05D;
+            double d5 = (float)k + random.nextFloat();
+            if(blockMaterial == Material.water)
+            {
+                world.spawnParticle("dripWater", d1, d3, d5, 0.0D, 0.0D, 0.0D);
+            } else
+            {
+                world.spawnParticle("dripLava", d1, d3, d5, 0.0D, 0.0D, 0.0D);
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -32,25 +32,6 @@ public enum EnumArt
     BurningSkull("BurningSkull", 22, "BurningSkull", 64, 64, 128, 192),
     Skeleton("Skeleton", 23, "Skeleton", 64, 48, 192, 64),
     DonkeyKong("DonkeyKong", 24, "DonkeyKong", 64, 48, 192, 112);
-/*
-    public static EnumArt[] values()
-    {
-        return (EnumArt[])allArt.clone();
-    }
-
-    public static EnumArt valueOf(String s)
-    {
-        return (EnumArt)Enum.valueOf(net.minecraft.src.EnumArt.class, s);
-    }
-*/
-    private EnumArt(String s, int i, String s1, int j, int k, int l, int i1)
-    {
-        title = s1;
-        sizeX = j;
-        sizeY = k;
-        offsetX = l;
-        offsetY = i1;
-    }
 /*
     public static final EnumArt Kebab;
     public static final EnumArt Aztec;
@@ -84,10 +65,31 @@ public enum EnumArt
     public final int sizeY;
     public final int offsetX;
     public final int offsetY;
-//    private static final EnumArt allArt[]; /* synthetic field */
+    private static final EnumArt allArt[]; /* synthetic field */
 /*
+    public static final EnumArt[] values()
+    {
+        return (EnumArt[])allArt.clone();
+    }
+
+    public static EnumArt valueOf(String s)
+    {
+        return (EnumArt)Enum.valueOf(net.minecraft.src.EnumArt.class, s);
+    }
+*/
+    private EnumArt(String s, int i, String s1, int j, int k, int l, int i1)
+    {
+//        super(s, i);
+        title = s1;
+        sizeX = j;
+        sizeY = k;
+        offsetX = l;
+        offsetY = i1;
+    }
+
     static 
     {
+/*
         Kebab = new EnumArt("Kebab", 0, "Kebab", 16, 16, 0, 0);
         Aztec = new EnumArt("Aztec", 1, "Aztec", 16, 16, 16, 0);
         Alban = new EnumArt("Alban", 2, "Alban", 16, 16, 32, 0);
@@ -113,11 +115,11 @@ public enum EnumArt
         BurningSkull = new EnumArt("BurningSkull", 22, "BurningSkull", 64, 64, 128, 192);
         Skeleton = new EnumArt("Skeleton", 23, "Skeleton", 64, 48, 192, 64);
         DonkeyKong = new EnumArt("DonkeyKong", 24, "DonkeyKong", 64, 48, 192, 112);
+*/
         allArt = (new EnumArt[] {
             Kebab, Aztec, Alban, Aztec2, Bomb, Plant, Wasteland, Pool, Courbet, Sea, 
             Sunset, Creebet, Wanderer, Graham, Match, Bust, Stage, Void, SkullAndRoses, Fighters, 
             Pointer, Pigscene, BurningSkull, Skeleton, DonkeyKong
         });
     }
-*/
 }

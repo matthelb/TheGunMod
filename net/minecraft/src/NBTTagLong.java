@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -12,12 +12,16 @@ import java.io.*;
 public class NBTTagLong extends NBTBase
 {
 
-    public NBTTagLong()
+    public long longValue;
+
+    public NBTTagLong(String s)
     {
+        super(s);
     }
 
-    public NBTTagLong(long l)
+    public NBTTagLong(String s, long l)
     {
+        super(s);
         longValue = l;
     }
 
@@ -43,5 +47,20 @@ public class NBTTagLong extends NBTBase
         return (new StringBuilder()).append("").append(longValue).toString();
     }
 
-    public long longValue;
+    public NBTBase func_40195_b()
+    {
+        return new NBTTagLong(getKey(), longValue);
+    }
+
+    public boolean equals(Object obj)
+    {
+        if(super.equals(obj))
+        {
+            NBTTagLong nbttaglong = (NBTTagLong)obj;
+            return longValue == nbttaglong.longValue;
+        } else
+        {
+            return false;
+        }
+    }
 }

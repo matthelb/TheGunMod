@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
 
 package net.minecraft.src;
 
@@ -11,6 +11,13 @@ import java.io.*;
 
 public class Packet27Position extends Packet
 {
+
+    private float strafeMovement;
+    private float fowardMovement;
+    private boolean isSneaking;
+    private boolean isInJump;
+    private float pitchRotation;
+    private float yawRotation;
 
     public Packet27Position()
     {
@@ -47,11 +54,4 @@ public class Packet27Position extends Packet
     {
         return 18;
     }
-
-    private float strafeMovement;
-    private float fowardMovement;
-    private boolean isSneaking;
-    private boolean isInJump;
-    private float pitchRotation;
-    private float yawRotation;
 }
