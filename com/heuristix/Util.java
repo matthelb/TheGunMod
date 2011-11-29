@@ -95,16 +95,16 @@ public class Util {
     }
 
     public static void renderTexture(Minecraft minecraft, String texture, float opacity) {
-        ScaledResolution localqm = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
-        int width = localqm.getScaledWidth();
-        int height = localqm.getScaledHeight();
-        GL11.glEnable(3042);
-        GL11.glDisable(2929);
+        ScaledResolution sr = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
+        int width = sr.getScaledWidth();
+        int height = sr.getScaledHeight();
+        GL11.glEnable(3042 /*GL_BLEND*/);
+        GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
         GL11.glDepthMask(false);
         GL11.glBlendFunc(770, 771);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, opacity);
-        GL11.glDisable(3008);
-        GL11.glBindTexture(3553, minecraft.renderEngine.getTexture(texture));
+        GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
+        GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, minecraft.renderEngine.getTexture(texture));
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
         t.addVertexWithUV(0.0D, height, -90.0D, 0.0D, 1.0D);
@@ -113,19 +113,19 @@ public class Util {
         t.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
         t.draw();
         GL11.glDepthMask(true);
-        GL11.glEnable(2929);
-        GL11.glEnable(3008);
+        GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
+        GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, opacity);
     }
 
     public static void renderRect(Color color, int x, int y, int width, int height, float opacity) {
         GL11.glPushMatrix();
-        GL11.glEnable(3042);
-        GL11.glDisable(2929);
+        GL11.glEnable(3042 /*GL_BLEND*/);
+        GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
         GL11.glDepthMask(false);
         GL11.glBlendFunc(770, 771);
         GL11.glColor4f((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, opacity);
-        GL11.glDisable(3008);
+        GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
         t.setNormal(0.0F, 1.0F, 0.0F);
@@ -135,13 +135,17 @@ public class Util {
         t.addVertexWithUV(x, y + height, 0, 0, 1);
         t.draw();
         GL11.glDepthMask(true);
-        GL11.glEnable(2929);
-        GL11.glEnable(3008);
+        GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
+        GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
         GL11.glPopMatrix();
     }
 
     public static float toRadians(double deg) {
         return (float) (deg / 180.0f * 3.141593f);
+    }
+
+    public static float toDegrees(double radians) {
+        return (float) (radians * 180 / 3.1415593f);
     }
 
     private static File HOME_DIRECTORY;
@@ -198,7 +202,7 @@ public class Util {
 
     public static byte[] read(InputStream is) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096];
+        byte[] buffer = new byte[4096 /*GL_TEXTURE_WIDTH*/];
         int n;
         try {
             while ((n = is.read(buffer)) != -1) {
@@ -258,7 +262,6 @@ public class Util {
     }
 
     private static JarFile minecraftJar;
-
     public static JarFile getMinecraftJar() {
         if(minecraftJar == null) {
             File file = new File(getMinecraftDir("bin") + File.separator + "minecraft.jar");
@@ -333,7 +336,7 @@ public class Util {
         numbersToStrings.put('9', 'I');
         numbersToStrings.put('0', 'J');
     }
-    public static String replaceNumbers(String text) {
+    public static String numbersToText(String text) {
         char[] chars = text.toCharArray();
         for(int i = 0; i < chars.length; i++) {
             if(Character.isDigit(chars[i])) {
@@ -367,7 +370,6 @@ public class Util {
     }
 
     private static Method methodDefineClass;
-
     public static Class defineClass(byte[] code, String name, ClassLoader cl) {
         try {
             if(methodDefineClass == null) {
@@ -383,5 +385,15 @@ public class Util {
 
     public static double distance(double x1, double x2, double y1, double y2, double z1, double z2) {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 -y2, 2) + Math.pow(z1 - z2, 2));
+    }
+
+    public static Vec3D getProjectedPoint(EntityLiving living, double distance) {
+        Vec3D pos = living.getPosition(1);
+        Vec3D look = living.getLook(1);
+        return getProjectedPoint(pos, look, distance);
+    }
+
+    public static Vec3D getProjectedPoint(Vec3D pos, Vec3D look, double distance) {
+        return pos.addVector(look.xCoord * distance, look.yCoord * distance, look.zCoord * distance);
     }
 }

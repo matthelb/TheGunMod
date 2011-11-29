@@ -28,7 +28,7 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.6.2";
+    public static final String VERSION = "0.7";
 
     private static final Dimension TEXT_FIELD_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
@@ -36,6 +36,8 @@ public class GunCreator extends JFrame {
 
     public static List<Pair<String,String>> obfuscatedClassName = new LinkedList<Pair<String,String>>();
     static {
+        //add additional Pairs as obfuscations increase
+        obfuscatedClassName.add(new Pair("ry", "nq"));
         obfuscatedClassName.add(new Pair("rv", "wd"));
     }
 
@@ -432,7 +434,7 @@ public class GunCreator extends JFrame {
         byte[] shootSoundBytes = shootSoundButton.getBytes();
         outBytes.putInt(shootSoundBytes.length);
         outBytes.putByteArray(shootSoundBytes, 0, shootSoundBytes.length);
-        byte[] shootSoundNameBytes = Utilities.getStringBytes(Utilities.replaceNumbers(shootSoundButton.getText()));
+        byte[] shootSoundNameBytes = Utilities.getStringBytes(Utilities.numbersToText(shootSoundButton.getText()));
         outBytes.putByteArray(shootSoundNameBytes, 0, shootSoundNameBytes.length);
         outBytes.putInt(Integer.parseInt(shotsPerMinuteField.getText()));
         outBytes.putInt(((FireMode) fireMode.getSelectedItem()).ordinal());

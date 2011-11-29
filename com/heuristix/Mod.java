@@ -20,7 +20,7 @@ import java.util.Map;
  */
 public abstract class Mod extends BaseMod {
 
-    public static final String CURRENT_VERSION = "1.8.1";
+    public static final String CURRENT_VERSION = "1.0.0";
 
     private boolean texturesRegistered;
     private final HashSet<ModTextureStatic> textures;
@@ -44,7 +44,6 @@ public abstract class Mod extends BaseMod {
             ModLoader.AddRecipe(new ItemStack(item, item.getCraftingAmount()), item.getCraftingRecipe());
     }
 
-    @Override
     public String Version() {
         return CURRENT_VERSION;
     }

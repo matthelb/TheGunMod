@@ -549,6 +549,7 @@ public class Item
         brewingStand = (new ItemReed(123, Block.brewingStand)).setIconCoord(12, 10).setItemName("brewingStand");
         cauldron = (new ItemReed(124, Block.cauldron)).setIconCoord(12, 9).setItemName("cauldron");
         speckledMelon = (new Item(126)).setIconCoord(9, 8).setItemName("speckledMelon").func_40407_b(PotionHelper.field_40361_f);
-        StatList.initStats();
+        if(mod_Guns.DEBUG)
+            StatList.initStats();
     }
 }

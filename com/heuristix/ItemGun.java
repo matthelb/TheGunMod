@@ -48,6 +48,9 @@ public abstract class ItemGun extends ItemProjectileShooter {
         double factor = Math.max(0.75, Math.min(Util.nextGaussian() + 1, 1.25));
         mod_Guns.recoilY +=  Math.min(factor * getRecoilY(), player.rotationPitch + 90.0F);
         mod_Guns.recoilX += factor * getRecoilX();
+        Vec3D pos = Util.getProjectedPoint(player, 0.8);
+        float radians = Util.toRadians(player.rotationYaw);
+        world.spawnParticle("largesmoke", pos.xCoord - (MathHelper.cos(radians) * 0.3f), pos.yCoord, pos.zCoord - (MathHelper.sin(radians) * 0.3f), 0, 0, 0);
         //world.entityJoinedWorld(new EntityFlash(world, player.posX, player.posY + player.getEyeHeight(), player.posZ, 15, 1, 2));
     }
 

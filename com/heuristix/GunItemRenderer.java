@@ -214,7 +214,7 @@ public class GunItemRenderer extends ItemRenderer {
             tessellator.addVertexWithUV(128 + byte0, 0 - byte0, 0.0D, 1.0D, 0.0D);
             tessellator.addVertexWithUV(0 - byte0, 0 - byte0, 0.0D, 0.0D, 0.0D);
             tessellator.draw();
-            MapData mapdata = Item.map.func_28012_a(itemstack, mc.theWorld);
+            MapData mapdata = Item.map.getMapData(itemstack, mc.theWorld);
             getMapItemRenderer().renderMap(mc.thePlayer, mc.renderEngine, mapdata);
             GL11.glPopMatrix();
         } else
@@ -297,7 +297,15 @@ public class GunItemRenderer extends ItemRenderer {
             {
                 GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
             }
-            renderItem(entityplayersp, itemstack);
+            if(itemstack.itemID == Item.potion.shiftedIndex)
+            {
+                renderItem(entityplayersp, itemstack, 0);
+                GL11.glColor4f(f4, f4, f4, 1.0F);
+                renderItem(entityplayersp, itemstack, 1);
+            } else
+            {
+                renderItem(entityplayersp, itemstack, 0);
+            }
             GL11.glPopMatrix();
         } else
         {
