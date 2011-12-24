@@ -65,19 +65,18 @@ public abstract class EntityProjectile extends Entity {
             }
             return;
         }
-        Vec3D currentLocation = Vec3D.createVector(posX, posY, posZ);
+        Vec3D currentLocation = getPosition();
         Vec3D newLocation = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
         MovingObjectPosition position = worldObj.rayTraceBlocks_do_do(currentLocation, newLocation, false, true);
-        currentLocation = Vec3D.createVector(posX, posY, posZ);
+        currentLocation = getPosition();
         newLocation = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
         if(position != null) {
             newLocation = Vec3D.createVector(position.hitVec.xCoord, position.hitVec.yCoord, position.hitVec.zCoord);
         }
         Entity hit = null;
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1, 1, 1));
+        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1, 1, 1));
         double d = 0;
-        for (Object aList : list) {
-            Entity entity = (Entity) aList;
+        for (Entity entity : list) {
             if (!entity.canBeCollidedWith() || entity == owner && ticksInAir < 5) {
                 continue;
             }
@@ -134,7 +133,7 @@ public abstract class EntityProjectile extends Entity {
     }
 
     protected final float getDamageModifier() {
-        return (float) Math.min(1, getEffectiveRange() / start.distanceTo(Vec3D.createVector(posX, posY, posZ)));
+        return (float) Math.min(1, getEffectiveRange() / start.distanceTo(getPosition()));
     }
 
     @Override
@@ -182,5 +181,9 @@ public abstract class EntityProjectile extends Entity {
         float pitchRadians = Util.toRadians(rotationPitch);
         float cosPitch = MathHelper.cos(pitchRadians);
         return Vec3D.createVector(-MathHelper.sin(yawRadians) * cosPitch, -MathHelper.sin(pitchRadians), MathHelper.cos(yawRadians) * cosPitch);
+    }
+
+    public Vec3D getPosition() {
+        return Vec3D.createVector(posX, posY, posZ);
     }
 }

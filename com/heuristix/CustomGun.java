@@ -25,7 +25,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
 
     public static final int MAGIC = 0xABCDEFAB;
 
-    private Class<? extends EntityProjectileBase> bulletClass;
+    private Class<? extends EntityProjectile> bulletClass;
     private G itemGun;
     private B itemBullet;
 
@@ -135,7 +135,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
 
 
 
-    public Class<? extends EntityProjectileBase> getBulletClass() {
+    public Class<? extends EntityProjectile> getBulletClass() {
         if(bulletClass == null) {
             HashMap<String, Method> methods = new HashMap<String, Method>();
             methods.put("getDamage()I", new Method(new BytecodeValue(bulletDamage)));
@@ -143,7 +143,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
             methods.put("getSpread()F", new Method(new BytecodeValue(bulletSpread)));
 
             try {
-                bulletClass = ExtensibleClassAdapter.modifyClass(EntityProjectileBase.class, "Entity" + name.replaceAll(" ", "") + "Bullet", methods, true);
+                bulletClass = ExtensibleClassAdapter.modifyClass(EntityProjectile.class, "Entity" + name.replaceAll(" ", "") + "Bullet", methods, true);
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
@@ -190,7 +190,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
             methods.put("getRoundsPerShot()I", new Method(new BytecodeValue(itemGunRoundsPerShot)));
 
             try {
-                Constructor init = ExtensibleClassAdapter.modifyClass(ItemGunBase.class+, "Item" + name.replaceAll(" ", ""), methods, true).getDeclaredConstructor(int.class, ItemProjectile.class);
+                Constructor init = ExtensibleClassAdapter.modifyClass(ItemGunBase.class, "Item" + name.replaceAll(" ", ""), methods, true).getDeclaredConstructor(int.class, ItemProjectile.class);
                 init.setAccessible(true);
                 itemGun = (G) init.newInstance(itemGunId - 256, getItemBullet());
             } catch (Exception e) {

@@ -3,6 +3,8 @@ package net.minecraft.src;
 
 import com.heuristix.*;
 import com.heuristix.asm.Opcodes;
+import com.heuristix.guns.EntityBullet;
+import com.heuristix.guns.RenderBullet;
 import com.heuristix.util.ExtensibleClassAdapter;
 import com.heuristix.util.InvokeMethod;
 import com.heuristix.util.Method;
@@ -98,7 +100,7 @@ public class mod_Guns extends Mod {
                             }
                             entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
                         }
-                        entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectileBase.class.getClassLoader());
+                        entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
                         classes.put(entityBulletClass.getName(), entityBulletClass);
 
                     }
@@ -236,7 +238,7 @@ public class mod_Guns extends Mod {
 
     @Override
     public void AddRenderer(Map map) {
-        map.put(EntityProjectileBase.class, new RenderBullet());
+        map.put(EntityBullet.class, new RenderBullet());
     }
 
     private static void applyRecoil(EntityPlayer player, ItemGun gun) {
