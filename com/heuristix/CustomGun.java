@@ -25,7 +25,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
 
     public static final int MAGIC = 0xABCDEFAB;
 
-    private Class<? extends EntityBullet> bulletClass;
+    private Class<? extends EntityProjectileBase> bulletClass;
     private G itemGun;
     private B itemBullet;
 
@@ -36,7 +36,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
 
     private BufferedImage bulletTexture, gunTexture;
 
-    private Class itemGunBaseClass = ItemGunBase.class, entityBulletBaseClass = EntityBulletBase.class, itemProjectileBaseClass = ItemProjectileBase.class;
+
 
     public CustomGun(byte[] bytes) {
         this(new Buffer(bytes));
@@ -135,7 +135,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
 
 
 
-    public Class<? extends EntityBullet> getBulletClass() {
+    public Class<? extends EntityProjectileBase> getBulletClass() {
         if(bulletClass == null) {
             HashMap<String, Method> methods = new HashMap<String, Method>();
             methods.put("getDamage()I", new Method(new BytecodeValue(bulletDamage)));
@@ -143,7 +143,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
             methods.put("getSpread()F", new Method(new BytecodeValue(bulletSpread)));
 
             try {
-                bulletClass = ExtensibleClassAdapter.modifyClass(entityBulletBaseClass, "Entity" + name.replaceAll(" ", "") + "Bullet", methods, true);
+                bulletClass = ExtensibleClassAdapter.modifyClass(EntityProjectileBase.class, "Entity" + name.replaceAll(" ", "") + "Bullet", methods, true);
             } catch (IOException e) {
                 e.printStackTrace();
                 return null;
@@ -158,7 +158,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
             methods.put("getName()Ljava/lang/String;", new Method(new BytecodeValue(name + " Bullet")));
             methods.put("getCraftAmount()I", new Method(new BytecodeValue(16)));
             try {
-                Constructor init = ExtensibleClassAdapter.modifyClass(itemProjectileBaseClass, "Item" + name.replaceAll(" ", "") + "Bullet", methods, true).getDeclaredConstructor(int.class, Class.class);
+                Constructor init = ExtensibleClassAdapter.modifyClass(ItemProjectileBase.class, "Item" + name.replaceAll(" ", "") + "Bullet", methods, true).getDeclaredConstructor(int.class, Class.class);
                 init.setAccessible(true);
                 itemBullet = (B) init.newInstance(itemBulletId - 256, getBulletClass());
             } catch (Exception e) {
@@ -190,7 +190,7 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
             methods.put("getRoundsPerShot()I", new Method(new BytecodeValue(itemGunRoundsPerShot)));
 
             try {
-                Constructor init = ExtensibleClassAdapter.modifyClass(itemGunBaseClass, "Item" + name.replaceAll(" ", ""), methods, true).getDeclaredConstructor(int.class, ItemProjectile.class);
+                Constructor init = ExtensibleClassAdapter.modifyClass(ItemGunBase.class+, "Item" + name.replaceAll(" ", ""), methods, true).getDeclaredConstructor(int.class, ItemProjectile.class);
                 init.setAccessible(true);
                 itemGun = (G) init.newInstance(itemGunId - 256, getItemBullet());
             } catch (Exception e) {

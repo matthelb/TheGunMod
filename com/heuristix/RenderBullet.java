@@ -1,7 +1,6 @@
 package com.heuristix;
 
 import net.minecraft.src.Entity;
-import net.minecraft.src.MathHelper;
 import net.minecraft.src.Render;
 import net.minecraft.src.Tessellator;
 import org.lwjgl.opengl.GL11;
@@ -14,7 +13,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderBullet extends Render {
 
-    public void doRenderBullet(EntityBullet bullet, double x, double y, double z, float f, float f1) {
+    public void doRenderBullet(EntityProjectileBase bullet, double x, double y, double z, float f, float f1) {
         double scale = 0.025;
         GL11.glPushMatrix();
         GL11.glDisable(3553 /*GL_TEXTURE_2D*/);
@@ -60,6 +59,6 @@ public class RenderBullet extends Render {
 
     @Override
     public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
-        doRenderBullet((EntityBullet) entity, d, d1, d2, f, f1);
+        doRenderBullet((EntityProjectileBase) entity, d, d1, d2, f, f1);
     }
 }

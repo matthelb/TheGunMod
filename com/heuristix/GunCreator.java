@@ -486,7 +486,7 @@ public class GunCreator extends JFrame {
         methods.put("<init>(Lnet/minecraft/src/World;)V", new Method("(L" + obfuscatedClassName.get(0).getFirst() + ";)V",
                         new InvokeMethod(superWorld, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(L" + obfuscatedClassName.get(0).getFirst() + ";)V", false, true, false)));
         String name = "Entity" + bulletNameField.getText().replaceAll("[^a-z^A-Z^0-9]", "") + nameField.getText().replaceAll("[^a-z^A-Z^0-9]", "");
-        byte[] bytes = ExtensibleClassAdapter.modifyClassBytes(EntityBulletBase.class, name, (HashMap<String, Method>) methods.clone(), true);
+        byte[] bytes = ExtensibleClassAdapter.modifyClassBytes(EntityProjectileBase.class, name, (HashMap<String, Method>) methods.clone(), true);
         byte[] stringBytes = Util.getStringBytes(name);
         outBytes.putByteArray(stringBytes, 0, stringBytes.length);
         outBytes.putInt(bytes.length);

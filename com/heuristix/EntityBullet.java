@@ -6,12 +6,12 @@ import net.minecraft.src.World;
 /**
  * Created by IntelliJ IDEA.
  * User: Matt
- * Date: 9/1/11
- * Time: 11:45 PM
+ * Date: 12/22/11
+ * Time: 8:42 PM
  */
-public abstract class EntityBullet extends EntityProjectile {
+public class EntityBullet extends EntityProjectileBase {
 
-    protected EntityBullet(World world) {
+    public EntityBullet(World world) {
         super(world);
     }
 
@@ -20,28 +20,23 @@ public abstract class EntityBullet extends EntityProjectile {
     }
 
     @Override
+    public int getDamage() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public float getSpeed() {
         return 1024f;
     }
 
     @Override
-    public int getMaxGroundTicks() {
-        return 0;
+    public float getEffectiveRange() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override
-    public String getHitSound() {
-        return "guns.hit";
-    }
-
-    @Override
-    public String getMoveSound() {
-        return "guns.move";
-    }
-
-    @Override
-    public float getMass() {
-        return 0;
+    public float getSpread() {
+        return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
 }

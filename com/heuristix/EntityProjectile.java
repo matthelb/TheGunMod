@@ -15,7 +15,7 @@ public abstract class EntityProjectile extends Entity {
     public static final float GRAVITY = 0.1f;
 
     protected EntityLiving owner;
-    private double startX, startY, startZ;
+    private Vec3D start;
 
     private int xTile;
     private int yTile;
@@ -35,9 +35,7 @@ public abstract class EntityProjectile extends Entity {
         super(world);
         this.owner = owner;
         setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, owner.rotationYaw + (Util.randomFloat(-getSpread(), getSpread())), owner.rotationPitch + (Util.randomFloat(-getSpread(), getSpread())));
-        this.startX = posX;
-        this.startY = posY;
-        this.startZ = posZ;
+        this.start = Vec3D.createVector(posX, posY, posZ);
         setVelocity(computeVelocity());
         changeVelocity(getSpeed());
     }
@@ -136,7 +134,7 @@ public abstract class EntityProjectile extends Entity {
     }
 
     protected final float getDamageModifier() {
-        return (float) Math.min(1, getEffectiveRange() / Vec3D.createVector(startX, startY, startZ).distanceTo(Vec3D.createVector(posX, posY, posZ)));
+        return (float) Math.min(1, getEffectiveRange() / start.distanceTo(Vec3D.createVector(posX, posY, posZ)));
     }
 
     @Override
