@@ -1,6 +1,8 @@
 package com.heuristix.guns;
 
 import com.heuristix.EntityProjectile;
+import net.minecraft.src.Block;
+import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.World;
 
@@ -21,8 +23,17 @@ public class EntityFlame extends EntityProjectile {
     }
 
     @Override
+    public boolean onHit(Entity hit) {
+        if(worldObj.getBlockId((int) posX, (int) posY, (int) posZ) == 0);
+            worldObj.setBlockWithNotify((int) posX, (int) posY, (int) posZ, Block.fire.blockID);
+        if(hit != null)
+            return super.onHit(hit);
+        return true;
+    }
+
+    @Override
     public int getDamage() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 4;
     }
 
     public float getSpeed() {
@@ -31,22 +42,22 @@ public class EntityFlame extends EntityProjectile {
 
     @Override
     public int getMaxGroundTicks() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public String getHitSound() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "guns.hit";
     }
 
     @Override
     public String getMoveSound() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "guns.move";
     }
 
     @Override
     public float getEffectiveRange() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 100;
     }
 
     public float getMass() {
@@ -55,6 +66,6 @@ public class EntityFlame extends EntityProjectile {
 
     @Override
     public float getSpread() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 15;
     }
 }
