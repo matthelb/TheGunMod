@@ -90,13 +90,14 @@ public class mod_Guns extends Mod {
                     if(entityBulletClass == null) {
                         byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
                         if(DEBUG) {
+                            Class projectileType = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader()).getSuperclass();
                             HashMap<String, Method> methods = new HashMap<String, Method>();
                             for(int i = 0; i < GunCreator.obfuscatedClassName.size(); i++) {
                                 Pair<String, String> obfuscatedNames = GunCreator.obfuscatedClassName.get(i);
                                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() +";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
-                                        new InvokeMethod(GunCreator.superWorldEntity, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
+                                        new InvokeMethod(GunCreator.superWorldEntity, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.','/'), "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
                                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
-                                        new InvokeMethod(GunCreator.superWorld, new int[]{Opcodes.RETURN}, "com/heuristix/EntityBulletBase", "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+                                        new InvokeMethod(GunCreator.superWorld, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.','/'), "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
                             }
                             entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
                         }
@@ -134,6 +135,9 @@ public class mod_Guns extends Mod {
                         itemGun.setIconIndex(registerTexture(Util.resize(ImageIO.read(new ByteArrayInputStream(resources.get(1))), 16, 16), true));
                         registerItem(itemGun);
                         registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get(2));
+                        if(resources.size() > 3) {
+                            registerSound(itemGun.getReloadSound().replaceFirst("\\.", "/") + ".ogg", resources.get(3));
+                        }
                     }
                     itemBullet.putProjectileClass(itemGun, entityBulletClass);
                     projectiles.put(gunClasses.get(1).getFirst(), itemBullet);

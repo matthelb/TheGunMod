@@ -69,8 +69,8 @@ public class Gun {
             outBytes.putInt(bytes.length);
             outBytes.putByteArray(bytes, 0, bytes.length);
         }
-        outBytes.putInt(3);
-        for(int i = 0; i < 3; i++) {
+        outBytes.putInt(4);
+        for(int i = 0; i < 4; i++) {
             byte[] bytes = resources.get(i);
             outBytes.putInt(bytes.length);
             outBytes.putByteArray(bytes, 0, bytes.length);

@@ -32,6 +32,8 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     public abstract int getScope();
 
+    public abstract String getReloadSound();
+
     public boolean handleAmmunitionConsumption(EntityPlayer player) {
         ItemStack gun = player.getCurrentEquippedItem();
         if(isReloading())
@@ -60,6 +62,7 @@ public abstract class ItemGun extends ItemProjectileShooter {
             if(!reloading) {
                 int slot = Util.getItemSlot(player.inventory, getProjectile().shiftedIndex);
                 if(slot != -1) {
+                    player.worldObj.playSoundAtEntity(player, getReloadSound(), 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
                     reloading = true;
                     reloadFinishTime = System.currentTimeMillis() + getReloadTime();
                     reloadingPlayer = player;

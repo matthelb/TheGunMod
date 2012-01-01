@@ -14,22 +14,22 @@ public class ItemGunBase extends ItemGun {
 
     @Override
     public int getClipSize() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public int getReloadTime() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public int getRecoilY() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
     public int getRecoilX() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
@@ -39,12 +39,17 @@ public class ItemGunBase extends ItemGun {
 
     @Override
     public int getScope() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
+    }
+
+    @Override
+    public String getReloadSound() {
+        return "";
     }
 
     @Override
     public int getShotsPerMinute() {
-        return 0;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0;
     }
 
     @Override
@@ -64,18 +69,18 @@ public class ItemGunBase extends ItemGun {
 
     @Override
     public String getShootSound() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "";
     }
 
     public String getName() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "";
     }
 
     public String getIconPath() {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return "";
     }
 
     public Object[] getCraftingRecipe() {
-        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
+        return new Object[0];
     }
 }
