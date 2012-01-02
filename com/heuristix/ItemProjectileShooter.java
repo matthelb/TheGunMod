@@ -1,5 +1,6 @@
 package com.heuristix;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 
 /**
@@ -39,13 +40,13 @@ public abstract class ItemProjectileShooter extends ItemCustom {
 
     public abstract String getShootSound();
 
-    protected boolean handleAmmunitionConsumption(EntityPlayer player) {
+    protected boolean handleAmmunitionConsumption(EntityPlayer player, Minecraft mc) {
         return player.inventory.consumeInventoryItem(projectile.shiftedIndex);
     }
 
-    public void fire(World world, EntityPlayer player) {
+    public void fire(World world, EntityPlayer player, Minecraft mc) {
         if(canShoot()) {
-            if(handleAmmunitionConsumption(player)) {
+            if(handleAmmunitionConsumption(player, mc)) {
                 for(int i = 0; i < getRoundsPerShot(); i++) {
                     if(!fireProjectile(world, player, i == 0))
                         break;
@@ -56,10 +57,10 @@ public abstract class ItemProjectileShooter extends ItemCustom {
         }
     }
 
-    public void burst(World world, EntityPlayer player) {
+    public void burst(World world, EntityPlayer player, Minecraft mc) {
         if(bursts < 2) {
            if(canFire()) {
-               if(handleAmmunitionConsumption(player)) {
+               if(handleAmmunitionConsumption(player, mc)) {
                    if(fireProjectile(world, player, true)) {
                        ++bursts;
                        return;
@@ -72,8 +73,10 @@ public abstract class ItemProjectileShooter extends ItemCustom {
     }
 
     public boolean fireProjectile(World world, EntityPlayer player, boolean playSound) {
-        if(playSound)
-            world.playSoundAtEntity(player, getShootSound(), 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
+        if(playSound) {
+            float rand = itemRand.nextFloat();
+            world.playSoundAtEntity(player, getShootSound(), rand + 0.5f, 1.0f / (rand * 0.4f + 0.8f));
+        }
         if(!world.multiplayerWorld) {
             world.entityJoinedWorld(projectile.newProjectile(world, player, this));
         }

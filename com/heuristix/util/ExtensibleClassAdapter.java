@@ -45,7 +45,7 @@ public class ExtensibleClassAdapter extends ClassAdapter {
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         com.heuristix.util.Method method = methods.get(name+desc);
-        MethodVisitor mv;
+        MethodVisitor mv = null;
         if(method != null) {
             mv = cv.visitMethod((method.access == -1) ? access : method.access, (method.name == null) ? name : method.name,
                     (method.desc == null) ? desc : method.desc, (method.signature == null) ? signature : method.signature,
@@ -115,8 +115,8 @@ public class ExtensibleClassAdapter extends ClassAdapter {
         cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         cr.accept(cw, ClassReader.SKIP_DEBUG);
         //CheckClassAdapter.verify(new org.objectweb.asm.ClassReader(cw.toByteArray()), true, new PrintWriter(System.out));
-        //File file = new File(className + ".class");
-        //new FileOutputStream(file).write(cw.toByteArray());
+        //java.io.File file = new java.io.File(className + ".class");
+        //new java.io.FileOutputStream(file).write(cw.toByteArray());
         return cw.toByteArray();
     }
 

@@ -12,7 +12,7 @@ import java.util.List;
  */
 public abstract class EntityProjectile extends Entity {
 
-    public static final float GRAVITY = 0.1f;
+    public static final float GRAVITY = 1;
 
     protected EntityLiving owner;
     private Vec3D start;
@@ -98,10 +98,11 @@ public abstract class EntityProjectile extends Entity {
         }
         if(position != null) {
             if(position.entityHit != null) {
-                if(onHit(position.entityHit)) {
-                    worldObj.playSoundAtEntity(this, getHitSound(), 0.01f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
-                    //worldObj.playSoundAtEntity(owner, getHitSound(), 0.01f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
-                    setEntityDead();
+                if(!(position.entityHit instanceof EntityProjectile)) {
+                    if(onHit(position.entityHit, position)) {
+                        worldObj.playSoundAtEntity(owner, getHitSound(), 1.0f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
+                        setEntityDead();
+                    }
                 }
             } else {
                 xTile = position.blockX;
@@ -118,15 +119,15 @@ public abstract class EntityProjectile extends Entity {
                 posZ -= (motionZ / f1) * 0.05000000074505806D;
                 //worldObj.playSoundAtEntity(this, getMoveSound(), 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
                 inGround = true;
-                onHit(null);
+                onHit(null, position);
             }
         }
         motionY -= GRAVITY * getMass();
-        setVelocity(computeVelocity());
+        //setVelocity(computeVelocity());
         setPosition(posX + motionX, posY + motionY, posZ + motionZ);
     }
 
-    public boolean onHit(Entity hit) {
+    public boolean onHit(Entity hit, MovingObjectPosition position) {
         if(hit != null)
             return hit.attackEntityFrom(new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
         return false;

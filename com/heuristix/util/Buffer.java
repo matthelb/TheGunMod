@@ -1,4 +1,4 @@
-package com.heuristix;
+package com.heuristix.util;
 
 /**
  * Created by IntelliJ IDEA.

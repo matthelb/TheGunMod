@@ -1,10 +1,8 @@
 package com.heuristix.guns;
 
 import com.heuristix.EntityProjectile;
-import net.minecraft.src.Block;
-import net.minecraft.src.Entity;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.World;
+import com.heuristix.Util;
+import net.minecraft.src.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,22 +20,49 @@ public class EntityFlame extends EntityProjectile {
         super(world, entityliving);
     }
 
+    /*@Override
+    public void onUpdate() {
+        super.onUpdate();
+        if(isEntityAlive())
+            worldObj.spawnParticle("flame", posX + rand.nextFloat(), posY + rand.nextFloat(), posZ + rand.nextFloat(), 0, 0, 0);
+    }*/
+
     @Override
-    public boolean onHit(Entity hit) {
-        if(worldObj.getBlockId((int) posX, (int) posY, (int) posZ) == 0);
-            worldObj.setBlockWithNotify((int) posX, (int) posY, (int) posZ, Block.fire.blockID);
+    public boolean onHit(Entity hit, MovingObjectPosition position) {
+        int x = position.blockX, y = position.blockY, z = position.blockZ;
+        switch(position.sideHit) {
+            case 0:
+                y--;
+                break;
+            case 1:
+                y++;
+                break;
+            case 2:
+                z--;
+                break;
+            case 3:
+                z++;
+                break;
+            case 4:
+                x--;
+                break;
+            case 5:
+                x++;
+                break;
+            default:
+                break;
+        }
+        if(worldObj.getBlockId(x, y, z) == 0) {
+            worldObj.playSoundEffect(posX, posY, posZ, "fire.ignite", 1.0f, Util.nextFloat() * 0.25f + 0.8f);
+            worldObj.setBlockWithNotify(x, y, z, Block.fire.blockID);
+        }
         if(hit != null)
-            return super.onHit(hit);
+            return super.onHit(hit, position);
         return true;
     }
 
-    @Override
-    public int getDamage() {
-        return 4;
-    }
-
     public float getSpeed() {
-        return 64;
+        return 1;
     }
 
     @Override
@@ -55,17 +80,22 @@ public class EntityFlame extends EntityProjectile {
         return "guns.move";
     }
 
-    @Override
-    public float getEffectiveRange() {
-        return 100;
+    public float getMass() {
+        return 0.1f;
     }
 
-    public float getMass() {
-        return 1;
+    @Override
+    public float getEffectiveRange() {
+        return 0;
     }
 
     @Override
     public float getSpread() {
-        return 15;
+        return 0;
+    }
+
+    @Override
+    public int getDamage() {
+        return 0;
     }
 }

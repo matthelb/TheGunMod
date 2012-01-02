@@ -4,6 +4,7 @@ import com.heuristix.EntityProjectile;
 import com.heuristix.Util;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLiving;
+import net.minecraft.src.MovingObjectPosition;
 import net.minecraft.src.World;
 
 /**
@@ -14,6 +15,9 @@ import net.minecraft.src.World;
  */
 public class EntityGrenade extends EntityProjectile {
 
+    public EntityGrenade(World world) {
+        super(world);
+    }
 
     public EntityGrenade(World world, EntityLiving owner) {
         super(world, owner);
@@ -26,9 +30,9 @@ public class EntityGrenade extends EntityProjectile {
             worldObj.spawnParticle("largesmoke", posX + Util.randomFloat(-1, 1), posY + Util.randomFloat(-1, 1), posZ + Util.randomFloat(-1, 1), 0, 0, 0);
     }
     @Override
-    public boolean onHit(Entity hit) {
+    public boolean onHit(Entity hit, MovingObjectPosition position) {
         if(hit != null)
-            return super.onHit(hit);
+            return super.onHit(hit, position);
         else {
             worldObj.createExplosion(this, posX, posY, posZ, getDamage());
             return true;
@@ -62,7 +66,7 @@ public class EntityGrenade extends EntityProjectile {
 
     @Override
     public float getMass() {
-        return 0.1f;  //To change body of implemented methods use File | Settings | File Templates.
+        return 0.01f;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.heuristix;
 
-import com.heuristix.guns.EntityBullet;
-import com.heuristix.guns.EntityFlame;
-import com.heuristix.guns.EntityGrenade;
-import com.heuristix.guns.EntityRocketGrenade;
+
+import com.heuristix.guns.EntityFlameBase;
+import com.heuristix.guns.EntityGrenadeBase;
+import com.heuristix.guns.EntityRocketGrenadeBase;
 
 /**
  * Created by IntelliJ IDEA.
@@ -12,10 +12,10 @@ import com.heuristix.guns.EntityRocketGrenade;
  * Time: 5:34 PM
  */
 public enum ProjectileType {
-    BULLET("Bullet", EntityBullet.class),
-    GRENADE("Grenade", EntityGrenade.class),
-    ROCKET_GRENADE("Rocket Grenade", EntityRocketGrenade.class),
-    FLAME("Flame", EntityFlame.class);
+    BULLET("Bullet", com.heuristix.guns.EntityBulletBase.class),
+    GRENADE("Grenade", EntityGrenadeBase.class),
+    ROCKET_GRENADE("Rocket Grenade", EntityRocketGrenadeBase.class),
+    FLAME("Flame", EntityFlameBase.class);
 
     private final String desc;
     private final Class clazz;

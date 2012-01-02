@@ -1,5 +1,6 @@
 package com.heuristix;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 
 /**
@@ -34,10 +35,10 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     public abstract String getReloadSound();
 
-    public boolean handleAmmunitionConsumption(EntityPlayer player) {
+    public boolean handleAmmunitionConsumption(EntityPlayer player, Minecraft mc) {
         ItemStack gun = player.getCurrentEquippedItem();
         if(isReloading())
-            stopReloading();
+            stopReloading(mc);
         if(gun.getItemDamage() < gun.getMaxDamage()) {
             gun.damageItem(1, player);
             return true;
@@ -56,13 +57,13 @@ public abstract class ItemGun extends ItemProjectileShooter {
         //world.entityJoinedWorld(new EntityFlash(world, player.posX, player.posY + player.getEyeHeight(), player.posZ, 15, 1, 2));
     }
 
-    public boolean reload(EntityPlayer player) {
+    public boolean reload(EntityPlayer player, Minecraft mc) {
         ItemStack equipped = player.getCurrentEquippedItem();
         if(equipped != null && equipped.itemID == shiftedIndex && equipped.getItemDamage() > 0) {
             if(!reloading) {
                 int slot = Util.getItemSlot(player.inventory, getProjectile().shiftedIndex);
                 if(slot != -1) {
-                    player.worldObj.playSoundAtEntity(player, getReloadSound(), 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 0.8F));
+                    Util.playStreamingAtEntity(player, getReloadSound(), "guns.reloading", 1.0f, 1.0f / (itemRand.nextFloat() * 0.4f + 0.8f), mc);
                     reloading = true;
                     reloadFinishTime = System.currentTimeMillis() + getReloadTime();
                     reloadingPlayer = player;
@@ -75,14 +76,15 @@ public abstract class ItemGun extends ItemProjectileShooter {
         return false;
     }
 
-    public void finishReloading() {
+    public void finishReloading(Minecraft mc) {
         int amount = Math.min(Util.getCount(reloadingPlayer.inventory, getProjectile().shiftedIndex), Math.min(reloadingStack.getItemDamage(), reloadingStack.getMaxDamage()));
         reloadingStack.damageItem(-amount, reloadingPlayer);
         Util.remove(reloadingPlayer.inventory, getProjectile().shiftedIndex, amount);
-        stopReloading();
+        stopReloading(mc);
     }
 
-    public void stopReloading() {
+    public void stopReloading(Minecraft mc) {
+        Util.playStreamingAtEntity(reloadingPlayer, null, "guns.reloading", 0.0f, 0.0f, mc);
         reloadFinishTime = System.currentTimeMillis();
         reloading = false;
     }

@@ -358,12 +358,12 @@ public class GunItemRenderer extends ItemRenderer {
                 change = f;
             reloadProgress += change;
             if(prevGun != null && prevGun.isReloading() && !prevGun.equals(gun))
-                prevGun.stopReloading();
+                prevGun.stopReloading(getMC());
             if(gun.isReloading() && finished)
-                gun.finishReloading();
+                gun.finishReloading(getMC());
             prevGun = gun;
         } else if(prevGun != null && prevGun.isReloading())
-            prevGun.stopReloading();
+            prevGun.stopReloading(getMC());
     }
 
     private ItemGun getGun() {

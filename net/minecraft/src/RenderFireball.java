@@ -31,7 +31,7 @@ public class RenderFireball extends Render
         byte byte0 = 46;
         loadTexture("/gui/items.png");
         Tessellator tessellator = Tessellator.instance;
-        float f3 = (float)((byte0 % 16) * 16 + 0) / 256F;
+        float f3 = (float)((byte0 % 16) * 16 + 0) / 256F;  //
         float f4 = (float)((byte0 % 16) * 16 + 16) / 256F;
         float f5 = (float)((byte0 / 16) * 16 + 0) / 256F;
         float f6 = (float)((byte0 / 16) * 16 + 16) / 256F;
@@ -41,7 +41,7 @@ public class RenderFireball extends Render
         GL11.glRotatef(180F - renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(-renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
         tessellator.startDrawingQuads();
-        tessellator.setNormal(0.0F, 1.0F, 0.0F);
+        //tessellator.setNormal(0.0F, 1.0F, 0.0F);
         tessellator.addVertexWithUV(0.0F - f8, 0.0F - f9, 0.0D, f3, f6);
         tessellator.addVertexWithUV(f7 - f8, 0.0F - f9, 0.0D, f4, f6);
         tessellator.addVertexWithUV(f7 - f8, 1.0F - f9, 0.0D, f4, f5);

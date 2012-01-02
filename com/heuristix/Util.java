@@ -3,6 +3,7 @@ package com.heuristix;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
+import paulscode.sound.SoundSystem;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -395,5 +396,115 @@ public class Util {
 
     public static Vec3D getProjectedPoint(Vec3D pos, Vec3D look, double distance) {
         return pos.addVector(look.xCoord * distance, look.yCoord * distance, look.zCoord * distance);
+    }
+
+    public static void playStreamingAtEntity(Entity entity, String sound, String stream, float f, float f1, Minecraft minecraft) {
+        playStreaming(sound, stream, (float) entity.posX, (float) entity.posY, (float) entity.posZ, f, f1, minecraft);
+    }
+
+    public static void playStreaming(String sound, String stream, float x, float y, float z, float v1, float v2, Minecraft minecraft) {
+        SoundSystem sndSystem = getSoundSystem(minecraft);
+        if(sndSystem.playing(stream)) {
+            sndSystem.stop(stream);
+        }
+        if(sound == null) {
+            return;
+        }
+        SoundPoolEntry soundpoolentry = getSoundPools(minecraft.sndManager)[1].getRandomSoundFromSoundPool(sound);
+        if(soundpoolentry != null && v1 > 0) {
+            float f5 = 16F;
+            sndSystem.newStreamingSource(true, stream, soundpoolentry.soundUrl, soundpoolentry.soundName, false, x, y, z, 2, f5 * 4F);
+            GameSettings options = getGameSettings(minecraft.sndManager);
+            float volume = 1.0f;
+            if(options != null)
+                volume = options.soundVolume;
+            sndSystem.setVolume(stream, 0.5f * volume);
+            sndSystem.play(stream);
+        }
+    }
+
+    public static SoundSystem getSoundSystem(Minecraft minecraft) {
+        if(minecraft != null) {
+            return getSoundSystem(minecraft.sndManager);
+        }
+        return null;
+    }
+
+    public static SoundSystem getSoundSystem(SoundManager sndManager) {
+        if(sndManager != null) {
+            try {
+                return (SoundSystem) ModLoader.getPrivateValue(SoundManager.class, sndManager, "sndSystem");
+            } catch (NoSuchFieldException e) {
+                System.out.println("Could not acquire sound system");
+            }
+        }
+        return null;
+    }
+
+    private static final Map<Class, Map<String, String>> obfuscatedFields = new HashMap<Class, Map<String, String>>();
+    static {
+        HashMap<String, String> fields = new HashMap<String, String>();
+        fields.put("soundPoolSounds", "b");
+        fields.put("soundPoolStreaming", "c");
+        fields.put("soundPoolMusic", "d");
+        fields.put("options", "f");
+        obfuscatedFields.put(SoundManager.class, fields);
+    }
+
+    public static SoundPool[] getSoundPools(SoundManager sndManager) {
+        SoundPool[] soundPools = new SoundPool[3];
+        Map<String, String> fields = obfuscatedFields.get(SoundManager.class);
+        soundPools[0] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolSounds", fields.get("soundPoolSounds"));
+        soundPools[1] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolStreaming", fields.get("soundPoolStreaming"));
+        soundPools[2] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolMusic", fields.get("soundPoolMusic"));
+        return soundPools;
+    }
+
+    public static GameSettings getGameSettings(SoundManager sndManager) {
+        return (GameSettings) getPrivateValue(SoundManager.class, sndManager, "options", obfuscatedFields.get(SoundManager.class).get("options"));
+    }
+
+    public static void setPrivateValue(Class clazz, Object classInstance, String fieldName, String obfuscatedName, Object fieldValue) {
+        try {
+            ModLoader.setPrivateValue(clazz, classInstance, fieldName, fieldValue);
+        } catch (NoSuchFieldException e) {
+            try {
+                if(obfuscatedName != null)
+                    ModLoader.setPrivateValue(clazz, classInstance, obfuscatedName, fieldValue);
+            } catch (NoSuchFieldException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    public static Object getPrivateValue(Class clazz, Object classInstance, String fieldName, String obfuscatedName) {
+        try {
+            return ModLoader.getPrivateValue(clazz, classInstance, fieldName);
+        } catch (NoSuchFieldException e) {
+            try {
+                if(obfuscatedName != null) {
+                    return ModLoader.getPrivateValue(clazz, classInstance, obfuscatedName);
+                }
+            } catch (NoSuchFieldException e1) {
+                e1.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public static int[] getIntArray(byte[] bytes) {
+        int[] ints = new int[bytes.length];
+        for(int i = 0; i < ints.length; i++) {
+            ints[i] = bytes[i];
+        }
+        return ints;
+    }
+
+    public static byte[] getByteArray(int[] ints) {
+        byte[] bytes = new byte[ints.length];
+        for(int i = 0; i < ints.length; i++) {
+            bytes[i] = (byte) ints[i];
+        }
+        return bytes;
     }
 }

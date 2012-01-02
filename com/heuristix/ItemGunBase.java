@@ -73,11 +73,11 @@ public class ItemGunBase extends ItemGun {
     }
 
     public String getName() {
-        return "";
+        return null;
     }
 
     public String getIconPath() {
-        return "";
+        return null;
     }
 
     public Object[] getCraftingRecipe() {

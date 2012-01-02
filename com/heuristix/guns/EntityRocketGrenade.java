@@ -11,7 +11,11 @@ import net.minecraft.src.World;
  */
 public class EntityRocketGrenade extends EntityGrenade {
 
-    protected EntityRocketGrenade(World world, EntityLiving living) {
+    public EntityRocketGrenade(World world) {
+        super(world);
+    }
+
+    public EntityRocketGrenade(World world, EntityLiving living) {
         super(world, living);
     }
 

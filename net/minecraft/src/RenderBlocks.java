@@ -2401,10 +2401,10 @@ public class RenderBlocks
         return true;
     }
 
-    public void renderTorchAtAngle(Block block, double d, double d1, double d2, 
+    public void renderTorchAtAngle(Block block, double x, double y, double z,
             double d3, double d4)
     {
-        Tessellator tessellator = Tessellator.instance;
+        Tessellator t = Tessellator.instance;
         int i = block.getBlockTextureFromSide(0);
         if(overrideBlockTexture >= 0)
         {
@@ -2420,34 +2420,34 @@ public class RenderBlocks
         double d6 = (double)f2 + 0.0234375D;
         double d7 = (double)f + 0.03515625D;
         double d8 = (double)f2 + 0.03125D;
-        d += 0.5D;
-        d2 += 0.5D;
-        double d9 = d - 0.5D;
-        double d10 = d + 0.5D;
-        double d11 = d2 - 0.5D;
-        double d12 = d2 + 0.5D;
+        x += 0.5D;
+        z += 0.5D;
+        double d9 = x - 0.5D;
+        double d10 = x + 0.5D;
+        double d11 = z - 0.5D;
+        double d12 = z + 0.5D;
         double d13 = 0.0625D;
         double d14 = 0.625D;
-        tessellator.addVertexWithUV((d + d3 * (1.0D - d14)) - d13, d1 + d14, (d2 + d4 * (1.0D - d14)) - d13, d5, d6);
-        tessellator.addVertexWithUV((d + d3 * (1.0D - d14)) - d13, d1 + d14, d2 + d4 * (1.0D - d14) + d13, d5, d8);
-        tessellator.addVertexWithUV(d + d3 * (1.0D - d14) + d13, d1 + d14, d2 + d4 * (1.0D - d14) + d13, d7, d8);
-        tessellator.addVertexWithUV(d + d3 * (1.0D - d14) + d13, d1 + d14, (d2 + d4 * (1.0D - d14)) - d13, d7, d6);
-        tessellator.addVertexWithUV(d - d13, d1 + 1.0D, d11, f, f2);
-        tessellator.addVertexWithUV((d - d13) + d3, d1 + 0.0D, d11 + d4, f, f3);
-        tessellator.addVertexWithUV((d - d13) + d3, d1 + 0.0D, d12 + d4, f1, f3);
-        tessellator.addVertexWithUV(d - d13, d1 + 1.0D, d12, f1, f2);
-        tessellator.addVertexWithUV(d + d13, d1 + 1.0D, d12, f, f2);
-        tessellator.addVertexWithUV(d + d3 + d13, d1 + 0.0D, d12 + d4, f, f3);
-        tessellator.addVertexWithUV(d + d3 + d13, d1 + 0.0D, d11 + d4, f1, f3);
-        tessellator.addVertexWithUV(d + d13, d1 + 1.0D, d11, f1, f2);
-        tessellator.addVertexWithUV(d9, d1 + 1.0D, d2 + d13, f, f2);
-        tessellator.addVertexWithUV(d9 + d3, d1 + 0.0D, d2 + d13 + d4, f, f3);
-        tessellator.addVertexWithUV(d10 + d3, d1 + 0.0D, d2 + d13 + d4, f1, f3);
-        tessellator.addVertexWithUV(d10, d1 + 1.0D, d2 + d13, f1, f2);
-        tessellator.addVertexWithUV(d10, d1 + 1.0D, d2 - d13, f, f2);
-        tessellator.addVertexWithUV(d10 + d3, d1 + 0.0D, (d2 - d13) + d4, f, f3);
-        tessellator.addVertexWithUV(d9 + d3, d1 + 0.0D, (d2 - d13) + d4, f1, f3);
-        tessellator.addVertexWithUV(d9, d1 + 1.0D, d2 - d13, f1, f2);
+        t.addVertexWithUV((x + d3 * (1.0D - d14)) - d13, y + d14, (z + d4 * (1.0D - d14)) - d13, d5, d6);
+        t.addVertexWithUV((x + d3 * (1.0D - d14)) - d13, y + d14, z + d4 * (1.0D - d14) + d13, d5, d8);
+        t.addVertexWithUV(x + d3 * (1.0D - d14) + d13, y + d14, z + d4 * (1.0D - d14) + d13, d7, d8);
+        t.addVertexWithUV(x + d3 * (1.0D - d14) + d13, y + d14, (z + d4 * (1.0D - d14)) - d13, d7, d6);
+        t.addVertexWithUV(x - d13, y + 1.0D, d11, f, f2);
+        t.addVertexWithUV((x - d13) + d3, y + 0.0D, d11 + d4, f, f3);
+        t.addVertexWithUV((x - d13) + d3, y + 0.0D, d12 + d4, f1, f3);
+        t.addVertexWithUV(x - d13, y + 1.0D, d12, f1, f2);
+        t.addVertexWithUV(x + d13, y + 1.0D, d12, f, f2);
+        t.addVertexWithUV(x + d3 + d13, y + 0.0D, d12 + d4, f, f3);
+        t.addVertexWithUV(x + d3 + d13, y + 0.0D, d11 + d4, f1, f3);
+        t.addVertexWithUV(x + d13, y + 1.0D, d11, f1, f2);
+        t.addVertexWithUV(d9, y + 1.0D, z + d13, f, f2);
+        t.addVertexWithUV(d9 + d3, y + 0.0D, z + d13 + d4, f, f3);
+        t.addVertexWithUV(d10 + d3, y + 0.0D, z + d13 + d4, f1, f3);
+        t.addVertexWithUV(d10, y + 1.0D, z + d13, f1, f2);
+        t.addVertexWithUV(d10, y + 1.0D, z - d13, f, f2);
+        t.addVertexWithUV(d10 + d3, y + 0.0D, (z - d13) + d4, f, f3);
+        t.addVertexWithUV(d9 + d3, y + 0.0D, (z - d13) + d4, f1, f3);
+        t.addVertexWithUV(d9, y + 1.0D, z - d13, f1, f2);
     }
 
     public void renderCrossedSquares(Block block, int i, double d, double d1, double d2)

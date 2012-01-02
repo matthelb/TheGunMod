@@ -37,12 +37,12 @@ public class EntityBullet extends EntityProjectile {
 
     @Override
     public String getHitSound() {
-        return null;
+        return "guns.hit";
     }
 
     @Override
     public String getMoveSound() {
-        return null;
+        return "guns.move";
     }
 
     @Override

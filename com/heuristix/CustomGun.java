@@ -2,6 +2,7 @@ package com.heuristix;
 
 import com.heuristix.asm.ByteVector;
 import com.heuristix.asm.Opcodes;
+import com.heuristix.util.Buffer;
 import com.heuristix.util.Method;
 import com.heuristix.util.ExtensibleClassAdapter;
 import com.heuristix.util.BytecodeValue;
@@ -29,10 +30,10 @@ public class CustomGun<G extends ItemGun, B extends ItemProjectile> {
     private G itemGun;
     private B itemBullet;
 
-    byte[] itemGunShootSoundBytes;
-    String name, itemGunShootSound;
-    int bulletDamage, itemBulletId, itemGunShotsPerMinute, itemGunFireMode, itemGunScope, itemGunClipSize, itemGunReloadTime, itemGunId, itemGunRecoilX, itemGunRecoilY, itemGunRoundsPerMinute, itemGunRoundsPerShot;
-    float bulletRange, itemGunZoom, bulletSpread;
+    public byte[] itemGunShootSoundBytes;
+    public String name, itemGunShootSound;
+    public int bulletDamage, itemBulletId, itemGunShotsPerMinute, itemGunFireMode, itemGunScope, itemGunClipSize, itemGunReloadTime, itemGunId, itemGunRecoilX, itemGunRecoilY, itemGunRoundsPerMinute, itemGunRoundsPerShot;
+    public float bulletRange, itemGunZoom, bulletSpread;
 
     private BufferedImage bulletTexture, gunTexture;
 

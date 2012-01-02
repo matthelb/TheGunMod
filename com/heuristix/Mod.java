@@ -1,10 +1,7 @@
 package com.heuristix;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.BaseMod;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.ModLoader;
-import net.minecraft.src.ModTextureStatic;
+import net.minecraft.src.*;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -59,33 +56,7 @@ public abstract class Mod extends BaseMod {
             }
         }
         if(!soundsRegistered) {
-            if(minecraft.sndManager != null) {
-                for(int i = 0; i < SOUND_KEYS.length; i++) {
-                    HashMap<String, byte[]> sounds = (HashMap<String, byte[]>) this.sounds.get(SOUND_KEYS[i]);
-                    if(sounds != null) {
-                        for(Map.Entry<String, byte[]> entry: sounds.entrySet()) {
-                            String name = entry.getKey();
-                            File soundFile = Util.getTempFile(name.replaceAll("/", "."), null, entry.getValue());
-                            if(soundFile != null) {
-                                switch(i) {
-                                    case 0:
-                                        minecraft.sndManager.addSound(name, soundFile);
-                                        break;
-                                    case 1:
-                                        minecraft.sndManager.addMusic(name, soundFile);
-                                        break;
-                                    case 2:
-                                        minecraft.sndManager.addStreaming(name, soundFile);
-                                        break;
-                                    default:
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                }
-                soundsRegistered = true;
-            }
+            registerAllSounds(minecraft );
         }
         return OnTick(tick, minecraft);
     }
@@ -124,17 +95,46 @@ public abstract class Mod extends BaseMod {
         this.sounds.put(SOUND_KEYS[2], streaming);
     }
 
-
-    public static void setPrivateValue(Class clazz, Object clazzInstance, String fieldName, String obfuscatedName, Object fieldValue) {
-        try {
-            ModLoader.setPrivateValue(clazz, clazzInstance, fieldName, fieldValue);
-        } catch (NoSuchFieldException e) {
+    public void registerAllSounds(Minecraft minecraft) {
+        if(minecraft.sndManager != null) {
+            SoundPool[] soundPools = Util.getSoundPools(minecraft.sndManager);
             try {
-                if(obfuscatedName != null)
-                    ModLoader.setPrivateValue(clazz, clazzInstance, obfuscatedName, fieldValue);
-            } catch (NoSuchFieldException e1) {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                for(int i = 0; i < soundPools.length; i++) {
+                    soundPools[i].isGetRandomSound = false;
+                }
+            } catch (NullPointerException e) { }
+            for(int i = 0; i < SOUND_KEYS.length; i++) {
+                HashMap<String, byte[]> sounds = (HashMap<String, byte[]>) this.sounds.get(SOUND_KEYS[i]);
+                if(sounds != null) {
+                    for(Map.Entry<String, byte[]> entry: sounds.entrySet()) {
+                        String name = entry.getKey();
+                        File soundFile = Util.getTempFile(name.replaceAll("/", "."), null, entry.getValue());
+                        if(soundFile != null) {
+                            switch(i) {
+                                case 0:
+                                    minecraft.sndManager.addSound(name, soundFile);
+                                    break;
+                                case 1:
+                                    minecraft.sndManager.addMusic(name, soundFile);
+                                    break;
+                                case 2:
+                                    minecraft.sndManager.addStreaming(name, soundFile);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    }
+                }
             }
+            try {
+                for(int i = 0; i < soundPools.length; i++) {
+                    soundPools[i].isGetRandomSound = true;
+                }
+            } catch (NullPointerException e) { }
+            soundsRegistered = true;
         }
     }
+
+
 }
