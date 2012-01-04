@@ -6,8 +6,9 @@ package com.heuristix.util;
  * Date: 7/9/11
  * Time: 11:46 AM
  */
-public class ReverseBuffer {
+public final class ReverseBuffer {
 
+    private ReverseBuffer() { }
 
     public static int getByte(int value) {
         return value & 0xFF;
@@ -26,7 +27,7 @@ public class ReverseBuffer {
     }
 
     public static int[] getString(String value) {
-        if(value == null)
+        if (value == null)
             return new int[]{10};
         byte[] bytes = value.getBytes();
         int[] ints = new int[bytes.length + 1];

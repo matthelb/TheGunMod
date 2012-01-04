@@ -10,5 +10,5 @@ import java.io.File;
  */
 public interface FileChooserCallback {
 
-    public void selectedFile(File file);
+    void selectedFile(File file);
 }

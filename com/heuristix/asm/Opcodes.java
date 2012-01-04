@@ -88,9 +88,9 @@ public interface Opcodes {
     int T_SHORT = 9;
     int T_INT = 10;
     int T_LONG = 11;
-    
+
     // tags for MethodHandle
-    
+
     int MH_GETFIELD = 1;
     int MH_GETSTATIC = 2;
     int MH_PUTFIELD = 3;

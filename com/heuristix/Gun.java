@@ -23,6 +23,9 @@ public class Gun {
     public static final int MAGIC = 0x47554E53;
     public static final int OLD_MAGIC = 0x47554E4D;
 
+    public static final int CLASSES = 3;
+    public static final int RESOURCES = 4;
+
     private List<Pair<String, byte[]>> clazzes;
     private List<byte[]> resources;
     private Map<String, int[]> properties;
@@ -37,11 +40,12 @@ public class Gun {
         this.clazzes = new LinkedList<Pair<String, byte[]>>();
         this.resources = new LinkedList<byte[]>();
         this.properties = new HashMap<String, int[]>();
-        if(!read(buffer));
-            //throw new IllegalArgumentException("Incorrectly formatted GUN2 file.");
+        if (!read(buffer)) {
+            throw new IllegalArgumentException("Incorrectly formatted GUN2 file.");
+        }
     }
 
-    public boolean read(Buffer buffer) {
+    public final boolean read(Buffer buffer) {
         try {
             int magic = buffer.readInt();
             return (magic == MAGIC) ? readPriv(buffer) : (magic == OLD_MAGIC) ? readOld(buffer) : false;
@@ -51,21 +55,21 @@ public class Gun {
         return false;
     }
 
-    private boolean readPriv(Buffer buffer) throws ArrayIndexOutOfBoundsException {
+    private boolean readPriv(Buffer buffer) {
         int classes = buffer.readInt();
-        while(classes-- > 0) {
+        while (classes-- > 0) {
             String name = buffer.readString();
             int length = buffer.readInt();
             byte[] bytes = buffer.readBytes(length);
             clazzes.add(new Pair(name, bytes));
         }
         int resources = buffer.readInt();
-        while(resources-- > 0) {
+        while (resources-- > 0) {
             int length = buffer.readInt();
             this.resources.add(buffer.readBytes(length));
         }
         int properties = buffer.readInt();
-        while(properties-- > 0) {
+        while (properties-- > 0) {
             String key = buffer.readString();
             int length = buffer.readInt();
             int[] bytes = Util.getIntArray(buffer.readBytes(length));
@@ -74,16 +78,16 @@ public class Gun {
         return true;
     }
 
-    private boolean readOld(Buffer buffer) throws ArrayIndexOutOfBoundsException {
+    private boolean readOld(Buffer buffer) {
         int classes = buffer.readInt();
-        while(classes-- > 0) {
+        while (classes-- > 0) {
             String name = buffer.readString();
             int length = buffer.readInt();
             byte[] bytes = buffer.readBytes(length);
             clazzes.add(new Pair(name, bytes));
         }
         int resources = buffer.readInt();
-        while(resources-- > 0) {
+        while (resources-- > 0) {
             int length = buffer.readInt();
             this.resources.add(buffer.readBytes(length));
         }
@@ -97,21 +101,21 @@ public class Gun {
     public void write(OutputStream out) throws IOException {
         ByteVector outBytes = new ByteVector();
         outBytes.putInt(MAGIC);
-        outBytes.putInt(3);
-        for(int i = 0; i < 3; i++) {
+        outBytes.putInt(CLASSES);
+        for (int i = 0; i < CLASSES; i++) {
             byte[] stringBytes = Util.getStringBytes(clazzes.get(i).getFirst());
             outBytes.putByteArray(stringBytes, 0, stringBytes.length);
             byte[] bytes = clazzes.get(i).getSecond();
             outBytes.putInt(bytes.length);
             outBytes.putByteArray(bytes, 0, bytes.length);
         }
-        outBytes.putInt(4);
-        for(int i = 0; i < 4; i++) {
+        outBytes.putInt(RESOURCES);
+        for (int i = 0; i < RESOURCES; i++) {
             byte[] bytes = resources.get(i);
             outBytes.putInt(bytes.length);
             outBytes.putByteArray(bytes, 0, bytes.length);
         }
-        for(Map.Entry<String, int[]> property : properties.entrySet()) {
+        for (Map.Entry<String, int[]> property : properties.entrySet()) {
             byte[] stringBytes = Util.getStringBytes(property.getKey());
             outBytes.putByteArray(stringBytes, 0, stringBytes.length);
             byte[] bytes = Util.getByteArray(property.getValue());

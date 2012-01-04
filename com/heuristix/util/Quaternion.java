@@ -11,8 +11,8 @@ import net.minecraft.src.Vec3D;
  */
 public class Quaternion {
 
-    public double x, y, z;
-    public float w;
+    private double x, y, z;
+    private float w;
 
     public Quaternion(Vec3D vec, float angle) {
         this(vec.xCoord, vec.yCoord, vec.zCoord, angle);

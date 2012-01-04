@@ -26,14 +26,16 @@ public class EntityGrenade extends EntityProjectile {
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if(isEntityAlive())
+        if (isEntityAlive()) {
             worldObj.spawnParticle("largesmoke", posX + Util.randomFloat(-1, 1), posY + Util.randomFloat(-1, 1), posZ + Util.randomFloat(-1, 1), 0, 0, 0);
+        }
     }
+
     @Override
     public boolean onHit(Entity hit, MovingObjectPosition position) {
-        if(hit != null)
+        if (hit != null) {
             return super.onHit(hit, position);
-        else {
+        } else {
             worldObj.createExplosion(this, posX, posY, posZ, getDamage());
             return true;
         }

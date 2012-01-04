@@ -1,6 +1,9 @@
 package com.heuristix.util;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
 import java.lang.instrument.Instrumentation;
@@ -22,7 +25,7 @@ public class LoadingAgent implements ClassFileTransformer {
             out.newLine();
         } catch (IOException e) {
 
-        }  finally {
+        } finally {
             try {
                 out.flush();
             } catch (IOException e) {

@@ -2,6 +2,8 @@ package com.heuristix;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
+import org.lwjgl.opengl.ARBMultitexture;
+import org.lwjgl.opengl.EXTRescaleNormal;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
@@ -23,12 +25,13 @@ public class GunItemRenderer extends ItemRenderer {
     private Field prevEquippedProgressField, equippedProgressField, mcField, itemToRenderField, mapItemRendererField;
 
     private float getPrevEquippedProgress() {
-        if(prevEquippedProgressField == null) {
+        if (prevEquippedProgressField == null) {
             prevEquippedProgressField = Util.getField(ItemRenderer.class, "prevEquippedProgress", obfuscatedFields.get("prevEquippedProgress"));
-            if(prevEquippedProgressField == null)
+            if (prevEquippedProgressField == null) {
                 return -1;
-            else
+            } else {
                 prevEquippedProgressField.setAccessible(true);
+            }
         }
         try {
             return (Float) prevEquippedProgressField.get(this);
@@ -39,12 +42,13 @@ public class GunItemRenderer extends ItemRenderer {
     }
 
     private float getEquippedProgress() {
-        if(equippedProgressField == null) {
+        if (equippedProgressField == null) {
             equippedProgressField = Util.getField(ItemRenderer.class, "equippedProgress", obfuscatedFields.get("equippedProgress"));
-            if(equippedProgressField == null)
+            if (equippedProgressField == null) {
                 return -1;
-            else
+            } else {
                 equippedProgressField.setAccessible(true);
+            }
         }
         try {
             return (Float) equippedProgressField.get(this);
@@ -55,12 +59,13 @@ public class GunItemRenderer extends ItemRenderer {
     }
 
     private Minecraft getMC() {
-        if(mcField == null) {
+        if (mcField == null) {
             mcField = Util.getField(ItemRenderer.class, "mc", obfuscatedFields.get("mc"));
-            if(mcField == null)
+            if (mcField == null) {
                 return null;
-            else
+            } else {
                 mcField.setAccessible(true);
+            }
         }
         try {
             return (Minecraft) mcField.get(this);
@@ -71,12 +76,13 @@ public class GunItemRenderer extends ItemRenderer {
     }
 
     private ItemStack getItemToRender() {
-        if(itemToRenderField == null) {
+        if (itemToRenderField == null) {
             itemToRenderField = Util.getField(ItemRenderer.class, "itemToRender", obfuscatedFields.get("itemToRender"));
-            if(itemToRenderField == null)
+            if (itemToRenderField == null) {
                 return null;
-            else
+            } else {
                 itemToRenderField.setAccessible(true);
+            }
         }
         try {
             return (ItemStack) itemToRenderField.get(this);
@@ -87,12 +93,13 @@ public class GunItemRenderer extends ItemRenderer {
     }
 
     private MapItemRenderer getMapItemRenderer() {
-        if(mapItemRendererField == null) {
+        if (mapItemRendererField == null) {
             mapItemRendererField = Util.getField(ItemRenderer.class, "mapItemRenderer", obfuscatedFields.get("mapItemRenderer"));
-            if(mapItemRendererField == null)
+            if (mapItemRendererField == null) {
                 return null;
-            else
+            } else {
                 mapItemRendererField.setAccessible(true);
+            }
         }
         try {
             return (MapItemRenderer) mapItemRendererField.get(this);
@@ -114,7 +121,7 @@ public class GunItemRenderer extends ItemRenderer {
         Minecraft mc = getMC();
 
         float f1 = prevEquippedProgress + (equippedProgress - prevEquippedProgress) * f;
-        if(equippedProgress == 1.0f && getGun() != null) {
+        if (equippedProgress == 1.0f && getGun() != null) {
             f1 = prevReloadProgress + (reloadProgress - prevReloadProgress) * f;
         }
         EntityPlayerSP entityplayersp = mc.thePlayer;
@@ -124,8 +131,7 @@ public class GunItemRenderer extends ItemRenderer {
         GL11.glRotatef(entityplayersp.prevRotationYaw + (entityplayersp.rotationYaw - entityplayersp.prevRotationYaw) * f, 0.0F, 1.0F, 0.0F);
         RenderHelper.enableStandardItemLighting();
         GL11.glPopMatrix();
-        if(entityplayersp instanceof EntityPlayerSP)
-        {
+        if (entityplayersp instanceof EntityPlayerSP) {
             EntityPlayerSP entityplayersp1 = entityplayersp;
             float f3 = entityplayersp1.prevRenderArmPitch + (entityplayersp1.renderArmPitch - entityplayersp1.prevRenderArmPitch) * f;
             float f5 = entityplayersp1.prevRenderArmYaw + (entityplayersp1.renderArmYaw - entityplayersp1.prevRenderArmYaw) * f;
@@ -138,44 +144,38 @@ public class GunItemRenderer extends ItemRenderer {
         int i = mc.theWorld.getLightBrightnessForSkyBlocks(MathHelper.floor_double(entityplayersp.posX), MathHelper.floor_double(entityplayersp.posY), MathHelper.floor_double(entityplayersp.posZ), 0);
         int k = i % 0x10000;
         int l = i / 0x10000;
-        GL13.glMultiTexCoord2f(33985 /*GL_TEXTURE1_ARB*/, (float) k / 1.0F, (float) l / 1.0F);
+        GL13.glMultiTexCoord2f(ARBMultitexture.GL_TEXTURE1_ARB, (float) k / 1.0F, (float) l / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        if(itemstack != null)
-        {
+        if (itemstack != null) {
             int j = Item.itemsList[itemstack.itemID].getColorFromDamage(itemstack.getItemDamage());
-            float f9 = (float)(j >> 16 & 0xff) / 255F;
-            float f14 = (float)(j >> 8 & 0xff) / 255F;
-            float f20 = (float)(j & 0xff) / 255F;
+            float f9 = (float) (j >> 16 & 0xff) / 255F;
+            float f14 = (float) (j >> 8 & 0xff) / 255F;
+            float f20 = (float) (j & 0xff) / 255F;
             GL11.glColor4f(f4 * f9, f4 * f14, f4 * f20, 1.0F);
-        } else
-        {
+        } else {
             GL11.glColor4f(f4, f4, f4, 1.0F);
         }
-        if(itemstack != null && itemstack.itemID == Item.map.shiftedIndex)
-        {
+        if (itemstack != null && itemstack.itemID == Item.map.shiftedIndex) {
             GL11.glPushMatrix();
             float f6 = 0.8F;
             float f10 = entityplayersp.getSwingProgress(f);
-            float f15 = MathHelper.sin(f10 * 3.141593F);
-            float f21 = MathHelper.sin(MathHelper.sqrt_float(f10) * 3.141593F);
-            GL11.glTranslatef(-f21 * 0.4F, MathHelper.sin(MathHelper.sqrt_float(f10) * 3.141593F * 2.0F) * 0.2F, -f15 * 0.2F);
+            float f15 = MathHelper.sin(f10 * Util.PI);
+            float f21 = MathHelper.sin(MathHelper.sqrt_float(f10) * Util.PI);
+            GL11.glTranslatef(-f21 * 0.4F, MathHelper.sin(MathHelper.sqrt_float(f10) * Util.PI * 2.0F) * 0.2F, -f15 * 0.2F);
             f10 = (1.0F - f2 / 45F) + 0.1F;
-            if(f10 < 0.0F)
-            {
+            if (f10 < 0.0F) {
                 f10 = 0.0F;
             }
-            if(f10 > 1.0F)
-            {
+            if (f10 > 1.0F) {
                 f10 = 1.0F;
             }
-            f10 = -MathHelper.cos(f10 * 3.141593F) * 0.5F + 0.5F;
+            f10 = -MathHelper.cos(f10 * Util.PI) * 0.5F + 0.5F;
             GL11.glTranslatef(0.0F, (0.0F * f6 - (1.0F - f1) * 1.2F - f10 * 0.5F) + 0.04F, -0.9F * f6);
             GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(f10 * -85F, 0.0F, 0.0F, 1.0F);
-            GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, mc.renderEngine.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getEntityTexture()));
-            for(f15 = 0; f15 < 2; f15++)
-            {
+            GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getEntityTexture()));
+            for (f15 = 0; f15 < 2; f15++) {
                 f21 = f15 * 2 - 1;
                 GL11.glPushMatrix();
                 GL11.glTranslatef(-0F, -0.6F, 1.1F * f21);
@@ -184,7 +184,7 @@ public class GunItemRenderer extends ItemRenderer {
                 GL11.glRotatef(59F, 0.0F, 0.0F, 1.0F);
                 GL11.glRotatef(-65 * f21, 0.0F, 1.0F, 0.0F);
                 Render render1 = RenderManager.instance.getEntityRenderObject(mc.thePlayer);
-                RenderPlayer renderplayer1 = (RenderPlayer)render1;
+                RenderPlayer renderplayer1 = (RenderPlayer) render1;
                 float f32 = 1.0F;
                 GL11.glScalef(f32, f32, f32);
                 renderplayer1.drawFirstPersonHand();
@@ -192,8 +192,8 @@ public class GunItemRenderer extends ItemRenderer {
             }
 
             f15 = entityplayersp.getSwingProgress(f);
-            f21 = MathHelper.sin(f15 * f15 * 3.141593F);
-            float f27 = MathHelper.sin(MathHelper.sqrt_float(f15) * 3.141593F);
+            f21 = MathHelper.sin(f15 * f15 * Util.PI);
+            float f27 = MathHelper.sin(MathHelper.sqrt_float(f15) * Util.PI);
             GL11.glRotatef(-f21 * 20F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(-f27 * 20F, 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(-f27 * 80F, 1.0F, 0.0F, 0.0F);
@@ -217,22 +217,20 @@ public class GunItemRenderer extends ItemRenderer {
             MapData mapdata = Item.map.getMapData(itemstack, mc.theWorld);
             getMapItemRenderer().renderMap(mc.thePlayer, mc.renderEngine, mapdata);
             GL11.glPopMatrix();
-        } else
-        if(itemstack != null)
-        {
+        } else if (itemstack != null) {
             GL11.glPushMatrix();
             float f7 = 0.8F;
-            if(entityplayersp.func_35205_Y() > 0) {
+            if (entityplayersp.func_35205_Y() > 0) {
                 EnumAction enumaction = itemstack.getItemUseAction();
-                if(enumaction == EnumAction.eat) {
-                    float f16 = ((float)entityplayersp.func_35205_Y() - f) + 1.0F;
-                    float f28 = 1.0F - f16 / (float)itemstack.getMaxItemUseDuration();
+                if (enumaction == EnumAction.eat) {
+                    float f16 = ((float) entityplayersp.func_35205_Y() - f) + 1.0F;
+                    float f28 = 1.0F - f16 / (float) itemstack.getMaxItemUseDuration();
                     float f30 = 1.0F - f28;
                     f30 = f30 * f30 * f30;
                     f30 = f30 * f30 * f30;
                     f30 = f30 * f30 * f30;
                     float f33 = 1.0F - f30;
-                    GL11.glTranslatef(0.0F, MathHelper.abs(MathHelper.cos((f16 / 4F) * 3.141593F) * 0.1F) * (float)((double)f28 <= 0.20000000000000001D ? 0 : 1), 0.0F);
+                    GL11.glTranslatef(0.0F, MathHelper.abs(MathHelper.cos((f16 / 4F) * Util.PI) * 0.1F) * (float) ((double) f28 <= 0.20000000000000001D ? 0 : 1), 0.0F);
                     GL11.glTranslatef(f33 * 0.6F, -f33 * 0.5F, 0.0F);
                     GL11.glRotatef(f33 * 90F, 0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(f33 * 10F, 1.0F, 0.0F, 0.0F);
@@ -240,46 +238,40 @@ public class GunItemRenderer extends ItemRenderer {
                 }
             } else {
                 float f11 = entityplayersp.getSwingProgress(f);
-                float f17 = MathHelper.sin(f11 * 3.141593F);
-                float f23 = MathHelper.sin(MathHelper.sqrt_float(f11) * 3.141593F);
-                GL11.glTranslatef(-f23 * 0.4F, MathHelper.sin(MathHelper.sqrt_float(f11) * 3.141593F * 2.0F) * 0.2F, -f17 * 0.2F);
+                float f17 = MathHelper.sin(f11 * Util.PI);
+                float f23 = MathHelper.sin(MathHelper.sqrt_float(f11) * Util.PI);
+                GL11.glTranslatef(-f23 * 0.4F, MathHelper.sin(MathHelper.sqrt_float(f11) * Util.PI * 2.0F) * 0.2F, -f17 * 0.2F);
             }
             GL11.glTranslatef(0.7F * f7, -0.65F * f7 - (1.0F - f1) * 0.6F, -0.9F * f7);
             GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
-            GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+            GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
             float f12 = entityplayersp.getSwingProgress(f);
-            float f18 = MathHelper.sin(f12 * f12 * 3.141593F);
-            float f24 = MathHelper.sin(MathHelper.sqrt_float(f12) * 3.141593F);
+            float f18 = MathHelper.sin(f12 * f12 * Util.PI);
+            float f24 = MathHelper.sin(MathHelper.sqrt_float(f12) * Util.PI);
             GL11.glRotatef(-f18 * 20F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(-f24 * 20F, 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(-f24 * 80F, 1.0F, 0.0F, 0.0F);
             f12 = 0.4F;
             GL11.glScalef(f12, f12, f12);
-            if(entityplayersp.func_35205_Y() > 0)
-            {
+            if (entityplayersp.func_35205_Y() > 0) {
                 EnumAction enumaction1 = itemstack.getItemUseAction();
-                if(enumaction1 == EnumAction.block)
-                {
+                if (enumaction1 == EnumAction.block) {
                     GL11.glTranslatef(-0.5F, 0.2F, 0.0F);
                     GL11.glRotatef(30F, 0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(-80F, 1.0F, 0.0F, 0.0F);
                     GL11.glRotatef(60F, 0.0F, 1.0F, 0.0F);
-                } else
-                if(enumaction1 == EnumAction.bow)
-                {
+                } else if (enumaction1 == EnumAction.bow) {
                     GL11.glRotatef(-18F, 0.0F, 0.0F, 1.0F);
                     GL11.glRotatef(-12F, 0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(-8F, 1.0F, 0.0F, 0.0F);
                     GL11.glTranslatef(-0.9F, 0.2F, 0.0F);
-                    float f25 = (float)itemstack.getMaxItemUseDuration() - (((float)entityplayersp.func_35205_Y() - f) + 1.0F);
+                    float f25 = (float) itemstack.getMaxItemUseDuration() - (((float) entityplayersp.func_35205_Y() - f) + 1.0F);
                     float f29 = f25 / 20F;
                     f29 = (f29 * f29 + f29 * 2.0F) / 3F;
-                    if(f29 > 1.0F)
-                    {
+                    if (f29 > 1.0F) {
                         f29 = 1.0F;
                     }
-                    if(f29 > 0.1F)
-                    {
+                    if (f29 > 0.1F) {
                         GL11.glTranslatef(0.0F, MathHelper.sin((f25 - 0.1F) * 1.3F) * 0.01F * (f29 - 0.1F), 0.0F);
                     }
                     GL11.glTranslatef(0.0F, 0.0F, f29 * 0.1F);
@@ -293,37 +285,33 @@ public class GunItemRenderer extends ItemRenderer {
                     GL11.glRotatef(335F, 0.0F, 0.0F, 1.0F);
                 }
             }
-            if(itemstack.getItem().shouldRotateAroundWhenRendering())
-            {
+            if (itemstack.getItem().shouldRotateAroundWhenRendering()) {
                 GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
             }
-            if(itemstack.itemID == Item.potion.shiftedIndex)
-            {
+            if (itemstack.itemID == Item.potion.shiftedIndex) {
                 renderItem(entityplayersp, itemstack, 0);
                 GL11.glColor4f(f4, f4, f4, 1.0F);
                 renderItem(entityplayersp, itemstack, 1);
-            } else
-            {
+            } else {
                 renderItem(entityplayersp, itemstack, 0);
             }
             GL11.glPopMatrix();
-        } else
-        {
+        } else {
             GL11.glPushMatrix();
             float f8 = 0.8F;
             float f13 = entityplayersp.getSwingProgress(f);
-            float f19 = MathHelper.sin(f13 * 3.141593F);
-            float f26 = MathHelper.sin(MathHelper.sqrt_float(f13) * 3.141593F);
-            GL11.glTranslatef(-f26 * 0.3F, MathHelper.sin(MathHelper.sqrt_float(f13) * 3.141593F * 2.0F) * 0.4F, -f19 * 0.4F);
+            float f19 = MathHelper.sin(f13 * Util.PI);
+            float f26 = MathHelper.sin(MathHelper.sqrt_float(f13) * Util.PI);
+            GL11.glTranslatef(-f26 * 0.3F, MathHelper.sin(MathHelper.sqrt_float(f13) * Util.PI * 2.0F) * 0.4F, -f19 * 0.4F);
             GL11.glTranslatef(0.8F * f8, -0.75F * f8 - (1.0F - f1) * 0.6F, -0.9F * f8);
             GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
-            GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+            GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
             f13 = entityplayersp.getSwingProgress(f);
-            f19 = MathHelper.sin(f13 * f13 * 3.141593F);
-            f26 = MathHelper.sin(MathHelper.sqrt_float(f13) * 3.141593F);
+            f19 = MathHelper.sin(f13 * f13 * Util.PI);
+            f26 = MathHelper.sin(MathHelper.sqrt_float(f13) * Util.PI);
             GL11.glRotatef(f26 * 70F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(-f19 * 20F, 0.0F, 0.0F, 1.0F);
-            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, mc.renderEngine.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getEntityTexture()));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getEntityTexture()));
             GL11.glTranslatef(-1F, 3.6F, 3.5F);
             GL11.glRotatef(120F, 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(200F, 1.0F, 0.0F, 0.0F);
@@ -331,13 +319,13 @@ public class GunItemRenderer extends ItemRenderer {
             GL11.glScalef(1.0F, 1.0F, 1.0F);
             GL11.glTranslatef(5.6F, 0.0F, 0.0F);
             Render render = RenderManager.instance.getEntityRenderObject(mc.thePlayer);
-            RenderPlayer renderplayer = (RenderPlayer)render;
+            RenderPlayer renderplayer = (RenderPlayer) render;
             f26 = 1.0F;
             GL11.glScalef(f26, f26, f26);
             renderplayer.drawFirstPersonHand();
             GL11.glPopMatrix();
         }
-        GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+        GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
         RenderHelper.disableStandardItemLighting();
     }
 
@@ -346,32 +334,32 @@ public class GunItemRenderer extends ItemRenderer {
     public void updateEquippedItem() {
         super.updateEquippedItem();
         ItemGun gun = getGun();
-        if(gun != null) {
+        if (gun != null) {
             boolean finished = System.currentTimeMillis() >= gun.getReloadFinishTime();
             prevReloadProgress = reloadProgress;
             float f = 0.4f;
             float f1 = (finished) ? 1.0f : 0.0f;
             float change = f1 - reloadProgress;
-            if(change < -f)
+            if (change < -f)
                 change = -f;
-            if(change > f)
+            if (change > f)
                 change = f;
             reloadProgress += change;
-            if(prevGun != null && prevGun.isReloading() && !prevGun.equals(gun))
+            if (prevGun != null && prevGun.isReloading() && !prevGun.equals(gun))
                 prevGun.stopReloading(getMC());
-            if(gun.isReloading() && finished)
+            if (gun.isReloading() && finished)
                 gun.finishReloading(getMC());
             prevGun = gun;
-        } else if(prevGun != null && prevGun.isReloading())
+        } else if (prevGun != null && prevGun.isReloading())
             prevGun.stopReloading(getMC());
     }
 
     private ItemGun getGun() {
         Minecraft mc = getMC();
         ItemStack stack = mc.thePlayer.getCurrentEquippedItem();
-        if(stack != null) {
+        if (stack != null) {
             Item item = stack.getItem();
-            if(item instanceof ItemGun)
+            if (item instanceof ItemGun)
                 return (ItemGun) item;
         }
         return null;

@@ -1,7 +1,8 @@
 package com.heuristix;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.World;
 
 /**
  * Created by IntelliJ IDEA.
@@ -45,45 +46,40 @@ public abstract class ItemProjectileShooter extends ItemCustom {
     }
 
     public void fire(World world, EntityPlayer player, Minecraft mc) {
-        if(canShoot()) {
-            if(handleAmmunitionConsumption(player, mc)) {
-                for(int i = 0; i < getRoundsPerShot(); i++) {
-                    if(!fireProjectile(world, player, i == 0))
-                        break;
-                    if(i == getRoundsPerShot() - 1)
-                        lastShot = System.currentTimeMillis();
+        if (canShoot() && handleAmmunitionConsumption(player, mc)) {
+            for (int i = 0; i < getRoundsPerShot(); i++) {
+                if (!fireProjectile(world, player, i == 0)) {
+                    break;
+                }
+                if (i == getRoundsPerShot() - 1) {
+                    lastShot = System.currentTimeMillis();
                 }
             }
         }
     }
 
     public void burst(World world, EntityPlayer player, Minecraft mc) {
-        if(bursts < 2) {
-           if(canFire()) {
-               if(handleAmmunitionConsumption(player, mc)) {
-                   if(fireProjectile(world, player, true)) {
-                       ++bursts;
-                       return;
-                   }
-               }
-           }
+        if (bursts < 2 && canFire() && handleAmmunitionConsumption(player, mc) && fireProjectile(world, player, true)) {
+            ++bursts;
+            return;
         }
         bursts = 0;
         isBursting = false;
     }
 
     public boolean fireProjectile(World world, EntityPlayer player, boolean playSound) {
-        if(playSound) {
+        if (playSound) {
             float rand = itemRand.nextFloat();
             world.playSoundAtEntity(player, getShootSound(), rand + 0.5f, 1.0f / (rand * 0.4f + 0.8f));
         }
-        if(!world.multiplayerWorld) {
+        if (!world.multiplayerWorld) {
             world.entityJoinedWorld(projectile.newProjectile(world, player, this));
         }
         lastRound = System.currentTimeMillis();
         onFire(world, player);
-        if(getFireMode() == FIRE_MODE_BURST)
+        if (getFireMode() == FIRE_MODE_BURST) {
             isBursting = true;
+        }
         return true;
     }
 

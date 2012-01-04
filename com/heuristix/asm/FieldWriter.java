@@ -31,7 +31,7 @@ package com.heuristix.asm;
 
 /**
  * An {@link org.objectweb.asm.FieldVisitor} that generates Java fields in bytecode form.
- * 
+ *
  * @author Eric Bruneton
  */
 final class FieldWriter implements FieldVisitor {
@@ -96,22 +96,21 @@ final class FieldWriter implements FieldVisitor {
 
     /**
      * Constructs a new {@link org.objectweb.asm.FieldWriter}.
-     * 
-     * @param cw the class writer to which this field must be added.
-     * @param access the field's access flags (see {@link Opcodes}).
-     * @param name the field's name.
-     * @param desc the field's descriptor (see {@link Type}).
+     *
+     * @param cw        the class writer to which this field must be added.
+     * @param access    the field's access flags (see {@link Opcodes}).
+     * @param name      the field's name.
+     * @param desc      the field's descriptor (see {@link Type}).
      * @param signature the field's signature. May be <tt>null</tt>.
-     * @param value the field's constant value. May be <tt>null</tt>.
+     * @param value     the field's constant value. May be <tt>null</tt>.
      */
     FieldWriter(
-        final ClassWriter cw,
-        final int access,
-        final String name,
-        final String desc,
-        final String signature,
-        final Object value)
-    {
+            final ClassWriter cw,
+            final int access,
+            final String name,
+            final String desc,
+            final String signature,
+            final Object value) {
         if (cw.firstField == null) {
             cw.firstField = this;
         } else {
@@ -135,9 +134,8 @@ final class FieldWriter implements FieldVisitor {
     // ------------------------------------------------------------------------
 
     public AnnotationVisitor visitAnnotation(
-        final String desc,
-        final boolean visible)
-    {
+            final String desc,
+            final boolean visible) {
         if (!ClassReader.ANNOTATIONS) {
             return null;
         }
@@ -169,7 +167,7 @@ final class FieldWriter implements FieldVisitor {
 
     /**
      * Returns the size of this field.
-     * 
+     *
      * @return the size of this field.
      */
     int getSize() {
@@ -179,8 +177,7 @@ final class FieldWriter implements FieldVisitor {
             size += 8;
         }
         if ((access & Opcodes.ACC_SYNTHETIC) != 0
-                && ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0))
-        {
+                && ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
             cw.newUTF8("Synthetic");
             size += 6;
         }
@@ -208,7 +205,7 @@ final class FieldWriter implements FieldVisitor {
 
     /**
      * Puts the content of this field into the given byte vector.
-     * 
+     *
      * @param out where the content of this field must be put.
      */
     void put(final ByteVector out) {
@@ -221,8 +218,7 @@ final class FieldWriter implements FieldVisitor {
             ++attributeCount;
         }
         if ((access & Opcodes.ACC_SYNTHETIC) != 0
-                && ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0))
-        {
+                && ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
             ++attributeCount;
         }
         if ((access & Opcodes.ACC_DEPRECATED) != 0) {
@@ -246,8 +242,7 @@ final class FieldWriter implements FieldVisitor {
             out.putInt(2).putShort(value);
         }
         if ((access & Opcodes.ACC_SYNTHETIC) != 0
-                && ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0))
-        {
+                && ((cw.version & 0xFFFF) < Opcodes.V1_5 || (access & ClassWriter.ACC_SYNTHETIC_ATTRIBUTE) != 0)) {
             out.putShort(cw.newUTF8("Synthetic")).putInt(0);
         }
         if ((access & Opcodes.ACC_DEPRECATED) != 0) {

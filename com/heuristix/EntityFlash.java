@@ -47,7 +47,7 @@ public class EntityFlash extends Entity {
     public void onUpdate() {
         super.onUpdate();
         brightness -= dieRate;
-        if(brightness <= 0) {
+        if (brightness <= 0) {
             brightness = 0;
             setEntityDead();
         }
@@ -56,20 +56,20 @@ public class EntityFlash extends Entity {
 
     private void updateLighting() {
         boolean first = (savedValues == null);
-        if(first) {
+        if (first) {
             savedValues = new int[2 * radius + 1][2 * radius + 1][2 * radius + 1];
         }
-        for(int x = -radius; x <= radius; x++) {
-            for(int z = -radius; z <= radius; z++) {
-                for(int y = -radius; y <= radius; y++) {
+        for (int x = -radius; x <= radius; x++) {
+            for (int z = -radius; z <= radius; z++) {
+                for (int y = -radius; y <= radius; y++) {
                     int posXInt = (int) Math.floor(posX), posYInt = (int) Math.floor(posY), posZInt = (int) Math.floor(posZ);
                     int brightness = (int) (this.brightness / Math.max(Math.floor(Util.distance(posX, posX + x, posY, posY + y, posZ, posZ + z)), 1));
-                    if(first) {
-                        if((savedValues[x + radius][y + radius][z + radius] = worldObj.getBlockLightValue(posXInt + x, posYInt + y, posZInt + z)) >= brightness)
-                            continue;
+                    if (first && ((savedValues[x + radius][y + radius][z + radius] = worldObj.getBlockLightValue(posXInt + x, posYInt + y, posZInt + z)) >= brightness)) {
+                        continue;
                     }
-                    if(brightness == 0)
+                    if (brightness == 0) {
                         brightness = savedValues[x + radius][y + radius][z + radius];
+                    }
                     worldObj.setLightValue(EnumSkyBlock.Sky, posXInt + x, posYInt + y, posZInt + z, brightness);
                 }
             }

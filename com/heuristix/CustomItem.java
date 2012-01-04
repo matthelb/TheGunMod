@@ -1,7 +1,5 @@
 package com.heuristix;
 
-import net.minecraft.src.Item;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Matt
@@ -10,11 +8,11 @@ import net.minecraft.src.Item;
  */
 public interface CustomItem {
 
-    public String getName();
+    String getName();
 
-    public String getIconPath();
+    String getIconPath();
 
-    public Object[] getCraftingRecipe();
+    Object[] getCraftingRecipe();
 
-    public int getCraftingAmount();
+    int getCraftingAmount();
 }

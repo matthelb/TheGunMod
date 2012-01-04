@@ -32,7 +32,7 @@ package com.heuristix.asm;
 /**
  * A constant pool item. Constant pool items can be created with the 'newXXX'
  * methods in the {@link org.objectweb.asm.ClassWriter} class.
- * 
+ *
  * @author Eric Bruneton
  */
 final class Item {
@@ -52,11 +52,11 @@ final class Item {
      * {@link org.objectweb.asm.ClassWriter#NAME_TYPE}, {@link org.objectweb.asm.ClassWriter#FIELD},
      * {@link org.objectweb.asm.ClassWriter#METH}, {@link org.objectweb.asm.ClassWriter#IMETH},
      * {@link org.objectweb.asm.ClassWriter#MTYPE}, {@link org.objectweb.asm.ClassWriter#INDY}.
-     * 
+     * <p/>
      * MethodHandle constant 9 variations are stored using a range
      * of 9 values from {@link org.objectweb.asm.ClassWriter#MHANDLE_BASE} + 1 to
      * {@link org.objectweb.asm.ClassWriter#MHANDLE_BASE} + 9.
-     * 
+     * <p/>
      * Special Item types are used for Items that are stored in the ClassWriter
      * {@link org.objectweb.asm.ClassWriter#typeTable}, instead of the constant pool, in order to
      * avoid clashes with normal constant pool items in the ClassWriter constant
@@ -93,7 +93,7 @@ final class Item {
      * primitive value.
      */
     String strVal3;
-    
+
     /**
      * The hash code value of this constant pool item.
      */
@@ -114,7 +114,7 @@ final class Item {
     /**
      * Constructs an uninitialized {@link org.objectweb.asm.Item} for constant pool element at
      * given position.
-     * 
+     *
      * @param index index of the item to be constructed.
      */
     Item(final int index) {
@@ -123,9 +123,9 @@ final class Item {
 
     /**
      * Constructs a copy of the given item.
-     * 
+     *
      * @param index index of the item to be constructed.
-     * @param i the item that must be copied into the item to be constructed.
+     * @param i     the item that must be copied into the item to be constructed.
      */
     Item(final int index, final Item i) {
         this.index = index;
@@ -140,7 +140,7 @@ final class Item {
 
     /**
      * Sets this item to an integer item.
-     * 
+     *
      * @param intVal the value of this item.
      */
     void set(final int intVal) {
@@ -151,7 +151,7 @@ final class Item {
 
     /**
      * Sets this item to a long item.
-     * 
+     *
      * @param longVal the value of this item.
      */
     void set(final long longVal) {
@@ -162,7 +162,7 @@ final class Item {
 
     /**
      * Sets this item to a float item.
-     * 
+     *
      * @param floatVal the value of this item.
      */
     void set(final float floatVal) {
@@ -173,7 +173,7 @@ final class Item {
 
     /**
      * Sets this item to a double item.
-     * 
+     *
      * @param doubleVal the value of this item.
      */
     void set(final double doubleVal) {
@@ -184,18 +184,17 @@ final class Item {
 
     /**
      * Sets this item to an item that do not hold a primitive value.
-     * 
-     * @param type the type of this item.
+     *
+     * @param type    the type of this item.
      * @param strVal1 first part of the value of this item.
      * @param strVal2 second part of the value of this item.
      * @param strVal3 third part of the value of this item.
      */
     void set(
-        final int type,
-        final String strVal1,
-        final String strVal2,
-        final String strVal3)
-    {
+            final int type,
+            final String strVal1,
+            final String strVal2,
+            final String strVal3) {
         this.type = type;
         this.strVal1 = strVal1;
         this.strVal2 = strVal2;
@@ -212,21 +211,21 @@ final class Item {
                 hashCode = 0x7FFFFFFF & (type + strVal1.hashCode()
                         * strVal2.hashCode());
                 return;
-                // ClassWriter.FIELD:
-                // ClassWriter.METH:
-                // ClassWriter.IMETH:
-                // ClassWriter.MHANDLE_BASE + 1..9
+            // ClassWriter.FIELD:
+            // ClassWriter.METH:
+            // ClassWriter.IMETH:
+            // ClassWriter.MHANDLE_BASE + 1..9
             default:
                 hashCode = 0x7FFFFFFF & (type + strVal1.hashCode()
                         * strVal2.hashCode() * strVal3.hashCode());
         }
     }
-    
+
     /**
      * Sets the item to an InvokeDynamic item.
-     * 
-     * @param name invokedynamic's name.
-     * @param desc invokedynamic's desc.
+     *
+     * @param name     invokedynamic's name.
+     * @param desc     invokedynamic's desc.
      * @param bsmIndex zero based index into the class attribute BootrapMethods.
      */
     void set(String name, String desc, int bsmIndex) {
@@ -237,14 +236,14 @@ final class Item {
         this.hashCode = 0x7FFFFFFF & (ClassWriter.INDY + bsmIndex
                 * strVal1.hashCode() * strVal2.hashCode());
     }
-    
+
     /**
      * Sets the item to a BootstrapMethod item.
-     * 
+     *
      * @param position position in byte in the class attribute BootrapMethods.
      * @param hashCode hashcode of the item. This hashcode is processed from
-     *        the hashcode of the bootstrap method and the hashcode of
-     *        all bootstrap arguments.
+     *                 the hashcode of the bootstrap method and the hashcode of
+     *                 all bootstrap arguments.
      */
     void set(int position, int hashCode) {
         this.type = ClassWriter.BSM;
@@ -254,10 +253,10 @@ final class Item {
 
     /**
      * Indicates if the given item is equal to this one. <i>This method assumes
-     * that the two items have the same {@link #type}</i>. 
-     * 
+     * that the two items have the same {@link #type}</i>.
+     *
      * @param i the item to be compared to this one. Both items must have the
-     *       same {@link #type}.
+     *          same {@link #type}.
      * @return <tt>true</tt> if the given item if equal to this one,
      *         <tt>false</tt> otherwise.
      */
@@ -283,12 +282,12 @@ final class Item {
             case ClassWriter.INDY:
                 return i.longVal == longVal && i.strVal1.equals(strVal1)
                         && i.strVal2.equals(strVal2);
-                
+
             // case ClassWriter.FIELD:
             // case ClassWriter.METH:
             // case ClassWriter.IMETH:
             // case ClassWriter.MHANDLE_BASE + 1..9
-            default:    
+            default:
                 return i.strVal1.equals(strVal1) && i.strVal2.equals(strVal2)
                         && i.strVal3.equals(strVal3);
         }

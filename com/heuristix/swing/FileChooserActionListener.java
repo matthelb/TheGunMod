@@ -18,7 +18,7 @@ public class FileChooserActionListener implements ActionListener {
 
     private final Component parent;
     private final boolean open;
-        private final FileChooserCallback fcc;
+    private final FileChooserCallback fcc;
     private JFileChooser fileChooser;
     private File lastSelectedFile;
 
@@ -39,7 +39,7 @@ public class FileChooserActionListener implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         int result = (open) ? fileChooser.showOpenDialog(parent) : fileChooser.showSaveDialog(parent);
-        if(result == JFileChooser.APPROVE_OPTION) {
+        if (result == JFileChooser.APPROVE_OPTION) {
             lastSelectedFile = fileChooser.getSelectedFile();
             fcc.selectedFile(lastSelectedFile);
         }

@@ -6,7 +6,7 @@ package com.heuristix.util;
  * Date: 11/7/11
  * Time: 4:01 PM
  */
-public class Pair <A, B> {
+public class Pair<A, B> {
 
     private A a;
     private B b;

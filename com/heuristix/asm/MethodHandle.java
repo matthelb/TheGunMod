@@ -32,7 +32,7 @@ package com.heuristix.asm;
 
 /**
  * A constant method handle.
- * 
+ *
  * @author Remi Forax
  * @author Eric Bruneton
  */
@@ -66,15 +66,15 @@ public final class MethodHandle {
 
     /**
      * Constructs a new constant method handle.
-     * 
-     * @param tag the kind of this method handle. Must be Opcodes#MH_GETFIELD,
-     *        Opcodes#MH_GETSTATIC, Opcodes#MH_PUTFIELD, Opcodes#MH_PUTSTATIC,
-     *        Opcodes#MH_INVOKEVIRTUAL, Opcodes#MH_INVOKESTATIC,
-     *        Opcodes#MH_INVOKESPECIAL, Opcodes#MH_NEWINVOKESPECIAL or
-     *        Opcodes#MH_INVOKEINTERFACE.
+     *
+     * @param tag   the kind of this method handle. Must be Opcodes#MH_GETFIELD,
+     *              Opcodes#MH_GETSTATIC, Opcodes#MH_PUTFIELD, Opcodes#MH_PUTSTATIC,
+     *              Opcodes#MH_INVOKEVIRTUAL, Opcodes#MH_INVOKESTATIC,
+     *              Opcodes#MH_INVOKESPECIAL, Opcodes#MH_NEWINVOKESPECIAL or
+     *              Opcodes#MH_INVOKEINTERFACE.
      * @param owner the internal name of the field or method owner class.
-     * @param name the name of the field or method.
-     * @param desc the descriptor of the field or method.
+     * @param name  the name of the field or method.
+     * @param desc  the descriptor of the field or method.
      */
     public MethodHandle(int tag, String owner, String name, String desc) {
         this.tag = tag;
@@ -85,7 +85,7 @@ public final class MethodHandle {
 
     /**
      * Returns the kind of this method handle.
-     * 
+     *
      * @return Opcodes#MH_GETFIELD, Opcodes#MH_GETSTATIC, Opcodes#MH_PUTFIELD,
      *         Opcodes#MH_PUTSTATIC, Opcodes#MH_INVOKEVIRTUAL,
      *         Opcodes#MH_INVOKESTATIC, Opcodes#MH_INVOKESPECIAL,
@@ -97,7 +97,7 @@ public final class MethodHandle {
 
     /**
      * Returns the internal name of the field or method owner class.
-     * 
+     *
      * @return the internal name of the field or method owner class.
      */
     public String getOwner() {
@@ -106,7 +106,7 @@ public final class MethodHandle {
 
     /**
      * Returns the name of the field or method.
-     * 
+     *
      * @return the name of the field or method.
      */
     public String getName() {
@@ -115,7 +115,7 @@ public final class MethodHandle {
 
     /**
      * Returns the descriptor of the field or method.
-     * 
+     *
      * @return the descriptor of the field or method.
      */
     public String getDesc() {

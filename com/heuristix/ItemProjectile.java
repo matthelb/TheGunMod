@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public abstract class ItemProjectile extends ItemCustom {
 
-    protected final Map<ItemProjectileShooter, Class<? extends EntityProjectile>> classes;
+    private final Map<ItemProjectileShooter, Class<? extends EntityProjectile>> classes;
 
     public ItemProjectile(int id) {
         super(id);

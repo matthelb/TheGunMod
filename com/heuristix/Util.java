@@ -24,7 +24,11 @@ import java.util.jar.JarFile;
  */
 public class Util {
 
+    public static final float PI = 3.141593f;
+
     private static final Random RANDOM = new Random();
+
+    private Util() { }
 
     public static int nextInt() {
         return RANDOM.nextInt();
@@ -46,7 +50,7 @@ public class Util {
         int realMin = Math.min(min, max);
         int realMax = Math.max(min, max);
         int difference = realMax - realMin;
-        if(difference <= 0) {
+        if (difference <= 0) {
             difference++;
         }
         return nextInt(++difference) + realMin;
@@ -57,17 +61,17 @@ public class Util {
     }
 
     public static boolean remove(InventoryPlayer inventory, int id, int amount) {
-        while(amount > 0) {
+        while (amount > 0) {
             int slot = getItemSlot(inventory, id);
-            if(slot == -1)
+            if (slot == -1)
                 return false;
             ItemStack stack = inventory.getStackInSlot(slot);
-            if(stack != null) {
+            if (stack != null) {
                 int reduce = Math.min(stack.stackSize, amount);
-                if(reduce > amount)
+                if (reduce > amount)
                     reduce = amount;
                 inventory.decrStackSize(slot, amount);
-                if((amount -= reduce) == 0)
+                if ((amount -= reduce) == 0)
                     break;
             }
         }
@@ -75,8 +79,8 @@ public class Util {
     }
 
     public static int getItemSlot(InventoryPlayer inventory, int id) {
-        for(int i = 0; i < inventory.mainInventory.length; i++) {
-            if(inventory.mainInventory[i] != null && inventory.mainInventory[i].itemID == id)
+        for (int i = 0; i < inventory.mainInventory.length; i++) {
+            if (inventory.mainInventory[i] != null && inventory.mainInventory[i].itemID == id)
                 return i;
         }
         return -1;
@@ -85,10 +89,10 @@ public class Util {
     public static int getCount(InventoryPlayer inventory, int id) {
         int count = 0;
         ItemStack[][] stacks = new ItemStack[][]{inventory.mainInventory, inventory.armorInventory};
-        for(int i = 0; i < stacks.length; i++) {
-            for(int j = 0; j < stacks[i].length; j++) {
+        for (int i = 0; i < stacks.length; i++) {
+            for (int j = 0; j < stacks[i].length; j++) {
                 ItemStack is = stacks[i][j];
-                if(is != null && is.itemID == id)
+                if (is != null && is.itemID == id)
                     count += (is.stackSize == 0) ? 1 : is.stackSize;
             }
         }
@@ -99,34 +103,34 @@ public class Util {
         ScaledResolution sr = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
         int width = sr.getScaledWidth();
         int height = sr.getScaledHeight();
-        GL11.glEnable(3042 /*GL_BLEND*/);
-        GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(false);
-        GL11.glBlendFunc(770, 771);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, opacity);
-        GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
-        GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, minecraft.renderEngine.getTexture(texture));
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(1, 1, 1, opacity);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.renderEngine.getTexture(texture));
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
-        t.addVertexWithUV(0.0D, height, -90.0D, 0.0D, 1.0D);
-        t.addVertexWithUV(width, height, -90.0D, 1.0D, 1.0D);
-        t.addVertexWithUV(width, 0.0D, -90.0D, 1.0D, 0.0D);
-        t.addVertexWithUV(0.0D, 0.0D, -90.0D, 0.0D, 0.0D);
+        t.addVertexWithUV(0, height, -90, 0, 1);
+        t.addVertexWithUV(width, height, -90, 1, 1);
+        t.addVertexWithUV(width, 0, -90, 1, 0);
+        t.addVertexWithUV(0, 0, -90, 0, 0);
         t.draw();
         GL11.glDepthMask(true);
-        GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
-        GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, opacity);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
     }
 
     public static void renderRect(Color color, int x, int y, int width, int height, float opacity) {
         GL11.glPushMatrix();
-        GL11.glEnable(3042 /*GL_BLEND*/);
-        GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(false);
         GL11.glBlendFunc(770, 771);
         GL11.glColor4f((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, opacity);
-        GL11.glDisable(3008 /*GL_ALPHA_TEST*/);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
         t.setNormal(0.0F, 1.0F, 0.0F);
@@ -136,22 +140,24 @@ public class Util {
         t.addVertexWithUV(x, y + height, 0, 0, 1);
         t.draw();
         GL11.glDepthMask(true);
-        GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
-        GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
         GL11.glPopMatrix();
     }
 
     public static float toRadians(double deg) {
-        return (float) (deg / 180.0f * 3.141593f);
+        return (float) (deg / 180.0f * PI);
     }
 
     public static float toDegrees(double radians) {
-        return (float) (radians * 180 / 3.1415593f);
+        return (float) (radians * 180 / PI);
     }
 
     private static File HOME_DIRECTORY;
+
     public static File getHomeDirectory() {
-        if(HOME_DIRECTORY == null) {
+        if (HOME_DIRECTORY == null) {
             HOME_DIRECTORY = new File(System.getProperty("user.home"));
         }
         return HOME_DIRECTORY;
@@ -172,7 +178,7 @@ public class Util {
             e.printStackTrace();
             return null;
         } finally {
-            if(in != null) {
+            if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
@@ -191,7 +197,7 @@ public class Util {
             e.printStackTrace();
             return null;
         } finally {
-            if(fis != null) {
+            if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {
@@ -228,34 +234,34 @@ public class Util {
         String home = System.getProperty("user.home", ".");
         File file = null;
         String os = System.getProperty("os.name").toLowerCase();
-        if(os.contains("win")) {
+        if (os.contains("win")) {
             String appdata = System.getenv("APPDATA");
-            if(appdata != null) {
+            if (appdata != null) {
                 file = new File(appdata, "." + dir + '/');
             } else {
                 file = new File(home, '.' + dir + '/');
             }
-        } else if(os.contains("linux") || os.contains("solaris")) {
+        } else if (os.contains("linux") || os.contains("solaris")) {
             file = new File(home, '.' + dir + File.separator);
-        } else if(os.contains("mac")) {
+        } else if (os.contains("mac")) {
             file = new File(home, "Library/Application Support/" + dir);
-        } else if(file != null && !file.exists() && !file.mkdirs())
+        } else if (file != null && !file.exists() && !file.mkdirs())
             return null;
-         return file;
+        return file;
     }
 
     public static File getMinecraftDir(String dir) {
         File minecraftDir = getAppDir("minecraft");
-        if(minecraftDir != null)
+        if (minecraftDir != null)
             return new File(minecraftDir.getAbsolutePath() + File.separator + dir);
         return null;
     }
 
     public static File getHeuristixDir(String dir) {
         File heuristixDir = getMinecraftDir("heuristix");
-        if(heuristixDir != null) {
+        if (heuristixDir != null) {
             heuristixDir = new File(heuristixDir.getAbsoluteFile() + File.separator + dir);
-            if(!heuristixDir.exists())
+            if (!heuristixDir.exists())
                 heuristixDir.mkdirs();
             return heuristixDir;
         }
@@ -263,10 +269,11 @@ public class Util {
     }
 
     private static JarFile minecraftJar;
+
     public static JarFile getMinecraftJar() {
-        if(minecraftJar == null) {
+        if (minecraftJar == null) {
             File file = new File(getMinecraftDir("bin") + File.separator + "minecraft.jar");
-            if(file.exists()) {
+            if (file.exists()) {
                 try {
                     minecraftJar = new JarFile(file);
                 } catch (IOException e) {
@@ -278,8 +285,8 @@ public class Util {
     }
 
     public static File getFile(String name, File dir) {
-        for(File file : dir.listFiles()) {
-            if(file.getName().equals(name))
+        for (File file : dir.listFiles()) {
+            if (file.getName().equals(name))
                 return file;
         }
         return null;
@@ -295,7 +302,7 @@ public class Util {
         } catch (IOException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } finally {
-            if(out != null) {
+            if (out != null) {
                 try {
                     out.close();
                 } catch (IOException e) {
@@ -324,34 +331,36 @@ public class Util {
         return normalized.substring(0, 1).toUpperCase() + normalized.substring(1, normalized.length());
     }
 
-    private static final Map<Character, Character> numbersToStrings = new HashMap<Character, Character>();
+    private static final Map<Character, Character> NUMBER_LETTER_MAP = new HashMap<Character, Character>();
+
     static {
-        numbersToStrings.put('1', 'A');
-        numbersToStrings.put('2', 'B');
-        numbersToStrings.put('3', 'C');
-        numbersToStrings.put('4', 'D');
-        numbersToStrings.put('5', 'E');
-        numbersToStrings.put('6', 'F');
-        numbersToStrings.put('7', 'G');
-        numbersToStrings.put('8', 'H');
-        numbersToStrings.put('9', 'I');
-        numbersToStrings.put('0', 'J');
+        NUMBER_LETTER_MAP.put('1', 'A');
+        NUMBER_LETTER_MAP.put('2', 'B');
+        NUMBER_LETTER_MAP.put('3', 'C');
+        NUMBER_LETTER_MAP.put('4', 'D');
+        NUMBER_LETTER_MAP.put('5', 'E');
+        NUMBER_LETTER_MAP.put('6', 'F');
+        NUMBER_LETTER_MAP.put('7', 'G');
+        NUMBER_LETTER_MAP.put('8', 'H');
+        NUMBER_LETTER_MAP.put('9', 'I');
+        NUMBER_LETTER_MAP.put('0', 'J');
     }
+
     public static String numbersToText(String text) {
         char[] chars = text.toCharArray();
-        for(int i = 0; i < chars.length; i++) {
-            if(Character.isDigit(chars[i])) {
-                chars[i] = numbersToStrings.get(chars[i]);
+        for (int i = 0; i < chars.length; i++) {
+            if (Character.isDigit(chars[i])) {
+                chars[i] = NUMBER_LETTER_MAP.get(chars[i]);
             }
         }
         return new String(chars);
     }
 
     public static byte[] parseByteArray(String text) {
-        if(text != null && !text.isEmpty()) {
+        if (text != null && !text.isEmpty()) {
             String[] texts = text.split(",");
             byte[] bytes = new byte[texts.length];
-            for(int i = 0; i < bytes.length; i++) {
+            for (int i = 0; i < bytes.length; i++) {
                 bytes[i] = Byte.parseByte(texts[i]);
             }
             return bytes;
@@ -361,7 +370,7 @@ public class Util {
 
     public static int[] toIntArray(byte[] bytes) {
         int[] array = new int[bytes.length];
-        for(int i = 0; i < array.length; i++)
+        for (int i = 0; i < array.length; i++)
             array[i] = bytes[i];
         return array;
     }
@@ -371,9 +380,10 @@ public class Util {
     }
 
     private static Method methodDefineClass;
+
     public static Class defineClass(byte[] code, String name, ClassLoader cl) {
         try {
-            if(methodDefineClass == null) {
+            if (methodDefineClass == null) {
                 methodDefineClass = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
                 methodDefineClass.setAccessible(true);
             }
@@ -385,7 +395,7 @@ public class Util {
     }
 
     public static double distance(double x1, double x2, double y1, double y2, double z1, double z2) {
-        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 -y2, 2) + Math.pow(z1 - z2, 2));
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) + Math.pow(z1 - z2, 2));
     }
 
     public static Vec3D getProjectedPoint(EntityLiving living, double distance) {
@@ -404,19 +414,19 @@ public class Util {
 
     public static void playStreaming(String sound, String stream, float x, float y, float z, float v1, float v2, Minecraft minecraft) {
         SoundSystem sndSystem = getSoundSystem(minecraft);
-        if(sndSystem.playing(stream)) {
+        if (sndSystem.playing(stream)) {
             sndSystem.stop(stream);
         }
-        if(sound == null) {
+        if (sound == null) {
             return;
         }
         SoundPoolEntry soundpoolentry = getSoundPools(minecraft.sndManager)[1].getRandomSoundFromSoundPool(sound);
-        if(soundpoolentry != null && v1 > 0) {
+        if (soundpoolentry != null && v1 > 0) {
             float f5 = 16F;
             sndSystem.newStreamingSource(true, stream, soundpoolentry.soundUrl, soundpoolentry.soundName, false, x, y, z, 2, f5 * 4F);
             GameSettings options = getGameSettings(minecraft.sndManager);
             float volume = 1.0f;
-            if(options != null)
+            if (options != null)
                 volume = options.soundVolume;
             sndSystem.setVolume(stream, 0.5f * volume);
             sndSystem.play(stream);
@@ -424,14 +434,14 @@ public class Util {
     }
 
     public static SoundSystem getSoundSystem(Minecraft minecraft) {
-        if(minecraft != null) {
+        if (minecraft != null) {
             return getSoundSystem(minecraft.sndManager);
         }
         return null;
     }
 
     public static SoundSystem getSoundSystem(SoundManager sndManager) {
-        if(sndManager != null) {
+        if (sndManager != null) {
             try {
                 return (SoundSystem) ModLoader.getPrivateValue(SoundManager.class, sndManager, "sndSystem");
             } catch (NoSuchFieldException e) {
@@ -441,19 +451,20 @@ public class Util {
         return null;
     }
 
-    private static final Map<Class, Map<String, String>> obfuscatedFields = new HashMap<Class, Map<String, String>>();
+    private static final Map<Class, Map<String, String>> OBFUSCATED_FIELDS = new HashMap<Class, Map<String, String>>();
+
     static {
         HashMap<String, String> fields = new HashMap<String, String>();
         fields.put("soundPoolSounds", "b");
         fields.put("soundPoolStreaming", "c");
         fields.put("soundPoolMusic", "d");
         fields.put("options", "f");
-        obfuscatedFields.put(SoundManager.class, fields);
+        OBFUSCATED_FIELDS.put(SoundManager.class, fields);
     }
 
     public static SoundPool[] getSoundPools(SoundManager sndManager) {
         SoundPool[] soundPools = new SoundPool[3];
-        Map<String, String> fields = obfuscatedFields.get(SoundManager.class);
+        Map<String, String> fields = OBFUSCATED_FIELDS.get(SoundManager.class);
         soundPools[0] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolSounds", fields.get("soundPoolSounds"));
         soundPools[1] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolStreaming", fields.get("soundPoolStreaming"));
         soundPools[2] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolMusic", fields.get("soundPoolMusic"));
@@ -461,7 +472,7 @@ public class Util {
     }
 
     public static GameSettings getGameSettings(SoundManager sndManager) {
-        return (GameSettings) getPrivateValue(SoundManager.class, sndManager, "options", obfuscatedFields.get(SoundManager.class).get("options"));
+        return (GameSettings) getPrivateValue(SoundManager.class, sndManager, "options", OBFUSCATED_FIELDS.get(SoundManager.class).get("options"));
     }
 
     public static void setPrivateValue(Class clazz, Object classInstance, String fieldName, String obfuscatedName, Object fieldValue) {
@@ -469,7 +480,7 @@ public class Util {
             ModLoader.setPrivateValue(clazz, classInstance, fieldName, fieldValue);
         } catch (NoSuchFieldException e) {
             try {
-                if(obfuscatedName != null)
+                if (obfuscatedName != null)
                     ModLoader.setPrivateValue(clazz, classInstance, obfuscatedName, fieldValue);
             } catch (NoSuchFieldException e1) {
                 e1.printStackTrace();
@@ -482,7 +493,7 @@ public class Util {
             return ModLoader.getPrivateValue(clazz, classInstance, fieldName);
         } catch (NoSuchFieldException e) {
             try {
-                if(obfuscatedName != null) {
+                if (obfuscatedName != null) {
                     return ModLoader.getPrivateValue(clazz, classInstance, obfuscatedName);
                 }
             } catch (NoSuchFieldException e1) {
@@ -494,15 +505,13 @@ public class Util {
 
     public static int[] getIntArray(byte[] bytes) {
         int[] ints = new int[bytes.length];
-        for(int i = 0; i < ints.length; i++) {
-            ints[i] = bytes[i];
-        }
+        System.arraycopy(bytes, 0, ints, 0, bytes.length);
         return ints;
     }
 
     public static byte[] getByteArray(int[] ints) {
         byte[] bytes = new byte[ints.length];
-        for(int i = 0; i < ints.length; i++) {
+        for (int i = 0; i < ints.length; i++) {
             bytes[i] = (byte) ints[i];
         }
         return bytes;

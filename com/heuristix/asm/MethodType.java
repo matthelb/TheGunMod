@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
 
 /**
  * A method type.
- * 
+ *
  * @author Remi Forax
  * @author Eric Bruneton
  */
@@ -48,7 +48,7 @@ public final class MethodType {
 
     /**
      * Creates a method type from a method descriptor.
-     * 
+     *
      * @param desc a method descriptor
      */
     public MethodType(String desc) {
@@ -57,8 +57,8 @@ public final class MethodType {
 
     /**
      * Creates a method type from argument and return types.
-     * 
-     * @param returnType the return type of the method.
+     *
+     * @param returnType    the return type of the method.
      * @param argumentTypes the argument types of the method.
      */
     public MethodType(final Type returnType, final Type[] argumentTypes) {
@@ -67,7 +67,7 @@ public final class MethodType {
 
     /**
      * Creates a method type from the given constructor.
-     * 
+     *
      * @param c a {@link java.lang.reflect.Constructor Constructor} object.
      */
     public MethodType(final Constructor<?> c) {
@@ -76,7 +76,7 @@ public final class MethodType {
 
     /**
      * Creates a method type from the given method.
-     * 
+     *
      * @param m a {@link java.lang.reflect.Method Method} object.
      */
     public MethodType(final Method m) {
@@ -85,7 +85,7 @@ public final class MethodType {
 
     /**
      * Returns the descriptor of methods of this type.
-     * 
+     *
      * @return the descriptor of methods of this type.
      */
     public String getDescriptor() {
@@ -94,7 +94,7 @@ public final class MethodType {
 
     /**
      * Returns the argument types of methods of this type.
-     * 
+     *
      * @return the argument types of methods of this type.
      */
     public Type[] getArgumentTypes() {
@@ -103,7 +103,7 @@ public final class MethodType {
 
     /**
      * Returns the return type of methods of this type.
-     * 
+     *
      * @return the return type of methods of this type.
      */
     public Type getReturnType() {
@@ -113,7 +113,7 @@ public final class MethodType {
     /**
      * Returns the size of the arguments and of the return value of methods of
      * this type.
-     * 
+     *
      * @return the size of the arguments (plus one for the implicit this
      *         argument), argSize, and the size of the return value, retSize,
      *         packed into a single int i = <tt>(argSize << 2) | retSize</tt>

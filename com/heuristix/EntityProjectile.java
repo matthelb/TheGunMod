@@ -14,7 +14,7 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
 
-    protected EntityLiving owner;
+    private EntityLiving owner;
     private Vec3D start;
 
     private int xTile;
@@ -25,7 +25,7 @@ public abstract class EntityProjectile extends Entity {
     private int ticksInAir;
     private int ticksInGround;
     private boolean inGround;
-    public boolean doesBelongToPlayer;
+    private boolean doesBelongToPlayer;
 
     protected EntityProjectile(World world) {
         super(world);
@@ -58,9 +58,9 @@ public abstract class EntityProjectile extends Entity {
 
     public void onUpdate() {
         super.onUpdate();
-        if(inGround) {
+        if (inGround) {
             ticksInGround++;
-            if(ticksInGround >= getMaxGroundTicks()) {
+            if (ticksInGround >= getMaxGroundTicks()) {
                 setEntityDead();
             }
             return;
@@ -70,7 +70,7 @@ public abstract class EntityProjectile extends Entity {
         MovingObjectPosition position = worldObj.rayTraceBlocks_do_do(currentLocation, newLocation, false, true);
         currentLocation = getPosition();
         newLocation = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
-        if(position != null) {
+        if (position != null) {
             newLocation = Vec3D.createVector(position.hitVec.xCoord, position.hitVec.yCoord, position.hitVec.zCoord);
         }
         Entity hit = null;
@@ -93,26 +93,22 @@ public abstract class EntityProjectile extends Entity {
             }
         }
 
-        if(hit != null) {
+        if (hit != null) {
             position = new MovingObjectPosition(hit);
         }
-        if(position != null) {
-            if(position.entityHit != null) {
-                if(!(position.entityHit instanceof EntityProjectile)) {
-                    if(onHit(position.entityHit, position)) {
-                        worldObj.playSoundAtEntity(owner, getHitSound(), 1.0f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
-                        setEntityDead();
-                    }
-                }
+        if (position != null) {
+            if (position.entityHit != null && !(position.entityHit instanceof EntityProjectile) && onHit(position.entityHit, position)) {
+                worldObj.playSoundAtEntity(owner, getHitSound(), 1.0f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
+                setEntityDead();
             } else {
                 xTile = position.blockX;
                 yTile = position.blockY;
                 zTile = position.blockZ;
                 inTile = worldObj.getBlockId(xTile, yTile, zTile);
                 inData = worldObj.getBlockMetadata(xTile, yTile, zTile);
-                motionX = (float)(position.hitVec.xCoord - posX);
-                motionY = (float)(position.hitVec.yCoord - posY);
-                motionZ = (float)(position.hitVec.zCoord - posZ);
+                motionX = (float) (position.hitVec.xCoord - posX);
+                motionY = (float) (position.hitVec.yCoord - posY);
+                motionZ = (float) (position.hitVec.zCoord - posZ);
                 float f1 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
                 posX -= (motionX / f1) * 0.05000000074505806D;
                 posY -= (motionY / f1) * 0.05000000074505806D;
@@ -128,7 +124,7 @@ public abstract class EntityProjectile extends Entity {
     }
 
     public boolean onHit(Entity hit, MovingObjectPosition position) {
-        if(hit != null)
+        if (hit != null)
             return hit.attackEntityFrom(new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
         return false;
     }
@@ -163,21 +159,21 @@ public abstract class EntityProjectile extends Entity {
         nbt.setBoolean("player", doesBelongToPlayer);
     }
 
-    public void changeVelocity(float factor) {
+    public final void changeVelocity(float factor) {
         changeVelocity(factor, factor, factor);
     }
 
-    public void changeVelocity(float xFactor, float yFactor, float zFactor) {
+    public final void changeVelocity(float xFactor, float yFactor, float zFactor) {
         motionX *= xFactor;
         motionY *= yFactor;
         motionZ *= zFactor;
     }
 
-    public void setVelocity(Vec3D velocity) {
+    public final void setVelocity(Vec3D velocity) {
         setVelocity(velocity.xCoord, velocity.yCoord, velocity.zCoord);
     }
 
-    public Vec3D computeVelocity() {
+    public final Vec3D computeVelocity() {
         float yawRadians = Util.toRadians(rotationYaw);
         float pitchRadians = Util.toRadians(rotationPitch);
         float cosPitch = MathHelper.cos(pitchRadians);
@@ -186,5 +182,9 @@ public abstract class EntityProjectile extends Entity {
 
     public Vec3D getPosition() {
         return Vec3D.createVector(posX, posY, posZ);
+    }
+
+    public EntityLiving getOwner() {
+        return owner;
     }
 }

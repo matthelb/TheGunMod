@@ -22,16 +22,16 @@ public class EntityBulletBase extends EntityBullet {
 
     @Override
     public int getDamage() {
-        return super.getDamage();    //To change body of overridden methods use File | Settings | File Templates.
+        return 0;    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override
     public float getEffectiveRange() {
-        return super.getEffectiveRange();    //To change body of overridden methods use File | Settings | File Templates.
+        return 0;    //To change body of overridden methods use File | Settings | File Templates.
     }
 
     @Override
     public float getSpread() {
-        return super.getSpread();    //To change body of overridden methods use File | Settings | File Templates.
+        return 0;    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

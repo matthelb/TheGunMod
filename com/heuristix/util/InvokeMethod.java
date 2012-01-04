@@ -2,7 +2,6 @@ package com.heuristix.util;
 
 import com.heuristix.asm.ClassWriter;
 import com.heuristix.asm.Opcodes;
-import com.heuristix.asm.Type;
 
 /**
  * Created by IntelliJ IDEA.

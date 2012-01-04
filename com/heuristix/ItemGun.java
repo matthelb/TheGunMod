@@ -13,8 +13,8 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     private boolean reloading;
     private long reloadFinishTime;
-        private EntityPlayer reloadingPlayer;
-        private ItemStack reloadingStack;
+    private EntityPlayer reloadingPlayer;
+    private ItemStack reloadingStack;
 
     public ItemGun(int id, ItemProjectile projectile) {
         super(id, projectile);
@@ -37,9 +37,9 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     public boolean handleAmmunitionConsumption(EntityPlayer player, Minecraft mc) {
         ItemStack gun = player.getCurrentEquippedItem();
-        if(isReloading())
+        if (isReloading())
             stopReloading(mc);
-        if(gun.getItemDamage() < gun.getMaxDamage()) {
+        if (gun.getItemDamage() < gun.getMaxDamage()) {
             gun.damageItem(1, player);
             return true;
         }
@@ -49,7 +49,7 @@ public abstract class ItemGun extends ItemProjectileShooter {
     @Override
     public void onFire(World world, EntityPlayer player) {
         double factor = Math.max(0.75, Math.min(Util.nextGaussian() + 1, 1.25));
-        mod_Guns.recoilY +=  Math.min(factor * getRecoilY(), player.rotationPitch + 90.0F);
+        mod_Guns.recoilY += Math.min(factor * getRecoilY(), player.rotationPitch + 90.0F);
         mod_Guns.recoilX += factor * getRecoilX();
         Vec3D pos = Util.getProjectedPoint(player, 0.8);
         float radians = Util.toRadians(player.rotationYaw);
@@ -59,10 +59,10 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     public boolean reload(EntityPlayer player, Minecraft mc) {
         ItemStack equipped = player.getCurrentEquippedItem();
-        if(equipped != null && equipped.itemID == shiftedIndex && equipped.getItemDamage() > 0) {
-            if(!reloading) {
+        if (equipped != null && equipped.itemID == shiftedIndex && equipped.getItemDamage() > 0) {
+            if (!reloading) {
                 int slot = Util.getItemSlot(player.inventory, getProjectile().shiftedIndex);
-                if(slot != -1) {
+                if (slot != -1) {
                     Util.playStreamingAtEntity(player, getReloadSound(), "guns.reloading", 1.0f, 1.0f / (itemRand.nextFloat() * 0.4f + 0.8f), mc);
                     reloading = true;
                     reloadFinishTime = System.currentTimeMillis() + getReloadTime();

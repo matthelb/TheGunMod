@@ -2,8 +2,6 @@ package com.heuristix.util;
 
 import com.heuristix.asm.Opcodes;
 
-import java.util.Arrays;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Matt
@@ -18,17 +16,17 @@ public class BytecodeValue {
 
     public BytecodeValue(Object value) {
         this.value = value;
-        if(value instanceof Float || value instanceof Double) {
+        if (value instanceof Float || value instanceof Double) {
             double realValue = Double.parseDouble(value.toString());
             int exponent = (int) ((Double.doubleToLongBits(realValue) >> 23) & 0xFF);
-            if(exponent >= Float.MIN_EXPONENT && exponent <= Float.MAX_EXPONENT) {
-                if(realValue == 0) {
+            if (exponent >= Float.MIN_EXPONENT && exponent <= Float.MAX_EXPONENT) {
+                if (realValue == 0) {
                     valueCode = new int[1];
                     valueCode[0] = Opcodes.FCONST_0;
-                } else if(realValue == 1) {
+                } else if (realValue == 1) {
                     valueCode = new int[1];
                     valueCode[0] = Opcodes.FCONST_1;
-                } else if(realValue == 2) {
+                } else if (realValue == 2) {
                     valueCode = new int[1];
                     valueCode[0] = Opcodes.FCONST_2;
                 } else {
@@ -38,13 +36,13 @@ public class BytecodeValue {
                 returnCode = Opcodes.FRETURN;
             } else {
                 valueCode = new int[3];
-                valueCode[0] = 0x14;
+                valueCode[0] = Opcodes.LDC2_W;
                 returnCode = Opcodes.DRETURN;
             }
-        } else if(value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long) {
+        } else if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long) {
             int realValue = Integer.parseInt(value.toString());
-            if(realValue >= Byte.MIN_VALUE && realValue <= Byte.MAX_VALUE) {
-                switch(realValue) {
+            if (realValue >= Byte.MIN_VALUE && realValue <= Byte.MAX_VALUE) {
+                switch (realValue) {
                     case -1:
                         valueCode = new int[1];
                         valueCode[0] = Opcodes.ICONST_M1;
@@ -80,13 +78,13 @@ public class BytecodeValue {
                         break;
                 }
                 returnCode = Opcodes.IRETURN;
-            } else if(realValue >= Short.MIN_VALUE && realValue <= Short.MAX_VALUE) {
+            } else if (realValue >= Short.MIN_VALUE && realValue <= Short.MAX_VALUE) {
                 valueCode = new int[3];
                 valueCode[0] = Opcodes.SIPUSH;
                 valueCode[1] = (realValue >> 8) & 0xFF;
                 valueCode[2] = realValue & 0xFF;
                 returnCode = Opcodes.IRETURN;
-            } else if(realValue >= Integer.MIN_VALUE && realValue <= Integer.MAX_VALUE) {
+            } else if (realValue >= Integer.MIN_VALUE && realValue <= Integer.MAX_VALUE) {
                 valueCode = new int[2];
                 valueCode[0] = Opcodes.LDC;
                 returnCode = Opcodes.IRETURN;
