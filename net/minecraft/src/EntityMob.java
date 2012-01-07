@@ -55,9 +55,9 @@ public abstract class EntityMob extends EntityCreature
         }
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
-        if(super.attackEntityFrom(damagesource, i))
+        if(super.attackEntityFrom(damagesource, damage))
         {
             Entity entity = damagesource.getEntity();
             if(riddenByEntity == entity || ridingEntity == entity)

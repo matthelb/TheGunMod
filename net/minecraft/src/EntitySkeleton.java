@@ -42,9 +42,9 @@ public class EntitySkeleton extends EntityMob
         return "mob.skeletonhurt";
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
-        return super.attackEntityFrom(damagesource, i);
+        return super.attackEntityFrom(damagesource, damage);
     }
 
     public void onDeath(DamageSource damagesource)

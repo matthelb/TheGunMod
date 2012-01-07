@@ -414,22 +414,24 @@ public class Util {
 
     public static void playStreaming(String sound, String stream, float x, float y, float z, float v1, float v2, Minecraft minecraft) {
         SoundSystem sndSystem = getSoundSystem(minecraft);
-        if (sndSystem.playing(stream)) {
-            sndSystem.stop(stream);
-        }
-        if (sound == null) {
-            return;
-        }
-        SoundPoolEntry soundpoolentry = getSoundPools(minecraft.sndManager)[1].getRandomSoundFromSoundPool(sound);
-        if (soundpoolentry != null && v1 > 0) {
-            float f5 = 16F;
-            sndSystem.newStreamingSource(true, stream, soundpoolentry.soundUrl, soundpoolentry.soundName, false, x, y, z, 2, f5 * 4F);
-            GameSettings options = getGameSettings(minecraft.sndManager);
-            float volume = 1.0f;
-            if (options != null)
-                volume = options.soundVolume;
-            sndSystem.setVolume(stream, 0.5f * volume);
-            sndSystem.play(stream);
+        if(sndSystem != null) {
+            if (sndSystem.playing(stream)) {
+                sndSystem.stop(stream);
+            }
+            if (sound == null) {
+                return;
+            }
+            SoundPoolEntry soundpoolentry = getSoundPools(minecraft.sndManager)[1].getRandomSoundFromSoundPool(sound);
+            if (soundpoolentry != null && v1 > 0) {
+                float f5 = 16F;
+                sndSystem.newStreamingSource(true, stream, soundpoolentry.soundUrl, soundpoolentry.soundName, false, x, y, z, 2, f5 * 4F);
+                GameSettings options = getGameSettings(minecraft.sndManager);
+                float volume = 1.0f;
+                if (options != null)
+                    volume = options.soundVolume;
+                sndSystem.setVolume(stream, 0.5f * volume);
+                sndSystem.play(stream);
+            }
         }
     }
 
@@ -442,11 +444,7 @@ public class Util {
 
     public static SoundSystem getSoundSystem(SoundManager sndManager) {
         if (sndManager != null) {
-            try {
-                return (SoundSystem) ModLoader.getPrivateValue(SoundManager.class, sndManager, "sndSystem");
-            } catch (NoSuchFieldException e) {
-                System.out.println("Could not acquire sound system");
-            }
+            return (SoundSystem) getPrivateValue(SoundManager.class, sndManager, "sndSystem", OBFUSCATED_FIELDS.get(SoundManager.class).get("sndSystem"));
         }
         return null;
     }
@@ -458,6 +456,7 @@ public class Util {
         fields.put("soundPoolSounds", "b");
         fields.put("soundPoolStreaming", "c");
         fields.put("soundPoolMusic", "d");
+        fields.put("sndSystem", "a");
         fields.put("options", "f");
         OBFUSCATED_FIELDS.put(SoundManager.class, fields);
     }
@@ -505,7 +504,9 @@ public class Util {
 
     public static int[] getIntArray(byte[] bytes) {
         int[] ints = new int[bytes.length];
-        System.arraycopy(bytes, 0, ints, 0, bytes.length);
+        for (int i = 0; i < ints.length; i++) {
+            ints[i] = bytes[i];
+        }
         return ints;
     }
 

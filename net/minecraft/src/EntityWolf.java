@@ -337,15 +337,15 @@ public class EntityWolf extends EntityAnimal
         return isWolfSitting() || field_25052_g;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         Entity entity = damagesource.getEntity();
         setIsSitting(false);
         if(entity != null && !(entity instanceof EntityPlayer) && !(entity instanceof EntityArrow))
         {
-            i = (i + 1) / 2;
+            damage = (damage + 1) / 2;
         }
-        if(super.attackEntityFrom(damagesource, i))
+        if(super.attackEntityFrom(damagesource, damage))
         {
             if(!isWolfTamed() && !isWolfAngry())
             {

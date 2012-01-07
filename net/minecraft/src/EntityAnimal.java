@@ -162,12 +162,12 @@ public abstract class EntityAnimal extends EntityCreature
     {
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         fleeingTick = 60;
         entityToAttack = null;
         field_39004_a = 0;
-        return super.attackEntityFrom(damagesource, i);
+        return super.attackEntityFrom(damagesource, damage);
     }
 
     protected float getBlockPathWeight(int i, int j, int k)

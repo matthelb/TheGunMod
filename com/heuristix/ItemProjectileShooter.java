@@ -59,8 +59,17 @@ public abstract class ItemProjectileShooter extends ItemCustom {
     }
 
     public void burst(World world, EntityPlayer player, Minecraft mc) {
-        if (bursts < 2 && canFire() && handleAmmunitionConsumption(player, mc) && fireProjectile(world, player, true)) {
-            ++bursts;
+        if (bursts < 2) {
+            if(canFire()) {
+                if(handleAmmunitionConsumption(player, mc)) {
+                    if (fireProjectile(world, player, true)) {
+                    ++bursts;
+                    }
+                } else {
+                    bursts = 0;
+                    isBursting = false;
+                }
+            }
             return;
         }
         bursts = 0;

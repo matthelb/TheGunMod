@@ -29,7 +29,7 @@ public class EntityDragonBase extends EntityLiving
         return attackEntityFrom(damagesource, i);
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         return false;
     }

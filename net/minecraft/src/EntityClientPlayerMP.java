@@ -43,7 +43,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         sendQueue = netclienthandler;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         return false;
     }
@@ -185,9 +185,9 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         sendQueue.addToSendQueue(new Packet9Respawn((byte)dimension, (byte)worldObj.difficultySetting, worldObj.getWorldSeed(), worldObj.field_35472_c, 0));
     }
 
-    protected void damageEntity(DamageSource damagesource, int i)
+    protected void damageEntity(DamageSource damagesource, int damage)
     {
-        setEntityHealth(getEntityHealth() - i);
+        setEntityHealth(getEntityHealth() - damage);
     }
 
     public void closeScreen()

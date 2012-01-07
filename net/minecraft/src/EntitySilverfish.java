@@ -56,13 +56,13 @@ public class EntitySilverfish extends EntityMob
         return "mob.silverfish.kill";
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         if(field_35189_a <= 0 && (damagesource instanceof EntityDamageSource))
         {
             field_35189_a = 20;
         }
-        return super.attackEntityFrom(damagesource, i);
+        return super.attackEntityFrom(damagesource, damage);
     }
 
     protected void attackEntity(Entity entity, float f)

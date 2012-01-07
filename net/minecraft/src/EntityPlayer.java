@@ -651,7 +651,7 @@ public abstract class EntityPlayer extends EntityLiving
         yOffset = 1.62F;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         if(capabilities.disableDamage && !damagesource.canHarmInCreative())
         {
@@ -671,18 +671,18 @@ public abstract class EntityPlayer extends EntityLiving
         {
             if(worldObj.difficultySetting == 0)
             {
-                i = 0;
+                damage = 0;
             }
             if(worldObj.difficultySetting == 1)
             {
-                i = i / 2 + 1;
+                damage = damage / 2 + 1;
             }
             if(worldObj.difficultySetting == 3)
             {
-                i = (i * 3) / 2;
+                damage = (damage * 3) / 2;
             }
         }
-        if(i == 0)
+        if(damage == 0)
         {
             return false;
         }
@@ -695,8 +695,8 @@ public abstract class EntityPlayer extends EntityLiving
         {
             alertWolves((EntityLiving)entity1, false);
         }
-        addStat(StatList.damageTakenStat, i);
-        return super.attackEntityFrom(damagesource, i);
+        addStat(StatList.damageTakenStat, damage);
+        return super.attackEntityFrom(damagesource, damage);
     }
 
     protected int func_40128_b(DamageSource damagesource, int i)
@@ -762,26 +762,26 @@ public abstract class EntityPlayer extends EntityLiving
         } while(true);
     }
 
-    protected void func_40125_g(int i)
+    protected void damageTotalArmorValue(int i)
     {
         inventory.damageArmor(i);
     }
 
-    protected int func_40119_ar()
+    protected int getTotalArmorValue()
     {
         return inventory.getTotalArmorValue();
     }
 
-    protected void damageEntity(DamageSource damagesource, int i)
+    protected void damageEntity(DamageSource damagesource, int damage)
     {
         if(!damagesource.unblockable() && func_35162_ad())
         {
-            i = 1 + i >> 1;
+            damage = 1 + damage >> 1;
         }
-        i = func_40115_d(damagesource, i);
-        i = func_40128_b(damagesource, i);
+        damage = func_40115_d(damagesource, damage);
+        damage = func_40128_b(damagesource, damage);
         addExhaustion(damagesource.getHungerDamage());
-        super.damageEntity(damagesource, i);
+        super.damageEntity(damagesource, damage);
     }
 
     public void displayGUIFurnace(TileEntityFurnace tileentityfurnace)

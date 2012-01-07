@@ -30,12 +30,13 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9";
+    public static final String VERSION = "0.9.1";
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
     private static final NumberFormatter DECIMAL_FORMATTER = new NumberFormatter(new DecimalFormat("#.#"));
     private static final String NON_ALPHA_NUMERICAL_REGEX = "[^a-z^A-Z^0-9]";
+    private static final int PROPERTIES = 2;
 
     public static final List<Pair<String, String>> OBFUSCATED_CLASS_NAMES = new LinkedList<Pair<String, String>>();
 
@@ -565,6 +566,7 @@ public class GunCreator extends JFrame {
 
         /*outBytes.putInt(Integer.parseInt(projectileIdField.getText()));
         outBytes.putInt(Integer.parseInt(gunIdField.getText()));*/
+        outBytes.putInt(PROPERTIES);
 
         String[] strings = new String[]{"itemGunId", "itemBulletId"};
         int[][] ints = new int[][]{ReverseBuffer.getInt(Integer.parseInt(gunIdField.getText())), ReverseBuffer.getInt(Integer.parseInt(projectileIdField.getText()))};

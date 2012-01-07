@@ -26,7 +26,7 @@ public class EntityZombie extends EntityMob
         return 20;
     }
 
-    protected int func_40119_ar()
+    protected int getTotalArmorValue()
     {
         return 2;
     }

@@ -427,7 +427,7 @@ public abstract class EntityLiving extends Entity
         }
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         if(worldObj.multiplayerWorld)
         {
@@ -443,22 +443,22 @@ public abstract class EntityLiving extends Entity
             return false;
         }
         field_704_R = 1.5F;
-        boolean flag = true;
+        boolean damaged = true;
         if((float)heartsLife > (float)heartsHalvesLife / 2.0F)
         {
-            if(i <= naturalArmorRating)
+            if(damage <= naturalArmorRating)
             {
                 return false;
             }
-            damageEntity(damagesource, i - naturalArmorRating);
-            naturalArmorRating = i;
-            flag = false;
+            damageEntity(damagesource, damage - naturalArmorRating);
+            naturalArmorRating = damage;
+            damaged = false;
         } else
         {
-            naturalArmorRating = i;
-            prevHealth = health;
+            naturalArmorRating = damage;
+            prevHealth = health;                 //record current health
             heartsLife = heartsHalvesLife;
-            damageEntity(damagesource, i);
+            damageEntity(damagesource, damage);
             hurtTime = maxHurtTime = 10;
         }
         attackedAtYaw = 0.0F;
@@ -480,7 +480,7 @@ public abstract class EntityLiving extends Entity
                 }
             }
         }
-        if(flag)
+        if(damaged)
         {
             worldObj.setEntityState(this, (byte)2);
             setBeenAttacked();
@@ -494,7 +494,7 @@ public abstract class EntityLiving extends Entity
                 }
 
                 attackedAtYaw = (float)((Math.atan2(d1, d) * 180D) / 3.1415927410125732D) - rotationYaw;
-                knockBack(entity, i, d, d1);
+                knockBack(entity, damage, d, d1);
             } else
             {
                 attackedAtYaw = (int)(Math.random() * 2D) * 180;
@@ -502,13 +502,13 @@ public abstract class EntityLiving extends Entity
         }
         if(health <= 0)
         {
-            if(flag)
+            if(damaged)
             {
                 worldObj.playSoundAtEntity(this, getDeathSound(), getSoundVolume(), func_40123_ac());
             }
             onDeath(damagesource);
         } else
-        if(flag)
+        if(damaged)
         {
             worldObj.playSoundAtEntity(this, getHurtSound(), getSoundVolume(), func_40123_ac());
         }
@@ -532,26 +532,26 @@ public abstract class EntityLiving extends Entity
         attackedAtYaw = 0.0F;
     }
 
-    protected int func_40119_ar()
+    protected int getTotalArmorValue()
     {
         return 0;
     }
 
-    protected void func_40125_g(int i)
+    protected void damageTotalArmorValue(int i)
     {
     }
 
-    protected int func_40115_d(DamageSource damagesource, int i)
+    protected int func_40115_d(DamageSource damagesource, int damage)
     {
         if(!damagesource.unblockable())
         {
-            int j = 25 - func_40119_ar();
-            int k = i * j + field_40129_bA;
-            func_40125_g(i);
-            i = k / 25;
+            int j = 25 - getTotalArmorValue();
+            int k = damage * j + field_40129_bA;
+            damageTotalArmorValue(damage);
+            damage = k / 25;
             field_40129_bA = k % 25;
         }
-        return i;
+        return damage;
     }
 
     protected int func_40128_b(DamageSource damagesource, int i)
@@ -567,11 +567,11 @@ public abstract class EntityLiving extends Entity
         return i;
     }
 
-    protected void damageEntity(DamageSource damagesource, int i)
+    protected void damageEntity(DamageSource damagesource, int damage)
     {
-        i = func_40115_d(damagesource, i);
-        i = func_40128_b(damagesource, i);
-        health -= i;
+        damage = func_40115_d(damagesource, damage);
+        damage = func_40128_b(damagesource, damage);
+        health -= damage;
     }
 
     protected float getSoundVolume()

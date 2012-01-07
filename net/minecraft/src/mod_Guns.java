@@ -167,7 +167,7 @@ public class mod_Guns extends Mod {
 
     @Override
     public String getVersion() {
-        return "0.9" + " for " + CURRENT_VERSION;
+        return "0.9.2" + " for " + CURRENT_VERSION;
     }
 
     public void KeyboardEvent(KeyBinding key) {

@@ -40,7 +40,7 @@ public class EntityGhast extends EntityFlying
         field_35171_bJ = 5;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         if("fireball".equals(damagesource.func_40545_l()) && (damagesource.getEntity() instanceof EntityPlayer))
         {
@@ -49,7 +49,7 @@ public class EntityGhast extends EntityFlying
             return true;
         } else
         {
-            return super.attackEntityFrom(damagesource, i);
+            return super.attackEntityFrom(damagesource, damage);
         }
     }
 

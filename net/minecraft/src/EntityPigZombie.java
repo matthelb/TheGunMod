@@ -73,7 +73,7 @@ public class EntityPigZombie extends EntityZombie
         super.onLivingUpdate();
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         Entity entity = damagesource.getEntity();
         if(entity instanceof EntityPlayer)
@@ -91,7 +91,7 @@ public class EntityPigZombie extends EntityZombie
 
             becomeAngryAt(entity);
         }
-        return super.attackEntityFrom(damagesource, i);
+        return super.attackEntityFrom(damagesource, damage);
     }
 
     private void becomeAngryAt(Entity entity)

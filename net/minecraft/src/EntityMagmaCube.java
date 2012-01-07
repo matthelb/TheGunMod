@@ -25,7 +25,7 @@ public class EntityMagmaCube extends EntitySlime
         return worldObj.difficultySetting > 0 && worldObj.checkIfAABBIsClear(boundingBox) && worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0 && !worldObj.getIsAnyLiquid(boundingBox);
     }
 
-    protected int func_40119_ar()
+    protected int getTotalArmorValue()
     {
         return getSlimeSize() * 3;
     }

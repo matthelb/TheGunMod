@@ -43,7 +43,7 @@ public class EntityOtherPlayerMP extends EntityPlayer
         yOffset = 0.0F;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    public boolean attackEntityFrom(DamageSource damagesource, int damage)
     {
         return true;
     }
