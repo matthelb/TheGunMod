@@ -1,8 +1,8 @@
 package com.heuristix.guns;
 
 import com.heuristix.EntityProjectile;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.World;
+import com.heuristix.Util;
+import net.minecraft.src.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -58,6 +58,20 @@ public class EntityBullet extends EntityProjectile {
     @Override
     public float getSpread() {
         return 0;
+    }
+
+    public boolean onBlockHit(MovingObjectPosition position) {
+        if(getOwner() instanceof EntityPlayerSP) {
+            PlayerController controller = Util.getPlayerController((EntityPlayerSP) getOwner());
+            if(controller != null) {
+                Block block = Block.blocksList[worldObj.getBlockId(position.blockX, position.blockY, position.blockZ)];
+                if(block.blockMaterial.equals(Material.glass)) {
+                    controller.sendBlockRemoved(position.blockX, position.blockY, position.blockZ, block.blockID);
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
 }

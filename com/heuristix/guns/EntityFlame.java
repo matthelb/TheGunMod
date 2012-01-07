@@ -28,7 +28,7 @@ public class EntityFlame extends EntityProjectile {
     }*/
 
     @Override
-    public boolean onHit(Entity hit, MovingObjectPosition position) {
+    public boolean onBlockHit(MovingObjectPosition position) {
         int x = position.blockX, y = position.blockY, z = position.blockZ;
         switch (position.sideHit) {
             case 0:
@@ -55,11 +55,9 @@ public class EntityFlame extends EntityProjectile {
         if (worldObj.getBlockId(x, y, z) == 0) {
             worldObj.playSoundEffect(posX, posY, posZ, "fire.ignite", 1.0f, Util.nextFloat() * 0.25f + 0.8f);
             worldObj.setBlockWithNotify(x, y, z, Block.fire.blockID);
+            return true;
         }
-        if (hit != null) {
-            return super.onHit(hit, position);
-        }
-        return true;
+        return false;
     }
 
     public float getSpeed() {

@@ -41,7 +41,7 @@ public class mod_Guns extends Mod {
     private static final KeyBinding RELOAD_KEYBINDING = new KeyBinding("key.reload", Keyboard.KEY_R);
     private static final KeyBinding ZOOM_KEYBINDING = new KeyBinding("key.zoom", Keyboard.KEY_Z);
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     private boolean justAttemptedFire;
     private boolean reflectionInit;

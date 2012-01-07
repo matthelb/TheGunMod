@@ -32,13 +32,9 @@ public class EntityGrenade extends EntityProjectile {
     }
 
     @Override
-    public boolean onHit(Entity hit, MovingObjectPosition position) {
-        if (hit != null) {
-            return super.onHit(hit, position);
-        } else {
-            worldObj.createExplosion(this, posX, posY, posZ, getDamage());
+    public boolean onBlockHit(MovingObjectPosition position) {
+        worldObj.createExplosion(this, posX, posY, posZ, getDamage());
             return true;
-        }
     }
 
     @Override

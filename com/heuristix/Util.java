@@ -458,7 +458,10 @@ public class Util {
         fields.put("soundPoolMusic", "d");
         fields.put("sndSystem", "a");
         fields.put("options", "f");
-        OBFUSCATED_FIELDS.put(SoundManager.class, fields);
+        OBFUSCATED_FIELDS.put(SoundManager.class, (Map<String, String>) fields.clone());
+        fields.clear();
+        fields.put("mc", "");
+        OBFUSCATED_FIELDS.put(EntityPlayerSP.class, (Map<String, String>) fields.clone());
     }
 
     public static SoundPool[] getSoundPools(SoundManager sndManager) {
@@ -516,5 +519,13 @@ public class Util {
             bytes[i] = (byte) ints[i];
         }
         return bytes;
+    }
+
+    public static PlayerController getPlayerController(EntityPlayerSP owner) {
+        Minecraft mc = (Minecraft) getPrivateValue(EntityPlayerSP.class, owner, "mc", OBFUSCATED_FIELDS.get(EntityPlayerSP.class).get("mc"));
+        if(mc != null) {
+            return mc.playerController;
+        }
+        return null;
     }
 }

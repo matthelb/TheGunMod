@@ -97,10 +97,11 @@ public abstract class EntityProjectile extends Entity {
             position = new MovingObjectPosition(hit);
         }
         if (position != null) {
-            if (position.entityHit != null && !(position.entityHit instanceof EntityProjectile) && onHit(position.entityHit, position)) {
+            if (position.entityHit != null && !(position.entityHit instanceof EntityProjectile) && onEntityHit(position.entityHit)) {
                 worldObj.playSoundAtEntity(owner, getHitSound(), 1.0f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
                 setEntityDead();
             } else {
+                onBlockHit(position);
                 xTile = position.blockX;
                 yTile = position.blockY;
                 zTile = position.blockZ;
@@ -115,7 +116,6 @@ public abstract class EntityProjectile extends Entity {
                 posZ -= (motionZ / f1) * 0.05000000074505806D;
                 //worldObj.playSoundAtEntity(this, getMoveSound(), 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
                 inGround = true;
-                onHit(null, position);
             }
         }
         motionY -= GRAVITY * getMass();
@@ -127,6 +127,16 @@ public abstract class EntityProjectile extends Entity {
         if (hit != null)
             return hit.attackEntityFrom(new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
         return false;
+    }
+
+    public boolean onEntityHit(Entity hit) {
+        if (hit != null)
+            return hit.attackEntityFrom(new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
+        return false;
+    }
+
+    public boolean onBlockHit(MovingObjectPosition blockPosition) {
+        return true;
     }
 
     protected final float getDamageModifier() {
