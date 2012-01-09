@@ -18,6 +18,6 @@ class J_JsonNullNodeBuilder
 
     public J_JsonNode buildNode()
     {
-        return J_JsonNodeFactories.func_27310_a();
+        return J_JsonNodeFactories.aJsonNull();
     }
 }

@@ -73,7 +73,7 @@ public class BlockMushroom extends BlockFlower
 
     public boolean canBlockStay(World world, int i, int j, int k)
     {
-        if(j < 0 || j >= world.field_35472_c)
+        if(j < 0 || j >= world.worldHeight)
         {
             return false;
         } else
@@ -83,7 +83,7 @@ public class BlockMushroom extends BlockFlower
         }
     }
 
-    public boolean func_35293_c(World world, int i, int j, int k, Random random)
+    public boolean fertilizeMushroom(World world, int i, int j, int k, Random random)
     {
         int l = world.getBlockMetadata(i, j, k);
         world.setBlock(i, j, k, 0);

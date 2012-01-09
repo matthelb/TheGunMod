@@ -14,22 +14,22 @@ class J_ObjectNodeContainer
 {
 
     final J_JsonObjectNodeBuilder nodeBuilder; /* synthetic field */
-    final J_JsonListenerToJdomAdapter field_27295_b; /* synthetic field */
+    final J_JsonListenerToJdomAdapter listenerToJdomAdapter; /* synthetic field */
 
     J_ObjectNodeContainer(J_JsonListenerToJdomAdapter j_jsonlistenertojdomadapter, J_JsonObjectNodeBuilder j_jsonobjectnodebuilder)
     {
-        field_27295_b = j_jsonlistenertojdomadapter;
+        listenerToJdomAdapter = j_jsonlistenertojdomadapter;
         nodeBuilder = j_jsonobjectnodebuilder;
 //        super();
     }
 
-    public void func_27290_a(J_JsonNodeBuilder j_jsonnodebuilder)
+    public void addNode(J_JsonNodeBuilder j_jsonnodebuilder)
     {
         throw new RuntimeException("Coding failure in Argo:  Attempt to add a node to an object.");
     }
 
-    public void func_27289_a(J_JsonFieldBuilder j_jsonfieldbuilder)
+    public void addField(J_JsonFieldBuilder j_jsonfieldbuilder)
     {
-        nodeBuilder.func_27237_a(j_jsonfieldbuilder);
+        nodeBuilder.withFieldBuilder(j_jsonfieldbuilder);
     }
 }

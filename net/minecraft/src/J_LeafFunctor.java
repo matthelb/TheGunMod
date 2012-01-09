@@ -18,7 +18,7 @@ abstract class J_LeafFunctor
 
     public final Object applyTo(Object obj)
     {
-        if(!matchsNode(obj))
+        if(!matchesNode(obj))
         {
             throw J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException.func_27322_a(this);
         } else

@@ -118,7 +118,7 @@ public abstract class Packet
             System.out.println("Reached end of stream");
             return null;
         }
-        PacketCount.func_40561_a(i, packet.getPacketSize());
+        PacketCount.countPacket(i, packet.getPacketSize());
         return packet;
     }
 
@@ -186,7 +186,7 @@ public abstract class Packet
             itemstack = new ItemStack(word0, byte0, word1);
             if(Item.itemsList[word0].isDamageable())
             {
-                itemstack.field_40715_d = func_40186_c(datainputstream);
+                itemstack.stackTagCompound = func_40186_c(datainputstream);
             }
         }
         return itemstack;
@@ -205,7 +205,7 @@ public abstract class Packet
             dataoutputstream.writeShort(itemstack.getItemDamage());
             if(itemstack.getItem().isDamageable())
             {
-                func_40189_a(itemstack.field_40715_d, dataoutputstream);
+                func_40189_a(itemstack.stackTagCompound, dataoutputstream);
             }
         }
     }
@@ -221,7 +221,7 @@ public abstract class Packet
         {
             byte abyte0[] = new byte[word0];
             datainputstream.readFully(abyte0);
-            return CompressedStreamTools.func_40592_a(abyte0);
+            return CompressedStreamTools.loadMapFromByteArray(abyte0);
         }
     }
 
@@ -233,7 +233,7 @@ public abstract class Packet
             dataoutputstream.writeShort(-1);
         } else
         {
-            byte abyte0[] = CompressedStreamTools.func_40591_a(nbttagcompound);
+            byte abyte0[] = CompressedStreamTools.writeMapToByteArray(nbttagcompound);
             dataoutputstream.writeShort((short)abyte0.length);
             dataoutputstream.write(abyte0);
         }

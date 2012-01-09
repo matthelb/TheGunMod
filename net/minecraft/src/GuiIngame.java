@@ -68,7 +68,7 @@ public class GuiIngame extends Gui
         {
             renderPumpkinBlur(k, l);
         }
-        if(!mc.thePlayer.isPotionActive(Potion.potionConfusion))
+        if(!mc.thePlayer.isPotionActive(Potion.confusion))
         {
             float f1 = mc.thePlayer.prevTimeInPortal + (mc.thePlayer.timeInPortal - mc.thePlayer.prevTimeInPortal) * f;
             if(f1 > 0.0F)
@@ -101,7 +101,7 @@ public class GuiIngame extends Gui
             FoodStats foodstats = mc.thePlayer.getFoodStats();
             int i5 = foodstats.getFoodLevel();
             int k5 = foodstats.getPrevFoodLevel();
-            func_41039_c();
+            renderBossHealth();
             if(mc.playerController.shouldDrawHUD())
             {
                 int k6 = k / 2 - 91;
@@ -122,7 +122,7 @@ public class GuiIngame extends Gui
                 int j9 = k8 - 10;
                 int i10 = mc.thePlayer.getPlayerArmorValue();
                 int j10 = -1;
-                if(mc.thePlayer.isPotionActive(Potion.potionRegeneration))
+                if(mc.thePlayer.isPotionActive(Potion.regeneration))
                 {
                     j10 = updateCounter % 25;
                 }
@@ -145,7 +145,7 @@ public class GuiIngame extends Gui
                         }
                     }
                     int l11 = 16;
-                    if(mc.thePlayer.isPotionActive(Potion.potionPoison))
+                    if(mc.thePlayer.isPotionActive(Potion.poison))
                     {
                         l11 += 36;
                     }
@@ -196,7 +196,7 @@ public class GuiIngame extends Gui
                     int i12 = k8;
                     int l12 = 16;
                     byte byte4 = 0;
-                    if(mc.thePlayer.isPotionActive(Potion.potionHunger))
+                    if(mc.thePlayer.isPotionActive(Potion.hunger))
                     {
                         l12 += 36;
                         byte4 = 13;
@@ -234,8 +234,8 @@ public class GuiIngame extends Gui
 
                 if(mc.thePlayer.isInsideOfMaterial(Material.water))
                 {
-                    int j11 = (int)Math.ceil(((double)(mc.thePlayer.func_41001_Z() - 2) * 10D) / 300D);
-                    int j12 = (int)Math.ceil(((double)mc.thePlayer.func_41001_Z() * 10D) / 300D) - j11;
+                    int j11 = (int)Math.ceil(((double)(mc.thePlayer.getAir() - 2) * 10D) / 300D);
+                    int j12 = (int)Math.ceil(((double)mc.thePlayer.getAir() * 10D) / 300D) - j11;
                     for(int i13 = 0; i13 < j11 + j12; i13++)
                     {
                         if(i13 < j11)
@@ -391,8 +391,8 @@ public class GuiIngame extends Gui
         if((mc.thePlayer instanceof EntityClientPlayerMP) && mc.gameSettings.keyBindPlayerList.pressed)
         {
             NetClientHandler netclienthandler = ((EntityClientPlayerMP)mc.thePlayer).sendQueue;
-            java.util.List list = netclienthandler.field_35786_c;
-            int i4 = netclienthandler.field_35785_d;
+            java.util.List list = netclienthandler.playerNames;
+            int i4 = netclienthandler.currentServerMaxPlayers;
             int k4 = i4;
             int j5 = 1;
             for(; k4 > 20; k4 = ((i4 + j5) - 1) / j5)
@@ -420,29 +420,29 @@ public class GuiIngame extends Gui
                     continue;
                 }
                 GuiSavingLevelString guisavinglevelstring = (GuiSavingLevelString)list.get(j8);
-                fontrenderer.drawStringWithShadow(guisavinglevelstring.field_35624_a, l8, k9, 0xffffff);
+                fontrenderer.drawStringWithShadow(guisavinglevelstring.name, l8, k9, 0xffffff);
                 mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/gui/icons.png"));
                 int k10 = 0;
                 byte byte3 = 0;
                 k10 = 0;
                 byte3 = 0;
-                if(guisavinglevelstring.field_35623_b < 0)
+                if(guisavinglevelstring.responseTime < 0)
                 {
                     byte3 = 5;
                 } else
-                if(guisavinglevelstring.field_35623_b < 150)
+                if(guisavinglevelstring.responseTime < 150)
                 {
                     byte3 = 0;
                 } else
-                if(guisavinglevelstring.field_35623_b < 300)
+                if(guisavinglevelstring.responseTime < 300)
                 {
                     byte3 = 1;
                 } else
-                if(guisavinglevelstring.field_35623_b < 600)
+                if(guisavinglevelstring.responseTime < 600)
                 {
                     byte3 = 2;
                 } else
-                if(guisavinglevelstring.field_35623_b < 1000)
+                if(guisavinglevelstring.responseTime < 1000)
                 {
                     byte3 = 3;
                 } else
@@ -460,14 +460,14 @@ public class GuiIngame extends Gui
         GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
     }
 
-    private void func_41039_c()
+    private void renderBossHealth()
     {
-        if(RenderDragon.field_41038_a == null)
+        if(RenderDragon.entityDragon == null)
         {
             return;
         }
-        EntityDragon entitydragon = RenderDragon.field_41038_a;
-        RenderDragon.field_41038_a = null;
+        EntityDragon entitydragon = RenderDragon.entityDragon;
+        RenderDragon.entityDragon = null;
         FontRenderer fontrenderer = mc.fontRenderer;
         ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
         int i = scaledresolution.getScaledWidth();

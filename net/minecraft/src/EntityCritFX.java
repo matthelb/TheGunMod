@@ -38,7 +38,7 @@ public class EntityCritFX extends EntityFX
         particleMaxAge = (int)(6D / (Math.random() * 0.80000000000000004D + 0.59999999999999998D));
         particleMaxAge *= f;
         noClip = false;
-        func_40099_c(65);
+        setParticleTextureIndex(65);
         onUpdate();
     }
 

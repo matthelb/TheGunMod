@@ -15,7 +15,7 @@ import java.util.Random;
 public class BlockEndPortal extends BlockContainer
 {
 
-    public static boolean field_41051_a = false;
+    public static boolean bossDefeated = false;
 
     protected BlockEndPortal(int i, Material material)
     {
@@ -90,7 +90,7 @@ public class BlockEndPortal extends BlockContainer
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if(field_41051_a)
+        if(bossDefeated)
         {
             return;
         }

@@ -26,7 +26,7 @@ public class EntityLavaFX extends EntityFX
         lavaParticleScale = particleScale;
         particleMaxAge = (int)(16D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
         noClip = false;
-        func_40099_c(49);
+        setParticleTextureIndex(49);
     }
 
     public int getEntityBrightnessForRender(float f)

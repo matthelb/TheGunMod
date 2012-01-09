@@ -80,7 +80,7 @@ public class GuiIngameMenu extends GuiScreen
     public void drawScreen(int i, int j, float f)
     {
         drawDefaultBackground();
-        boolean flag = !mc.theWorld.func_650_a(updateCounter2++);
+        boolean flag = !mc.theWorld.quickSaveWorld(updateCounter2++);
         if(flag || updateCounter < 20)
         {
             float f1 = ((float)(updateCounter % 10) + f) / 10F;

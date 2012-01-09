@@ -34,7 +34,7 @@ public class MapGenCaves extends MapGenBase
         Random random = new Random(l);
         if(i1 <= 0)
         {
-            int j1 = field_1306_a * 16 - 16;
+            int j1 = range * 16 - 16;
             i1 = j1 - random.nextInt(j1 / 4);
         }
         boolean flag = false;
@@ -107,9 +107,9 @@ public class MapGenCaves extends MapGenBase
             {
                 d9 = 1;
             }
-            if(i2 > worldObj.field_35472_c - 8)
+            if(i2 > worldObj.worldHeight - 8)
             {
-                i2 = worldObj.field_35472_c - 8;
+                i2 = worldObj.worldHeight - 8;
             }
             if(d10 < 0)
             {
@@ -126,8 +126,8 @@ public class MapGenCaves extends MapGenBase
                 {
                     for(int j3 = i2 + 1; !flag2 && j3 >= d9 - 1; j3--)
                     {
-                        int k3 = (k2 * 16 + i3) * worldObj.field_35472_c + j3;
-                        if(j3 < 0 || j3 >= worldObj.field_35472_c)
+                        int k3 = (k2 * 16 + i3) * worldObj.worldHeight + j3;
+                        if(j3 < 0 || j3 >= worldObj.worldHeight)
                         {
                             continue;
                         }
@@ -156,7 +156,7 @@ label0:
                 for(int l3 = d10; l3 < j2; l3++)
                 {
                     double d13 = (((double)(l3 + j * 16) + 0.5D) - d2) / d6;
-                    int i4 = (l2 * 16 + l3) * worldObj.field_35472_c + i2;
+                    int i4 = (l2 * 16 + l3) * worldObj.worldHeight + i2;
                     boolean flag3 = false;
                     if(d12 * d12 + d13 * d13 >= 1.0D)
                     {
@@ -217,7 +217,7 @@ label0:
         for(int j1 = 0; j1 < i1; j1++)
         {
             double d = i * 16 + rand.nextInt(16);
-            double d1 = rand.nextInt(rand.nextInt(world.field_35472_c - 8) + 8);
+            double d1 = rand.nextInt(rand.nextInt(world.worldHeight - 8) + 8);
             double d2 = j * 16 + rand.nextInt(16);
             int k1 = 1;
             if(rand.nextInt(4) == 0)

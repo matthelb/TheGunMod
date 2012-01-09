@@ -57,7 +57,7 @@ public class BlockLilyPad extends BlockFlower
 
     public boolean canBlockStay(World world, int i, int j, int k)
     {
-        if(j < 0 || j >= world.field_35472_c)
+        if(j < 0 || j >= world.worldHeight)
         {
             return false;
         } else

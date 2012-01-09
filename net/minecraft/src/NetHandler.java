@@ -228,7 +228,7 @@ public abstract class NetHandler
         registerPacket(packet130updatesign);
     }
 
-    public void handleCraftingProgress(Packet105UpdateProgressbar packet105updateprogressbar)
+    public void handleUpdateProgressbar(Packet105UpdateProgressbar packet105updateprogressbar)
     {
         registerPacket(packet105updateprogressbar);
     }
@@ -268,7 +268,7 @@ public abstract class NetHandler
         registerPacket(packet27position);
     }
 
-    public void handleBedUpdate(Packet70Bed packet70bed)
+    public void handleBed(Packet70Bed packet70bed)
     {
         registerPacket(packet70bed);
     }
@@ -283,7 +283,7 @@ public abstract class NetHandler
         registerPacket(packet131mapdata);
     }
 
-    public void handleAuxSFX(Packet61DoorChange packet61doorchange)
+    public void handleDoorChange(Packet61DoorChange packet61doorchange)
     {
         registerPacket(packet61doorchange);
     }
@@ -323,12 +323,12 @@ public abstract class NetHandler
         registerPacket(packet107creativesetslot);
     }
 
-    public void handleXPOrb(Packet26EntityExpOrb packet26entityexporb)
+    public void handleEntityExpOrb(Packet26EntityExpOrb packet26entityexporb)
     {
         registerPacket(packet26entityexporb);
     }
 
-    public void func_40599_a(Packet108EnchantItem packet108enchantitem)
+    public void handleEnchantItem(Packet108EnchantItem packet108enchantitem)
     {
     }
 }

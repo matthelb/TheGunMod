@@ -15,7 +15,7 @@ package net.minecraft.src;
 public abstract class GenLayer
 {
 
-    private long worldGendSeed;
+    private long worldGenSeed;
     protected GenLayer parent;
     private long chunkSeed;
     private long baseSeed;
@@ -69,10 +69,10 @@ public abstract class GenLayer
         obj3 = GenLayerSmoothZoom.func_35517_a(1000L, ((GenLayer) (obj3)), 2);
         obj4 = GenLayerSmoothZoom.func_35517_a(1000L, ((GenLayer) (obj4)), 2);
         GenLayerZoomVoronoi genlayerzoomvoronoi = new GenLayerZoomVoronoi(10L, ((GenLayer) (obj2)));
-        ((GenLayer) (obj2)).func_35496_b(l);
-        ((GenLayer) (obj3)).func_35496_b(l);
-        ((GenLayer) (obj4)).func_35496_b(l);
-        genlayerzoomvoronoi.func_35496_b(l);
+        ((GenLayer) (obj2)).initWorldGenSeed(l);
+        ((GenLayer) (obj3)).initWorldGenSeed(l);
+        ((GenLayer) (obj4)).initWorldGenSeed(l);
+        genlayerzoomvoronoi.initWorldGenSeed(l);
         return (new GenLayer[] {
             obj2, genlayerzoomvoronoi, obj3, obj4, genlayerrivermix
         });
@@ -89,24 +89,24 @@ public abstract class GenLayer
         baseSeed += l;
     }
 
-    public void func_35496_b(long l)
+    public void initWorldGenSeed(long l)
     {
-        worldGendSeed = l;
+        worldGenSeed = l;
         if(parent != null)
         {
-            parent.func_35496_b(l);
+            parent.initWorldGenSeed(l);
         }
-        worldGendSeed *= worldGendSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
-        worldGendSeed += baseSeed;
-        worldGendSeed *= worldGendSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
-        worldGendSeed += baseSeed;
-        worldGendSeed *= worldGendSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
-        worldGendSeed += baseSeed;
+        worldGenSeed *= worldGenSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
+        worldGenSeed += baseSeed;
+        worldGenSeed *= worldGenSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
+        worldGenSeed += baseSeed;
+        worldGenSeed *= worldGenSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
+        worldGenSeed += baseSeed;
     }
 
-    public void func_35499_a(long l, long l1)
+    public void initChunkSeed(long l, long l1)
     {
-        chunkSeed = worldGendSeed;
+        chunkSeed = worldGenSeed;
         chunkSeed *= chunkSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
         chunkSeed += l;
         chunkSeed *= chunkSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
@@ -125,9 +125,9 @@ public abstract class GenLayer
             j += i;
         }
         chunkSeed *= chunkSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
-        chunkSeed += worldGendSeed;
+        chunkSeed += worldGenSeed;
         return j;
     }
 
-    public abstract int[] func_35500_a(int i, int j, int k, int l);
+    public abstract int[] getInts(int i, int j, int k, int l);
 }

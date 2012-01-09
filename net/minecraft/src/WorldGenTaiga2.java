@@ -25,7 +25,7 @@ public class WorldGenTaiga2 extends WorldGenerator
         int j1 = l - i1;
         int k1 = 2 + random.nextInt(2);
         boolean flag = true;
-        if(j < 1 || j + l + 1 > world.field_35472_c)
+        if(j < 1 || j + l + 1 > world.worldHeight)
         {
             return false;
         }
@@ -43,7 +43,7 @@ public class WorldGenTaiga2 extends WorldGenerator
             {
                 for(int j3 = k - j2; j3 <= k + j2 && flag; j3++)
                 {
-                    if(l1 >= 0 && l1 < world.field_35472_c)
+                    if(l1 >= 0 && l1 < world.worldHeight)
                     {
                         int k3 = world.getBlockId(l2, l1, j3);
                         if(k3 != 0 && k3 != Block.leaves.blockID)
@@ -65,7 +65,7 @@ public class WorldGenTaiga2 extends WorldGenerator
             return false;
         }
         int i2 = world.getBlockId(i, j - 1, k);
-        if(i2 != Block.grass.blockID && i2 != Block.dirt.blockID || j >= world.field_35472_c - l - 1)
+        if(i2 != Block.grass.blockID && i2 != Block.dirt.blockID || j >= world.worldHeight - l - 1)
         {
             return false;
         }

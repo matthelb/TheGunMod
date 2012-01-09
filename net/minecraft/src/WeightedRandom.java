@@ -22,7 +22,7 @@ public class WeightedRandom
         for(Iterator iterator = collection.iterator(); iterator.hasNext();)
         {
             WeightedRandomChoice weightedrandomchoice = (WeightedRandomChoice)iterator.next();
-            i += weightedrandomchoice.field_35590_d;
+            i += weightedrandomchoice.itemWeight;
         }
 
         return i;
@@ -38,7 +38,7 @@ public class WeightedRandom
         for(Iterator iterator = collection.iterator(); iterator.hasNext();)
         {
             WeightedRandomChoice weightedrandomchoice = (WeightedRandomChoice)iterator.next();
-            j -= weightedrandomchoice.field_35590_d;
+            j -= weightedrandomchoice.itemWeight;
             if(j < 0)
             {
                 return weightedrandomchoice;
@@ -53,7 +53,7 @@ public class WeightedRandom
         return func_35734_a(random, collection, func_35736_a(collection));
     }
 
-    public static int func_35737_a(WeightedRandomChoice aweightedrandomchoice[])
+    public static int sumWeights(WeightedRandomChoice aweightedrandomchoice[])
     {
         int i = 0;
         WeightedRandomChoice aweightedrandomchoice1[] = aweightedrandomchoice;
@@ -61,7 +61,7 @@ public class WeightedRandom
         for(int k = 0; k < j; k++)
         {
             WeightedRandomChoice weightedrandomchoice = aweightedrandomchoice1[k];
-            i += weightedrandomchoice.field_35590_d;
+            i += weightedrandomchoice.itemWeight;
         }
 
         return i;
@@ -79,7 +79,7 @@ public class WeightedRandom
         for(int l = 0; l < k; l++)
         {
             WeightedRandomChoice weightedrandomchoice = aweightedrandomchoice1[l];
-            j -= weightedrandomchoice.field_35590_d;
+            j -= weightedrandomchoice.itemWeight;
             if(j < 0)
             {
                 return weightedrandomchoice;
@@ -89,8 +89,8 @@ public class WeightedRandom
         return null;
     }
 
-    public static WeightedRandomChoice func_35735_a(Random random, WeightedRandomChoice aweightedrandomchoice[])
+    public static WeightedRandomChoice chooseOne(Random random, WeightedRandomChoice aweightedrandomchoice[])
     {
-        return func_35732_a(random, aweightedrandomchoice, func_35737_a(aweightedrandomchoice));
+        return func_35732_a(random, aweightedrandomchoice, sumWeights(aweightedrandomchoice));
     }
 }

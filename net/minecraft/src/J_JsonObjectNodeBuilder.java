@@ -15,21 +15,21 @@ public final class J_JsonObjectNodeBuilder
     implements J_JsonNodeBuilder
 {
 
-    private final List field_27238_a = new LinkedList();
+    private final List fieldBuilders = new LinkedList();
 
     J_JsonObjectNodeBuilder()
     {
     }
 
-    public J_JsonObjectNodeBuilder func_27237_a(J_JsonFieldBuilder j_jsonfieldbuilder)
+    public J_JsonObjectNodeBuilder withFieldBuilder(J_JsonFieldBuilder j_jsonfieldbuilder)
     {
-        field_27238_a.add(j_jsonfieldbuilder);
+        fieldBuilders.add(j_jsonfieldbuilder);
         return this;
     }
 
     public J_JsonRootNode func_27235_a()
     {
-        return J_JsonNodeFactories.func_27312_a(new J_JsonObjectNodeList(this));
+        return J_JsonNodeFactories.aJsonObject(new J_JsonObjectNodeList(this));
     }
 
     public J_JsonNode buildNode()
@@ -39,6 +39,6 @@ public final class J_JsonObjectNodeBuilder
 
     static List func_27236_a(J_JsonObjectNodeBuilder j_jsonobjectnodebuilder)
     {
-        return j_jsonobjectnodebuilder.field_27238_a;
+        return j_jsonobjectnodebuilder.fieldBuilders;
     }
 }

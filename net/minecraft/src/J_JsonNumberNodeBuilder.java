@@ -16,7 +16,7 @@ final class J_JsonNumberNodeBuilder
 
     J_JsonNumberNodeBuilder(String s)
     {
-        field_27239_a = J_JsonNodeFactories.func_27311_b(s);
+        field_27239_a = J_JsonNodeFactories.aJsonNumber(s);
     }
 
     public J_JsonNode buildNode()

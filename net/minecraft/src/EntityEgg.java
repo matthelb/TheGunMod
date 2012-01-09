@@ -28,11 +28,11 @@ public class EntityEgg extends EntityThrowable
         super(world, d, d1, d2);
     }
 
-    protected void func_40078_a(MovingObjectPosition movingobjectposition)
+    protected void onThrowableCollision(MovingObjectPosition movingobjectposition)
     {
         if(movingobjectposition.entityHit != null)
         {
-            if(!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, field_40083_c), 0));
+            if(!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, throwingEntity), 0));
         }
         if(!worldObj.multiplayerWorld && rand.nextInt(8) == 0)
         {
@@ -44,9 +44,9 @@ public class EntityEgg extends EntityThrowable
             for(int j = 0; j < byte0; j++)
             {
                 EntityChicken entitychicken = new EntityChicken(worldObj);
-                entitychicken.func_40142_a_(-24000);
+                entitychicken.setDelay(-24000);
                 entitychicken.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
-                worldObj.entityJoinedWorld(entitychicken);
+                worldObj.spawnEntityInWorld(entitychicken);
             }
 
         }

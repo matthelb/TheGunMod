@@ -41,7 +41,7 @@ public class EntitySnowman extends EntitySnowmanBase
         int i = MathHelper.floor_double(posX);
         int k = MathHelper.floor_double(posY);
         int i1 = MathHelper.floor_double(posZ);
-        if(worldObj.getWorldChunkManager().func_35554_b(i, k, i1) > 1.0F)
+        if(worldObj.getWorldChunkManager().getTemperature(i, k, i1) > 1.0F)
         {
             attackEntityFrom(DamageSource.onFire, 1);
         }
@@ -50,7 +50,7 @@ public class EntitySnowman extends EntitySnowmanBase
             int l = MathHelper.floor_double(posX + (double)((float)((j % 2) * 2 - 1) * 0.25F));
             int j1 = MathHelper.floor_double(posY);
             int k1 = MathHelper.floor_double(posZ + (double)((float)(((j / 2) % 2) * 2 - 1) * 0.25F));
-            if(worldObj.getBlockId(l, j1, k1) == 0 && worldObj.getWorldChunkManager().func_35554_b(l, j1, k1) < 0.8F && Block.snow.canPlaceBlockAt(worldObj, l, j1, k1))
+            if(worldObj.getBlockId(l, j1, k1) == 0 && worldObj.getWorldChunkManager().getTemperature(l, j1, k1) < 0.8F && Block.snow.canPlaceBlockAt(worldObj, l, j1, k1))
             {
                 worldObj.setBlockWithNotify(l, j1, k1, Block.snow.blockID);
             }
@@ -70,7 +70,7 @@ public class EntitySnowman extends EntitySnowmanBase
                 double d2 = (entity.posY + (double)entity.getEyeHeight()) - 1.1000000238418579D - entitysnowball.posY;
                 float f1 = MathHelper.sqrt_double(d * d + d1 * d1) * 0.2F;
                 worldObj.playSoundAtEntity(this, "random.bow", 1.0F, 1.0F / (rand.nextFloat() * 0.4F + 0.8F));
-                worldObj.entityJoinedWorld(entitysnowball);
+                worldObj.spawnEntityInWorld(entitysnowball);
                 entitysnowball.setThrowableHeading(d, d2 + (double)f1, d1, 1.6F, 12F);
                 attackTime = 10;
             }

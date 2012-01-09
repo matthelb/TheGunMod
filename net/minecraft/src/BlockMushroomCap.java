@@ -12,12 +12,12 @@ import java.util.Random;
 public class BlockMushroomCap extends Block
 {
 
-    private int field_35292_a;
+    private int mushroomType;
 
     public BlockMushroomCap(int i, Material material, int j, int k)
     {
         super(i, j, material);
-        field_35292_a = k;
+        mushroomType = k;
     }
 
     public int getBlockTextureFromSideAndMetadata(int i, int j)
@@ -28,27 +28,27 @@ public class BlockMushroomCap extends Block
         }
         if(j >= 1 && j <= 9 && i == 1)
         {
-            return blockIndexInTexture - 16 - field_35292_a;
+            return blockIndexInTexture - 16 - mushroomType;
         }
         if(j >= 1 && j <= 3 && i == 2)
         {
-            return blockIndexInTexture - 16 - field_35292_a;
+            return blockIndexInTexture - 16 - mushroomType;
         }
         if(j >= 7 && j <= 9 && i == 3)
         {
-            return blockIndexInTexture - 16 - field_35292_a;
+            return blockIndexInTexture - 16 - mushroomType;
         }
         if((j == 1 || j == 4 || j == 7) && i == 4)
         {
-            return blockIndexInTexture - 16 - field_35292_a;
+            return blockIndexInTexture - 16 - mushroomType;
         }
         if((j == 3 || j == 6 || j == 9) && i == 5)
         {
-            return blockIndexInTexture - 16 - field_35292_a;
+            return blockIndexInTexture - 16 - mushroomType;
         }
         if(j == 14)
         {
-            return blockIndexInTexture - 16 - field_35292_a;
+            return blockIndexInTexture - 16 - mushroomType;
         }
         if(j == 15)
         {
@@ -71,6 +71,6 @@ public class BlockMushroomCap extends Block
 
     public int idDropped(int i, Random random, int j)
     {
-        return Block.mushroomBrown.blockID + field_35292_a;
+        return Block.mushroomBrown.blockID + mushroomType;
     }
 }

@@ -91,7 +91,7 @@ public class ChunkProviderLoadOrGenerate
                 } else
                 {
                     chunk = chunkProvider.provideChunk(i, j);
-                    chunk.func_25124_i();
+                    chunk.removeUnknownBlocks();
                 }
             }
             chunks[i1] = chunk;

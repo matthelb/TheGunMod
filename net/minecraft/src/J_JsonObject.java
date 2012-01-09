@@ -12,16 +12,16 @@ import java.util.*;
 final class J_JsonObject extends J_JsonRootNode
 {
 
-    private final Map field_27222_a;
+    private final Map fields;
 
     J_JsonObject(Map map)
     {
-        field_27222_a = new HashMap(map);
+        fields = new HashMap(map);
     }
 
     public Map getFields()
     {
-        return new HashMap(field_27222_a);
+        return new HashMap(fields);
     }
 
     public EnumJsonNodeType getType()
@@ -51,17 +51,17 @@ final class J_JsonObject extends J_JsonRootNode
         } else
         {
             J_JsonObject j_jsonobject = (J_JsonObject)obj;
-            return field_27222_a.equals(j_jsonobject.field_27222_a);
+            return fields.equals(j_jsonobject.fields);
         }
     }
 
     public int hashCode()
     {
-        return field_27222_a.hashCode();
+        return fields.hashCode();
     }
 
     public String toString()
     {
-        return (new StringBuilder()).append("JsonObject fields:[").append(field_27222_a).append("]").toString();
+        return (new StringBuilder()).append("JsonObject fields:[").append(fields).append("]").toString();
     }
 }

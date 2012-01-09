@@ -24,7 +24,7 @@ public class ComponentMineshaftRoom extends StructureComponent
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        int i = func_35012_c();
+        int i = getComponentType();
         int j1 = boundingBox.getYSize() - 3 - 1;
         if(j1 <= 0)
         {

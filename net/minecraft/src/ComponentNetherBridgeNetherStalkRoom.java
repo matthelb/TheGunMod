@@ -78,7 +78,7 @@ public class ComponentNetherBridgeNetherStalkRoom extends ComponentNetherBridgeP
             fillWithBlocks(world, structureboundingbox, 11, 7, j, 11, 8, j, Block.netherFence.blockID, Block.netherFence.blockID, false);
         }
 
-        int k = func_35009_c(Block.stairsNetherBrick.blockID, 3);
+        int k = getMetadataWithOffset(Block.stairsNetherBrick.blockID, 3);
         for(int l = 0; l <= 6; l++)
         {
             int k1 = l + 4;
@@ -115,8 +115,8 @@ public class ComponentNetherBridgeNetherStalkRoom extends ComponentNetherBridgeP
         fillWithBlocks(world, structureboundingbox, 9, 5, 2, 10, 5, 3, Block.netherBrick.blockID, Block.netherBrick.blockID, false);
         fillWithBlocks(world, structureboundingbox, 9, 5, 9, 10, 5, 10, Block.netherBrick.blockID, Block.netherBrick.blockID, false);
         fillWithBlocks(world, structureboundingbox, 10, 5, 4, 10, 5, 8, Block.netherBrick.blockID, Block.netherBrick.blockID, false);
-        int j1 = func_35009_c(Block.stairsNetherBrick.blockID, 0);
-        int l1 = func_35009_c(Block.stairsNetherBrick.blockID, 1);
+        int j1 = getMetadataWithOffset(Block.stairsNetherBrick.blockID, 0);
+        int l1 = getMetadataWithOffset(Block.stairsNetherBrick.blockID, 1);
         placeBlockAtCurrentPosition(world, Block.stairsNetherBrick.blockID, l1, 4, 5, 2, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.stairsNetherBrick.blockID, l1, 4, 5, 3, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.stairsNetherBrick.blockID, l1, 4, 5, 9, structureboundingbox);

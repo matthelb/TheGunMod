@@ -18,6 +18,6 @@ class J_JsonTrueNodeBuilder
 
     public J_JsonNode buildNode()
     {
-        return J_JsonNodeFactories.func_27313_b();
+        return J_JsonNodeFactories.aJsonTrue();
     }
 }

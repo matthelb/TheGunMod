@@ -16,7 +16,7 @@ public class EntitySplashFX extends EntityRainFX
     {
         super(world, d, d1, d2);
         particleGravity = 0.04F;
-        func_40099_c(func_40100_q() + 1);
+        setParticleTextureIndex(getParticleTextureIndex() + 1);
         if(d4 == 0.0D && (d3 != 0.0D || d5 != 0.0D))
         {
             motionX = d3;

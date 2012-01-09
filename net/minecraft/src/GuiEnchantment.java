@@ -20,7 +20,7 @@ public class GuiEnchantment extends GuiContainer
 
     private static ModelBook field_40220_w = new ModelBook();
     private Random field_40230_x;
-    private ContainerEnchantment field_40228_y;
+    private ContainerEnchantment containerEnchantment;
     public int field_40227_h;
     public float field_40229_i;
     public float field_40225_j;
@@ -34,7 +34,7 @@ public class GuiEnchantment extends GuiContainer
     {
         super(new ContainerEnchantment(inventoryplayer, world, i, j, k));
         field_40230_x = new Random();
-        field_40228_y = (ContainerEnchantment)inventorySlots;
+        containerEnchantment = (ContainerEnchantment)inventorySlots;
     }
 
     public void onGuiClosed()
@@ -63,9 +63,9 @@ public class GuiEnchantment extends GuiContainer
         {
             int k1 = i - (l + 60);
             int l1 = j - (i1 + 14 + 19 * j1);
-            if(k1 >= 0 && l1 >= 0 && k1 < 108 && l1 < 19 && field_40228_y.func_40233_a(mc.thePlayer, j1))
+            if(k1 >= 0 && l1 >= 0 && k1 < 108 && l1 < 19 && containerEnchantment.enchantItem(mc.thePlayer, j1))
             {
-                mc.playerController.func_40593_a(field_40228_y.windowId, j1);
+                mc.playerController.func_40593_a(containerEnchantment.windowId, j1);
             }
         }
 
@@ -134,13 +134,13 @@ public class GuiEnchantment extends GuiContainer
         RenderHelper.disableStandardItemLighting();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(k);
-        EnchantmentNameParts.field_40253_a.func_40250_a(field_40228_y.field_40234_b);
+        EnchantmentNameParts.field_40253_a.func_40250_a(containerEnchantment.nameSeed);
         for(int j1 = 0; j1 < 3; j1++)
         {
             String s = EnchantmentNameParts.field_40253_a.func_40249_a();
             zLevel = 0.0F;
             mc.renderEngine.bindTexture(k);
-            int k1 = field_40228_y.field_40235_c[j1];
+            int k1 = containerEnchantment.enchantLevels[j1];
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             if(k1 == 0)
             {
@@ -194,7 +194,7 @@ public class GuiEnchantment extends GuiContainer
         boolean flag = false;
         for(int i = 0; i < 3; i++)
         {
-            if(field_40228_y.field_40235_c[i] != 0)
+            if(containerEnchantment.enchantLevels[i] != 0)
             {
                 flag = true;
             }

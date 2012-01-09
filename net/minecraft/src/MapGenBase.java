@@ -12,19 +12,19 @@ import java.util.Random;
 public class MapGenBase
 {
 
-    protected int field_1306_a;
+    protected int range;
     protected Random rand;
     protected World worldObj;
 
     public MapGenBase()
     {
-        field_1306_a = 8;
+        range = 8;
         rand = new Random();
     }
 
     public void generate(IChunkProvider ichunkprovider, World world, int i, int j, byte abyte0[])
     {
-        int k = field_1306_a;
+        int k = range;
         worldObj = world;
         rand.setSeed(world.getWorldSeed());
         long l = rand.nextLong();

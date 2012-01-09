@@ -40,7 +40,7 @@ class J_JsonStringNodeSelector extends J_LeafFunctor
         return func_27073_b((J_JsonNode)obj);
     }
 
-    public boolean matchsNode(Object obj)
+    public boolean matchesNode(Object obj)
     {
         return func_27072_a((J_JsonNode)obj);
     }

@@ -28,7 +28,7 @@ public class ItemSnowball extends Item
         world.playSoundAtEntity(entityplayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
         if(!world.multiplayerWorld)
         {
-            world.entityJoinedWorld(new EntitySnowball(world, entityplayer));
+            world.spawnEntityInWorld(new EntitySnowball(world, entityplayer));
         }
         return itemstack;
     }

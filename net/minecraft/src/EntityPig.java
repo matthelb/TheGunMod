@@ -112,7 +112,7 @@ public class EntityPig extends EntityAnimal
         {
             EntityPigZombie entitypigzombie = new EntityPigZombie(worldObj);
             entitypigzombie.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
-            worldObj.entityJoinedWorld(entitypigzombie);
+            worldObj.spawnEntityInWorld(entitypigzombie);
             setEntityDead();
             return;
         }
@@ -127,7 +127,7 @@ public class EntityPig extends EntityAnimal
         }
     }
 
-    protected EntityAnimal func_40145_a(EntityAnimal entityanimal)
+    protected EntityAnimal spawnBabyAnimal(EntityAnimal entityanimal)
     {
         return new EntityPig(worldObj);
     }

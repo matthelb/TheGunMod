@@ -67,7 +67,7 @@ public class BlockTallGrass extends BlockFlower
             return 0xffffff;
         } else
         {
-            return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).func_40254_a(iblockaccess, i, j, k);
+            return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).getGrassColorAtCoords(iblockaccess, i, j, k);
         }
     }
 
@@ -82,7 +82,7 @@ public class BlockTallGrass extends BlockFlower
         }
     }
 
-    public int func_40198_a(int i, Random random)
+    public int quantityDroppedWithBonus(int i, Random random)
     {
         return 1 + random.nextInt(i * 2 + 1);
     }

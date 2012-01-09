@@ -12,7 +12,7 @@ import java.util.List;
 public interface ISaveFormat
 {
 
-    public abstract String func_22178_a();
+    public abstract String getFormatName();
 
     public abstract ISaveHandler getSaveLoader(String s, boolean flag);
 

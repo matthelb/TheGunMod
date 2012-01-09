@@ -25,7 +25,7 @@ public class TileEntity
     public int zCoord;
     protected boolean tileEntityInvalid;
     public int blockMetadata;
-    public Block field_35146_o;
+    public Block blockType;
 
     public TileEntity()
     {
@@ -125,11 +125,11 @@ public class TileEntity
 
     public Block getBlockType()
     {
-        if(field_35146_o == null)
+        if(blockType == null)
         {
-            field_35146_o = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, zCoord)];
+            blockType = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, zCoord)];
         }
-        return field_35146_o;
+        return blockType;
     }
 
     public boolean isInvalid()
@@ -147,13 +147,13 @@ public class TileEntity
         tileEntityInvalid = false;
     }
 
-    public void func_35143_b(int i, int j)
+    public void onTileEntityPowered(int i, int j)
     {
     }
 
-    public void func_35144_b()
+    public void updateContainingBlockInfo()
     {
-        field_35146_o = null;
+        blockType = null;
         blockMetadata = -1;
     }
 

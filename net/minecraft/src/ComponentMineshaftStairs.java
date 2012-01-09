@@ -56,7 +56,7 @@ public class ComponentMineshaftStairs extends StructureComponent
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        int i = func_35012_c();
+        int i = getComponentType();
         switch(coordBaseMode)
         {
         case 2: // '\002'

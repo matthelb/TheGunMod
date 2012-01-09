@@ -24,7 +24,7 @@ public class StatStringFormatKeyInv
     public String formatString(String s)
     {
         return String.format(s, new Object[] {
-            GameSettings.func_41085_c(mc.gameSettings.keyBindInventory.keyCode)
+            GameSettings.getKeyDisplayString(mc.gameSettings.keyBindInventory.keyCode)
         });
     }
 }

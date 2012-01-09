@@ -27,7 +27,7 @@ public class Packet108EnchantItem extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.func_40599_a(this);
+        nethandler.handleEnchantItem(this);
     }
 
     public void readPacketData(DataInputStream datainputstream)

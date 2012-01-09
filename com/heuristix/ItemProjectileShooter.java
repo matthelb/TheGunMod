@@ -82,7 +82,7 @@ public abstract class ItemProjectileShooter extends ItemCustom {
             world.playSoundAtEntity(player, getShootSound(), rand + 0.5f, 1.0f / (rand * 0.4f + 0.8f));
         }
         if (!world.multiplayerWorld) {
-            world.entityJoinedWorld(projectile.newProjectile(world, player, this));
+            world.spawnEntityInWorld(projectile.newProjectile(world, player, this));
         }
         lastRound = System.currentTimeMillis();
         onFire(world, player);

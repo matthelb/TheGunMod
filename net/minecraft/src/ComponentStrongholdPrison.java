@@ -59,10 +59,10 @@ public class ComponentStrongholdPrison extends ComponentStronghold
             fillWithBlocks(world, structureboundingbox, 5, 1, 5, 7, 3, 5, Block.fenceIron.blockID, Block.fenceIron.blockID, false);
             placeBlockAtCurrentPosition(world, Block.fenceIron.blockID, 0, 4, 3, 2, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.fenceIron.blockID, 0, 4, 3, 8, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, func_35009_c(Block.doorSteel.blockID, 3), 4, 1, 2, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, func_35009_c(Block.doorSteel.blockID, 3) + 8, 4, 2, 2, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, func_35009_c(Block.doorSteel.blockID, 3), 4, 1, 8, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, func_35009_c(Block.doorSteel.blockID, 3) + 8, 4, 2, 8, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, getMetadataWithOffset(Block.doorSteel.blockID, 3), 4, 1, 2, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, getMetadataWithOffset(Block.doorSteel.blockID, 3) + 8, 4, 2, 2, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, getMetadataWithOffset(Block.doorSteel.blockID, 3), 4, 1, 8, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, getMetadataWithOffset(Block.doorSteel.blockID, 3) + 8, 4, 2, 8, structureboundingbox);
             return true;
         }
     }

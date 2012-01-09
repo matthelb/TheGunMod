@@ -62,8 +62,8 @@ abstract class ComponentStronghold extends StructureComponent
             placeBlockAtCurrentPosition(world, Block.stoneBrick.blockID, 0, i + 2, j, k, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, 0, i + 1, j, k, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.doorSteel.blockID, 8, i + 1, j + 1, k, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.button.blockID, func_35009_c(Block.button.blockID, 4), i + 2, j + 1, k + 1, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.button.blockID, func_35009_c(Block.button.blockID, 3), i + 2, j + 1, k - 1, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.button.blockID, getMetadataWithOffset(Block.button.blockID, 4), i + 2, j + 1, k + 1, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.button.blockID, getMetadataWithOffset(Block.button.blockID, 3), i + 2, j + 1, k - 1, structureboundingbox);
             break;
         }
     }
@@ -94,16 +94,16 @@ abstract class ComponentStronghold extends StructureComponent
         switch(coordBaseMode)
         {
         case 2: // '\002'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.minZ - 1, coordBaseMode, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.minZ - 1, coordBaseMode, getComponentType());
 
         case 0: // '\0'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.maxZ + 1, coordBaseMode, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.maxZ + 1, coordBaseMode, getComponentType());
 
         case 1: // '\001'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX - 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX - 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, getComponentType());
 
         case 3: // '\003'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.maxX + 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.maxX + 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, getComponentType());
         }
         return null;
     }
@@ -113,16 +113,16 @@ abstract class ComponentStronghold extends StructureComponent
         switch(coordBaseMode)
         {
         case 2: // '\002'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, getComponentType());
 
         case 0: // '\0'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, getComponentType());
 
         case 1: // '\001'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, getComponentType());
 
         case 3: // '\003'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, getComponentType());
         }
         return null;
     }
@@ -132,16 +132,16 @@ abstract class ComponentStronghold extends StructureComponent
         switch(coordBaseMode)
         {
         case 2: // '\002'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, getComponentType());
 
         case 0: // '\0'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, getComponentType());
 
         case 1: // '\001'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, getComponentType());
 
         case 3: // '\003'
-            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, func_35012_c());
+            return StructureStrongholdPieces.func_35850_a(componentstrongholdstairs2, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, getComponentType());
         }
         return null;
     }

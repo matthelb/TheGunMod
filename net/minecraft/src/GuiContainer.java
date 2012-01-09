@@ -22,8 +22,8 @@ public abstract class GuiContainer extends GuiScreen
     protected int xSize;
     protected int ySize;
     public Container inventorySlots;
-    protected int field_40216_e;
-    protected int field_40215_f;
+    protected int guiLeft;
+    protected int guiTop;
 
     public GuiContainer(Container container)
     {
@@ -36,15 +36,15 @@ public abstract class GuiContainer extends GuiScreen
     {
         super.initGui();
         mc.thePlayer.craftingInventory = inventorySlots;
-        field_40216_e = (width - xSize) / 2;
-        field_40215_f = (height - ySize) / 2;
+        guiLeft = (width - xSize) / 2;
+        guiTop = (height - ySize) / 2;
     }
 
     public void drawScreen(int i, int j, float f)
     {
         drawDefaultBackground();
-        int k = field_40216_e;
-        int l = field_40215_f;
+        int k = guiLeft;
+        int l = guiTop;
         drawGuiContainerBackgroundLayer(f, i, j);
         RenderHelper.func_41089_c();
         GL11.glPushMatrix();
@@ -78,11 +78,11 @@ public abstract class GuiContainer extends GuiScreen
         {
             GL11.glTranslatef(0.0F, 0.0F, 32F);
             zLevel = 200F;
-            itemRenderer.field_40268_b = 200F;
+            itemRenderer.zLevel = 200F;
             itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, inventoryplayer.getItemStack(), i - k - 8, j - l - 8);
             itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, inventoryplayer.getItemStack(), i - k - 8, j - l - 8);
             zLevel = 0.0F;
-            itemRenderer.field_40268_b = 0.0F;
+            itemRenderer.zLevel = 0.0F;
         }
         GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
         RenderHelper.disableStandardItemLighting();
@@ -92,7 +92,7 @@ public abstract class GuiContainer extends GuiScreen
         if(inventoryplayer.getItemStack() == null && slot != null && slot.getHasStack())
         {
             ItemStack itemstack = slot.getStack();
-            List list = itemstack.func_40712_q();
+            List list = itemstack.getItemNameandInformation();
             if(list.size() > 0)
             {
                 int j2 = 0;
@@ -114,7 +114,7 @@ public abstract class GuiContainer extends GuiScreen
                     l3 += 2 + (list.size() - 1) * 10;
                 }
                 zLevel = 300F;
-                itemRenderer.field_40268_b = 300F;
+                itemRenderer.zLevel = 300F;
                 int i4 = 0xf0100010;
                 drawGradientRect(l2 - 3, j3 - 4, l2 + k3 + 3, j3 - 3, i4, i4);
                 drawGradientRect(l2 - 3, j3 + l3 + 3, l2 + k3 + 3, j3 + l3 + 4, i4, i4);
@@ -146,7 +146,7 @@ public abstract class GuiContainer extends GuiScreen
                 }
 
                 zLevel = 0.0F;
-                itemRenderer.field_40268_b = 0.0F;
+                itemRenderer.zLevel = 0.0F;
             }
         }
         GL11.glPopMatrix();
@@ -170,7 +170,7 @@ public abstract class GuiContainer extends GuiScreen
         int k = i;
         int i1 = j;
         zLevel = 100F;
-        itemRenderer.field_40268_b = 100F;
+        itemRenderer.zLevel = 100F;
         if(itemstack == null)
         {
             int j1 = slot.getBackgroundIconIndex();
@@ -188,12 +188,12 @@ public abstract class GuiContainer extends GuiScreen
             itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, itemstack, k, i1);
             itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, itemstack, k, i1);
         }
-        itemRenderer.field_40268_b = 0.0F;
+        itemRenderer.zLevel = 0.0F;
         zLevel = 0.0F;
         if(this == null)
         {
             zLevel = 100F;
-            itemRenderer.field_40268_b = 100F;
+            itemRenderer.zLevel = 100F;
             if(itemstack == null)
             {
                 int l = slot.getBackgroundIconIndex();
@@ -211,7 +211,7 @@ public abstract class GuiContainer extends GuiScreen
                 itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, itemstack, i, j);
                 itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, itemstack, i, j);
             }
-            itemRenderer.field_40268_b = 0.0F;
+            itemRenderer.zLevel = 0.0F;
             zLevel = 0.0F;
         }
     }
@@ -236,8 +236,8 @@ public abstract class GuiContainer extends GuiScreen
         if(k == 0 || k == 1)
         {
             Slot slot = getSlotAtPosition(i, j);
-            int l = field_40216_e;
-            int i1 = field_40215_f;
+            int l = guiLeft;
+            int i1 = guiTop;
             boolean flag = i < l || j < i1 || i >= l + xSize || j >= i1 + ySize;
             int j1 = -1;
             if(slot != null)
@@ -251,21 +251,21 @@ public abstract class GuiContainer extends GuiScreen
             if(j1 != -1)
             {
                 boolean flag1 = j1 != -999 && (Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54));
-                func_35309_a(slot, j1, k, flag1);
+                handleMouseClick(slot, j1, k, flag1);
             }
         }
     }
 
     private boolean getIsMouseOverSlot(Slot slot, int i, int j)
     {
-        int k = field_40216_e;
-        int l = field_40215_f;
+        int k = guiLeft;
+        int l = guiTop;
         i -= k;
         j -= l;
         return i >= slot.xDisplayPosition - 1 && i < slot.xDisplayPosition + 16 + 1 && j >= slot.yDisplayPosition - 1 && j < slot.yDisplayPosition + 16 + 1;
     }
 
-    protected void func_35309_a(Slot slot, int i, int j, boolean flag)
+    protected void handleMouseClick(Slot slot, int i, int j, boolean flag)
     {
         if(slot != null)
         {

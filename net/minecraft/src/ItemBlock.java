@@ -64,11 +64,11 @@ public class ItemBlock extends Item
         {
             return false;
         }
-        if(!entityplayer.func_35190_e(i, j, k))
+        if(!entityplayer.canPlayerEdit(i, j, k))
         {
             return false;
         }
-        if(j == world.field_35472_c - 1 && Block.blocksList[blockID].blockMaterial.isSolid())
+        if(j == world.worldHeight - 1 && Block.blocksList[blockID].blockMaterial.isSolid())
         {
             return false;
         }

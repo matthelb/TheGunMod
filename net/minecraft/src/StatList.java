@@ -210,7 +210,7 @@ public class StatList
         }
     }
 
-    public static StatBase func_27361_a(int i)
+    public static StatBase getOneShotStat(int i)
     {
         return (StatBase)oneShotStats.get(Integer.valueOf(i));
     }

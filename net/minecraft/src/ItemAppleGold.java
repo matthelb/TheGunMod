@@ -16,12 +16,12 @@ public class ItemAppleGold extends ItemFood
         super(i, j, f, flag);
     }
 
-    public boolean func_40403_e(ItemStack itemstack)
+    public boolean hasEffect(ItemStack itemstack)
     {
         return true;
     }
 
-    public EnumRarity func_40398_f(ItemStack itemstack)
+    public EnumRarity getRarity(ItemStack itemstack)
     {
         return EnumRarity.epic;
     }

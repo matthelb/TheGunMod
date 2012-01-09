@@ -180,11 +180,11 @@ public abstract class Minecraft
     private static File minecraftDir = null;
     public volatile boolean running;
     public String debug;
-    long field_40004_N;
+    long debugUpdateTime;
     int fpsCounter;
     boolean isTakingScreenshot;
     long prevFrameTime;
-    private String field_40006_ak;
+    private String debugProfilerName;
     public boolean inGameHasFocus;
     public boolean isRaining;
     long systemTime;
@@ -211,11 +211,11 @@ public abstract class Minecraft
         textureLavaFX = new TextureLavaFX();
         running = true;
         debug = "";
-        field_40004_N = System.currentTimeMillis();
+        debugUpdateTime = System.currentTimeMillis();
         fpsCounter = 0;
         isTakingScreenshot = false;
         prevFrameTime = -1L;
-        field_40006_ak = "root";
+        debugProfilerName = "root";
         inGameHasFocus = false;
         isRaining = false;
         systemTime = System.currentTimeMillis();
@@ -307,7 +307,7 @@ public abstract class Minecraft
         loadScreen();
         fontRenderer = new FontRenderer(gameSettings, "/font/default.png", renderEngine);
         standardGalacticFontRenderer = new FontRenderer(gameSettings, "/font/alternate.png", renderEngine);
-        ColorizerWater.getWaterBiomeColorizer(renderEngine.getTextureContents("/misc/watercolor.png"));
+        ColorizerWater.setWaterBiomeColorizer(renderEngine.getTextureContents("/misc/watercolor.png"));
         ColorizerGrass.setGrassBiomeColorizer(renderEngine.getTextureContents("/misc/grasscolor.png"));
         ColorizerFoliage.getFoilageBiomeColorizer(renderEngine.getTextureContents("/misc/foliagecolor.png"));
         entityRenderer = new EntityRenderer(this);
@@ -624,7 +624,7 @@ public abstract class Minecraft
             {
                 try
                 {
-                    func_40001_x();
+                    runGameLoop();
                 }
                 catch(MinecraftException minecraftexception)
                 {
@@ -653,7 +653,7 @@ public abstract class Minecraft
         }
     }
 
-    private void func_40001_x()
+    private void runGameLoop()
     {
         if(mcApplet != null && !mcApplet.isActive())
         {
@@ -774,11 +774,11 @@ public abstract class Minecraft
         checkGLError("Post render");
         fpsCounter++;
         isGamePaused = !isMultiplayerWorld() && currentScreen != null && currentScreen.doesGuiPauseGame();
-        while(System.currentTimeMillis() >= field_40004_N + 1000L) 
+        while(System.currentTimeMillis() >= debugUpdateTime + 1000L) 
         {
             debug = (new StringBuilder()).append(fpsCounter).append(" fps, ").append(WorldRenderer.chunksUpdated).append(" chunk updates").toString();
             WorldRenderer.chunksUpdated = 0;
-            field_40004_N += 1000L;
+            debugUpdateTime += 1000L;
             fpsCounter = 0;
         }
         Profiler.endSection();
@@ -823,11 +823,11 @@ public abstract class Minecraft
         }
     }
 
-    private void func_40003_b(int i)
+    private void updateDebugProfilerName(int i)
     {
         java.util.List list;
         ProfilerResult profilerresult;
-        list = Profiler.getProfilingData(field_40006_ak);
+        list = Profiler.getProfilingData(debugProfilerName);
         if(list == null || list.size() == 0)
         {
             return;
@@ -835,31 +835,31 @@ public abstract class Minecraft
         profilerresult = (ProfilerResult)list.remove(0);
         if(i == 0)
         {
-            if(profilerresult.field_40703_c.length() > 0)
+            if(profilerresult.name.length() > 0)
             {
-                int j = field_40006_ak.lastIndexOf(".");
+                int j = debugProfilerName.lastIndexOf(".");
                 if(j >= 0)
                 {
-                    field_40006_ak = field_40006_ak.substring(0, j);
+                    debugProfilerName = debugProfilerName.substring(0, j);
                 }
             }
         }
         else
         {
-            if(--i < list.size() && !((ProfilerResult)list.get(i)).field_40703_c.equals("unspecified"))
+            if(--i < list.size() && !((ProfilerResult)list.get(i)).name.equals("unspecified"))
             {
-                if(field_40006_ak.length() > 0)
+                if(debugProfilerName.length() > 0)
                 {
-                    field_40006_ak += ".";
+                    debugProfilerName += ".";
                 }
-                field_40006_ak += ((ProfilerResult)list.get(i)).field_40703_c;
+                debugProfilerName += ((ProfilerResult)list.get(i)).name;
             }
         }
     }
 
     private void displayDebugInfo(long l)
     {
-        java.util.List list = Profiler.getProfilingData(field_40006_ak);
+        java.util.List list = Profiler.getProfilingData(debugProfilerName);
         ProfilerResult profilerresult = (ProfilerResult)list.remove(0);
         long l1 = 0xfe502aL;
         if(prevFrameTime == -1L)
@@ -949,13 +949,13 @@ public abstract class Minecraft
         for(int j3 = 0; j3 < list.size(); j3++)
         {
             ProfilerResult profilerresult1 = (ProfilerResult)list.get(j3);
-            int i4 = MathHelper.floor_double(profilerresult1.field_40704_a / 4D) + 1;
+            int i4 = MathHelper.floor_double(profilerresult1.sectionPercentage / 4D) + 1;
             tessellator.startDrawing(6);
-            tessellator.setColorOpaque_I(profilerresult1.func_40700_a());
+            tessellator.setColorOpaque_I(profilerresult1.getDisplayColor());
             tessellator.addVertex(i2, k2, 0.0D);
             for(int k4 = i4; k4 >= 0; k4--)
             {
-                float f = (float)(((d + (profilerresult1.field_40704_a * (double)k4) / (double)i4) * 3.1415927410125732D * 2D) / 100D);
+                float f = (float)(((d + (profilerresult1.sectionPercentage * (double)k4) / (double)i4) * 3.1415927410125732D * 2D) / 100D);
                 float f2 = MathHelper.sin(f) * (float)j1;
                 float f4 = MathHelper.cos(f) * (float)j1 * 0.5F;
                 tessellator.addVertex((float)i2 + f2, (float)k2 - f4, 0.0D);
@@ -963,10 +963,10 @@ public abstract class Minecraft
 
             tessellator.draw();
             tessellator.startDrawing(5);
-            tessellator.setColorOpaque_I((profilerresult1.func_40700_a() & 0xfefefe) >> 1);
+            tessellator.setColorOpaque_I((profilerresult1.getDisplayColor() & 0xfefefe) >> 1);
             for(int i5 = i4; i5 >= 0; i5--)
             {
-                float f1 = (float)(((d + (profilerresult1.field_40704_a * (double)i5) / (double)i4) * 3.1415927410125732D * 2D) / 100D);
+                float f1 = (float)(((d + (profilerresult1.sectionPercentage * (double)i5) / (double)i4) * 3.1415927410125732D * 2D) / 100D);
                 float f3 = MathHelper.sin(f1) * (float)j1;
                 float f5 = MathHelper.cos(f1) * (float)j1 * 0.5F;
                 tessellator.addVertex((float)i2 + f3, (float)k2 - f5, 0.0D);
@@ -974,41 +974,41 @@ public abstract class Minecraft
             }
 
             tessellator.draw();
-            d += profilerresult1.field_40704_a;
+            d += profilerresult1.sectionPercentage;
         }
 
         DecimalFormat decimalformat = new DecimalFormat("##0.00");
         GL11.glEnable(3553 /*GL_TEXTURE_2D*/);
         String s = "";
-        if(!profilerresult.field_40703_c.equals("unspecified"))
+        if(!profilerresult.name.equals("unspecified"))
         {
             s = (new StringBuilder()).append(s).append("[0] ").toString();
         }
-        if(profilerresult.field_40703_c.length() == 0)
+        if(profilerresult.name.length() == 0)
         {
             s = (new StringBuilder()).append(s).append("ROOT ").toString();
         } else
         {
-            s = (new StringBuilder()).append(s).append(profilerresult.field_40703_c).append(" ").toString();
+            s = (new StringBuilder()).append(s).append(profilerresult.name).append(" ").toString();
         }
         int j4 = 0xffffff;
         fontRenderer.drawStringWithShadow(s, i2 - j1, k2 - j1 / 2 - 16, j4);
-        fontRenderer.drawStringWithShadow(s = (new StringBuilder()).append(decimalformat.format(profilerresult.field_40702_b)).append("%").toString(), (i2 + j1) - fontRenderer.getStringWidth(s), k2 - j1 / 2 - 16, j4);
+        fontRenderer.drawStringWithShadow(s = (new StringBuilder()).append(decimalformat.format(profilerresult.globalPercentage)).append("%").toString(), (i2 + j1) - fontRenderer.getStringWidth(s), k2 - j1 / 2 - 16, j4);
         for(int k3 = 0; k3 < list.size(); k3++)
         {
             ProfilerResult profilerresult2 = (ProfilerResult)list.get(k3);
             String s1 = "";
-            if(!profilerresult2.field_40703_c.equals("unspecified"))
+            if(!profilerresult2.name.equals("unspecified"))
             {
                 s1 = (new StringBuilder()).append(s1).append("[").append(k3 + 1).append("] ").toString();
             } else
             {
                 s1 = (new StringBuilder()).append(s1).append("[?] ").toString();
             }
-            s1 = (new StringBuilder()).append(s1).append(profilerresult2.field_40703_c).toString();
-            fontRenderer.drawStringWithShadow(s1, i2 - j1, k2 + j1 / 2 + k3 * 8 + 20, profilerresult2.func_40700_a());
-            fontRenderer.drawStringWithShadow(s1 = (new StringBuilder()).append(decimalformat.format(profilerresult2.field_40704_a)).append("%").toString(), (i2 + j1) - 50 - fontRenderer.getStringWidth(s1), k2 + j1 / 2 + k3 * 8 + 20, profilerresult2.func_40700_a());
-            fontRenderer.drawStringWithShadow(s1 = (new StringBuilder()).append(decimalformat.format(profilerresult2.field_40702_b)).append("%").toString(), (i2 + j1) - fontRenderer.getStringWidth(s1), k2 + j1 / 2 + k3 * 8 + 20, profilerresult2.func_40700_a());
+            s1 = (new StringBuilder()).append(s1).append(profilerresult2.name).toString();
+            fontRenderer.drawStringWithShadow(s1, i2 - j1, k2 + j1 / 2 + k3 * 8 + 20, profilerresult2.getDisplayColor());
+            fontRenderer.drawStringWithShadow(s1 = (new StringBuilder()).append(decimalformat.format(profilerresult2.sectionPercentage)).append("%").toString(), (i2 + j1) - 50 - fontRenderer.getStringWidth(s1), k2 + j1 / 2 + k3 * 8 + 20, profilerresult2.getDisplayColor());
+            fontRenderer.drawStringWithShadow(s1 = (new StringBuilder()).append(decimalformat.format(profilerresult2.globalPercentage)).append("%").toString(), (i2 + j1) - fontRenderer.getStringWidth(s1), k2 + j1 / 2 + k3 * 8 + 20, profilerresult2.getDisplayColor());
         }
 
     }
@@ -1078,8 +1078,8 @@ public abstract class Minecraft
             int j = objectMouseOver.blockX;
             int k = objectMouseOver.blockY;
             int l = objectMouseOver.blockZ;
-            playerController.sendBlockRemoving(j, k, l, objectMouseOver.sideHit);
-            if(thePlayer.func_35190_e(j, k, l))
+            playerController.onPlayerDamageBlock(j, k, l, objectMouseOver.sideHit);
+            if(thePlayer.canPlayerEdit(j, k, l))
             {
                 effectRenderer.addBlockHitEffects(j, k, l, objectMouseOver.sideHit);
                 thePlayer.swingItem();
@@ -1137,7 +1137,7 @@ public abstract class Minecraft
             {
                 ItemStack itemstack2 = itemstack;
                 int j1 = itemstack2 == null ? 0 : itemstack2.stackSize;
-                if(playerController.sendPlaceBlock(thePlayer, theWorld, itemstack2, j, k, l, i1))
+                if(playerController.onPlayerRightClick(thePlayer, theWorld, itemstack2, j, k, l, i1))
                 {
                     flag = false;
                     thePlayer.swingItem();
@@ -1442,14 +1442,14 @@ public abstract class Minecraft
                         {
                             if(Keyboard.getEventKey() == 11)
                             {
-                                func_40003_b(0);
+                                updateDebugProfilerName(0);
                             }
                             int j = 0;
                             while(j < 9) 
                             {
                                 if(Keyboard.getEventKey() == 2 + j)
                                 {
-                                    func_40003_b(j + 1);
+                                    updateDebugProfilerName(j + 1);
                                 }
                                 j++;
                             }
@@ -1636,7 +1636,7 @@ public abstract class Minecraft
         {
             World world2 = null;
             world2 = new World(theWorld, WorldProvider.getProviderForDimension(thePlayer.dimension));
-            ChunkCoordinates chunkcoordinates = world2.func_40472_j();
+            ChunkCoordinates chunkcoordinates = world2.getEntrancePortalLocation();
             d = chunkcoordinates.posX;
             thePlayer.posY = chunkcoordinates.posY;
             d1 = chunkcoordinates.posZ;
@@ -1657,7 +1657,7 @@ public abstract class Minecraft
         }
     }
 
-    public void func_40002_b(String s)
+    public void exitToMainMenu(String s)
     {
         theWorld = null;
         changeWorld2(null, s);
@@ -1707,7 +1707,7 @@ public abstract class Minecraft
                 thePlayer.preparePlayerToSpawn();
                 if(world != null)
                 {
-                    world.entityJoinedWorld(thePlayer);
+                    world.spawnEntityInWorld(thePlayer);
                 }
             }
             if(!world.multiplayerWorld)
@@ -1759,7 +1759,7 @@ public abstract class Minecraft
 
     private void convertMapFormat(String s, String s1)
     {
-        loadingScreen.printText((new StringBuilder()).append("Converting World to ").append(saveLoader.func_22178_a()).toString());
+        loadingScreen.printText((new StringBuilder()).append("Converting World to ").append(saveLoader.getFormatName()).toString());
         loadingScreen.displayLoadingString("This may take a while :)");
         saveLoader.convertMapFormat(s, loadingScreen);
         startWorld(s, s1, new WorldSettings(0L, 0, true, false));
@@ -1913,7 +1913,7 @@ public abstract class Minecraft
         thePlayer = (EntityPlayerSP)playerController.createPlayer(theWorld);
         if(flag1)
         {
-            thePlayer.func_41014_d(entityplayersp);
+            thePlayer.copyPlayer(entityplayersp);
         }
         thePlayer.dimension = i;
         renderViewEntity = thePlayer;

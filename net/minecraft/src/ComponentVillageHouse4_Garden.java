@@ -14,13 +14,13 @@ import java.util.Random;
 public class ComponentVillageHouse4_Garden extends ComponentVillage
 {
 
-    private int field_35084_a;
+    private int averageGroundLevel;
     private final boolean field_35083_b;
 
     public ComponentVillageHouse4_Garden(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
-        field_35084_a = -1;
+        averageGroundLevel = -1;
         coordBaseMode = j;
         boundingBox = structureboundingbox;
         field_35083_b = random.nextBoolean();
@@ -44,14 +44,14 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(field_35084_a < 0)
+        if(averageGroundLevel < 0)
         {
-            field_35084_a = getAverageGroundLevel(world, structureboundingbox);
-            if(field_35084_a < 0)
+            averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
+            if(averageGroundLevel < 0)
             {
                 return true;
             }
-            boundingBox.offset(0, ((field_35084_a - boundingBox.maxY) + 6) - 1, 0);
+            boundingBox.offset(0, ((averageGroundLevel - boundingBox.maxY) + 6) - 1, 0);
         }
         fillWithBlocks(world, structureboundingbox, 0, 0, 0, 4, 0, 4, Block.cobblestone.blockID, Block.cobblestone.blockID, false);
         fillWithBlocks(world, structureboundingbox, 0, 4, 0, 4, 4, 4, Block.wood.blockID, Block.wood.blockID, false);
@@ -83,7 +83,7 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
         placeBlockAtCurrentPosition(world, Block.planks.blockID, 0, 3, 1, 0, structureboundingbox);
         if(getBlockIdAtCurrentPosition(world, 2, 0, -1, structureboundingbox) == 0 && getBlockIdAtCurrentPosition(world, 2, -1, -1, structureboundingbox) != 0)
         {
-            placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, func_35009_c(Block.stairCompactCobblestone.blockID, 3), 2, 0, -1, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), 2, 0, -1, structureboundingbox);
         }
         fillWithBlocks(world, structureboundingbox, 1, 1, 1, 3, 3, 3, 0, 0, false);
         if(field_35083_b)
@@ -107,7 +107,7 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
         }
         if(field_35083_b)
         {
-            int i = func_35009_c(Block.ladder.blockID, 3);
+            int i = getMetadataWithOffset(Block.ladder.blockID, 3);
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, i, 3, 1, 3, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, i, 3, 2, 3, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, i, 3, 3, 3, structureboundingbox);
@@ -124,7 +124,7 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
 
         }
 
-        func_40044_a(world, structureboundingbox, 1, 1, 2, 1);
+        spawnVillagers(world, structureboundingbox, 1, 1, 2, 1);
         return true;
     }
 }

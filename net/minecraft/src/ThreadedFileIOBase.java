@@ -13,18 +13,18 @@ public class ThreadedFileIOBase
     implements Runnable
 {
 
-    public static final ThreadedFileIOBase field_40573_a = new ThreadedFileIOBase();
-    private List field_40571_b;
-    private volatile long field_40572_c;
-    private volatile long field_40569_d;
-    private volatile boolean field_40570_e;
+    public static final ThreadedFileIOBase threadedIOInstance = new ThreadedFileIOBase();
+    private List threadedIOQueue;
+    private volatile long writeQueuedCounter;
+    private volatile long savedIOCounter;
+    private volatile boolean isThreadWaiting;
 
     private ThreadedFileIOBase()
     {
-        field_40571_b = Collections.synchronizedList(new ArrayList());
-        field_40572_c = 0L;
-        field_40569_d = 0L;
-        field_40570_e = false;
+        threadedIOQueue = Collections.synchronizedList(new ArrayList());
+        writeQueuedCounter = 0L;
+        savedIOCounter = 0L;
+        isThreadWaiting = false;
         Thread thread = new Thread(this, "File IO Thread");
         thread.setPriority(1);
         thread.start();
@@ -40,18 +40,18 @@ public class ThreadedFileIOBase
 
     private void func_40568_b()
     {
-        for(int i = 0; i < field_40571_b.size(); i++)
+        for(int i = 0; i < threadedIOQueue.size(); i++)
         {
-            IThreadedFileIO ithreadedfileio = (IThreadedFileIO)field_40571_b.get(i);
-            boolean flag = ithreadedfileio.func_40550_A_();
+            IThreadedFileIO ithreadedfileio = (IThreadedFileIO)threadedIOQueue.get(i);
+            boolean flag = ithreadedfileio.writeNextIO();
             if(!flag)
             {
-                field_40571_b.remove(i--);
-                field_40569_d++;
+                threadedIOQueue.remove(i--);
+                savedIOCounter++;
             }
             try
             {
-                if(!field_40570_e)
+                if(!isThreadWaiting)
                 {
                     Thread.sleep(10L);
                 } else
@@ -65,7 +65,7 @@ public class ThreadedFileIOBase
             }
         }
 
-        if(field_40571_b.isEmpty())
+        if(threadedIOQueue.isEmpty())
         {
             try
             {
@@ -78,28 +78,28 @@ public class ThreadedFileIOBase
         }
     }
 
-    public void func_40567_a(IThreadedFileIO ithreadedfileio)
+    public void queueIO(IThreadedFileIO ithreadedfileio)
     {
-        if(field_40571_b.contains(ithreadedfileio))
+        if(threadedIOQueue.contains(ithreadedfileio))
         {
             return;
         } else
         {
-            field_40572_c++;
-            field_40571_b.add(ithreadedfileio);
+            writeQueuedCounter++;
+            threadedIOQueue.add(ithreadedfileio);
             return;
         }
     }
 
-    public void func_40566_a()
+    public void waitForFinish()
         throws InterruptedException
     {
-        field_40570_e = true;
-        while(field_40572_c != field_40569_d) 
+        isThreadWaiting = true;
+        while(writeQueuedCounter != savedIOCounter) 
         {
             Thread.sleep(10L);
         }
-        field_40570_e = false;
+        isThreadWaiting = false;
     }
 
 }

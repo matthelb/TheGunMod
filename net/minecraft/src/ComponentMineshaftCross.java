@@ -69,7 +69,7 @@ public class ComponentMineshaftCross extends StructureComponent
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        int i = func_35012_c();
+        int i = getComponentType();
         switch(field_35073_a)
         {
         case 2: // '\002'

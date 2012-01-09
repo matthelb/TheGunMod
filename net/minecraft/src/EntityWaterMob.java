@@ -47,7 +47,7 @@ public abstract class EntityWaterMob extends EntityCreature
         return true;
     }
 
-    protected int func_36001_a(EntityPlayer entityplayer)
+    protected int getExperiencePoints(EntityPlayer entityplayer)
     {
         return 1 + worldObj.rand.nextInt(3);
     }

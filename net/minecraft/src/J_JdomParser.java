@@ -16,12 +16,12 @@ public final class J_JdomParser
     {
     }
 
-    public J_JsonRootNode Parse(Reader reader)
+    public J_JsonRootNode parse(Reader reader)
         throws J_InvalidSyntaxException, IOException
     {
         J_JsonListenerToJdomAdapter j_jsonlistenertojdomadapter = new J_JsonListenerToJdomAdapter();
-        (new J_SajParser()).func_27463_a(reader, j_jsonlistenertojdomadapter);
-        return j_jsonlistenertojdomadapter.func_27208_a();
+        (new J_SajParser()).parse(reader, j_jsonlistenertojdomadapter);
+        return j_jsonlistenertojdomadapter.getDocument();
     }
 
     public J_JsonRootNode parse(String s)
@@ -30,7 +30,7 @@ public final class J_JdomParser
         J_JsonRootNode j_jsonrootnode;
         try
         {
-            j_jsonrootnode = Parse(new StringReader(s));
+            j_jsonrootnode = parse(new StringReader(s));
         }
         catch(IOException ioexception)
         {

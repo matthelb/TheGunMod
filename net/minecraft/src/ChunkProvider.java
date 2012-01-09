@@ -30,7 +30,7 @@ public class ChunkProvider
         droppedChunksSet = new HashSet();
         chunkMap = new LongHashMap();
         chunkList = new ArrayList();
-        emptyChunk = new EmptyChunk(world, new byte[256 * world.field_35472_c], 0, 0);
+        emptyChunk = new EmptyChunk(world, new byte[256 * world.worldHeight], 0, 0);
         worldObj = world;
         chunkLoader = ichunkloader;
         chunkProvider = ichunkprovider;
@@ -38,7 +38,7 @@ public class ChunkProvider
 
     public boolean chunkExists(int i, int j)
     {
-        return chunkMap.func_35575_b(ChunkCoordIntPair.chunkXZ2Int(i, j));
+        return chunkMap.containsKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
     }
 
     public void dropChunk(int i, int j)

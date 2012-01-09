@@ -16,7 +16,7 @@ class J_JsonArrayNodeSelector extends J_LeafFunctor
     {
     }
 
-    public boolean matchsNode_(J_JsonNode j_jsonnode)
+    public boolean matchesNode_(J_JsonNode j_jsonnode)
     {
         return EnumJsonNodeType.ARRAY == j_jsonnode.getType();
     }
@@ -41,8 +41,8 @@ class J_JsonArrayNodeSelector extends J_LeafFunctor
         return typeSafeApplyTo((J_JsonNode)obj);
     }
 
-    public boolean matchsNode(Object obj)
+    public boolean matchesNode(Object obj)
     {
-        return matchsNode_((J_JsonNode)obj);
+        return matchesNode_((J_JsonNode)obj);
     }
 }

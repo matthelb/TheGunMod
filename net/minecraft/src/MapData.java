@@ -101,7 +101,7 @@ public class MapData extends WorldSavedData
         for(int i = 0; i < field_28174_h.size(); i++)
         {
             MapInfo mapinfo1 = (MapInfo)field_28174_h.get(i);
-            if(mapinfo1.entityplayerObj.isDead || !mapinfo1.entityplayerObj.inventory.getHasItemStack(itemstack))
+            if(mapinfo1.entityplayerObj.isDead || !mapinfo1.entityplayerObj.inventory.hasItemStack(itemstack))
             {
                 field_28172_j.remove(mapinfo1.entityplayerObj);
                 field_28174_h.remove(mapinfo1);

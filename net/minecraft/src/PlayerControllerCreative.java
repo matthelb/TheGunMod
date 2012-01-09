@@ -22,14 +22,14 @@ public class PlayerControllerCreative extends PlayerController
         isInTestMode = true;
     }
 
-    public static void func_35646_d(EntityPlayer entityplayer)
+    public static void enableAbilities(EntityPlayer entityplayer)
     {
         entityplayer.capabilities.allowFlying = true;
         entityplayer.capabilities.depleteBuckets = true;
         entityplayer.capabilities.disableDamage = true;
     }
 
-    public static void func_35645_e(EntityPlayer entityplayer)
+    public static void disableAbilities(EntityPlayer entityplayer)
     {
         entityplayer.capabilities.allowFlying = false;
         entityplayer.capabilities.isFlying = false;
@@ -39,7 +39,7 @@ public class PlayerControllerCreative extends PlayerController
 
     public void func_6473_b(EntityPlayer entityplayer)
     {
-        func_35646_d(entityplayer);
+        enableAbilities(entityplayer);
         for(int i = 0; i < 9; i++)
         {
             if(entityplayer.inventory.mainInventory[i] == null)
@@ -50,13 +50,13 @@ public class PlayerControllerCreative extends PlayerController
 
     }
 
-    public static void func_35644_a(Minecraft minecraft, PlayerController playercontroller, int i, int j, int k, int l)
+    public static void clickBlockCreative(Minecraft minecraft, PlayerController playercontroller, int i, int j, int k, int l)
     {
         minecraft.theWorld.onBlockHit(minecraft.thePlayer, i, j, k, l);
-        playercontroller.sendBlockRemoved(i, j, k, l);
+        playercontroller.onPlayerDestroyBlock(i, j, k, l);
     }
 
-    public boolean sendPlaceBlock(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l)
+    public boolean onPlayerRightClick(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l)
     {
         int i1 = world.getBlockId(i, j, k);
         if(i1 > 0 && Block.blocksList[i1].blockActivated(world, i, j, k, entityplayer))
@@ -79,17 +79,17 @@ public class PlayerControllerCreative extends PlayerController
 
     public void clickBlock(int i, int j, int k, int l)
     {
-        func_35644_a(mc, this, i, j, k, l);
+        clickBlockCreative(mc, this, i, j, k, l);
         field_35647_c = 5;
     }
 
-    public void sendBlockRemoving(int i, int j, int k, int l)
+    public void onPlayerDamageBlock(int i, int j, int k, int l)
     {
         field_35647_c--;
         if(field_35647_c <= 0)
         {
             field_35647_c = 5;
-            func_35644_a(mc, this, i, j, k, l);
+            clickBlockCreative(mc, this, i, j, k, l);
         }
     }
 

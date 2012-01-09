@@ -24,7 +24,7 @@ public class PlayerCapabilities
         depleteBuckets = false;
     }
 
-    public void func_40601_a(NBTTagCompound nbttagcompound)
+    public void writeCapabilitiesToNBT(NBTTagCompound nbttagcompound)
     {
         NBTTagCompound nbttagcompound1 = new NBTTagCompound();
         nbttagcompound1.setBoolean("invulnerable", disableDamage);
@@ -34,7 +34,7 @@ public class PlayerCapabilities
         nbttagcompound.setTag("abilities", nbttagcompound1);
     }
 
-    public void func_40600_b(NBTTagCompound nbttagcompound)
+    public void readCapabilitiesFromNBT(NBTTagCompound nbttagcompound)
     {
         if(nbttagcompound.hasKey("abilities"))
         {

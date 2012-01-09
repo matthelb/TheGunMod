@@ -27,7 +27,7 @@ public class SaveFormatOld
         savesDirectory = file;
     }
 
-    public String func_22178_a()
+    public String getFormatName()
     {
         return "Old Format";
     }

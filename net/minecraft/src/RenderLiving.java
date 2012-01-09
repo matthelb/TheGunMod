@@ -44,7 +44,7 @@ public class RenderLiving extends Render
         {
             renderPassModel.isRiding = mainModel.isRiding;
         }
-        mainModel.field_40301_k = entityliving.func_40127_l();
+        mainModel.field_40301_k = entityliving.isChild();
         if(renderPassModel != null)
         {
             renderPassModel.field_40301_k = mainModel.field_40301_k;
@@ -64,7 +64,7 @@ public class RenderLiving extends Render
             GL11.glTranslatef(0.0F, -24F * f6 - 0.0078125F, 0.0F);
             float f7 = entityliving.field_705_Q + (entityliving.field_704_R - entityliving.field_705_Q) * f1;
             float f8 = entityliving.field_703_S - entityliving.field_704_R * (1.0F - f1);
-            if(entityliving.func_40127_l())
+            if(entityliving.isChild())
             {
                 f8 *= 3F;
             }
@@ -74,7 +74,7 @@ public class RenderLiving extends Render
             }
             GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
             mainModel.setLivingAnimations(entityliving, f8, f7, f1);
-            func_40270_a(entityliving, f8, f7, f5, f3 - f2, f4, f6);
+            renderModel(entityliving, f8, f7, f5, f3 - f2, f4, f6);
             for(int i = 0; i < 4; i++)
             {
                 int j = shouldRenderPass(entityliving, i, f1);
@@ -186,7 +186,7 @@ public class RenderLiving extends Render
         passSpecialRender(entityliving, d, d1, d2);
     }
 
-    protected void func_40270_a(EntityLiving entityliving, float f, float f1, float f2, float f3, float f4, float f5)
+    protected void renderModel(EntityLiving entityliving, float f, float f1, float f2, float f3, float f4, float f5)
     {
         loadDownloadableImageTexture(entityliving.skinUrl, entityliving.getEntityTexture());
         mainModel.render(entityliving, f, f1, f2, f3, f4, f5);

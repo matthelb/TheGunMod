@@ -11,7 +11,7 @@ package net.minecraft.src;
 interface J_NodeContainer
 {
 
-    public abstract void func_27290_a(J_JsonNodeBuilder j_jsonnodebuilder);
+    public abstract void addNode(J_JsonNodeBuilder j_jsonnodebuilder);
 
-    public abstract void func_27289_a(J_JsonFieldBuilder j_jsonfieldbuilder);
+    public abstract void addField(J_JsonFieldBuilder j_jsonfieldbuilder);
 }

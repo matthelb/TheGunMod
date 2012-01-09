@@ -268,8 +268,8 @@ public class GuiAchievements extends GuiScreen
             {
                 l5 = 0xff000000;
             }
-            func_27100_a(k3, k4, j4, l5);
-            func_27099_b(k4, j4, i5, l5);
+            drawHorizontalLine(k3, k4, j4, l5);
+            drawVerticalLine(k4, j4, i5, l5);
         }
 
         Achievement achievement = null;

@@ -85,7 +85,7 @@ public class ComponentMineshaftCorridor extends StructureComponent
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        int i = func_35012_c();
+        int i = getComponentType();
         int j = random.nextInt(4);
         switch(coordBaseMode)
         {
@@ -254,7 +254,7 @@ public class ComponentMineshaftCorridor extends StructureComponent
                 int i1 = getBlockIdAtCurrentPosition(world, 1, -1, k, structureboundingbox);
                 if(i1 > 0 && Block.opaqueCubeLookup[i1])
                 {
-                    randomlyPlaceBlock(world, structureboundingbox, random, 0.7F, 1, 0, k, Block.rail.blockID, func_35009_c(Block.rail.blockID, 0));
+                    randomlyPlaceBlock(world, structureboundingbox, random, 0.7F, 1, 0, k, Block.rail.blockID, getMetadataWithOffset(Block.rail.blockID, 0));
                 }
             }
 

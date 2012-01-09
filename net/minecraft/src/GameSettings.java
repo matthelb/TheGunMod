@@ -24,7 +24,7 @@ public class GameSettings
     private static final String GUISCALES[] = {
         "options.guiScale.auto", "options.guiScale.small", "options.guiScale.normal", "options.guiScale.large"
     };
-    private static final String field_41086_T[] = {
+    private static final String PARTICLES[] = {
         "options.particles.all", "options.particles.decreased", "options.particles.minimal"
     };
     private static final String LIMIT_FRAMERATES[] = {
@@ -72,7 +72,7 @@ public class GameSettings
     public float fovSetting;
     public float gammaSetting;
     public int guiScale;
-    public int field_41087_P;
+    public int particles;
 
     public GameSettings(Minecraft minecraft, File file)
     {
@@ -119,7 +119,7 @@ public class GameSettings
         fovSetting = 0.0F;
         gammaSetting = 0.0F;
         guiScale = 0;
-        field_41087_P = 0;
+        particles = 0;
         mc = minecraft;
         optionsFile = new File(file, "options.txt");
         loadOptions();
@@ -170,7 +170,7 @@ public class GameSettings
         fovSetting = 0.0F;
         gammaSetting = 0.0F;
         guiScale = 0;
-        field_41087_P = 0;
+        particles = 0;
     }
 
     public String getKeyBindingDescription(int i)
@@ -182,10 +182,10 @@ public class GameSettings
     public String getOptionDisplayString(int i)
     {
         int j = keyBindings[i].keyCode;
-        return func_41085_c(j);
+        return getKeyDisplayString(j);
     }
 
-    public static String func_41085_c(int i)
+    public static String getKeyDisplayString(int i)
     {
         if(i < 0)
         {
@@ -246,7 +246,7 @@ public class GameSettings
         }
         if(enumoptions == EnumOptions.PARTICLES)
         {
-            field_41087_P = (field_41087_P + i) % 3;
+            particles = (particles + i) % 3;
         }
         if(enumoptions == EnumOptions.VIEW_BOBBING)
         {
@@ -421,7 +421,7 @@ public class GameSettings
         }
         if(enumoptions == EnumOptions.PARTICLES)
         {
-            return (new StringBuilder()).append(s).append(stringtranslate.translateKey(field_41086_T[field_41087_P])).toString();
+            return (new StringBuilder()).append(s).append(stringtranslate.translateKey(PARTICLES[particles])).toString();
         }
         if(enumoptions == EnumOptions.FRAMERATE_LIMIT)
         {
@@ -490,7 +490,7 @@ public class GameSettings
                     }
                     if(as[0].equals("particles"))
                     {
-                        field_41087_P = Integer.parseInt(as[1]);
+                        particles = Integer.parseInt(as[1]);
                     }
                     if(as[0].equals("bobView"))
                     {
@@ -586,7 +586,7 @@ public class GameSettings
             printwriter.println((new StringBuilder()).append("gamma:").append(gammaSetting).toString());
             printwriter.println((new StringBuilder()).append("viewDistance:").append(renderDistance).toString());
             printwriter.println((new StringBuilder()).append("guiScale:").append(guiScale).toString());
-            printwriter.println((new StringBuilder()).append("particles:").append(field_41087_P).toString());
+            printwriter.println((new StringBuilder()).append("particles:").append(particles).toString());
             printwriter.println((new StringBuilder()).append("bobView:").append(viewBobbing).toString());
             printwriter.println((new StringBuilder()).append("anaglyph3d:").append(anaglyph).toString());
             printwriter.println((new StringBuilder()).append("advancedOpengl:").append(advancedOpengl).toString());

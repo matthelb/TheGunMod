@@ -90,7 +90,7 @@ public class ChunkLoader
                     nbttagcompound.setInteger("zPos", j);
                     chunk = loadChunkIntoWorldFromCompound(world, nbttagcompound.getCompoundTag("Level"));
                 }
-                chunk.func_25124_i();
+                chunk.removeUnknownBlocks();
                 return chunk;
             }
             catch(Exception exception)
@@ -207,24 +207,24 @@ label0:
         int j = nbttagcompound.getInteger("zPos");
         Chunk chunk = new Chunk(world, i, j);
         chunk.blocks = nbttagcompound.getByteArray("Blocks");
-        chunk.data = new NibbleArray(nbttagcompound.getByteArray("Data"), world.field_35473_a);
-        chunk.skylightMap = new NibbleArray(nbttagcompound.getByteArray("SkyLight"), world.field_35473_a);
-        chunk.blocklightMap = new NibbleArray(nbttagcompound.getByteArray("BlockLight"), world.field_35473_a);
+        chunk.data = new NibbleArray(nbttagcompound.getByteArray("Data"), world.heightShift);
+        chunk.skylightMap = new NibbleArray(nbttagcompound.getByteArray("SkyLight"), world.heightShift);
+        chunk.blocklightMap = new NibbleArray(nbttagcompound.getByteArray("BlockLight"), world.heightShift);
         chunk.heightMap = nbttagcompound.getByteArray("HeightMap");
         chunk.isTerrainPopulated = nbttagcompound.getBoolean("TerrainPopulated");
         if(!chunk.data.isValid())
         {
-            chunk.data = new NibbleArray(chunk.blocks.length, world.field_35473_a);
+            chunk.data = new NibbleArray(chunk.blocks.length, world.heightShift);
         }
         if(chunk.heightMap == null || !chunk.skylightMap.isValid())
         {
             chunk.heightMap = new byte[256];
-            chunk.skylightMap = new NibbleArray(chunk.blocks.length, world.field_35473_a);
+            chunk.skylightMap = new NibbleArray(chunk.blocks.length, world.heightShift);
             chunk.generateSkylightMap();
         }
         if(!chunk.blocklightMap.isValid())
         {
-            chunk.blocklightMap = new NibbleArray(chunk.blocks.length, world.field_35473_a);
+            chunk.blocklightMap = new NibbleArray(chunk.blocks.length, world.heightShift);
             chunk.func_1014_a();
         }
         NBTTagList nbttaglist = nbttagcompound.getTagList("Entities");

@@ -33,7 +33,7 @@ public abstract class BlockFluid extends Block
         if(blockMaterial == Material.water)
         {
             BiomeGenBase biomegenbase = iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k);
-            return biomegenbase.field_40256_A;
+            return biomegenbase.waterColorMultiplier;
         } else
         {
             return 0xffffff;

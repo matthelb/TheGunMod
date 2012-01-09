@@ -13,8 +13,8 @@ import java.util.List;
 public final class J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException extends J_JsonNodeDoesNotMatchJsonNodeSelectorException
 {
 
-    final J_Functor field_27326_a;
-    final List field_27325_b;
+    final J_Functor failedNode;
+    final List failPath;
 
     static J_JsonNodeDoesNotMatchJsonNodeSelectorException func_27322_a(J_Functor j_functor)
     {
@@ -23,26 +23,26 @@ public final class J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException extend
 
     static J_JsonNodeDoesNotMatchJsonNodeSelectorException func_27323_a(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, J_JsonNodeSelector j_jsonnodeselector)
     {
-        LinkedList linkedlist = new LinkedList(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.field_27325_b);
+        LinkedList linkedlist = new LinkedList(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.failPath);
         linkedlist.add(j_jsonnodeselector);
-        return new J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.field_27326_a, linkedlist);
+        return new J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.failedNode, linkedlist);
     }
 
     static J_JsonNodeDoesNotMatchJsonNodeSelectorException func_27321_b(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, J_JsonNodeSelector j_jsonnodeselector)
     {
         LinkedList linkedlist = new LinkedList();
         linkedlist.add(j_jsonnodeselector);
-        return new J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.field_27326_a, linkedlist);
+        return new J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.failedNode, linkedlist);
     }
 
     private J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException(J_Functor j_functor, List list)
     {
-        super((new StringBuilder()).append("Failed to match any JSON node at [").append(func_27324_a(list)).append("]").toString());
-        field_27326_a = j_functor;
-        field_27325_b = list;
+        super((new StringBuilder()).append("Failed to match any JSON node at [").append(getShortFormFailPath(list)).append("]").toString());
+        failedNode = j_functor;
+        failPath = list;
     }
 
-    static String func_27324_a(List list)
+    static String getShortFormFailPath(List list)
     {
         StringBuilder stringbuilder = new StringBuilder();
         for(int i = list.size() - 1; i >= 0; i--)
@@ -59,6 +59,6 @@ public final class J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException extend
 
     public String toString()
     {
-        return (new StringBuilder()).append("JsonNodeDoesNotMatchJsonNodeSelectorException{failedNode=").append(field_27326_a).append(", failPath=").append(field_27325_b).append('}').toString();
+        return (new StringBuilder()).append("JsonNodeDoesNotMatchJsonNodeSelectorException{failedNode=").append(failedNode).append(", failPath=").append(failPath).append('}').toString();
     }
 }

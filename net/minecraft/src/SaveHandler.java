@@ -22,7 +22,7 @@ public class SaveHandler
     private final File playersDirectory;
     private final File mapDataDir;
     private final long now = System.currentTimeMillis();
-    private final String field_40531_f;
+    private final String saveDirectoryName;
 
     public SaveHandler(File file, String s, boolean flag)
     {
@@ -31,15 +31,15 @@ public class SaveHandler
         playersDirectory = new File(saveDirectory, "players");
         mapDataDir = new File(saveDirectory, "data");
         mapDataDir.mkdirs();
-        field_40531_f = s;
+        saveDirectoryName = s;
         if(flag)
         {
             playersDirectory.mkdirs();
         }
-        func_22154_d();
+        createSessionLock();
     }
 
-    private void func_22154_d()
+    private void createSessionLock()
     {
         try
         {
@@ -211,9 +211,9 @@ public class SaveHandler
         return new File(mapDataDir, (new StringBuilder()).append(s).append(".dat").toString());
     }
 
-    public String func_40530_d()
+    public String getSaveDirectoryName()
     {
-        return field_40531_f;
+        return saveDirectoryName;
     }
 
 }

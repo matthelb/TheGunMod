@@ -38,7 +38,7 @@ public class BlockMelon extends Block
         return 3 + random.nextInt(5);
     }
 
-    public int func_40198_a(int i, Random random)
+    public int quantityDroppedWithBonus(int i, Random random)
     {
         int j = quantityDropped(random) + random.nextInt(1 + i);
         if(j > 9)

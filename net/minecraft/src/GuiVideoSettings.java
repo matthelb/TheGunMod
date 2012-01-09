@@ -16,14 +16,14 @@ public class GuiVideoSettings extends GuiScreen
 {
 
     private GuiScreen parentGuiScreen;
-    protected String field_22107_a;
+    protected String screenTitle;
     private GameSettings guiGameSettings;
     private boolean field_40231_d;
     private static EnumOptions videoOptions[];
 
     public GuiVideoSettings(GuiScreen guiscreen, GameSettings gamesettings)
     {
-        field_22107_a = "Video Settings";
+        screenTitle = "Video Settings";
         field_40231_d = false;
         parentGuiScreen = guiscreen;
         guiGameSettings = gamesettings;
@@ -32,7 +32,7 @@ public class GuiVideoSettings extends GuiScreen
     public void initGui()
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
-        field_22107_a = stringtranslate.translateKey("options.videoTitle");
+        screenTitle = stringtranslate.translateKey("options.videoTitle");
         int i = 0;
         EnumOptions aobj[] = videoOptions;
         int j = aobj.length;
@@ -103,7 +103,7 @@ public class GuiVideoSettings extends GuiScreen
     public void drawScreen(int i, int j, float f)
     {
         drawDefaultBackground();
-        drawCenteredString(fontRenderer, field_22107_a, width / 2, 20, 0xffffff);
+        drawCenteredString(fontRenderer, screenTitle, width / 2, 20, 0xffffff);
         if(!field_40231_d && guiGameSettings.renderDistance == 0)
         {
             drawCenteredString(fontRenderer, StatCollector.translateToLocal("options.farWarning1"), width / 2, height / 6 + 144, 0xaf0000);

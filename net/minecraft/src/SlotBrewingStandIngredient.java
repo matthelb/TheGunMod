@@ -24,7 +24,7 @@ class SlotBrewingStandIngredient extends Slot
     {
         if(itemstack != null)
         {
-            return Item.itemsList[itemstack.itemID].func_40406_n();
+            return Item.itemsList[itemstack.itemID].isValidBrewingIngredient();
         } else
         {
             return false;

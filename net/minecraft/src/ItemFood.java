@@ -17,7 +17,7 @@ public class ItemFood extends Item
     private final int healAmount;
     private final float saturationModifier;
     private final boolean isWolfsFavoriteMeat;
-    private boolean field_35431_bw;
+    private boolean alwaysEdible;
     private int potionId;
     private int potionDuration;
     private int potionAmplifier;
@@ -60,7 +60,7 @@ public class ItemFood extends Item
 
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        if(entityplayer.func_35197_b(field_35431_bw))
+        if(entityplayer.canEat(alwaysEdible))
         {
             entityplayer.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
         }
@@ -91,9 +91,9 @@ public class ItemFood extends Item
         return this;
     }
 
-    public ItemFood func_35424_o()
+    public ItemFood setAlwaysEdible()
     {
-        field_35431_bw = true;
+        alwaysEdible = true;
         return this;
     }
 

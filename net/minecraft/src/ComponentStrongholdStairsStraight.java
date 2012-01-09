@@ -50,7 +50,7 @@ public class ComponentStrongholdStairsStraight extends ComponentStronghold
         fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 4, 10, 7, true, random, StructureStrongholdPieces.getStrongholdStones());
         placeDoor(world, random, structureboundingbox, field_35054_a, 1, 7, 0);
         placeDoor(world, random, structureboundingbox, EnumDoor.OPENING, 1, 1, 7);
-        int i = func_35009_c(Block.stairCompactCobblestone.blockID, 2);
+        int i = getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 2);
         for(int j = 0; j < 6; j++)
         {
             placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, i, 1, 6 - j, 1 + j, structureboundingbox);

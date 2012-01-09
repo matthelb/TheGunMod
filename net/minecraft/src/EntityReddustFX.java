@@ -66,7 +66,7 @@ public class EntityReddustFX extends EntityFX
         {
             setEntityDead();
         }
-        func_40099_c(7 - (particleAge * 8) / particleMaxAge);
+        setParticleTextureIndex(7 - (particleAge * 8) / particleMaxAge);
         moveEntity(motionX, motionY, motionZ);
         if(posY == prevPosY)
         {

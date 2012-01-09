@@ -44,7 +44,7 @@ public class ChunkCache
         {
             return 0;
         }
-        if(j >= worldObj.field_35472_c)
+        if(j >= worldObj.worldHeight)
         {
             return 0;
         }
@@ -141,7 +141,7 @@ public class ChunkCache
         {
             return 0;
         }
-        if(j >= worldObj.field_35472_c)
+        if(j >= worldObj.worldHeight)
         {
             int i1 = 15 - worldObj.skylightSubtracted;
             if(i1 < 0)
@@ -163,7 +163,7 @@ public class ChunkCache
         {
             return 0;
         }
-        if(j >= worldObj.field_35472_c)
+        if(j >= worldObj.worldHeight)
         {
             return 0;
         } else
@@ -227,11 +227,11 @@ public class ChunkCache
         {
             j = 0;
         }
-        if(j >= worldObj.field_35472_c)
+        if(j >= worldObj.worldHeight)
         {
-            j = worldObj.field_35472_c - 1;
+            j = worldObj.worldHeight - 1;
         }
-        if(j < 0 || j >= worldObj.field_35472_c || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k > 0x1c9c380)
+        if(j < 0 || j >= worldObj.worldHeight || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k > 0x1c9c380)
         {
             return enumskyblock.defaultLightValue;
         }
@@ -273,11 +273,11 @@ public class ChunkCache
         {
             j = 0;
         }
-        if(j >= worldObj.field_35472_c)
+        if(j >= worldObj.worldHeight)
         {
-            j = worldObj.field_35472_c - 1;
+            j = worldObj.worldHeight - 1;
         }
-        if(j < 0 || j >= worldObj.field_35472_c || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k > 0x1c9c380)
+        if(j < 0 || j >= worldObj.worldHeight || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k > 0x1c9c380)
         {
             return enumskyblock.defaultLightValue;
         } else
@@ -288,8 +288,8 @@ public class ChunkCache
         }
     }
 
-    public int func_35452_b()
+    public int getWorldHeight()
     {
-        return worldObj.field_35472_c;
+        return worldObj.worldHeight;
     }
 }

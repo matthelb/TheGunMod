@@ -125,7 +125,7 @@ public class BlockPistonMoving extends BlockContainer
         {
             f = 1.0F - f;
         }
-        return func_31035_a(world, i, j, k, tileentitypiston.getStoredBlockID(), f, tileentitypiston.func_31009_d());
+        return getAxisAlignedBB(world, i, j, k, tileentitypiston.getStoredBlockID(), f, tileentitypiston.func_31009_d());
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
@@ -154,7 +154,7 @@ public class BlockPistonMoving extends BlockContainer
         }
     }
 
-    public AxisAlignedBB func_31035_a(World world, int i, int j, int k, int l, float f, int i1)
+    public AxisAlignedBB getAxisAlignedBB(World world, int i, int j, int k, int l, float f, int i1)
     {
         if(l == 0 || l == blockID)
         {

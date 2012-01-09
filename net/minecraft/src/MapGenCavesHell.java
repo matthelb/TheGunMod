@@ -34,7 +34,7 @@ public class MapGenCavesHell extends MapGenBase
         Random random = new Random(rand.nextLong());
         if(l <= 0)
         {
-            int i1 = field_1306_a * 16 - 16;
+            int i1 = range * 16 - 16;
             l = i1 - random.nextInt(i1 / 4);
         }
         boolean flag = false;
@@ -107,9 +107,9 @@ public class MapGenCavesHell extends MapGenBase
             {
                 d9 = 1;
             }
-            if(l1 > worldObj.field_35472_c - 8)
+            if(l1 > worldObj.worldHeight - 8)
             {
-                l1 = worldObj.field_35472_c - 8;
+                l1 = worldObj.worldHeight - 8;
             }
             if(d10 < 0)
             {
@@ -126,8 +126,8 @@ public class MapGenCavesHell extends MapGenBase
                 {
                     for(int i3 = l1 + 1; !flag2 && i3 >= d9 - 1; i3--)
                     {
-                        int j3 = (j2 * 16 + l2) * worldObj.field_35472_c + i3;
-                        if(i3 < 0 || i3 >= worldObj.field_35472_c)
+                        int j3 = (j2 * 16 + l2) * worldObj.worldHeight + i3;
+                        if(i3 < 0 || i3 >= worldObj.worldHeight)
                         {
                             continue;
                         }
@@ -155,7 +155,7 @@ public class MapGenCavesHell extends MapGenBase
                 for(int k3 = d10; k3 < i2; k3++)
                 {
                     double d13 = (((double)(k3 + j * 16) + 0.5D) - d2) / d6;
-                    int l3 = (k2 * 16 + k3) * worldObj.field_35472_c + l1;
+                    int l3 = (k2 * 16 + k3) * worldObj.worldHeight + l1;
                     for(int i4 = l1 - 1; i4 >= d9; i4--)
                     {
                         double d14 = (((double)i4 + 0.5D) - d1) / d7;
@@ -192,7 +192,7 @@ public class MapGenCavesHell extends MapGenBase
         for(int j1 = 0; j1 < i1; j1++)
         {
             double d = i * 16 + rand.nextInt(16);
-            double d1 = rand.nextInt(world.field_35472_c);
+            double d1 = rand.nextInt(world.worldHeight);
             double d2 = j * 16 + rand.nextInt(16);
             int k1 = 1;
             if(rand.nextInt(4) == 0)

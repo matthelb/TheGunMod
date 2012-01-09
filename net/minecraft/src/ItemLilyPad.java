@@ -34,7 +34,7 @@ public class ItemLilyPad extends ItemColored
             {
                 return itemstack;
             }
-            if(!entityplayer.func_35190_e(i, j, k))
+            if(!entityplayer.canPlayerEdit(i, j, k))
             {
                 return itemstack;
             }

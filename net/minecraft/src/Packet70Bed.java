@@ -38,7 +38,7 @@ public class Packet70Bed extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.handleBedUpdate(this);
+        nethandler.handleBed(this);
     }
 
     public int getPacketSize()

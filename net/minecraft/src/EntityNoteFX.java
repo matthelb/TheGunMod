@@ -35,7 +35,7 @@ public class EntityNoteFX extends EntityFX
         noteParticleScale = particleScale;
         particleMaxAge = 6;
         noClip = false;
-        func_40099_c(64);
+        setParticleTextureIndex(64);
     }
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)

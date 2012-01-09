@@ -58,7 +58,7 @@ public abstract class Container
 
     }
 
-    public boolean func_40233_a(EntityPlayer entityplayer, int i)
+    public boolean enchantItem(EntityPlayer entityplayer, int i)
     {
         return false;
     }

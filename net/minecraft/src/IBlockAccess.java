@@ -33,5 +33,5 @@ public interface IBlockAccess
 
     public abstract WorldChunkManager getWorldChunkManager();
 
-    public abstract int func_35452_b();
+    public abstract int getWorldHeight();
 }

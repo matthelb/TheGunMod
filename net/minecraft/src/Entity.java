@@ -43,7 +43,7 @@ public abstract class Entity
     public boolean isCollidedHorizontally;
     public boolean isCollidedVertically;
     public boolean isCollided;
-    public boolean beenAttacked;
+    public boolean velocityChanged;
     protected boolean isInWeb;
     public boolean field_9293_aM;
     public boolean isDead;
@@ -91,7 +91,7 @@ public abstract class Entity
         preventEntitySpawning = false;
         onGround = false;
         isCollided = false;
-        beenAttacked = false;
+        velocityChanged = false;
         field_9293_aM = true;
         isDead = false;
         yOffset = 0.0F;
@@ -321,11 +321,11 @@ public abstract class Entity
         if(!isImmuneToFire)
         {
             attackEntityFrom(DamageSource.lava, 4);
-            func_40046_d(15);
+            setFire(15);
         }
     }
 
-    public void func_40046_d(int i)
+    public void setFire(int i)
     {
         int j = i * 20;
         if(fire < j)
@@ -334,7 +334,7 @@ public abstract class Entity
         }
     }
 
-    public void func_40045_B()
+    public void extinguish()
     {
         fire = 0;
     }
@@ -598,7 +598,7 @@ public abstract class Entity
                 fire++;
                 if(fire == 0)
                 {
-                    func_40046_d(8);
+                    setFire(8);
                 }
             }
         } else
@@ -662,7 +662,7 @@ public abstract class Entity
         }
     }
 
-    public final boolean func_40047_D()
+    public final boolean isImmuneToFire()
     {
         return isImmuneToFire;
     }
@@ -742,7 +742,7 @@ public abstract class Entity
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posZ);
-        if(worldObj.blockExists(i, worldObj.field_35472_c / 2, j))
+        if(worldObj.blockExists(i, worldObj.worldHeight / 2, j))
         {
             double d = (boundingBox.maxY - boundingBox.minY) * 0.66000000000000003D;
             int k = MathHelper.floor_double((posY - (double)yOffset) + d);
@@ -757,7 +757,7 @@ public abstract class Entity
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posZ);
-        if(worldObj.blockExists(i, worldObj.field_35472_c / 2, j))
+        if(worldObj.blockExists(i, worldObj.worldHeight / 2, j))
         {
             double d = (boundingBox.maxY - boundingBox.minY) * 0.66000000000000003D;
             int k = MathHelper.floor_double((posY - (double)yOffset) + d);
@@ -882,7 +882,7 @@ public abstract class Entity
 
     protected void setBeenAttacked()
     {
-        beenAttacked = true;
+        velocityChanged = true;
     }
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
@@ -953,7 +953,7 @@ public abstract class Entity
         }));
         nbttagcompound.setFloat("FallDistance", fallDistance);
         nbttagcompound.setShort("Fire", (short)fire);
-        nbttagcompound.setShort("Air", (short)func_41001_Z());
+        nbttagcompound.setShort("Air", (short)getAir());
         nbttagcompound.setBoolean("OnGround", onGround);
         writeEntityToNBT(nbttagcompound);
     }
@@ -985,7 +985,7 @@ public abstract class Entity
         prevRotationPitch = rotationPitch = ((NBTTagFloat)nbttaglist2.tagAt(1)).floatValue;
         fallDistance = nbttagcompound.getFloat("FallDistance");
         fire = nbttagcompound.getShort("Fire");
-        func_41003_g(nbttagcompound.getShort("Air"));
+        setAir(nbttagcompound.getShort("Air"));
         onGround = nbttagcompound.getBoolean("OnGround");
         setPosition(posX, posY, posZ);
         setRotation(rotationYaw, rotationPitch);
@@ -1048,7 +1048,7 @@ public abstract class Entity
     {
         EntityItem entityitem = new EntityItem(worldObj, posX, posY + (double)f, posZ, itemstack);
         entityitem.delayBeforeCanPickup = 10;
-        worldObj.entityJoinedWorld(entityitem);
+        worldObj.spawnEntityInWorld(entityitem);
         return entityitem;
     }
 
@@ -1243,22 +1243,22 @@ public abstract class Entity
 
     public boolean isBurning()
     {
-        return fire > 0 || getEntityFlag(0);
+        return fire > 0 || getFlag(0);
     }
 
     public boolean isRiding()
     {
-        return ridingEntity != null || getEntityFlag(2);
+        return ridingEntity != null || getFlag(2);
     }
 
     public boolean isSneaking()
     {
-        return getEntityFlag(1);
+        return getFlag(1);
     }
 
     public boolean isSprinting()
     {
-        return getEntityFlag(3);
+        return getFlag(3);
     }
 
     public void setSprinting(boolean flag)
@@ -1268,7 +1268,7 @@ public abstract class Entity
 
     public boolean isEating()
     {
-        return getEntityFlag(4);
+        return getFlag(4);
     }
 
     public void setEating(boolean flag)
@@ -1276,7 +1276,7 @@ public abstract class Entity
         setFlag(4, flag);
     }
 
-    protected boolean getEntityFlag(int i)
+    protected boolean getFlag(int i)
     {
         return (dataWatcher.getWatchableObjectByte(0) & 1 << i) != 0;
     }
@@ -1293,12 +1293,12 @@ public abstract class Entity
         }
     }
 
-    public int func_41001_Z()
+    public int getAir()
     {
-        return dataWatcher.func_41062_b(1);
+        return dataWatcher.getWatchableObjectShort(1);
     }
 
-    public void func_41003_g(int i)
+    public void setAir(int i)
     {
         dataWatcher.updateObject(1, Short.valueOf((short)i));
     }
@@ -1309,7 +1309,7 @@ public abstract class Entity
         fire++;
         if(fire == 0)
         {
-            func_40046_d(8);
+            setFire(8);
         }
     }
 
@@ -1402,12 +1402,12 @@ public abstract class Entity
         isInWeb = true;
     }
 
-    public Entity[] func_40048_X()
+    public Entity[] getParts()
     {
         return null;
     }
 
-    public boolean func_41004_h(Entity entity)
+    public boolean isEntityEqual(Entity entity)
     {
         return this == entity;
     }

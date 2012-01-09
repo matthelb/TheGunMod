@@ -253,7 +253,7 @@ public class RenderGlobal
             j = 400;
         }
         renderChunksWide = j / 16 + 1;
-        renderChunksTall = worldObj.field_35472_c / 16;
+        renderChunksTall = worldObj.worldHeight / 16;
         renderChunksDeep = j / 16 + 1;
         worldRenderers = new WorldRenderer[renderChunksWide * renderChunksTall * renderChunksDeep];
         sortedWorldRenderers = new WorldRenderer[renderChunksWide * renderChunksTall * renderChunksDeep];
@@ -357,9 +357,9 @@ public class RenderGlobal
             {
                 l = 0;
             }
-            if(l >= worldObj.field_35472_c)
+            if(l >= worldObj.worldHeight)
             {
-                l = worldObj.field_35472_c - 1;
+                l = worldObj.worldHeight - 1;
             }
             if(worldObj.blockExists(MathHelper.floor_double(entity1.posX), l, MathHelper.floor_double(entity1.posZ)))
             {
@@ -771,7 +771,7 @@ public class RenderGlobal
             GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
             return;
         }
-        if(mc.theWorld.worldProvider.isNether)
+        if(mc.theWorld.worldProvider.isAlternateDimension)
         {
             return;
         }
@@ -938,7 +938,7 @@ public class RenderGlobal
 
     public void renderClouds(float f)
     {
-        if(mc.theWorld.worldProvider.isNether)
+        if(mc.theWorld.worldProvider.isAlternateDimension)
         {
             return;
         }
@@ -1543,7 +1543,7 @@ public class RenderGlobal
         {
             return null;
         }
-        int i = mc.gameSettings.field_41087_P;
+        int i = mc.gameSettings.particles;
         if(i == 1 && worldObj.rand.nextInt(3) == 0)
         {
             i = 2;
@@ -1597,7 +1597,7 @@ public class RenderGlobal
         {
             obj = new EntityCritFX(worldObj, d, d1, d2, d3, d4, d5);
             ((EntityFX) (obj)).func_40097_b(((EntityFX) (obj)).func_40098_n() * 0.3F, ((EntityFX) (obj)).func_40101_o() * 0.8F, ((EntityFX) (obj)).func_40102_p());
-            ((EntityFX) (obj)).func_40099_c(((EntityFX) (obj)).func_40100_q() + 1);
+            ((EntityFX) (obj)).setParticleTextureIndex(((EntityFX) (obj)).getParticleTextureIndex() + 1);
         } else
         if(s.equals("smoke"))
         {
@@ -1809,7 +1809,7 @@ public class RenderGlobal
             float f1 = (float)(l2 >> 8 & 0xff) / 255F;
             float f2 = (float)(l2 >> 0 & 0xff) / 255F;
             String s2 = "spell";
-            if(Item.potion.func_40432_e(i1))
+            if(Item.potion.isEffectInstant(i1))
             {
                 s2 = "instantSpell";
             }

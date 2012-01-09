@@ -136,13 +136,13 @@ public class StatFileWriter
                 java.util.Map.Entry entry = (java.util.Map.Entry)map.entrySet().iterator().next();
                 int i = Integer.parseInt(((J_JsonStringNode)entry.getKey()).getText());
                 int j = Integer.parseInt(((J_JsonNode)entry.getValue()).getText());
-                StatBase statbase = StatList.func_27361_a(i);
+                StatBase statbase = StatList.getOneShotStat(i);
                 if(statbase == null)
                 {
                     System.out.println((new StringBuilder()).append(i).append(" is not a valid stat").toString());
                 } else
                 {
-                    stringbuilder.append(StatList.func_27361_a(i).statGuid).append(",");
+                    stringbuilder.append(StatList.getOneShotStat(i).statGuid).append(",");
                     stringbuilder.append(j).append(",");
                     hashmap.put(statbase, Integer.valueOf(j));
                 }

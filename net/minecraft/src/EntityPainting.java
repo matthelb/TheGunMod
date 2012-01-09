@@ -163,7 +163,7 @@ public class EntityPainting extends Entity
             if(!canStay())
             {
                 setEntityDead();
-                worldObj.entityJoinedWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
+                worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
             }
         }
     }
@@ -239,7 +239,7 @@ public class EntityPainting extends Entity
         {
             setEntityDead();
             setBeenAttacked();
-            worldObj.entityJoinedWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
+            worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
         }
         return true;
     }
@@ -283,7 +283,7 @@ public class EntityPainting extends Entity
         if(!worldObj.multiplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
-            worldObj.entityJoinedWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
+            worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
         }
     }
 
@@ -292,7 +292,7 @@ public class EntityPainting extends Entity
         if(!worldObj.multiplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
-            worldObj.entityJoinedWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
+            worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
         }
     }
 }

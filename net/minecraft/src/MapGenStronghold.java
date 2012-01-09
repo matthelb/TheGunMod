@@ -22,7 +22,7 @@ public class MapGenStronghold extends MapGenStructure
     public MapGenStronghold()
     {
         allowedBiomeGenBases = (new BiomeGenBase[] {
-            BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.hills, BiomeGenBase.swampland, BiomeGenBase.taiga, BiomeGenBase.icePlains, BiomeGenBase.iceMountains
+            BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.taiga, BiomeGenBase.icePlains, BiomeGenBase.iceMountains
         });
         structureCoords = new ChunkCoordIntPair[3];
     }

@@ -54,7 +54,7 @@ public class InventoryPlayer
         return -1;
     }
 
-    private int func_41021_b(int i, int j)
+    private int getInventorySlotContainItemAndDamage(int i, int j)
     {
         for(int k = 0; k < mainInventory.length; k++)
         {
@@ -98,7 +98,7 @@ public class InventoryPlayer
         int k = -1;
         if(flag)
         {
-            k = func_41021_b(i, j);
+            k = getInventorySlotContainItemAndDamage(i, j);
         } else
         {
             k = getInventorySlotContainItem(i);
@@ -492,7 +492,7 @@ public class InventoryPlayer
         return entityplayer.getDistanceSqToEntity(player) <= 64D;
     }
 
-    public boolean getHasItemStack(ItemStack itemstack)
+    public boolean hasItemStack(ItemStack itemstack)
     {
         for(int i = 0; i < armorInventory.length; i++)
         {
@@ -521,7 +521,7 @@ public class InventoryPlayer
     {
     }
 
-    public void func_41022_a(InventoryPlayer inventoryplayer)
+    public void copyInventory(InventoryPlayer inventoryplayer)
     {
         for(int i = 0; i < mainInventory.length; i++)
         {

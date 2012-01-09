@@ -15,7 +15,7 @@ public class TextureWaterFlowFX extends TextureFX
     protected float field_1137_h[];
     protected float field_1136_i[];
     protected float field_1135_j[];
-    private int field_1134_k;
+    private int tickCounter;
 
     public TextureWaterFlowFX()
     {
@@ -24,13 +24,13 @@ public class TextureWaterFlowFX extends TextureFX
         field_1137_h = new float[256];
         field_1136_i = new float[256];
         field_1135_j = new float[256];
-        field_1134_k = 0;
+        tickCounter = 0;
         tileSize = 2;
     }
 
     public void onTick()
     {
-        field_1134_k++;
+        tickCounter++;
         for(int i = 0; i < 16; i++)
         {
             for(int k = 0; k < 16; k++)
@@ -71,7 +71,7 @@ public class TextureWaterFlowFX extends TextureFX
         field_1138_g = af;
         for(int i1 = 0; i1 < 256; i1++)
         {
-            float f1 = field_1138_g[i1 - field_1134_k * 16 & 0xff];
+            float f1 = field_1138_g[i1 - tickCounter * 16 & 0xff];
             if(f1 > 1.0F)
             {
                 f1 = 1.0F;

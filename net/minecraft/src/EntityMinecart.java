@@ -204,7 +204,7 @@ label0:
                         entityitem.motionX = (float)rand.nextGaussian() * f3;
                         entityitem.motionY = (float)rand.nextGaussian() * f3 + 0.2F;
                         entityitem.motionZ = (float)rand.nextGaussian() * f3;
-                        worldObj.entityJoinedWorld(entityitem);
+                        worldObj.spawnEntityInWorld(entityitem);
                     } while(true);
                 }
 
@@ -260,7 +260,7 @@ label0:
                 entityitem.motionX = (float)rand.nextGaussian() * f3;
                 entityitem.motionY = (float)rand.nextGaussian() * f3 + 0.2F;
                 entityitem.motionZ = (float)rand.nextGaussian() * f3;
-                worldObj.entityJoinedWorld(entityitem);
+                worldObj.spawnEntityInWorld(entityitem);
             } while(true);
         }
 
@@ -277,7 +277,7 @@ label0:
         {
             func_41024_b(func_41025_i() - 1);
         }
-        if(func_41026_g() && rand.nextInt(4) == 0)
+        if(isMinecartPowered() && rand.nextInt(4) == 0)
         {
             worldObj.spawnParticle("largesmoke", posX, posY + 0.80000000000000004D, posZ, 0.0D, 0.0D, 0.0D);
         }
@@ -621,7 +621,7 @@ label0:
         {
             pushX = pushZ = 0.0D;
         }
-        func_41027_b(fuel > 0);
+        setMinecartPowered(fuel > 0);
     }
 
     public Vec3D func_515_a(double d, double d1, double d2, double d3)
@@ -998,12 +998,12 @@ label0:
         return entityplayer.getDistanceSqToEntity(this) <= 64D;
     }
 
-    protected boolean func_41026_g()
+    protected boolean isMinecartPowered()
     {
         return (dataWatcher.getWatchableObjectByte(16) & 1) != 0;
     }
 
-    protected void func_41027_b(boolean flag)
+    protected void setMinecartPowered(boolean flag)
     {
         if(flag)
         {

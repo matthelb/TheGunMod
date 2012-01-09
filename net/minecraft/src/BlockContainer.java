@@ -43,7 +43,7 @@ public abstract class BlockContainer extends Block
         TileEntity tileentity = world.getBlockTileEntity(i, j, k);
         if(tileentity != null)
         {
-            tileentity.func_35143_b(l, i1);
+            tileentity.onTileEntityPowered(l, i1);
         }
     }
 }

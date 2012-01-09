@@ -17,9 +17,9 @@ public class BlockGlowStone extends Block
         super(i, j, material);
     }
 
-    public int func_40198_a(int i, Random random)
+    public int quantityDroppedWithBonus(int i, Random random)
     {
-        return MathHelper.func_41084_a(quantityDropped(random) + random.nextInt(i + 1), 1, 4);
+        return MathHelper.clamp_int(quantityDropped(random) + random.nextInt(i + 1), 1, 4);
     }
 
     public int quantityDropped(Random random)

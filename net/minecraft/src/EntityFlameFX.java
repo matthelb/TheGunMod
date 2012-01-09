@@ -28,7 +28,7 @@ public class EntityFlameFX extends EntityFX
         particleRed = particleGreen = particleBlue = 1.0F;
         particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D)) + 4;
         noClip = true;
-        func_40099_c(48);
+        setParticleTextureIndex(48);
     }
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)

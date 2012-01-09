@@ -20,7 +20,7 @@ public class RenderBlaze extends RenderLiving
         field_40278_c = ((ModelBlaze)mainModel).func_40321_a();
     }
 
-    public void func_40277_a(EntityBlaze entityblaze, double d, double d1, double d2, 
+    public void renderBlaze(EntityBlaze entityblaze, double d, double d1, double d2, 
             float f, float f1)
     {
         int i = ((ModelBlaze)mainModel).func_40321_a();
@@ -35,12 +35,12 @@ public class RenderBlaze extends RenderLiving
     public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, 
             float f, float f1)
     {
-        func_40277_a((EntityBlaze)entityliving, d, d1, d2, f, f1);
+        renderBlaze((EntityBlaze)entityliving, d, d1, d2, f, f1);
     }
 
     public void doRender(Entity entity, double d, double d1, double d2, 
             float f, float f1)
     {
-        func_40277_a((EntityBlaze)entity, d, d1, d2, f, f1);
+        renderBlaze((EntityBlaze)entity, d, d1, d2, f, f1);
     }
 }

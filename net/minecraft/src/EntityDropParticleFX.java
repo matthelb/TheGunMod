@@ -31,7 +31,7 @@ public class EntityDropParticleFX extends EntityFX
             particleGreen = 0.0F;
             particleBlue = 0.0F;
         }
-        func_40099_c(113);
+        setParticleTextureIndex(113);
         setSize(0.01F, 0.01F);
         particleGravity = 0.06F;
         field_40103_a = material;
@@ -89,10 +89,10 @@ public class EntityDropParticleFX extends EntityFX
             motionX *= 0.02D;
             motionY *= 0.02D;
             motionZ *= 0.02D;
-            func_40099_c(113);
+            setParticleTextureIndex(113);
         } else
         {
-            func_40099_c(112);
+            setParticleTextureIndex(112);
         }
         moveEntity(motionX, motionY, motionZ);
         motionX *= 0.98000001907348633D;
@@ -110,7 +110,7 @@ public class EntityDropParticleFX extends EntityFX
                 worldObj.spawnParticle("splash", posX, posY, posZ, 0.0D, 0.0D, 0.0D);
             } else
             {
-                func_40099_c(114);
+                setParticleTextureIndex(114);
             }
             motionX *= 0.69999998807907104D;
             motionZ *= 0.69999998807907104D;

@@ -189,8 +189,8 @@ public class RenderBlocks
         byte byte0 = 13;
         byte byte1 = 52;
         byte byte2 = 32;
-        int i1 = MathHelper.abs_int(i - byte0);
-        int j1 = MathHelper.abs_int(k - byte1);
+        int i1 = MathHelper.abs(i - byte0);
+        int j1 = MathHelper.abs(k - byte1);
         if(j1 <= byte2 && i1 <= byte2 && (i1 == byte2 || j1 == byte2) && catchesLight[blockAccess.getBlockId(i, j, k)])
         {
             int k1 = 5;
@@ -222,7 +222,7 @@ public class RenderBlocks
     {
         int l = block.getRenderType();
         block.setBlockBoundsBasedOnState(blockAccess, i, j, k);
-        return l != 0 ? l != 4 ? l != 13 ? l != 1 ? l != 19 ? l != 23 ? l != 6 ? l != 2 ? l != 3 ? l != 5 ? l != 8 ? l != 7 ? l != 9 ? l != 10 ? l != 27 ? l != 11 ? l != 12 ? l != 14 ? l != 15 ? l != 16 ? l != 17 ? l != 18 ? l != 20 ? l != 21 ? l != 24 ? l != 25 ? l != 26 ? ModLoader.RenderWorldBlock(this, blockAccess, i, j, k, block, l) : renderBlockEndPortalFrame(block, i, j, k) : renderBlockBrewingStand((BlockBrewingStand)block, i, j, k) : renderBlockCauldron((BlockCauldron)block, i, j, k) : renderBlockFenceGate((BlockFenceGate)block, i, j, k) : renderBlockVine(block, i, j, k) : renderBlockPane((BlockPane)block, i, j, k) : renderPistonExtension(block, i, j, k, true) : renderPistonBase(block, i, j, k, false) : renderBlockRepeater(block, i, j, k) : renderBlockBed(block, i, j, k) : renderBlockLever(block, i, j, k) : renderBlockFence((BlockFence)block, i, j, k) : func_41088_a((BlockDragonEgg)block, i, j, k) : renderBlockStairs(block, i, j, k) : renderBlockMinecartTrack((BlockRail)block, i, j, k) : renderBlockDoor(block, i, j, k) : renderBlockLadder(block, i, j, k) : renderBlockRedstoneWire(block, i, j, k) : renderBlockFire(block, i, j, k) : renderBlockTorch(block, i, j, k) : renderBlockCrops(block, i, j, k) : renderBlockLilyPad(block, i, j, k) : renderBlockStem(block, i, j, k) : renderBlockReed(block, i, j, k) : renderBlockCactus(block, i, j, k) : renderBlockFluids(block, i, j, k) : renderStandardBlock(block, i, j, k);
+        return l != 0 ? l != 4 ? l != 13 ? l != 1 ? l != 19 ? l != 23 ? l != 6 ? l != 2 ? l != 3 ? l != 5 ? l != 8 ? l != 7 ? l != 9 ? l != 10 ? l != 27 ? l != 11 ? l != 12 ? l != 14 ? l != 15 ? l != 16 ? l != 17 ? l != 18 ? l != 20 ? l != 21 ? l != 24 ? l != 25 ? l != 26 ? ModLoader.RenderWorldBlock(this, blockAccess, i, j, k, block, l) : renderBlockEndPortalFrame(block, i, j, k) : renderBlockBrewingStand((BlockBrewingStand)block, i, j, k) : renderBlockCauldron((BlockCauldron)block, i, j, k) : renderBlockFenceGate((BlockFenceGate)block, i, j, k) : renderBlockVine(block, i, j, k) : renderBlockPane((BlockPane)block, i, j, k) : renderPistonExtension(block, i, j, k, true) : renderPistonBase(block, i, j, k, false) : renderBlockRepeater(block, i, j, k) : renderBlockBed(block, i, j, k) : renderBlockLever(block, i, j, k) : renderBlockFence((BlockFence)block, i, j, k) : renderBlockDragonEgg((BlockDragonEgg)block, i, j, k) : renderBlockStairs(block, i, j, k) : renderBlockMinecartTrack((BlockRail)block, i, j, k) : renderBlockDoor(block, i, j, k) : renderBlockLadder(block, i, j, k) : renderBlockRedstoneWire(block, i, j, k) : renderBlockFire(block, i, j, k) : renderBlockTorch(block, i, j, k) : renderBlockCrops(block, i, j, k) : renderBlockLilyPad(block, i, j, k) : renderBlockStem(block, i, j, k) : renderCrossedSquares(block, i, j, k) : renderBlockCactus(block, i, j, k) : renderBlockFluids(block, i, j, k) : renderStandardBlock(block, i, j, k);
     }
 
     public boolean renderBlockEndPortalFrame(Block block, int i, int j, int k)
@@ -241,7 +241,7 @@ public class RenderBlocks
         {
             uvRotateTop = 2;
         }
-        if(!BlockEndPortalFrame.func_40212_d(l))
+        if(!BlockEndPortalFrame.isEnderEyeInserted(l))
         {
             block.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.8125F, 1.0F);
             renderStandardBlock(block, i, j, k);
@@ -1918,7 +1918,7 @@ public class RenderBlocks
 
     public boolean renderBlockPane(BlockPane blockpane, int i, int j, int k)
     {
-        int l = blockAccess.func_35452_b();
+        int l = blockAccess.getWorldHeight();
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(blockpane.getMixedBrightnessForBlock(blockAccess, i, j, k));
         float f = 1.0F;
@@ -1948,7 +1948,7 @@ public class RenderBlocks
         {
             int j1 = blockAccess.getBlockMetadata(i, j, k);
             l1 = blockpane.getBlockTextureFromSideAndMetadata(0, j1);
-            i2 = blockpane.func_35299_s();
+            i2 = blockpane.getSideTextureIndex();
         }
         int k1 = (l1 & 0xf) << 4;
         int j2 = l1 & 0xf0;
@@ -2325,7 +2325,7 @@ public class RenderBlocks
         return true;
     }
 
-    public boolean renderBlockReed(Block block, int i, int j, int k)
+    public boolean renderCrossedSquares(Block block, int i, int j, int k)
     {
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(block.getMixedBrightnessForBlock(blockAccess, i, j, k));
@@ -2355,7 +2355,7 @@ public class RenderBlocks
             d1 += ((double)((float)(l1 >> 20 & 15L) / 15F) - 1.0D) * 0.20000000000000001D;
             d2 += ((double)((float)(l1 >> 24 & 15L) / 15F) - 0.5D) * 0.5D;
         }
-        renderCrossedSquares(block, blockAccess.getBlockMetadata(i, j, k), d, d1, d2);
+        drawCrossedSquares(block, blockAccess.getBlockMetadata(i, j, k), d, d1, d2);
         return true;
     }
 
@@ -2401,10 +2401,10 @@ public class RenderBlocks
         return true;
     }
 
-    public void renderTorchAtAngle(Block block, double x, double y, double z,
+    public void renderTorchAtAngle(Block block, double d, double d1, double d2, 
             double d3, double d4)
     {
-        Tessellator t = Tessellator.instance;
+        Tessellator tessellator = Tessellator.instance;
         int i = block.getBlockTextureFromSide(0);
         if(overrideBlockTexture >= 0)
         {
@@ -2420,37 +2420,37 @@ public class RenderBlocks
         double d6 = (double)f2 + 0.0234375D;
         double d7 = (double)f + 0.03515625D;
         double d8 = (double)f2 + 0.03125D;
-        x += 0.5D;
-        z += 0.5D;
-        double d9 = x - 0.5D;
-        double d10 = x + 0.5D;
-        double d11 = z - 0.5D;
-        double d12 = z + 0.5D;
+        d += 0.5D;
+        d2 += 0.5D;
+        double d9 = d - 0.5D;
+        double d10 = d + 0.5D;
+        double d11 = d2 - 0.5D;
+        double d12 = d2 + 0.5D;
         double d13 = 0.0625D;
         double d14 = 0.625D;
-        t.addVertexWithUV((x + d3 * (1.0D - d14)) - d13, y + d14, (z + d4 * (1.0D - d14)) - d13, d5, d6);
-        t.addVertexWithUV((x + d3 * (1.0D - d14)) - d13, y + d14, z + d4 * (1.0D - d14) + d13, d5, d8);
-        t.addVertexWithUV(x + d3 * (1.0D - d14) + d13, y + d14, z + d4 * (1.0D - d14) + d13, d7, d8);
-        t.addVertexWithUV(x + d3 * (1.0D - d14) + d13, y + d14, (z + d4 * (1.0D - d14)) - d13, d7, d6);
-        t.addVertexWithUV(x - d13, y + 1.0D, d11, f, f2);
-        t.addVertexWithUV((x - d13) + d3, y + 0.0D, d11 + d4, f, f3);
-        t.addVertexWithUV((x - d13) + d3, y + 0.0D, d12 + d4, f1, f3);
-        t.addVertexWithUV(x - d13, y + 1.0D, d12, f1, f2);
-        t.addVertexWithUV(x + d13, y + 1.0D, d12, f, f2);
-        t.addVertexWithUV(x + d3 + d13, y + 0.0D, d12 + d4, f, f3);
-        t.addVertexWithUV(x + d3 + d13, y + 0.0D, d11 + d4, f1, f3);
-        t.addVertexWithUV(x + d13, y + 1.0D, d11, f1, f2);
-        t.addVertexWithUV(d9, y + 1.0D, z + d13, f, f2);
-        t.addVertexWithUV(d9 + d3, y + 0.0D, z + d13 + d4, f, f3);
-        t.addVertexWithUV(d10 + d3, y + 0.0D, z + d13 + d4, f1, f3);
-        t.addVertexWithUV(d10, y + 1.0D, z + d13, f1, f2);
-        t.addVertexWithUV(d10, y + 1.0D, z - d13, f, f2);
-        t.addVertexWithUV(d10 + d3, y + 0.0D, (z - d13) + d4, f, f3);
-        t.addVertexWithUV(d9 + d3, y + 0.0D, (z - d13) + d4, f1, f3);
-        t.addVertexWithUV(d9, y + 1.0D, z - d13, f1, f2);
+        tessellator.addVertexWithUV((d + d3 * (1.0D - d14)) - d13, d1 + d14, (d2 + d4 * (1.0D - d14)) - d13, d5, d6);
+        tessellator.addVertexWithUV((d + d3 * (1.0D - d14)) - d13, d1 + d14, d2 + d4 * (1.0D - d14) + d13, d5, d8);
+        tessellator.addVertexWithUV(d + d3 * (1.0D - d14) + d13, d1 + d14, d2 + d4 * (1.0D - d14) + d13, d7, d8);
+        tessellator.addVertexWithUV(d + d3 * (1.0D - d14) + d13, d1 + d14, (d2 + d4 * (1.0D - d14)) - d13, d7, d6);
+        tessellator.addVertexWithUV(d - d13, d1 + 1.0D, d11, f, f2);
+        tessellator.addVertexWithUV((d - d13) + d3, d1 + 0.0D, d11 + d4, f, f3);
+        tessellator.addVertexWithUV((d - d13) + d3, d1 + 0.0D, d12 + d4, f1, f3);
+        tessellator.addVertexWithUV(d - d13, d1 + 1.0D, d12, f1, f2);
+        tessellator.addVertexWithUV(d + d13, d1 + 1.0D, d12, f, f2);
+        tessellator.addVertexWithUV(d + d3 + d13, d1 + 0.0D, d12 + d4, f, f3);
+        tessellator.addVertexWithUV(d + d3 + d13, d1 + 0.0D, d11 + d4, f1, f3);
+        tessellator.addVertexWithUV(d + d13, d1 + 1.0D, d11, f1, f2);
+        tessellator.addVertexWithUV(d9, d1 + 1.0D, d2 + d13, f, f2);
+        tessellator.addVertexWithUV(d9 + d3, d1 + 0.0D, d2 + d13 + d4, f, f3);
+        tessellator.addVertexWithUV(d10 + d3, d1 + 0.0D, d2 + d13 + d4, f1, f3);
+        tessellator.addVertexWithUV(d10, d1 + 1.0D, d2 + d13, f1, f2);
+        tessellator.addVertexWithUV(d10, d1 + 1.0D, d2 - d13, f, f2);
+        tessellator.addVertexWithUV(d10 + d3, d1 + 0.0D, (d2 - d13) + d4, f, f3);
+        tessellator.addVertexWithUV(d9 + d3, d1 + 0.0D, (d2 - d13) + d4, f1, f3);
+        tessellator.addVertexWithUV(d9, d1 + 1.0D, d2 - d13, f1, f2);
     }
 
-    public void renderCrossedSquares(Block block, int i, double d, double d1, double d2)
+    public void drawCrossedSquares(Block block, int i, double d, double d1, double d2)
     {
         Tessellator tessellator = Tessellator.instance;
         int j = block.getBlockTextureFromSideAndMetadata(0, i);
@@ -3933,7 +3933,7 @@ public class RenderBlocks
         return flag;
     }
 
-    public boolean func_41088_a(BlockDragonEgg blockdragonegg, int i, int j, int k)
+    public boolean renderBlockDragonEgg(BlockDragonEgg blockdragonegg, int i, int j, int k)
     {
         boolean flag = false;
         int l = 0;
@@ -4824,7 +4824,7 @@ public class RenderBlocks
         }
     }
 
-    public void renderBlockOnInventory(Block block, int i, float f)
+    public void renderBlockAsItem(Block block, int i, float f)
     {
         Tessellator tessellator = Tessellator.instance;
         boolean flag = block.blockID == Block.grass.blockID;
@@ -4847,7 +4847,7 @@ public class RenderBlocks
             {
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(0.0F, -1F, 0.0F);
-                renderCrossedSquares(block, i, -0.5D, -0.5D, -0.5D);
+                drawCrossedSquares(block, i, -0.5D, -0.5D, -0.5D);
                 tessellator.draw();
             } else
             if(k == 19)

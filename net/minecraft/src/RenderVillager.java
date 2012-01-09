@@ -26,7 +26,7 @@ public class RenderVillager extends RenderLiving
         return -1;
     }
 
-    public void func_40294_a(EntityVillager entityvillager, double d, double d1, double d2, 
+    public void renderVillager(EntityVillager entityvillager, double d, double d1, double d2, 
             float f, float f1)
     {
         super.doRenderLiving(entityvillager, d, d1, d2, f, f1);
@@ -70,12 +70,12 @@ public class RenderVillager extends RenderLiving
     public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, 
             float f, float f1)
     {
-        func_40294_a((EntityVillager)entityliving, d, d1, d2, f, f1);
+        renderVillager((EntityVillager)entityliving, d, d1, d2, f, f1);
     }
 
     public void doRender(Entity entity, double d, double d1, double d2, 
             float f, float f1)
     {
-        func_40294_a((EntityVillager)entity, d, d1, d2, f, f1);
+        renderVillager((EntityVillager)entity, d, d1, d2, f, f1);
     }
 }

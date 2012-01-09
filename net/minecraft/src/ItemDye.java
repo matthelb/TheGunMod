@@ -33,19 +33,19 @@ public class ItemDye extends Item
 
     public int getIconFromDamage(int i)
     {
-        int j = MathHelper.func_41084_a(i, 0, 15);
+        int j = MathHelper.clamp_int(i, 0, 15);
         return iconIndex + (j % 8) * 16 + j / 8;
     }
 
     public String getItemNameIS(ItemStack itemstack)
     {
-        int i = MathHelper.func_41084_a(itemstack.getItemDamage(), 0, 15);
+        int i = MathHelper.clamp_int(itemstack.getItemDamage(), 0, 15);
         return (new StringBuilder()).append(super.getItemName()).append(".").append(dyeColorNames[i]).toString();
     }
 
     public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
     {
-        if(!entityplayer.func_35190_e(i, j, k))
+        if(!entityplayer.canPlayerEdit(i, j, k))
         {
             return false;
         }
@@ -63,7 +63,7 @@ public class ItemDye extends Item
             }
             if(i1 == Block.mushroomBrown.blockID || i1 == Block.mushroomRed.blockID)
             {
-                if(!world.multiplayerWorld && ((BlockMushroom)Block.blocksList[i1]).func_35293_c(world, i, j, k, world.rand))
+                if(!world.multiplayerWorld && ((BlockMushroom)Block.blocksList[i1]).fertilizeMushroom(world, i, j, k, world.rand))
                 {
                     itemstack.stackSize--;
                 }
@@ -73,7 +73,7 @@ public class ItemDye extends Item
             {
                 if(!world.multiplayerWorld)
                 {
-                    ((BlockStem)Block.blocksList[i1]).func_35294_i(world, i, j, k);
+                    ((BlockStem)Block.blocksList[i1]).fertilizeStem(world, i, j, k);
                     itemstack.stackSize--;
                 }
                 return true;

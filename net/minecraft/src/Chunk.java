@@ -50,7 +50,7 @@ public class Chunk
         hasEntities = false;
         lastSaveTime = 0L;
         field_35846_u = false;
-        entities = new List[world.field_35472_c / 16];
+        entities = new List[world.worldHeight / 16];
         worldObj = world;
         xPosition = i;
         zPosition = j;
@@ -67,9 +67,9 @@ public class Chunk
     {
         this(world, i, j);
         blocks = abyte0;
-        data = new NibbleArray(abyte0.length, world.field_35473_a);
-        skylightMap = new NibbleArray(abyte0.length, world.field_35473_a);
-        blocklightMap = new NibbleArray(abyte0.length, world.field_35473_a);
+        data = new NibbleArray(abyte0.length, world.heightShift);
+        skylightMap = new NibbleArray(abyte0.length, world.heightShift);
+        blocklightMap = new NibbleArray(abyte0.length, world.heightShift);
     }
 
     public boolean isAtLocation(int i, int j)
@@ -88,14 +88,14 @@ public class Chunk
 
     public void generateHeightMap()
     {
-        int i = worldObj.field_35472_c - 1;
+        int i = worldObj.worldHeight - 1;
         for(int j = 0; j < 16; j++)
         {
             for(int k = 0; k < 16; k++)
             {
                 precipitationHeightMap[j + (k << 4)] = -999;
-                int l = worldObj.field_35472_c - 1;
-                for(int i1 = j << worldObj.field_35471_b | k << worldObj.field_35473_a; l > 0 && Block.lightOpacity[blocks[(i1 + l) - 1] & 0xff] == 0; l--) { }
+                int l = worldObj.worldHeight - 1;
+                for(int i1 = j << worldObj.xShift | k << worldObj.heightShift; l > 0 && Block.lightOpacity[blocks[(i1 + l) - 1] & 0xff] == 0; l--) { }
                 heightMap[k << 4 | j] = (byte)l;
                 if(l < i)
                 {
@@ -111,14 +111,14 @@ public class Chunk
 
     public void generateSkylightMap()
     {
-        int i = worldObj.field_35472_c - 1;
+        int i = worldObj.worldHeight - 1;
         for(int j = 0; j < 16; j++)
         {
             for(int l = 0; l < 16; l++)
             {
-                int j1 = worldObj.field_35472_c - 1;
+                int j1 = worldObj.worldHeight - 1;
                 int k1;
-                for(k1 = j << worldObj.field_35471_b | l << worldObj.field_35473_a; j1 > 0 && Block.lightOpacity[blocks[(k1 + j1) - 1] & 0xff] == 0; j1--) { }
+                for(k1 = j << worldObj.xShift | l << worldObj.heightShift; j1 > 0 && Block.lightOpacity[blocks[(k1 + j1) - 1] & 0xff] == 0; j1--) { }
                 heightMap[l << 4 | j] = (byte)j1;
                 if(j1 < i)
                 {
@@ -129,7 +129,7 @@ public class Chunk
                     continue;
                 }
                 int l1 = 15;
-                int i2 = worldObj.field_35472_c - 1;
+                int i2 = worldObj.worldHeight - 1;
                 do
                 {
                     l1 -= Block.lightOpacity[blocks[k1 + i2] & 0xff];
@@ -165,9 +165,9 @@ public class Chunk
         field_40741_v = true;
     }
 
-    private void func_35839_k()
+    private void updateSkylight_do()
     {
-        if(worldObj.doChunksNearChunkExist(xPosition * 16 + 8, worldObj.field_35472_c / 2, zPosition * 16 + 8, 16))
+        if(worldObj.doChunksNearChunkExist(xPosition * 16 + 8, worldObj.worldHeight / 2, zPosition * 16 + 8, 16))
         {
             for(int i = 0; i < 16; i++)
             {
@@ -225,7 +225,7 @@ public class Chunk
 
     private void updateSkylightNeighborHeight(int i, int j, int k, int l)
     {
-        if(l > k && worldObj.doChunksNearChunkExist(i, worldObj.field_35472_c / 2, j, 16))
+        if(l > k && worldObj.doChunksNearChunkExist(i, worldObj.worldHeight / 2, j, 16))
         {
             for(int i1 = k; i1 < l; i1++)
             {
@@ -244,7 +244,7 @@ public class Chunk
         {
             i1 = j;
         }
-        for(int j1 = i << worldObj.field_35471_b | k << worldObj.field_35473_a; i1 > 0 && Block.lightOpacity[blocks[(j1 + i1) - 1] & 0xff] == 0; i1--) { }
+        for(int j1 = i << worldObj.xShift | k << worldObj.heightShift; i1 > 0 && Block.lightOpacity[blocks[(j1 + i1) - 1] & 0xff] == 0; i1--) { }
         if(i1 == l)
         {
             return;
@@ -256,7 +256,7 @@ public class Chunk
             lowestBlockHeight = i1;
         } else
         {
-            int k1 = worldObj.field_35472_c - 1;
+            int k1 = worldObj.worldHeight - 1;
             for(int i2 = 0; i2 < 16; i2++)
             {
                 for(int k2 = 0; k2 < 16; k2++)
@@ -329,7 +329,7 @@ public class Chunk
 
     public int getBlockID(int i, int j, int k)
     {
-        return blocks[i << worldObj.field_35471_b | k << worldObj.field_35473_a | j] & 0xff;
+        return blocks[i << worldObj.xShift | k << worldObj.heightShift | j] & 0xff;
     }
 
     public boolean setBlockIDWithMetadata(int i, int j, int k, int l, int i1)
@@ -341,14 +341,14 @@ public class Chunk
             precipitationHeightMap[j1] = -999;
         }
         int k1 = heightMap[k << 4 | i] & 0xff;
-        int l1 = blocks[i << worldObj.field_35471_b | k << worldObj.field_35473_a | j] & 0xff;
+        int l1 = blocks[i << worldObj.xShift | k << worldObj.heightShift | j] & 0xff;
         if(l1 == l && data.getNibble(i, j, k) == i1)
         {
             return false;
         }
         int i2 = xPosition * 16 + i;
         int j2 = zPosition * 16 + k;
-        blocks[i << worldObj.field_35471_b | k << worldObj.field_35473_a | j] = (byte)(byte0 & 0xff);
+        blocks[i << worldObj.xShift | k << worldObj.heightShift | j] = (byte)(byte0 & 0xff);
         if(l1 != 0)
         {
             if(!worldObj.multiplayerWorld)
@@ -395,7 +395,7 @@ public class Chunk
                 }
                 if(tileentity != null)
                 {
-                    tileentity.func_35144_b();
+                    tileentity.updateContainingBlockInfo();
                 }
             }
         } else
@@ -404,7 +404,7 @@ public class Chunk
             TileEntity tileentity1 = getChunkBlockTileEntity(i, j, k);
             if(tileentity1 != null)
             {
-                tileentity1.func_35144_b();
+                tileentity1.updateContainingBlockInfo();
             }
         }
         isModified = true;
@@ -420,14 +420,14 @@ public class Chunk
             precipitationHeightMap[i1] = -999;
         }
         int j1 = heightMap[i1] & 0xff;
-        int k1 = blocks[i << worldObj.field_35471_b | k << worldObj.field_35473_a | j] & 0xff;
+        int k1 = blocks[i << worldObj.xShift | k << worldObj.heightShift | j] & 0xff;
         if(k1 == l)
         {
             return false;
         }
         int l1 = xPosition * 16 + i;
         int i2 = zPosition * 16 + k;
-        blocks[i << worldObj.field_35471_b | k << worldObj.field_35473_a | j] = (byte)(byte0 & 0xff);
+        blocks[i << worldObj.xShift | k << worldObj.heightShift | j] = (byte)(byte0 & 0xff);
         if(k1 != 0)
         {
             Block.blocksList[k1].onBlockRemoval(worldObj, l1, j, i2);
@@ -463,7 +463,7 @@ public class Chunk
                 }
                 if(tileentity != null)
                 {
-                    tileentity.func_35144_b();
+                    tileentity.updateContainingBlockInfo();
                 }
             }
         } else
@@ -472,7 +472,7 @@ public class Chunk
             TileEntity tileentity1 = getChunkBlockTileEntity(i, j, k);
             if(tileentity1 != null)
             {
-                tileentity1.func_35144_b();
+                tileentity1.updateContainingBlockInfo();
             }
         }
         isModified = true;
@@ -499,7 +499,7 @@ public class Chunk
             TileEntity tileentity = getChunkBlockTileEntity(i, j, k);
             if(tileentity != null)
             {
-                tileentity.func_35144_b();
+                tileentity.updateContainingBlockInfo();
                 tileentity.blockMetadata = l;
             }
         }
@@ -691,7 +691,7 @@ public class Chunk
     {
         isChunkLoaded = false;
         TileEntity tileentity;
-        for(Iterator iterator = chunkTileEntityMap.values().iterator(); iterator.hasNext(); worldObj.func_35455_a(tileentity))
+        for(Iterator iterator = chunkTileEntityMap.values().iterator(); iterator.hasNext(); worldObj.markEntityForDespawn(tileentity))
         {
             tileentity = (TileEntity)iterator.next();
         }
@@ -731,7 +731,7 @@ public class Chunk
                     continue;
                 }
                 list.add(entity1);
-                Entity aentity[] = entity1.func_40048_X();
+                Entity aentity[] = entity1.getParts();
                 if(aentity == null)
                 {
                     continue;
@@ -814,7 +814,7 @@ public class Chunk
         {
             for(int l2 = k; l2 < j1; l2++)
             {
-                int l3 = l1 << worldObj.field_35471_b | l2 << worldObj.field_35473_a | j;
+                int l3 = l1 << worldObj.xShift | l2 << worldObj.heightShift | j;
                 int l4 = i1 - j;
                 System.arraycopy(abyte0, k1, blocks, l3, l4);
                 k1 += l4;
@@ -827,7 +827,7 @@ public class Chunk
         {
             for(int i3 = k; i3 < j1; i3++)
             {
-                int i4 = (i2 << worldObj.field_35471_b | i3 << worldObj.field_35473_a | j) >> 1;
+                int i4 = (i2 << worldObj.xShift | i3 << worldObj.heightShift | j) >> 1;
                 int i5 = (i1 - j) / 2;
                 System.arraycopy(abyte0, k1, data.data, i4, i5);
                 k1 += i5;
@@ -839,7 +839,7 @@ public class Chunk
         {
             for(int j3 = k; j3 < j1; j3++)
             {
-                int j4 = (j2 << worldObj.field_35471_b | j3 << worldObj.field_35473_a | j) >> 1;
+                int j4 = (j2 << worldObj.xShift | j3 << worldObj.heightShift | j) >> 1;
                 int j5 = (i1 - j) / 2;
                 System.arraycopy(abyte0, k1, blocklightMap.data, j4, j5);
                 k1 += j5;
@@ -851,7 +851,7 @@ public class Chunk
         {
             for(int k3 = k; k3 < j1; k3++)
             {
-                int k4 = (k2 << worldObj.field_35471_b | k3 << worldObj.field_35473_a | j) >> 1;
+                int k4 = (k2 << worldObj.xShift | k3 << worldObj.heightShift | j) >> 1;
                 int k5 = (i1 - j) / 2;
                 System.arraycopy(abyte0, k1, skylightMap.data, k4, k5);
                 k1 += k5;
@@ -860,7 +860,7 @@ public class Chunk
         }
 
         TileEntity tileentity;
-        for(Iterator iterator = chunkTileEntityMap.values().iterator(); iterator.hasNext(); tileentity.func_35144_b())
+        for(Iterator iterator = chunkTileEntityMap.values().iterator(); iterator.hasNext(); tileentity.updateContainingBlockInfo())
         {
             tileentity = (TileEntity)iterator.next();
         }
@@ -873,14 +873,14 @@ public class Chunk
         return new Random(worldObj.getWorldSeed() + (long)(xPosition * xPosition * 0x4c1906) + (long)(xPosition * 0x5ac0db) + (long)(zPosition * zPosition) * 0x4307a7L + (long)(zPosition * 0x5f24f) ^ l);
     }
 
-    public boolean getFalse()
+    public boolean isEmpty()
     {
         return false;
     }
 
-    public void func_25124_i()
+    public void removeUnknownBlocks()
     {
-        ChunkBlockMap.func_26002_a(blocks);
+        ChunkBlockMap.removeUnknownBlockIDs(blocks);
     }
 
     public void populateChunk(IChunkProvider ichunkprovider, IChunkProvider ichunkprovider1, int i, int j)
@@ -903,13 +903,13 @@ public class Chunk
         }
     }
 
-    public int func_35840_c(int i, int j)
+    public int getPrecipitationHeight(int i, int j)
     {
         int k = i | j << 4;
         int l = precipitationHeightMap[k];
         if(l == -999)
         {
-            int i1 = worldObj.field_35472_c - 1;
+            int i1 = worldObj.worldHeight - 1;
             for(l = -1; i1 > 0 && l == -1;)
             {
                 int j1 = getBlockID(i, i1, j);
@@ -928,15 +928,15 @@ public class Chunk
         return l;
     }
 
-    public void func_35841_j()
+    public void updateSkylight()
     {
         if(field_40741_v && !worldObj.worldProvider.hasNoSky)
         {
-            func_35839_k();
+            updateSkylight_do();
         }
     }
 
-    public ChunkCoordIntPair func_40740_k()
+    public ChunkCoordIntPair getChunkCoordIntPair()
     {
         return new ChunkCoordIntPair(xPosition, zPosition);
     }

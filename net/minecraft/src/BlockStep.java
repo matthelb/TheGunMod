@@ -13,7 +13,7 @@ import java.util.Random;
 public class BlockStep extends Block
 {
 
-    public static final String field_22037_a[] = {
+    public static final String blockStepTypes[] = {
         "stone", "sand", "wood", "cobble", "brick", "smoothStoneBrick"
     };
     private boolean blockType;
@@ -124,7 +124,7 @@ public class BlockStep extends Block
         }
     }
 
-    protected ItemStack func_41049_c_(int i)
+    protected ItemStack createStackedBlock(int i)
     {
         return new ItemStack(Block.stairSingle.blockID, 1, i);
     }

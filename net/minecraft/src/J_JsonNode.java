@@ -44,7 +44,7 @@ public abstract class J_JsonNode
         }
         catch(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException j_jsonnodedoesnotmatchchainedjsonnodeselectorexception)
         {
-            throw J_JsonNodeDoesNotMatchPathElementsException.func_27319_a(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, aobj, J_JsonNodeFactories.func_27315_a(new J_JsonNode[] {
+            throw J_JsonNodeDoesNotMatchPathElementsException.jsonNodeDoesNotMatchPathElementsException(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, aobj, J_JsonNodeFactories.aJsonArray(new J_JsonNode[] {
                 j_jsonnode
             }));
         }

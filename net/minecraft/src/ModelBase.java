@@ -16,7 +16,7 @@ public abstract class ModelBase
     public boolean isRiding;
     public List boxList;
     public boolean field_40301_k;
-    private Map field_39000_a;
+    private Map modelTextureMap;
     public int textureWidth;
     public int textureHeight;
 
@@ -25,7 +25,7 @@ public abstract class ModelBase
         isRiding = false;
         boxList = new ArrayList();
         field_40301_k = true;
-        field_39000_a = new HashMap();
+        modelTextureMap = new HashMap();
         textureWidth = 64;
         textureHeight = 32;
     }
@@ -44,11 +44,11 @@ public abstract class ModelBase
 
     protected void setTextureOffset(String s, int i, int j)
     {
-        field_39000_a.put(s, new TextureOffset(i, j));
+        modelTextureMap.put(s, new TextureOffset(i, j));
     }
 
     public TextureOffset func_40297_a(String s)
     {
-        return (TextureOffset)field_39000_a.get(s);
+        return (TextureOffset)modelTextureMap.get(s);
     }
 }

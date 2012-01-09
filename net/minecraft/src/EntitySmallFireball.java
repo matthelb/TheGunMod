@@ -37,9 +37,9 @@ public class EntitySmallFireball extends EntityFireball
         {
             if(movingobjectposition.entityHit != null)
             {
-                if(!movingobjectposition.entityHit.func_40047_D() && movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, shootingEntity), 5))
+                if(!movingobjectposition.entityHit.isImmuneToFire() && movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, shootingEntity), 5))
                 {
-                    movingobjectposition.entityHit.func_40046_d(5);
+                    movingobjectposition.entityHit.setFire(5);
                 }
             } else
             {

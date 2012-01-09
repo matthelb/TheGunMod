@@ -140,9 +140,9 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
                 placeBlockAtCurrentPosition(world, Block.planks.blockID, 0, 8, 3, i1, structureboundingbox);
             }
 
-            placeBlockAtCurrentPosition(world, Block.ladder.blockID, func_35009_c(Block.ladder.blockID, 4), 9, 1, 3, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.ladder.blockID, func_35009_c(Block.ladder.blockID, 4), 9, 2, 3, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.ladder.blockID, func_35009_c(Block.ladder.blockID, 4), 9, 3, 3, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.ladder.blockID, getMetadataWithOffset(Block.ladder.blockID, 4), 9, 1, 3, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.ladder.blockID, getMetadataWithOffset(Block.ladder.blockID, 4), 9, 2, 3, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.ladder.blockID, getMetadataWithOffset(Block.ladder.blockID, 4), 9, 3, 3, structureboundingbox);
             createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 3, 4, 8, field_35061_c, 1 + random.nextInt(4));
             break;
         }

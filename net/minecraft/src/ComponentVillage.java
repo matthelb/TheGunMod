@@ -14,7 +14,7 @@ import java.util.Random;
 abstract class ComponentVillage extends StructureComponent
 {
 
-    private int field_39009_a;
+    private int villagersSpawned;
 
     protected ComponentVillage(int i)
     {
@@ -26,16 +26,16 @@ abstract class ComponentVillage extends StructureComponent
         switch(coordBaseMode)
         {
         case 2: // '\002'
-            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, func_35012_c());
+            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, getComponentType());
 
         case 0: // '\0'
-            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, func_35012_c());
+            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, getComponentType());
 
         case 1: // '\001'
-            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, func_35012_c());
+            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, getComponentType());
 
         case 3: // '\003'
-            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, func_35012_c());
+            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, getComponentType());
         }
         return null;
     }
@@ -45,16 +45,16 @@ abstract class ComponentVillage extends StructureComponent
         switch(coordBaseMode)
         {
         case 2: // '\002'
-            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, func_35012_c());
+            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, getComponentType());
 
         case 0: // '\0'
-            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, func_35012_c());
+            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, getComponentType());
 
         case 1: // '\001'
-            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, func_35012_c());
+            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, getComponentType());
 
         case 3: // '\003'
-            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, func_35012_c());
+            return StructureVillagePieces.getNextStructureComponent(componentvillagestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, getComponentType());
         }
         return null;
     }
@@ -69,7 +69,7 @@ abstract class ComponentVillage extends StructureComponent
             {
                 if(structureboundingbox.isVecInside(l, 64, k))
                 {
-                    i += Math.max(world.getTopSolidOrLiquidBlock(l, k), world.field_35470_e);
+                    i += Math.max(world.getTopSolidOrLiquidBlock(l, k), world.seaLevel);
                     j++;
                 }
             }
@@ -90,13 +90,13 @@ abstract class ComponentVillage extends StructureComponent
         return structureboundingbox != null && structureboundingbox.minY > 10;
     }
 
-    protected void func_40044_a(World world, StructureBoundingBox structureboundingbox, int i, int j, int k, int l)
+    protected void spawnVillagers(World world, StructureBoundingBox structureboundingbox, int i, int j, int k, int l)
     {
-        if(field_39009_a >= l)
+        if(villagersSpawned >= l)
         {
             return;
         }
-        int i1 = field_39009_a;
+        int i1 = villagersSpawned;
         do
         {
             if(i1 >= l)
@@ -110,15 +110,15 @@ abstract class ComponentVillage extends StructureComponent
             {
                 break;
             }
-            field_39009_a++;
-            EntityVillager entityvillager = new EntityVillager(world, func_40043_a(i1));
+            villagersSpawned++;
+            EntityVillager entityvillager = new EntityVillager(world, getVillagerType(i1));
             entityvillager.setLocationAndAngles((double)j1 + 0.5D, k1, (double)l1 + 0.5D, 0.0F, 0.0F);
-            world.entityJoinedWorld(entityvillager);
+            world.spawnEntityInWorld(entityvillager);
             i1++;
         } while(true);
     }
 
-    protected int func_40043_a(int i)
+    protected int getVillagerType(int i)
     {
         return 0;
     }

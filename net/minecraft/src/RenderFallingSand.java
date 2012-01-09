@@ -13,11 +13,11 @@ import org.lwjgl.opengl.GL11;
 public class RenderFallingSand extends Render
 {
 
-    private RenderBlocks field_197_d;
+    private RenderBlocks renderBlocks;
 
     public RenderFallingSand()
     {
-        field_197_d = new RenderBlocks();
+        renderBlocks = new RenderBlocks();
         shadowSize = 0.5F;
     }
 
@@ -30,18 +30,18 @@ public class RenderFallingSand extends Render
         Block block = Block.blocksList[entityfallingsand.blockID];
         World world = entityfallingsand.getWorld();
         GL11.glDisable(2896 /*GL_LIGHTING*/);
-        if(block == Block.field_41050_bK)
+        if(block == Block.dragonEgg)
         {
-            field_197_d.blockAccess = world;
+            renderBlocks.blockAccess = world;
             Tessellator tessellator = Tessellator.instance;
             tessellator.startDrawingQuads();
             tessellator.setTranslationD((float)(-MathHelper.floor_double(entityfallingsand.posX)) - 0.5F, (float)(-MathHelper.floor_double(entityfallingsand.posY)) - 0.5F, (float)(-MathHelper.floor_double(entityfallingsand.posZ)) - 0.5F);
-            field_197_d.renderBlockByRenderType(block, MathHelper.floor_double(entityfallingsand.posX), MathHelper.floor_double(entityfallingsand.posY), MathHelper.floor_double(entityfallingsand.posZ));
+            renderBlocks.renderBlockByRenderType(block, MathHelper.floor_double(entityfallingsand.posX), MathHelper.floor_double(entityfallingsand.posY), MathHelper.floor_double(entityfallingsand.posZ));
             tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
             tessellator.draw();
         } else
         {
-            field_197_d.renderBlockFallingSand(block, world, MathHelper.floor_double(entityfallingsand.posX), MathHelper.floor_double(entityfallingsand.posY), MathHelper.floor_double(entityfallingsand.posZ));
+            renderBlocks.renderBlockFallingSand(block, world, MathHelper.floor_double(entityfallingsand.posX), MathHelper.floor_double(entityfallingsand.posY), MathHelper.floor_double(entityfallingsand.posZ));
         }
         GL11.glEnable(2896 /*GL_LIGHTING*/);
         GL11.glPopMatrix();

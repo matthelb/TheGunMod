@@ -24,11 +24,11 @@ public class World
     implements IBlockAccess
 {
 
-    public int field_35473_a;
-    public int field_35471_b;
-    public int field_35472_c;
-    public int field_35469_d;
-    public int field_35470_e;
+    public int heightShift;
+    public int xShift;
+    public int worldHeight;
+    public int worldMaxY;
+    public int seaLevel;
     public boolean scheduledUpdatesAreImmediate;
     public List loadedEntityList;
     private List unloadedEntityList;
@@ -70,7 +70,7 @@ public class World
     private Set positionsToUpdate;
     private int soundCounter;
     int lightUpdateBlockList[];
-    private List field_1012_M;
+    private List entitiesWithinAABBExcludingEntity;
     public boolean multiplayerWorld;
 
     public WorldChunkManager getWorldChunkManager()
@@ -80,11 +80,11 @@ public class World
 
     public World(ISaveHandler isavehandler, String s, WorldProvider worldprovider, WorldSettings worldsettings)
     {
-        field_35473_a = 7;
-        field_35471_b = field_35473_a + 4;
-        field_35472_c = 1 << field_35473_a;
-        field_35469_d = field_35472_c - 1;
-        field_35470_e = field_35472_c / 2 - 1;
+        heightShift = 7;
+        xShift = heightShift + 4;
+        worldHeight = 1 << heightShift;
+        worldMaxY = worldHeight - 1;
+        seaLevel = worldHeight / 2 - 1;
         scheduledUpdatesAreImmediate = false;
         loadedEntityList = new ArrayList();
         unloadedEntityList = new ArrayList();
@@ -112,7 +112,7 @@ public class World
         positionsToUpdate = new HashSet();
         soundCounter = rand.nextInt(12000);
         lightUpdateBlockList = new int[32768];
-        field_1012_M = new ArrayList();
+        entitiesWithinAABBExcludingEntity = new ArrayList();
         multiplayerWorld = false;
         saveHandler = isavehandler;
         worldInfo = new WorldInfo(worldsettings, s);
@@ -126,11 +126,11 @@ public class World
 
     public World(World world, WorldProvider worldprovider)
     {
-        field_35473_a = 7;
-        field_35471_b = field_35473_a + 4;
-        field_35472_c = 1 << field_35473_a;
-        field_35469_d = field_35472_c - 1;
-        field_35470_e = field_35472_c / 2 - 1;
+        heightShift = 7;
+        xShift = heightShift + 4;
+        worldHeight = 1 << heightShift;
+        worldMaxY = worldHeight - 1;
+        seaLevel = worldHeight / 2 - 1;
         scheduledUpdatesAreImmediate = false;
         loadedEntityList = new ArrayList();
         unloadedEntityList = new ArrayList();
@@ -158,7 +158,7 @@ public class World
         positionsToUpdate = new HashSet();
         soundCounter = rand.nextInt(12000);
         lightUpdateBlockList = new int[32768];
-        field_1012_M = new ArrayList();
+        entitiesWithinAABBExcludingEntity = new ArrayList();
         multiplayerWorld = false;
         lockTimestamp = world.lockTimestamp;
         saveHandler = world.saveHandler;
@@ -178,11 +178,11 @@ public class World
 
     public World(ISaveHandler isavehandler, String s, WorldSettings worldsettings, WorldProvider worldprovider)
     {
-        field_35473_a = 7;
-        field_35471_b = field_35473_a + 4;
-        field_35472_c = 1 << field_35473_a;
-        field_35469_d = field_35472_c - 1;
-        field_35470_e = field_35472_c / 2 - 1;
+        heightShift = 7;
+        xShift = heightShift + 4;
+        worldHeight = 1 << heightShift;
+        worldMaxY = worldHeight - 1;
+        seaLevel = worldHeight / 2 - 1;
         scheduledUpdatesAreImmediate = false;
         loadedEntityList = new ArrayList();
         unloadedEntityList = new ArrayList();
@@ -210,7 +210,7 @@ public class World
         positionsToUpdate = new HashSet();
         soundCounter = rand.nextInt(12000);
         lightUpdateBlockList = new int[32768];
-        field_1012_M = new ArrayList();
+        entitiesWithinAABBExcludingEntity = new ArrayList();
         multiplayerWorld = false;
         saveHandler = isavehandler;
         mapStorage = new MapStorage(isavehandler);
@@ -260,7 +260,7 @@ public class World
         Random random = new Random(getWorldSeed());
         ChunkPosition chunkposition = worldchunkmanager.func_35556_a(0, 0, 256, list, random);
         int i = 0;
-        int j = field_35472_c / 2;
+        int j = worldHeight / 2;
         int k = 0;
         if(chunkposition != null)
         {
@@ -284,16 +284,16 @@ public class World
         findingSpawnPoint = false;
     }
 
-    public ChunkCoordinates func_40472_j()
+    public ChunkCoordinates getEntrancePortalLocation()
     {
-        return worldProvider.func_40469_f();
+        return worldProvider.getEntrancePortalLocation();
     }
 
     public void setSpawnLocation()
     {
         if(worldInfo.getSpawnY() <= 0)
         {
-            worldInfo.setSpawnY(field_35472_c / 2);
+            worldInfo.setSpawnY(worldHeight / 2);
         }
         int i = worldInfo.getSpawnX();
         int j = worldInfo.getSpawnZ();
@@ -314,7 +314,7 @@ public class World
     public int getFirstUncoveredBlock(int i, int j)
     {
         int k;
-        for(k = field_35470_e; !isAirBlock(i, k + 1, j); k++) { }
+        for(k = seaLevel; !isAirBlock(i, k + 1, j); k++) { }
         return getBlockId(i, k, j);
     }
 
@@ -339,7 +339,7 @@ public class World
                 int j = MathHelper.floor_float((int)entityplayer.posZ) >> 4;
                 chunkproviderloadorgenerate.setCurrentChunkOver(i, j);
             }
-            entityJoinedWorld(entityplayer);
+            spawnEntityInWorld(entityplayer);
         }
         catch(Exception exception)
         {
@@ -372,7 +372,7 @@ public class World
         mapStorage.saveAllData();
     }
 
-    public boolean func_650_a(int i)
+    public boolean quickSaveWorld(int i)
     {
         if(!chunkProvider.canSave())
         {
@@ -395,7 +395,7 @@ public class World
         {
             return 0;
         }
-        if(j >= field_35472_c)
+        if(j >= worldHeight)
         {
             return 0;
         } else
@@ -411,7 +411,7 @@ public class World
 
     public boolean blockExists(int i, int j, int k)
     {
-        if(j < 0 || j >= field_35472_c)
+        if(j < 0 || j >= worldHeight)
         {
             return false;
         } else
@@ -427,7 +427,7 @@ public class World
 
     public boolean checkChunksExist(int i, int j, int k, int l, int i1, int j1)
     {
-        if(i1 < 0 || j >= field_35472_c)
+        if(i1 < 0 || j >= worldHeight)
         {
             return false;
         }
@@ -477,7 +477,7 @@ public class World
         {
             return false;
         }
-        if(j >= field_35472_c)
+        if(j >= worldHeight)
         {
             return false;
         } else
@@ -499,7 +499,7 @@ public class World
         {
             return false;
         }
-        if(j >= field_35472_c)
+        if(j >= worldHeight)
         {
             return false;
         } else
@@ -533,7 +533,7 @@ public class World
         {
             return 0;
         }
-        if(j >= field_35472_c)
+        if(j >= worldHeight)
         {
             return 0;
         } else
@@ -570,7 +570,7 @@ public class World
         {
             return false;
         }
-        if(j >= field_35472_c)
+        if(j >= worldHeight)
         {
             return false;
         } else
@@ -692,9 +692,9 @@ public class World
         {
             return 0;
         }
-        if(j >= field_35472_c)
+        if(j >= worldHeight)
         {
-            j = field_35472_c - 1;
+            j = worldHeight - 1;
         }
         return getChunkFromChunkCoords(i >> 4, k >> 4).getBlockLightValue(i & 0xf, j, k & 0xf, 0);
     }
@@ -743,9 +743,9 @@ public class World
         {
             return 0;
         }
-        if(j >= field_35472_c)
+        if(j >= worldHeight)
         {
-            j = field_35472_c - 1;
+            j = worldHeight - 1;
         }
         Chunk chunk = getChunkFromChunkCoords(i >> 4, k >> 4);
         i &= 0xf;
@@ -779,11 +779,11 @@ public class World
         {
             j = 0;
         }
-        if(j >= field_35472_c && enumskyblock == EnumSkyBlock.Sky)
+        if(j >= worldHeight && enumskyblock == EnumSkyBlock.Sky)
         {
             return 15;
         }
-        if(j < 0 || j >= field_35472_c || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k >= 0x1c9c380)
+        if(j < 0 || j >= worldHeight || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k >= 0x1c9c380)
         {
             return enumskyblock.defaultLightValue;
         }
@@ -830,11 +830,11 @@ public class World
         {
             j = 0;
         }
-        if(j >= field_35472_c)
+        if(j >= worldHeight)
         {
-            j = field_35472_c - 1;
+            j = worldHeight - 1;
         }
-        if(j < 0 || j >= field_35472_c || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k >= 0x1c9c380)
+        if(j < 0 || j >= worldHeight || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k >= 0x1c9c380)
         {
             return enumskyblock.defaultLightValue;
         }
@@ -860,7 +860,7 @@ public class World
         {
             return;
         }
-        if(j >= field_35472_c)
+        if(j >= worldHeight)
         {
             return;
         }
@@ -1130,7 +1130,7 @@ public class World
         return true;
     }
 
-    public boolean entityJoinedWorld(Entity entity)
+    public boolean spawnEntityInWorld(Entity entity)
     {
         int i = MathHelper.floor_double(entity.posX / 16D);
         int j = MathHelper.floor_double(entity.posZ / 16D);
@@ -1216,7 +1216,7 @@ public class World
         {
             for(int l1 = i1; l1 < j1; l1++)
             {
-                if(!blockExists(k1, field_35472_c / 2, l1))
+                if(!blockExists(k1, worldHeight / 2, l1))
                 {
                     continue;
                 }
@@ -1303,7 +1303,7 @@ public class World
         }
         int i = MathHelper.floor_double(entity.posX);
         int j = MathHelper.floor_double(entity.posZ);
-        float f3 = getWorldChunkManager().func_35554_b(i, 64, j);
+        float f3 = getWorldChunkManager().getTemperature(i, 64, j);
         int k = getWorldChunkManager().getBiomeGenAt(i, j).getSkyColorByTemp(f3);
         float f4 = (float)(k >> 16 & 0xff) / 255F;
         float f5 = (float)(k >> 8 & 0xff) / 255F;
@@ -1405,15 +1405,15 @@ public class World
         return worldProvider.getFogColor(f1, f);
     }
 
-    public int func_35461_e(int i, int j)
+    public int getPrecipitationHeight(int i, int j)
     {
-        return getChunkFromBlockCoords(i, j).func_35840_c(i & 0xf, j & 0xf);
+        return getChunkFromBlockCoords(i, j).getPrecipitationHeight(i & 0xf, j & 0xf);
     }
 
     public int getTopSolidOrLiquidBlock(int i, int j)
     {
         Chunk chunk = getChunkFromBlockCoords(i, j);
-        int k = field_35472_c - 1;
+        int k = worldHeight - 1;
         i &= 0xf;
         j &= 0xf;
         while(k > 0) 
@@ -1642,7 +1642,7 @@ public class World
         int i = MathHelper.floor_double(entity.posX);
         int j = MathHelper.floor_double(entity.posZ);
         byte byte0 = 32;
-        if(flag && !checkChunksExist(i - byte0, 0, j - byte0, i + byte0, field_35472_c, j + byte0))
+        if(flag && !checkChunksExist(i - byte0, 0, j - byte0, i + byte0, worldHeight, j + byte0))
         {
             return;
         }
@@ -2086,7 +2086,7 @@ label1:
         }
     }
 
-    public void func_35455_a(TileEntity tileentity)
+    public void markEntityForDespawn(TileEntity tileentity)
     {
         entityRemoval.add(tileentity);
     }
@@ -2122,7 +2122,7 @@ label1:
             return flag;
         }
         Chunk chunk = chunkProvider.provideChunk(i >> 4, k >> 4);
-        if(chunk == null || chunk.getFalse())
+        if(chunk == null || chunk.isEmpty())
         {
             return flag;
         }
@@ -2141,7 +2141,7 @@ label1:
         saveWorld(true, iprogressupdate);
         try
         {
-            ThreadedFileIOBase.field_40573_a.func_40566_a();
+            ThreadedFileIOBase.threadedIOInstance.waitForFinish();
         }
         catch(InterruptedException interruptedexception)
         {
@@ -2170,7 +2170,7 @@ label1:
         {
             difficultySetting = 3;
         }
-        getWorldChunkManager().func_35561_b();
+        getWorldChunkManager().cleanupCache();
         updateWeather();
         if(isAllPlayersFullyAsleep())
         {
@@ -2347,7 +2347,7 @@ label1:
             Profiler.startSection("getChunk");
             Chunk chunk = getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
             Profiler.endStartSection("tickChunk");
-            chunk.func_35841_j();
+            chunk.updateSkylight();
             Profiler.endStartSection("moodSound");
             if(soundCounter == 0)
             {
@@ -2355,7 +2355,7 @@ label1:
                 int j2 = updateLCG >> 2;
                 int j3 = j2 & 0xf;
                 int j4 = j2 >> 8 & 0xf;
-                int j5 = j2 >> 16 & field_35469_d;
+                int j5 = j2 >> 16 & worldMaxY;
                 int j6 = chunk.getBlockID(j3, j5, j4);
                 j3 += j1;
                 j4 += l1;
@@ -2376,7 +2376,7 @@ label1:
                 int k2 = updateLCG >> 2;
                 int k3 = j1 + (k2 & 0xf);
                 int k4 = l1 + (k2 >> 8 & 0xf);
-                int k5 = func_35461_e(k3, k4);
+                int k5 = getPrecipitationHeight(k3, k4);
                 if(canLightningStrikeAt(k3, k5, k4))
                 {
                     addWeatherEffect(new EntityLightningBolt(this, k3, k5, k4));
@@ -2388,17 +2388,17 @@ label1:
             int l2 = updateLCG >> 2;
             int l3 = l2 & 0xf;
             int l4 = l2 >> 8 & 0xf;
-            int l5 = func_35461_e(l3 + j1, l4 + l1);
+            int l5 = getPrecipitationHeight(l3 + j1, l4 + l1);
             if(func_40481_q(l3 + j1, l5 - 1, l4 + l1))
             {
                 setBlockWithNotify(l3 + j1, l5 - 1, l4 + l1, Block.ice.blockID);
             }
-            if(isRaining() && func_40478_r(l3 + j1, l5, l4 + l1))
+            if(isRaining() && canSnowAt(l3 + j1, l5, l4 + l1))
             {
                 setBlockWithNotify(l3 + j1, l5, l4 + l1, Block.snow.blockID);
             }
             Profiler.endStartSection("checkLight");
-            updateAllLightTypes(j1 + rand.nextInt(16), rand.nextInt(field_35472_c), l1 + rand.nextInt(16));
+            updateAllLightTypes(j1 + rand.nextInt(16), rand.nextInt(worldHeight), l1 + rand.nextInt(16));
             Profiler.endStartSection("tickTiles");
             for(int i3 = 0; i3 < 20; i3++)
             {
@@ -2406,8 +2406,8 @@ label1:
                 int i4 = updateLCG >> 2;
                 int i5 = i4 & 0xf;
                 int i6 = i4 >> 8 & 0xf;
-                int k6 = i4 >> 16 & field_35469_d;
-                int l6 = chunk.blocks[i5 << field_35471_b | i6 << field_35473_a | k6] & 0xff;
+                int k6 = i4 >> 16 & worldMaxY;
+                int l6 = chunk.blocks[i5 << xShift | i6 << heightShift | k6] & 0xff;
                 k++;
                 if(Block.tickOnLoad[l6])
                 {
@@ -2422,22 +2422,22 @@ label1:
 
     public boolean func_40471_p(int i, int j, int k)
     {
-        return func_40476_b(i, j, k, false);
+        return isBlockHydrated(i, j, k, false);
     }
 
     public boolean func_40481_q(int i, int j, int k)
     {
-        return func_40476_b(i, j, k, true);
+        return isBlockHydrated(i, j, k, true);
     }
 
-    public boolean func_40476_b(int i, int j, int k, boolean flag)
+    public boolean isBlockHydrated(int i, int j, int k, boolean flag)
     {
-        float f = getWorldChunkManager().func_35554_b(i, j, k);
+        float f = getWorldChunkManager().getTemperature(i, j, k);
         if(f > 0.15F)
         {
             return false;
         }
-        if(j >= 0 && j < field_35472_c && getSavedLightValue(EnumSkyBlock.Block, i, j, k) < 10)
+        if(j >= 0 && j < worldHeight && getSavedLightValue(EnumSkyBlock.Block, i, j, k) < 10)
         {
             int l = getBlockId(i, j, k);
             if((l == Block.waterStill.blockID || l == Block.waterMoving.blockID) && getBlockMetadata(i, j, k) == 0)
@@ -2472,14 +2472,14 @@ label1:
         return false;
     }
 
-    public boolean func_40478_r(int i, int j, int k)
+    public boolean canSnowAt(int i, int j, int k)
     {
-        float f = getWorldChunkManager().func_35554_b(i, j, k);
+        float f = getWorldChunkManager().getTemperature(i, j, k);
         if(f > 0.15F)
         {
             return false;
         }
-        if(j >= 0 && j < field_35472_c && getSavedLightValue(EnumSkyBlock.Block, i, j, k) < 10)
+        if(j >= 0 && j < worldHeight && getSavedLightValue(EnumSkyBlock.Block, i, j, k) < 10)
         {
             int l = getBlockId(i, j - 1, k);
             int i1 = getBlockId(i, j, k);
@@ -2773,7 +2773,7 @@ label1:
     public List func_41081_a(Chunk chunk, boolean flag)
     {
         ArrayList arraylist = null;
-        ChunkCoordIntPair chunkcoordintpair = chunk.func_40740_k();
+        ChunkCoordIntPair chunkcoordintpair = chunk.getChunkCoordIntPair();
         int i = chunkcoordintpair.chunkXPos << 4;
         int j = i + 16;
         int k = chunkcoordintpair.chunkZPos << 4;
@@ -2827,7 +2827,7 @@ label1:
 
     public List getEntitiesWithinAABBExcludingEntity(Entity entity, AxisAlignedBB axisalignedbb)
     {
-        field_1012_M.clear();
+        entitiesWithinAABBExcludingEntity.clear();
         int i = MathHelper.floor_double((axisalignedbb.minX - 2D) / 16D);
         int j = MathHelper.floor_double((axisalignedbb.maxX + 2D) / 16D);
         int k = MathHelper.floor_double((axisalignedbb.minZ - 2D) / 16D);
@@ -2838,13 +2838,13 @@ label1:
             {
                 if(chunkExists(i1, j1))
                 {
-                    getChunkFromChunkCoords(i1, j1).getEntitiesWithinAABBForEntity(entity, axisalignedbb, field_1012_M);
+                    getChunkFromChunkCoords(i1, j1).getEntitiesWithinAABBForEntity(entity, axisalignedbb, entitiesWithinAABBExcludingEntity);
                 }
             }
 
         }
 
-        return field_1012_M;
+        return entitiesWithinAABBExcludingEntity;
     }
 
     public List getEntitiesWithinAABB(Class class1, AxisAlignedBB axisalignedbb)
@@ -3135,9 +3135,9 @@ label1:
         {
             l2 = 0;
         }
-        if(i3 > field_35472_c)
+        if(i3 > worldHeight)
         {
-            i3 = field_35472_c;
+            i3 = worldHeight;
         }
         for(int j3 = k1; j3 <= i2; j3++)
         {
@@ -3296,7 +3296,7 @@ label1:
         }
     }
 
-    public ISaveHandler func_40479_y()
+    public ISaveHandler getSaveHandler()
     {
         return saveHandler;
     }
@@ -3401,7 +3401,7 @@ label1:
         {
             return false;
         }
-        if(func_35461_e(i, k) > j)
+        if(getPrecipitationHeight(i, k) > j)
         {
             return false;
         }
@@ -3444,9 +3444,9 @@ label1:
 
     }
 
-    public int func_35452_b()
+    public int getWorldHeight()
     {
-        return field_35472_c;
+        return worldHeight;
     }
 
     public Random setRandomSeed(int i, int j, int k)

@@ -23,7 +23,7 @@ public class ItemEnderEye extends Item
     {
         int i1 = world.getBlockId(i, j, k);
         int j1 = world.getBlockMetadata(i, j, k);
-        if(entityplayer.func_35190_e(i, j, k) && i1 == Block.endPortalFrame.blockID && !BlockEndPortalFrame.func_40212_d(j1))
+        if(entityplayer.canPlayerEdit(i, j, k) && i1 == Block.endPortalFrame.blockID && !BlockEndPortalFrame.isEnderEyeInserted(j1))
         {
             if(world.multiplayerWorld)
             {
@@ -58,7 +58,7 @@ public class ItemEnderEye extends Item
                     continue;
                 }
                 int l6 = world.getBlockMetadata(l3, j, l4);
-                if(!BlockEndPortalFrame.func_40212_d(l6))
+                if(!BlockEndPortalFrame.isEnderEyeInserted(l6))
                 {
                     flag1 = false;
                     break;
@@ -89,7 +89,7 @@ public class ItemEnderEye extends Item
                     i5 += Direction.field_35870_b[l1] * 4;
                     int i6 = world.getBlockId(i4, j, i5);
                     int i7 = world.getBlockMetadata(i4, j, i5);
-                    if(i6 != Block.endPortalFrame.blockID || !BlockEndPortalFrame.func_40212_d(i7))
+                    if(i6 != Block.endPortalFrame.blockID || !BlockEndPortalFrame.isEnderEyeInserted(i7))
                     {
                         flag1 = false;
                         break;
@@ -112,7 +112,7 @@ label0:
                         j6 += Direction.field_35870_b[l1] * j4;
                         int j7 = world.getBlockId(j5, j, j6);
                         int k7 = world.getBlockMetadata(j5, j, j6);
-                        if(j7 != Block.endPortalFrame.blockID || !BlockEndPortalFrame.func_40212_d(k7))
+                        if(j7 != Block.endPortalFrame.blockID || !BlockEndPortalFrame.isEnderEyeInserted(k7))
                         {
                             flag1 = false;
                             continue label0;
@@ -163,7 +163,7 @@ label0:
             {
                 EntityEnderEye entityendereye = new EntityEnderEye(world, entityplayer.posX, (entityplayer.posY + 1.6200000000000001D) - (double)entityplayer.yOffset, entityplayer.posZ);
                 entityendereye.func_40090_a(chunkposition.x, chunkposition.y, chunkposition.z);
-                world.entityJoinedWorld(entityendereye);
+                world.spawnEntityInWorld(entityendereye);
                 world.playSoundAtEntity(entityplayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
                 world.playAuxSFXAtEntity(null, 1002, (int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ, 0);
                 if(!entityplayer.capabilities.depleteBuckets)

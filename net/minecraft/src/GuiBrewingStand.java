@@ -36,7 +36,7 @@ public class GuiBrewingStand extends GuiContainer
         int l = (width - xSize) / 2;
         int i1 = (height - ySize) / 2;
         drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
-        int j1 = field_40217_h.func_40053_g();
+        int j1 = field_40217_h.getBrewTime();
         if(j1 > 0)
         {
             int k1 = (int)(28F * (1.0F - (float)j1 / 600F));

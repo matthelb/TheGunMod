@@ -42,12 +42,12 @@ public class ItemRecord extends Item
         }
     }
 
-    public void func_40404_a(ItemStack itemstack, List list)
+    public void addInformation(ItemStack itemstack, List list)
     {
         list.add((new StringBuilder()).append("C418 - ").append(recordName).toString());
     }
 
-    public EnumRarity func_40398_f(ItemStack itemstack)
+    public EnumRarity getRarity(ItemStack itemstack)
     {
         return EnumRarity.rare;
     }

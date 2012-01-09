@@ -13,29 +13,29 @@ import java.util.Random;
 public class WorldGenBigMushroom extends WorldGenerator
 {
 
-    private int field_35266_a;
+    private int mushroomType;
 
     public WorldGenBigMushroom(int i)
     {
-        field_35266_a = -1;
-        field_35266_a = i;
+        mushroomType = -1;
+        mushroomType = i;
     }
 
     public WorldGenBigMushroom()
     {
-        field_35266_a = -1;
+        mushroomType = -1;
     }
 
     public boolean generate(World world, Random random, int i, int j, int k)
     {
         int l = random.nextInt(2);
-        if(field_35266_a >= 0)
+        if(mushroomType >= 0)
         {
-            l = field_35266_a;
+            l = mushroomType;
         }
         int i1 = random.nextInt(3) + 4;
         boolean flag = true;
-        if(j < 1 || j + i1 + 1 > world.field_35472_c)
+        if(j < 1 || j + i1 + 1 > world.worldHeight)
         {
             return false;
         }
@@ -50,7 +50,7 @@ public class WorldGenBigMushroom extends WorldGenerator
             {
                 for(int l2 = k - byte0; l2 <= k + byte0 && flag; l2++)
                 {
-                    if(j1 >= 0 && j1 < world.field_35472_c)
+                    if(j1 >= 0 && j1 < world.worldHeight)
                     {
                         int k3 = world.getBlockId(i2, j1, l2);
                         if(k3 != 0 && k3 != Block.leaves.blockID)

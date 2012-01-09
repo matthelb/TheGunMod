@@ -60,7 +60,7 @@ public abstract class StructureStart
 
     protected void markAvailableHeight(World world, Random random, int i)
     {
-        int j = world.field_35470_e - i;
+        int j = world.seaLevel - i;
         int k = boundingBox.getYSize() + 1;
         if(k < j)
         {

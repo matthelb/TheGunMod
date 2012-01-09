@@ -34,7 +34,7 @@ public class EntityPortalFX extends EntityFX
         particleRed *= 0.9F;
         particleMaxAge = (int)(Math.random() * 10D) + 40;
         noClip = true;
-        func_40099_c((int)(Math.random() * 8D));
+        setParticleTextureIndex((int)(Math.random() * 8D));
     }
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)

@@ -37,19 +37,19 @@ public class EntityGhast extends EntityFlying
         texture = "/mob/ghast.png";
         setSize(4F, 4F);
         isImmuneToFire = true;
-        field_35171_bJ = 5;
+        experienceValue = 5;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int damage)
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if("fireball".equals(damagesource.func_40545_l()) && (damagesource.getEntity() instanceof EntityPlayer))
+        if("fireball".equals(damagesource.getDamageType()) && (damagesource.getEntity() instanceof EntityPlayer))
         {
             super.attackEntityFrom(damagesource, 1000);
             ((EntityPlayer)damagesource.getEntity()).triggerAchievement(AchievementList.ghast);
             return true;
         } else
         {
-            return super.attackEntityFrom(damagesource, damage);
+            return super.attackEntityFrom(damagesource, i);
         }
     }
 
@@ -139,7 +139,7 @@ public class EntityGhast extends EntityFlying
                     entityfireball.posX = posX + vec3d.xCoord * d8;
                     entityfireball.posY = posY + (double)(height / 2.0F) + 0.5D;
                     entityfireball.posZ = posZ + vec3d.zCoord * d8;
-                    worldObj.entityJoinedWorld(entityfireball);
+                    worldObj.spawnEntityInWorld(entityfireball);
                     attackCounter = -40;
                 }
             } else

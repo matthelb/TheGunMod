@@ -11,13 +11,13 @@ package net.minecraft.src;
 public class EnchantmentData extends WeightedRandomChoice
 {
 
-    public final Enchantment field_40264_a;
-    public final int field_40263_b;
+    public final Enchantment enchantmentobj;
+    public final int enchantmentLevel;
 
     public EnchantmentData(Enchantment enchantment, int i)
     {
         super(enchantment.getWeight());
-        field_40264_a = enchantment;
-        field_40263_b = i;
+        enchantmentobj = enchantment;
+        enchantmentLevel = i;
     }
 }

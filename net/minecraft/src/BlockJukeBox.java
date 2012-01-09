@@ -30,7 +30,7 @@ public class BlockJukeBox extends BlockContainer
             return false;
         } else
         {
-            func_28038_b_(world, i, j, k);
+            insertDisc(world, i, j, k);
             return true;
         }
     }
@@ -54,7 +54,7 @@ public class BlockJukeBox extends BlockContainer
         }
     }
 
-    public void func_28038_b_(World world, int i, int j, int k)
+    public void insertDisc(World world, int i, int j, int k)
     {
         if(world.multiplayerWorld)
         {
@@ -83,14 +83,14 @@ public class BlockJukeBox extends BlockContainer
             double d2 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             EntityItem entityitem = new EntityItem(world, (double)i + d, (double)j + d1, (double)k + d2, new ItemStack(i1, 1, 0));
             entityitem.delayBeforeCanPickup = 10;
-            world.entityJoinedWorld(entityitem);
+            world.spawnEntityInWorld(entityitem);
             return;
         }
     }
 
     public void onBlockRemoval(World world, int i, int j, int k)
     {
-        func_28038_b_(world, i, j, k);
+        insertDisc(world, i, j, k);
         super.onBlockRemoval(world, i, j, k);
     }
 

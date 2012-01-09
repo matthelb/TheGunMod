@@ -148,14 +148,14 @@ public class EntitySpider extends EntityMob
         return 1.0F;
     }
 
-    public EnumCreatureAttribute func_40124_t()
+    public EnumCreatureAttribute getCreatureAttribute()
     {
         return EnumCreatureAttribute.ARTHROPOD;
     }
 
     public boolean func_40126_a(PotionEffect potioneffect)
     {
-        if(potioneffect.getPotionID() == Potion.potionPoison.id)
+        if(potioneffect.getPotionID() == Potion.poison.id)
         {
             return false;
         } else

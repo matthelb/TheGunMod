@@ -44,7 +44,7 @@ public class Packet61DoorChange extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.handleAuxSFX(this);
+        nethandler.handleDoorChange(this);
     }
 
     public int getPacketSize()

@@ -19,7 +19,7 @@ public class Gui
         zLevel = 0.0F;
     }
 
-    protected void func_27100_a(int i, int j, int k, int l)
+    protected void drawHorizontalLine(int i, int j, int k, int l)
     {
         if(j < i)
         {
@@ -30,7 +30,7 @@ public class Gui
         drawRect(i, k, j + 1, k + 1, l);
     }
 
-    protected void func_27099_b(int i, int j, int k, int l)
+    protected void drawVerticalLine(int i, int j, int k, int l)
     {
         if(k < j)
         {

@@ -397,7 +397,7 @@ public class EntityFishHook extends Entity
             entityitem.motionX = d1 * d9;
             entityitem.motionY = d3 * d9 + (double)MathHelper.sqrt_double(d7) * 0.080000000000000002D;
             entityitem.motionZ = d5 * d9;
-            worldObj.entityJoinedWorld(entityitem);
+            worldObj.spawnEntityInWorld(entityitem);
             angler.addStat(StatList.fishCaughtStat, 1);
             byte0 = 1;
         }

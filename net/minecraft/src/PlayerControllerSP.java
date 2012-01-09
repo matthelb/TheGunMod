@@ -19,7 +19,7 @@ public class PlayerControllerSP extends PlayerController
     private int curBlockZ;
     private float curBlockDamage;
     private float prevBlockDamage;
-    private float field_1069_h;
+    private float blockDestroySoundCounter;
     private int blockHitWait;
 
     public PlayerControllerSP(Minecraft minecraft)
@@ -30,7 +30,7 @@ public class PlayerControllerSP extends PlayerController
         curBlockZ = -1;
         curBlockDamage = 0.0F;
         prevBlockDamage = 0.0F;
-        field_1069_h = 0.0F;
+        blockDestroySoundCounter = 0.0F;
         blockHitWait = 0;
     }
 
@@ -44,11 +44,11 @@ public class PlayerControllerSP extends PlayerController
         return true;
     }
 
-    public boolean sendBlockRemoved(int i, int j, int k, int l)
+    public boolean onPlayerDestroyBlock(int i, int j, int k, int l)
     {
         int i1 = mc.theWorld.getBlockId(i, j, k);
         int j1 = mc.theWorld.getBlockMetadata(i, j, k);
-        boolean flag = super.sendBlockRemoved(i, j, k, l);
+        boolean flag = super.onPlayerDestroyBlock(i, j, k, l);
         ItemStack itemstack = mc.thePlayer.getCurrentEquippedItem();
         boolean flag1 = mc.thePlayer.canHarvestBlock(Block.blocksList[i1]);
         if(itemstack != null)
@@ -69,7 +69,7 @@ public class PlayerControllerSP extends PlayerController
 
     public void clickBlock(int i, int j, int k, int l)
     {
-        if(!mc.thePlayer.func_35190_e(i, j, k))
+        if(!mc.thePlayer.canPlayerEdit(i, j, k))
         {
             return;
         }
@@ -81,7 +81,7 @@ public class PlayerControllerSP extends PlayerController
         }
         if(i1 > 0 && Block.blocksList[i1].blockStrength(mc.thePlayer) >= 1.0F)
         {
-            sendBlockRemoved(i, j, k, l);
+            onPlayerDestroyBlock(i, j, k, l);
         }
     }
 
@@ -91,7 +91,7 @@ public class PlayerControllerSP extends PlayerController
         blockHitWait = 0;
     }
 
-    public void sendBlockRemoving(int i, int j, int k, int l)
+    public void onPlayerDamageBlock(int i, int j, int k, int l)
     {
         if(blockHitWait > 0)
         {
@@ -101,7 +101,7 @@ public class PlayerControllerSP extends PlayerController
         if(i == curBlockX && j == curBlockY && k == curBlockZ)
         {
             int i1 = mc.theWorld.getBlockId(i, j, k);
-            if(!mc.thePlayer.func_35190_e(i, j, k))
+            if(!mc.thePlayer.canPlayerEdit(i, j, k))
             {
                 return;
             }
@@ -111,24 +111,24 @@ public class PlayerControllerSP extends PlayerController
             }
             Block block = Block.blocksList[i1];
             curBlockDamage += block.blockStrength(mc.thePlayer);
-            if(field_1069_h % 4F == 0.0F && block != null)
+            if(blockDestroySoundCounter % 4F == 0.0F && block != null)
             {
                 mc.sndManager.playSound(block.stepSound.stepSoundDir2(), (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, (block.stepSound.getVolume() + 1.0F) / 8F, block.stepSound.getPitch() * 0.5F);
             }
-            field_1069_h++;
+            blockDestroySoundCounter++;
             if(curBlockDamage >= 1.0F)
             {
-                sendBlockRemoved(i, j, k, l);
+                onPlayerDestroyBlock(i, j, k, l);
                 curBlockDamage = 0.0F;
                 prevBlockDamage = 0.0F;
-                field_1069_h = 0.0F;
+                blockDestroySoundCounter = 0.0F;
                 blockHitWait = 5;
             }
         } else
         {
             curBlockDamage = 0.0F;
             prevBlockDamage = 0.0F;
-            field_1069_h = 0.0F;
+            blockDestroySoundCounter = 0.0F;
             curBlockX = i;
             curBlockY = j;
             curBlockZ = k;
@@ -171,7 +171,7 @@ public class PlayerControllerSP extends PlayerController
         mc.sndManager.playRandomMusicIfReady();
     }
 
-    public boolean sendPlaceBlock(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l)
+    public boolean onPlayerRightClick(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l)
     {
         int i1 = world.getBlockId(i, j, k);
         if(i1 > 0 && Block.blocksList[i1].blockActivated(world, i, j, k, entityplayer))

@@ -20,10 +20,10 @@ public class ModelBiped extends ModelBase
     public ModelRenderer bipedLeftLeg;
     public ModelRenderer bipedEars;
     public ModelRenderer bipedCloak;
-    public int field_1279_h;
-    public int field_1278_i;
+    public int heldItemLeft;
+    public int heldItemRight;
     public boolean isSneak;
-    public boolean field_40333_u;
+    public boolean aimedBow;
 
     public ModelBiped()
     {
@@ -37,10 +37,10 @@ public class ModelBiped extends ModelBase
 
     public ModelBiped(float f, float f1)
     {
-        field_1279_h = 0;
-        field_1278_i = 0;
+        heldItemLeft = 0;
+        heldItemRight = 0;
         isSneak = false;
-        field_40333_u = false;
+        aimedBow = false;
         bipedCloak = new ModelRenderer(this, 0, 0);
         bipedCloak.addBox(-5F, 0.0F, -1F, 10, 16, 1, f);
         bipedEars = new ModelRenderer(this, 24, 0);
@@ -105,13 +105,13 @@ public class ModelBiped extends ModelBase
             bipedRightLeg.rotateAngleY = 0.3141593F;
             bipedLeftLeg.rotateAngleY = -0.3141593F;
         }
-        if(field_1279_h != 0)
+        if(heldItemLeft != 0)
         {
-            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - 0.3141593F * (float)field_1279_h;
+            bipedLeftArm.rotateAngleX = bipedLeftArm.rotateAngleX * 0.5F - 0.3141593F * (float)heldItemLeft;
         }
-        if(field_1278_i != 0)
+        if(heldItemRight != 0)
         {
-            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - 0.3141593F * (float)field_1278_i;
+            bipedRightArm.rotateAngleX = bipedRightArm.rotateAngleX * 0.5F - 0.3141593F * (float)heldItemRight;
         }
         bipedRightArm.rotateAngleY = 0.0F;
         bipedLeftArm.rotateAngleY = 0.0F;
@@ -161,7 +161,7 @@ public class ModelBiped extends ModelBase
         bipedLeftArm.rotateAngleZ -= MathHelper.cos(f2 * 0.09F) * 0.05F + 0.05F;
         bipedRightArm.rotateAngleX += MathHelper.sin(f2 * 0.067F) * 0.05F;
         bipedLeftArm.rotateAngleX -= MathHelper.sin(f2 * 0.067F) * 0.05F;
-        if(field_40333_u)
+        if(aimedBow)
         {
             float f7 = 0.0F;
             float f9 = 0.0F;

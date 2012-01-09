@@ -68,14 +68,14 @@ class GuiWorldSlot extends GuiSlot
         s1 = (new StringBuilder()).append(s1).append(" (").append(GuiSelectWorld.getDateFormatter(parentWorldGui).format(new Date(saveformatcomparator.getLastTimePlayed()))).toString();
         s1 = (new StringBuilder()).append(s1).append(")").toString();
         String s2 = "";
-        if(saveformatcomparator.func_22161_d())
+        if(saveformatcomparator.requiresConversion())
         {
             s2 = (new StringBuilder()).append(GuiSelectWorld.func_22088_h(parentWorldGui)).append(" ").append(s2).toString();
         } else
         {
             s2 = GuiSelectWorld.func_35315_i(parentWorldGui)[saveformatcomparator.getGameType()];
         }
-        if(saveformatcomparator.func_40594_g())
+        if(saveformatcomparator.isHardcoreModeEnabled())
         {
             s2 = (new StringBuilder()).append("\2474").append(StatCollector.translateToLocal("gameMode.hardcore")).append("\2478").toString();
         }

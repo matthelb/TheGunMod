@@ -16,7 +16,7 @@ public abstract class WorldProvider
 
     public World worldObj;
     public WorldChunkManager worldChunkMgr;
-    public boolean isNether;
+    public boolean isAlternateDimension;
     public boolean isHellWorld;
     public boolean hasNoSky;
     public float lightBrightnessTable[];
@@ -25,7 +25,7 @@ public abstract class WorldProvider
 
     public WorldProvider()
     {
-        isNether = false;
+        isAlternateDimension = false;
         isHellWorld = false;
         hasNoSky = false;
         lightBrightnessTable = new float[16];
@@ -157,7 +157,7 @@ public abstract class WorldProvider
 
     public float getCloudHeight()
     {
-        return (float)worldObj.field_35472_c;
+        return (float)worldObj.worldHeight;
     }
 
     public boolean func_28112_c()
@@ -165,7 +165,7 @@ public abstract class WorldProvider
         return true;
     }
 
-    public ChunkCoordinates func_40469_f()
+    public ChunkCoordinates getEntrancePortalLocation()
     {
         return null;
     }

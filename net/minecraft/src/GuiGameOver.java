@@ -49,10 +49,10 @@ public class GuiGameOver extends GuiScreen
             if(mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
             {
                 World world = mc.theWorld;
-                mc.func_40002_b("Deleting world");
+                mc.exitToMainMenu("Deleting world");
                 ISaveFormat isaveformat = mc.getSaveLoader();
                 isaveformat.flushCache();
-                isaveformat.deleteWorldDirectory(world.func_40479_y().func_40530_d());
+                isaveformat.deleteWorldDirectory(world.getSaveHandler().getSaveDirectoryName());
                 mc.displayGuiScreen(new GuiMainMenu());
             } else
             {

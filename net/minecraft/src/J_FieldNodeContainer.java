@@ -13,21 +13,21 @@ class J_FieldNodeContainer
 {
 
     final J_JsonFieldBuilder fieldBuilder; /* synthetic field */
-    final J_JsonListenerToJdomAdapter field_27291_b; /* synthetic field */
+    final J_JsonListenerToJdomAdapter listenerToJdomAdapter; /* synthetic field */
 
     J_FieldNodeContainer(J_JsonListenerToJdomAdapter j_jsonlistenertojdomadapter, J_JsonFieldBuilder j_jsonfieldbuilder)
     {
-        field_27291_b = j_jsonlistenertojdomadapter;
+        listenerToJdomAdapter = j_jsonlistenertojdomadapter;
         fieldBuilder = j_jsonfieldbuilder;
 //        super();
     }
 
-    public void func_27290_a(J_JsonNodeBuilder j_jsonnodebuilder)
+    public void addNode(J_JsonNodeBuilder j_jsonnodebuilder)
     {
-        fieldBuilder.func_27300_b(j_jsonnodebuilder);
+        fieldBuilder.withValue(j_jsonnodebuilder);
     }
 
-    public void func_27289_a(J_JsonFieldBuilder j_jsonfieldbuilder)
+    public void addField(J_JsonFieldBuilder j_jsonfieldbuilder)
     {
         throw new RuntimeException("Coding failure in Argo:  Attempt to add a field to a field.");
     }

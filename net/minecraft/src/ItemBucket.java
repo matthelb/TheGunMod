@@ -46,7 +46,7 @@ public class ItemBucket extends Item
             }
             if(isFull == 0)
             {
-                if(!entityplayer.func_35190_e(i, j, k))
+                if(!entityplayer.canPlayerEdit(i, j, k))
                 {
                     return itemstack;
                 }
@@ -102,7 +102,7 @@ public class ItemBucket extends Item
                 {
                     i++;
                 }
-                if(!entityplayer.func_35190_e(i, j, k))
+                if(!entityplayer.canPlayerEdit(i, j, k))
                 {
                     return itemstack;
                 }

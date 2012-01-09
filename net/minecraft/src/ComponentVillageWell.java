@@ -15,12 +15,12 @@ public class ComponentVillageWell extends ComponentVillage
 {
 
     private final boolean field_35104_a = true;
-    private int field_35103_b;
+    private int averageGroundLevel;
 
     public ComponentVillageWell(int i, Random random, int j, int k)
     {
         super(i);
-        field_35103_b = -1;
+        averageGroundLevel = -1;
         coordBaseMode = random.nextInt(4);
         switch(coordBaseMode)
         {
@@ -37,22 +37,22 @@ public class ComponentVillageWell extends ComponentVillage
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX - 1, boundingBox.maxY - 4, boundingBox.minZ + 1, 1, func_35012_c());
-        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX + 1, boundingBox.maxY - 4, boundingBox.minZ + 1, 3, func_35012_c());
-        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX + 1, boundingBox.maxY - 4, boundingBox.minZ - 1, 2, func_35012_c());
-        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX + 1, boundingBox.maxY - 4, boundingBox.maxZ + 1, 0, func_35012_c());
+        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX - 1, boundingBox.maxY - 4, boundingBox.minZ + 1, 1, getComponentType());
+        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX + 1, boundingBox.maxY - 4, boundingBox.minZ + 1, 3, getComponentType());
+        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX + 1, boundingBox.maxY - 4, boundingBox.minZ - 1, 2, getComponentType());
+        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX + 1, boundingBox.maxY - 4, boundingBox.maxZ + 1, 0, getComponentType());
     }
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(field_35103_b < 0)
+        if(averageGroundLevel < 0)
         {
-            field_35103_b = getAverageGroundLevel(world, structureboundingbox);
-            if(field_35103_b < 0)
+            averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
+            if(averageGroundLevel < 0)
             {
                 return true;
             }
-            boundingBox.offset(0, (field_35103_b - boundingBox.maxY) + 3, 0);
+            boundingBox.offset(0, (averageGroundLevel - boundingBox.maxY) + 3, 0);
         }
         if(!field_35104_a);
         fillWithBlocks(world, structureboundingbox, 1, 0, 1, 4, 12, 4, Block.cobblestone.blockID, Block.waterMoving.blockID, false);

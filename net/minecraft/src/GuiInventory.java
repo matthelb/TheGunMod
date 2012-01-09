@@ -46,7 +46,7 @@ public class GuiInventory extends GuiContainer
             super.initGui();
             if(!mc.thePlayer.func_40118_aO().isEmpty())
             {
-                field_40216_e = 160 + (width - xSize - 200) / 2;
+                guiLeft = 160 + (width - xSize - 200) / 2;
             }
         }
     }
@@ -68,8 +68,8 @@ public class GuiInventory extends GuiContainer
         int k = mc.renderEngine.getTexture("/gui/inventory.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(k);
-        int l = field_40216_e;
-        int i1 = field_40215_f;
+        int l = guiLeft;
+        int i1 = guiTop;
         drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
         func_40218_g();
         GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
@@ -116,8 +116,8 @@ public class GuiInventory extends GuiContainer
 
     private void func_40218_g()
     {
-        int i = field_40216_e - 124;
-        int j = field_40215_f;
+        int i = guiLeft - 124;
+        int j = guiTop;
         int k = mc.renderEngine.getTexture("/gui/inventory.png");
         Collection collection = mc.thePlayer.func_40118_aO();
         if(collection.isEmpty())
@@ -136,12 +136,12 @@ public class GuiInventory extends GuiContainer
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             mc.renderEngine.bindTexture(k);
             drawTexturedModalRect(i, j, 0, ySize, 140, 32);
-            if(potion.func_40617_d())
+            if(potion.hasStatusIcon())
             {
-                int i1 = potion.func_40611_e();
+                int i1 = potion.getStatusIconIndex();
                 drawTexturedModalRect(i + 6, j + 7, 0 + (i1 % 8) * 18, ySize + 32 + (i1 / 8) * 18, 18, 18);
             }
-            String s = StatCollector.translateToLocal(potion.func_40623_c());
+            String s = StatCollector.translateToLocal(potion.getName());
             if(potioneffect.getAmplifier() > 0)
             {
                 s = (new StringBuilder()).append(s).append(" ").append(StatCollector.translateToLocal((new StringBuilder()).append("potion.potency.").append(potioneffect.getAmplifier()).toString())).toString();

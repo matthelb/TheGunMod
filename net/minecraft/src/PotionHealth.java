@@ -16,7 +16,7 @@ public class PotionHealth extends Potion
         super(i, flag, j);
     }
 
-    public boolean func_40622_b()
+    public boolean isInstant()
     {
         return true;
     }

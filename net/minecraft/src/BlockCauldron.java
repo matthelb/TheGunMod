@@ -95,7 +95,7 @@ public class BlockCauldron extends Block
             ItemStack itemstack1 = new ItemStack(Item.potion, 1, 0);
             if(!entityplayer.inventory.addItemStackToInventory(itemstack1))
             {
-                world.entityJoinedWorld(new EntityItem(world, (double)i + 0.5D, (double)j + 1.5D, (double)k + 0.5D, itemstack1));
+                world.spawnEntityInWorld(new EntityItem(world, (double)i + 0.5D, (double)j + 1.5D, (double)k + 0.5D, itemstack1));
             }
             itemstack.stackSize--;
             if(itemstack.stackSize <= 0)

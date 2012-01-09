@@ -20,7 +20,7 @@ public class EntityAuraFX extends EntityFX
         particleRed = f;
         particleGreen = f;
         particleBlue = f;
-        func_40099_c(0);
+        setParticleTextureIndex(0);
         setSize(0.02F, 0.02F);
         particleScale = particleScale * (rand.nextFloat() * 0.6F + 0.5F);
         motionX *= 0.019999999552965164D;

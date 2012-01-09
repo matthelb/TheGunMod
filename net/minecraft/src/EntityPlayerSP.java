@@ -134,7 +134,7 @@ public class EntityPlayerSP extends EntityPlayer
             }
             inPortal = false;
         } else
-        if(isPotionActive(Potion.potionConfusion) && getActivePotionEffect(Potion.potionConfusion).getDuration() > 60)
+        if(isPotionActive(Potion.confusion) && getActivePotionEffect(Potion.confusion).getDuration() > 60)
         {
             timeInPortal += 0.006666667F;
             if(timeInPortal > 1.0F)
@@ -175,7 +175,7 @@ public class EntityPlayerSP extends EntityPlayer
         pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, boundingBox.minY + 0.5D, posZ - (double)width * 0.34999999999999998D);
         pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, boundingBox.minY + 0.5D, posZ + (double)width * 0.34999999999999998D);
         boolean flag2 = (float)getFoodStats().getFoodLevel() > 6F;
-        if(onGround && !flag1 && movementInput.moveForward >= f && !isSprinting() && flag2 && !isUsingItem() && !isPotionActive(Potion.potionBlindness))
+        if(onGround && !flag1 && movementInput.moveForward >= f && !isSprinting() && flag2 && !isUsingItem() && !isPotionActive(Potion.blindness))
         {
             if(sprintToggleTimer == 0)
             {
@@ -247,7 +247,7 @@ public class EntityPlayerSP extends EntityPlayer
         {
             f *= 1.1F;
         }
-        f *= ((landMovementFactor * func_35166_t_()) / speedOnGround + 1.0F) / 2.0F;
+        f *= ((landMovementFactor * getSpeedModifier()) / speedOnGround + 1.0F) / 2.0F;
         if(isUsingItem() && getItemInUse().itemID == Item.bow.shiftedIndex)
         {
             int i = getItemInUseDuration();
@@ -297,7 +297,7 @@ public class EntityPlayerSP extends EntityPlayer
         mc.displayGuiScreen(new GuiCrafting(inventory, worldObj, i, j, k));
     }
 
-    public void func_40181_c(int i, int j, int k)
+    public void displayGUIEnchantment(int i, int j, int k)
     {
         mc.displayGuiScreen(new GuiEnchantment(inventory, worldObj, i, j, k));
     }
@@ -307,7 +307,7 @@ public class EntityPlayerSP extends EntityPlayer
         mc.displayGuiScreen(new GuiFurnace(inventory, tileentityfurnace));
     }
 
-    public void func_40180_a(TileEntityBrewingStand tileentitybrewingstand)
+    public void displayGUIBrewingStand(TileEntityBrewingStand tileentitybrewingstand)
     {
         mc.displayGuiScreen(new GuiBrewingStand(inventory, tileentitybrewingstand));
     }

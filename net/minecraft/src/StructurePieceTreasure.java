@@ -11,17 +11,17 @@ package net.minecraft.src;
 public class StructurePieceTreasure extends WeightedRandomChoice
 {
 
-    public int field_35596_a;
-    public int field_35594_b;
-    public int field_35595_c;
-    public int field_35593_e;
+    public int itemID;
+    public int itemMetadata;
+    public int minItemStack;
+    public int maxItemStack;
 
     public StructurePieceTreasure(int i, int j, int k, int l, int i1)
     {
         super(i1);
-        field_35596_a = i;
-        field_35594_b = j;
-        field_35595_c = k;
-        field_35593_e = l;
+        itemID = i;
+        itemMetadata = j;
+        minItemStack = k;
+        maxItemStack = l;
     }
 }

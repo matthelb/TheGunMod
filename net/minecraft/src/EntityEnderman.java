@@ -335,7 +335,7 @@ public class EntityEnderman extends EntityMob
         return dataWatcher.getWatchableObjectByte(17);
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int damage)
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
         if(damagesource instanceof EntityDamageSourceIndirect)
         {
@@ -350,7 +350,7 @@ public class EntityEnderman extends EntityMob
             return false;
         } else
         {
-            return super.attackEntityFrom(damagesource, damage);
+            return super.attackEntityFrom(damagesource, i);
         }
     }
 

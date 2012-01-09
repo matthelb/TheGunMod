@@ -16,11 +16,11 @@ public class Packet23VehicleSpawn extends Packet
     public int xPosition;
     public int yPosition;
     public int zPosition;
-    public int field_28047_e;
-    public int field_28046_f;
-    public int field_28045_g;
+    public int speedX;
+    public int speedY;
+    public int speedZ;
     public int type;
-    public int field_28044_i;
+    public int throwerEntityId;
 
     public Packet23VehicleSpawn()
     {
@@ -34,12 +34,12 @@ public class Packet23VehicleSpawn extends Packet
         xPosition = datainputstream.readInt();
         yPosition = datainputstream.readInt();
         zPosition = datainputstream.readInt();
-        field_28044_i = datainputstream.readInt();
-        if(field_28044_i > 0)
+        throwerEntityId = datainputstream.readInt();
+        if(throwerEntityId > 0)
         {
-            field_28047_e = datainputstream.readShort();
-            field_28046_f = datainputstream.readShort();
-            field_28045_g = datainputstream.readShort();
+            speedX = datainputstream.readShort();
+            speedY = datainputstream.readShort();
+            speedZ = datainputstream.readShort();
         }
     }
 
@@ -51,12 +51,12 @@ public class Packet23VehicleSpawn extends Packet
         dataoutputstream.writeInt(xPosition);
         dataoutputstream.writeInt(yPosition);
         dataoutputstream.writeInt(zPosition);
-        dataoutputstream.writeInt(field_28044_i);
-        if(field_28044_i > 0)
+        dataoutputstream.writeInt(throwerEntityId);
+        if(throwerEntityId > 0)
         {
-            dataoutputstream.writeShort(field_28047_e);
-            dataoutputstream.writeShort(field_28046_f);
-            dataoutputstream.writeShort(field_28045_g);
+            dataoutputstream.writeShort(speedX);
+            dataoutputstream.writeShort(speedY);
+            dataoutputstream.writeShort(speedZ);
         }
     }
 
@@ -67,6 +67,6 @@ public class Packet23VehicleSpawn extends Packet
 
     public int getPacketSize()
     {
-        return 21 + field_28044_i <= 0 ? 0 : 6;
+        return 21 + throwerEntityId <= 0 ? 0 : 6;
     }
 }

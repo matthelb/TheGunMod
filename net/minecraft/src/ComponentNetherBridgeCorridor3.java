@@ -40,7 +40,7 @@ public class ComponentNetherBridgeCorridor3 extends ComponentNetherBridgePiece
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        int i = func_35009_c(Block.stairsNetherBrick.blockID, 2);
+        int i = getMetadataWithOffset(Block.stairsNetherBrick.blockID, 2);
         for(int j = 0; j <= 9; j++)
         {
             int k = Math.max(1, 7 - j);

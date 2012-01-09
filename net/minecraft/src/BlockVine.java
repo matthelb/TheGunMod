@@ -181,7 +181,7 @@ public class BlockVine extends Block
 
     public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
     {
-        return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).func_40255_b(iblockaccess, i, j, k);
+        return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).getFoliageColorAtCoords(iblockaccess, i, j, k);
     }
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
@@ -232,7 +232,7 @@ label1:
             i1 = world.getBlockMetadata(i, j, k);
             int k1 = world.rand.nextInt(6);
             int i2 = Direction.field_35869_d[k1];
-            if(k1 == 1 && j < world.field_35472_c - 1 && world.isAirBlock(i, j + 1, k))
+            if(k1 == 1 && j < world.worldHeight - 1 && world.isAirBlock(i, j + 1, k))
             {
                 if(flag)
                 {

@@ -22,7 +22,7 @@ public class Packet105UpdateProgressbar extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.handleCraftingProgress(this);
+        nethandler.handleUpdateProgressbar(this);
     }
 
     public void readPacketData(DataInputStream datainputstream)

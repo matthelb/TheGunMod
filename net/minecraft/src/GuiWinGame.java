@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL11;
 public class GuiWinGame extends GuiScreen
 {
 
-    private int field_41046_a;
+    private int updateCounter;
     private List field_41044_b;
     private int field_41045_c[];
     private int field_41042_d;
@@ -27,16 +27,16 @@ public class GuiWinGame extends GuiScreen
 
     public GuiWinGame()
     {
-        field_41046_a = 0;
+        updateCounter = 0;
         field_41042_d = 0;
         field_41043_e = 0.5F;
     }
 
     public void updateScreen()
     {
-        field_41046_a++;
+        updateCounter++;
         float f = (float)(field_41042_d + height + height + 24) / field_41043_e;
-        if((float)field_41046_a > f)
+        if((float)updateCounter > f)
         {
             func_41041_e();
         }
@@ -56,7 +56,7 @@ public class GuiWinGame extends GuiScreen
         {
             EntityClientPlayerMP entityclientplayermp = (EntityClientPlayerMP)mc.thePlayer;
             entityclientplayermp.sendInventoryChanged();
-            entityclientplayermp.sendQueue.addToSendQueue(new Packet9Respawn((byte)entityclientplayermp.dimension, (byte)mc.theWorld.difficultySetting, mc.theWorld.getWorldSeed(), mc.theWorld.field_35472_c, 0));
+            entityclientplayermp.sendQueue.addToSendQueue(new Packet9Respawn((byte)entityclientplayermp.dimension, (byte)mc.theWorld.difficultySetting, mc.theWorld.getWorldSeed(), mc.theWorld.worldHeight, 0));
         } else
         {
             mc.displayGuiScreen(null);
@@ -117,13 +117,13 @@ public class GuiWinGame extends GuiScreen
             }
             field_41045_c = new int[field_41044_b.size()];
             char c = '\u0112';
-            fontRenderer.field_41063_b = 12;
+            fontRenderer.FONT_HEIGHT = 12;
             for(int k = 0; k < field_41044_b.size(); k++)
             {
                 field_41042_d += field_41045_c[k] = fontRenderer.splitStringWidth((String)field_41044_b.get(k), c);
             }
 
-            fontRenderer.field_41063_b = 8;
+            fontRenderer.FONT_HEIGHT = 8;
         }
         catch(Exception exception)
         {
@@ -142,12 +142,12 @@ public class GuiWinGame extends GuiScreen
         tessellator.startDrawingQuads();
         tessellator.setColorRGBA_F(1.0F, 1.0F, 1.0F, 1.0F);
         int k = width;
-        float f1 = 0.0F - ((float)field_41046_a + f) * 0.5F * field_41043_e;
-        float f2 = (float)height - ((float)field_41046_a + f) * 0.5F * field_41043_e;
+        float f1 = 0.0F - ((float)updateCounter + f) * 0.5F * field_41043_e;
+        float f2 = (float)height - ((float)updateCounter + f) * 0.5F * field_41043_e;
         float f3 = 0.015625F;
-        float f4 = (((float)field_41046_a + f) - 0.0F) * 0.02F;
+        float f4 = (((float)updateCounter + f) - 0.0F) * 0.02F;
         float f5 = (float)(field_41042_d + height + height + 24) / field_41043_e;
-        float f6 = (f5 - 20F - ((float)field_41046_a + f)) * 0.005F;
+        float f6 = (f5 - 20F - ((float)updateCounter + f)) * 0.005F;
         if(f6 < f4)
         {
             f4 = f6;
@@ -173,7 +173,7 @@ public class GuiWinGame extends GuiScreen
         char c = '\u0112';
         int k = width / 2 - c / 2;
         int l = height + 50;
-        float f1 = -((float)field_41046_a + f) * field_41043_e;
+        float f1 = -((float)updateCounter + f) * field_41043_e;
         GL11.glPushMatrix();
         GL11.glTranslatef(0.0F, f1, 0.0F);
         GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, mc.renderEngine.getTexture("/title/mclogo.png"));
@@ -181,7 +181,7 @@ public class GuiWinGame extends GuiScreen
         drawTexturedModalRect(k + 0, l + 0, 0, 0, 155, 44);
         drawTexturedModalRect(k + 155, l + 0, 0, 45, 155, 44);
         tessellator.setColorOpaque_I(0xffffff);
-        fontRenderer.field_41063_b = 12;
+        fontRenderer.FONT_HEIGHT = 12;
         int i1 = l + 200;
         for(int j1 = 0; j1 < field_41044_b.size(); j1++)
         {
@@ -202,16 +202,16 @@ public class GuiWinGame extends GuiScreen
                     fontRenderer.drawStringWithShadow(s.substring(3), k + (c - fontRenderer.getStringWidth(s.substring(3))) / 2, i1, 0xffffff);
                 } else
                 {
-                    fontRenderer.field_41064_c.setSeed((long)j1 * 0xfca99533L + (long)(field_41046_a / 4));
+                    fontRenderer.field_41064_c.setSeed((long)j1 * 0xfca99533L + (long)(updateCounter / 4));
                     fontRenderer.func_40609_a(s, k + 1, i1 + 1, c, 0xffffff, true);
-                    fontRenderer.field_41064_c.setSeed((long)j1 * 0xfca99533L + (long)(field_41046_a / 4));
+                    fontRenderer.field_41064_c.setSeed((long)j1 * 0xfca99533L + (long)(updateCounter / 4));
                     fontRenderer.func_40609_a(s, k, i1, c, 0xffffff, false);
                 }
             }
             i1 += l1;
         }
 
-        fontRenderer.field_41063_b = 8;
+        fontRenderer.FONT_HEIGHT = 8;
         GL11.glPopMatrix();
         GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, mc.renderEngine.getTexture("%blur%/misc/vignette.png"));
         GL11.glEnable(3042 /*GL_BLEND*/);

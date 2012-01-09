@@ -18,9 +18,9 @@ public final class J_JsonNodeSelector
         valueGetter = j_functor;
     }
 
-    public boolean matchs(Object obj)
+    public boolean matches(Object obj)
     {
-        return valueGetter.matchsNode(obj);
+        return valueGetter.matchesNode(obj);
     }
 
     public Object getValue(Object obj)

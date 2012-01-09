@@ -45,7 +45,7 @@ public class ItemBow extends Item
             entityplayer.inventory.consumeInventoryItem(Item.arrow.shiftedIndex);
             if(!world.multiplayerWorld)
             {
-                world.entityJoinedWorld(entityarrow);
+                world.spawnEntityInWorld(entityarrow);
             }
         }
     }

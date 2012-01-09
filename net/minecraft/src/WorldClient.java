@@ -43,7 +43,7 @@ public class WorldClient extends World
             Entity entity = (Entity)entitySpawnQueue.iterator().next();
             if(!loadedEntityList.contains(entity))
             {
-                entityJoinedWorld(entity);
+                spawnEntityInWorld(entity);
             }
         }
 
@@ -109,13 +109,13 @@ public class WorldClient extends World
         }
         if(!flag)
         {
-            markBlocksDirty(i * 16, 0, j * 16, i * 16 + 15, field_35472_c, j * 16 + 15);
+            markBlocksDirty(i * 16, 0, j * 16, i * 16 + 15, worldHeight, j * 16 + 15);
         }
     }
 
-    public boolean entityJoinedWorld(Entity entity)
+    public boolean spawnEntityInWorld(Entity entity)
     {
-        boolean flag = super.entityJoinedWorld(entity);
+        boolean flag = super.spawnEntityInWorld(entity);
         entityList.add(entity);
         if(!flag)
         {
@@ -148,23 +148,23 @@ public class WorldClient extends World
         }
     }
 
-    public void func_712_a(int i, Entity entity)
+    public void addEntityToWorld(int i, Entity entity)
     {
-        Entity entity1 = func_709_b(i);
+        Entity entity1 = getEntityByID(i);
         if(entity1 != null)
         {
             setEntityDead(entity1);
         }
         entityList.add(entity);
         entity.entityId = i;
-        if(!entityJoinedWorld(entity))
+        if(!spawnEntityInWorld(entity))
         {
             entitySpawnQueue.add(entity);
         }
         entityHashSet.addKey(i, entity);
     }
 
-    public Entity func_709_b(int i)
+    public Entity getEntityByID(int i)
     {
         return (Entity)entityHashSet.lookup(i);
     }

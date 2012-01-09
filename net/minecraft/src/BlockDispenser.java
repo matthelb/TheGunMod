@@ -145,28 +145,28 @@ public class BlockDispenser extends BlockContainer
                         EntityArrow entityarrow = new EntityArrow(world, d, d1, d2);
                         entityarrow.setArrowHeading(i1, 0.10000000149011612D, j1, 1.1F, 6F);
                         entityarrow.doesArrowBelongToPlayer = true;
-                        world.entityJoinedWorld(entityarrow);
+                        world.spawnEntityInWorld(entityarrow);
                         world.playAuxSFX(1002, i, j, k, 0);
                     } else
                     if(itemstack.itemID == Item.egg.shiftedIndex)
                     {
                         EntityEgg entityegg = new EntityEgg(world, d, d1, d2);
                         entityegg.setThrowableHeading(i1, 0.10000000149011612D, j1, 1.1F, 6F);
-                        world.entityJoinedWorld(entityegg);
+                        world.spawnEntityInWorld(entityegg);
                         world.playAuxSFX(1002, i, j, k, 0);
                     } else
                     if(itemstack.itemID == Item.snowball.shiftedIndex)
                     {
                         EntitySnowball entitysnowball = new EntitySnowball(world, d, d1, d2);
                         entitysnowball.setThrowableHeading(i1, 0.10000000149011612D, j1, 1.1F, 6F);
-                        world.entityJoinedWorld(entitysnowball);
+                        world.spawnEntityInWorld(entitysnowball);
                         world.playAuxSFX(1002, i, j, k, 0);
                     } else
-                    if(itemstack.itemID == Item.potion.shiftedIndex && ItemPotion.func_40433_c(itemstack.getItemDamage()))
+                    if(itemstack.itemID == Item.potion.shiftedIndex && ItemPotion.isSplash(itemstack.getItemDamage()))
                     {
                         EntityPotion entitypotion = new EntityPotion(world, d, d1, d2, itemstack.getItemDamage());
                         entitypotion.setThrowableHeading(i1, 0.10000000149011612D, j1, 1.375F, 3F);
-                        world.entityJoinedWorld(entitypotion);
+                        world.spawnEntityInWorld(entitypotion);
                         world.playAuxSFX(1002, i, j, k, 0);
                     } else
                     {
@@ -178,7 +178,7 @@ public class BlockDispenser extends BlockContainer
                         entityitem.motionX += random.nextGaussian() * 0.0074999998323619366D * 6D;
                         entityitem.motionY += random.nextGaussian() * 0.0074999998323619366D * 6D;
                         entityitem.motionZ += random.nextGaussian() * 0.0074999998323619366D * 6D;
-                        world.entityJoinedWorld(entityitem);
+                        world.spawnEntityInWorld(entityitem);
                         world.playAuxSFX(1000, i, j, k, 0);
                     }
                 }
@@ -259,7 +259,7 @@ public class BlockDispenser extends BlockContainer
                         entityitem.motionX = (float)random.nextGaussian() * f3;
                         entityitem.motionY = (float)random.nextGaussian() * f3 + 0.2F;
                         entityitem.motionZ = (float)random.nextGaussian() * f3;
-                        world.entityJoinedWorld(entityitem);
+                        world.spawnEntityInWorld(entityitem);
                     }
                 }
             }

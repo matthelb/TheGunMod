@@ -45,7 +45,7 @@ public class BlockSilverfish extends Block
         {
             EntitySilverfish entitysilverfish = new EntitySilverfish(world);
             entitysilverfish.setLocationAndAngles((double)i + 0.5D, j, (double)k + 0.5D, 0.0F, 0.0F);
-            world.entityJoinedWorld(entitysilverfish);
+            world.spawnEntityInWorld(entitysilverfish);
             entitysilverfish.spawnExplosionParticle();
         }
         super.onBlockDestroyedByPlayer(world, i, j, k, l);
@@ -70,7 +70,7 @@ public class BlockSilverfish extends Block
         return i != Block.stoneBrick.blockID ? 0 : 2;
     }
 
-    protected ItemStack func_41049_c_(int i)
+    protected ItemStack createStackedBlock(int i)
     {
         Block block = Block.stone;
         if(i == 1)

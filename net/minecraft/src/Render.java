@@ -19,14 +19,14 @@ public abstract class Render
     private ModelBase modelBase;
     protected RenderBlocks renderBlocks;
     protected float shadowSize;
-    protected float field_194_c;
+    protected float shadowOpaque;
 
     public Render()
     {
         modelBase = new ModelBiped();
         renderBlocks = new RenderBlocks();
         shadowSize = 0.0F;
-        field_194_c = 1.0F;
+        shadowOpaque = 1.0F;
     }
 
     public abstract void doRender(Entity entity, double d, double d1, double d2, 
@@ -136,7 +136,7 @@ public abstract class Render
             if(entityliving instanceof EntityAnimal)
             {
                 EntityAnimal entityanimal = (EntityAnimal)entityliving;
-                if(entityanimal.func_40127_l())
+                if(entityanimal.isChild())
                 {
                     f2 *= 0.5F;
                 }
@@ -302,7 +302,7 @@ public abstract class Render
         if(renderManager.options.fancyGraphics && shadowSize > 0.0F)
         {
             double d3 = renderManager.getDistanceToCamera(entity.posX, entity.posY, entity.posZ);
-            float f2 = (float)((1.0D - d3 / 256D) * (double)field_194_c);
+            float f2 = (float)((1.0D - d3 / 256D) * (double)shadowOpaque);
             if(f2 > 0.0F)
             {
                 renderShadow(entity, d, d1, d2, f2, f1);

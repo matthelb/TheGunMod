@@ -15,7 +15,7 @@ public class BlockCake extends Block
 
     protected BlockCake(int i, int j)
     {
-        super(i, j, Material.cakeMaterial);
+        super(i, j, Material.cake);
         setTickOnLoad(true);
     }
 
@@ -110,7 +110,7 @@ public class BlockCake extends Block
 
     private void eatCakeSlice(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(entityplayer.func_35197_b(false))
+        if(entityplayer.canEat(false))
         {
             entityplayer.getFoodStats().addStats(2, 0.1F);
             int l = world.getBlockMetadata(i, j, k) + 1;

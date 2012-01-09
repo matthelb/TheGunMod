@@ -8,29 +8,29 @@ package net.minecraft.src;
 public interface J_JsonListener
 {
 
-    public abstract void func_27195_b();
+    public abstract void startDocument();
 
-    public abstract void func_27204_c();
+    public abstract void endDocument();
 
-    public abstract void func_27200_d();
+    public abstract void startArray();
 
-    public abstract void func_27197_e();
+    public abstract void endArray();
 
-    public abstract void func_27194_f();
+    public abstract void startObject();
 
-    public abstract void func_27203_g();
+    public abstract void endObject();
 
-    public abstract void func_27205_a(String s);
+    public abstract void startField(String s);
 
-    public abstract void func_27199_h();
+    public abstract void endField();
 
-    public abstract void func_27198_c(String s);
+    public abstract void stringValue(String s);
 
-    public abstract void func_27201_b(String s);
+    public abstract void numberValue(String s);
 
-    public abstract void func_27196_i();
+    public abstract void trueValue();
 
-    public abstract void func_27193_j();
+    public abstract void falseValue();
 
-    public abstract void func_27202_k();
+    public abstract void nullValue();
 }

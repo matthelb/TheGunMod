@@ -14,13 +14,13 @@ import org.lwjgl.opengl.GL11;
 public class RenderSnowMan extends RenderLiving
 {
 
-    private ModelSnowMan field_40289_c;
+    private ModelSnowMan snowmanModel;
 
     public RenderSnowMan()
     {
         super(new ModelSnowMan(), 0.5F);
-        field_40289_c = (ModelSnowMan)super.mainModel;
-        setRenderPassModel(field_40289_c);
+        snowmanModel = (ModelSnowMan)super.mainModel;
+        setRenderPassModel(snowmanModel);
     }
 
     protected void func_40288_a(EntitySnowman entitysnowman, float f)
@@ -30,7 +30,7 @@ public class RenderSnowMan extends RenderLiving
         if(itemstack != null && itemstack.getItem().shiftedIndex < 256)
         {
             GL11.glPushMatrix();
-            field_40289_c.field_40305_c.postRender(0.0625F);
+            snowmanModel.field_40305_c.postRender(0.0625F);
             if(RenderBlocks.renderItemIn3d(Block.blocksList[itemstack.itemID].getRenderType()))
             {
                 float f1 = 0.625F;

@@ -21,7 +21,7 @@ public abstract class EntityMob extends EntityCreature
     {
         super(world);
         attackStrength = 2;
-        field_35171_bJ = 5;
+        experienceValue = 5;
     }
 
     public void onLivingUpdate()
@@ -55,9 +55,9 @@ public abstract class EntityMob extends EntityCreature
         }
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int damage)
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if(super.attackEntityFrom(damagesource, damage))
+        if(super.attackEntityFrom(damagesource, i))
         {
             Entity entity = damagesource.getEntity();
             if(riddenByEntity == entity || ridingEntity == entity)
@@ -78,13 +78,13 @@ public abstract class EntityMob extends EntityCreature
     protected boolean attackEntityAsMob(Entity entity)
     {
         int i = attackStrength;
-        if(isPotionActive(Potion.potionDamageBoost))
+        if(isPotionActive(Potion.damageBoost))
         {
-            i += 3 << getActivePotionEffect(Potion.potionDamageBoost).getAmplifier();
+            i += 3 << getActivePotionEffect(Potion.damageBoost).getAmplifier();
         }
-        if(isPotionActive(Potion.potionWeakness))
+        if(isPotionActive(Potion.weakness))
         {
-            i -= 2 << getActivePotionEffect(Potion.potionWeakness).getAmplifier();
+            i -= 2 << getActivePotionEffect(Potion.weakness).getAmplifier();
         }
         return entity.attackEntityFrom(DamageSource.causeMobDamage(this), i);
     }

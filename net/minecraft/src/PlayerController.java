@@ -29,7 +29,7 @@ public abstract class PlayerController
 
     public abstract void clickBlock(int i, int j, int k, int l);
 
-    public boolean sendBlockRemoved(int i, int j, int k, int l)
+    public boolean onPlayerDestroyBlock(int i, int j, int k, int l)
     {
         World world = mc.theWorld;
         Block block = Block.blocksList[world.getBlockId(i, j, k)];
@@ -47,7 +47,7 @@ public abstract class PlayerController
         return flag;
     }
 
-    public abstract void sendBlockRemoving(int i, int j, int k, int l);
+    public abstract void onPlayerDamageBlock(int i, int j, int k, int l);
 
     public abstract void resetBlockRemoving();
 
@@ -87,10 +87,10 @@ public abstract class PlayerController
 
     public void func_6473_b(EntityPlayer entityplayer)
     {
-        PlayerControllerCreative.func_35645_e(entityplayer);
+        PlayerControllerCreative.disableAbilities(entityplayer);
     }
 
-    public abstract boolean sendPlaceBlock(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l);
+    public abstract boolean onPlayerRightClick(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l);
 
     public EntityPlayer createPlayer(World world)
     {

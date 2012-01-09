@@ -105,19 +105,19 @@ public class RegionFile
         debug((new StringBuilder()).append(s).append("\n").toString());
     }
 
-    private void func_22199_a(String s, int i, int j, String s1)
+    private void debug(String s, int i, int j, String s1)
     {
         debug((new StringBuilder()).append("REGION ").append(s).append(" ").append(fileName.getName()).append("[").append(i).append(",").append(j).append("] = ").append(s1).toString());
     }
 
-    private void func_22197_a(String s, int i, int j, int k, String s1)
+    private void debug(String s, int i, int j, int k, String s1)
     {
         debug((new StringBuilder()).append("REGION ").append(s).append(" ").append(fileName.getName()).append("[").append(i).append(",").append(j).append("] ").append(k).append("B = ").append(s1).toString());
     }
 
     private void debugln(String s, int i, int j, String s1)
     {
-        func_22199_a(s, i, j, (new StringBuilder()).append(s1).append("\n").toString());
+        debug(s, i, j, (new StringBuilder()).append(s1).append("\n").toString());
     }
 
     public synchronized DataInputStream getChunkDataInputStream(int i, int j)
@@ -200,7 +200,7 @@ public class RegionFile
             }
             if(i1 != 0 && l1 == i2)
             {
-                func_22197_a("SAVE", i, j, k, "rewrite");
+                debug("SAVE", i, j, k, "rewrite");
                 write(i1, abyte0, k);
             } else
             {
@@ -244,7 +244,7 @@ public class RegionFile
                 }
                 if(l2 >= i2)
                 {
-                    func_22197_a("SAVE", i, j, k, "reuse");
+                    debug("SAVE", i, j, k, "reuse");
                     int j1 = k2;
                     setOffset(i, j, j1 << 8 | i2);
                     for(int j3 = 0; j3 < i2; j3++)
@@ -255,7 +255,7 @@ public class RegionFile
                     write(j1, abyte0, k);
                 } else
                 {
-                    func_22197_a("SAVE", i, j, k, "grow");
+                    debug("SAVE", i, j, k, "grow");
                     dataFile.seek(dataFile.length());
                     int k1 = sectorFree.size();
                     for(int k3 = 0; k3 < i2; k3++)

@@ -103,7 +103,7 @@ class ContainerCreative extends Container
             addSlot(new Slot(inventoryplayer, i3, 8 + i3 * 18, 184));
         }
 
-        func_35374_a(0.0F);
+        scrollTo(0.0F);
     }
 
     public boolean canInteractWith(EntityPlayer entityplayer)
@@ -111,7 +111,7 @@ class ContainerCreative extends Container
         return true;
     }
 
-    public void func_35374_a(float f)
+    public void scrollTo(float f)
     {
         int i = (itemList.size() / 8 - 8) + 1;
         int j = (int)((double)(f * (float)i) + 0.5D);

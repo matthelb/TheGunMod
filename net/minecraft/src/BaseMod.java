@@ -4,8 +4,6 @@
 
 package net.minecraft.src;
 
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Random;
 import net.minecraft.client.Minecraft;
@@ -61,7 +59,7 @@ public abstract class BaseMod
     {
     }
 
-    public abstract void load() throws IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException;
+    public abstract void load();
 
     public void ModsLoaded()
     {

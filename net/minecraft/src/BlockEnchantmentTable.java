@@ -96,7 +96,7 @@ public class BlockEnchantmentTable extends BlockContainer
             return true;
         } else
         {
-            entityplayer.func_40181_c(i, j, k);
+            entityplayer.displayGUIEnchantment(i, j, k);
             return true;
         }
     }

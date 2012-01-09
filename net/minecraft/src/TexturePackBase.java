@@ -14,7 +14,7 @@ public abstract class TexturePackBase
     public String texturePackFileName;
     public String firstDescriptionLine;
     public String secondDescriptionLine;
-    public String field_6488_d;
+    public String texturePackID;
 
     public TexturePackBase()
     {

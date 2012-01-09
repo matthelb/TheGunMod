@@ -59,7 +59,7 @@ public class BlockLeaves extends BlockLeavesBase
             return ColorizerFoliage.getFoliageColorBirch();
         } else
         {
-            return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).func_40255_b(iblockaccess, i, j, k);
+            return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).getFoliageColorAtCoords(iblockaccess, i, j, k);
         }
     }
 

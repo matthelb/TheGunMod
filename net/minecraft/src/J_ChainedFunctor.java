@@ -21,9 +21,9 @@ final class J_ChainedFunctor
         childJsonNodeSelector = j_jsonnodeselector1;
     }
 
-    public boolean matchsNode(Object obj)
+    public boolean matchesNode(Object obj)
     {
-        return parentJsonNodeSelector.matchs(obj) && childJsonNodeSelector.matchs(parentJsonNodeSelector.getValue(obj));
+        return parentJsonNodeSelector.matches(obj) && childJsonNodeSelector.matches(parentJsonNodeSelector.getValue(obj));
     }
 
     public Object applyTo(Object obj)

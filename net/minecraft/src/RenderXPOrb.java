@@ -21,7 +21,7 @@ public class RenderXPOrb extends Render
         field_35439_b = new RenderBlocks();
         field_35440_a = true;
         shadowSize = 0.15F;
-        field_194_c = 0.75F;
+        shadowOpaque = 0.75F;
     }
 
     public void func_35438_a(EntityXPOrb entityxporb, double d, double d1, double d2, 

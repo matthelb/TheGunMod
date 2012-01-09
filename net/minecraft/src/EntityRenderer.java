@@ -262,7 +262,7 @@ public class EntityRenderer
             float f2 = (float)entityplayer.deathTime + f;
             f1 /= (1.0F - 500F / (f2 + 500F)) * 2.0F + 1.0F;
         }
-        int i = ActiveRenderInfo.func_41066_a(mc.theWorld, entityplayer, f);
+        int i = ActiveRenderInfo.getBlockIdAtEntityViewpoint(mc.theWorld, entityplayer, f);
         if(i != 0 && Block.blocksList[i].blockMaterial == Material.water)
         {
             f1 = (f1 * 60F) / 70F;
@@ -445,7 +445,7 @@ public class EntityRenderer
         if(f3 > 0.0F)
         {
             int j = 20;
-            if(mc.thePlayer.isPotionActive(Potion.potionConfusion))
+            if(mc.thePlayer.isPotionActive(Potion.confusion))
             {
                 j = 7;
             }
@@ -859,7 +859,7 @@ public class EntityRenderer
             GL11.glEnable(2884 /*GL_CULL_FACE*/);
             Profiler.endStartSection("camera");
             setupCameraTransform(f, i);
-            ActiveRenderInfo.func_41067_a(mc.thePlayer, mc.gameSettings.thirdPersonView == 2);
+            ActiveRenderInfo.updateRenderInfo(mc.thePlayer, mc.gameSettings.thirdPersonView == 2);
             Profiler.endStartSection("frustrum");
             ClippingHelperImpl.getInstance();
             if(mc.gameSettings.renderDistance < 2)
@@ -1028,11 +1028,11 @@ public class EntityRenderer
         double d2 = 0.0D;
         int l = 0;
         int i1 = (int)(100F * f * f);
-        if(mc.gameSettings.field_41087_P == 1)
+        if(mc.gameSettings.particles == 1)
         {
             i1 >>= 1;
         } else
-        if(mc.gameSettings.field_41087_P == 2)
+        if(mc.gameSettings.particles == 2)
         {
             i1 = 0;
         }
@@ -1040,9 +1040,9 @@ public class EntityRenderer
         {
             int k1 = (i + random.nextInt(byte0)) - random.nextInt(byte0);
             int l1 = (k + random.nextInt(byte0)) - random.nextInt(byte0);
-            int i2 = world.func_35461_e(k1, l1);
+            int i2 = world.getPrecipitationHeight(k1, l1);
             int j2 = world.getBlockId(k1, i2 - 1, l1);
-            if(i2 > j + byte0 || i2 < j - byte0 || !world.getWorldChunkManager().getBiomeGenAt(k1, l1).canSpawnLightningBolt() || world.getWorldChunkManager().func_35554_b(k1, i2, l1) <= 0.2F)
+            if(i2 > j + byte0 || i2 < j - byte0 || !world.getWorldChunkManager().getBiomeGenAt(k1, l1).canSpawnLightningBolt() || world.getWorldChunkManager().getTemperature(k1, i2, l1) <= 0.2F)
             {
                 continue;
             }
@@ -1069,7 +1069,7 @@ public class EntityRenderer
         if(l > 0 && random.nextInt(3) < rainSoundCounter++)
         {
             rainSoundCounter = 0;
-            if(d1 > entityliving.posY + 1.0D && world.func_35461_e(MathHelper.floor_double(entityliving.posX), MathHelper.floor_double(entityliving.posZ)) > MathHelper.floor_double(entityliving.posY))
+            if(d1 > entityliving.posY + 1.0D && world.getPrecipitationHeight(MathHelper.floor_double(entityliving.posX), MathHelper.floor_double(entityliving.posZ)) > MathHelper.floor_double(entityliving.posY))
             {
                 mc.theWorld.playSoundEffect(d, d1, d2, "ambient.weather.rain", 0.1F, 0.5F);
             } else
@@ -1126,8 +1126,8 @@ public class EntityRenderer
         {
             k1 = 10;
         }
-        BiomeGenBase abiomegenbase[] = world.getWorldChunkManager().func_4069_a(k - k1, i1 - k1, k1 * 2 + 1, k1 * 2 + 1);
-        float af[] = world.getWorldChunkManager().func_40539_b(k - k1, i1 - k1, k1 * 2 + 1, k1 * 2 + 1);
+        BiomeGenBase abiomegenbase[] = world.getWorldChunkManager().loadRendererData(k - k1, i1 - k1, k1 * 2 + 1, k1 * 2 + 1);
+        float af[] = world.getWorldChunkManager().initTemperatureCache(k - k1, i1 - k1, k1 * 2 + 1, k1 * 2 + 1);
         int l1 = 0;
         byte byte0 = -1;
         float f5 = (float)rendererUpdateCount + f;
@@ -1149,7 +1149,7 @@ public class EntityRenderer
                 {
                     continue;
                 }
-                int l2 = world.func_35461_e(j2, i2);
+                int l2 = world.getPrecipitationHeight(j2, i2);
                 int i3 = l - k1;
                 int j3 = l + k1;
                 if(i3 < l2)
@@ -1172,7 +1172,7 @@ public class EntityRenderer
                 }
                 random.setSeed(j2 * j2 * 3121 /*GL_RGBA_MODE*/ + j2 * 0x2b24abb ^ i2 * i2 * 0x66397 + i2 * 13761);
                 float f9 = af[l1 - 1];
-                if(world.getWorldChunkManager().func_40540_a(f9, l2) >= 0.15F)
+                if(world.getWorldChunkManager().getTemperatureAtHeight(f9, l2) >= 0.15F)
                 {
                     if(byte0 != 0)
                     {
@@ -1304,7 +1304,7 @@ public class EntityRenderer
             fogColorGreen *= f10;
             fogColorBlue *= f10;
         }
-        int i = ActiveRenderInfo.func_41066_a(mc.theWorld, entityliving, f);
+        int i = ActiveRenderInfo.getBlockIdAtEntityViewpoint(mc.theWorld, entityliving, f);
         if(cloudFog)
         {
             Vec3D vec3d3 = world.drawClouds(f);
@@ -1329,9 +1329,9 @@ public class EntityRenderer
         fogColorGreen *= f11;
         fogColorBlue *= f11;
         double d = (entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * (double)f) / 32D;
-        if(entityliving.isPotionActive(Potion.potionBlindness))
+        if(entityliving.isPotionActive(Potion.blindness))
         {
-            int j = entityliving.getActivePotionEffect(Potion.potionBlindness).getDuration();
+            int j = entityliving.getActivePotionEffect(Potion.blindness).getDuration();
             if(j < 20)
             {
                 d *= 1.0F - (float)j / 20F;
@@ -1382,11 +1382,11 @@ public class EntityRenderer
         GL11.glFog(2918 /*GL_FOG_COLOR*/, setFogColorBuffer(fogColorRed, fogColorGreen, fogColorBlue, 1.0F));
         GL11.glNormal3f(0.0F, -1F, 0.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        int j = ActiveRenderInfo.func_41066_a(mc.theWorld, entityliving, f);
-        if(entityliving.isPotionActive(Potion.potionBlindness))
+        int j = ActiveRenderInfo.getBlockIdAtEntityViewpoint(mc.theWorld, entityliving, f);
+        if(entityliving.isPotionActive(Potion.blindness))
         {
             float f1 = 5F;
-            int k = entityliving.getActivePotionEffect(Potion.potionBlindness).getDuration();
+            int k = entityliving.getActivePotionEffect(Potion.blindness).getDuration();
             if(k < 20)
             {
                 f1 = 5F + (farPlaneDistance - 5F) * (1.0F - (float)k / 20F);
@@ -1426,7 +1426,7 @@ public class EntityRenderer
         if(j > 0 && Block.blocksList[j].blockMaterial == Material.water)
         {
             GL11.glFogi(2917 /*GL_FOG_MODE*/, 2048 /*GL_EXP*/);
-            if(!entityliving.isPotionActive(Potion.potionWaterBreathing))
+            if(!entityliving.isPotionActive(Potion.waterBreathing))
             {
                 GL11.glFogf(2914 /*GL_FOG_DENSITY*/, 0.1F);
             } else
@@ -1500,7 +1500,7 @@ public class EntityRenderer
             {
                 GL11.glFogi(34138, 34139);
             }
-            if(mc.theWorld.worldProvider.isNether)
+            if(mc.theWorld.worldProvider.isAlternateDimension)
             {
                 GL11.glFogf(2915 /*GL_FOG_START*/, 0.0F);
             }

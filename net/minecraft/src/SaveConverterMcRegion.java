@@ -21,7 +21,7 @@ public class SaveConverterMcRegion extends SaveFormatOld
         super(file);
     }
 
-    public String func_22178_a()
+    public String getFormatName()
     {
         return "Scaevolus' McRegion";
     }

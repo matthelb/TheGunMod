@@ -180,7 +180,7 @@ public class Block
     public static final Block endPortal;
     public static final Block endPortalFrame;
     public static final Block whiteStone;
-    public static final Block field_41050_bK;
+    public static final Block dragonEgg;
     public int blockIndexInTexture;
     public final int blockID;
     protected float blockHardness;
@@ -470,7 +470,7 @@ public class Block
         {
             return;
         }
-        int j1 = func_40198_a(i1, world.rand);
+        int j1 = quantityDroppedWithBonus(i1, world.rand);
         for(int k1 = 0; k1 < j1; k1++)
         {
             if(world.rand.nextFloat() > f)
@@ -499,7 +499,7 @@ public class Block
             double d2 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             EntityItem entityitem = new EntityItem(world, (double)i + d, (double)j + d1, (double)k + d2, itemstack);
             entityitem.delayBeforeCanPickup = 10;
-            world.entityJoinedWorld(entityitem);
+            world.spawnEntityInWorld(entityitem);
             return;
         }
     }
@@ -728,7 +728,7 @@ public class Block
         entityplayer.addExhaustion(0.025F);
         if(renderAsNormalBlock() && !isBlockContainer[blockID] && EnchantmentHelper.getSilkTouchModifier(entityplayer.inventory))
         {
-            ItemStack itemstack = func_41049_c_(l);
+            ItemStack itemstack = createStackedBlock(l);
             if(itemstack != null)
             {
                 dropBlockAsItem_do(world, i, j, k, itemstack);
@@ -740,7 +740,7 @@ public class Block
         }
     }
 
-    protected ItemStack func_41049_c_(int i)
+    protected ItemStack createStackedBlock(int i)
     {
         int j = 0;
         if(blockID >= 0 && blockID < Item.itemsList.length && Item.itemsList[blockID].getHasSubtypes())
@@ -750,7 +750,7 @@ public class Block
         return new ItemStack(blockID, 1, j);
     }
 
-    public int func_40198_a(int i, Random random)
+    public int quantityDroppedWithBonus(int i, Random random)
     {
         return quantityDropped(random);
     }
@@ -952,7 +952,7 @@ public class Block
         endPortal = (new BlockEndPortal(119, Material.portal)).setHardness(-1F).setResistance(6000000F);
         endPortalFrame = (new BlockEndPortalFrame(120)).setStepSound(soundGlassFootstep).setLightValue(0.125F).setHardness(-1F).setBlockName("endPortalFrame").setRequiresSelfNotify().setResistance(6000000F);
         whiteStone = (new Block(121, 175, Material.rock)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setBlockName("whiteStone");
-        field_41050_bK = (new BlockDragonEgg(122, 167)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setLightValue(0.125F).setBlockName("dragonEgg");
+        dragonEgg = (new BlockDragonEgg(122, 167)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setLightValue(0.125F).setBlockName("dragonEgg");
         Item.itemsList[cloth.blockID] = (new ItemCloth(cloth.blockID - 256)).setItemName("cloth");
         Item.itemsList[wood.blockID] = (new ItemMetadata(wood.blockID - 256, wood)).setItemName("log");
         Item.itemsList[stoneBrick.blockID] = (new ItemMetadata(stoneBrick.blockID - 256, stoneBrick)).setItemName("stonebricksmooth");
@@ -960,7 +960,7 @@ public class Block
         Item.itemsList[sapling.blockID] = (new ItemSapling(sapling.blockID - 256)).setItemName("sapling");
         Item.itemsList[leaves.blockID] = (new ItemLeaves(leaves.blockID - 256)).setItemName("leaves");
         Item.itemsList[vine.blockID] = new ItemColored(vine.blockID - 256, false);
-        Item.itemsList[tallGrass.blockID] = (new ItemColored(tallGrass.blockID - 256, true)).func_41033_a(new String[] {
+        Item.itemsList[tallGrass.blockID] = (new ItemColored(tallGrass.blockID - 256, true)).setBlockNames(new String[] {
             "shrub", "grass", "fern"
         });
         Item.itemsList[waterlily.blockID] = new ItemLilyPad(waterlily.blockID - 256);
@@ -994,7 +994,6 @@ public class Block
         }
 
         canBlockGrass[0] = true;
-        if(mod_Guns.DEBUG)
-            StatList.initBreakableStats();
+        StatList.initBreakableStats();
     }
 }

@@ -66,7 +66,7 @@ public class EntityBullet extends EntityProjectile {
             if(controller != null) {
                 Block block = Block.blocksList[worldObj.getBlockId(position.blockX, position.blockY, position.blockZ)];
                 if(block.blockMaterial.equals(Material.glass)) {
-                    controller.sendBlockRemoved(position.blockX, position.blockY, position.blockZ, block.blockID);
+                    controller.onPlayerDestroyBlock(position.blockX, position.blockY, position.blockZ, block.blockID);
                 }
                 return true;
             }

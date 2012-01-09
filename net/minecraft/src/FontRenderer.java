@@ -20,7 +20,7 @@ public class FontRenderer
 
     private int charWidth[];
     public int fontTextureName;
-    public int field_41063_b;
+    public int FONT_HEIGHT;
     private int fontDisplayLists;
     private IntBuffer buffer;
     public Random field_41064_c;
@@ -29,7 +29,7 @@ public class FontRenderer
     {
         charWidth = new int[256];
         fontTextureName = 0;
-        field_41063_b = 8;
+        FONT_HEIGHT = 8;
         buffer = GLAllocation.createDirectIntBuffer(1024 /*GL_FRONT_LEFT*/);
         field_41064_c = new Random();
         BufferedImage bufferedimage;
@@ -297,7 +297,7 @@ public class FontRenderer
                     s1 = (new StringBuilder()).append("\247").append(s3.charAt(s3.lastIndexOf("\247") + 1)).toString();
                 }
                 renderString(s3, i, j, l, flag);
-                j += field_41063_b;
+                j += FONT_HEIGHT;
             }
 
             if(getStringWidth(s2.trim()) > 0)
@@ -307,7 +307,7 @@ public class FontRenderer
                     s1 = (new StringBuilder()).append("\247").append(s2.charAt(s2.lastIndexOf("\247") + 1)).toString();
                 }
                 renderString(s2, i, j, l, flag);
-                j += field_41063_b;
+                j += FONT_HEIGHT;
             }
         } while(true);
     }
@@ -342,18 +342,18 @@ public class FontRenderer
                 for(j1 = 0; getStringWidth(s1.substring(0, j1 + 1)) <= i; j1++) { }
                 if(s1.substring(0, j1).trim().length() > 0)
                 {
-                    i1 += field_41063_b;
+                    i1 += FONT_HEIGHT;
                 }
             }
 
             if(s1.trim().length() > 0)
             {
-                i1 += field_41063_b;
+                i1 += FONT_HEIGHT;
             }
         } while(true);
-        if(i1 < field_41063_b)
+        if(i1 < FONT_HEIGHT)
         {
-            i1 += field_41063_b;
+            i1 += FONT_HEIGHT;
         }
         return i1;
     }

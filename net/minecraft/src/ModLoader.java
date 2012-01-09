@@ -412,7 +412,7 @@ public final class ModLoader
                     SpawnListEntry spawnlistentry = (SpawnListEntry)iterator.next();
                     if(spawnlistentry.entityClass == class1)
                     {
-                        spawnlistentry.field_35590_d = i;
+                        spawnlistentry.itemWeight = i;
                         spawnlistentry.field_35591_b = j;
                         spawnlistentry.field_35592_c = k;
                         flag = true;

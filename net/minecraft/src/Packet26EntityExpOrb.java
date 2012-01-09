@@ -53,7 +53,7 @@ public class Packet26EntityExpOrb extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.handleXPOrb(this);
+        nethandler.handleEntityExpOrb(this);
     }
 
     public int getPacketSize()

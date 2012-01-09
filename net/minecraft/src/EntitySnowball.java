@@ -27,7 +27,7 @@ public class EntitySnowball extends EntityThrowable
         super(world, d, d1, d2);
     }
 
-    protected void func_40078_a(MovingObjectPosition movingobjectposition)
+    protected void onThrowableCollision(MovingObjectPosition movingobjectposition)
     {
         if(movingobjectposition.entityHit != null)
         {
@@ -36,7 +36,7 @@ public class EntitySnowball extends EntityThrowable
             {
                 byte0 = 3;
             }
-            if(!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, field_40083_c), byte0));
+            if(!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, throwingEntity), byte0));
         }
         for(int i = 0; i < 8; i++)
         {

@@ -17,13 +17,13 @@ public class GenLayerRiver extends GenLayer
         super.parent = genlayer;
     }
 
-    public int[] func_35500_a(int i, int j, int k, int l)
+    public int[] getInts(int i, int j, int k, int l)
     {
         int i1 = i - 1;
         int j1 = j - 1;
         int k1 = k + 2;
         int l1 = l + 2;
-        int ai[] = parent.func_35500_a(i1, j1, k1, l1);
+        int ai[] = parent.getInts(i1, j1, k1, l1);
         int ai1[] = IntCache.getIntCache(k * l);
         for(int i2 = 0; i2 < l; i2++)
         {

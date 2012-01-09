@@ -46,7 +46,7 @@ public class ItemFlintAndSteel extends Item
         {
             i++;
         }
-        if(!entityplayer.func_35190_e(i, j, k))
+        if(!entityplayer.canPlayerEdit(i, j, k))
         {
             return false;
         }

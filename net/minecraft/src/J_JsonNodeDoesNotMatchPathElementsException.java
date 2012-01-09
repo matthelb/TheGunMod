@@ -12,24 +12,24 @@ package net.minecraft.src;
 public final class J_JsonNodeDoesNotMatchPathElementsException extends J_JsonNodeDoesNotMatchJsonNodeSelectorException
 {
 
-    private static final J_JsonFormatter field_27320_a = new J_CompactJsonFormatter();
+    private static final J_JsonFormatter JSON_FORMATTER = new J_CompactJsonFormatter();
 
-    static J_JsonNodeDoesNotMatchPathElementsException func_27319_a(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, Object aobj[], J_JsonRootNode j_jsonrootnode)
+    static J_JsonNodeDoesNotMatchPathElementsException jsonNodeDoesNotMatchPathElementsException(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, Object aobj[], J_JsonRootNode j_jsonrootnode)
     {
         return new J_JsonNodeDoesNotMatchPathElementsException(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, aobj, j_jsonrootnode);
     }
 
     private J_JsonNodeDoesNotMatchPathElementsException(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, Object aobj[], J_JsonRootNode j_jsonrootnode)
     {
-        super(func_27318_b(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, aobj, j_jsonrootnode));
+        super(formatMessage(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, aobj, j_jsonrootnode));
     }
 
-    private static String func_27318_b(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, Object aobj[], J_JsonRootNode j_jsonrootnode)
+    private static String formatMessage(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException j_jsonnodedoesnotmatchchainedjsonnodeselectorexception, Object aobj[], J_JsonRootNode j_jsonrootnode)
     {
-        return (new StringBuilder()).append("Failed to find ").append(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.field_27326_a.toString()).append(" at [").append(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException.func_27324_a(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.field_27325_b)).append("] while resolving [").append(func_27317_a(aobj)).append("] in ").append(field_27320_a.format(j_jsonrootnode)).append(".").toString();
+        return (new StringBuilder()).append("Failed to find ").append(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.failedNode.toString()).append(" at [").append(J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException.getShortFormFailPath(j_jsonnodedoesnotmatchchainedjsonnodeselectorexception.failPath)).append("] while resolving [").append(commaSeparate(aobj)).append("] in ").append(JSON_FORMATTER.format(j_jsonrootnode)).append(".").toString();
     }
 
-    private static String func_27317_a(Object aobj[])
+    private static String commaSeparate(Object aobj[])
     {
         StringBuilder stringbuilder = new StringBuilder();
         boolean flag = true;

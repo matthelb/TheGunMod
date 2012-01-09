@@ -236,7 +236,7 @@ public class BlockDoor extends Block
 
     public boolean canPlaceBlockAt(World world, int i, int j, int k)
     {
-        if(j >= world.field_35472_c - 1)
+        if(j >= world.worldHeight - 1)
         {
             return false;
         } else

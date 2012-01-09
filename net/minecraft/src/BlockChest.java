@@ -378,7 +378,7 @@ public class BlockChest extends BlockContainer
         TileEntityChest tileentitychest = (TileEntityChest)world.getBlockTileEntity(i, j, k);
         if(tileentitychest != null)
         {
-            tileentitychest.func_35144_b();
+            tileentitychest.updateContainingBlockInfo();
         }
     }
 
@@ -410,11 +410,11 @@ public class BlockChest extends BlockContainer
                     entityitem.motionX = (float)random.nextGaussian() * f3;
                     entityitem.motionY = (float)random.nextGaussian() * f3 + 0.2F;
                     entityitem.motionZ = (float)random.nextGaussian() * f3;
-                    if(itemstack.func_40710_n())
+                    if(itemstack.hasTagCompound())
                     {
-                        entityitem.item.func_40706_d((NBTTagCompound)itemstack.func_40709_o().func_40195_b());
+                        entityitem.item.setTagCompound((NBTTagCompound)itemstack.getTagCompound().cloneTag());
                     }
-                    world.entityJoinedWorld(entityitem);
+                    world.spawnEntityInWorld(entityitem);
                 }
             }
 

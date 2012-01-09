@@ -11,27 +11,27 @@ package net.minecraft.src;
 class LongHashMapEntry
 {
 
-    final long field_35834_a;
-    Object field_35832_b;
-    LongHashMapEntry field_35833_c;
+    final long key;
+    Object value;
+    LongHashMapEntry nextEntry;
     final int field_35831_d;
 
     LongHashMapEntry(int i, long l, Object obj, LongHashMapEntry longhashmapentry)
     {
-        field_35832_b = obj;
-        field_35833_c = longhashmapentry;
-        field_35834_a = l;
+        value = obj;
+        nextEntry = longhashmapentry;
+        key = l;
         field_35831_d = i;
     }
 
     public final long func_35830_a()
     {
-        return field_35834_a;
+        return key;
     }
 
     public final Object func_35829_b()
     {
-        return field_35832_b;
+        return value;
     }
 
     public final boolean equals(Object obj)
@@ -57,7 +57,7 @@ class LongHashMapEntry
 
     public final int hashCode()
     {
-        return LongHashMap.getHashCode(field_35834_a);
+        return LongHashMap.getHashCode(key);
     }
 
     public final String toString()

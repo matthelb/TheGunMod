@@ -22,7 +22,7 @@ public class EntityRainFX extends EntityFX
         particleRed = 1.0F;
         particleGreen = 1.0F;
         particleBlue = 1.0F;
-        func_40099_c(19 + rand.nextInt(4));
+        setParticleTextureIndex(19 + rand.nextInt(4));
         setSize(0.01F, 0.01F);
         particleGravity = 0.06F;
         particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));

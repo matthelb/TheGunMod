@@ -14,12 +14,12 @@ import java.util.Random;
 public class ComponentVillageField extends ComponentVillage
 {
 
-    private int field_35081_a;
+    private int averageGroundLevel;
 
     public ComponentVillageField(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
-        field_35081_a = -1;
+        averageGroundLevel = -1;
         coordBaseMode = j;
         boundingBox = structureboundingbox;
     }
@@ -42,14 +42,14 @@ public class ComponentVillageField extends ComponentVillage
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(field_35081_a < 0)
+        if(averageGroundLevel < 0)
         {
-            field_35081_a = getAverageGroundLevel(world, structureboundingbox);
-            if(field_35081_a < 0)
+            averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
+            if(averageGroundLevel < 0)
             {
                 return true;
             }
-            boundingBox.offset(0, ((field_35081_a - boundingBox.maxY) + 4) - 1, 0);
+            boundingBox.offset(0, ((averageGroundLevel - boundingBox.maxY) + 4) - 1, 0);
         }
         fillWithBlocks(world, structureboundingbox, 0, 1, 0, 12, 4, 8, 0, 0, false);
         fillWithBlocks(world, structureboundingbox, 1, 0, 1, 2, 0, 7, Block.tilledField.blockID, Block.tilledField.blockID, false);

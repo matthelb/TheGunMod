@@ -23,11 +23,11 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 /**
- * Created by IntelliJ IDEA.
- * User: Matt
- * Date: 9/1/11
- * Time: 9:47 AM
- */
+* Created by IntelliJ IDEA.
+* User: Matt
+* Date: 9/1/11
+* Time: 9:47 AM
+*/
 public class mod_Guns extends Mod {
 
     public static final int MOUSE_LEFT = 0;
@@ -81,9 +81,17 @@ public class mod_Guns extends Mod {
     }
 
     @Override
-    public void load() throws IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+    public void load() {
+        try {
         loadConfig(getConfig());
-        initItems();
+        } catch (IOException e) {
+            System.out.println("Failed to load config file");
+        }
+        try {
+            initItems();
+        } catch (Exception e) {
+            System.out.println("Failed to initialize items");
+        }
         registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
         registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
         ModLoader.RegisterKey(this, reloadKeybinding, false);
@@ -301,33 +309,9 @@ public class mod_Guns extends Mod {
         }
     }
 
-    private static void renderRedDot(EntityPlayer player, World world) {
-        Vec3D playerPos = player.getPosition(1);
-        Vec3D projectedPos = Util.getProjectedPoint(playerPos, player.getLook(1), 1000);
-        MovingObjectPosition rayTrace = world.rayTraceBlocks(playerPos, projectedPos);
-        Vec3D vec = null;
-        if (rayTrace != null)
-            vec = rayTrace.hitVec;
-        if (vec == null)
-            vec = projectedPos;
-        GL11.glPushMatrix();
-        GL11.glDisable(3553 /*GL_TEXTURE_2D*/);
-        GL11.glColor4f(1.0f, 0.0f, 0.0f, 0.4f);
-        Tessellator t = Tessellator.instance;
-        t.setTranslationD(vec.xCoord, vec.yCoord, vec.zCoord);
-        t.setNormal(0, 1, 0);
-        t.addVertexWithUV(-1, -1, 0, 0, 0);
-        t.addVertexWithUV(1, -1, 0, 1, 0);
-        t.addVertexWithUV(1, 1, 0, 1, 1);
-        t.addVertexWithUV(-1, 1, 0, 0, 1);
-        t.draw();
-        GL11.glEnable(3553 /*GL_TEXTURE_2D*/);
-        GL11.glPopMatrix();
-    }
-
     private void zoom(Minecraft mc, ItemGun gun, EntityPlayer player, World world, boolean in) {
         float increment = 0.1f + (((gun != null) ? gun.getZoom(): 0) / 30f);
-        currentZoom = (currentZoom + ((in) ?  increment : -increment));
+        currentZoom = (currentZoom + ((in) ? increment : -increment));
         currentZoom = (in) ? Math.min(gun.getZoom(), currentZoom) : Math.max(1.0f, currentZoom);
         Util.setPrivateValue(EntityRenderer.class, mc.entityRenderer, "cameraZoom", obfuscatedFields.get(EntityRenderer.class).get("cameraZoom"), (in && gun != null && gun.getZoom() > 1.0f) ? Math.min(currentZoom, gun.getZoom()) : Math.max(currentZoom, 1.0f));
         if (gun != null && gun.getScope() > 0 && (in || currentZoom != 1.0f)) {

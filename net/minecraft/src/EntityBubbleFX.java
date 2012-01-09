@@ -19,7 +19,7 @@ public class EntityBubbleFX extends EntityFX
         particleRed = 1.0F;
         particleGreen = 1.0F;
         particleBlue = 1.0F;
-        func_40099_c(32);
+        setParticleTextureIndex(32);
         setSize(0.02F, 0.02F);
         particleScale = particleScale * (rand.nextFloat() * 0.6F + 0.2F);
         motionX = d3 * 0.20000000298023224D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);

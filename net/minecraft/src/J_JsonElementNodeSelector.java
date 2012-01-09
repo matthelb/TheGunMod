@@ -20,7 +20,7 @@ class J_JsonElementNodeSelector extends J_LeafFunctor
 //        super();
     }
 
-    public boolean matchsNode_(List list)
+    public boolean matchesNode_(List list)
     {
         return list.size() > index;
     }
@@ -45,8 +45,8 @@ class J_JsonElementNodeSelector extends J_LeafFunctor
         return typeSafeApplyTo_((List)obj);
     }
 
-    public boolean matchsNode(Object obj)
+    public boolean matchesNode(Object obj)
     {
-        return matchsNode_((List)obj);
+        return matchesNode_((List)obj);
     }
 }

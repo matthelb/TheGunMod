@@ -16,11 +16,11 @@ public abstract class StructureComponent
 
     protected StructureBoundingBox boundingBox;
     protected int coordBaseMode;
-    protected int field_35026_i;
+    protected int componentType;
 
     protected StructureComponent(int i)
     {
-        field_35026_i = i;
+        componentType = i;
         coordBaseMode = -1;
     }
 
@@ -35,9 +35,9 @@ public abstract class StructureComponent
         return boundingBox;
     }
 
-    public int func_35012_c()
+    public int getComponentType()
     {
-        return field_35026_i;
+        return componentType;
     }
 
     public static StructureComponent getIntersectingStructureComponent(List list, StructureBoundingBox structureboundingbox)
@@ -169,7 +169,7 @@ public abstract class StructureComponent
         return j;
     }
 
-    protected int func_35009_c(int i, int j)
+    protected int getMetadataWithOffset(int i, int j)
     {
         if(i == Block.rail.blockID)
         {
@@ -520,7 +520,7 @@ public abstract class StructureComponent
         {
             return;
         }
-        for(; !world.isAirBlock(l, i1, j1) && i1 < world.field_35469_d; i1++)
+        for(; !world.isAirBlock(l, i1, j1) && i1 < world.worldMaxY; i1++)
         {
             world.setBlockAndMetadata(l, i1, j1, 0, 0);
         }
@@ -564,16 +564,16 @@ public abstract class StructureComponent
     {
         for(int j = 0; j < i; j++)
         {
-            StructurePieceTreasure structurepiecetreasure = (StructurePieceTreasure)WeightedRandom.func_35735_a(random, astructurepiecetreasure);
-            int k = structurepiecetreasure.field_35595_c + random.nextInt((structurepiecetreasure.field_35593_e - structurepiecetreasure.field_35595_c) + 1);
-            if(Item.itemsList[structurepiecetreasure.field_35596_a].getItemStackLimit() >= k)
+            StructurePieceTreasure structurepiecetreasure = (StructurePieceTreasure)WeightedRandom.chooseOne(random, astructurepiecetreasure);
+            int k = structurepiecetreasure.minItemStack + random.nextInt((structurepiecetreasure.maxItemStack - structurepiecetreasure.minItemStack) + 1);
+            if(Item.itemsList[structurepiecetreasure.itemID].getItemStackLimit() >= k)
             {
-                tileentitychest.setInventorySlotContents(random.nextInt(tileentitychest.getSizeInventory()), new ItemStack(structurepiecetreasure.field_35596_a, k, structurepiecetreasure.field_35594_b));
+                tileentitychest.setInventorySlotContents(random.nextInt(tileentitychest.getSizeInventory()), new ItemStack(structurepiecetreasure.itemID, k, structurepiecetreasure.itemMetadata));
                 continue;
             }
             for(int l = 0; l < k; l++)
             {
-                tileentitychest.setInventorySlotContents(random.nextInt(tileentitychest.getSizeInventory()), new ItemStack(structurepiecetreasure.field_35596_a, 1, structurepiecetreasure.field_35594_b));
+                tileentitychest.setInventorySlotContents(random.nextInt(tileentitychest.getSizeInventory()), new ItemStack(structurepiecetreasure.itemID, 1, structurepiecetreasure.itemMetadata));
             }
 
         }

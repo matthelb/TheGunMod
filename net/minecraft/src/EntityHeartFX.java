@@ -32,7 +32,7 @@ public class EntityHeartFX extends EntityFX
         particleScaleOverTime = particleScale;
         particleMaxAge = 16;
         noClip = false;
-        func_40099_c(80);
+        setParticleTextureIndex(80);
     }
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)

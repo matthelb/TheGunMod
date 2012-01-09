@@ -8,11 +8,11 @@ package net.minecraft.src;
 public class GuiSavingLevelString
 {
 
-    public String field_35624_a;
-    public int field_35623_b;
+    public String name;
+    public int responseTime;
 
     public GuiSavingLevelString(String s)
     {
-        field_35624_a = s;
+        name = s;
     }
 }

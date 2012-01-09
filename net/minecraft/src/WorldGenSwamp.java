@@ -22,7 +22,7 @@ public class WorldGenSwamp extends WorldGenerator
         int l = random.nextInt(4) + 5;
         for(; world.getBlockMaterial(i, j - 1, k) == Material.water; j--) { }
         boolean flag = true;
-        if(j < 1 || j + l + 1 > world.field_35472_c)
+        if(j < 1 || j + l + 1 > world.worldHeight)
         {
             return false;
         }
@@ -41,7 +41,7 @@ public class WorldGenSwamp extends WorldGenerator
             {
                 for(int j3 = k - byte0; j3 <= k + byte0 && flag; j3++)
                 {
-                    if(i1 >= 0 && i1 < world.field_35472_c)
+                    if(i1 >= 0 && i1 < world.worldHeight)
                     {
                         int i4 = world.getBlockId(j2, i1, j3);
                         if(i4 == 0 || i4 == Block.leaves.blockID)
@@ -73,7 +73,7 @@ public class WorldGenSwamp extends WorldGenerator
             return false;
         }
         int j1 = world.getBlockId(i, j - 1, k);
-        if(j1 != Block.grass.blockID && j1 != Block.dirt.blockID || j >= world.field_35472_c - l - 1)
+        if(j1 != Block.grass.blockID && j1 != Block.dirt.blockID || j >= world.worldHeight - l - 1)
         {
             return false;
         }

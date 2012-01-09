@@ -25,7 +25,7 @@ public class BlockFlowing extends BlockFluid
         flowCost = new int[4];
     }
 
-    private void func_30003_j(World world, int i, int j, int k)
+    private void updateFlow(World world, int i, int j, int k)
     {
         int l = world.getBlockMetadata(i, j, k);
         world.setBlockAndMetadata(i, j, k, blockID + 1, l);
@@ -97,11 +97,11 @@ public class BlockFlowing extends BlockFluid
             } else
             if(flag)
             {
-                func_30003_j(world, i, j, k);
+                updateFlow(world, i, j, k);
             }
         } else
         {
-            func_30003_j(world, i, j, k);
+            updateFlow(world, i, j, k);
         }
         if(liquidCanDisplaceBlock(world, i, j - 1, k))
         {

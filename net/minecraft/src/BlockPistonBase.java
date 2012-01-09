@@ -376,7 +376,7 @@ public class BlockPistonBase extends Block
             {
                 break;
             }
-            if(j1 <= 0 || j1 >= world.field_35472_c - 1)
+            if(j1 <= 0 || j1 >= world.worldHeight - 1)
             {
                 return false;
             }
@@ -417,7 +417,7 @@ public class BlockPistonBase extends Block
             {
                 break;
             }
-            if(j1 <= 0 || j1 >= world.field_35472_c - 1)
+            if(j1 <= 0 || j1 >= world.worldHeight - 1)
             {
                 return false;
             }

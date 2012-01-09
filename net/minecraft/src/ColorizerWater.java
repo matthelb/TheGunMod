@@ -14,7 +14,7 @@ public class ColorizerWater
     {
     }
 
-    public static void getWaterBiomeColorizer(int ai[])
+    public static void setWaterBiomeColorizer(int ai[])
     {
         waterBuffer = ai;
     }

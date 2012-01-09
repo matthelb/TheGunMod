@@ -23,7 +23,7 @@ public class BiomeGenSwamp extends BiomeGenBase
         biomeDecorator.reedsPerChunk = 10;
         biomeDecorator.clayPerChunk = 1;
         biomeDecorator.waterlilyPerChunk = 4;
-        field_40256_A = 0xe0ff70;
+        waterColorMultiplier = 0xe0ff70;
     }
 
     public WorldGenerator getRandomWorldGenForTrees(Random random)
@@ -31,17 +31,17 @@ public class BiomeGenSwamp extends BiomeGenBase
         return worldGenSwamp;
     }
 
-    public int func_40254_a(IBlockAccess iblockaccess, int i, int j, int k)
+    public int getGrassColorAtCoords(IBlockAccess iblockaccess, int i, int j, int k)
     {
-        double d = iblockaccess.getWorldChunkManager().func_35554_b(i, j, k);
-        double d1 = iblockaccess.getWorldChunkManager().func_35558_c(i, k);
+        double d = iblockaccess.getWorldChunkManager().getTemperature(i, j, k);
+        double d1 = iblockaccess.getWorldChunkManager().getRainfall(i, k);
         return ((ColorizerGrass.getGrassColor(d, d1) & 0xfefefe) + 0x4e0e4e) / 2;
     }
 
-    public int func_40255_b(IBlockAccess iblockaccess, int i, int j, int k)
+    public int getFoliageColorAtCoords(IBlockAccess iblockaccess, int i, int j, int k)
     {
-        double d = iblockaccess.getWorldChunkManager().func_35554_b(i, j, k);
-        double d1 = iblockaccess.getWorldChunkManager().func_35558_c(i, k);
+        double d = iblockaccess.getWorldChunkManager().getTemperature(i, j, k);
+        double d1 = iblockaccess.getWorldChunkManager().getRainfall(i, k);
         return ((ColorizerFoliage.getFoliageColor(d, d1) & 0xfefefe) + 0x4e0e4e) / 2;
     }
 }

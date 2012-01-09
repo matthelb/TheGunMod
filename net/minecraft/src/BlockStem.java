@@ -13,12 +13,12 @@ import java.util.Random;
 public class BlockStem extends BlockFlower
 {
 
-    private Block field_35297_a;
+    private Block fruitType;
 
     protected BlockStem(int i, Block block)
     {
         super(i, 111);
-        field_35297_a = block;
+        fruitType = block;
         setTickOnLoad(true);
         float f = 0.125F;
         setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.25F, 0.5F + f);
@@ -44,19 +44,19 @@ public class BlockStem extends BlockFlower
                     world.setBlockMetadataWithNotify(i, j, k, l);
                 } else
                 {
-                    if(world.getBlockId(i - 1, j, k) == field_35297_a.blockID)
+                    if(world.getBlockId(i - 1, j, k) == fruitType.blockID)
                     {
                         return;
                     }
-                    if(world.getBlockId(i + 1, j, k) == field_35297_a.blockID)
+                    if(world.getBlockId(i + 1, j, k) == fruitType.blockID)
                     {
                         return;
                     }
-                    if(world.getBlockId(i, j, k - 1) == field_35297_a.blockID)
+                    if(world.getBlockId(i, j, k - 1) == fruitType.blockID)
                     {
                         return;
                     }
-                    if(world.getBlockId(i, j, k + 1) == field_35297_a.blockID)
+                    if(world.getBlockId(i, j, k + 1) == fruitType.blockID)
                     {
                         return;
                     }
@@ -81,14 +81,14 @@ public class BlockStem extends BlockFlower
                     }
                     if(world.getBlockId(j1, j, k1) == 0 && world.getBlockId(j1, j - 1, k1) == Block.tilledField.blockID)
                     {
-                        world.setBlockWithNotify(j1, j, k1, field_35297_a.blockID);
+                        world.setBlockWithNotify(j1, j, k1, fruitType.blockID);
                     }
                 }
             }
         }
     }
 
-    public void func_35294_i(World world, int i, int j, int k)
+    public void fertilizeStem(World world, int i, int j, int k)
     {
         world.setBlockMetadataWithNotify(i, j, k, 7);
     }
@@ -180,19 +180,19 @@ public class BlockStem extends BlockFlower
         {
             return -1;
         }
-        if(iblockaccess.getBlockId(i - 1, j, k) == field_35297_a.blockID)
+        if(iblockaccess.getBlockId(i - 1, j, k) == fruitType.blockID)
         {
             return 0;
         }
-        if(iblockaccess.getBlockId(i + 1, j, k) == field_35297_a.blockID)
+        if(iblockaccess.getBlockId(i + 1, j, k) == fruitType.blockID)
         {
             return 1;
         }
-        if(iblockaccess.getBlockId(i, j, k - 1) == field_35297_a.blockID)
+        if(iblockaccess.getBlockId(i, j, k - 1) == fruitType.blockID)
         {
             return 2;
         }
-        return iblockaccess.getBlockId(i, j, k + 1) != field_35297_a.blockID ? -1 : 3;
+        return iblockaccess.getBlockId(i, j, k + 1) != fruitType.blockID ? -1 : 3;
     }
 
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
@@ -203,11 +203,11 @@ public class BlockStem extends BlockFlower
             return;
         }
         Item item = null;
-        if(field_35297_a == Block.pumpkin)
+        if(fruitType == Block.pumpkin)
         {
             item = Item.pumpkinSeeds;
         }
-        if(field_35297_a == Block.melon)
+        if(fruitType == Block.melon)
         {
             item = Item.melonSeeds;
         }
@@ -221,7 +221,7 @@ public class BlockStem extends BlockFlower
                 float f4 = world.rand.nextFloat() * f1 + (1.0F - f1) * 0.5F;
                 EntityItem entityitem = new EntityItem(world, (float)i + f2, (float)j + f3, (float)k + f4, new ItemStack(item));
                 entityitem.delayBeforeCanPickup = 10;
-                world.entityJoinedWorld(entityitem);
+                world.spawnEntityInWorld(entityitem);
             }
         }
 

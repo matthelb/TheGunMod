@@ -43,7 +43,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         sendQueue = netclienthandler;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int damage)
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
         return false;
     }
@@ -54,7 +54,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
 
     public void onUpdate()
     {
-        if(!worldObj.blockExists(MathHelper.floor_double(posX), worldObj.field_35472_c / 2, MathHelper.floor_double(posZ)))
+        if(!worldObj.blockExists(MathHelper.floor_double(posX), worldObj.worldHeight / 2, MathHelper.floor_double(posZ)))
         {
             return;
         } else
@@ -182,12 +182,12 @@ public class EntityClientPlayerMP extends EntityPlayerSP
     public void respawnPlayer()
     {
         sendInventoryChanged();
-        sendQueue.addToSendQueue(new Packet9Respawn((byte)dimension, (byte)worldObj.difficultySetting, worldObj.getWorldSeed(), worldObj.field_35472_c, 0));
+        sendQueue.addToSendQueue(new Packet9Respawn((byte)dimension, (byte)worldObj.difficultySetting, worldObj.getWorldSeed(), worldObj.worldHeight, 0));
     }
 
-    protected void damageEntity(DamageSource damagesource, int damage)
+    protected void damageEntity(DamageSource damagesource, int i)
     {
-        setEntityHealth(getEntityHealth() - damage);
+        setEntityHealth(getEntityHealth() - i);
     }
 
     public void closeScreen()
@@ -221,7 +221,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         }
     }
 
-    public void func_27027_b(StatBase statbase, int i)
+    public void incrementStat(StatBase statbase, int i)
     {
         if(statbase == null)
         {

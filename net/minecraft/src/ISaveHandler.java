@@ -25,5 +25,5 @@ public interface ISaveHandler
 
     public abstract File getMapFile(String s);
 
-    public abstract String func_40530_d();
+    public abstract String getSaveDirectoryName();
 }

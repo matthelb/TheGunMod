@@ -57,7 +57,7 @@ public class BlockGrass extends Block
 
     public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
     {
-        return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).func_40254_a(iblockaccess, i, j, k);
+        return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).getGrassColorAtCoords(iblockaccess, i, j, k);
     }
 
     public void updateTick(World world, int i, int j, int k, Random random)

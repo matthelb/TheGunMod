@@ -25,9 +25,9 @@ public class GuiSelectWorld extends GuiScreen
     private int selectedWorld;
     private List saveList;
     private GuiWorldSlot worldSlotContainer;
-    private String field_22098_o;
-    private String field_22097_p;
-    private String field_35316_k[];
+    private String localizedWorldText;
+    private String localizedMustConvertText;
+    private String localizedGameModeText[];
     private boolean deleting;
     private GuiButton buttonRename;
     private GuiButton buttonSelect;
@@ -37,7 +37,7 @@ public class GuiSelectWorld extends GuiScreen
     {
         screenTitle = "Select world";
         selected = false;
-        field_35316_k = new String[2];
+        localizedGameModeText = new String[2];
         parentScreen = guiscreen;
     }
 
@@ -45,10 +45,10 @@ public class GuiSelectWorld extends GuiScreen
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
         screenTitle = stringtranslate.translateKey("selectWorld.title");
-        field_22098_o = stringtranslate.translateKey("selectWorld.world");
-        field_22097_p = stringtranslate.translateKey("selectWorld.conversion");
-        field_35316_k[0] = stringtranslate.translateKey("gameMode.survival");
-        field_35316_k[1] = stringtranslate.translateKey("gameMode.creative");
+        localizedWorldText = stringtranslate.translateKey("selectWorld.world");
+        localizedMustConvertText = stringtranslate.translateKey("selectWorld.conversion");
+        localizedGameModeText[0] = stringtranslate.translateKey("gameMode.survival");
+        localizedGameModeText[1] = stringtranslate.translateKey("gameMode.creative");
         loadSaves();
         worldSlotContainer = new GuiWorldSlot(this);
         worldSlotContainer.registerScrollButtons(controlList, 4, 5);
@@ -214,7 +214,7 @@ public class GuiSelectWorld extends GuiScreen
 
     static String func_22087_f(GuiSelectWorld guiselectworld)
     {
-        return guiselectworld.field_22098_o;
+        return guiselectworld.localizedWorldText;
     }
 
     static DateFormat getDateFormatter(GuiSelectWorld guiselectworld)
@@ -224,11 +224,11 @@ public class GuiSelectWorld extends GuiScreen
 
     static String func_22088_h(GuiSelectWorld guiselectworld)
     {
-        return guiselectworld.field_22097_p;
+        return guiselectworld.localizedMustConvertText;
     }
 
     static String[] func_35315_i(GuiSelectWorld guiselectworld)
     {
-        return guiselectworld.field_35316_k;
+        return guiselectworld.localizedGameModeText;
     }
 }

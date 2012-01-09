@@ -165,7 +165,7 @@ public class EmptyChunk extends Chunk
         return new Random(worldObj.getWorldSeed() + (long)(xPosition * xPosition * 0x4c1906) + (long)(xPosition * 0x5ac0db) + (long)(zPosition * zPosition) * 0x4307a7L + (long)(zPosition * 0x5f24f) ^ l);
     }
 
-    public boolean getFalse()
+    public boolean isEmpty()
     {
         return true;
     }

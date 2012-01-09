@@ -51,7 +51,7 @@ public class RenderPlayer extends RenderLiving
                 modelbiped.bipedRightLeg.showModel = i == 2 || i == 3;
                 modelbiped.bipedLeftLeg.showModel = i == 2 || i == 3;
                 setRenderPassModel(modelbiped);
-                return !itemstack.func_40711_u() ? 1 : 15;
+                return !itemstack.isItemEnchanted() ? 1 : 15;
             }
         }
         return -1;
@@ -61,17 +61,17 @@ public class RenderPlayer extends RenderLiving
             float f, float f1)
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        modelArmorChestplate.field_1278_i = modelArmor.field_1278_i = modelBipedMain.field_1278_i = itemstack == null ? 0 : 1;
+        modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = modelBipedMain.heldItemRight = itemstack == null ? 0 : 1;
         if(itemstack != null && entityplayer.func_35205_Y() > 0)
         {
             EnumAction enumaction = itemstack.getItemUseAction();
             if(enumaction == EnumAction.block)
             {
-                modelArmorChestplate.field_1278_i = modelArmor.field_1278_i = modelBipedMain.field_1278_i = 3;
+                modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = modelBipedMain.heldItemRight = 3;
             } else
             if(enumaction == EnumAction.bow)
             {
-                modelArmorChestplate.field_40333_u = modelArmor.field_40333_u = modelBipedMain.field_40333_u = true;
+                modelArmorChestplate.aimedBow = modelArmor.aimedBow = modelBipedMain.aimedBow = true;
             }
         }
         modelArmorChestplate.isSneak = modelArmor.isSneak = modelBipedMain.isSneak = entityplayer.isSneaking();
@@ -81,9 +81,9 @@ public class RenderPlayer extends RenderLiving
             d3 -= 0.125D;
         }
         super.doRenderLiving(entityplayer, d, d3, d2, f, f1);
-        modelArmorChestplate.field_40333_u = modelArmor.field_40333_u = modelBipedMain.field_40333_u = false;
+        modelArmorChestplate.aimedBow = modelArmor.aimedBow = modelBipedMain.aimedBow = false;
         modelArmorChestplate.isSneak = modelArmor.isSneak = modelBipedMain.isSneak = false;
-        modelArmorChestplate.field_1278_i = modelArmor.field_1278_i = modelBipedMain.field_1278_i = 0;
+        modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = modelBipedMain.heldItemRight = 0;
     }
 
     protected void renderName(EntityPlayer entityplayer, double d, double d1, double d2)

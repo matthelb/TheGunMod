@@ -47,7 +47,7 @@ public class BlockOre extends Block
         }
     }
 
-    public int func_40198_a(int i, Random random)
+    public int quantityDroppedWithBonus(int i, Random random)
     {
         if(i > 0 && blockID != idDropped(0, random, i))
         {

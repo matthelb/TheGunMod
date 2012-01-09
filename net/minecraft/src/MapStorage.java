@@ -141,9 +141,9 @@ public class MapStorage
             if(file != null && file.exists())
             {
                 DataInputStream datainputstream = new DataInputStream(new FileInputStream(file));
-                NBTTagCompound nbttagcompound = CompressedStreamTools.func_1141_a(datainputstream);
+                NBTTagCompound nbttagcompound = CompressedStreamTools.read(datainputstream);
                 datainputstream.close();
-                Iterator iterator = nbttagcompound.func_28110_c().iterator();
+                Iterator iterator = nbttagcompound.getTags().iterator();
                 do
                 {
                     if(!iterator.hasNext())

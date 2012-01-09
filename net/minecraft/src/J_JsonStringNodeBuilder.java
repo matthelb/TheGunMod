@@ -21,7 +21,7 @@ public final class J_JsonStringNodeBuilder
 
     public J_JsonStringNode func_27243_a()
     {
-        return J_JsonNodeFactories.func_27316_a(field_27244_a);
+        return J_JsonNodeFactories.aJsonString(field_27244_a);
     }
 
     public J_JsonNode buildNode()

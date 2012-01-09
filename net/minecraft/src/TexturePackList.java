@@ -79,7 +79,7 @@ public class TexturePackList
                     if(!field_6538_d.containsKey(s))
                     {
                         TexturePackCustom texturepackcustom = new TexturePackCustom(file);
-                        texturepackcustom.field_6488_d = s;
+                        texturepackcustom.texturePackID = s;
                         field_6538_d.put(s, texturepackcustom);
                         texturepackcustom.func_6485_a(mc);
                     }
@@ -103,7 +103,7 @@ public class TexturePackList
         }
         availableTexturePacks.removeAll(arraylist);
         TexturePackBase texturepackbase;
-        for(Iterator iterator = availableTexturePacks.iterator(); iterator.hasNext(); field_6538_d.remove(texturepackbase.field_6488_d))
+        for(Iterator iterator = availableTexturePacks.iterator(); iterator.hasNext(); field_6538_d.remove(texturepackbase.texturePackID))
         {
             texturepackbase = (TexturePackBase)iterator.next();
             texturepackbase.func_6484_b(mc);

@@ -54,8 +54,8 @@ public class RenderEndPortal extends TileEntitySpecialRenderer
                 f6 = 0.5F;
             }
             float f8 = (float)(-(d1 + (double)f4));
-            float f9 = f8 + ActiveRenderInfo.field_41072_b;
-            float f10 = f8 + f5 + ActiveRenderInfo.field_41072_b;
+            float f9 = f8 + ActiveRenderInfo.objectY;
+            float f10 = f8 + f5 + ActiveRenderInfo.objectY;
             float f11 = f9 / f10;
             f11 = (float)(d1 + (double)f4) + f11;
             GL11.glTranslatef(f1, f11, f3);
@@ -81,8 +81,8 @@ public class RenderEndPortal extends TileEntitySpecialRenderer
             GL11.glRotatef((float)(i * i * 4321 + i * 9) * 2.0F, 0.0F, 0.0F, 1.0F);
             GL11.glTranslatef(-0.5F, -0.5F, 0.0F);
             GL11.glTranslatef(-f1, -f3, -f2);
-            f9 = f8 + ActiveRenderInfo.field_41072_b;
-            GL11.glTranslatef((ActiveRenderInfo.field_41074_a * f5) / f9, (ActiveRenderInfo.field_41073_c * f5) / f9, -f2);
+            f9 = f8 + ActiveRenderInfo.objectY;
+            GL11.glTranslatef((ActiveRenderInfo.objectX * f5) / f9, (ActiveRenderInfo.objectZ * f5) / f9, -f2);
             Tessellator tessellator = Tessellator.instance;
             tessellator.startDrawingQuads();
             f11 = random.nextFloat() * 0.5F + 0.1F;

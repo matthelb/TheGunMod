@@ -70,7 +70,7 @@ public class TextureCompassFX extends TextureFX
             double d2 = (double)chunkcoordinates.posX - mc.thePlayer.posX;
             double d4 = (double)chunkcoordinates.posZ - mc.thePlayer.posZ;
             d = ((double)(mc.thePlayer.rotationYaw - 90F) * 3.1415926535897931D) / 180D - Math.atan2(d4, d2);
-            if(mc.theWorld.worldProvider.isNether)
+            if(mc.theWorld.worldProvider.isAlternateDimension)
             {
                 d = Math.random() * 3.1415927410125732D * 2D;
             }

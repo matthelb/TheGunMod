@@ -62,7 +62,7 @@ public class EntitySmokeFX extends EntityFX
         {
             setEntityDead();
         }
-        func_40099_c(7 - (particleAge * 8) / particleMaxAge);
+        setParticleTextureIndex(7 - (particleAge * 8) / particleMaxAge);
         motionY += 0.0040000000000000001D;
         moveEntity(motionX, motionY, motionZ);
         if(posY == prevPosY)

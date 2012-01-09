@@ -36,7 +36,7 @@ public class ItemDoor extends Item
         {
             block = Block.doorSteel;
         }
-        if(!entityplayer.func_35190_e(i, j, k) || !entityplayer.func_35190_e(i, j + 1, k))
+        if(!entityplayer.canPlayerEdit(i, j, k) || !entityplayer.canPlayerEdit(i, j + 1, k))
         {
             return false;
         }

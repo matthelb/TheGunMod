@@ -32,25 +32,25 @@ public class BlockRedstoneOre extends Block
 
     public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        func_320_h(world, i, j, k);
+        glow(world, i, j, k);
         super.onBlockClicked(world, i, j, k, entityplayer);
     }
 
     public void onEntityWalking(World world, int i, int j, int k, Entity entity)
     {
-        func_320_h(world, i, j, k);
+        glow(world, i, j, k);
         super.onEntityWalking(world, i, j, k, entity);
     }
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        func_320_h(world, i, j, k);
+        glow(world, i, j, k);
         return super.blockActivated(world, i, j, k, entityplayer);
     }
 
-    private void func_320_h(World world, int i, int j, int k)
+    private void glow(World world, int i, int j, int k)
     {
-        func_319_i(world, i, j, k);
+        sparkle(world, i, j, k);
         if(blockID == Block.oreRedstone.blockID)
         {
             world.setBlockWithNotify(i, j, k, Block.oreRedstoneGlowing.blockID);
@@ -70,7 +70,7 @@ public class BlockRedstoneOre extends Block
         return Item.redstone.shiftedIndex;
     }
 
-    public int func_40198_a(int i, Random random)
+    public int quantityDroppedWithBonus(int i, Random random)
     {
         return quantityDropped(random) + random.nextInt(i + 1);
     }
@@ -84,11 +84,11 @@ public class BlockRedstoneOre extends Block
     {
         if(glowing)
         {
-            func_319_i(world, i, j, k);
+            sparkle(world, i, j, k);
         }
     }
 
-    private void func_319_i(World world, int i, int j, int k)
+    private void sparkle(World world, int i, int j, int k)
     {
         Random random = world.rand;
         double d = 0.0625D;
@@ -129,7 +129,7 @@ public class BlockRedstoneOre extends Block
 
     }
 
-    protected ItemStack func_41049_c_(int i)
+    protected ItemStack createStackedBlock(int i)
     {
         return new ItemStack(Block.oreRedstone);
     }

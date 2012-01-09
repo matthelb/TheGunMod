@@ -17,13 +17,13 @@ public class GenLayerSmooth extends GenLayer
         super.parent = genlayer;
     }
 
-    public int[] func_35500_a(int i, int j, int k, int l)
+    public int[] getInts(int i, int j, int k, int l)
     {
         int i1 = i - 1;
         int j1 = j - 1;
         int k1 = k + 2;
         int l1 = l + 2;
-        int ai[] = parent.func_35500_a(i1, j1, k1, l1);
+        int ai[] = parent.getInts(i1, j1, k1, l1);
         int ai1[] = IntCache.getIntCache(k * l);
         for(int i2 = 0; i2 < l; i2++)
         {
@@ -36,7 +36,7 @@ public class GenLayerSmooth extends GenLayer
                 int k3 = ai[j2 + 1 + (i2 + 1) * k1];
                 if(k2 == l2 && i3 == j3)
                 {
-                    func_35499_a(j2 + i, i2 + j);
+                    initChunkSeed(j2 + i, i2 + j);
                     if(nextInt(2) == 0)
                     {
                         k3 = k2;

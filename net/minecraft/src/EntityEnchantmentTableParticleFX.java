@@ -34,7 +34,7 @@ public class EntityEnchantmentTableParticleFX extends EntityFX
         particleRed *= 0.9F;
         particleMaxAge = (int)(Math.random() * 10D) + 30;
         noClip = true;
-        func_40099_c((int)(Math.random() * 26D + 1.0D + 224D));
+        setParticleTextureIndex((int)(Math.random() * 26D + 1.0D + 224D));
     }
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)

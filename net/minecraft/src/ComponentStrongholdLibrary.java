@@ -107,7 +107,7 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
             placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 9, 6, 11, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 8, 6, 11, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 9, 6, 10, structureboundingbox);
-            int k = func_35009_c(Block.ladder.blockID, 3);
+            int k = getMetadataWithOffset(Block.ladder.blockID, 3);
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, k, 10, 1, 13, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, k, 10, 2, 13, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, k, 10, 3, 13, structureboundingbox);

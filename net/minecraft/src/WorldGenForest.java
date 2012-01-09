@@ -22,7 +22,7 @@ public class WorldGenForest extends WorldGenerator
     {
         int l = random.nextInt(3) + 5;
         boolean flag = true;
-        if(j < 1 || j + l + 1 > world.field_35472_c)
+        if(j < 1 || j + l + 1 > world.worldHeight)
         {
             return false;
         }
@@ -41,7 +41,7 @@ public class WorldGenForest extends WorldGenerator
             {
                 for(int l2 = k - byte0; l2 <= k + byte0 && flag; l2++)
                 {
-                    if(i1 >= 0 && i1 < world.field_35472_c)
+                    if(i1 >= 0 && i1 < world.worldHeight)
                     {
                         int j3 = world.getBlockId(i2, i1, l2);
                         if(j3 != 0 && j3 != Block.leaves.blockID)
@@ -63,7 +63,7 @@ public class WorldGenForest extends WorldGenerator
             return false;
         }
         int j1 = world.getBlockId(i, j - 1, k);
-        if(j1 != Block.grass.blockID && j1 != Block.dirt.blockID || j >= world.field_35472_c - l - 1)
+        if(j1 != Block.grass.blockID && j1 != Block.dirt.blockID || j >= world.worldHeight - l - 1)
         {
             return false;
         }

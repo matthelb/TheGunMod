@@ -25,7 +25,7 @@ public class ItemArmor extends Item
         material = enumarmormaterial;
         armorType = k;
         renderIndex = j;
-        damageReduceAmount = enumarmormaterial.func_40574_b(k);
+        damageReduceAmount = enumarmormaterial.getDamageReductionAmount(k);
         setMaxDamage(enumarmormaterial.func_40576_a(k));
         maxStackSize = 1;
     }
@@ -35,7 +35,7 @@ public class ItemArmor extends Item
         return material.getEnchantability();
     }
 
-    static int[] func_40436_c()
+    static int[] getMaxDamageArray()
     {
         return maxDamageArray;
     }

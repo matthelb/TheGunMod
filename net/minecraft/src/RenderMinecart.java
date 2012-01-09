@@ -83,7 +83,7 @@ public class RenderMinecart extends Render
             {
                 GL11.glTranslatef(-0.5F, 0.0F, 0.5F);
                 GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
-                (new RenderBlocks()).renderBlockOnInventory(Block.chest, 0, entityminecart.getEntityBrightness(f1));
+                (new RenderBlocks()).renderBlockAsItem(Block.chest, 0, entityminecart.getEntityBrightness(f1));
                 GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
                 GL11.glTranslatef(0.5F, 0.0F, -0.5F);
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -92,7 +92,7 @@ public class RenderMinecart extends Render
             {
                 GL11.glTranslatef(0.0F, 0.3125F, 0.0F);
                 GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
-                (new RenderBlocks()).renderBlockOnInventory(Block.stoneOvenIdle, 0, entityminecart.getEntityBrightness(f1));
+                (new RenderBlocks()).renderBlockAsItem(Block.stoneOvenIdle, 0, entityminecart.getEntityBrightness(f1));
                 GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
                 GL11.glTranslatef(0.0F, -0.3125F, 0.0F);
                 GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);

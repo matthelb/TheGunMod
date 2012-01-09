@@ -47,7 +47,7 @@ public class NBTTagShort extends NBTBase
         return (new StringBuilder()).append("").append(shortValue).toString();
     }
 
-    public NBTBase func_40195_b()
+    public NBTBase cloneTag()
     {
         return new NBTTagShort(getKey(), shortValue);
     }

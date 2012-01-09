@@ -45,7 +45,7 @@ public class SaveHandlerMP
         return null;
     }
 
-    public String func_40530_d()
+    public String getSaveDirectoryName()
     {
         return "none";
     }

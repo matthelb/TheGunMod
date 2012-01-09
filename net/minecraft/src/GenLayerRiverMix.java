@@ -21,17 +21,17 @@ public class GenLayerRiverMix extends GenLayer
         field_35513_c = genlayer1;
     }
 
-    public void func_35496_b(long l)
+    public void initWorldGenSeed(long l)
     {
-        field_35512_b.func_35496_b(l);
-        field_35513_c.func_35496_b(l);
-        super.func_35496_b(l);
+        field_35512_b.initWorldGenSeed(l);
+        field_35513_c.initWorldGenSeed(l);
+        super.initWorldGenSeed(l);
     }
 
-    public int[] func_35500_a(int i, int j, int k, int l)
+    public int[] getInts(int i, int j, int k, int l)
     {
-        int ai[] = field_35512_b.func_35500_a(i, j, k, l);
-        int ai1[] = field_35513_c.func_35500_a(i, j, k, l);
+        int ai[] = field_35512_b.getInts(i, j, k, l);
+        int ai1[] = field_35513_c.getInts(i, j, k, l);
         int ai2[] = IntCache.getIntCache(k * l);
         for(int i1 = 0; i1 < k * l; i1++)
         {

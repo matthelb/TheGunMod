@@ -56,8 +56,8 @@ public class ComponentVillageHouse1 extends ComponentVillage
         fillWithBlocks(world, structureboundingbox, 0, 5, 0, 8, 5, 5, Block.cobblestone.blockID, Block.cobblestone.blockID, false);
         fillWithBlocks(world, structureboundingbox, 0, 6, 1, 8, 6, 4, Block.cobblestone.blockID, Block.cobblestone.blockID, false);
         fillWithBlocks(world, structureboundingbox, 0, 7, 2, 8, 7, 3, Block.cobblestone.blockID, Block.cobblestone.blockID, false);
-        int i = func_35009_c(Block.stairCompactPlanks.blockID, 3);
-        int j = func_35009_c(Block.stairCompactPlanks.blockID, 2);
+        int i = getMetadataWithOffset(Block.stairCompactPlanks.blockID, 3);
+        int j = getMetadataWithOffset(Block.stairCompactPlanks.blockID, 2);
         for(int k = -1; k <= 2; k++)
         {
             for(int i1 = 0; i1 <= 8; i1++)
@@ -102,8 +102,8 @@ public class ComponentVillageHouse1 extends ComponentVillage
         fillWithBlocks(world, structureboundingbox, 1, 4, 4, 7, 4, 4, Block.planks.blockID, Block.planks.blockID, false);
         fillWithBlocks(world, structureboundingbox, 1, 3, 4, 7, 3, 4, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
         placeBlockAtCurrentPosition(world, Block.planks.blockID, 0, 7, 1, 4, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.stairCompactPlanks.blockID, func_35009_c(Block.stairCompactPlanks.blockID, 0), 7, 1, 3, structureboundingbox);
-        int l = func_35009_c(Block.stairCompactPlanks.blockID, 3);
+        placeBlockAtCurrentPosition(world, Block.stairCompactPlanks.blockID, getMetadataWithOffset(Block.stairCompactPlanks.blockID, 0), 7, 1, 3, structureboundingbox);
+        int l = getMetadataWithOffset(Block.stairCompactPlanks.blockID, 3);
         placeBlockAtCurrentPosition(world, Block.stairCompactPlanks.blockID, l, 6, 1, 4, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.stairCompactPlanks.blockID, l, 5, 1, 4, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.stairCompactPlanks.blockID, l, 4, 1, 4, structureboundingbox);
@@ -115,10 +115,10 @@ public class ComponentVillageHouse1 extends ComponentVillage
         placeBlockAtCurrentPosition(world, Block.workbench.blockID, 0, 7, 1, 1, structureboundingbox);
         placeBlockAtCurrentPosition(world, 0, 0, 1, 1, 0, structureboundingbox);
         placeBlockAtCurrentPosition(world, 0, 0, 1, 2, 0, structureboundingbox);
-        placeDoorAtCurrentPosition(world, structureboundingbox, random, 1, 1, 0, func_35009_c(Block.doorWood.blockID, 1));
+        placeDoorAtCurrentPosition(world, structureboundingbox, random, 1, 1, 0, getMetadataWithOffset(Block.doorWood.blockID, 1));
         if(getBlockIdAtCurrentPosition(world, 1, 0, -1, structureboundingbox) == 0 && getBlockIdAtCurrentPosition(world, 1, -1, -1, structureboundingbox) != 0)
         {
-            placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, func_35009_c(Block.stairCompactCobblestone.blockID, 3), 1, 0, -1, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), 1, 0, -1, structureboundingbox);
         }
         for(int j1 = 0; j1 < 6; j1++)
         {
@@ -130,11 +130,11 @@ public class ComponentVillageHouse1 extends ComponentVillage
 
         }
 
-        func_40044_a(world, structureboundingbox, 2, 1, 2, 1);
+        spawnVillagers(world, structureboundingbox, 2, 1, 2, 1);
         return true;
     }
 
-    protected int func_40043_a(int i)
+    protected int getVillagerType(int i)
     {
         return 1;
     }

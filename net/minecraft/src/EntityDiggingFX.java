@@ -19,7 +19,7 @@ public class EntityDiggingFX extends EntityFX
     {
         super(world, d, d1, d2, d3, d4, d5);
         blockInstance = block;
-        func_40099_c(block.getBlockTextureFromSideAndMetadata(0, j));
+        setParticleTextureIndex(block.getBlockTextureFromSideAndMetadata(0, j));
         particleGravity = block.blockParticleGravity;
         particleRed = particleGreen = particleBlue = 0.6F;
         particleScale /= 2.0F;
@@ -47,9 +47,9 @@ public class EntityDiggingFX extends EntityFX
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
     {
-        float f6 = ((float)(func_40100_q() % 16) + particleTextureJitterX / 4F) / 16F;
+        float f6 = ((float)(getParticleTextureIndex() % 16) + particleTextureJitterX / 4F) / 16F;
         float f7 = f6 + 0.01560938F;
-        float f8 = ((float)(func_40100_q() / 16) + particleTextureJitterY / 4F) / 16F;
+        float f8 = ((float)(getParticleTextureIndex() / 16) + particleTextureJitterY / 4F) / 16F;
         float f9 = f8 + 0.01560938F;
         float f10 = 0.1F * particleScale;
         float f11 = (float)((prevPosX + (posX - prevPosX) * (double)f) - interpPosX);

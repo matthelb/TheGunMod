@@ -29,7 +29,7 @@ public class EnchantmentHelper
         {
             return 0;
         }
-        NBTTagList nbttaglist = itemstack.func_40714_p();
+        NBTTagList nbttaglist = itemstack.getEnchantmentTagList();
         if(nbttaglist == null)
         {
             return 0;
@@ -71,7 +71,7 @@ public class EnchantmentHelper
         {
             return;
         }
-        NBTTagList nbttaglist = itemstack.func_40714_p();
+        NBTTagList nbttaglist = itemstack.getEnchantmentTagList();
         if(nbttaglist == null)
         {
             return;
@@ -238,7 +238,7 @@ public class EnchantmentHelper
                                 break;
                             }
                             EnchantmentData enchantmentdata2 = (EnchantmentData)iterator1.next();
-                            if(enchantmentdata2.field_40264_a.canApplyTogether(Enchantment.enchantmentsList[integer.intValue()]))
+                            if(enchantmentdata2.enchantmentobj.canApplyTogether(Enchantment.enchantmentsList[integer.intValue()]))
                             {
                                 continue;
                             }

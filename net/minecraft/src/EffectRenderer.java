@@ -66,11 +66,11 @@ public class EffectRenderer
 
     public void renderParticles(Entity entity, float f)
     {
-        float f1 = ActiveRenderInfo.field_41070_d;
-        float f2 = ActiveRenderInfo.field_41068_f;
-        float f3 = ActiveRenderInfo.field_41069_g;
-        float f4 = ActiveRenderInfo.field_41078_h;
-        float f5 = ActiveRenderInfo.field_41071_e;
+        float f1 = ActiveRenderInfo.rotationX;
+        float f2 = ActiveRenderInfo.rotationZ;
+        float f3 = ActiveRenderInfo.rotationYZ;
+        float f4 = ActiveRenderInfo.rotationXY;
+        float f5 = ActiveRenderInfo.rotationXZ;
         EntityFX.interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)f;
         EntityFX.interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)f;
         EntityFX.interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)f;

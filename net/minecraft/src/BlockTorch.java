@@ -39,7 +39,7 @@ public class BlockTorch extends Block
         return 2;
     }
 
-    private boolean func_31032_h(World world, int i, int j, int k)
+    private boolean canPlaceTorchOn(World world, int i, int j, int k)
     {
         if(world.func_41082_b(i, j, k, true))
         {
@@ -69,13 +69,13 @@ public class BlockTorch extends Block
         {
             return true;
         }
-        return func_31032_h(world, i, j - 1, k);
+        return canPlaceTorchOn(world, i, j - 1, k);
     }
 
     public void onBlockPlaced(World world, int i, int j, int k, int l)
     {
         int i1 = world.getBlockMetadata(i, j, k);
-        if(l == 1 && func_31032_h(world, i, j - 1, k))
+        if(l == 1 && canPlaceTorchOn(world, i, j - 1, k))
         {
             i1 = 5;
         }
@@ -125,7 +125,7 @@ public class BlockTorch extends Block
         {
             world.setBlockMetadataWithNotify(i, j, k, 4);
         } else
-        if(func_31032_h(world, i, j - 1, k))
+        if(canPlaceTorchOn(world, i, j - 1, k))
         {
             world.setBlockMetadataWithNotify(i, j, k, 5);
         }
@@ -154,7 +154,7 @@ public class BlockTorch extends Block
             {
                 flag = true;
             }
-            if(!func_31032_h(world, i, j - 1, k) && i1 == 5)
+            if(!canPlaceTorchOn(world, i, j - 1, k) && i1 == 5)
             {
                 flag = true;
             }

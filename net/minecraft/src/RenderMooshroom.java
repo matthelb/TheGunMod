@@ -28,7 +28,7 @@ public class RenderMooshroom extends RenderLiving
     protected void func_40272_a(EntityMooshroom entitymooshroom, float f)
     {
         super.renderEquippedItems(entitymooshroom, f);
-        if(entitymooshroom.func_40127_l())
+        if(entitymooshroom.isChild())
         {
             return;
         } else
@@ -39,17 +39,17 @@ public class RenderMooshroom extends RenderLiving
             GL11.glScalef(1.0F, -1F, 1.0F);
             GL11.glTranslatef(0.2F, 0.4F, 0.5F);
             GL11.glRotatef(42F, 0.0F, 1.0F, 0.0F);
-            renderBlocks.renderBlockOnInventory(Block.mushroomRed, 0, 1.0F);
+            renderBlocks.renderBlockAsItem(Block.mushroomRed, 0, 1.0F);
             GL11.glTranslatef(0.1F, 0.0F, -0.6F);
             GL11.glRotatef(42F, 0.0F, 1.0F, 0.0F);
-            renderBlocks.renderBlockOnInventory(Block.mushroomRed, 0, 1.0F);
+            renderBlocks.renderBlockAsItem(Block.mushroomRed, 0, 1.0F);
             GL11.glPopMatrix();
             GL11.glPushMatrix();
             ((ModelQuadruped)mainModel).head.postRender(0.0625F);
             GL11.glScalef(1.0F, -1F, 1.0F);
             GL11.glTranslatef(0.0F, 0.75F, -0.2F);
             GL11.glRotatef(12F, 0.0F, 1.0F, 0.0F);
-            renderBlocks.renderBlockOnInventory(Block.mushroomRed, 0, 1.0F);
+            renderBlocks.renderBlockAsItem(Block.mushroomRed, 0, 1.0F);
             GL11.glPopMatrix();
             GL11.glDisable(2884 /*GL_CULL_FACE*/);
             return;

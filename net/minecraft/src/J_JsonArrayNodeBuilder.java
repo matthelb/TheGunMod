@@ -34,7 +34,7 @@ public final class J_JsonArrayNodeBuilder
             j_jsonnodebuilder = (J_JsonNodeBuilder)iterator.next();
         }
 
-        return J_JsonNodeFactories.func_27309_a(linkedlist);
+        return J_JsonNodeFactories.aJsonArray(linkedlist);
     }
 
     public J_JsonNode buildNode()

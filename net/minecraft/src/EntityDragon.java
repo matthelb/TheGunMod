@@ -15,14 +15,14 @@ import java.util.*;
 public class EntityDragon extends EntityDragonBase
 {
 
-    public double field_40167_a;
-    public double field_40165_b;
-    public double field_40166_c;
+    public double targetX;
+    public double targetY;
+    public double targetZ;
     public double field_40162_d[][];
     public int field_40164_e;
-    public DragonPart field_40176_ao[];
-    public DragonPart field_40177_ap;
-    public DragonPart field_40171_aq;
+    public DragonPart dragonPartArray[];
+    public DragonPart dragonPartHead;
+    public DragonPart dragonPartBody;
     public DragonPart field_40170_ar;
     public DragonPart field_40169_as;
     public DragonPart field_40168_at;
@@ -32,9 +32,9 @@ public class EntityDragon extends EntityDragonBase
     public float field_40172_ax;
     public boolean field_40163_ay;
     public boolean field_40161_az;
-    private Entity field_40179_aC;
+    private Entity target;
     public int field_40178_aA;
-    public EntityEnderCrystal field_41013_bH;
+    public EntityEnderCrystal healingEnderCrystal;
 
     public EntityDragon(World world)
     {
@@ -46,24 +46,24 @@ public class EntityDragon extends EntityDragonBase
         field_40163_ay = false;
         field_40161_az = false;
         field_40178_aA = 0;
-        field_41013_bH = null;
-        field_40176_ao = (new DragonPart[] {
-            field_40177_ap = new DragonPart(this, "head", 6F, 6F), field_40171_aq = new DragonPart(this, "body", 8F, 8F), field_40170_ar = new DragonPart(this, "tail", 4F, 4F), field_40169_as = new DragonPart(this, "tail", 4F, 4F), field_40168_at = new DragonPart(this, "tail", 4F, 4F), field_40175_au = new DragonPart(this, "wing", 4F, 4F), field_40174_av = new DragonPart(this, "wing", 4F, 4F)
+        healingEnderCrystal = null;
+        dragonPartArray = (new DragonPart[] {
+            dragonPartHead = new DragonPart(this, "head", 6F, 6F), dragonPartBody = new DragonPart(this, "body", 8F, 8F), field_40170_ar = new DragonPart(this, "tail", 4F, 4F), field_40169_as = new DragonPart(this, "tail", 4F, 4F), field_40168_at = new DragonPart(this, "tail", 4F, 4F), field_40175_au = new DragonPart(this, "wing", 4F, 4F), field_40174_av = new DragonPart(this, "wing", 4F, 4F)
         });
-        field_40157_aB = 200;
-        setEntityHealth(field_40157_aB);
+        maxHealth = 200;
+        setEntityHealth(maxHealth);
         texture = "/mob/enderdragon/ender.png";
         setSize(16F, 8F);
         noClip = true;
         isImmuneToFire = true;
-        field_40165_b = 100D;
+        targetY = 100D;
         ignoreFrustumCheck = true;
     }
 
     protected void entityInit()
     {
         super.entityInit();
-        dataWatcher.addObject(16, new Integer(field_40157_aB));
+        dataWatcher.addObject(16, new Integer(maxHealth));
     }
 
     public double[] func_40160_a(int i, float f)
@@ -148,27 +148,27 @@ public class EntityDragon extends EntityDragonBase
             }
         } else
         {
-            double d1 = field_40167_a - posX;
-            double d3 = field_40165_b - posY;
-            double d5 = field_40166_c - posZ;
+            double d1 = targetX - posX;
+            double d3 = targetY - posY;
+            double d5 = targetZ - posZ;
             double d7 = d1 * d1 + d3 * d3 + d5 * d5;
-            if(field_40179_aC != null)
+            if(target != null)
             {
-                field_40167_a = field_40179_aC.posX;
-                field_40166_c = field_40179_aC.posZ;
-                double d8 = field_40167_a - posX;
-                double d10 = field_40166_c - posZ;
+                targetX = target.posX;
+                targetZ = target.posZ;
+                double d8 = targetX - posX;
+                double d10 = targetZ - posZ;
                 double d12 = Math.sqrt(d8 * d8 + d10 * d10);
                 double d13 = (0.40000000596046448D + d12 / 80D) - 1.0D;
                 if(d13 > 10D)
                 {
                     d13 = 10D;
                 }
-                field_40165_b = field_40179_aC.boundingBox.minY + d13;
+                targetY = target.boundingBox.minY + d13;
             } else
             {
-                field_40167_a += rand.nextGaussian() * 2D;
-                field_40166_c += rand.nextGaussian() * 2D;
+                targetX += rand.nextGaussian() * 2D;
+                targetZ += rand.nextGaussian() * 2D;
             }
             if(field_40163_ay || d7 < 100D || d7 > 22500D || isCollidedHorizontally || isCollidedVertically)
             {
@@ -199,7 +199,7 @@ public class EntityDragon extends EntityDragonBase
             {
                 d11 = -50D;
             }
-            Vec3D vec3d = Vec3D.createVector(field_40167_a - posX, field_40165_b - posY, field_40166_c - posZ).normalize();
+            Vec3D vec3d = Vec3D.createVector(targetX - posX, targetY - posY, targetZ - posZ).normalize();
             Vec3D vec3d1 = Vec3D.createVector(MathHelper.sin((rotationYaw * 3.141593F) / 180F), motionY, -MathHelper.cos((rotationYaw * 3.141593F) / 180F)).normalize();
             float f18 = (float)(vec3d1.dotProduct(vec3d) + 0.5D) / 1.5F;
             if(f18 < 0.0F)
@@ -233,12 +233,12 @@ public class EntityDragon extends EntityDragonBase
             motionY *= 0.9100000262260437D;
         }
         renderYawOffset = rotationYaw;
-        field_40177_ap.width = field_40177_ap.height = 3F;
+        dragonPartHead.width = dragonPartHead.height = 3F;
         field_40170_ar.width = field_40170_ar.height = 2.0F;
         field_40169_as.width = field_40169_as.height = 2.0F;
         field_40168_at.width = field_40168_at.height = 2.0F;
-        field_40171_aq.height = 3F;
-        field_40171_aq.width = 5F;
+        dragonPartBody.height = 3F;
+        dragonPartBody.width = 5F;
         field_40175_au.height = 2.0F;
         field_40175_au.width = 4F;
         field_40174_av.height = 3F;
@@ -249,8 +249,8 @@ public class EntityDragon extends EntityDragonBase
         float f7 = (rotationYaw * 3.141593F) / 180F;
         float f8 = MathHelper.sin(f7);
         float f9 = MathHelper.cos(f7);
-        field_40171_aq.onUpdate();
-        field_40171_aq.setLocationAndAngles(posX + (double)(f8 * 0.5F), posY, posZ - (double)(f9 * 0.5F), 0.0F, 0.0F);
+        dragonPartBody.onUpdate();
+        dragonPartBody.setLocationAndAngles(posX + (double)(f8 * 0.5F), posY, posZ - (double)(f9 * 0.5F), 0.0F, 0.0F);
         field_40175_au.onUpdate();
         field_40175_au.setLocationAndAngles(posX + (double)(f9 * 4.5F), posY + 2D, posZ + (double)(f8 * 4.5F), 0.0F, 0.0F);
         field_40174_av.onUpdate();
@@ -263,14 +263,14 @@ public class EntityDragon extends EntityDragonBase
         {
             func_41008_a(worldObj.getEntitiesWithinAABBExcludingEntity(this, field_40175_au.boundingBox.expand(4D, 2D, 4D).offset(0.0D, -2D, 0.0D)));
             func_41008_a(worldObj.getEntitiesWithinAABBExcludingEntity(this, field_40174_av.boundingBox.expand(4D, 2D, 4D).offset(0.0D, -2D, 0.0D)));
-            func_41009_b(worldObj.getEntitiesWithinAABBExcludingEntity(this, field_40177_ap.boundingBox.expand(1.0D, 1.0D, 1.0D)));
+            func_41009_b(worldObj.getEntitiesWithinAABBExcludingEntity(this, dragonPartHead.boundingBox.expand(1.0D, 1.0D, 1.0D)));
         }
         double ad[] = func_40160_a(5, 1.0F);
         double ad1[] = func_40160_a(0, 1.0F);
         float f11 = MathHelper.sin((rotationYaw * 3.141593F) / 180F - randomYawVelocity * 0.01F);
         float f12 = MathHelper.cos((rotationYaw * 3.141593F) / 180F - randomYawVelocity * 0.01F);
-        field_40177_ap.onUpdate();
-        field_40177_ap.setLocationAndAngles(posX + (double)(f11 * 5.5F * f5), posY + (ad1[1] - ad[1]) * 1.0D + (double)(f6 * 5.5F), posZ - (double)(f12 * 5.5F * f5), 0.0F, 0.0F);
+        dragonPartHead.onUpdate();
+        dragonPartHead.setLocationAndAngles(posX + (double)(f11 * 5.5F * f5), posY + (ad1[1] - ad[1]) * 1.0D + (double)(f6 * 5.5F), posZ - (double)(f12 * 5.5F * f5), 0.0F, 0.0F);
         for(int j = 0; j < 3; j++)
         {
             DragonPart dragonpart = null;
@@ -298,23 +298,23 @@ public class EntityDragon extends EntityDragonBase
 
         if(!worldObj.multiplayerWorld)
         {
-            field_40161_az = func_40158_a(field_40177_ap.boundingBox) | func_40158_a(field_40171_aq.boundingBox);
+            field_40161_az = func_40158_a(dragonPartHead.boundingBox) | func_40158_a(dragonPartBody.boundingBox);
         }
     }
 
     private void func_41011_ay()
     {
-        if(field_41013_bH != null)
+        if(healingEnderCrystal != null)
         {
-            if(field_41013_bH.isDead)
+            if(healingEnderCrystal.isDead)
             {
                 if(!worldObj.multiplayerWorld)
                 {
-                    func_40156_a(field_40177_ap, DamageSource.explosion, 10);
+                    attackEntityFromPart(dragonPartHead, DamageSource.explosion, 10);
                 }
-                field_41013_bH = null;
+                healingEnderCrystal = null;
             } else
-            if(ticksExisted % 10 == 0 && health < field_40157_aB)
+            if(ticksExisted % 10 == 0 && health < maxHealth)
             {
                 health++;
             }
@@ -340,7 +340,7 @@ public class EntityDragon extends EntityDragonBase
                     entityendercrystal = (EntityEnderCrystal)entity;
                 }
             } while(true);
-            field_41013_bH = entityendercrystal;
+            healingEnderCrystal = entityendercrystal;
         }
     }
 
@@ -357,8 +357,8 @@ public class EntityDragon extends EntityDragonBase
 
     private void func_41008_a(List list)
     {
-        double d = (field_40171_aq.boundingBox.minX + field_40171_aq.boundingBox.maxX) / 2D;
-        double d1 = (field_40171_aq.boundingBox.minZ + field_40171_aq.boundingBox.maxZ) / 2D;
+        double d = (dragonPartBody.boundingBox.minX + dragonPartBody.boundingBox.maxX) / 2D;
+        double d1 = (dragonPartBody.boundingBox.minZ + dragonPartBody.boundingBox.maxZ) / 2D;
         Iterator iterator = list.iterator();
         do
         {
@@ -395,23 +395,23 @@ public class EntityDragon extends EntityDragonBase
         field_40163_ay = false;
         if(rand.nextInt(2) == 0 && worldObj.playerEntities.size() > 0)
         {
-            field_40179_aC = (Entity)worldObj.playerEntities.get(rand.nextInt(worldObj.playerEntities.size()));
+            target = (Entity)worldObj.playerEntities.get(rand.nextInt(worldObj.playerEntities.size()));
         } else
         {
             boolean flag = false;
             do
             {
-                field_40167_a = 0.0D;
-                field_40165_b = 70F + rand.nextFloat() * 50F;
-                field_40166_c = 0.0D;
-                field_40167_a += rand.nextFloat() * 120F - 60F;
-                field_40166_c += rand.nextFloat() * 120F - 60F;
-                double d = posX - field_40167_a;
-                double d1 = posY - field_40165_b;
-                double d2 = posZ - field_40166_c;
+                targetX = 0.0D;
+                targetY = 70F + rand.nextFloat() * 50F;
+                targetZ = 0.0D;
+                targetX += rand.nextFloat() * 120F - 60F;
+                targetZ += rand.nextFloat() * 120F - 60F;
+                double d = posX - targetX;
+                double d1 = posY - targetY;
+                double d2 = posZ - targetZ;
                 flag = d * d + d1 * d1 + d2 * d2 > 100D;
             } while(!flag);
-            field_40179_aC = null;
+            target = null;
         }
     }
 
@@ -467,27 +467,27 @@ public class EntityDragon extends EntityDragonBase
         return flag;
     }
 
-    public boolean func_40156_a(DragonPart dragonpart, DamageSource damagesource, int i)
+    public boolean attackEntityFromPart(DragonPart dragonpart, DamageSource damagesource, int i)
     {
-        if(dragonpart != field_40177_ap)
+        if(dragonpart != dragonPartHead)
         {
             i = i / 4 + 1;
         }
         float f = (rotationYaw * 3.141593F) / 180F;
         float f1 = MathHelper.sin(f);
         float f2 = MathHelper.cos(f);
-        field_40167_a = posX + (double)(f1 * 5F) + (double)((rand.nextFloat() - 0.5F) * 2.0F);
-        field_40165_b = posY + (double)(rand.nextFloat() * 3F) + 1.0D;
-        field_40166_c = (posZ - (double)(f2 * 5F)) + (double)((rand.nextFloat() - 0.5F) * 2.0F);
-        field_40179_aC = null;
+        targetX = posX + (double)(f1 * 5F) + (double)((rand.nextFloat() - 0.5F) * 2.0F);
+        targetY = posY + (double)(rand.nextFloat() * 3F) + 1.0D;
+        targetZ = (posZ - (double)(f2 * 5F)) + (double)((rand.nextFloat() - 0.5F) * 2.0F);
+        target = null;
         if((damagesource.getSourceOfDamage() instanceof EntityPlayer) || damagesource == DamageSource.explosion)
         {
-            func_40155_e(damagesource, i);
+            superAttackFrom(damagesource, i);
         }
         return true;
     }
 
-    protected void func_40120_m_()
+    protected void onDeathUpdate()
     {
         field_40178_aA++;
         if(field_40178_aA >= 180 && field_40178_aA <= 200)
@@ -503,7 +503,7 @@ public class EntityDragon extends EntityDragonBase
             {
                 int k = EntityXPOrb.getXPSplit(i);
                 i -= k;
-                worldObj.entityJoinedWorld(new EntityXPOrb(worldObj, posX, posY, posZ, k));
+                worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, posX, posY, posZ, k));
             }
 
         }
@@ -515,7 +515,7 @@ public class EntityDragon extends EntityDragonBase
             {
                 int l = EntityXPOrb.getXPSplit(j);
                 j -= l;
-                worldObj.entityJoinedWorld(new EntityXPOrb(worldObj, posX, posY, posZ, l));
+                worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, posX, posY, posZ, l));
             }
 
             int i1 = (5 + rand.nextInt(2) * 2) - 1;
@@ -535,8 +535,8 @@ public class EntityDragon extends EntityDragonBase
 
     private void func_41012_a(int i, int j)
     {
-        int k = worldObj.field_35472_c / 2;
-        BlockEndPortal.field_41051_a = true;
+        int k = worldObj.worldHeight / 2;
+        BlockEndPortal.bossDefeated = true;
         int l = 4;
         for(int i1 = k - 1; i1 <= k + 32; i1++)
         {
@@ -585,17 +585,17 @@ public class EntityDragon extends EntityDragonBase
         worldObj.setBlockWithNotify(i, k + 2, j - 1, Block.torchWood.blockID);
         worldObj.setBlockWithNotify(i, k + 2, j + 1, Block.torchWood.blockID);
         worldObj.setBlockWithNotify(i, k + 3, j, Block.bedrock.blockID);
-        worldObj.setBlockWithNotify(i, k + 4, j, Block.field_41050_bK.blockID);
-        BlockEndPortal.field_41051_a = false;
+        worldObj.setBlockWithNotify(i, k + 4, j, Block.dragonEgg.blockID);
+        BlockEndPortal.bossDefeated = false;
     }
 
     protected void despawnEntity()
     {
     }
 
-    public Entity[] func_40048_X()
+    public Entity[] getParts()
     {
-        return field_40176_ao;
+        return dragonPartArray;
     }
 
     public boolean canBeCollidedWith()

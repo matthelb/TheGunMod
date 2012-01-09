@@ -15,7 +15,7 @@ public class BlockDragonEgg extends Block
 
     public BlockDragonEgg(int i, int j)
     {
-        super(i, j, Material.field_41056_z);
+        super(i, j, Material.dragonEgg);
     }
 
     public void onBlockAdded(World world, int i, int j, int k)
@@ -30,10 +30,10 @@ public class BlockDragonEgg extends Block
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        func_41055_g(world, i, j, k);
+        fallIfPossible(world, i, j, k);
     }
 
-    private void func_41055_g(World world, int i, int j, int k)
+    private void fallIfPossible(World world, int i, int j, int k)
     {
         int l = i;
         int i1 = j;
@@ -52,23 +52,23 @@ public class BlockDragonEgg extends Block
             } else
             {
                 EntityFallingSand entityfallingsand = new EntityFallingSand(world, (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, blockID);
-                world.entityJoinedWorld(entityfallingsand);
+                world.spawnEntityInWorld(entityfallingsand);
             }
         }
     }
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        func_41054_h(world, i, j, k);
+        teleportNearby(world, i, j, k);
         return true;
     }
 
     public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        func_41054_h(world, i, j, k);
+        teleportNearby(world, i, j, k);
     }
 
-    private void func_41054_h(World world, int i, int j, int k)
+    private void teleportNearby(World world, int i, int j, int k)
     {
         if(world.getBlockId(i, j, k) != blockID)
         {

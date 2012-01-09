@@ -105,16 +105,16 @@ abstract class ComponentNetherBridgePiece extends StructureComponent
         switch(coordBaseMode)
         {
         case 2: // '\002'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.minZ - 1, coordBaseMode, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.minZ - 1, coordBaseMode, getComponentType(), flag);
 
         case 0: // '\0'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.maxZ + 1, coordBaseMode, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.maxZ + 1, coordBaseMode, getComponentType(), flag);
 
         case 1: // '\001'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, getComponentType(), flag);
 
         case 3: // '\003'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, getComponentType(), flag);
         }
         return null;
     }
@@ -124,16 +124,16 @@ abstract class ComponentNetherBridgePiece extends StructureComponent
         switch(coordBaseMode)
         {
         case 2: // '\002'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, getComponentType(), flag);
 
         case 0: // '\0'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, getComponentType(), flag);
 
         case 1: // '\001'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, getComponentType(), flag);
 
         case 3: // '\003'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, getComponentType(), flag);
         }
         return null;
     }
@@ -143,16 +143,16 @@ abstract class ComponentNetherBridgePiece extends StructureComponent
         switch(coordBaseMode)
         {
         case 2: // '\002'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, getComponentType(), flag);
 
         case 0: // '\0'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, getComponentType(), flag);
 
         case 1: // '\001'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, getComponentType(), flag);
 
         case 3: // '\003'
-            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, func_35012_c(), flag);
+            return func_40018_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, getComponentType(), flag);
         }
         return null;
     }

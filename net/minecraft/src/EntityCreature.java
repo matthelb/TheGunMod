@@ -222,9 +222,9 @@ public abstract class EntityCreature extends EntityLiving
         entityToAttack = entity;
     }
 
-    protected float func_35166_t_()
+    protected float getSpeedModifier()
     {
-        float f = super.func_35166_t_();
+        float f = super.getSpeedModifier();
         if(fleeingTick > 0)
         {
             f *= 2.0F;

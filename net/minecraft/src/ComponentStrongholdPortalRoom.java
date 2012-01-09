@@ -70,7 +70,7 @@ public class ComponentStrongholdPortalRoom extends ComponentStronghold
             fillWithBlocks(world, structureboundingbox, k, 3, 15, k, 4, 15, Block.fenceIron.blockID, Block.fenceIron.blockID, false);
         }
 
-        int l = func_35009_c(Block.stairsStoneBrickSmooth.blockID, 3);
+        int l = getMetadataWithOffset(Block.stairsStoneBrickSmooth.blockID, 3);
         fillWithRandomizedBlocks(world, structureboundingbox, 4, 1, 5, 6, 1, 7, false, random, StructureStrongholdPieces.getStrongholdStones());
         fillWithRandomizedBlocks(world, structureboundingbox, 4, 2, 6, 6, 2, 7, false, random, StructureStrongholdPieces.getStrongholdStones());
         fillWithRandomizedBlocks(world, structureboundingbox, 4, 3, 7, 6, 3, 7, false, random, StructureStrongholdPieces.getStrongholdStones());

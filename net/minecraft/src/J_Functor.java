@@ -8,7 +8,7 @@ package net.minecraft.src;
 interface J_Functor
 {
 
-    public abstract boolean matchsNode(Object obj);
+    public abstract boolean matchesNode(Object obj);
 
     public abstract Object applyTo(Object obj);
 

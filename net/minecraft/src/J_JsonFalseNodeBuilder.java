@@ -18,6 +18,6 @@ class J_JsonFalseNodeBuilder
 
     public J_JsonNode buildNode()
     {
-        return J_JsonNodeFactories.func_27314_c();
+        return J_JsonNodeFactories.aJsonFalse();
     }
 }

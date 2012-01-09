@@ -56,13 +56,13 @@ public class EntitySilverfish extends EntityMob
         return "mob.silverfish.kill";
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int damage)
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
         if(field_35189_a <= 0 && (damagesource instanceof EntityDamageSource))
         {
             field_35189_a = 20;
         }
-        return super.attackEntityFrom(damagesource, damage);
+        return super.attackEntityFrom(damagesource, i);
     }
 
     protected void attackEntity(Entity entity, float f)
@@ -195,7 +195,7 @@ public class EntitySilverfish extends EntityMob
         }
     }
 
-    public EnumCreatureAttribute func_40124_t()
+    public EnumCreatureAttribute getCreatureAttribute()
     {
         return EnumCreatureAttribute.ARTHROPOD;
     }

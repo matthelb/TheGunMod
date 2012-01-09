@@ -39,9 +39,9 @@ public class RenderSquid extends RenderLiving
     {
     }
 
-    protected float func_21006_b(EntitySquid entitysquid, float f)
+    protected float handleRotationFloat(EntitySquid entitysquid, float f)
     {
-        float f1 = entitysquid.field_21082_j + (entitysquid.field_21083_i - entitysquid.field_21082_j) * f;
+        float f1 = entitysquid.lastTentacleAngle + (entitysquid.tentacleAngle - entitysquid.lastTentacleAngle) * f;
         return f1;
     }
 
@@ -52,7 +52,7 @@ public class RenderSquid extends RenderLiving
 
     protected float handleRotationFloat(EntityLiving entityliving, float f)
     {
-        return func_21006_b((EntitySquid)entityliving, f);
+        return handleRotationFloat((EntitySquid)entityliving, f);
     }
 
     protected void rotateCorpse(EntityLiving entityliving, float f, float f1, float f2)

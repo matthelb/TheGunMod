@@ -14,20 +14,20 @@ import java.util.Random;
 public class ComponentVillagePathGen extends ComponentVillageRoadPiece
 {
 
-    private int field_35088_a;
+    private int averageGroundLevel;
 
     public ComponentVillagePathGen(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
         coordBaseMode = j;
         boundingBox = structureboundingbox;
-        field_35088_a = Math.max(structureboundingbox.getXSize(), structureboundingbox.getZSize());
+        averageGroundLevel = Math.max(structureboundingbox.getXSize(), structureboundingbox.getZSize());
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
         boolean flag = false;
-        for(int i = random.nextInt(5); i < field_35088_a - 8; i += 2 + random.nextInt(5))
+        for(int i = random.nextInt(5); i < averageGroundLevel - 8; i += 2 + random.nextInt(5))
         {
             StructureComponent structurecomponent1 = func_35077_a((ComponentVillageStartPiece)structurecomponent, list, random, 0, i);
             if(structurecomponent1 != null)
@@ -37,7 +37,7 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
             }
         }
 
-        for(int j = random.nextInt(5); j < field_35088_a - 8; j += 2 + random.nextInt(5))
+        for(int j = random.nextInt(5); j < averageGroundLevel - 8; j += 2 + random.nextInt(5))
         {
             StructureComponent structurecomponent2 = func_35076_b((ComponentVillageStartPiece)structurecomponent, list, random, 0, j);
             if(structurecomponent2 != null)
@@ -52,19 +52,19 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
             switch(coordBaseMode)
             {
             case 2: // '\002'
-                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX - 1, boundingBox.minY, boundingBox.minZ, 1, func_35012_c());
+                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX - 1, boundingBox.minY, boundingBox.minZ, 1, getComponentType());
                 break;
 
             case 0: // '\0'
-                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX - 1, boundingBox.minY, boundingBox.maxZ - 2, 1, func_35012_c());
+                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX - 1, boundingBox.minY, boundingBox.maxZ - 2, 1, getComponentType());
                 break;
 
             case 3: // '\003'
-                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX - 2, boundingBox.minY, boundingBox.minZ - 1, 2, func_35012_c());
+                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX - 2, boundingBox.minY, boundingBox.minZ - 1, 2, getComponentType());
                 break;
 
             case 1: // '\001'
-                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX, boundingBox.minY, boundingBox.minZ - 1, 2, func_35012_c());
+                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX, boundingBox.minY, boundingBox.minZ - 1, 2, getComponentType());
                 break;
             }
         }
@@ -73,19 +73,19 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
             switch(coordBaseMode)
             {
             case 2: // '\002'
-                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX + 1, boundingBox.minY, boundingBox.minZ, 3, func_35012_c());
+                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX + 1, boundingBox.minY, boundingBox.minZ, 3, getComponentType());
                 break;
 
             case 0: // '\0'
-                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX + 1, boundingBox.minY, boundingBox.maxZ - 2, 3, func_35012_c());
+                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX + 1, boundingBox.minY, boundingBox.maxZ - 2, 3, getComponentType());
                 break;
 
             case 3: // '\003'
-                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX - 2, boundingBox.minY, boundingBox.maxZ + 1, 0, func_35012_c());
+                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX - 2, boundingBox.minY, boundingBox.maxZ + 1, 0, getComponentType());
                 break;
 
             case 1: // '\001'
-                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX, boundingBox.minY, boundingBox.maxZ + 1, 0, func_35012_c());
+                StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX, boundingBox.minY, boundingBox.maxZ + 1, 0, getComponentType());
                 break;
             }
         }

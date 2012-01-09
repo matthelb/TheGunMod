@@ -24,7 +24,7 @@ public class ChunkProviderClient
     {
         chunkMapping = new LongHashMap();
         field_889_c = new ArrayList();
-        blankChunk = new EmptyChunk(world, new byte[256 * world.field_35472_c], 0, 0);
+        blankChunk = new EmptyChunk(world, new byte[256 * world.worldHeight], 0, 0);
         worldObj = world;
     }
 
@@ -35,14 +35,14 @@ public class ChunkProviderClient
             return true;
         } else
         {
-            return chunkMapping.func_35575_b(ChunkCoordIntPair.chunkXZ2Int(i, j));
+            return chunkMapping.containsKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
         }
     }
 
     public void func_539_c(int i, int j)
     {
         Chunk chunk = provideChunk(i, j);
-        if(!chunk.getFalse())
+        if(!chunk.isEmpty())
         {
             chunk.onChunkUnload();
         }
@@ -52,7 +52,7 @@ public class ChunkProviderClient
 
     public Chunk loadChunk(int i, int j)
     {
-        byte abyte0[] = new byte[256 * worldObj.field_35472_c];
+        byte abyte0[] = new byte[256 * worldObj.worldHeight];
         Chunk chunk = new Chunk(worldObj, abyte0, i, j);
         Arrays.fill(chunk.skylightMap.data, (byte)-1);
         chunkMapping.add(ChunkCoordIntPair.chunkXZ2Int(i, j), chunk);

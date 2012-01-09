@@ -22,7 +22,7 @@ public class WorldProviderEnd extends WorldProvider
         worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.sky, 0.5F, 0.0F);
         worldType = 1;
         hasNoSky = true;
-        isNether = true;
+        isAlternateDimension = true;
     }
 
     public IChunkProvider getChunkProvider()
@@ -88,7 +88,7 @@ public class WorldProviderEnd extends WorldProvider
         }
     }
 
-    public ChunkCoordinates func_40469_f()
+    public ChunkCoordinates getEntrancePortalLocation()
     {
         return new ChunkCoordinates(100, 50, 0);
     }

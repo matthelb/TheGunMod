@@ -95,7 +95,7 @@ public class TileEntityMobSpawner extends TileEntity
                 entityliving.setLocationAndAngles(d3, d4, d5, worldObj.rand.nextFloat() * 360F, 0.0F);
                 if(entityliving.getCanSpawnHere())
                 {
-                    worldObj.entityJoinedWorld(entityliving);
+                    worldObj.spawnEntityInWorld(entityliving);
                     worldObj.playAuxSFX(2004, xCoord, yCoord, zCoord, 0);
                     entityliving.spawnExplosionParticle();
                     updateDelay();

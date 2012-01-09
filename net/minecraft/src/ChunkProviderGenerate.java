@@ -69,10 +69,10 @@ public class ChunkProviderGenerate
     public void generateTerrain(int i, int j, byte abyte0[])
     {
         byte byte0 = 4;
-        int k = worldObj.field_35472_c / 8;
-        int l = worldObj.field_35470_e;
+        int k = worldObj.worldHeight / 8;
+        int l = worldObj.seaLevel;
         int i1 = byte0 + 1;
-        int j1 = worldObj.field_35472_c / 8 + 1;
+        int j1 = worldObj.worldHeight / 8 + 1;
         int k1 = byte0 + 1;
         biomesForGeneration = worldObj.getWorldChunkManager().func_35557_b(biomesForGeneration, i * 4 - 2, j * 4 - 2, i1 + 5, k1 + 5);
         field_4180_q = initializeNoiseField(field_4180_q, i * byte0, 0, j * byte0, i1, j1, k1);
@@ -100,8 +100,8 @@ public class ChunkProviderGenerate
                         double d13 = (d4 - d2) * d9;
                         for(int l2 = 0; l2 < 4; l2++)
                         {
-                            int i3 = l2 + l1 * 4 << worldObj.field_35471_b | 0 + i2 * 4 << worldObj.field_35473_a | j2 * 8 + k2;
-                            int j3 = 1 << worldObj.field_35473_a;
+                            int i3 = l2 + l1 * 4 << worldObj.xShift | 0 + i2 * 4 << worldObj.heightShift | j2 * 8 + k2;
+                            int j3 = 1 << worldObj.heightShift;
                             i3 -= j3;
                             double d14 = 0.25D;
                             double d15 = d10;
@@ -143,10 +143,10 @@ public class ChunkProviderGenerate
 
     public void replaceBlocksForBiome(int i, int j, byte abyte0[], BiomeGenBase abiomegenbase[])
     {
-        int k = worldObj.field_35470_e;
+        int k = worldObj.seaLevel;
         double d = 0.03125D;
         stoneNoise = noiseGen4.generateNoiseOctaves(stoneNoise, i * 16, j * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
-        float af[] = worldObj.getWorldChunkManager().func_40539_b(i * 16, j * 16, 16, 16);
+        float af[] = worldObj.getWorldChunkManager().initTemperatureCache(i * 16, j * 16, 16, 16);
         for(int l = 0; l < 16; l++)
         {
             for(int i1 = 0; i1 < 16; i1++)
@@ -157,9 +157,9 @@ public class ChunkProviderGenerate
                 int k1 = -1;
                 byte byte0 = biomegenbase.topBlock;
                 byte byte1 = biomegenbase.fillerBlock;
-                for(int l1 = worldObj.field_35469_d; l1 >= 0; l1--)
+                for(int l1 = worldObj.worldMaxY; l1 >= 0; l1--)
                 {
-                    int i2 = (i1 * 16 + l) * worldObj.field_35472_c + l1;
+                    int i2 = (i1 * 16 + l) * worldObj.worldHeight + l1;
                     if(l1 <= 0 + rand.nextInt(5))
                     {
                         abyte0[i2] = (byte)Block.bedrock.blockID;
@@ -234,7 +234,7 @@ public class ChunkProviderGenerate
     public Chunk provideChunk(int i, int j)
     {
         rand.setSeed((long)i * 0x4f9939f508L + (long)j * 0x1ef1565bd5L);
-        byte abyte0[] = new byte[16 * worldObj.field_35472_c * 16];
+        byte abyte0[] = new byte[16 * worldObj.worldHeight * 16];
         Chunk chunk = new Chunk(worldObj, abyte0, i, j);
         generateTerrain(i, j, abyte0);
         biomesForGeneration = worldObj.getWorldChunkManager().loadBlockGeneratorData(biomesForGeneration, i * 16, j * 16, 16, 16);
@@ -343,7 +343,7 @@ public class ChunkProviderGenerate
                     d3 = (d3 * (double)i1) / 16D;
                     double d5 = (double)i1 / 2D + d3 * 4D;
                     double d6 = 0.0D;
-                    double d7 = (((double)k3 - d5) * 12D * 128D) / (double)worldObj.field_35472_c / d4;
+                    double d7 = (((double)k3 - d5) * 12D * 128D) / (double)worldObj.worldHeight / d4;
                     if(d7 < 0.0D)
                     {
                         d7 *= 4D;
@@ -404,16 +404,16 @@ public class ChunkProviderGenerate
         if(!flag && rand.nextInt(4) == 0)
         {
             int i1 = k + rand.nextInt(16) + 8;
-            int j2 = rand.nextInt(worldObj.field_35472_c);
+            int j2 = rand.nextInt(worldObj.worldHeight);
             int k3 = l + rand.nextInt(16) + 8;
             (new WorldGenLakes(Block.waterStill.blockID)).generate(worldObj, rand, i1, j2, k3);
         }
         if(!flag && rand.nextInt(8) == 0)
         {
             int j1 = k + rand.nextInt(16) + 8;
-            int k2 = rand.nextInt(rand.nextInt(worldObj.field_35472_c - 8) + 8);
+            int k2 = rand.nextInt(rand.nextInt(worldObj.worldHeight - 8) + 8);
             int l3 = l + rand.nextInt(16) + 8;
-            if(k2 < worldObj.field_35470_e || rand.nextInt(10) == 0)
+            if(k2 < worldObj.seaLevel || rand.nextInt(10) == 0)
             {
                 (new WorldGenLakes(Block.lavaStill.blockID)).generate(worldObj, rand, j1, k2, l3);
             }
@@ -421,7 +421,7 @@ public class ChunkProviderGenerate
         for(int k1 = 0; k1 < 8; k1++)
         {
             int i3 = k + rand.nextInt(16) + 8;
-            int i4 = rand.nextInt(worldObj.field_35472_c);
+            int i4 = rand.nextInt(worldObj.worldHeight);
             int k4 = l + rand.nextInt(16) + 8;
             if(!(new WorldGenDungeons()).generate(worldObj, rand, i3, i4, k4));
         }
@@ -434,12 +434,12 @@ public class ChunkProviderGenerate
         {
             for(int j3 = 0; j3 < 16; j3++)
             {
-                int j4 = worldObj.func_35461_e(k + i2, l + j3);
+                int j4 = worldObj.getPrecipitationHeight(k + i2, l + j3);
                 if(worldObj.func_40471_p(i2 + k, j4 - 1, j3 + l))
                 {
                     worldObj.setBlockWithNotify(i2 + k, j4 - 1, j3 + l, Block.ice.blockID);
                 }
-                if(worldObj.func_40478_r(i2 + k, j4, j3 + l))
+                if(worldObj.canSnowAt(i2 + k, j4, j3 + l))
                 {
                     worldObj.setBlockWithNotify(i2 + k, j4, j3 + l, Block.snow.blockID);
                 }

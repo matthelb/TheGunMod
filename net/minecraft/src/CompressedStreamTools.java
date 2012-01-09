@@ -24,7 +24,7 @@ public class CompressedStreamTools
         DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(inputstream)));
         try
         {
-            NBTTagCompound nbttagcompound = func_1141_a(datainputstream);
+            NBTTagCompound nbttagcompound = read(datainputstream);
             return nbttagcompound;
         }
         finally
@@ -47,13 +47,13 @@ public class CompressedStreamTools
         }
     }
 
-    public static NBTTagCompound func_40592_a(byte abyte0[])
+    public static NBTTagCompound loadMapFromByteArray(byte abyte0[])
         throws IOException
     {
         DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(abyte0))));
         try
         {
-            NBTTagCompound nbttagcompound = func_1141_a(datainputstream);
+            NBTTagCompound nbttagcompound = read(datainputstream);
             return nbttagcompound;
         }
         finally
@@ -62,7 +62,7 @@ public class CompressedStreamTools
         }
     }
 
-    public static byte[] func_40591_a(NBTTagCompound nbttagcompound)
+    public static byte[] writeMapToByteArray(NBTTagCompound nbttagcompound)
         throws IOException
     {
         ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
@@ -78,7 +78,7 @@ public class CompressedStreamTools
         return bytearrayoutputstream.toByteArray();
     }
 
-    public static void func_35621_a(NBTTagCompound nbttagcompound, File file)
+    public static void saveMapToFileWithBackup(NBTTagCompound nbttagcompound, File file)
         throws IOException
     {
         File file1 = new File((new StringBuilder()).append(file.getAbsolutePath()).append("_tmp").toString());
@@ -86,7 +86,7 @@ public class CompressedStreamTools
         {
             file1.delete();
         }
-        func_35620_b(nbttagcompound, file1);
+        saveMapToFile(nbttagcompound, file1);
         if(file.exists())
         {
             file.delete();
@@ -101,7 +101,7 @@ public class CompressedStreamTools
         }
     }
 
-    public static void func_35620_b(NBTTagCompound nbttagcompound, File file)
+    public static void saveMapToFile(NBTTagCompound nbttagcompound, File file)
         throws IOException
     {
         DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(file));
@@ -115,7 +115,7 @@ public class CompressedStreamTools
         }
     }
 
-    public static NBTTagCompound func_35622_a(File file)
+    public static NBTTagCompound writeMapToFileUncompressed(File file)
         throws IOException
     {
         if(!file.exists())
@@ -125,7 +125,7 @@ public class CompressedStreamTools
         DataInputStream datainputstream = new DataInputStream(new FileInputStream(file));
         try
         {
-            NBTTagCompound nbttagcompound = func_1141_a(datainputstream);
+            NBTTagCompound nbttagcompound = read(datainputstream);
             return nbttagcompound;
         }
         finally
@@ -134,7 +134,7 @@ public class CompressedStreamTools
         }
     }
 
-    public static NBTTagCompound func_1141_a(DataInput datainput)
+    public static NBTTagCompound read(DataInput datainput)
         throws IOException
     {
         NBTBase nbtbase = NBTBase.readTag(datainput);

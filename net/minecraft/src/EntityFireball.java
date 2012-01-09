@@ -96,7 +96,7 @@ public class EntityFireball extends Entity
     public void onUpdate()
     {
         super.onUpdate();
-        func_40046_d(1);
+        setFire(1);
         if(!worldObj.multiplayerWorld && (shootingEntity == null || shootingEntity.isDead))
         {
             setEntityDead();
@@ -140,7 +140,7 @@ public class EntityFireball extends Entity
         for(int j = 0; j < list.size(); j++)
         {
             Entity entity1 = (Entity)list.get(j);
-            if(!entity1.canBeCollidedWith() || entity1.func_41004_h(shootingEntity) && ticksInAir < 25)
+            if(!entity1.canBeCollidedWith() || entity1.isEntityEqual(shootingEntity) && ticksInAir < 25)
             {
                 continue;
             }

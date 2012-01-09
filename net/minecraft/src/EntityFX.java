@@ -150,12 +150,12 @@ public class EntityFX extends Entity
     {
     }
 
-    public void func_40099_c(int i)
+    public void setParticleTextureIndex(int i)
     {
         particleTextureIndex = i;
     }
 
-    public int func_40100_q()
+    public int getParticleTextureIndex()
     {
         return particleTextureIndex;
     }

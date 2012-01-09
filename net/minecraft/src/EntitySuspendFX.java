@@ -19,7 +19,7 @@ public class EntitySuspendFX extends EntityFX
         particleRed = 0.4F;
         particleGreen = 0.4F;
         particleBlue = 0.7F;
-        func_40099_c(0);
+        setParticleTextureIndex(0);
         setSize(0.01F, 0.01F);
         particleScale = particleScale * (rand.nextFloat() * 0.6F + 0.2F);
         motionX = d3 * 0.0D;

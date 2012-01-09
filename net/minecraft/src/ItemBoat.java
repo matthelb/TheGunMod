@@ -78,7 +78,7 @@ public class ItemBoat extends Item
                 {
                     j--;
                 }
-                world.entityJoinedWorld(new EntityBoat(world, (float)i + 0.5F, (float)j + 1.0F, (float)k + 0.5F));
+                world.spawnEntityInWorld(new EntityBoat(world, (float)i + 0.5F, (float)j + 1.0F, (float)k + 0.5F));
             }
             if(!entityplayer.capabilities.depleteBuckets)
             {

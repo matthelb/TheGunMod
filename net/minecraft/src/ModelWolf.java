@@ -93,14 +93,14 @@ public class ModelWolf extends ModelBase
     public void setLivingAnimations(EntityLiving entityliving, float f, float f1, float f2)
     {
         EntityWolf entitywolf = (EntityWolf)entityliving;
-        if(entitywolf.isWolfAngry())
+        if(entitywolf.isAngry())
         {
             wolfTail.rotateAngleY = 0.0F;
         } else
         {
             wolfTail.rotateAngleY = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
         }
-        if(entitywolf.isWolfSitting())
+        if(entitywolf.isSitting())
         {
             wolfMane.setRotationPoint(-1F, 16F, -3F);
             wolfMane.rotateAngleX = 1.256637F;

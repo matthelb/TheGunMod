@@ -20,7 +20,7 @@ public class EnchantmentProtection extends Enchantment
     private static final int levelEnchantability[] = {
         16, 8, 6, 8, 6
     };
-    private static final int threesholdEnchantability[] = {
+    private static final int thresholdEnchantability[] = {
         20, 12, 10, 12, 15
     };
     public final int protectionType;
@@ -42,7 +42,7 @@ public class EnchantmentProtection extends Enchantment
 
     public int getMaxEnchantability(int i)
     {
-        return getMinEnchantability(i) + threesholdEnchantability[protectionType];
+        return getMinEnchantability(i) + thresholdEnchantability[protectionType];
     }
 
     public int getMaxLevel()
@@ -61,7 +61,7 @@ public class EnchantmentProtection extends Enchantment
         {
             return j;
         }
-        if(protectionType == 1 && damagesource.func_40543_k())
+        if(protectionType == 1 && damagesource.fireDamage())
         {
             return j;
         }
@@ -73,7 +73,7 @@ public class EnchantmentProtection extends Enchantment
         {
             return j;
         }
-        if(protectionType == 4 && damagesource.func_40547_b())
+        if(protectionType == 4 && damagesource.isProjectile())
         {
             return j;
         } else

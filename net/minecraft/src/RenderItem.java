@@ -19,16 +19,16 @@ public class RenderItem extends Render
     private RenderBlocks renderBlocks;
     private Random random;
     public boolean field_27004_a;
-    public float field_40268_b;
+    public float zLevel;
 
     public RenderItem()
     {
         renderBlocks = new RenderBlocks();
         random = new Random();
         field_27004_a = true;
-        field_40268_b = 0.0F;
+        zLevel = 0.0F;
         shadowSize = 0.15F;
-        field_194_c = 0.75F;
+        shadowOpaque = 0.75F;
     }
 
     public void doRenderItem(EntityItem entityitem, double d, double d1, double d2, 
@@ -76,7 +76,7 @@ public class RenderItem extends Render
                     GL11.glTranslatef(f7, f11, f14);
                 }
                 float f8 = 1.0F;
-                renderBlocks.renderBlockOnInventory(Block.blocksList[itemstack.itemID], itemstack.getItemDamage(), f8);
+                renderBlocks.renderBlockAsItem(Block.blocksList[itemstack.itemID], itemstack.getItemDamage(), f8);
                 GL11.glPopMatrix();
             }
 
@@ -168,7 +168,7 @@ public class RenderItem extends Render
             renderengine.bindTexture(renderengine.getTexture("/terrain.png"));
             Block block = Block.blocksList[j1];
             GL11.glPushMatrix();
-            GL11.glTranslatef(l - 2, i1 + 3, -3F + field_40268_b);
+            GL11.glTranslatef(l - 2, i1 + 3, -3F + zLevel);
             GL11.glScalef(10F, 10F, 10F);
             GL11.glTranslatef(1.0F, 0.5F, 1.0F);
             GL11.glScalef(1.0F, 1.0F, -1F);
@@ -184,7 +184,7 @@ public class RenderItem extends Render
             }
             GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
             renderBlocks.useInventoryTint = field_27004_a;
-            renderBlocks.renderBlockOnInventory(block, j, 1.0F);
+            renderBlocks.renderBlockAsItem(block, j, 1.0F);
             renderBlocks.useInventoryTint = true;
             GL11.glPopMatrix();
         } else
@@ -246,14 +246,14 @@ public class RenderItem extends Render
             GL11.glDisable(2896 /*GL_LIGHTING*/);
             GL11.glDepthMask(false);
             renderengine.bindTexture(renderengine.getTexture("%blur%/misc/glint.png"));
-            field_40268_b -= 50F;
+            zLevel -= 50F;
             GL11.glEnable(3042 /*GL_BLEND*/);
             GL11.glBlendFunc(774, 774);
             GL11.glColor4f(0.5F, 0.25F, 0.8F, 1.0F);
             func_40266_a(i * 0x19b4ca14 + j * 0x1eafff1, i - 2, j - 2, 20, 20);
             GL11.glDisable(3042 /*GL_BLEND*/);
             GL11.glDepthMask(true);
-            field_40268_b += 50F;
+            zLevel += 50F;
             GL11.glEnable(2896 /*GL_LIGHTING*/);
             GL11.glDepthFunc(515);
         }
@@ -282,10 +282,10 @@ public class RenderItem extends Render
                 f4 = -1F;
             }
             tessellator.startDrawingQuads();
-            tessellator.addVertexWithUV(j + 0, k + i1, field_40268_b, (f2 + (float)i1 * f4) * f, (f3 + (float)i1) * f1);
-            tessellator.addVertexWithUV(j + l, k + i1, field_40268_b, (f2 + (float)l + (float)i1 * f4) * f, (f3 + (float)i1) * f1);
-            tessellator.addVertexWithUV(j + l, k + 0, field_40268_b, (f2 + (float)l) * f, (f3 + 0.0F) * f1);
-            tessellator.addVertexWithUV(j + 0, k + 0, field_40268_b, (f2 + 0.0F) * f, (f3 + 0.0F) * f1);
+            tessellator.addVertexWithUV(j + 0, k + i1, zLevel, (f2 + (float)i1 * f4) * f, (f3 + (float)i1) * f1);
+            tessellator.addVertexWithUV(j + l, k + i1, zLevel, (f2 + (float)l + (float)i1 * f4) * f, (f3 + (float)i1) * f1);
+            tessellator.addVertexWithUV(j + l, k + 0, zLevel, (f2 + (float)l) * f, (f3 + 0.0F) * f1);
+            tessellator.addVertexWithUV(j + 0, k + 0, zLevel, (f2 + 0.0F) * f, (f3 + 0.0F) * f1);
             tessellator.draw();
         }
 
@@ -343,10 +343,10 @@ public class RenderItem extends Render
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(i + 0, j + j1, field_40268_b, (float)(k + 0) * f, (float)(l + j1) * f1);
-        tessellator.addVertexWithUV(i + i1, j + j1, field_40268_b, (float)(k + i1) * f, (float)(l + j1) * f1);
-        tessellator.addVertexWithUV(i + i1, j + 0, field_40268_b, (float)(k + i1) * f, (float)(l + 0) * f1);
-        tessellator.addVertexWithUV(i + 0, j + 0, field_40268_b, (float)(k + 0) * f, (float)(l + 0) * f1);
+        tessellator.addVertexWithUV(i + 0, j + j1, zLevel, (float)(k + 0) * f, (float)(l + j1) * f1);
+        tessellator.addVertexWithUV(i + i1, j + j1, zLevel, (float)(k + i1) * f, (float)(l + j1) * f1);
+        tessellator.addVertexWithUV(i + i1, j + 0, zLevel, (float)(k + i1) * f, (float)(l + 0) * f1);
+        tessellator.addVertexWithUV(i + 0, j + 0, zLevel, (float)(k + 0) * f, (float)(l + 0) * f1);
         tessellator.draw();
     }
 

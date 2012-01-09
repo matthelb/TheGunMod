@@ -50,7 +50,7 @@ public class TextureWatchFX extends TextureFX
         {
             float f = mc.theWorld.getCelestialAngle(1.0F);
             d = -f * 3.141593F * 2.0F;
-            if(mc.theWorld.worldProvider.isNether)
+            if(mc.theWorld.worldProvider.isAlternateDimension)
             {
                 d = Math.random() * 3.1415927410125732D * 2D;
             }

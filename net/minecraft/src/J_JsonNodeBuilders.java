@@ -41,12 +41,12 @@ public final class J_JsonNodeBuilders
         return new J_JsonStringNodeBuilder(s);
     }
 
-    public static J_JsonObjectNodeBuilder func_27253_d()
+    public static J_JsonObjectNodeBuilder anObjectBuilder()
     {
         return new J_JsonObjectNodeBuilder();
     }
 
-    public static J_JsonArrayNodeBuilder func_27249_e()
+    public static J_JsonArrayNodeBuilder anArrayBuilder()
     {
         return new J_JsonArrayNodeBuilder();
     }

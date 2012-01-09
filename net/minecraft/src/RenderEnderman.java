@@ -59,7 +59,7 @@ public class RenderEnderman extends RenderLiving
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             loadTexture("/terrain.png");
-            renderBlocks.renderBlockOnInventory(Block.blocksList[entityenderman.getCarried()], entityenderman.getCarryingData(), 1.0F);
+            renderBlocks.renderBlockAsItem(Block.blocksList[entityenderman.getCarried()], entityenderman.getCarryingData(), 1.0F);
             GL11.glPopMatrix();
             GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
         }

@@ -11,11 +11,11 @@ package net.minecraft.src;
 class ThreadCloseConnection extends Thread
 {
 
-    final NetworkManager networkManager; /* synthetic field */
+    final NetworkManager netManager; /* synthetic field */
 
     ThreadCloseConnection(NetworkManager networkmanager)
     {
-        networkManager = networkmanager;
+        netManager = networkmanager;
 //        super();
     }
 
@@ -24,10 +24,10 @@ class ThreadCloseConnection extends Thread
         try
         {
             Thread.sleep(2000L);
-            if(NetworkManager.isRunning(networkManager))
+            if(NetworkManager.isRunning(netManager))
             {
-                NetworkManager.getWriteThread(networkManager).interrupt();
-                networkManager.networkShutdown("disconnect.closed", new Object[0]);
+                NetworkManager.getWriteThread(netManager).interrupt();
+                netManager.networkShutdown("disconnect.closed", new Object[0]);
             }
         }
         catch(Exception exception)

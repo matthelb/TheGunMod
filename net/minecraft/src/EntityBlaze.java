@@ -14,18 +14,18 @@ import java.util.Random;
 public class EntityBlaze extends EntityMob
 {
 
-    private float field_40154_a;
-    private int field_40153_b;
+    private float heightOffset;
+    private int heightOffsetUpdateTime;
     private int field_40152_d;
 
     public EntityBlaze(World world)
     {
         super(world);
-        field_40154_a = 0.5F;
+        heightOffset = 0.5F;
         texture = "/mob/fire.png";
         isImmuneToFire = true;
         attackStrength = 6;
-        field_35171_bJ = 10;
+        experienceValue = 10;
     }
 
     public int getMaxHealth()
@@ -54,9 +54,9 @@ public class EntityBlaze extends EntityMob
         return "mob.blaze.death";
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int damage)
+    public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        return super.attackEntityFrom(damagesource, damage);
+        return super.attackEntityFrom(damagesource, i);
     }
 
     public void onDeath(DamageSource damagesource)
@@ -82,13 +82,13 @@ public class EntityBlaze extends EntityMob
             {
                 attackEntityFrom(DamageSource.drown, 1);
             }
-            field_40153_b--;
-            if(field_40153_b <= 0)
+            heightOffsetUpdateTime--;
+            if(heightOffsetUpdateTime <= 0)
             {
-                field_40153_b = 100;
-                field_40154_a = 0.5F + (float)rand.nextGaussian() * 3F;
+                heightOffsetUpdateTime = 100;
+                heightOffset = 0.5F + (float)rand.nextGaussian() * 3F;
             }
-            if(getEntityToAttack() != null && getEntityToAttack().posY + (double)getEntityToAttack().getEyeHeight() > posY + (double)getEyeHeight() + (double)field_40154_a)
+            if(getEntityToAttack() != null && getEntityToAttack().posY + (double)getEntityToAttack().getEyeHeight() > posY + (double)getEyeHeight() + (double)heightOffset)
             {
                 motionY = motionY + (0.30000001192092896D - motionY) * 0.30000001192092896D;
             }
@@ -146,7 +146,7 @@ public class EntityBlaze extends EntityMob
                     {
                         EntitySmallFireball entitysmallfireball = new EntitySmallFireball(worldObj, this, d + rand.nextGaussian() * (double)f1, d1, d2 + rand.nextGaussian() * (double)f1);
                         entitysmallfireball.posY = posY + (double)(height / 2.0F) + 0.5D;
-                        worldObj.entityJoinedWorld(entitysmallfireball);
+                        worldObj.spawnEntityInWorld(entitysmallfireball);
                     }
 
                 }

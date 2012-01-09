@@ -38,14 +38,14 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
                 ((BlockChest)block).unifyAdjacentChests(tileentitychest.worldObj, tileentitychest.xCoord, tileentitychest.yCoord, tileentitychest.zCoord);
                 i = tileentitychest.getBlockMetadata();
             }
-            tileentitychest.func_35147_g();
+            tileentitychest.checkForAdjacentChests();
         }
-        if(tileentitychest.field_35152_b != null || tileentitychest.field_35150_d != null)
+        if(tileentitychest.adjacentChestZNeg != null || tileentitychest.adjacentChestXNeg != null)
         {
             return;
         }
         ModelChest modelchest;
-        if(tileentitychest.field_35153_c != null || tileentitychest.field_35151_e != null)
+        if(tileentitychest.adjacentChestXPos != null || tileentitychest.adjacentChestZPos != null)
         {
             modelchest = field_35378_c;
             bindTextureByName("/item/largechest.png");
@@ -77,28 +77,28 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer
         {
             j = -90;
         }
-        if(i == 2 && tileentitychest.field_35153_c != null)
+        if(i == 2 && tileentitychest.adjacentChestXPos != null)
         {
             GL11.glTranslatef(1.0F, 0.0F, 0.0F);
         }
-        if(i == 5 && tileentitychest.field_35151_e != null)
+        if(i == 5 && tileentitychest.adjacentChestZPos != null)
         {
             GL11.glTranslatef(0.0F, 0.0F, -1F);
         }
         GL11.glRotatef(j, 0.0F, 1.0F, 0.0F);
         GL11.glTranslatef(-0.5F, -0.5F, -0.5F);
-        float f1 = tileentitychest.field_35149_g + (tileentitychest.field_35148_f - tileentitychest.field_35149_g) * f;
-        if(tileentitychest.field_35152_b != null)
+        float f1 = tileentitychest.prevLidAngle + (tileentitychest.lidAngle - tileentitychest.prevLidAngle) * f;
+        if(tileentitychest.adjacentChestZNeg != null)
         {
-            float f2 = tileentitychest.field_35152_b.field_35149_g + (tileentitychest.field_35152_b.field_35148_f - tileentitychest.field_35152_b.field_35149_g) * f;
+            float f2 = tileentitychest.adjacentChestZNeg.prevLidAngle + (tileentitychest.adjacentChestZNeg.lidAngle - tileentitychest.adjacentChestZNeg.prevLidAngle) * f;
             if(f2 > f1)
             {
                 f1 = f2;
             }
         }
-        if(tileentitychest.field_35150_d != null)
+        if(tileentitychest.adjacentChestXNeg != null)
         {
-            float f3 = tileentitychest.field_35150_d.field_35149_g + (tileentitychest.field_35150_d.field_35148_f - tileentitychest.field_35150_d.field_35149_g) * f;
+            float f3 = tileentitychest.adjacentChestXNeg.prevLidAngle + (tileentitychest.adjacentChestXNeg.lidAngle - tileentitychest.adjacentChestXNeg.prevLidAngle) * f;
             if(f3 > f1)
             {
                 f1 = f3;

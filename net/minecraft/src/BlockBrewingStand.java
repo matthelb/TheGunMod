@@ -66,7 +66,7 @@ public class BlockBrewingStand extends BlockContainer
         TileEntityBrewingStand tileentitybrewingstand = (TileEntityBrewingStand)world.getBlockTileEntity(i, j, k);
         if(tileentitybrewingstand != null)
         {
-            entityplayer.func_40180_a(tileentitybrewingstand);
+            entityplayer.displayGUIBrewingStand(tileentitybrewingstand);
         }
         return true;
     }
@@ -113,7 +113,7 @@ label0:
                     entityitem.motionX = (float)field_40214_a.nextGaussian() * f3;
                     entityitem.motionY = (float)field_40214_a.nextGaussian() * f3 + 0.2F;
                     entityitem.motionZ = (float)field_40214_a.nextGaussian() * f3;
-                    world.entityJoinedWorld(entityitem);
+                    world.spawnEntityInWorld(entityitem);
                 } while(true);
             }
 

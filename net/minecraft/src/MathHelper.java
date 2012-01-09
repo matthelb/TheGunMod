@@ -63,12 +63,12 @@ public class MathHelper
         return f < 0.0F ? -f : f;
     }
 
-    public static int abs_int(int i)
+    public static int abs(int i)
     {
         return i < 0 ? -i : i;
     }
 
-    public static int func_41084_a(int i, int j, int k)
+    public static int clamp_int(int i, int j, int k)
     {
         if(i < j)
         {

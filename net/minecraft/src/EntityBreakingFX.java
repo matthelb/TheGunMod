@@ -16,7 +16,7 @@ public class EntityBreakingFX extends EntityFX
             Item item)
     {
         super(world, d, d1, d2, 0.0D, 0.0D, 0.0D);
-        func_40099_c(item.getIconFromDamage(0));
+        setParticleTextureIndex(item.getIconFromDamage(0));
         particleRed = particleGreen = particleBlue = 1.0F;
         particleGravity = Block.blockSnow.blockParticleGravity;
         particleScale /= 2.0F;
@@ -41,9 +41,9 @@ public class EntityBreakingFX extends EntityFX
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
     {
-        float f6 = ((float)(func_40100_q() % 16) + particleTextureJitterX / 4F) / 16F;
+        float f6 = ((float)(getParticleTextureIndex() % 16) + particleTextureJitterX / 4F) / 16F;
         float f7 = f6 + 0.01560938F;
-        float f8 = ((float)(func_40100_q() / 16) + particleTextureJitterY / 4F) / 16F;
+        float f8 = ((float)(getParticleTextureIndex() / 16) + particleTextureJitterY / 4F) / 16F;
         float f9 = f8 + 0.01560938F;
         float f10 = 0.1F * particleScale;
         float f11 = (float)((prevPosX + (posX - prevPosX) * (double)f) - interpPosX);

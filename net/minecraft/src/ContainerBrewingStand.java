@@ -14,13 +14,13 @@ import java.util.List;
 public class ContainerBrewingStand extends Container
 {
 
-    private TileEntityBrewingStand field_40243_a;
-    private int field_40242_b;
+    private TileEntityBrewingStand tileBrewingStand;
+    private int brewTime;
 
     public ContainerBrewingStand(InventoryPlayer inventoryplayer, TileEntityBrewingStand tileentitybrewingstand)
     {
-        field_40242_b = 0;
-        field_40243_a = tileentitybrewingstand;
+        brewTime = 0;
+        tileBrewingStand = tileentitybrewingstand;
         addSlot(new SlotBrewingStandPotion(this, inventoryplayer.player, tileentitybrewingstand, 0, 56, 46));
         addSlot(new SlotBrewingStandPotion(this, inventoryplayer.player, tileentitybrewingstand, 1, 79, 53));
         addSlot(new SlotBrewingStandPotion(this, inventoryplayer.player, tileentitybrewingstand, 2, 102, 46));
@@ -47,26 +47,26 @@ public class ContainerBrewingStand extends Container
         for(int i = 0; i < crafters.size(); i++)
         {
             ICrafting icrafting = (ICrafting)crafters.get(i);
-            if(field_40242_b != field_40243_a.func_40053_g())
+            if(brewTime != tileBrewingStand.getBrewTime())
             {
-                icrafting.updateCraftingInventoryInfo(this, 0, field_40243_a.func_40053_g());
+                icrafting.updateCraftingInventoryInfo(this, 0, tileBrewingStand.getBrewTime());
             }
         }
 
-        field_40242_b = field_40243_a.func_40053_g();
+        brewTime = tileBrewingStand.getBrewTime();
     }
 
     public void updateProgressBar(int i, int j)
     {
         if(i == 0)
         {
-            field_40243_a.func_40049_b(j);
+            tileBrewingStand.setBrewTime(j);
         }
     }
 
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        return field_40243_a.isUseableByPlayer(entityplayer);
+        return tileBrewingStand.isUseableByPlayer(entityplayer);
     }
 
     public ItemStack transferStackInSlot(int i)

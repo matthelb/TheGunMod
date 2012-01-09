@@ -59,7 +59,7 @@ public class BlockIce extends BlockBreakable
         return 0;
     }
 
-    protected ItemStack func_41049_c_(int i)
+    protected ItemStack createStackedBlock(int i)
     {
         return null;
     }

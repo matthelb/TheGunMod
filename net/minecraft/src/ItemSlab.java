@@ -32,11 +32,11 @@ public class ItemSlab extends ItemBlock
     public String getItemNameIS(ItemStack itemstack)
     {
         int i = itemstack.getItemDamage();
-        if(i < 0 || i >= BlockStep.field_22037_a.length)
+        if(i < 0 || i >= BlockStep.blockStepTypes.length)
         {
             i = 0;
         }
-        return (new StringBuilder()).append(super.getItemName()).append(".").append(BlockStep.field_22037_a[i]).toString();
+        return (new StringBuilder()).append(super.getItemName()).append(".").append(BlockStep.blockStepTypes[i]).toString();
     }
 
     public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
@@ -46,7 +46,7 @@ public class ItemSlab extends ItemBlock
         {
             return false;
         }
-        if(!entityplayer.func_35190_e(i, j, k))
+        if(!entityplayer.canPlayerEdit(i, j, k))
         {
             return false;
         }

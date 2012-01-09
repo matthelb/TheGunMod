@@ -14,12 +14,12 @@ import java.util.Random;
 public class ComponentVillageChurch extends ComponentVillage
 {
 
-    private int field_35098_a;
+    private int averageGroundLevel;
 
     public ComponentVillageChurch(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
-        field_35098_a = -1;
+        averageGroundLevel = -1;
         coordBaseMode = j;
         boundingBox = structureboundingbox;
     }
@@ -42,14 +42,14 @@ public class ComponentVillageChurch extends ComponentVillage
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(field_35098_a < 0)
+        if(averageGroundLevel < 0)
         {
-            field_35098_a = getAverageGroundLevel(world, structureboundingbox);
-            if(field_35098_a < 0)
+            averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
+            if(averageGroundLevel < 0)
             {
                 return true;
             }
-            boundingBox.offset(0, ((field_35098_a - boundingBox.maxY) + 12) - 1, 0);
+            boundingBox.offset(0, ((averageGroundLevel - boundingBox.maxY) + 12) - 1, 0);
         }
         fillWithBlocks(world, structureboundingbox, 1, 1, 1, 3, 3, 7, 0, 0, false);
         fillWithBlocks(world, structureboundingbox, 1, 5, 1, 3, 9, 3, 0, 0, false);
@@ -73,11 +73,11 @@ public class ComponentVillageChurch extends ComponentVillage
         placeBlockAtCurrentPosition(world, Block.cobblestone.blockID, 0, 2, 1, 7, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.cobblestone.blockID, 0, 3, 1, 6, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.cobblestone.blockID, 0, 3, 1, 7, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, func_35009_c(Block.stairCompactCobblestone.blockID, 3), 1, 1, 5, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, func_35009_c(Block.stairCompactCobblestone.blockID, 3), 2, 1, 6, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, func_35009_c(Block.stairCompactCobblestone.blockID, 3), 3, 1, 5, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, func_35009_c(Block.stairCompactCobblestone.blockID, 1), 1, 2, 7, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, func_35009_c(Block.stairCompactCobblestone.blockID, 0), 3, 2, 7, structureboundingbox);
+        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), 1, 1, 5, structureboundingbox);
+        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), 2, 1, 6, structureboundingbox);
+        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), 3, 1, 5, structureboundingbox);
+        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 1), 1, 2, 7, structureboundingbox);
+        placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 0), 3, 2, 7, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.thinGlass.blockID, 0, 0, 2, 2, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.thinGlass.blockID, 0, 0, 3, 2, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.thinGlass.blockID, 0, 4, 2, 2, structureboundingbox);
@@ -97,7 +97,7 @@ public class ComponentVillageChurch extends ComponentVillage
         placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 1, 4, 6, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 3, 4, 6, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 2, 4, 5, structureboundingbox);
-        int i = func_35009_c(Block.ladder.blockID, 4);
+        int i = getMetadataWithOffset(Block.ladder.blockID, 4);
         for(int j = 1; j <= 9; j++)
         {
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, i, 3, j, 3, structureboundingbox);
@@ -105,10 +105,10 @@ public class ComponentVillageChurch extends ComponentVillage
 
         placeBlockAtCurrentPosition(world, 0, 0, 2, 1, 0, structureboundingbox);
         placeBlockAtCurrentPosition(world, 0, 0, 2, 2, 0, structureboundingbox);
-        placeDoorAtCurrentPosition(world, structureboundingbox, random, 2, 1, 0, func_35009_c(Block.doorWood.blockID, 1));
+        placeDoorAtCurrentPosition(world, structureboundingbox, random, 2, 1, 0, getMetadataWithOffset(Block.doorWood.blockID, 1));
         if(getBlockIdAtCurrentPosition(world, 2, 0, -1, structureboundingbox) == 0 && getBlockIdAtCurrentPosition(world, 2, -1, -1, structureboundingbox) != 0)
         {
-            placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, func_35009_c(Block.stairCompactCobblestone.blockID, 3), 2, 0, -1, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), 2, 0, -1, structureboundingbox);
         }
         for(int k = 0; k < 9; k++)
         {
@@ -120,11 +120,11 @@ public class ComponentVillageChurch extends ComponentVillage
 
         }
 
-        func_40044_a(world, structureboundingbox, 2, 1, 2, 1);
+        spawnVillagers(world, structureboundingbox, 2, 1, 2, 1);
         return true;
     }
 
-    protected int func_40043_a(int i)
+    protected int getVillagerType(int i)
     {
         return 2;
     }

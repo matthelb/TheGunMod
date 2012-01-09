@@ -11,13 +11,13 @@ package net.minecraft.src;
 public class ItemColored extends ItemBlock
 {
 
-    private final Block field_35436_a;
-    private String field_41034_b[];
+    private final Block blockRef;
+    private String blockNames[];
 
     public ItemColored(int i, boolean flag)
     {
         super(i);
-        field_35436_a = Block.blocksList[getBlockID()];
+        blockRef = Block.blocksList[getBlockID()];
         if(flag)
         {
             setMaxDamage(0);
@@ -27,12 +27,12 @@ public class ItemColored extends ItemBlock
 
     public int getColorFromDamage(int i)
     {
-        return field_35436_a.getRenderColor(i);
+        return blockRef.getRenderColor(i);
     }
 
     public int getIconFromDamage(int i)
     {
-        return field_35436_a.getBlockTextureFromSideAndMetadata(0, i);
+        return blockRef.getBlockTextureFromSideAndMetadata(0, i);
     }
 
     public int getPlacedBlockMetadata(int i)
@@ -40,22 +40,22 @@ public class ItemColored extends ItemBlock
         return i;
     }
 
-    public ItemColored func_41033_a(String as[])
+    public ItemColored setBlockNames(String as[])
     {
-        field_41034_b = as;
+        blockNames = as;
         return this;
     }
 
     public String getItemNameIS(ItemStack itemstack)
     {
-        if(field_41034_b == null)
+        if(blockNames == null)
         {
             return super.getItemNameIS(itemstack);
         }
         int i = itemstack.getItemDamage();
-        if(i >= 0 && i < field_41034_b.length)
+        if(i >= 0 && i < blockNames.length)
         {
-            return (new StringBuilder()).append(super.getItemNameIS(itemstack)).append(".").append(field_41034_b[i]).toString();
+            return (new StringBuilder()).append(super.getItemNameIS(itemstack)).append(".").append(blockNames[i]).toString();
         } else
         {
             return super.getItemNameIS(itemstack);

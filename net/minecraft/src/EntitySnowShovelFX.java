@@ -62,7 +62,7 @@ public class EntitySnowShovelFX extends EntityFX
         {
             setEntityDead();
         }
-        func_40099_c(7 - (particleAge * 8) / particleMaxAge);
+        setParticleTextureIndex(7 - (particleAge * 8) / particleMaxAge);
         motionY -= 0.029999999999999999D;
         moveEntity(motionX, motionY, motionZ);
         motionX *= 0.99000000953674316D;

@@ -239,7 +239,7 @@ public class EntityArrow extends Entity
                 {
                     if(movingobjectposition.entityHit instanceof EntityLiving)
                     {
-                        ((EntityLiving)movingobjectposition.entityHit).field_35172_bP++;
+                        ((EntityLiving)movingobjectposition.entityHit).arrowHitTempCounter++;
                     }
                     worldObj.playSoundAtEntity(this, "random.bowhit", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
                     setEntityDead();

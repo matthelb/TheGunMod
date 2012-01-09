@@ -14,7 +14,7 @@ public final class J_JsonStringNode extends J_JsonNode
     implements Comparable
 {
 
-    private final String field_27224_a;
+    private final String value;
 
     J_JsonStringNode(String s)
     {
@@ -23,7 +23,7 @@ public final class J_JsonStringNode extends J_JsonNode
             throw new NullPointerException("Attempt to construct a JsonString with a null value.");
         } else
         {
-            field_27224_a = s;
+            value = s;
             return;
         }
     }
@@ -35,7 +35,7 @@ public final class J_JsonStringNode extends J_JsonNode
 
     public String getText()
     {
-        return field_27224_a;
+        return value;
     }
 
     public Map getFields()
@@ -60,23 +60,23 @@ public final class J_JsonStringNode extends J_JsonNode
         } else
         {
             J_JsonStringNode j_jsonstringnode = (J_JsonStringNode)obj;
-            return field_27224_a.equals(j_jsonstringnode.field_27224_a);
+            return value.equals(j_jsonstringnode.value);
         }
     }
 
     public int hashCode()
     {
-        return field_27224_a.hashCode();
+        return value.hashCode();
     }
 
     public String toString()
     {
-        return (new StringBuilder()).append("JsonStringNode value:[").append(field_27224_a).append("]").toString();
+        return (new StringBuilder()).append("JsonStringNode value:[").append(value).append("]").toString();
     }
 
     public int func_27223_a(J_JsonStringNode j_jsonstringnode)
     {
-        return field_27224_a.compareTo(j_jsonstringnode.field_27224_a);
+        return value.compareTo(j_jsonstringnode.value);
     }
 
     public int compareTo(Object obj)

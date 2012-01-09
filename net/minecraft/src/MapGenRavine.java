@@ -31,7 +31,7 @@ public class MapGenRavine extends MapGenBase
         float f4 = 0.0F;
         if(i1 <= 0)
         {
-            int j1 = field_1306_a * 16 - 16;
+            int j1 = range * 16 - 16;
             i1 = j1 - random.nextInt(j1 / 4);
         }
         boolean flag = false;
@@ -41,7 +41,7 @@ public class MapGenRavine extends MapGenBase
             flag = true;
         }
         float f5 = 1.0F;
-        for(int k1 = 0; k1 < worldObj.field_35472_c; k1++)
+        for(int k1 = 0; k1 < worldObj.worldHeight; k1++)
         {
             if(k1 == 0 || random.nextInt(3) == 0)
             {
@@ -102,9 +102,9 @@ public class MapGenRavine extends MapGenBase
             {
                 d9 = 1;
             }
-            if(i2 > worldObj.field_35472_c - 8)
+            if(i2 > worldObj.worldHeight - 8)
             {
-                i2 = worldObj.field_35472_c - 8;
+                i2 = worldObj.worldHeight - 8;
             }
             if(d10 < 0)
             {
@@ -121,8 +121,8 @@ public class MapGenRavine extends MapGenBase
                 {
                     for(int j3 = i2 + 1; !flag1 && j3 >= d9 - 1; j3--)
                     {
-                        int k3 = (k2 * 16 + i3) * worldObj.field_35472_c + j3;
-                        if(j3 < 0 || j3 >= worldObj.field_35472_c)
+                        int k3 = (k2 * 16 + i3) * worldObj.worldHeight + j3;
+                        if(j3 < 0 || j3 >= worldObj.worldHeight)
                         {
                             continue;
                         }
@@ -151,7 +151,7 @@ label0:
                 for(int l3 = d10; l3 < j2; l3++)
                 {
                     double d13 = (((double)(l3 + j * 16) + 0.5D) - d2) / d6;
-                    int i4 = (l2 * 16 + l3) * worldObj.field_35472_c + i2;
+                    int i4 = (l2 * 16 + l3) * worldObj.worldHeight + i2;
                     boolean flag2 = false;
                     if(d12 * d12 + d13 * d13 >= 1.0D)
                     {
