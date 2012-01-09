@@ -17,15 +17,10 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -38,8 +33,10 @@ public class mod_Guns extends Mod {
     public static final int MOUSE_LEFT = 0;
     public static final int MOUSE_RIGHT = 1;
 
-    private static final KeyBinding RELOAD_KEYBINDING = new KeyBinding("key.reload", Keyboard.KEY_R);
-    private static final KeyBinding ZOOM_KEYBINDING = new KeyBinding("key.zoom", Keyboard.KEY_Z);
+    private static final Properties DEFAULT_CONFIG = new Properties();
+
+    private KeyBinding reloadKeybinding = new KeyBinding("key.reload", Keyboard.KEY_R);
+    private KeyBinding zoomKeybinding = new KeyBinding("key.zoom", Keyboard.KEY_Z);
 
     public static boolean DEBUG = true;
 
@@ -68,12 +65,46 @@ public class mod_Guns extends Mod {
         values.put("mapItemRenderer", "f");
         obfuscatedFields.put(ItemRenderer.class, (Map<String, String>) values.clone());
 
+        DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
+        DEFAULT_CONFIG.setProperty("key.zoom", Keyboard.getKeyName(Keyboard.KEY_Z));
     }
 
     private static final Map<String, Class> classes = new HashMap<String, Class>();
     private static final Map<String, ItemProjectile> projectiles = new HashMap<String, ItemProjectile>();
 
     public mod_Guns() {
+    }
+
+    @Override
+    public String getVersion() {
+        return "0.9.2" + " for " + CURRENT_VERSION;
+    }
+
+    @Override
+    public void load() throws IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
+        loadConfig(getConfig());
+        initItems();
+        registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
+        registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
+        ModLoader.RegisterKey(this, reloadKeybinding, false);
+        ModLoader.RegisterKey(this, zoomKeybinding, false);
+        ModLoader.SetInGameHook(this, true, false);
+    }
+
+    private Properties getConfig() throws IOException {
+        File configFile = Util.getMinecraftDir("heuristix/config.ini");
+        Properties config = DEFAULT_CONFIG;
+        if(configFile.exists()) {
+            config.load(new FileInputStream(configFile));
+        } else {
+            config.store(new FileOutputStream(configFile), "TheGunMod v" + getVersion() + " Configuration");
+        }
+        return config;
+    }
+
+    private void loadConfig(Properties config) {
+        reloadKeybinding = new KeyBinding("key.reload", Keyboard.getKeyIndex(config.getProperty("key.reload")));
+        zoomKeybinding = new KeyBinding("key.zoom", Keyboard.getKeyIndex(config.getProperty("key.zoom")));
     }
 
     private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException {
@@ -165,11 +196,6 @@ public class mod_Guns extends Mod {
         return true;
     }
 
-    @Override
-    public String getVersion() {
-        return "0.9.2" + " for " + CURRENT_VERSION;
-    }
-
     public void KeyboardEvent(KeyBinding key) {
         Minecraft mc = ModLoader.getMinecraftInstance();
         if (mc != null) {
@@ -181,10 +207,10 @@ public class mod_Guns extends Mod {
                         Item equipped = equippedStack.getItem();
                         if (equipped != null && equipped instanceof ItemGun) {
                             ItemGun equippedGun = (ItemGun) equipped;
-                            if (key.equals(RELOAD_KEYBINDING)) {
+                            if (key.equals(reloadKeybinding)) {
                                 equippedGun.reload(player, mc);
                                 isZoomed = false;
-                            } else if (key.equals(ZOOM_KEYBINDING)) {
+                            } else if (key.equals(zoomKeybinding)) {
                                 if (equippedGun.getZoom() > 1.0f || equippedGun.getScope() > 0) {
                                     isZoomed = !isZoomed;
                                     if (equippedGun.isReloading())
@@ -196,16 +222,6 @@ public class mod_Guns extends Mod {
                 }
             }
         }
-    }
-
-    @Override
-    public void load() throws IOException, InvocationTargetException, NoSuchMethodException, IllegalAccessException, InstantiationException {
-        initItems();
-        registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
-        registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
-        ModLoader.RegisterKey(this, RELOAD_KEYBINDING, false);
-        ModLoader.RegisterKey(this, ZOOM_KEYBINDING, false);
-        ModLoader.SetInGameHook(this, true, false);
     }
 
     @Override
@@ -310,14 +326,12 @@ public class mod_Guns extends Mod {
     }
 
     private void zoom(Minecraft mc, ItemGun gun, EntityPlayer player, World world, boolean in) {
-        currentZoom = (currentZoom + ((in) ? 0.2f : -0.2f));
+        float increment = 0.1f + (((gun != null) ? gun.getZoom(): 0) / 30f);
+        currentZoom = (currentZoom + ((in) ?  increment : -increment));
         currentZoom = (in) ? Math.min(gun.getZoom(), currentZoom) : Math.max(1.0f, currentZoom);
         Util.setPrivateValue(EntityRenderer.class, mc.entityRenderer, "cameraZoom", obfuscatedFields.get(EntityRenderer.class).get("cameraZoom"), (in && gun != null && gun.getZoom() > 1.0f) ? Math.min(currentZoom, gun.getZoom()) : Math.max(currentZoom, 1.0f));
         if (gun != null && gun.getScope() > 0 && (in || currentZoom != 1.0f)) {
             Util.renderTexture(mc, Scope.values()[gun.getScope()].getTexturePath(), 1.0f);
-            if (gun.getScope() == Scope.RED_DOT.ordinal()) {
-                renderRedDot(player, world);
-            }
         }
     }
 

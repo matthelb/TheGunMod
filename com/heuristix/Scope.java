@@ -9,7 +9,7 @@ package com.heuristix;
 public enum Scope {
     NONE("", 0),
     SNIPER("%blur%/heuristix/sniper_scope.png", 1),
-    RED_DOT("%blur%/heuristix/red_dot.png", 2),
+    HOLOGRAPHIC_SIGHT("%blur%/heuristix/holographic.png", 2),
     ADVANCED_COMBAT_OPTICAL_GUNSIGHT("%blur%/heuristix/acog.png", 4);
 
     private final String texturePath;
