@@ -1,8 +1,8 @@
 package com.heuristix;
 
+import com.heuristix.net.PacketFireProjectile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -82,7 +82,11 @@ public abstract class ItemProjectileShooter extends ItemCustom {
             world.playSoundAtEntity(player, getShootSound(), rand + 0.5f, 1.0f / (rand * 0.4f + 0.8f));
         }
         if (!world.multiplayerWorld) {
-            world.spawnEntityInWorld(projectile.newProjectile(world, player, this));
+            spawnProjectile(world, player);
+        } else {
+            PacketFireProjectile packet = new PacketFireProjectile();
+            packet.modId = Util.getModMPId(mod_Guns.class);
+            ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet);
         }
         lastRound = System.currentTimeMillis();
         onFire(world, player);
@@ -90,6 +94,10 @@ public abstract class ItemProjectileShooter extends ItemCustom {
             isBursting = true;
         }
         return true;
+    }
+
+    public void spawnProjectile(World world, EntityPlayer player) {
+        world.spawnEntityInWorld(projectile.newProjectile(world, player, this));
     }
 
     public void onFire(World world, EntityPlayer player) {
