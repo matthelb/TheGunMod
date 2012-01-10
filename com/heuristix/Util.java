@@ -11,9 +11,8 @@ import java.io.*;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.List;
 import java.util.jar.JarFile;
 
 /**
@@ -528,4 +527,24 @@ public class Util {
         }
         return null;
     }
+
+    public static BaseMod getLoadedMod(Class clazz) {
+        List<BaseMod> mods = ModLoader.getLoadedMods();
+        Iterator itr = mods.iterator();
+        while(itr.hasNext()) {
+            BaseMod next = (BaseMod) itr.next();
+            if(next.getClass().equals(clazz))
+                return next;
+        }
+        return null;
+    }
+
+    public static int getModMPId(BaseMod mod) {
+        return mod.toString().hashCode();
+    }
+
+    public static int getModMPId(Class clazz) {
+        return getModMPId(getLoadedMod(clazz));
+    }
+
 }
