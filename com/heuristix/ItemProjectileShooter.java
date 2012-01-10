@@ -1,6 +1,5 @@
 package com.heuristix;
 
-import com.heuristix.net.PacketFireProjectile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 
@@ -83,10 +82,6 @@ public abstract class ItemProjectileShooter extends ItemCustom {
         }
         if (!world.multiplayerWorld) {
             spawnProjectile(world, player);
-        } else {
-            PacketFireProjectile packet = new PacketFireProjectile();
-            packet.modId = Util.getModMPId(mod_Guns.class);
-            ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet);
         }
         lastRound = System.currentTimeMillis();
         onFire(world, player);

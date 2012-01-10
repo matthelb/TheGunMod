@@ -47,8 +47,6 @@ public class mod_Guns extends Mod {
 
     public static int recoilY, recoilX;
 
-    private static int uniqueId = Gun.MAGIC;
-
     private static final Map<Class, Map<String, String>> obfuscatedFields = new HashMap<Class, Map<String, String>>();
 
     static {
@@ -163,7 +161,6 @@ public class mod_Guns extends Mod {
             }
             entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
             classes.put(entityBulletClass.getName(), entityBulletClass);
-            ModLoaderMp.RegisterNetClientHandlerEntity(entityBulletClass, getUniqueEntityProjectileId());
         }
         ItemProjectile itemBullet = projectiles.get(gunClasses.get(1).getFirst());
         if (itemBullet == null) {
@@ -328,10 +325,5 @@ public class mod_Guns extends Mod {
             Util.renderTexture(mc, Scope.values()[gun.getScope()].getTexturePath(), 1.0f);
         }
     }
-
-    private static int getUniqueEntityProjectileId() {
-        return uniqueId++;
-    }
-
 
 }
