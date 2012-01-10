@@ -14,7 +14,6 @@ import com.heuristix.util.Pair;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
 import java.io.*;
@@ -77,7 +76,7 @@ public class mod_Guns extends Mod {
 
     @Override
     public String getVersion() {
-        return "0.9.2" + " for " + CURRENT_VERSION;
+        return "0.9.3" + " for " + CURRENT_VERSION;
     }
 
     @Override
@@ -96,6 +95,8 @@ public class mod_Guns extends Mod {
         registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
         ModLoader.RegisterKey(this, reloadKeybinding, false);
         ModLoader.RegisterKey(this, zoomKeybinding, false);
+        ModLoader.AddLocalization("key.reload", "Reload");
+        ModLoader.AddLocalization("key.zoom", "Zoom");
         ModLoader.SetInGameHook(this, true, false);
     }
 
