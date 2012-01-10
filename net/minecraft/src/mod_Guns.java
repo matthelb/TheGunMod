@@ -128,70 +128,76 @@ public class mod_Guns extends ModMP {
                     }
                 })) {
                     Gun gun = new Gun(Util.read(f));
-                    List<Pair<String, byte[]>> gunClasses = gun.getClasses();
-                    List<byte[]> resources = gun.getResources();
-
-                    Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
-                    if (entityBulletClass == null) {
-                        byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
-                        if (DEBUG) {
-                            byte[] moddedBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst() + "CheckSuper", new HashMap<String, Method>(), false);
-                            Class projectileType = Util.defineClass(moddedBytes, null, EntityProjectile.class.getClassLoader()).getSuperclass();
-                            HashMap<String, Method> methods = new HashMap<String, Method>();
-                            for (int i = 0; i < GunCreator.OBFUSCATED_CLASS_NAMES.size(); i++) {
-                                Pair<String, String> obfuscatedNames = GunCreator.OBFUSCATED_CLASS_NAMES.get(i);
-                                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
-                                        new InvokeMethod(GunCreator.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
-                                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
-                                        new InvokeMethod(GunCreator.SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
-                            }
-                            entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst(), methods, false);
-                        }
-                        entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
-                        classes.put(entityBulletClass.getName(), entityBulletClass);
+                    if(gun != null) {
+                        registerGun(gun);
                     }
-                    ItemProjectile itemBullet = projectiles.get(gunClasses.get(1).getFirst());
-                    if (itemBullet == null) {
-                        Class itemBulletClass = classes.get(gunClasses.get(1).getFirst());
-                        if (itemBulletClass == null) {
-                            itemBulletClass = Util.defineClass(gunClasses.get(1).getSecond(), null/*gunClasses.get(1).getFirst()*/, ItemProjectileBase.class.getClassLoader());
-                            classes.put(itemBulletClass.getName(), itemBulletClass);
-                        }
-                        Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class);
-                        itemBulletConstructor.setAccessible(true);
-                        itemBullet = (ItemProjectile) itemBulletConstructor.newInstance(gun.getItemBulletId());
-                        projectiles.put(itemBulletClass.getName(), itemBullet);
-                    }
-                    if (itemBullet != null) {
-                        itemBullet.setIconIndex(registerTexture(Util.resize(ImageIO.read(new ByteArrayInputStream(resources.get(0))), 16, 16), true));
-                        registerItem(itemBullet);
-                    }
-
-                    Class itemGunClass = classes.get(gunClasses.get(2).getFirst());
-                    com.heuristix.ItemGun itemGun = null;
-                    if (itemGunClass == null) {
-                        itemGunClass = Util.defineClass(gunClasses.get(2).getSecond(), null/*gunClasses.get(2).getFirst()*/, ItemGunBase.class.getClassLoader());
-                        classes.put(itemGunClass.getName(), itemGunClass);
-                        Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
-                        itemGunConstructor.setAccessible(true);
-                        itemGun = (com.heuristix.ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
-                    }
-                    if (itemGun != null) {
-                        itemGun.setIconIndex(registerTexture(Util.resize(ImageIO.read(new ByteArrayInputStream(resources.get(1))), 16, 16), true));
-                        registerItem(itemGun);
-                        registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get(2));
-                        if (resources.size() > 3) {
-                            registerStreaming(itemGun.getReloadSound().replaceFirst("\\.", "/") + ".ogg", resources.get(3));
-                        }
-                    }
-                    itemBullet.putProjectileClass(itemGun, entityBulletClass);
-                    projectiles.put(gunClasses.get(1).getFirst(), itemBullet);
                 }
 
             }
         } else {
             System.out.println("Could not find minecraft directory. Are you using an obscure operating system?");
         }
+    }
+
+    public void registerGun(Gun gun) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+        List<Pair<String, byte[]>> gunClasses = gun.getClasses();
+        List<byte[]> resources = gun.getResources();
+
+        Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
+        if (entityBulletClass == null) {
+            byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
+            if (DEBUG) {
+                byte[] moddedBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst() + "CheckSuper", new HashMap<String, Method>(), false);
+                Class projectileType = Util.defineClass(moddedBytes, null, EntityProjectile.class.getClassLoader()).getSuperclass();
+                HashMap<String, Method> methods = new HashMap<String, Method>();
+                for (int i = 0; i < GunCreator.OBFUSCATED_CLASS_NAMES.size(); i++) {
+                    Pair<String, String> obfuscatedNames = GunCreator.OBFUSCATED_CLASS_NAMES.get(i);
+                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
+                            new InvokeMethod(GunCreator.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
+                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
+                            new InvokeMethod(GunCreator.SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+                }
+                entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst(), methods, false);
+            }
+            entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
+            classes.put(entityBulletClass.getName(), entityBulletClass);
+        }
+        ItemProjectile itemBullet = projectiles.get(gunClasses.get(1).getFirst());
+        if (itemBullet == null) {
+            Class itemBulletClass = classes.get(gunClasses.get(1).getFirst());
+            if (itemBulletClass == null) {
+                itemBulletClass = Util.defineClass(gunClasses.get(1).getSecond(), null/*gunClasses.get(1).getFirst()*/, ItemProjectileBase.class.getClassLoader());
+                classes.put(itemBulletClass.getName(), itemBulletClass);
+            }
+            Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class);
+            itemBulletConstructor.setAccessible(true);
+            itemBullet = (ItemProjectile) itemBulletConstructor.newInstance(gun.getItemBulletId());
+            projectiles.put(itemBulletClass.getName(), itemBullet);
+        }
+        if (itemBullet != null) {
+            itemBullet.setIconIndex(registerTexture(Util.resize(ImageIO.read(new ByteArrayInputStream(resources.get(0))), 16, 16), true));
+            registerItem(itemBullet);
+        }
+
+        Class itemGunClass = classes.get(gunClasses.get(2).getFirst());
+        ItemGun itemGun = null;
+        if (itemGunClass == null) {
+            itemGunClass = Util.defineClass(gunClasses.get(2).getSecond(), null/*gunClasses.get(2).getFirst()*/, ItemGunBase.class.getClassLoader());
+            classes.put(itemGunClass.getName(), itemGunClass);
+            Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
+            itemGunConstructor.setAccessible(true);
+            itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
+        }
+        if (itemGun != null) {
+            itemGun.setIconIndex(registerTexture(Util.resize(ImageIO.read(new ByteArrayInputStream(resources.get(1))), 16, 16), true));
+            registerItem(itemGun);
+            registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get(2));
+            if (resources.size() > 3) {
+                registerStreaming(itemGun.getReloadSound().replaceFirst("\\.", "/") + ".ogg", resources.get(3));
+            }
+        }
+        itemBullet.putProjectileClass(itemGun, entityBulletClass);
+        projectiles.put(gunClasses.get(1).getFirst(), itemBullet);
     }
 
     private boolean initReflection(Minecraft mc) {
