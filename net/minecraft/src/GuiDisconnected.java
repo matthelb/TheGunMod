@@ -56,7 +56,12 @@ public class GuiDisconnected extends GuiScreen
     {
         drawDefaultBackground();
         drawCenteredString(fontRenderer, errorMessage, width / 2, height / 2 - 50, 0xffffff);
-        drawCenteredString(fontRenderer, errorDetail, width / 2, height / 2 - 10, 0xffffff);
+        String as[] = errorDetail.split("\n");
+        for(int k = 0; k < as.length; k++)
+        {
+            drawCenteredString(fontRenderer, as[k], width / 2, (height / 2 - 10) + k * 10, 0xffffff);
+        }
+
         super.drawScreen(i, j, f);
     }
 }
