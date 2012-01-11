@@ -7,10 +7,7 @@ import com.heuristix.guns.EntityFlame;
 import com.heuristix.guns.RenderBullet;
 import com.heuristix.guns.RenderFlame;
 import com.heuristix.swing.GunCreator;
-import com.heuristix.util.ExtensibleClassAdapter;
-import com.heuristix.util.InvokeMethod;
-import com.heuristix.util.Method;
-import com.heuristix.util.Pair;
+import com.heuristix.util.*;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -128,7 +125,16 @@ public class mod_Guns extends Mod {
                     }
                 })) {
                     Gun gun = new Gun(Util.read(f));
+                    GunCreator gc = null;
                     if(gun != null) {
+                        int[] versionCreated = gun.getProperties().get("versionCreated");
+                        if(versionCreated == null || !Util.getStringFromBytes(versionCreated).equals(GunCreator.VERSION)) {
+                            if(gc == null)
+                                gc = new GunCreator();
+                            gc.load(gun);
+                            gc.write(new FileOutputStream(f));
+                            gun = new Gun(Util.read(f));
+                        }
                         registerGun(gun);
                     }
                 }

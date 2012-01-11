@@ -547,4 +547,10 @@ public class Util {
         return getModMPId(getLoadedMod(clazz));
     }
 
+    public static String getStringFromBytes(int[] bytes) {
+        int i = 0;
+        while (bytes[i++] != 10) ;
+        return new String(bytes, 0, i - 1);
+    }
+
 }

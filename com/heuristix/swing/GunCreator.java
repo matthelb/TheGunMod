@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9.1";
+    public static final String VERSION = "0.9.2";
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
@@ -316,7 +316,7 @@ public class GunCreator extends JFrame {
         }
     }*/
 
-    private void load(Gun gun) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
+    public void load(Gun gun) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
         if (gun != null) {
             List<Pair<String, byte[]>> gunClasses = gun.getClasses();
             List<byte[]> resources = gun.getResources();
@@ -403,92 +403,10 @@ public class GunCreator extends JFrame {
         }
     }
 
-    /*private void write(OutputStream out) throws IOException {
-        ByteVector outBytes = new ByteVector();
-        outBytes.putInt(CustomGun.MAGIC);
-        byte[] nameBytes = Utilities.getStringBytes(nameField.getText());
-        outBytes.putByteArray(nameBytes, 0, nameBytes.length);
-        outBytes.putInt(Integer.parseInt(damageField.getText()));
-        outBytes.putInt(Float.floatToIntBits(Float.parseFloat(rangeField.getText())));
-        HashMap<String, String> bulletOverrideMethods = methodOverrides.get(EntityBulletBase.class);
-        if(bulletOverrideMethods == null)
-            bulletOverrideMethods = new HashMap<String, String>();
-        bulletOverrideMethods.remove(null);
-        outBytes.putShort(bulletOverrideMethods.size());
-        for(Map.Entry<String, String> entry : bulletOverrideMethods.entrySet()) {
-            byte[] bytes = Utilities.parseByteArray(entry.getValue());
-            if(bytes == null)
-                bytes = new byte[0];
-            outBytes.putInt(bytes.length);
-            byte[] stringBytes = Utilities.getStringBytes(entry.getKey());
-            outBytes.putByteArray(stringBytes, 0, stringBytes.length);
-            outBytes.putByteArray(bytes, 0, bytes.length);
-        }
-
-        outBytes.putInt(Integer.parseInt(bulletIdField.getText()));
-        ByteArrayOutputStream imageOut = new ByteArrayOutputStream();
-        ImageIO.write(bulletImageButton.getImage(), "png", imageOut);
-        byte[] imageBytes = imageOut.toByteArray();
-        outBytes.putInt(imageBytes.length);
-        outBytes.putByteArray(imageBytes, 0, imageBytes.length);
-        HashMap<String, String> itemBulletOverrideMethods = methodOverrides.get(ItemProjectileBase.class);
-        if(itemBulletOverrideMethods == null)
-            itemBulletOverrideMethods = new HashMap<String, String>();
-        itemBulletOverrideMethods.remove(null);
-        outBytes.putShort(itemBulletOverrideMethods.size());
-        for(Map.Entry<String, String> entry : itemBulletOverrideMethods.entrySet()) {
-            byte[] bytes = Utilities.parseByteArray(entry.getValue());
-            outBytes.putInt(bytes.length);
-            byte[] stringBytes = Utilities.getStringBytes(entry.getKey());
-            outBytes.putByteArray(stringBytes, 0, stringBytes.length);
-            outBytes.putByteArray(bytes, 0, bytes.length);
-        }
-
-        outBytes.putInt(Integer.parseInt(gunIdField.getText()));
-        imageOut.reset();
-        ImageIO.write(gunImageButton.getImage(), "png", imageOut);
-        imageBytes = imageOut.toByteArray();
-        imageOut.close();
-        outBytes.putInt(imageBytes.length);
-        outBytes.putByteArray(imageBytes, 0, imageBytes.length);
-        byte[] shootSoundBytes = shootSoundButton.getBytes();
-        outBytes.putInt(shootSoundBytes.length);
-        outBytes.putByteArray(shootSoundBytes, 0, shootSoundBytes.length);
-        byte[] shootSoundNameBytes = Utilities.getStringBytes(Utilities.numbersToText(shootSoundButton.getText()));
-        outBytes.putByteArray(shootSoundNameBytes, 0, shootSoundNameBytes.length);
-        outBytes.putInt(Integer.parseInt(shotsPerMinuteField.getText()));
-        outBytes.putInt(((FireMode) fireMode.getSelectedItem()).ordinal());
-        outBytes.putInt(((Scope) scope.getSelectedItem()).ordinal());
-        outBytes.putInt(Float.floatToIntBits(Float.parseFloat(zoomField.getText())));
-        outBytes.putInt(Integer.parseInt(clipSizeField.getText()));
-        outBytes.putInt(Integer.parseInt(reloadField.getText()));
-        outBytes.putInt(Integer.parseInt(recoilXField.getText()));
-        outBytes.putInt(Integer.parseInt(recoilYField.getText()));
-        HashMap<String, String> itemGunOverrideMethods = methodOverrides.get(ItemGunBase.class);
-        if(itemGunOverrideMethods == null)
-            itemGunOverrideMethods = new HashMap<String, String>();
-        itemGunOverrideMethods.remove(null);
-        outBytes.putShort(itemGunOverrideMethods.size());
-        for(Map.Entry<String, String> entry : itemGunOverrideMethods.entrySet()) {
-            byte[] bytes = Utilities.parseByteArray(entry.getValue());
-            outBytes.putInt(bytes.length);
-            byte[] stringBytes = Utilities.getStringBytes(entry.getKey());
-            outBytes.putByteArray(stringBytes, 0, stringBytes.length);
-            outBytes.putByteArray(bytes, 0, bytes.length);
-        }
-        outBytes.putInt(Integer.parseInt(roundsPerMinuteField.getText()));
-        outBytes.putInt(Float.floatToIntBits(Float.parseFloat(bulletSpreadField.getText())));
-        outBytes.putInt(Integer.parseInt(roundsPerShotField.getText()));
-        try {
-            out.write(outBytes.toByteArray());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }*/
     public static final int[] SUPER_WORLD = {Opcodes.ALOAD_0, Opcodes.ALOAD_1};
     public static final int[] SUPER_WORLD_ENTITY = {Opcodes.ALOAD_0, Opcodes.ALOAD_1, Opcodes.ALOAD_2};
 
-    private void write(OutputStream out) throws IOException {
+    public void write(OutputStream out) throws IOException {
         ByteVector outBytes = new ByteVector();
         outBytes.putInt(Gun.MAGIC);
 
@@ -568,8 +486,8 @@ public class GunCreator extends JFrame {
         outBytes.putInt(Integer.parseInt(gunIdField.getText()));*/
         outBytes.putInt(PROPERTIES);
 
-        String[] strings = new String[]{"itemGunId", "itemBulletId"};
-        int[][] ints = new int[][]{ReverseBuffer.getInt(Integer.parseInt(gunIdField.getText())), ReverseBuffer.getInt(Integer.parseInt(projectileIdField.getText()))};
+        String[] strings = new String[]{"itemGunId", "itemBulletId", "versionCreated"};
+        int[][] ints = new int[][]{ReverseBuffer.getInt(Integer.parseInt(gunIdField.getText())), ReverseBuffer.getInt(Integer.parseInt(projectileIdField.getText())), Util.getIntArray(Util.getStringBytes(VERSION))};
 
         for (int i = 0; i < strings.length; i++) {
             stringBytes = Util.getStringBytes(strings[i]);
