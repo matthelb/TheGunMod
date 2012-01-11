@@ -49,7 +49,7 @@ public class mod_Guns extends ModMP {
 
     public static int recoilY, recoilX;
 
-    private static int uniqueId = Gun.MAGIC;
+    private static int uniqueId = 0;//Gun.MAGIC;
 
     private static final Map<Class, Map<String, String>> obfuscatedFields = new HashMap<Class, Map<String, String>>();
 
@@ -80,7 +80,7 @@ public class mod_Guns extends ModMP {
 
     @Override
     public String getVersion() {
-        return "0.9.2" + " for " + CURRENT_VERSION;
+        return "0.9.3" + " for " + CURRENT_VERSION;
     }
 
     @Override
@@ -163,7 +163,7 @@ public class mod_Guns extends ModMP {
             }
             entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
             classes.put(entityBulletClass.getName(), entityBulletClass);
-            ModLoaderMp.RegisterNetClientHandlerEntity(entityBulletClass, getUniqueEntityProjectileId());
+            ModLoaderMp.RegisterNetClientHandlerEntity(entityBulletClass, true, getUniqueEntityProjectileId());
         }
         ItemProjectile itemBullet = projectiles.get(gunClasses.get(1).getFirst());
         if (itemBullet == null) {

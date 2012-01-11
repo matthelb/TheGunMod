@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
@@ -545,6 +546,25 @@ public class Util {
 
     public static int getModMPId(Class clazz) {
         return getModMPId(getLoadedMod(clazz));
+    }
+
+    public static void sendPacket(Packet230ModLoader packet, Class modClass) {
+        packet.modId = Util.getModMPId(modClass);
+        ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet);
+    }
+
+    private static Method addIdClassMapping;
+    public static void setPacketId(Class packetClass, int id, boolean client, boolean server) throws InvocationTargetException, IllegalAccessException {
+        if(addIdClassMapping == null) {
+            try {
+                addIdClassMapping = Packet.class.getDeclaredMethod("addIdClassMapping", int.class, boolean.class, boolean.class, Class.class);
+                addIdClassMapping.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                return;
+            }
+        }
+        addIdClassMapping.invoke(null, id, client, server, packetClass);
     }
 
 }

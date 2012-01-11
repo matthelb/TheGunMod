@@ -85,8 +85,9 @@ public abstract class ItemProjectileShooter extends ItemCustom {
             spawnProjectile(world, player);
         } else {
             PacketFireProjectile packet = new PacketFireProjectile();
-            packet.modId = Util.getModMPId(mod_Guns.class);
-            ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet);
+            packet.dataInt = new int[1];
+            packet.dataInt[0] = shiftedIndex;
+            Util.sendPacket(packet, mod_Guns.class);
         }
         lastRound = System.currentTimeMillis();
         onFire(world, player);

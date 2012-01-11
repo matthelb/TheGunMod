@@ -20,6 +20,10 @@ public class EntityBullet extends EntityProjectile {
         super(world, entityliving);
     }
 
+    public EntityBullet(World world, double x, double y, double z) {
+        super(world, x, y, z);
+    }
+
     @Override
     public int getDamage() {
         return 0;
