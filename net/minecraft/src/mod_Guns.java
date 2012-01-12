@@ -8,14 +8,10 @@ import com.heuristix.guns.EntityFlame;
 import com.heuristix.guns.RenderBullet;
 import com.heuristix.guns.RenderFlame;
 import com.heuristix.swing.GunCreator;
-import com.heuristix.util.ExtensibleClassAdapter;
-import com.heuristix.util.InvokeMethod;
-import com.heuristix.util.Method;
-import com.heuristix.util.Pair;
+import com.heuristix.util.*;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
 
 import javax.imageio.ImageIO;
 import java.io.*;
@@ -99,6 +95,8 @@ public class mod_Guns extends ModMP {
         registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
         ModLoader.RegisterKey(this, reloadKeybinding, false);
         ModLoader.RegisterKey(this, zoomKeybinding, false);
+        ModLoader.AddLocalization("key.reload", "Reload");
+        ModLoader.AddLocalization("key.zoom", "Zoom");
         ModLoader.SetInGameHook(this, true, false);
     }
 
@@ -130,7 +128,16 @@ public class mod_Guns extends ModMP {
                     }
                 })) {
                     Gun gun = new Gun(Util.read(f));
+                    GunCreator gc = null;
                     if(gun != null) {
+                        int[] versionCreated = gun.getProperties().get("versionCreated");
+                        if(versionCreated == null || !Util.getStringFromBytes(versionCreated).equals(GunCreator.VERSION)) {
+                            if(gc == null)
+                                gc = new GunCreator();
+                            gc.load(gun);
+                            gc.write(new FileOutputStream(f));
+                            gun = new Gun(Util.read(f));
+                        }
                         registerGun(gun);
                     }
                 }
@@ -332,6 +339,5 @@ public class mod_Guns extends ModMP {
     private static int getUniqueEntityProjectileId() {
         return uniqueId++;
     }
-
 
 }
