@@ -68,7 +68,7 @@ public final class GunDumper {
                         out.close();
                     }
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Could not load gun file: " + f.toString());
+                    System.out.println("Could not read gun file: " + f.toString());
                 }
             } else {
                 Object[] data = readOldGun(f);

@@ -272,8 +272,8 @@ public final class ModLoader
         }
         catch(Throwable throwable)
         {
-            logger.fine((new StringBuilder("Failed to load mod from \"")).append(s).append("\"").toString());
-            System.out.println((new StringBuilder("Failed to load mod from \"")).append(s).append("\"").toString());
+            logger.fine((new StringBuilder("Failed to read mod from \"")).append(s).append("\"").toString());
+            System.out.println((new StringBuilder("Failed to read mod from \"")).append(s).append("\"").toString());
             logger.throwing("ModLoader", "addMod", throwable);
             ThrowException(throwable);
         }
