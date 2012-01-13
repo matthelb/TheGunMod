@@ -8,9 +8,8 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockContainer, Material, Block, World, 
-//            IBlockAccess, TileEntityFurnace, EntityPlayer, TileEntity, 
-//            EntityLiving, MathHelper, IInventory, ItemStack, 
-//            EntityItem
+//            TileEntityFurnace, EntityPlayer, TileEntity, EntityLiving, 
+//            MathHelper, IInventory, ItemStack, EntityItem
 
 public class BlockFurnace extends BlockContainer
 {
@@ -40,7 +39,7 @@ public class BlockFurnace extends BlockContainer
 
     private void setDefaultDirection(World world, int i, int j, int k)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }
@@ -68,64 +67,6 @@ public class BlockFurnace extends BlockContainer
         world.setBlockMetadataWithNotify(i, j, k, byte0);
     }
 
-    public int getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        if(l == 1)
-        {
-            return blockIndexInTexture + 17;
-        }
-        if(l == 0)
-        {
-            return blockIndexInTexture + 17;
-        }
-        int i1 = iblockaccess.getBlockMetadata(i, j, k);
-        if(l != i1)
-        {
-            return blockIndexInTexture;
-        }
-        if(isActive)
-        {
-            return blockIndexInTexture + 16;
-        } else
-        {
-            return blockIndexInTexture - 1;
-        }
-    }
-
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
-    {
-        if(!isActive)
-        {
-            return;
-        }
-        int l = world.getBlockMetadata(i, j, k);
-        float f = (float)i + 0.5F;
-        float f1 = (float)j + 0.0F + (random.nextFloat() * 6F) / 16F;
-        float f2 = (float)k + 0.5F;
-        float f3 = 0.52F;
-        float f4 = random.nextFloat() * 0.6F - 0.3F;
-        if(l == 4)
-        {
-            world.spawnParticle("smoke", f - f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
-            world.spawnParticle("flame", f - f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
-        } else
-        if(l == 5)
-        {
-            world.spawnParticle("smoke", f + f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
-            world.spawnParticle("flame", f + f3, f1, f2 + f4, 0.0D, 0.0D, 0.0D);
-        } else
-        if(l == 2)
-        {
-            world.spawnParticle("smoke", f + f4, f1, f2 - f3, 0.0D, 0.0D, 0.0D);
-            world.spawnParticle("flame", f + f4, f1, f2 - f3, 0.0D, 0.0D, 0.0D);
-        } else
-        if(l == 3)
-        {
-            world.spawnParticle("smoke", f + f4, f1, f2 + f3, 0.0D, 0.0D, 0.0D);
-            world.spawnParticle("flame", f + f4, f1, f2 + f3, 0.0D, 0.0D, 0.0D);
-        }
-    }
-
     public int getBlockTextureFromSide(int i)
     {
         if(i == 1)
@@ -147,7 +88,7 @@ public class BlockFurnace extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return true;
         }

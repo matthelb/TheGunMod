@@ -34,7 +34,7 @@ public class BlockStem extends BlockFlower
         super.updateTick(world, i, j, k, random);
         if(world.getBlockLightValue(i, j + 1, k) >= 9)
         {
-            float f = func_35295_j(world, i, j, k);
+            float f = func_35067_h(world, i, j, k);
             if(random.nextInt((int)(25F / f) + 1) == 0)
             {
                 int l = world.getBlockMetadata(i, j, k);
@@ -88,12 +88,12 @@ public class BlockStem extends BlockFlower
         }
     }
 
-    public void fertilizeStem(World world, int i, int j, int k)
+    public void func_35066_f_(World world, int i, int j, int k)
     {
         world.setBlockMetadataWithNotify(i, j, k, 7);
     }
 
-    private float func_35295_j(World world, int i, int j, int k)
+    private float func_35067_h(World world, int i, int j, int k)
     {
         float f = 1.0F;
         int l = world.getBlockId(i, j, k - 1);
@@ -137,19 +137,6 @@ public class BlockStem extends BlockFlower
         return f;
     }
 
-    public int getRenderColor(int i)
-    {
-        int j = i * 32;
-        int k = 255 - i * 8;
-        int l = i * 4;
-        return j << 16 | k << 8 | l;
-    }
-
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return getRenderColor(iblockaccess.getBlockMetadata(i, j, k));
-    }
-
     public int getBlockTextureFromSideAndMetadata(int i, int j)
     {
         return blockIndexInTexture;
@@ -173,32 +160,10 @@ public class BlockStem extends BlockFlower
         return 19;
     }
 
-    public int func_35296_f(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        int l = iblockaccess.getBlockMetadata(i, j, k);
-        if(l < 7)
-        {
-            return -1;
-        }
-        if(iblockaccess.getBlockId(i - 1, j, k) == fruitType.blockID)
-        {
-            return 0;
-        }
-        if(iblockaccess.getBlockId(i + 1, j, k) == fruitType.blockID)
-        {
-            return 1;
-        }
-        if(iblockaccess.getBlockId(i, j, k - 1) == fruitType.blockID)
-        {
-            return 2;
-        }
-        return iblockaccess.getBlockId(i, j, k + 1) != fruitType.blockID ? -1 : 3;
-    }
-
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
         super.dropBlockAsItemWithChance(world, i, j, k, l, f, i1);
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }

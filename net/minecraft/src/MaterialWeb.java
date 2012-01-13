@@ -8,7 +8,7 @@ package net.minecraft.src;
 // Referenced classes of package net.minecraft.src:
 //            Material, MapColor
 
-class MaterialWeb extends Material
+final class MaterialWeb extends Material
 {
 
     MaterialWeb(MapColor mapcolor)

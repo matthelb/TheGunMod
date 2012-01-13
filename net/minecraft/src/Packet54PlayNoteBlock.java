@@ -22,6 +22,15 @@ public class Packet54PlayNoteBlock extends Packet
     {
     }
 
+    public Packet54PlayNoteBlock(int i, int j, int k, int l, int i1)
+    {
+        xLocation = i;
+        yLocation = j;
+        zLocation = k;
+        instrumentType = l;
+        pitch = i1;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {
@@ -44,7 +53,7 @@ public class Packet54PlayNoteBlock extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.handleNotePlay(this);
+        nethandler.handlePlayNoteBlock(this);
     }
 
     public int getPacketSize()

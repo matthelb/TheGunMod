@@ -21,6 +21,14 @@ public class Packet50PreChunk extends Packet
         isChunkDataPacket = false;
     }
 
+    public Packet50PreChunk(int i, int j, boolean flag)
+    {
+        isChunkDataPacket = false;
+        xPosition = i;
+        yPosition = j;
+        mode = flag;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

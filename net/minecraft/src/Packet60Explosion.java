@@ -23,6 +23,16 @@ public class Packet60Explosion extends Packet
     {
     }
 
+    public Packet60Explosion(double d, double d1, double d2, float f, 
+            Set set)
+    {
+        explosionX = d;
+        explosionY = d1;
+        explosionZ = d2;
+        explosionSize = f;
+        destroyedBlockPositions = new HashSet(set);
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

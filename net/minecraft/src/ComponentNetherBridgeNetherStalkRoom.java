@@ -23,14 +23,14 @@ public class ComponentNetherBridgeNetherStalkRoom extends ComponentNetherBridgeP
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        func_40022_a((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 5, 3, true);
-        func_40022_a((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 5, 11, true);
+        func_40287_a((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 5, 3, true);
+        func_40287_a((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 5, 11, true);
     }
 
-    public static ComponentNetherBridgeNetherStalkRoom func_40040_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentNetherBridgeNetherStalkRoom func_40291_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -5, -3, 0, 13, 14, 13, l);
-        if(!func_40021_a(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else

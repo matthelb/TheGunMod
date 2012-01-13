@@ -8,7 +8,7 @@ package net.minecraft.src;
 // Referenced classes of package net.minecraft.src:
 //            StructureStrongholdPieceWeight
 
-class StructureStrongholdPieceWeight3 extends StructureStrongholdPieceWeight
+final class StructureStrongholdPieceWeight3 extends StructureStrongholdPieceWeight
 {
 
     StructureStrongholdPieceWeight3(Class class1, int i, int j)

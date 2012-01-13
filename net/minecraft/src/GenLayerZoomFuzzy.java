@@ -17,13 +17,13 @@ public class GenLayerZoomFuzzy extends GenLayer
         super.parent = genlayer;
     }
 
-    public int[] getInts(int i, int j, int k, int l)
+    public int[] func_35018_a(int i, int j, int k, int l)
     {
         int i1 = i >> 1;
         int j1 = j >> 1;
         int k1 = (k >> 1) + 3;
         int l1 = (l >> 1) + 3;
-        int ai[] = parent.getInts(i1, j1, k1, l1);
+        int ai[] = parent.func_35018_a(i1, j1, k1, l1);
         int ai1[] = IntCache.getIntCache(k1 * 2 * (l1 * 2));
         int i2 = k1 << 1;
         for(int j2 = 0; j2 < l1 - 1; j2++)
@@ -34,7 +34,7 @@ public class GenLayerZoomFuzzy extends GenLayer
             int k3 = ai[0 + (j2 + 1) * k1];
             for(int l3 = 0; l3 < k1 - 1; l3++)
             {
-                initChunkSeed(l3 + i1 << 1, j2 + j1 << 1);
+                func_35017_a(l3 + i1 << 1, j2 + j1 << 1);
                 int i4 = ai[l3 + 1 + (j2 + 0) * k1];
                 int j4 = ai[l3 + 1 + (j2 + 1) * k1];
                 ai1[i3] = j3;

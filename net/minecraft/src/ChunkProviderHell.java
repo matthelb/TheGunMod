@@ -20,42 +20,42 @@ public class ChunkProviderHell
 {
 
     private Random hellRNG;
-    private NoiseGeneratorOctaves field_4169_i;
-    private NoiseGeneratorOctaves field_4168_j;
-    private NoiseGeneratorOctaves field_4167_k;
-    private NoiseGeneratorOctaves field_4166_l;
-    private NoiseGeneratorOctaves field_4165_m;
-    public NoiseGeneratorOctaves field_4177_a;
-    public NoiseGeneratorOctaves field_4176_b;
+    private NoiseGeneratorOctaves field_4240_i;
+    private NoiseGeneratorOctaves field_4239_j;
+    private NoiseGeneratorOctaves field_4238_k;
+    private NoiseGeneratorOctaves field_4237_l;
+    private NoiseGeneratorOctaves field_4236_m;
+    public NoiseGeneratorOctaves field_4248_a;
+    public NoiseGeneratorOctaves field_4247_b;
     private World worldObj;
-    private double field_4163_o[];
-    public MapGenNetherBridge genNetherBridge;
-    private double field_4162_p[];
+    private double field_4234_o[];
+    public MapGenNetherBridge field_40183_c;
+    private double field_4233_p[];
     private double gravelNoise[];
-    private double field_4160_r[];
+    private double field_4231_r[];
     private MapGenBase netherCaveGenerator;
-    double field_4175_c[];
-    double field_4174_d[];
-    double field_4173_e[];
-    double field_4172_f[];
-    double field_4171_g[];
+    double field_4246_c[];
+    double field_4245_d[];
+    double field_4244_e[];
+    double field_4243_f[];
+    double field_4242_g[];
 
     public ChunkProviderHell(World world, long l)
     {
-        genNetherBridge = new MapGenNetherBridge();
-        field_4162_p = new double[256];
+        field_40183_c = new MapGenNetherBridge();
+        field_4233_p = new double[256];
         gravelNoise = new double[256];
-        field_4160_r = new double[256];
+        field_4231_r = new double[256];
         netherCaveGenerator = new MapGenCavesHell();
         worldObj = world;
         hellRNG = new Random(l);
-        field_4169_i = new NoiseGeneratorOctaves(hellRNG, 16);
-        field_4168_j = new NoiseGeneratorOctaves(hellRNG, 16);
-        field_4167_k = new NoiseGeneratorOctaves(hellRNG, 8);
-        field_4166_l = new NoiseGeneratorOctaves(hellRNG, 4);
-        field_4165_m = new NoiseGeneratorOctaves(hellRNG, 4);
-        field_4177_a = new NoiseGeneratorOctaves(hellRNG, 10);
-        field_4176_b = new NoiseGeneratorOctaves(hellRNG, 16);
+        field_4240_i = new NoiseGeneratorOctaves(hellRNG, 16);
+        field_4239_j = new NoiseGeneratorOctaves(hellRNG, 16);
+        field_4238_k = new NoiseGeneratorOctaves(hellRNG, 8);
+        field_4237_l = new NoiseGeneratorOctaves(hellRNG, 4);
+        field_4236_m = new NoiseGeneratorOctaves(hellRNG, 4);
+        field_4248_a = new NoiseGeneratorOctaves(hellRNG, 10);
+        field_4247_b = new NoiseGeneratorOctaves(hellRNG, 16);
     }
 
     public void generateNetherTerrain(int i, int j, byte abyte0[])
@@ -65,7 +65,7 @@ public class ChunkProviderHell
         int k = byte0 + 1;
         int l = worldObj.worldHeight / 8 + 1;
         int i1 = byte0 + 1;
-        field_4163_o = func_4057_a(field_4163_o, i * byte0, 0, j * byte0, k, l, i1);
+        field_4234_o = func_4060_a(field_4234_o, i * byte0, 0, j * byte0, k, l, i1);
         for(int j1 = 0; j1 < byte0; j1++)
         {
             for(int k1 = 0; k1 < byte0; k1++)
@@ -73,14 +73,14 @@ public class ChunkProviderHell
                 for(int l1 = 0; l1 < worldObj.worldHeight / 8; l1++)
                 {
                     double d = 0.125D;
-                    double d1 = field_4163_o[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 0)];
-                    double d2 = field_4163_o[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 0)];
-                    double d3 = field_4163_o[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 0)];
-                    double d4 = field_4163_o[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 0)];
-                    double d5 = (field_4163_o[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 1)] - d1) * d;
-                    double d6 = (field_4163_o[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 1)] - d2) * d;
-                    double d7 = (field_4163_o[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 1)] - d3) * d;
-                    double d8 = (field_4163_o[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 1)] - d4) * d;
+                    double d1 = field_4234_o[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 0)];
+                    double d2 = field_4234_o[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 0)];
+                    double d3 = field_4234_o[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 0)];
+                    double d4 = field_4234_o[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 0)];
+                    double d5 = (field_4234_o[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 1)] - d1) * d;
+                    double d6 = (field_4234_o[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 1)] - d2) * d;
+                    double d7 = (field_4234_o[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 1)] - d3) * d;
+                    double d8 = (field_4234_o[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 1)] - d4) * d;
                     for(int i2 = 0; i2 < 8; i2++)
                     {
                         double d9 = 0.25D;
@@ -90,8 +90,8 @@ public class ChunkProviderHell
                         double d13 = (d4 - d2) * d9;
                         for(int j2 = 0; j2 < 4; j2++)
                         {
-                            int k2 = j2 + j1 * 4 << worldObj.xShift | 0 + k1 * 4 << worldObj.heightShift | l1 * 8 + i2;
-                            int l2 = 1 << worldObj.heightShift;
+                            int k2 = j2 + j1 * 4 << worldObj.xShift | 0 + k1 * 4 << worldObj.worldYBits | l1 * 8 + i2;
+                            int l2 = 1 << worldObj.worldYBits;
                             double d14 = 0.25D;
                             double d15 = d10;
                             double d16 = (d11 - d10) * d14;
@@ -129,27 +129,27 @@ public class ChunkProviderHell
 
     }
 
-    public void func_4058_b(int i, int j, byte abyte0[])
+    public void func_4061_b(int i, int j, byte abyte0[])
     {
         int k = worldObj.worldHeight - 64;
         double d = 0.03125D;
-        field_4162_p = field_4166_l.generateNoiseOctaves(field_4162_p, i * 16, j * 16, 0, 16, 16, 1, d, d, 1.0D);
-        gravelNoise = field_4166_l.generateNoiseOctaves(gravelNoise, i * 16, 109, j * 16, 16, 1, 16, d, 1.0D, d);
-        field_4160_r = field_4165_m.generateNoiseOctaves(field_4160_r, i * 16, j * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
+        field_4233_p = field_4237_l.generateNoiseOctaves(field_4233_p, i * 16, j * 16, 0, 16, 16, 1, d, d, 1.0D);
+        gravelNoise = field_4237_l.generateNoiseOctaves(gravelNoise, i * 16, 109, j * 16, 16, 1, 16, d, 1.0D, d);
+        field_4231_r = field_4236_m.generateNoiseOctaves(field_4231_r, i * 16, j * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
         for(int l = 0; l < 16; l++)
         {
             for(int i1 = 0; i1 < 16; i1++)
             {
-                boolean flag = field_4162_p[l + i1 * 16] + hellRNG.nextDouble() * 0.20000000000000001D > 0.0D;
+                boolean flag = field_4233_p[l + i1 * 16] + hellRNG.nextDouble() * 0.20000000000000001D > 0.0D;
                 boolean flag1 = gravelNoise[l + i1 * 16] + hellRNG.nextDouble() * 0.20000000000000001D > 0.0D;
-                int j1 = (int)(field_4160_r[l + i1 * 16] / 3D + 3D + hellRNG.nextDouble() * 0.25D);
+                int j1 = (int)(field_4231_r[l + i1 * 16] / 3D + 3D + hellRNG.nextDouble() * 0.25D);
                 int k1 = -1;
                 byte byte0 = (byte)Block.netherrack.blockID;
                 byte byte1 = (byte)Block.netherrack.blockID;
-                for(int l1 = worldObj.worldMaxY; l1 >= 0; l1--)
+                for(int l1 = worldObj.worldYMask; l1 >= 0; l1--)
                 {
                     int i2 = (i1 * 16 + l) * worldObj.worldHeight + l1;
-                    if(l1 >= worldObj.worldMaxY - hellRNG.nextInt(5))
+                    if(l1 >= worldObj.worldYMask - hellRNG.nextInt(5))
                     {
                         abyte0[i2] = (byte)Block.bedrock.blockID;
                         continue;
@@ -234,14 +234,14 @@ public class ChunkProviderHell
         hellRNG.setSeed((long)i * 0x4f9939f508L + (long)j * 0x1ef1565bd5L);
         byte abyte0[] = new byte[16 * worldObj.worldHeight * 16];
         generateNetherTerrain(i, j, abyte0);
-        func_4058_b(i, j, abyte0);
+        func_4061_b(i, j, abyte0);
         netherCaveGenerator.generate(this, worldObj, i, j, abyte0);
-        genNetherBridge.generate(this, worldObj, i, j, abyte0);
+        field_40183_c.generate(this, worldObj, i, j, abyte0);
         Chunk chunk = new Chunk(worldObj, abyte0, i, j);
         return chunk;
     }
 
-    private double[] func_4057_a(double ad[], int i, int j, int k, int l, int i1, int j1)
+    private double[] func_4060_a(double ad[], int i, int j, int k, int l, int i1, int j1)
     {
         if(ad == null)
         {
@@ -249,11 +249,11 @@ public class ChunkProviderHell
         }
         double d = 684.41200000000003D;
         double d1 = 2053.2359999999999D;
-        field_4172_f = field_4177_a.generateNoiseOctaves(field_4172_f, i, j, k, l, 1, j1, 1.0D, 0.0D, 1.0D);
-        field_4171_g = field_4176_b.generateNoiseOctaves(field_4171_g, i, j, k, l, 1, j1, 100D, 0.0D, 100D);
-        field_4175_c = field_4167_k.generateNoiseOctaves(field_4175_c, i, j, k, l, i1, j1, d / 80D, d1 / 60D, d / 80D);
-        field_4174_d = field_4169_i.generateNoiseOctaves(field_4174_d, i, j, k, l, i1, j1, d, d1, d);
-        field_4173_e = field_4168_j.generateNoiseOctaves(field_4173_e, i, j, k, l, i1, j1, d, d1, d);
+        field_4243_f = field_4248_a.generateNoiseOctaves(field_4243_f, i, j, k, l, 1, j1, 1.0D, 0.0D, 1.0D);
+        field_4242_g = field_4247_b.generateNoiseOctaves(field_4242_g, i, j, k, l, 1, j1, 100D, 0.0D, 100D);
+        field_4246_c = field_4238_k.generateNoiseOctaves(field_4246_c, i, j, k, l, i1, j1, d / 80D, d1 / 60D, d / 80D);
+        field_4245_d = field_4240_i.generateNoiseOctaves(field_4245_d, i, j, k, l, i1, j1, d, d1, d);
+        field_4244_e = field_4239_j.generateNoiseOctaves(field_4244_e, i, j, k, l, i1, j1, d, d1, d);
         int k1 = 0;
         int l1 = 0;
         double ad1[] = new double[i1];
@@ -276,13 +276,13 @@ public class ChunkProviderHell
         {
             for(int k2 = 0; k2 < j1; k2++)
             {
-                double d3 = (field_4172_f[l1] + 256D) / 512D;
+                double d3 = (field_4243_f[l1] + 256D) / 512D;
                 if(d3 > 1.0D)
                 {
                     d3 = 1.0D;
                 }
                 double d4 = 0.0D;
-                double d5 = field_4171_g[l1] / 8000D;
+                double d5 = field_4242_g[l1] / 8000D;
                 if(d5 < 0.0D)
                 {
                     d5 = -d5;
@@ -313,9 +313,9 @@ public class ChunkProviderHell
                 {
                     double d6 = 0.0D;
                     double d7 = ad1[l2];
-                    double d8 = field_4174_d[k1] / 512D;
-                    double d9 = field_4173_e[k1] / 512D;
-                    double d10 = (field_4175_c[k1] / 10D + 1.0D) / 2D;
+                    double d8 = field_4245_d[k1] / 512D;
+                    double d9 = field_4244_e[k1] / 512D;
+                    double d10 = (field_4246_c[k1] / 10D + 1.0D) / 2D;
                     if(d10 < 0.0D)
                     {
                         d6 = d8;
@@ -367,7 +367,7 @@ public class ChunkProviderHell
         BlockSand.fallInstantly = true;
         int k = i * 16;
         int l = j * 16;
-        genNetherBridge.generateStructuresInChunk(worldObj, hellRNG, i, j);
+        field_40183_c.generateStructuresInChunk(worldObj, hellRNG, i, j);
         for(int i1 = 0; i1 < 8; i1++)
         {
             int k1 = k + hellRNG.nextInt(16) + 8;
@@ -434,16 +434,11 @@ public class ChunkProviderHell
         return true;
     }
 
-    public String makeString()
+    public List func_40181_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
-        return "HellRandomLevelSource";
-    }
-
-    public List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
-    {
-        if(enumcreaturetype == EnumCreatureType.monster && genNetherBridge.func_40483_a(i, j, k))
+        if(enumcreaturetype == EnumCreatureType.monster && field_40183_c.func_40204_a(i, j, k))
         {
-            return genNetherBridge.func_40485_b();
+            return field_40183_c.func_40205_b();
         }
         WorldChunkManager worldchunkmanager = worldObj.getWorldChunkManager();
         if(worldchunkmanager == null)
@@ -460,7 +455,7 @@ public class ChunkProviderHell
         }
     }
 
-    public ChunkPosition func_40376_a(World world, String s, int i, int j, int k)
+    public ChunkPosition func_40182_a(World world, String s, int i, int j, int k)
     {
         return null;
     }

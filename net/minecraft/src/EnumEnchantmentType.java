@@ -30,7 +30,7 @@ public enum EnumEnchantmentType
 */
     private static final EnumEnchantmentType allEnchantmentTypes[]; /* synthetic field */
 /*
-    public static final EnumEnchantmentType[] values()
+    public static EnumEnchantmentType[] values()
     {
         return (EnumEnchantmentType[])allEnchantmentTypes.clone();
     }

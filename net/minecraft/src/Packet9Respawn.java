@@ -14,7 +14,7 @@ public class Packet9Respawn extends Packet
 
     public long mapSeed;
     public int respawnDimension;
-    public int difficulty;
+    public int difficultySetting;
     public int worldHeight;
     public int creativeMode;
 
@@ -25,7 +25,7 @@ public class Packet9Respawn extends Packet
     public Packet9Respawn(byte byte0, byte byte1, long l, int i, int j)
     {
         respawnDimension = byte0;
-        difficulty = byte1;
+        difficultySetting = byte1;
         mapSeed = l;
         worldHeight = i;
         creativeMode = j;
@@ -40,7 +40,7 @@ public class Packet9Respawn extends Packet
         throws IOException
     {
         respawnDimension = datainputstream.readByte();
-        difficulty = datainputstream.readByte();
+        difficultySetting = datainputstream.readByte();
         creativeMode = datainputstream.readByte();
         worldHeight = datainputstream.readShort();
         mapSeed = datainputstream.readLong();
@@ -50,7 +50,7 @@ public class Packet9Respawn extends Packet
         throws IOException
     {
         dataoutputstream.writeByte(respawnDimension);
-        dataoutputstream.writeByte(difficulty);
+        dataoutputstream.writeByte(difficultySetting);
         dataoutputstream.writeByte(creativeMode);
         dataoutputstream.writeShort(worldHeight);
         dataoutputstream.writeLong(mapSeed);

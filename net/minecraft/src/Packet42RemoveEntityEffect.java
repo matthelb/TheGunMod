@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
+//            Packet, PotionEffect, NetHandler
 
 public class Packet42RemoveEntityEffect extends Packet
 {
@@ -17,6 +17,12 @@ public class Packet42RemoveEntityEffect extends Packet
 
     public Packet42RemoveEntityEffect()
     {
+    }
+
+    public Packet42RemoveEntityEffect(int i, PotionEffect potioneffect)
+    {
+        entityId = i;
+        effectId = (byte)(potioneffect.getPotionID() & 0xff);
     }
 
     public void readPacketData(DataInputStream datainputstream)

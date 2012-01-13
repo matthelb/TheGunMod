@@ -18,11 +18,6 @@ public class Packet16BlockItemSwitch extends Packet
     {
     }
 
-    public Packet16BlockItemSwitch(int i)
-    {
-        id = i;
-    }
-
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

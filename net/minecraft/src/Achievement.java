@@ -8,7 +8,7 @@ import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            StatBase, ItemStack, StatCollector, AchievementList, 
-//            IStatStringFormat, Item, Block
+//            Item, Block
 
 public class Achievement extends StatBase
 {
@@ -17,7 +17,6 @@ public class Achievement extends StatBase
     public final int displayRow;
     public final Achievement parentAchievement;
     private final String achievementDescription;
-    private IStatStringFormat statStringFormatter;
     public final ItemStack theItemStack;
     private boolean isSpecial;
 
@@ -74,33 +73,6 @@ public class Achievement extends StatBase
         super.registerStat();
         AchievementList.achievementList.add(this);
         return this;
-    }
-
-    public boolean isAchievement()
-    {
-        return true;
-    }
-
-    public String getDescription()
-    {
-        if(statStringFormatter != null)
-        {
-            return statStringFormatter.formatString(achievementDescription);
-        } else
-        {
-            return achievementDescription;
-        }
-    }
-
-    public Achievement setStatStringFormatter(IStatStringFormat istatstringformat)
-    {
-        statStringFormatter = istatstringformat;
-        return this;
-    }
-
-    public boolean getSpecial()
-    {
-        return isSpecial;
     }
 
     public StatBase registerStat()

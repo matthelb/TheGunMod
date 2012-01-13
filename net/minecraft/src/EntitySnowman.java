@@ -35,13 +35,13 @@ public class EntitySnowman extends EntitySnowmanBase
             List list = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityMob.class, AxisAlignedBB.getBoundingBoxFromPool(posX, posY, posZ, posX + 1.0D, posY + 1.0D, posZ + 1.0D).expand(16D, 4D, 16D));
             if(!list.isEmpty())
             {
-                setEntityToAttack((Entity)list.get(worldObj.rand.nextInt(list.size())));
+                setTarget((Entity)list.get(worldObj.rand.nextInt(list.size())));
             }
         }
         int i = MathHelper.floor_double(posX);
         int k = MathHelper.floor_double(posY);
         int i1 = MathHelper.floor_double(posZ);
-        if(worldObj.getWorldChunkManager().getTemperature(i, k, i1) > 1.0F)
+        if(worldObj.getWorldChunkManager().func_40579_a(i, k, i1) > 1.0F)
         {
             attackEntityFrom(DamageSource.onFire, 1);
         }
@@ -50,7 +50,7 @@ public class EntitySnowman extends EntitySnowmanBase
             int l = MathHelper.floor_double(posX + (double)((float)((j % 2) * 2 - 1) * 0.25F));
             int j1 = MathHelper.floor_double(posY);
             int k1 = MathHelper.floor_double(posZ + (double)((float)(((j / 2) % 2) * 2 - 1) * 0.25F));
-            if(worldObj.getBlockId(l, j1, k1) == 0 && worldObj.getWorldChunkManager().getTemperature(l, j1, k1) < 0.8F && Block.snow.canPlaceBlockAt(worldObj, l, j1, k1))
+            if(worldObj.getBlockId(l, j1, k1) == 0 && worldObj.getWorldChunkManager().func_40579_a(l, j1, k1) < 0.8F && Block.snow.canPlaceBlockAt(worldObj, l, j1, k1))
             {
                 worldObj.setBlockWithNotify(l, j1, k1, Block.snow.blockID);
             }

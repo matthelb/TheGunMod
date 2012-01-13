@@ -20,6 +20,10 @@ public class EntityBullet extends EntityProjectile {
         super(world, entityliving);
     }
 
+    public EntityBullet(World world, double x, double y, double z) {
+        super(world, x, y, z);
+    }
+
     @Override
     public int getDamage() {
         return 0;
@@ -61,8 +65,8 @@ public class EntityBullet extends EntityProjectile {
     }
 
     public boolean onBlockHit(MovingObjectPosition position) {
-        if(getOwner() instanceof EntityPlayerSP) {
-            PlayerController controller = Util.getPlayerController((EntityPlayerSP) getOwner());
+        /*if(getOwner() instanceof EntityPlayerMP) {
+            PlayerController controller = Util.getPlayerController((EntityPlayerMP) getOwner());
             if(controller != null) {
                 Block block = Block.blocksList[worldObj.getBlockId(position.blockX, position.blockY, position.blockZ)];
                 if(block.blockMaterial.equals(Material.glass)) {
@@ -70,7 +74,7 @@ public class EntityBullet extends EntityProjectile {
                 }
                 return true;
             }
-        }
+        }*/
         return false;
     }
 

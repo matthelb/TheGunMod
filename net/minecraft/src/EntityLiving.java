@@ -11,29 +11,29 @@ import java.util.*;
 //            Profiler, DamageSource, Material, Potion, 
 //            EntityXPOrb, MathHelper, EntityPlayer, EntityWolf, 
 //            PotionEffect, EnchantmentHelper, Block, StepSound, 
-//            AxisAlignedBB, NBTTagCompound, NBTTagList, ItemStack, 
-//            PotionHelper, EnumCreatureAttribute, Item, MovingObjectPosition
+//            AxisAlignedBB, NBTTagCompound, NBTTagList, PotionHelper, 
+//            EnumCreatureAttribute, ItemStack, Item
 
 public abstract class EntityLiving extends Entity
 {
 
     public int heartsHalvesLife;
-    public float field_9365_p;
-    public float field_9363_r;
+    public float field_9098_aw;
+    public float field_9096_ay;
     public float renderYawOffset;
     public float prevRenderYawOffset;
-    protected float field_9362_u;
-    protected float field_9361_v;
-    protected float field_9360_w;
-    protected float field_9359_x;
-    protected boolean field_9358_y;
+    protected float field_9124_aB;
+    protected float field_9123_aC;
+    protected float field_9122_aD;
+    protected float field_9121_aE;
+    protected boolean field_9120_aF;
     protected String texture;
-    protected boolean field_9355_A;
-    protected float field_9353_B;
+    protected boolean field_9118_aH;
+    protected float field_9117_aI;
     protected String entityType;
-    protected float field_9349_D;
+    protected float field_9115_aK;
     protected int scoreValue;
-    protected float field_9345_F;
+    protected float field_9113_aM;
     public boolean isMultiplayerEntity;
     public float landMovementFactor;
     public float jumpMovementFactor;
@@ -52,25 +52,25 @@ public abstract class EntityLiving extends Entity
     public float cameraPitch;
     protected boolean unused_flag;
     protected int experienceValue;
-    public int field_9326_T;
-    public float field_9325_U;
-    public float field_705_Q;
-    public float field_704_R;
-    public float field_703_S;
-    protected EntityPlayer attackingPlayer;
-    protected int recentlyHit;
-    public int arrowHitTempCounter;
-    public int arrowHitTimer;
+    public int field_9144_ba;
+    public float field_9143_bb;
+    public float field_9142_bc;
+    public float field_9141_bd;
+    public float field_386_ba;
+    protected EntityPlayer field_34903_b;
+    protected int field_34904_c;
+    public int field_35189_aD;
+    public int field_35190_aE;
     protected HashMap activePotionsMap;
-    private boolean field_39001_b;
-    private int field_39002_c;
+    private boolean field_39002_b;
+    private int field_39003_c;
     protected int newPosRotationIncrements;
     protected double newPosX;
     protected double newPosY;
     protected double newPosZ;
     protected double newRotationYaw;
     protected double newRotationPitch;
-    float field_9348_ae;
+    float field_9134_bl;
     protected int naturalArmorRating;
     protected int entityAge;
     protected float moveStrafing;
@@ -79,7 +79,7 @@ public abstract class EntityLiving extends Entity
     protected boolean isJumping;
     protected float defaultPitch;
     protected float moveSpeed;
-    private int field_39003_d;
+    private int field_39004_d;
     private Entity currentTarget;
     protected int numTicksToChaseTarget;
 
@@ -89,14 +89,14 @@ public abstract class EntityLiving extends Entity
         heartsHalvesLife = 20;
         renderYawOffset = 0.0F;
         prevRenderYawOffset = 0.0F;
-        field_9358_y = true;
+        field_9120_aF = true;
         texture = "/mob/char.png";
-        field_9355_A = true;
-        field_9353_B = 0.0F;
+        field_9118_aH = true;
+        field_9117_aI = 0.0F;
         entityType = null;
-        field_9349_D = 1.0F;
+        field_9115_aK = 1.0F;
         scoreValue = 0;
-        field_9345_F = 0.0F;
+        field_9113_aM = 0.0F;
         isMultiplayerEntity = false;
         landMovementFactor = 0.1F;
         jumpMovementFactor = 0.02F;
@@ -104,44 +104,39 @@ public abstract class EntityLiving extends Entity
         deathTime = 0;
         attackTime = 0;
         unused_flag = false;
-        field_9326_T = -1;
-        field_9325_U = (float)(Math.random() * 0.89999997615814209D + 0.10000000149011612D);
-        attackingPlayer = null;
-        recentlyHit = 0;
-        arrowHitTempCounter = 0;
-        arrowHitTimer = 0;
+        field_9144_ba = -1;
+        field_9143_bb = (float)(Math.random() * 0.89999997615814209D + 0.10000000149011612D);
+        field_34903_b = null;
+        field_34904_c = 0;
+        field_35189_aD = 0;
+        field_35190_aE = 0;
         activePotionsMap = new HashMap();
-        field_39001_b = true;
-        field_9348_ae = 0.0F;
+        field_39002_b = true;
+        field_9134_bl = 0.0F;
         naturalArmorRating = 0;
         entityAge = 0;
         isJumping = false;
         defaultPitch = 0.0F;
         moveSpeed = 0.7F;
-        field_39003_d = 0;
+        field_39004_d = 0;
         numTicksToChaseTarget = 0;
         health = getMaxHealth();
         preventEntitySpawning = true;
-        field_9363_r = (float)(Math.random() + 1.0D) * 0.01F;
+        field_9096_ay = (float)(Math.random() + 1.0D) * 0.01F;
         setPosition(posX, posY, posZ);
-        field_9365_p = (float)Math.random() * 12398F;
+        field_9098_aw = (float)Math.random() * 12398F;
         rotationYaw = (float)(Math.random() * 3.1415927410125732D * 2D);
         stepHeight = 0.5F;
     }
 
     protected void entityInit()
     {
-        dataWatcher.addObject(8, Integer.valueOf(field_39002_c));
+        dataWatcher.addObject(8, Integer.valueOf(field_39003_c));
     }
 
     public boolean canEntityBeSeen(Entity entity)
     {
         return worldObj.rayTraceBlocks(Vec3D.createVector(posX, posY + (double)getEyeHeight(), posZ), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null;
-    }
-
-    public String getEntityTexture()
-    {
-        return texture;
     }
 
     public boolean canBeCollidedWith()
@@ -187,7 +182,7 @@ public abstract class EntityLiving extends Entity
         {
             if(!attackEntityFrom(DamageSource.inWall, 1));
         }
-        if(isImmuneToFire() || worldObj.multiplayerWorld)
+        if(isImmuneToFire() || worldObj.singleplayerWorld)
         {
             extinguish();
         }
@@ -227,33 +222,33 @@ public abstract class EntityLiving extends Entity
         }
         if(health <= 0)
         {
-            onDeathUpdate();
+            func_40102_ag();
         }
-        if(recentlyHit > 0)
+        if(field_34904_c > 0)
         {
-            recentlyHit--;
+            field_34904_c--;
         } else
         {
-            attackingPlayer = null;
+            field_34903_b = null;
         }
         updatePotionEffects();
-        field_9359_x = field_9360_w;
+        field_9121_aE = field_9122_aD;
         prevRenderYawOffset = renderYawOffset;
         prevRotationYaw = rotationYaw;
         prevRotationPitch = rotationPitch;
         Profiler.endSection();
     }
 
-    protected void onDeathUpdate()
+    protected void func_40102_ag()
     {
         deathTime++;
         if(deathTime == 20)
         {
-            if(!worldObj.multiplayerWorld && (recentlyHit > 0 || isPlayer()) && !isChild())
+            if(!worldObj.singleplayerWorld && (field_34904_c > 0 || func_35188_X()) && !func_40104_l())
             {
-                for(int i = getExperiencePoints(attackingPlayer); i > 0;)
+                for(int i = getExperiencePoints(field_34903_b); i > 0;)
                 {
-                    int k = EntityXPOrb.getXPSplit(i);
+                    int k = EntityXPOrb.getMore(i);
                     i -= k;
                     worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, posX, posY, posZ, k));
                 }
@@ -282,7 +277,7 @@ public abstract class EntityLiving extends Entity
         return experienceValue;
     }
 
-    protected boolean isPlayer()
+    protected boolean func_35188_X()
     {
         return false;
     }
@@ -303,36 +298,24 @@ public abstract class EntityLiving extends Entity
     public void updateRidden()
     {
         super.updateRidden();
-        field_9362_u = field_9361_v;
-        field_9361_v = 0.0F;
+        field_9124_aB = field_9123_aC;
+        field_9123_aC = 0.0F;
         fallDistance = 0.0F;
-    }
-
-    public void setPositionAndRotation2(double d, double d1, double d2, float f, 
-            float f1, int i)
-    {
-        yOffset = 0.0F;
-        newPosX = d;
-        newPosY = d1;
-        newPosZ = d2;
-        newRotationYaw = f;
-        newRotationPitch = f1;
-        newPosRotationIncrements = i;
     }
 
     public void onUpdate()
     {
         super.onUpdate();
-        if(arrowHitTempCounter > 0)
+        if(field_35189_aD > 0)
         {
-            if(arrowHitTimer <= 0)
+            if(field_35190_aE <= 0)
             {
-                arrowHitTimer = 60;
+                field_35190_aE = 60;
             }
-            arrowHitTimer--;
-            if(arrowHitTimer <= 0)
+            field_35190_aE--;
+            if(field_35190_aE <= 0)
             {
-                arrowHitTempCounter--;
+                field_35189_aD--;
             }
         }
         onLivingUpdate();
@@ -341,7 +324,7 @@ public abstract class EntityLiving extends Entity
         float f = MathHelper.sqrt_double(d * d + d1 * d1);
         float f1 = renderYawOffset;
         float f2 = 0.0F;
-        field_9362_u = field_9361_v;
+        field_9124_aB = field_9123_aC;
         float f3 = 0.0F;
         if(f > 0.05F)
         {
@@ -357,7 +340,7 @@ public abstract class EntityLiving extends Entity
         {
             f3 = 0.0F;
         }
-        field_9361_v = field_9361_v + (f3 - field_9361_v) * 0.3F;
+        field_9123_aC = field_9123_aC + (f3 - field_9123_aC) * 0.3F;
         float f4;
         for(f4 = f1 - renderYawOffset; f4 < -180F; f4 += 360F) { }
         for(; f4 >= 180F; f4 -= 360F) { }
@@ -389,7 +372,7 @@ public abstract class EntityLiving extends Entity
         for(; renderYawOffset - prevRenderYawOffset >= 180F; prevRenderYawOffset += 360F) { }
         for(; rotationPitch - prevRotationPitch < -180F; prevRotationPitch -= 360F) { }
         for(; rotationPitch - prevRotationPitch >= 180F; prevRotationPitch += 360F) { }
-        field_9360_w += f2;
+        field_9122_aD += f2;
     }
 
     protected void setSize(float f, float f1)
@@ -429,7 +412,7 @@ public abstract class EntityLiving extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
             return false;
         }
@@ -442,7 +425,7 @@ public abstract class EntityLiving extends Entity
         {
             return false;
         }
-        field_704_R = 1.5F;
+        field_9141_bd = 1.5F;
         boolean flag = true;
         if((float)heartsLife > (float)heartsHalvesLife / 2.0F)
         {
@@ -467,22 +450,22 @@ public abstract class EntityLiving extends Entity
         {
             if(entity instanceof EntityPlayer)
             {
-                recentlyHit = 60;
-                attackingPlayer = (EntityPlayer)entity;
+                field_34904_c = 60;
+                field_34903_b = (EntityPlayer)entity;
             } else
             if(entity instanceof EntityWolf)
             {
                 EntityWolf entitywolf = (EntityWolf)entity;
                 if(entitywolf.isTamed())
                 {
-                    recentlyHit = 60;
-                    attackingPlayer = null;
+                    field_34904_c = 60;
+                    field_34903_b = null;
                 }
             }
         }
         if(flag)
         {
-            worldObj.setEntityState(this, (byte)2);
+            worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)2);
             setBeenAttacked();
             if(entity != null)
             {
@@ -517,7 +500,7 @@ public abstract class EntityLiving extends Entity
 
     private float getSoundPitch()
     {
-        if(isChild())
+        if(func_40104_l())
         {
             return (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.5F;
         } else
@@ -526,18 +509,12 @@ public abstract class EntityLiving extends Entity
         }
     }
 
-    public void performHurtAnimation()
-    {
-        hurtTime = maxHurtTime = 10;
-        attackedAtYaw = 0.0F;
-    }
-
     protected int getTotalArmorValue()
     {
         return 0;
     }
 
-    protected void func_40125_g(int i)
+    protected void func_40101_g(int i)
     {
     }
 
@@ -547,7 +524,7 @@ public abstract class EntityLiving extends Entity
         {
             int j = 25 - getTotalArmorValue();
             int k = i * j + carryoverDamage;
-            func_40125_g(i);
+            func_40101_g(i);
             i = k / 25;
             carryoverDamage = k % 25;
         }
@@ -623,19 +600,19 @@ public abstract class EntityLiving extends Entity
             entity.onKillEntity(this);
         }
         unused_flag = true;
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             int i = 0;
             if(entity instanceof EntityPlayer)
             {
                 i = EnchantmentHelper.getLootingModifier(((EntityPlayer)entity).inventory);
             }
-            if(!isChild())
+            if(!func_40104_l())
             {
-                dropFewItems(recentlyHit > 0, i);
+                dropFewItems(field_34904_c > 0, i);
             }
         }
-        worldObj.setEntityState(this, (byte)3);
+        worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)3);
     }
 
     protected void dropFewItems(boolean flag, int i)
@@ -679,7 +656,7 @@ public abstract class EntityLiving extends Entity
             if(j > 0)
             {
                 StepSound stepsound = Block.blocksList[j].stepSound;
-                worldObj.playSoundAtEntity(this, stepsound.stepSoundDir2(), stepsound.getVolume() * 0.5F, stepsound.getPitch() * 0.75F);
+                worldObj.playSoundAtEntity(this, stepsound.stepSoundDir(), stepsound.getVolume() * 0.5F, stepsound.getPitch() * 0.75F);
             }
         }
     }
@@ -777,7 +754,7 @@ public abstract class EntityLiving extends Entity
             motionX *= f2;
             motionZ *= f2;
         }
-        field_705_Q = field_704_R;
+        field_9142_bc = field_9141_bd;
         double d2 = posX - prevPosX;
         double d3 = posZ - prevPosZ;
         float f6 = MathHelper.sqrt_double(d2 * d2 + d3 * d3) * 4F;
@@ -785,8 +762,8 @@ public abstract class EntityLiving extends Entity
         {
             f6 = 1.0F;
         }
-        field_704_R += (f6 - field_704_R) * 0.4F;
-        field_703_S += field_704_R;
+        field_9141_bd += (f6 - field_9141_bd) * 0.4F;
+        field_386_ba += field_9141_bd;
     }
 
     public boolean isOnLadder()
@@ -857,9 +834,9 @@ public abstract class EntityLiving extends Entity
 
     public void onLivingUpdate()
     {
-        if(field_39003_d > 0)
+        if(field_39004_d > 0)
         {
-            field_39003_d--;
+            field_39004_d--;
         }
         if(newPosRotationIncrements > 0)
         {
@@ -916,20 +893,20 @@ public abstract class EntityLiving extends Entity
             {
                 motionY += 0.039999999105930328D;
             } else
-            if(onGround && field_39003_d == 0)
+            if(onGround && field_39004_d == 0)
             {
                 jump();
-                field_39003_d = 10;
+                field_39004_d = 10;
             }
         } else
         {
-            field_39003_d = 0;
+            field_39004_d = 0;
         }
         moveStrafing *= 0.98F;
         moveForward *= 0.98F;
         randomYawVelocity *= 0.9F;
         float f = landMovementFactor;
-        landMovementFactor *= getSpeedModifier();
+        landMovementFactor *= getPotionSpeedMultiplier();
         moveEntityWithHeading(moveStrafing, moveForward);
         landMovementFactor = f;
         Profiler.startSection("push");
@@ -954,7 +931,7 @@ public abstract class EntityLiving extends Entity
         return health <= 0;
     }
 
-    public boolean func_35162_ad()
+    public boolean func_35180_G()
     {
         return false;
     }
@@ -1113,30 +1090,6 @@ public abstract class EntityLiving extends Entity
         attackEntityFrom(DamageSource.outOfWorld, 4);
     }
 
-    public float getSwingProgress(float f)
-    {
-        float f1 = swingProgress - prevSwingProgress;
-        if(f1 < 0.0F)
-        {
-            f1++;
-        }
-        return prevSwingProgress + f1 * f;
-    }
-
-    public Vec3D getPosition(float f)
-    {
-        if(f == 1.0F)
-        {
-            return Vec3D.createVector(posX, posY, posZ);
-        } else
-        {
-            double d = prevPosX + (posX - prevPosX) * (double)f;
-            double d1 = prevPosY + (posY - prevPosY) * (double)f;
-            double d2 = prevPosZ + (posZ - prevPosZ) * (double)f;
-            return Vec3D.createVector(d, d1, d2);
-        }
-    }
-
     public Vec3D getLookVec()
     {
         return getLook(1.0F);
@@ -1163,59 +1116,14 @@ public abstract class EntityLiving extends Entity
         }
     }
 
-    public float func_35159_aC()
-    {
-        return 1.0F;
-    }
-
-    public MovingObjectPosition rayTrace(double d, float f)
-    {
-        Vec3D vec3d = getPosition(f);
-        Vec3D vec3d1 = getLook(f);
-        Vec3D vec3d2 = vec3d.addVector(vec3d1.xCoord * d, vec3d1.yCoord * d, vec3d1.zCoord * d);
-        return worldObj.rayTraceBlocks(vec3d, vec3d2);
-    }
-
     public int getMaxSpawnedInChunk()
     {
         return 4;
     }
 
-    public ItemStack getHeldItem()
-    {
-        return null;
-    }
-
-    public void handleHealthUpdate(byte byte0)
-    {
-        if(byte0 == 2)
-        {
-            field_704_R = 1.5F;
-            heartsLife = heartsHalvesLife;
-            hurtTime = maxHurtTime = 10;
-            attackedAtYaw = 0.0F;
-            worldObj.playSoundAtEntity(this, getHurtSound(), getSoundVolume(), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
-            attackEntityFrom(DamageSource.generic, 0);
-        } else
-        if(byte0 == 3)
-        {
-            worldObj.playSoundAtEntity(this, getDeathSound(), getSoundVolume(), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
-            health = 0;
-            onDeath(DamageSource.generic);
-        } else
-        {
-            super.handleHealthUpdate(byte0);
-        }
-    }
-
     public boolean isPlayerSleeping()
     {
         return false;
-    }
-
-    public int getItemIcon(ItemStack itemstack, int i)
-    {
-        return itemstack.getIconIndex();
     }
 
     protected void updatePotionEffects()
@@ -1229,26 +1137,26 @@ public abstract class EntityLiving extends Entity
             }
             Integer integer = (Integer)iterator.next();
             PotionEffect potioneffect = (PotionEffect)activePotionsMap.get(integer);
-            if(!potioneffect.onUpdate(this) && !worldObj.multiplayerWorld)
+            if(!potioneffect.onUpdate(this) && !worldObj.singleplayerWorld)
             {
                 iterator.remove();
                 onFinishedPotionEffect(potioneffect);
             }
         } while(true);
-        if(field_39001_b)
+        if(field_39002_b)
         {
-            if(!worldObj.multiplayerWorld)
+            if(!worldObj.singleplayerWorld)
             {
                 if(!activePotionsMap.isEmpty())
                 {
-                    int i = PotionHelper.func_40354_a(activePotionsMap.values());
+                    int i = PotionHelper.func_40553_a(activePotionsMap.values());
                     dataWatcher.updateObject(8, Integer.valueOf(i));
                 } else
                 {
                     dataWatcher.updateObject(8, Integer.valueOf(0));
                 }
             }
-            field_39001_b = false;
+            field_39002_b = false;
         }
         if(rand.nextBoolean())
         {
@@ -1263,7 +1171,7 @@ public abstract class EntityLiving extends Entity
         }
     }
 
-    public void func_40112_aN()
+    public void func_40089_ar()
     {
         Iterator iterator = activePotionsMap.keySet().iterator();
         do
@@ -1274,7 +1182,7 @@ public abstract class EntityLiving extends Entity
             }
             Integer integer = (Integer)iterator.next();
             PotionEffect potioneffect = (PotionEffect)activePotionsMap.get(integer);
-            if(!worldObj.multiplayerWorld)
+            if(!worldObj.singleplayerWorld)
             {
                 iterator.remove();
                 onFinishedPotionEffect(potioneffect);
@@ -1282,7 +1190,7 @@ public abstract class EntityLiving extends Entity
         } while(true);
     }
 
-    public Collection func_40118_aO()
+    public Collection func_35183_ak()
     {
         return activePotionsMap.values();
     }
@@ -1299,7 +1207,7 @@ public abstract class EntityLiving extends Entity
 
     public void addPotionEffect(PotionEffect potioneffect)
     {
-        if(!func_40126_a(potioneffect))
+        if(!func_40096_a(potioneffect))
         {
             return;
         }
@@ -1314,7 +1222,7 @@ public abstract class EntityLiving extends Entity
         }
     }
 
-    public boolean func_40126_a(PotionEffect potioneffect)
+    public boolean func_40096_a(PotionEffect potioneffect)
     {
         if(getCreatureAttribute() == EnumCreatureAttribute.UNDEAD)
         {
@@ -1332,27 +1240,22 @@ public abstract class EntityLiving extends Entity
         return getCreatureAttribute() == EnumCreatureAttribute.UNDEAD;
     }
 
-    public void removePotionEffect(int i)
-    {
-        activePotionsMap.remove(Integer.valueOf(i));
-    }
-
     protected void onNewPotionEffect(PotionEffect potioneffect)
     {
-        field_39001_b = true;
+        field_39002_b = true;
     }
 
     protected void onChangedPotionEffect(PotionEffect potioneffect)
     {
-        field_39001_b = true;
+        field_39002_b = true;
     }
 
     protected void onFinishedPotionEffect(PotionEffect potioneffect)
     {
-        field_39001_b = true;
+        field_39002_b = true;
     }
 
-    protected float getSpeedModifier()
+    protected float getPotionSpeedMultiplier()
     {
         float f = 1.0F;
         if(isPotionActive(Potion.moveSpeed))
@@ -1366,12 +1269,12 @@ public abstract class EntityLiving extends Entity
         return f;
     }
 
-    public void teleportToLocation(double d, double d1, double d2)
+    public void setPositionAndUpdate(double d, double d1, double d2)
     {
         setLocationAndAngles(d, d1, d2, rotationYaw, rotationPitch);
     }
 
-    public boolean isChild()
+    public boolean func_40104_l()
     {
         return false;
     }
@@ -1381,7 +1284,7 @@ public abstract class EntityLiving extends Entity
         return EnumCreatureAttribute.UNDEFINED;
     }
 
-    public void func_41005_b(ItemStack itemstack)
+    public void func_41030_c(ItemStack itemstack)
     {
         worldObj.playSoundAtEntity(this, "random.break", 0.8F, 0.8F + worldObj.rand.nextFloat() * 0.4F);
         for(int i = 0; i < 5; i++)

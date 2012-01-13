@@ -14,13 +14,13 @@ public class WorldChunkManagerHell extends WorldChunkManager
 
     private BiomeGenBase biomeGenerator;
     private float hellTemperature;
-    private float field_4199_g;
+    private float field_4260_g;
 
     public WorldChunkManagerHell(BiomeGenBase biomegenbase, float f, float f1)
     {
         biomeGenerator = biomegenbase;
         hellTemperature = f;
-        field_4199_g = f1;
+        field_4260_g = f1;
     }
 
     public BiomeGenBase getBiomeGenAtChunkCoord(ChunkCoordIntPair chunkcoordintpair)
@@ -33,12 +33,6 @@ public class WorldChunkManagerHell extends WorldChunkManager
         return biomeGenerator;
     }
 
-    public BiomeGenBase[] loadRendererData(int i, int j, int k, int l)
-    {
-        rendererBiomeGenCache = loadBlockGeneratorData(rendererBiomeGenCache, i, j, k, l);
-        return rendererBiomeGenCache;
-    }
-
     public float[] getTemperatures(float af[], int i, int j, int k, int l)
     {
         if(af == null || af.length < k * l)
@@ -49,7 +43,7 @@ public class WorldChunkManagerHell extends WorldChunkManager
         return af;
     }
 
-    public float[] initTemperatureCache(int i, int j, int k, int l)
+    public float[] func_40578_a(int i, int j, int k, int l)
     {
         return getTemperatures(new float[k * l], i, j, k, l);
     }
@@ -60,13 +54,8 @@ public class WorldChunkManagerHell extends WorldChunkManager
         {
             af = new float[k * l];
         }
-        Arrays.fill(af, 0, k * l, field_4199_g);
+        Arrays.fill(af, 0, k * l, field_4260_g);
         return af;
-    }
-
-    public float getRainfall(int i, int j)
-    {
-        return field_4199_g;
     }
 
     public BiomeGenBase[] loadBlockGeneratorData(BiomeGenBase abiomegenbase[], int i, int j, int k, int l)
@@ -79,12 +68,12 @@ public class WorldChunkManagerHell extends WorldChunkManager
         return abiomegenbase;
     }
 
-    public BiomeGenBase[] getBiomeGenAt(BiomeGenBase abiomegenbase[], int i, int j, int k, int l, boolean flag)
+    public BiomeGenBase[] func_35140_a(BiomeGenBase abiomegenbase[], int i, int j, int k, int l, boolean flag)
     {
         return loadBlockGeneratorData(abiomegenbase, i, j, k, l);
     }
 
-    public ChunkPosition func_35556_a(int i, int j, int k, List list, Random random)
+    public ChunkPosition func_35139_a(int i, int j, int k, List list, Random random)
     {
         if(list.contains(biomeGenerator))
         {

@@ -151,7 +151,7 @@ public class WorldGenLakes extends WorldGenerator
                 for(int k3 = 0; k3 < 16; k3++)
                 {
                     byte byte0 = 4;
-                    if(world.func_40471_p(i + j2, j + byte0, k + k3))
+                    if(world.func_40210_p(i + j2, j + byte0, k + k3))
                     {
                         world.setBlock(i + j2, j + byte0, k + k3, Block.ice.blockID);
                     }

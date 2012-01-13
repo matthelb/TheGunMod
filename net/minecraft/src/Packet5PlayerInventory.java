@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
+//            Packet, ItemStack, NetHandler
 
 public class Packet5PlayerInventory extends Packet
 {
@@ -19,6 +19,21 @@ public class Packet5PlayerInventory extends Packet
 
     public Packet5PlayerInventory()
     {
+    }
+
+    public Packet5PlayerInventory(int i, int j, ItemStack itemstack)
+    {
+        entityID = i;
+        slot = j;
+        if(itemstack == null)
+        {
+            itemID = -1;
+            itemDamage = 0;
+        } else
+        {
+            itemID = itemstack.itemID;
+            itemDamage = itemstack.getItemDamage();
+        }
     }
 
     public void readPacketData(DataInputStream datainputstream)

@@ -7,24 +7,23 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Entity, AxisAlignedBB, MathHelper, World, 
-//            EntityItem, ItemStack, Item, NBTTagCompound, 
-//            EntityPlayer
+//            Entity, MathHelper, World, EntityItem, 
+//            ItemStack, Item, NBTTagCompound, EntityPlayer
 
 public class EntityEnderEye extends Entity
 {
 
-    public int field_40096_a;
-    private double field_40094_b;
-    private double field_40095_c;
-    private double field_40091_d;
+    public int field_40062_a;
+    private double field_40060_b;
+    private double field_40061_c;
+    private double field_40058_d;
     private int despawnTimer;
     private boolean shatterOrDrop;
 
     public EntityEnderEye(World world)
     {
         super(world);
-        field_40096_a = 0;
+        field_40062_a = 0;
         setSize(0.25F, 0.25F);
     }
 
@@ -32,54 +31,34 @@ public class EntityEnderEye extends Entity
     {
     }
 
-    public boolean isInRangeToRenderDist(double d)
-    {
-        double d1 = boundingBox.getAverageEdgeLength() * 4D;
-        d1 *= 64D;
-        return d < d1 * d1;
-    }
-
     public EntityEnderEye(World world, double d, double d1, double d2)
     {
         super(world);
-        field_40096_a = 0;
+        field_40062_a = 0;
         despawnTimer = 0;
         setSize(0.25F, 0.25F);
         setPosition(d, d1, d2);
         yOffset = 0.0F;
     }
 
-    public void func_40090_a(double d, int i, double d1)
+    public void func_40056_a(double d, int i, double d1)
     {
         double d2 = d - posX;
         double d3 = d1 - posZ;
         float f = MathHelper.sqrt_double(d2 * d2 + d3 * d3);
         if(f > 12F)
         {
-            field_40094_b = posX + (d2 / (double)f) * 12D;
-            field_40091_d = posZ + (d3 / (double)f) * 12D;
-            field_40095_c = posY + 8D;
+            field_40060_b = posX + (d2 / (double)f) * 12D;
+            field_40058_d = posZ + (d3 / (double)f) * 12D;
+            field_40061_c = posY + 8D;
         } else
         {
-            field_40094_b = d;
-            field_40095_c = i;
-            field_40091_d = d1;
+            field_40060_b = d;
+            field_40061_c = i;
+            field_40058_d = d1;
         }
         despawnTimer = 0;
         shatterOrDrop = rand.nextInt(5) > 0;
-    }
-
-    public void setVelocity(double d, double d1, double d2)
-    {
-        motionX = d;
-        motionY = d1;
-        motionZ = d2;
-        if(prevRotationPitch == 0.0F && prevRotationYaw == 0.0F)
-        {
-            float f = MathHelper.sqrt_double(d * d + d2 * d2);
-            prevRotationYaw = rotationYaw = (float)((Math.atan2(d, d2) * 180D) / 3.1415927410125732D);
-            prevRotationPitch = rotationPitch = (float)((Math.atan2(d1, f) * 180D) / 3.1415927410125732D);
-        }
     }
 
     public void onUpdate()
@@ -99,10 +78,10 @@ public class EntityEnderEye extends Entity
         for(; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
         rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2F;
         rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2F;
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
-            double d = field_40094_b - posX;
-            double d1 = field_40091_d - posZ;
+            double d = field_40060_b - posX;
+            double d1 = field_40058_d - posZ;
             float f2 = (float)Math.sqrt(d * d + d1 * d1);
             float f3 = (float)Math.atan2(d1, d);
             double d2 = (double)f + (double)(f2 - f) * 0.0025000000000000001D;
@@ -113,7 +92,7 @@ public class EntityEnderEye extends Entity
             }
             motionX = Math.cos(f3) * d2;
             motionZ = Math.sin(f3) * d2;
-            if(posY < field_40095_c)
+            if(posY < field_40061_c)
             {
                 motionY = motionY + (1.0D - motionY) * 0.014999999664723873D;
             } else
@@ -133,11 +112,11 @@ public class EntityEnderEye extends Entity
         {
             worldObj.spawnParticle("portal", ((posX - motionX * (double)f1) + rand.nextDouble() * 0.59999999999999998D) - 0.29999999999999999D, posY - motionY * (double)f1 - 0.5D, ((posZ - motionZ * (double)f1) + rand.nextDouble() * 0.59999999999999998D) - 0.29999999999999999D, motionX, motionY, motionZ);
         }
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             setPosition(posX, posY, posZ);
             despawnTimer++;
-            if(despawnTimer > 80 && !worldObj.multiplayerWorld)
+            if(despawnTimer > 80 && !worldObj.singleplayerWorld)
             {
                 setEntityDead();
                 if(shatterOrDrop)
@@ -163,18 +142,8 @@ public class EntityEnderEye extends Entity
     {
     }
 
-    public float getShadowSize()
-    {
-        return 0.0F;
-    }
-
     public float getEntityBrightness(float f)
     {
         return 1.0F;
-    }
-
-    public int getEntityBrightnessForRender(float f)
-    {
-        return 0xf000f0;
     }
 }

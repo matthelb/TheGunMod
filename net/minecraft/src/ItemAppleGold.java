@@ -6,7 +6,7 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            ItemFood, EnumRarity, ItemStack
+//            ItemFood
 
 public class ItemAppleGold extends ItemFood
 {
@@ -14,15 +14,5 @@ public class ItemAppleGold extends ItemFood
     public ItemAppleGold(int i, int j, float f, boolean flag)
     {
         super(i, j, f, flag);
-    }
-
-    public boolean hasEffect(ItemStack itemstack)
-    {
-        return true;
-    }
-
-    public EnumRarity getRarity(ItemStack itemstack)
-    {
-        return EnumRarity.epic;
     }
 }

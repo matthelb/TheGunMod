@@ -18,6 +18,11 @@ public class Packet4UpdateTime extends Packet
     {
     }
 
+    public Packet4UpdateTime(long l)
+    {
+        time = l;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

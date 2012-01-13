@@ -21,7 +21,7 @@ public enum EnumAction
 */
     private static final EnumAction allActions[]; /* synthetic field */
 /*
-    public static final EnumAction[] values()
+    public static EnumAction[] values()
     {
         return (EnumAction[])allActions.clone();
     }

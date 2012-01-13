@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Item, MathHelper, ItemStack, EntityPlayer, 
+//            Item, ItemStack, MathHelper, EntityPlayer, 
 //            World, Block, BlockSapling, BlockFlower, 
 //            BlockMushroom, BlockStem, BlockCrops, BlockGrass, 
 //            BlockTallGrass, EntitySheep, BlockCloth, EntityLiving
@@ -31,15 +31,9 @@ public class ItemDye extends Item
         setMaxDamage(0);
     }
 
-    public int getIconFromDamage(int i)
-    {
-        int j = MathHelper.clamp_int(i, 0, 15);
-        return iconIndex + (j % 8) * 16 + j / 8;
-    }
-
     public String getItemNameIS(ItemStack itemstack)
     {
-        int i = MathHelper.clamp_int(itemstack.getItemDamage(), 0, 15);
+        int i = MathHelper.func_41051_a(itemstack.getItemDamage(), 0, 15);
         return (new StringBuilder()).append(super.getItemName()).append(".").append(dyeColorNames[i]).toString();
     }
 
@@ -54,7 +48,7 @@ public class ItemDye extends Item
             int i1 = world.getBlockId(i, j, k);
             if(i1 == Block.sapling.blockID)
             {
-                if(!world.multiplayerWorld)
+                if(!world.singleplayerWorld)
                 {
                     ((BlockSapling)Block.sapling).growTree(world, i, j, k, world.rand);
                     itemstack.stackSize--;
@@ -63,7 +57,7 @@ public class ItemDye extends Item
             }
             if(i1 == Block.mushroomBrown.blockID || i1 == Block.mushroomRed.blockID)
             {
-                if(!world.multiplayerWorld && ((BlockMushroom)Block.blocksList[i1]).fertilizeMushroom(world, i, j, k, world.rand))
+                if(!world.singleplayerWorld && ((BlockMushroom)Block.blocksList[i1]).fertilizeMushroom(world, i, j, k, world.rand))
                 {
                     itemstack.stackSize--;
                 }
@@ -71,16 +65,16 @@ public class ItemDye extends Item
             }
             if(i1 == Block.melonStem.blockID || i1 == Block.pumpkinStem.blockID)
             {
-                if(!world.multiplayerWorld)
+                if(!world.singleplayerWorld)
                 {
-                    ((BlockStem)Block.blocksList[i1]).fertilizeStem(world, i, j, k);
+                    ((BlockStem)Block.blocksList[i1]).func_35066_f_(world, i, j, k);
                     itemstack.stackSize--;
                 }
                 return true;
             }
             if(i1 == Block.crops.blockID)
             {
-                if(!world.multiplayerWorld)
+                if(!world.singleplayerWorld)
                 {
                     ((BlockCrops)Block.crops).fertilize(world, i, j, k);
                     itemstack.stackSize--;
@@ -89,7 +83,7 @@ public class ItemDye extends Item
             }
             if(i1 == Block.grass.blockID)
             {
-                if(!world.multiplayerWorld)
+                if(!world.singleplayerWorld)
                 {
                     itemstack.stackSize--;
 label0:
@@ -134,7 +128,7 @@ label0:
         return false;
     }
 
-    public void useItemOnEntity(ItemStack itemstack, EntityLiving entityliving)
+    public void saddleEntity(ItemStack itemstack, EntityLiving entityliving)
     {
         if(entityliving instanceof EntitySheep)
         {

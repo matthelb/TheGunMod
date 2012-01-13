@@ -25,7 +25,7 @@ public class StructureMineshaftPieces
         int j1 = random.nextInt(100);
         if(j1 >= 80)
         {
-            StructureBoundingBox structureboundingbox = ComponentMineshaftCross.func_35071_a(list, random, i, j, k, l);
+            StructureBoundingBox structureboundingbox = ComponentMineshaftCross.func_35362_a(list, random, i, j, k, l);
             if(structureboundingbox != null)
             {
                 return new ComponentMineshaftCross(i1, random, structureboundingbox, l);
@@ -33,14 +33,14 @@ public class StructureMineshaftPieces
         } else
         if(j1 >= 70)
         {
-            StructureBoundingBox structureboundingbox1 = ComponentMineshaftStairs.func_35027_a(list, random, i, j, k, l);
+            StructureBoundingBox structureboundingbox1 = ComponentMineshaftStairs.func_35365_a(list, random, i, j, k, l);
             if(structureboundingbox1 != null)
             {
                 return new ComponentMineshaftStairs(i1, random, structureboundingbox1, l);
             }
         } else
         {
-            StructureBoundingBox structureboundingbox2 = ComponentMineshaftCorridor.func_35066_a(list, random, i, j, k, l);
+            StructureBoundingBox structureboundingbox2 = ComponentMineshaftCorridor.func_35357_a(list, random, i, j, k, l);
             if(structureboundingbox2 != null)
             {
                 return new ComponentMineshaftCorridor(i1, random, structureboundingbox2, l);
@@ -55,7 +55,7 @@ public class StructureMineshaftPieces
         {
             return null;
         }
-        if(Math.abs(i - structurecomponent.getBoundingBox().minX) > 80 || Math.abs(k - structurecomponent.getBoundingBox().minZ) > 80)
+        if(Math.abs(i - structurecomponent.getStructureBoundingBox().minX) > 80 || Math.abs(k - structurecomponent.getStructureBoundingBox().minZ) > 80)
         {
             return null;
         }

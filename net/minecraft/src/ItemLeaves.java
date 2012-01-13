@@ -6,7 +6,7 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            ItemBlock, Block, BlockLeaves, ColorizerFoliage
+//            ItemBlock
 
 public class ItemLeaves extends ItemBlock
 {
@@ -18,28 +18,8 @@ public class ItemLeaves extends ItemBlock
         setHasSubtypes(true);
     }
 
-    public int getPlacedBlockMetadata(int i)
+    public int getMetadata(int i)
     {
         return i | 4;
-    }
-
-    public int getIconFromDamage(int i)
-    {
-        return Block.leaves.getBlockTextureFromSideAndMetadata(0, i);
-    }
-
-    public int getColorFromDamage(int i)
-    {
-        if((i & 1) == 1)
-        {
-            return ColorizerFoliage.getFoliageColorPine();
-        }
-        if((i & 2) == 2)
-        {
-            return ColorizerFoliage.getFoliageColorBirch();
-        } else
-        {
-            return ColorizerFoliage.getFoliageColorBasic();
-        }
     }
 }

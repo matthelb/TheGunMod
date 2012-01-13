@@ -214,7 +214,7 @@ public class EnchantmentHelper
         Map map = mapEnchantmentData(l, itemstack);
         if(map != null && !map.isEmpty())
         {
-            EnchantmentData enchantmentdata = (EnchantmentData)WeightedRandom.func_35733_a(random, map.values());
+            EnchantmentData enchantmentdata = (EnchantmentData)WeightedRandom.func_35689_a(random, map.values());
             if(enchantmentdata != null)
             {
                 arraylist = new ArrayList();
@@ -252,7 +252,7 @@ public class EnchantmentHelper
                     } while(true);
                     if(!map.isEmpty())
                     {
-                        EnchantmentData enchantmentdata1 = (EnchantmentData)WeightedRandom.func_35733_a(random, map.values());
+                        EnchantmentData enchantmentdata1 = (EnchantmentData)WeightedRandom.func_35689_a(random, map.values());
                         arraylist.add(enchantmentdata1);
                     }
                 }

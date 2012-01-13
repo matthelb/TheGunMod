@@ -6,7 +6,8 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            Item
+//            Item, ItemStack, World, EntityPlayer, 
+//            Packet
 
 public class ItemMapBase extends Item
 {
@@ -14,5 +15,15 @@ public class ItemMapBase extends Item
     protected ItemMapBase(int i)
     {
         super(i);
+    }
+
+    public boolean func_28019_b()
+    {
+        return true;
+    }
+
+    public Packet getUpdatePacket(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    {
+        return null;
     }
 }

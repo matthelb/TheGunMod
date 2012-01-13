@@ -16,7 +16,7 @@ public enum EnumSkyBlock
     public final int defaultLightValue;
     private static final EnumSkyBlock allSkyBlocks[]; /* synthetic field */
 /*
-    public static final EnumSkyBlock[] values()
+    public static EnumSkyBlock[] values()
     {
         return (EnumSkyBlock[])allSkyBlocks.clone();
     }

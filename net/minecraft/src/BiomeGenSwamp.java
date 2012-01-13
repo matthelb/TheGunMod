@@ -7,8 +7,7 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            BiomeGenBase, BiomeDecorator, IBlockAccess, WorldChunkManager, 
-//            ColorizerGrass, ColorizerFoliage, WorldGenerator
+//            BiomeGenBase, BiomeDecorator, WorldGenerator
 
 public class BiomeGenSwamp extends BiomeGenBase
 {
@@ -29,19 +28,5 @@ public class BiomeGenSwamp extends BiomeGenBase
     public WorldGenerator getRandomWorldGenForTrees(Random random)
     {
         return worldGenSwamp;
-    }
-
-    public int getGrassColorAtCoords(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        double d = iblockaccess.getWorldChunkManager().getTemperature(i, j, k);
-        double d1 = iblockaccess.getWorldChunkManager().getRainfall(i, k);
-        return ((ColorizerGrass.getGrassColor(d, d1) & 0xfefefe) + 0x4e0e4e) / 2;
-    }
-
-    public int getFoliageColorAtCoords(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        double d = iblockaccess.getWorldChunkManager().getTemperature(i, j, k);
-        double d1 = iblockaccess.getWorldChunkManager().getRainfall(i, k);
-        return ((ColorizerFoliage.getFoliageColor(d, d1) & 0xfefefe) + 0x4e0e4e) / 2;
     }
 }

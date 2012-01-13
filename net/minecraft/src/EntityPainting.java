@@ -43,8 +43,8 @@ public class EntityPainting extends Entity
         {
             EnumArt enumart = aenumart[j1];
             art = enumart;
-            func_412_b(l);
-            if(canStay())
+            func_179_a(l);
+            if(onValidSurface())
             {
                 arraylist.add(enumart);
             }
@@ -54,40 +54,14 @@ public class EntityPainting extends Entity
         {
             art = (EnumArt)arraylist.get(rand.nextInt(arraylist.size()));
         }
-        func_412_b(l);
-    }
-
-    public EntityPainting(World world, int i, int j, int k, int l, String s)
-    {
-        this(world);
-        xPosition = i;
-        yPosition = j;
-        zPosition = k;
-        EnumArt aenumart[] = EnumArt.values();
-        int i1 = aenumart.length;
-        int j1 = 0;
-        do
-        {
-            if(j1 >= i1)
-            {
-                break;
-            }
-            EnumArt enumart = aenumart[j1];
-            if(enumart.title.equals(s))
-            {
-                art = enumart;
-                break;
-            }
-            j1++;
-        } while(true);
-        func_412_b(l);
+        func_179_a(l);
     }
 
     protected void entityInit()
     {
     }
 
-    public void func_412_b(int i)
+    public void func_179_a(int i)
     {
         direction = i;
         prevRotationYaw = rotationYaw = i * 90;
@@ -126,27 +100,27 @@ public class EntityPainting extends Entity
         }
         if(i == 0)
         {
-            f3 -= func_411_c(art.sizeX);
+            f3 -= func_180_c(art.sizeX);
         }
         if(i == 1)
         {
-            f5 += func_411_c(art.sizeX);
+            f5 += func_180_c(art.sizeX);
         }
         if(i == 2)
         {
-            f3 += func_411_c(art.sizeX);
+            f3 += func_180_c(art.sizeX);
         }
         if(i == 3)
         {
-            f5 -= func_411_c(art.sizeX);
+            f5 -= func_180_c(art.sizeX);
         }
-        f4 += func_411_c(art.sizeY);
+        f4 += func_180_c(art.sizeY);
         setPosition(f3, f4, f5);
         float f7 = -0.00625F;
         boundingBox.setBounds(f3 - f - f7, f4 - f1 - f7, f5 - f2 - f7, f3 + f + f7, f4 + f1 + f7, f5 + f2 + f7);
     }
 
-    private float func_411_c(int i)
+    private float func_180_c(int i)
     {
         if(i == 32)
         {
@@ -157,10 +131,10 @@ public class EntityPainting extends Entity
 
     public void onUpdate()
     {
-        if(tickCounter1++ == 100 && !worldObj.multiplayerWorld)
+        if(tickCounter1++ == 100 && !worldObj.singleplayerWorld)
         {
             tickCounter1 = 0;
-            if(!canStay())
+            if(!onValidSurface())
             {
                 setEntityDead();
                 worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
@@ -168,7 +142,7 @@ public class EntityPainting extends Entity
         }
     }
 
-    public boolean canStay()
+    public boolean onValidSurface()
     {
         if(worldObj.getCollidingBoundingBoxes(this, boundingBox).size() > 0)
         {
@@ -235,7 +209,7 @@ public class EntityPainting extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if(!isDead && !worldObj.multiplayerWorld)
+        if(!isDead && !worldObj.singleplayerWorld)
         {
             setEntityDead();
             setBeenAttacked();
@@ -275,12 +249,12 @@ public class EntityPainting extends Entity
         {
             art = EnumArt.Kebab;
         }
-        func_412_b(direction);
+        func_179_a(direction);
     }
 
     public void moveEntity(double d, double d1, double d2)
     {
-        if(!worldObj.multiplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if(!worldObj.singleplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
@@ -289,7 +263,7 @@ public class EntityPainting extends Entity
 
     public void addVelocity(double d, double d1, double d2)
     {
-        if(!worldObj.multiplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if(!worldObj.singleplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));

@@ -6,7 +6,7 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            Block, IBlockAccess, Material
+//            Block, Material
 
 public class BlockLeavesBase extends Block
 {
@@ -22,17 +22,5 @@ public class BlockLeavesBase extends Block
     public boolean isOpaqueCube()
     {
         return false;
-    }
-
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        int i1 = iblockaccess.getBlockId(i, j, k);
-        if(!graphicsLevel && i1 == blockID)
-        {
-            return false;
-        } else
-        {
-            return super.shouldSideBeRendered(iblockaccess, i, j, k, l);
-        }
     }
 }

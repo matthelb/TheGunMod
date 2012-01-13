@@ -15,8 +15,8 @@ public class ComponentVillageWoodHut extends ComponentVillage
 {
 
     private int averageGroundLevel;
-    private final boolean field_35092_b;
-    private final int field_35093_c;
+    private final boolean field_35394_b;
+    private final int field_35395_c;
 
     public ComponentVillageWoodHut(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -24,18 +24,18 @@ public class ComponentVillageWoodHut extends ComponentVillage
         averageGroundLevel = -1;
         coordBaseMode = j;
         boundingBox = structureboundingbox;
-        field_35092_b = random.nextBoolean();
-        field_35093_c = random.nextInt(3);
+        field_35394_b = random.nextBoolean();
+        field_35395_c = random.nextInt(3);
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
     }
 
-    public static ComponentVillageWoodHut func_35091_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentVillageWoodHut func_35393_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 4, 6, 5, l);
-        if(!canVillageGoDeeper(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -58,7 +58,7 @@ public class ComponentVillageWoodHut extends ComponentVillage
         fillWithBlocks(world, structureboundingbox, 1, 1, 1, 3, 5, 4, 0, 0, false);
         fillWithBlocks(world, structureboundingbox, 0, 0, 0, 3, 0, 4, Block.cobblestone.blockID, Block.cobblestone.blockID, false);
         fillWithBlocks(world, structureboundingbox, 1, 0, 1, 2, 0, 3, Block.dirt.blockID, Block.dirt.blockID, false);
-        if(field_35092_b)
+        if(field_35394_b)
         {
             fillWithBlocks(world, structureboundingbox, 1, 4, 1, 2, 4, 3, Block.wood.blockID, Block.wood.blockID, false);
         } else
@@ -85,10 +85,10 @@ public class ComponentVillageWoodHut extends ComponentVillage
         fillWithBlocks(world, structureboundingbox, 1, 1, 4, 2, 3, 4, Block.planks.blockID, Block.planks.blockID, false);
         placeBlockAtCurrentPosition(world, Block.thinGlass.blockID, 0, 0, 2, 2, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.thinGlass.blockID, 0, 3, 2, 2, structureboundingbox);
-        if(field_35093_c > 0)
+        if(field_35395_c > 0)
         {
-            placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, field_35093_c, 1, 3, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, field_35093_c, 2, 3, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, field_35395_c, 1, 3, structureboundingbox);
+            placeBlockAtCurrentPosition(world, Block.pressurePlatePlanks.blockID, 0, field_35395_c, 2, 3, structureboundingbox);
         }
         placeBlockAtCurrentPosition(world, 0, 0, 1, 1, 0, structureboundingbox);
         placeBlockAtCurrentPosition(world, 0, 0, 1, 2, 0, structureboundingbox);

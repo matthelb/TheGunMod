@@ -30,8 +30,8 @@ public class ItemHoe extends Item
         if(l != 0 && j1 == 0 && i1 == Block.grass.blockID || i1 == Block.dirt.blockID)
         {
             Block block = Block.tilledField;
-            world.playSoundEffect((float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, block.stepSound.stepSoundDir2(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
-            if(world.multiplayerWorld)
+            world.playSoundEffect((float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, block.stepSound.stepSoundDir(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+            if(world.singleplayerWorld)
             {
                 return true;
             } else
@@ -44,10 +44,5 @@ public class ItemHoe extends Item
         {
             return false;
         }
-    }
-
-    public boolean isFull3D()
-    {
-        return true;
     }
 }

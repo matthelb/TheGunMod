@@ -21,6 +21,14 @@ public class Packet131MapData extends Packet
         isChunkDataPacket = true;
     }
 
+    public Packet131MapData(short word0, short word1, byte abyte0[])
+    {
+        isChunkDataPacket = true;
+        itemID = word0;
+        uniqueID = word1;
+        itemData = abyte0;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {
@@ -41,7 +49,7 @@ public class Packet131MapData extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.processItemData(this);
+        nethandler.handleMapData(this);
     }
 
     public int getPacketSize()

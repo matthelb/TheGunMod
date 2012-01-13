@@ -14,12 +14,12 @@ public class WorldGenSand extends WorldGenerator
 {
 
     private int sandID;
-    private int field_35263_b;
+    private int field_35290_b;
 
     public WorldGenSand(int i, int j)
     {
         sandID = j;
-        field_35263_b = i;
+        field_35290_b = i;
     }
 
     public boolean generate(World world, Random random, int i, int j, int k)
@@ -28,7 +28,7 @@ public class WorldGenSand extends WorldGenerator
         {
             return false;
         }
-        int l = random.nextInt(field_35263_b - 2) + 2;
+        int l = random.nextInt(field_35290_b - 2) + 2;
         byte byte0 = 2;
         for(int i1 = i - l; i1 <= i + l; i1++)
         {

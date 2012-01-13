@@ -64,7 +64,7 @@ public class ContainerWorkbench extends Container
     public void onCraftGuiClosed(EntityPlayer entityplayer)
     {
         super.onCraftGuiClosed(entityplayer);
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
             return;
         }

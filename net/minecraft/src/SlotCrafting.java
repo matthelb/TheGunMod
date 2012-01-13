@@ -70,17 +70,18 @@ public class SlotCrafting extends Slot
         {
             thePlayer.addStat(AchievementList.bookcase, 1);
         }
-        ModLoader.TakenFromCrafting(thePlayer, itemstack, craftMatrix);
+        ModLoader.TakenFromCrafting(thePlayer, itemstack);
         for(int i = 0; i < craftMatrix.getSizeInventory(); i++)
         {
             ItemStack itemstack1 = craftMatrix.getStackInSlot(i);
-            if(itemstack1 != null)
+            if(itemstack1 == null)
             {
-                craftMatrix.decrStackSize(i, 1);
-                if(itemstack1.getItem().hasContainerItem())
-                {
-                    craftMatrix.setInventorySlotContents(i, new ItemStack(itemstack1.getItem().getContainerItem()));
-                }
+                continue;
+            }
+            craftMatrix.decrStackSize(i, 1);
+            if(itemstack1.getItem().hasContainerItem())
+            {
+                craftMatrix.setInventorySlotContents(i, new ItemStack(itemstack1.getItem().getContainerItem()));
             }
         }
 

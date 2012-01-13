@@ -19,7 +19,7 @@ public class BlockGlowStone extends Block
 
     public int quantityDroppedWithBonus(int i, Random random)
     {
-        return MathHelper.clamp_int(quantityDropped(random) + random.nextInt(i + 1), 1, 4);
+        return MathHelper.func_41051_a(quantityDropped(random) + random.nextInt(i + 1), 1, 4);
     }
 
     public int quantityDropped(Random random)

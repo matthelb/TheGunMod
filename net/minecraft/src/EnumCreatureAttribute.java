@@ -17,7 +17,7 @@ public enum EnumCreatureAttribute
 */
     private static final EnumCreatureAttribute allCreatureAttributes[]; /* synthetic field */
 /*
-    public static final EnumCreatureAttribute[] values()
+    public static EnumCreatureAttribute[] values()
     {
         return (EnumCreatureAttribute[])allCreatureAttributes.clone();
     }

@@ -16,7 +16,7 @@ public class InventoryBasic
     private String inventoryTitle;
     private int slotsCount;
     private ItemStack inventoryContents[];
-    private List field_20073_d;
+    private List field_40084_d;
 
     public InventoryBasic(String s, int i)
     {
@@ -81,11 +81,11 @@ public class InventoryBasic
 
     public void onInventoryChanged()
     {
-        if(field_20073_d != null)
+        if(field_40084_d != null)
         {
-            for(int i = 0; i < field_20073_d.size(); i++)
+            for(int i = 0; i < field_40084_d.size(); i++)
             {
-                ((IInvBasic)field_20073_d.get(i)).func_20134_a(this);
+                ((IInvBasic)field_40084_d.get(i)).func_40581_a(this);
             }
 
         }

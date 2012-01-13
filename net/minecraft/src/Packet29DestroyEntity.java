@@ -18,6 +18,11 @@ public class Packet29DestroyEntity extends Packet
     {
     }
 
+    public Packet29DestroyEntity(int i)
+    {
+        entityId = i;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

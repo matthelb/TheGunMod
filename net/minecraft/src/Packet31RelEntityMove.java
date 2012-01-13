@@ -16,6 +16,14 @@ public class Packet31RelEntityMove extends Packet30Entity
     {
     }
 
+    public Packet31RelEntityMove(int i, byte byte0, byte byte1, byte byte2)
+    {
+        super(i);
+        xPosition = byte0;
+        yPosition = byte1;
+        zPosition = byte2;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

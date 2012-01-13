@@ -65,11 +65,6 @@ public class EnchantmentDamage extends Enchantment
         }
     }
 
-    public String getName()
-    {
-        return (new StringBuilder()).append("enchantment.damage.").append(protectionName[damageType]).toString();
-    }
-
     public boolean canApplyTogether(Enchantment enchantment)
     {
         return !(enchantment instanceof EnchantmentDamage);

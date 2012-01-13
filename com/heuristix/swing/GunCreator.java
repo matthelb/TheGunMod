@@ -30,21 +30,20 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9.2";
+    public static final String VERSION = "0.9.1";
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
     private static final NumberFormatter DECIMAL_FORMATTER = new NumberFormatter(new DecimalFormat("#.#"));
     private static final String NON_ALPHA_NUMERICAL_REGEX = "[^a-z^A-Z^0-9]";
+    private static final int PROPERTIES = 2;
 
-    private static final int PROPERTIES = 3;
-
-    public static final List<Pair<String, String>> OBFUSCATED_CLASS_NAMES = new LinkedList<Pair<String, String>>();
+    public static final List<com.heuristix.util.Pair<String, String>> OBFUSCATED_CLASS_NAMES = new LinkedList<com.heuristix.util.Pair<String, String>>();
 
     static {
         //add additional Pairs as obfuscations increase
-        OBFUSCATED_CLASS_NAMES.add(new Pair("ry", "nq"));
-        OBFUSCATED_CLASS_NAMES.add(new Pair("rv", "wd"));
+        OBFUSCATED_CLASS_NAMES.add(new com.heuristix.util.Pair("ry", "nq"));
+        OBFUSCATED_CLASS_NAMES.add(new com.heuristix.util.Pair("rv", "wd"));
     }
 
     private DisplayableImageButton gunImageButton, bulletImageButton;
@@ -286,7 +285,7 @@ public class GunCreator extends JFrame {
         pack();
     }
 
-    /*private void read(CustomGun gun) {
+    /*private void load(CustomGun gun) {
         if (gun != null) {
             nameField.setText(gun.name);
             try {
@@ -317,29 +316,40 @@ public class GunCreator extends JFrame {
         }
     }*/
 
-    public void load(Gun gun) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, IOException, ClassNotFoundException {
+    private void load(Gun gun) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, IOException {
         if (gun != null) {
             List<Pair<String, byte[]>> gunClasses = gun.getClasses();
             List<byte[]> resources = gun.getResources();
 
-
-            String projectileType = ClassDescriptor.getClassDescription(gunClasses.get(0).getSecond()).getSuperName();
+            Class entityProjectileClass = Util.defineClass(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst());
+            if (entityProjectileClass == null) {
+                for (int i = 0; entityProjectileClass == null; i++) {
+                    entityProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(0).getFirst() + i);
+                }
+            }
+            Class projectileType = entityProjectileClass.getSuperclass();
+            /*if(projectileType.equals(com.heuristix.EntityBulletBase.class))
+                projectileType = com.heuristix.guns.EntityBulletBase.class;*/
             HashMap<String, Method> methods = new HashMap<String, Method>();
             for (int i = 0; i < OBFUSCATED_CLASS_NAMES.size(); i++) {
                 Pair<String, String> obfuscatedNames = OBFUSCATED_CLASS_NAMES.get(i);
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
-                        new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
+                        new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
-                        new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+                        new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
             }
             byte[] entityProjectileClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
-            Class entityProjectileClass = null;
-            for (int i = 0; entityProjectileClass == null; i++) {
-                entityProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(entityProjectileClassBytes, gunClasses.get(0).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(0).getFirst() + i);
+            entityProjectileClass = Util.defineClass(entityProjectileClassBytes, gunClasses.get(0).getFirst());
+            if (entityProjectileClass == null) {
+                for (int i = 0; entityProjectileClass == null; i++) {
+                    entityProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(entityProjectileClassBytes, gunClasses.get(0).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(0).getFirst() + i);
+                }
             }
-            Class itemProjectileClass = null;
-            for (int i = 0; itemProjectileClass == null; i++) {
-                itemProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(1).getFirst() + i);
+            Class itemProjectileClass = Util.defineClass(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst());
+            if (itemProjectileClass == null) {
+                for (int i = 0; itemProjectileClass == null; i++) {
+                    itemProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(1).getFirst() + i);
+                }
             }
             Constructor itemProjectileConstructor = itemProjectileClass.getDeclaredConstructor(int.class);
             itemProjectileConstructor.setAccessible(true);
@@ -347,16 +357,17 @@ public class GunCreator extends JFrame {
             Constructor entityBulletConstructor = entityProjectileClass.getDeclaredConstructor(World.class);
             entityBulletConstructor.setAccessible(true);
             EntityProjectile entityProjectile = (EntityProjectile) entityBulletConstructor.newInstance(new Object[]{null});
-            Class itemGunClass = null;
-            for (int i = 0; itemGunClass == null; i++) {
-                itemGunClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(2).getFirst() + i);
+            Class itemGunClass = Util.defineClass(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst());
+            if (itemGunClass == null) {
+                for (int i = 0; itemGunClass == null; i++) {
+                    itemGunClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(2).getFirst() + i);
+                }
             }
             Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
             itemGunConstructor.setAccessible(true);
             ItemGun itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
 
-            this.projectileType.setSelectedItem(ProjectileType.forClass(Class.forName(projectileType.replace('/','.'))));
-
+            this.projectileType.setSelectedItem(ProjectileType.forClass(projectileType));
             nameField.setText(itemGun.getName());
             try {
                 fireMode.setSelectedItem(FireMode.values()[(itemGun.getFireMode())]);
@@ -392,10 +403,92 @@ public class GunCreator extends JFrame {
         }
     }
 
+    /*private void write(OutputStream out) throws IOException {
+        ByteVector outBytes = new ByteVector();
+        outBytes.putInt(CustomGun.MAGIC);
+        byte[] nameBytes = Utilities.getStringBytes(nameField.getText());
+        outBytes.putByteArray(nameBytes, 0, nameBytes.length);
+        outBytes.putInt(Integer.parseInt(damageField.getText()));
+        outBytes.putInt(Float.floatToIntBits(Float.parseFloat(rangeField.getText())));
+        HashMap<String, String> bulletOverrideMethods = methodOverrides.get(EntityBulletBase.class);
+        if(bulletOverrideMethods == null)
+            bulletOverrideMethods = new HashMap<String, String>();
+        bulletOverrideMethods.remove(null);
+        outBytes.putShort(bulletOverrideMethods.size());
+        for(Map.Entry<String, String> entry : bulletOverrideMethods.entrySet()) {
+            byte[] bytes = Utilities.parseByteArray(entry.getValue());
+            if(bytes == null)
+                bytes = new byte[0];
+            outBytes.putInt(bytes.length);
+            byte[] stringBytes = Utilities.getStringBytes(entry.getKey());
+            outBytes.putByteArray(stringBytes, 0, stringBytes.length);
+            outBytes.putByteArray(bytes, 0, bytes.length);
+        }
+
+        outBytes.putInt(Integer.parseInt(bulletIdField.getText()));
+        ByteArrayOutputStream imageOut = new ByteArrayOutputStream();
+        ImageIO.write(bulletImageButton.getImage(), "png", imageOut);
+        byte[] imageBytes = imageOut.toByteArray();
+        outBytes.putInt(imageBytes.length);
+        outBytes.putByteArray(imageBytes, 0, imageBytes.length);
+        HashMap<String, String> itemBulletOverrideMethods = methodOverrides.get(ItemProjectileBase.class);
+        if(itemBulletOverrideMethods == null)
+            itemBulletOverrideMethods = new HashMap<String, String>();
+        itemBulletOverrideMethods.remove(null);
+        outBytes.putShort(itemBulletOverrideMethods.size());
+        for(Map.Entry<String, String> entry : itemBulletOverrideMethods.entrySet()) {
+            byte[] bytes = Utilities.parseByteArray(entry.getValue());
+            outBytes.putInt(bytes.length);
+            byte[] stringBytes = Utilities.getStringBytes(entry.getKey());
+            outBytes.putByteArray(stringBytes, 0, stringBytes.length);
+            outBytes.putByteArray(bytes, 0, bytes.length);
+        }
+
+        outBytes.putInt(Integer.parseInt(gunIdField.getText()));
+        imageOut.reset();
+        ImageIO.write(gunImageButton.getImage(), "png", imageOut);
+        imageBytes = imageOut.toByteArray();
+        imageOut.close();
+        outBytes.putInt(imageBytes.length);
+        outBytes.putByteArray(imageBytes, 0, imageBytes.length);
+        byte[] shootSoundBytes = shootSoundButton.getBytes();
+        outBytes.putInt(shootSoundBytes.length);
+        outBytes.putByteArray(shootSoundBytes, 0, shootSoundBytes.length);
+        byte[] shootSoundNameBytes = Utilities.getStringBytes(Utilities.numbersToText(shootSoundButton.getText()));
+        outBytes.putByteArray(shootSoundNameBytes, 0, shootSoundNameBytes.length);
+        outBytes.putInt(Integer.parseInt(shotsPerMinuteField.getText()));
+        outBytes.putInt(((FireMode) fireMode.getSelectedItem()).ordinal());
+        outBytes.putInt(((Scope) scope.getSelectedItem()).ordinal());
+        outBytes.putInt(Float.floatToIntBits(Float.parseFloat(zoomField.getText())));
+        outBytes.putInt(Integer.parseInt(clipSizeField.getText()));
+        outBytes.putInt(Integer.parseInt(reloadField.getText()));
+        outBytes.putInt(Integer.parseInt(recoilXField.getText()));
+        outBytes.putInt(Integer.parseInt(recoilYField.getText()));
+        HashMap<String, String> itemGunOverrideMethods = methodOverrides.get(ItemGunBase.class);
+        if(itemGunOverrideMethods == null)
+            itemGunOverrideMethods = new HashMap<String, String>();
+        itemGunOverrideMethods.remove(null);
+        outBytes.putShort(itemGunOverrideMethods.size());
+        for(Map.Entry<String, String> entry : itemGunOverrideMethods.entrySet()) {
+            byte[] bytes = Utilities.parseByteArray(entry.getValue());
+            outBytes.putInt(bytes.length);
+            byte[] stringBytes = Utilities.getStringBytes(entry.getKey());
+            outBytes.putByteArray(stringBytes, 0, stringBytes.length);
+            outBytes.putByteArray(bytes, 0, bytes.length);
+        }
+        outBytes.putInt(Integer.parseInt(roundsPerMinuteField.getText()));
+        outBytes.putInt(Float.floatToIntBits(Float.parseFloat(bulletSpreadField.getText())));
+        outBytes.putInt(Integer.parseInt(roundsPerShotField.getText()));
+        try {
+            out.write(outBytes.toByteArray());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }*/
     public static final int[] SUPER_WORLD = {Opcodes.ALOAD_0, Opcodes.ALOAD_1};
     public static final int[] SUPER_WORLD_ENTITY = {Opcodes.ALOAD_0, Opcodes.ALOAD_1, Opcodes.ALOAD_2};
 
-    public void write(OutputStream out) throws IOException {
+    private void write(OutputStream out) throws IOException {
         ByteVector outBytes = new ByteVector();
         outBytes.putInt(Gun.MAGIC);
 
@@ -475,10 +568,10 @@ public class GunCreator extends JFrame {
         outBytes.putInt(Integer.parseInt(gunIdField.getText()));*/
         outBytes.putInt(PROPERTIES);
 
-        String[] strings = new String[]{"itemGunId", "itemBulletId", "versionCreated"};
-        int[][] ints = new int[][]{ReverseBuffer.getInt(Integer.parseInt(gunIdField.getText())), ReverseBuffer.getInt(Integer.parseInt(projectileIdField.getText())), Util.getIntArray(Util.getStringBytes(VERSION))};
+        String[] strings = new String[]{"itemGunId", "itemBulletId"};
+        int[][] ints = new int[][]{ReverseBuffer.getInt(Integer.parseInt(gunIdField.getText())), ReverseBuffer.getInt(Integer.parseInt(projectileIdField.getText()))};
 
-        for (int i = 0; i < PROPERTIES; i++) {
+        for (int i = 0; i < strings.length; i++) {
             stringBytes = Util.getStringBytes(strings[i]);
             outBytes.putByteArray(stringBytes, 0, stringBytes.length);
             bytes = Util.getByteArray(ints[i]);

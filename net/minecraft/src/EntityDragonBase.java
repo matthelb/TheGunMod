@@ -34,7 +34,7 @@ public class EntityDragonBase extends EntityLiving
         return false;
     }
 
-    protected boolean superAttackFrom(DamageSource damagesource, int i)
+    protected boolean func_40137_e(DamageSource damagesource, int i)
     {
         return super.attackEntityFrom(damagesource, i);
     }

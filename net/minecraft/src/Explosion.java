@@ -115,7 +115,7 @@ label0:
                 d6 /= d11;
                 d8 /= d11;
                 d10 /= d11;
-                double d12 = worldObj.func_675_a(vec3d, entity.boundingBox);
+                double d12 = worldObj.func_494_a(vec3d, entity.boundingBox);
                 double d13 = (1.0D - d4) * d12;
                 entity.attackEntityFrom(DamageSource.explosion, (int)(((d13 * d13 + d13) / 2D) * 8D * (double)explosionSize + 1.0D));
                 double d14 = d13;

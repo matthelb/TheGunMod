@@ -64,7 +64,7 @@ public class EntitySkeleton extends EntityMob
 
     public void onLivingUpdate()
     {
-        if(worldObj.isDaytime() && !worldObj.multiplayerWorld)
+        if(worldObj.isDaytime() && !worldObj.singleplayerWorld)
         {
             float f = getEntityBrightness(1.0F);
             if(f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
@@ -125,11 +125,6 @@ public class EntitySkeleton extends EntityMob
             dropItem(Item.bone.shiftedIndex, 1);
         }
 
-    }
-
-    public ItemStack getHeldItem()
-    {
-        return defaultHeldItem;
     }
 
     public EnumCreatureAttribute getCreatureAttribute()

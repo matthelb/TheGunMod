@@ -180,7 +180,7 @@ label0:
         }
 
         nbttagcompound.setTag("TileEntities", nbttaglist1);
-        List list = world.func_41081_a(chunk, false);
+        List list = world.func_41046_a(chunk, false);
         if(list != null)
         {
             long l = world.getWorldTime();
@@ -207,25 +207,25 @@ label0:
         int j = nbttagcompound.getInteger("zPos");
         Chunk chunk = new Chunk(world, i, j);
         chunk.blocks = nbttagcompound.getByteArray("Blocks");
-        chunk.data = new NibbleArray(nbttagcompound.getByteArray("Data"), world.heightShift);
-        chunk.skylightMap = new NibbleArray(nbttagcompound.getByteArray("SkyLight"), world.heightShift);
-        chunk.blocklightMap = new NibbleArray(nbttagcompound.getByteArray("BlockLight"), world.heightShift);
+        chunk.data = new NibbleArray(nbttagcompound.getByteArray("Data"), world.worldYBits);
+        chunk.skylightMap = new NibbleArray(nbttagcompound.getByteArray("SkyLight"), world.worldYBits);
+        chunk.blocklightMap = new NibbleArray(nbttagcompound.getByteArray("BlockLight"), world.worldYBits);
         chunk.heightMap = nbttagcompound.getByteArray("HeightMap");
         chunk.isTerrainPopulated = nbttagcompound.getBoolean("TerrainPopulated");
         if(!chunk.data.isValid())
         {
-            chunk.data = new NibbleArray(chunk.blocks.length, world.heightShift);
+            chunk.data = new NibbleArray(chunk.blocks.length, world.worldYBits);
         }
         if(chunk.heightMap == null || !chunk.skylightMap.isValid())
         {
             chunk.heightMap = new byte[256];
-            chunk.skylightMap = new NibbleArray(chunk.blocks.length, world.heightShift);
+            chunk.skylightMap = new NibbleArray(chunk.blocks.length, world.worldYBits);
             chunk.generateSkylightMap();
         }
         if(!chunk.blocklightMap.isValid())
         {
-            chunk.blocklightMap = new NibbleArray(chunk.blocks.length, world.heightShift);
-            chunk.func_1014_a();
+            chunk.blocklightMap = new NibbleArray(chunk.blocks.length, world.worldYBits);
+            chunk.func_348_a();
         }
         NBTTagList nbttaglist = nbttagcompound.getTagList("Entities");
         if(nbttaglist != null)
@@ -264,7 +264,7 @@ label0:
                 for(int i1 = 0; i1 < nbttaglist2.tagCount(); i1++)
                 {
                     NBTTagCompound nbttagcompound3 = (NBTTagCompound)nbttaglist2.tagAt(i1);
-                    world.func_41083_e(nbttagcompound3.getInteger("x"), nbttagcompound3.getInteger("y"), nbttagcompound3.getInteger("z"), nbttagcompound3.getInteger("i"), nbttagcompound3.getInteger("t"));
+                    world.func_41045_d(nbttagcompound3.getInteger("x"), nbttagcompound3.getInteger("y"), nbttagcompound3.getInteger("z"), nbttagcompound3.getInteger("i"), nbttagcompound3.getInteger("t"));
                 }
 
             }
@@ -272,7 +272,7 @@ label0:
         return chunk;
     }
 
-    public void func_814_a()
+    public void func_661_a()
     {
     }
 

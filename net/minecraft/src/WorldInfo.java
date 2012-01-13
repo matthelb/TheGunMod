@@ -99,11 +99,11 @@ public class WorldInfo
     public NBTTagCompound getNBTTagCompound()
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
-        updateTagCompound(nbttagcompound, playerTag);
+        saveNBTTag(nbttagcompound, playerTag);
         return nbttagcompound;
     }
 
-    public NBTTagCompound getNBTTagCompoundWithPlayer(List list)
+    public NBTTagCompound storeLevelDataToNBT(List list)
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         EntityPlayer entityplayer = null;
@@ -117,11 +117,11 @@ public class WorldInfo
             nbttagcompound1 = new NBTTagCompound();
             entityplayer.writeToNBT(nbttagcompound1);
         }
-        updateTagCompound(nbttagcompound, nbttagcompound1);
+        saveNBTTag(nbttagcompound, nbttagcompound1);
         return nbttagcompound;
     }
 
-    private void updateTagCompound(NBTTagCompound nbttagcompound, NBTTagCompound nbttagcompound1)
+    private void saveNBTTag(NBTTagCompound nbttagcompound, NBTTagCompound nbttagcompound1)
     {
         nbttagcompound.setLong("RandomSeed", randomSeed);
         nbttagcompound.setInteger("GameType", gameType);
@@ -175,29 +175,9 @@ public class WorldInfo
         return sizeOnDisk;
     }
 
-    public NBTTagCompound getPlayerNBTTagCompound()
-    {
-        return playerTag;
-    }
-
     public int getDimension()
     {
         return dimension;
-    }
-
-    public void setSpawnX(int i)
-    {
-        spawnX = i;
-    }
-
-    public void setSpawnY(int i)
-    {
-        spawnY = i;
-    }
-
-    public void setSpawnZ(int i)
-    {
-        spawnZ = i;
     }
 
     public void setWorldTime(long l)
@@ -210,21 +190,11 @@ public class WorldInfo
         sizeOnDisk = l;
     }
 
-    public void setPlayerNBTTagCompound(NBTTagCompound nbttagcompound)
-    {
-        playerTag = nbttagcompound;
-    }
-
-    public void setSpawn(int i, int j, int k)
+    public void setSpawnPosition(int i, int j, int k)
     {
         spawnX = i;
         spawnY = j;
         spawnZ = k;
-    }
-
-    public String getWorldName()
-    {
-        return levelName;
     }
 
     public void setWorldName(String s)
@@ -240,11 +210,6 @@ public class WorldInfo
     public void setSaveVersion(int i)
     {
         saveVersion = i;
-    }
-
-    public long getLastTimePlayed()
-    {
-        return lastTimePlayed;
     }
 
     public boolean getIsThundering()
@@ -295,6 +260,11 @@ public class WorldInfo
     public boolean isMapFeaturesEnabled()
     {
         return mapFeaturesEnabled;
+    }
+
+    public void setGameType(int i)
+    {
+        gameType = i;
     }
 
     public boolean isHardcoreModeEnabled()

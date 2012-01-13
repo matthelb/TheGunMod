@@ -6,10 +6,10 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            StatCollector, EnchantmentProtection, EnchantmentOxygen, EnchantmentWaterWorker, 
-//            EnchantmentDamage, EnchantmentKnockback, EnchantmentFireAspect, EnchantmentLootBonus, 
-//            EnumEnchantmentType, EnchantmentDigging, EnchantmentUntouching, EnchantmentDurability, 
-//            DamageSource, EntityLiving
+//            EnchantmentProtection, EnchantmentOxygen, EnchantmentWaterWorker, EnchantmentDamage, 
+//            EnchantmentKnockback, EnchantmentFireAspect, EnchantmentLootBonus, EnumEnchantmentType, 
+//            EnchantmentDigging, EnchantmentUntouching, EnchantmentDurability, DamageSource, 
+//            EntityLiving
 
 public abstract class Enchantment
 {
@@ -96,17 +96,6 @@ public abstract class Enchantment
     {
         name = s;
         return this;
-    }
-
-    public String getName()
-    {
-        return (new StringBuilder()).append("enchantment.").append(name).toString();
-    }
-
-    public String getTranslatedName(int i)
-    {
-        String s = StatCollector.translateToLocal(getName());
-        return (new StringBuilder()).append(s).append(" ").append(StatCollector.translateToLocal((new StringBuilder()).append("enchantment.level.").append(i).toString())).toString();
     }
 
     static 

@@ -14,7 +14,7 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
 
-    private EntityLiving owner;
+    public EntityLiving owner;
     private Vec3D start;
 
     private int xTile;
@@ -40,6 +40,16 @@ public abstract class EntityProjectile extends Entity {
         changeVelocity(getSpeed());
     }
 
+    public EntityProjectile(World world, double x, double y, double z) {
+        super(world);
+        this.posX = x;
+        this.posY = y;
+        this.posZ = z;
+        this.start = Vec3D.createVector(posX, posY, posZ);
+        setVelocity(computeVelocity());
+        changeVelocity(getSpeed());
+    }
+
     public abstract int getDamage();
 
     public abstract float getSpeed();
@@ -58,6 +68,13 @@ public abstract class EntityProjectile extends Entity {
 
     public void onUpdate() {
         super.onUpdate();
+        if(prevRotationPitch == 0 && prevRotationYaw == 0) {
+            float horizontalDist = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
+            prevRotationYaw = rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180) / Util.PI) + Util.randomFloat(-getSpread(), getSpread());
+            prevRotationPitch = rotationPitch = (float)((Math.atan2(motionY, horizontalDist) * 180) / Util.PI) + Util.randomFloat(-getSpread(), getSpread());
+            setVelocity(computeVelocity());
+            changeVelocity(getSpeed());
+        }
         if (inGround) {
             ticksInGround++;
             if (ticksInGround >= getMaxGroundTicks()) {
@@ -82,7 +99,7 @@ public abstract class EntityProjectile extends Entity {
             }
             float expandAmount = 0.3f;
             AxisAlignedBB aabb = entity.boundingBox.expand(expandAmount, expandAmount, expandAmount);
-            MovingObjectPosition position1 = aabb.func_1169_a(currentLocation, newLocation);
+            MovingObjectPosition position1 = aabb.func_706_a(currentLocation, newLocation);
             if (position1 == null) {
                 continue;
             }
@@ -180,7 +197,9 @@ public abstract class EntityProjectile extends Entity {
     }
 
     public final void setVelocity(Vec3D velocity) {
-        setVelocity(velocity.xCoord, velocity.yCoord, velocity.zCoord);
+        this.motionX = velocity.xCoord;
+        this.motionY = velocity.yCoord;
+        this.motionZ = velocity.zCoord;
     }
 
     public final Vec3D computeVelocity() {

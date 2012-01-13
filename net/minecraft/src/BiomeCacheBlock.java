@@ -17,34 +17,29 @@ public class BiomeCacheBlock
     public int xPosition;
     public int zPosition;
     public long lastAccessTime;
-    final BiomeCache biomeCache; /* synthetic field */
+    final BiomeCache field_35702_g; /* synthetic field */
 
     public BiomeCacheBlock(BiomeCache biomecache, int i, int j)
     {
-        biomeCache = biomecache;
+        field_35702_g = biomecache;
 //        super();
         temperatureValues = new float[256];
         rainfallValues = new float[256];
         biomes = new BiomeGenBase[256];
         xPosition = i;
         zPosition = j;
-        BiomeCache.getWorldChunkManager(biomecache).getTemperatures(temperatureValues, i << 4, j << 4, 16, 16);
-        BiomeCache.getWorldChunkManager(biomecache).getRainfall(rainfallValues, i << 4, j << 4, 16, 16);
-        BiomeCache.getWorldChunkManager(biomecache).getBiomeGenAt(biomes, i << 4, j << 4, 16, 16, false);
+        BiomeCache.getChunkManager(biomecache).getTemperatures(temperatureValues, i << 4, j << 4, 16, 16);
+        BiomeCache.getChunkManager(biomecache).getRainfall(rainfallValues, i << 4, j << 4, 16, 16);
+        BiomeCache.getChunkManager(biomecache).func_35140_a(biomes, i << 4, j << 4, 16, 16, false);
     }
 
-    public BiomeGenBase getBiomeGenAt(int i, int j)
+    public BiomeGenBase func_35700_a(int i, int j)
     {
         return biomes[i & 0xf | (j & 0xf) << 4];
     }
 
-    public float getTemperature(int i, int j)
+    public float func_40626_b(int i, int j)
     {
         return temperatureValues[i & 0xf | (j & 0xf) << 4];
-    }
-
-    public float getRainfall(int i, int j)
-    {
-        return rainfallValues[i & 0xf | (j & 0xf) << 4];
     }
 }

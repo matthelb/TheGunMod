@@ -63,12 +63,6 @@ public class BlockDoor extends Block
         return 7;
     }
 
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
-    {
-        setBlockBoundsBasedOnState(world, i, j, k);
-        return super.getSelectedBoundingBoxFromPool(world, i, j, k);
-    }
-
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
     {
         setBlockBoundsBasedOnState(world, i, j, k);
@@ -166,7 +160,7 @@ public class BlockDoor extends Block
             {
                 world.setBlockWithNotify(i, j, k, 0);
             }
-            if(l > 0 && Block.blocksList[l].canProvidePower())
+            if(l > 0 && l != blockID)
             {
                 onNeighborBlockChange(world, i, j - 1, k, l);
             }
@@ -189,12 +183,12 @@ public class BlockDoor extends Block
             }
             if(flag)
             {
-                if(!world.multiplayerWorld)
+                if(!world.singleplayerWorld)
                 {
                     dropBlockAsItem(world, i, j, k, i1, 0);
                 }
             } else
-            if(l > 0)
+            if(l > 0 && l != blockID)
             {
                 boolean flag1 = world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k);
                 onPoweredBlockChange(world, i, j, k, flag1);

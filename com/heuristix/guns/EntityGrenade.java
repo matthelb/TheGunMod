@@ -2,7 +2,6 @@ package com.heuristix.guns;
 
 import com.heuristix.EntityProjectile;
 import com.heuristix.Util;
-import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.MovingObjectPosition;
 import net.minecraft.src.World;
@@ -21,6 +20,10 @@ public class EntityGrenade extends EntityProjectile {
 
     public EntityGrenade(World world, EntityLiving owner) {
         super(world, owner);
+    }
+
+    public EntityGrenade(World world, double x, double y, double z) {
+        super(world, x, y, z);
     }
 
     @Override

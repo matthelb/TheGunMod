@@ -52,11 +52,6 @@ public class BlockStairs extends Block
         return 10;
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        return super.shouldSideBeRendered(iblockaccess, i, j, k, l);
-    }
-
     public void getCollidingBoundingBoxes(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist)
     {
         int l = world.getBlockMetadata(i, j, k);
@@ -91,11 +86,6 @@ public class BlockStairs extends Block
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
-    {
-        modelBlock.randomDisplayTick(world, i, j, k, random);
-    }
-
     public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
         modelBlock.onBlockClicked(world, i, j, k, entityplayer);
@@ -106,24 +96,9 @@ public class BlockStairs extends Block
         modelBlock.onBlockDestroyedByPlayer(world, i, j, k, l);
     }
 
-    public int getMixedBrightnessForBlock(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return modelBlock.getMixedBrightnessForBlock(iblockaccess, i, j, k);
-    }
-
-    public float getBlockBrightness(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return modelBlock.getBlockBrightness(iblockaccess, i, j, k);
-    }
-
     public float getExplosionResistance(Entity entity)
     {
         return modelBlock.getExplosionResistance(entity);
-    }
-
-    public int getRenderBlockPass()
-    {
-        return modelBlock.getRenderBlockPass();
     }
 
     public int getBlockTextureFromSideAndMetadata(int i, int j)
@@ -139,11 +114,6 @@ public class BlockStairs extends Block
     public int tickRate()
     {
         return modelBlock.tickRate();
-    }
-
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
-    {
-        return modelBlock.getSelectedBoundingBoxFromPool(world, i, j, k);
     }
 
     public void velocityToAddToEntity(World world, int i, int j, int k, Entity entity, Vec3D vec3d)

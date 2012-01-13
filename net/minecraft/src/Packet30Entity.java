@@ -25,6 +25,12 @@ public class Packet30Entity extends Packet
         rotating = false;
     }
 
+    public Packet30Entity(int i)
+    {
+        rotating = false;
+        entityId = i;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

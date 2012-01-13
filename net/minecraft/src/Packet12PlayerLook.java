@@ -17,14 +17,6 @@ public class Packet12PlayerLook extends Packet10Flying
         rotating = true;
     }
 
-    public Packet12PlayerLook(float f, float f1, boolean flag)
-    {
-        yaw = f;
-        pitch = f1;
-        onGround = flag;
-        rotating = true;
-    }
-
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

@@ -26,11 +26,6 @@ public class Packet10Flying extends Packet
     {
     }
 
-    public Packet10Flying(boolean flag)
-    {
-        onGround = flag;
-    }
-
     public void processPacket(NetHandler nethandler)
     {
         nethandler.handleFlying(this);

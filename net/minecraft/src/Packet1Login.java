@@ -25,10 +25,17 @@ public class Packet1Login extends Packet
     {
     }
 
-    public Packet1Login(String s, int i)
+    public Packet1Login(String s, int i, long l, int j, byte byte0, byte byte1, 
+            byte byte2, byte byte3)
     {
         username = s;
         protocolVersion = i;
+        mapSeed = l;
+        worldType = byte0;
+        difficultySetting = byte1;
+        serverMode = j;
+        worldHeight = byte2;
+        maxPlayers = byte3;
     }
 
     public void readPacketData(DataInputStream datainputstream)

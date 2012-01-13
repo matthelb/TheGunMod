@@ -27,7 +27,7 @@ public class EntitySnowball extends EntityThrowable
         super(world, d, d1, d2);
     }
 
-    protected void onThrowableCollision(MovingObjectPosition movingobjectposition)
+    protected void onImpact(MovingObjectPosition movingobjectposition)
     {
         if(movingobjectposition.entityHit != null)
         {
@@ -36,14 +36,14 @@ public class EntitySnowball extends EntityThrowable
             {
                 byte0 = 3;
             }
-            if(!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, throwingEntity), byte0));
+            if(!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, thrower), byte0));
         }
         for(int i = 0; i < 8; i++)
         {
             worldObj.spawnParticle("snowballpoof", posX, posY, posZ, 0.0D, 0.0D, 0.0D);
         }
 
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             setEntityDead();
         }

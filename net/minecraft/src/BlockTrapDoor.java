@@ -40,12 +40,6 @@ public class BlockTrapDoor extends Block
         return 0;
     }
 
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
-    {
-        setBlockBoundsBasedOnState(world, i, j, k);
-        return super.getSelectedBoundingBoxFromPool(world, i, j, k);
-    }
-
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
     {
         setBlockBoundsBasedOnState(world, i, j, k);
@@ -124,7 +118,7 @@ public class BlockTrapDoor extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }
@@ -147,7 +141,7 @@ public class BlockTrapDoor extends Block
         {
             j1--;
         }
-        if(!func_41052_f(world.getBlockId(j1, j, k1)))
+        if(!func_41006_g(world.getBlockId(j1, j, k1)))
         {
             world.setBlockWithNotify(i, j, k, 0);
             dropBlockAsItem(world, i, j, k, i1, 0);
@@ -216,7 +210,7 @@ public class BlockTrapDoor extends Block
         {
             i--;
         }
-        return func_41052_f(world.getBlockId(i, j, k));
+        return func_41006_g(world.getBlockId(i, j, k));
     }
 
     public static boolean isTrapdoorOpen(int i)
@@ -224,7 +218,7 @@ public class BlockTrapDoor extends Block
         return (i & 4) != 0;
     }
 
-    private static boolean func_41052_f(int i)
+    private static boolean func_41006_g(int i)
     {
         if(i <= 0)
         {

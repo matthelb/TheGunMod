@@ -41,6 +41,11 @@ public class InventoryPlayer
         }
     }
 
+    public static int func_25054_e()
+    {
+        return 9;
+    }
+
     private int getInventorySlotContainItem(int i)
     {
         for(int j = 0; j < mainInventory.length; j++)
@@ -48,19 +53,6 @@ public class InventoryPlayer
             if(mainInventory[j] != null && mainInventory[j].itemID == i)
             {
                 return j;
-            }
-        }
-
-        return -1;
-    }
-
-    private int getInventorySlotContainItemAndDamage(int i, int j)
-    {
-        for(int k = 0; k < mainInventory.length; k++)
-        {
-            if(mainInventory[k] != null && mainInventory[k].itemID == i && mainInventory[k].getItemDamage() == j)
-            {
-                return k;
             }
         }
 
@@ -91,40 +83,6 @@ public class InventoryPlayer
         }
 
         return -1;
-    }
-
-    public void setCurrentItem(int i, int j, boolean flag, boolean flag1)
-    {
-        int k = -1;
-        if(flag)
-        {
-            k = getInventorySlotContainItemAndDamage(i, j);
-        } else
-        {
-            k = getInventorySlotContainItem(i);
-        }
-        if(k >= 0 && k < 9)
-        {
-            currentItem = k;
-            return;
-        } else
-        {
-            return;
-        }
-    }
-
-    public void changeCurrentItem(int i)
-    {
-        if(i > 0)
-        {
-            i = 1;
-        }
-        if(i < 0)
-        {
-            i = -1;
-        }
-        for(currentItem -= i; currentItem < 0; currentItem += 9) { }
-        for(; currentItem >= 9; currentItem -= 9) { }
     }
 
     private int storePartialItemStack(ItemStack itemstack)
@@ -204,7 +162,7 @@ public class InventoryPlayer
         return true;
     }
 
-    public boolean hasItem(int i)
+    public boolean hasItemInInventory(int i)
     {
         int j = getInventorySlotContainItem(i);
         return j >= 0;
@@ -400,11 +358,6 @@ public class InventoryPlayer
         {
             return false;
         }
-    }
-
-    public ItemStack armorItemInSlot(int i)
-    {
-        return armorInventory[i];
     }
 
     public int getTotalArmorValue()

@@ -24,11 +24,6 @@ public class EntityCaveSpider extends EntitySpider
         return 12;
     }
 
-    public float spiderScaleAmount()
-    {
-        return 0.7F;
-    }
-
     protected boolean attackEntityAsMob(Entity entity)
     {
         if(super.attackEntityAsMob(entity))

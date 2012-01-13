@@ -14,28 +14,28 @@ import java.util.Random;
 public class ComponentMineshaftCorridor extends StructureComponent
 {
 
-    private final boolean field_35070_a;
-    private final boolean field_35068_b;
-    private boolean field_35069_c;
-    private int field_35067_d;
+    private final boolean field_35361_a;
+    private final boolean field_35359_b;
+    private boolean field_35360_c;
+    private int field_35358_d;
 
     public ComponentMineshaftCorridor(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
         coordBaseMode = j;
         boundingBox = structureboundingbox;
-        field_35070_a = random.nextInt(3) == 0;
-        field_35068_b = !field_35070_a && random.nextInt(23) == 0;
+        field_35361_a = random.nextInt(3) == 0;
+        field_35359_b = !field_35361_a && random.nextInt(23) == 0;
         if(coordBaseMode == 2 || coordBaseMode == 0)
         {
-            field_35067_d = structureboundingbox.getZSize() / 5;
+            field_35358_d = structureboundingbox.bbDepth() / 5;
         } else
         {
-            field_35067_d = structureboundingbox.getXSize() / 5;
+            field_35358_d = structureboundingbox.bbWidth() / 5;
         }
     }
 
-    public static StructureBoundingBox func_35066_a(List list, Random random, int i, int j, int k, int l)
+    public static StructureBoundingBox func_35357_a(List list, Random random, int i, int j, int k, int l)
     {
         StructureBoundingBox structureboundingbox = new StructureBoundingBox(i, j, k, i, j + 2, k);
         int i1 = random.nextInt(3) + 2;
@@ -68,7 +68,7 @@ public class ComponentMineshaftCorridor extends StructureComponent
                 structureboundingbox.maxZ = k + 2;
                 break;
             }
-            if(StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) == null)
+            if(StructureComponent.canFitInside(list, structureboundingbox) == null)
             {
                 break;
             }
@@ -188,14 +188,14 @@ public class ComponentMineshaftCorridor extends StructureComponent
         {
             return false;
         }
-        int i = field_35067_d * 5 - 1;
+        int i = field_35358_d * 5 - 1;
         fillWithBlocks(world, structureboundingbox, 0, 0, 0, 2, 1, i, 0, 0, false);
         randomlyFillWithBlocks(world, structureboundingbox, random, 0.8F, 0, 2, 0, 2, 2, i, 0, 0, false);
-        if(field_35068_b)
+        if(field_35359_b)
         {
             randomlyFillWithBlocks(world, structureboundingbox, random, 0.6F, 0, 0, 0, 2, 1, i, Block.web.blockID, 0, false);
         }
-        for(int j = 0; j < field_35067_d; j++)
+        for(int j = 0; j < field_35358_d; j++)
         {
             int l = 2 + j * 5;
             fillWithBlocks(world, structureboundingbox, 0, 0, l, 0, 1, l, Block.fence.blockID, 0, false);
@@ -226,7 +226,7 @@ public class ComponentMineshaftCorridor extends StructureComponent
             {
                 createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 0, 0, l + 1, StructureMineshaftPieces.getTreasurePieces(), 3 + random.nextInt(4));
             }
-            if(!field_35068_b || field_35069_c)
+            if(!field_35359_b || field_35360_c)
             {
                 continue;
             }
@@ -234,11 +234,11 @@ public class ComponentMineshaftCorridor extends StructureComponent
             int k1 = (l - 1) + random.nextInt(3);
             int l1 = getXWithOffset(1, k1);
             k1 = getZWithOffset(1, k1);
-            if(!structureboundingbox.isVecInside(l1, j1, k1))
+            if(!structureboundingbox.isInBbVolume(l1, j1, k1))
             {
                 continue;
             }
-            field_35069_c = true;
+            field_35360_c = true;
             world.setBlockWithNotify(l1, j1, k1, Block.mobSpawner.blockID);
             TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getBlockTileEntity(l1, j1, k1);
             if(tileentitymobspawner != null)
@@ -247,7 +247,7 @@ public class ComponentMineshaftCorridor extends StructureComponent
             }
         }
 
-        if(field_35070_a)
+        if(field_35361_a)
         {
             for(int k = 0; k <= i; k++)
             {

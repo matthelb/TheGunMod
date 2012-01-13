@@ -26,7 +26,7 @@ public enum EnumToolMaterial
     private final int enchantability;
     private static final EnumToolMaterial allToolMaterials[]; /* synthetic field */
 /*
-    public static final EnumToolMaterial[] values()
+    public static EnumToolMaterial[] values()
     {
         return (EnumToolMaterial[])allToolMaterials.clone();
     }

@@ -20,7 +20,7 @@ public class ComponentMineshaftStairs extends StructureComponent
         boundingBox = structureboundingbox;
     }
 
-    public static StructureBoundingBox func_35027_a(List list, Random random, int i, int j, int k, int l)
+    public static StructureBoundingBox func_35365_a(List list, Random random, int i, int j, int k, int l)
     {
         StructureBoundingBox structureboundingbox = new StructureBoundingBox(i, j - 5, k, i, j + 2, k);
         switch(l)
@@ -45,7 +45,7 @@ public class ComponentMineshaftStairs extends StructureComponent
             structureboundingbox.maxZ = k + 2;
             break;
         }
-        if(StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else

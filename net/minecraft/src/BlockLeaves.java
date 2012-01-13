@@ -7,8 +7,7 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            BlockLeavesBase, Material, ColorizerFoliage, IBlockAccess, 
-//            WorldChunkManager, BiomeGenBase, World, Block, 
+//            BlockLeavesBase, Material, World, Block, 
 //            EntityPlayer, ItemStack, Item, ItemShears, 
 //            StatList, Entity
 
@@ -23,44 +22,6 @@ public class BlockLeaves extends BlockLeavesBase
         super(i, j, Material.leaves, false);
         baseIndexInPNG = j;
         setTickOnLoad(true);
-    }
-
-    public int getBlockColor()
-    {
-        double d = 0.5D;
-        double d1 = 1.0D;
-        return ColorizerFoliage.getFoliageColor(d, d1);
-    }
-
-    public int getRenderColor(int i)
-    {
-        if((i & 1) == 1)
-        {
-            return ColorizerFoliage.getFoliageColorPine();
-        }
-        if((i & 2) == 2)
-        {
-            return ColorizerFoliage.getFoliageColorBirch();
-        } else
-        {
-            return ColorizerFoliage.getFoliageColorBasic();
-        }
-    }
-
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        int l = iblockaccess.getBlockMetadata(i, j, k);
-        if((l & 1) == 1)
-        {
-            return ColorizerFoliage.getFoliageColorPine();
-        }
-        if((l & 2) == 2)
-        {
-            return ColorizerFoliage.getFoliageColorBirch();
-        } else
-        {
-            return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).getFoliageColorAtCoords(iblockaccess, i, j, k);
-        }
     }
 
     public void onBlockRemoval(World world, int i, int j, int k)
@@ -92,7 +53,7 @@ public class BlockLeaves extends BlockLeavesBase
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }
@@ -209,7 +170,7 @@ public class BlockLeaves extends BlockLeavesBase
 
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
-        if(!world.multiplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
+        if(!world.singleplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
         {
             entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
             dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.leaves.blockID, 1, l & 3));
@@ -238,12 +199,6 @@ public class BlockLeaves extends BlockLeavesBase
         {
             return blockIndexInTexture;
         }
-    }
-
-    public void setGraphicsLevel(boolean flag)
-    {
-        graphicsLevel = flag;
-        blockIndexInTexture = baseIndexInPNG + (flag ? 0 : 1);
     }
 
     public void onEntityWalking(World world, int i, int j, int k, Entity entity)

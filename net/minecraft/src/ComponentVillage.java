@@ -21,7 +21,7 @@ abstract class ComponentVillage extends StructureComponent
         super(i);
     }
 
-    protected StructureComponent func_35077_a(ComponentVillageStartPiece componentvillagestartpiece, List list, Random random, int i, int j)
+    protected StructureComponent func_35368_a(ComponentVillageStartPiece componentvillagestartpiece, List list, Random random, int i, int j)
     {
         switch(coordBaseMode)
         {
@@ -40,7 +40,7 @@ abstract class ComponentVillage extends StructureComponent
         return null;
     }
 
-    protected StructureComponent func_35076_b(ComponentVillageStartPiece componentvillagestartpiece, List list, Random random, int i, int j)
+    protected StructureComponent func_35369_b(ComponentVillageStartPiece componentvillagestartpiece, List list, Random random, int i, int j)
     {
         switch(coordBaseMode)
         {
@@ -67,9 +67,9 @@ abstract class ComponentVillage extends StructureComponent
         {
             for(int l = boundingBox.minX; l <= boundingBox.maxX; l++)
             {
-                if(structureboundingbox.isVecInside(l, 64, k))
+                if(structureboundingbox.isInBbVolume(l, 64, k))
                 {
-                    i += Math.max(world.getTopSolidOrLiquidBlock(l, k), world.seaLevel);
+                    i += Math.max(world.findTopSolidBlock(l, k), world.worldOceanHeight);
                     j++;
                 }
             }
@@ -106,7 +106,7 @@ abstract class ComponentVillage extends StructureComponent
             int j1 = getXWithOffset(i + i1, k);
             int k1 = getYWithOffset(j);
             int l1 = getZWithOffset(i + i1, k);
-            if(!structureboundingbox.isVecInside(j1, k1, l1))
+            if(!structureboundingbox.isInBbVolume(j1, k1, l1))
             {
                 break;
             }

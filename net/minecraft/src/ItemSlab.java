@@ -6,8 +6,8 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            ItemBlock, Block, ItemStack, BlockStep, 
-//            EntityPlayer, World, StepSound
+//            ItemBlock, ItemStack, BlockStep, EntityPlayer, 
+//            World, Block, StepSound
 
 public class ItemSlab extends ItemBlock
 {
@@ -19,12 +19,7 @@ public class ItemSlab extends ItemBlock
         setHasSubtypes(true);
     }
 
-    public int getIconFromDamage(int i)
-    {
-        return Block.stairSingle.getBlockTextureFromSideAndMetadata(2, i);
-    }
-
-    public int getPlacedBlockMetadata(int i)
+    public int getMetadata(int i)
     {
         return i;
     }
@@ -56,7 +51,7 @@ public class ItemSlab extends ItemBlock
         {
             if(world.setBlockAndMetadataWithNotify(i, j, k, Block.stairDouble.blockID, j1))
             {
-                world.playSoundEffect((float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, Block.stairDouble.stepSound.stepSoundDir2(), (Block.stairDouble.stepSound.getVolume() + 1.0F) / 2.0F, Block.stairDouble.stepSound.getPitch() * 0.8F);
+                world.playSoundEffect((float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, Block.stairDouble.stepSound.stepSoundDir(), (Block.stairDouble.stepSound.getVolume() + 1.0F) / 2.0F, Block.stairDouble.stepSound.getPitch() * 0.8F);
                 itemstack.stackSize--;
             }
             return true;

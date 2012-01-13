@@ -238,7 +238,7 @@ public abstract class NetHandler
         registerPacket(packet5playerinventory);
     }
 
-    public void handleContainerTransaction(Packet106Transaction packet106transaction)
+    public void handleTransaction(Packet106Transaction packet106transaction)
     {
         registerPacket(packet106transaction);
     }
@@ -248,7 +248,7 @@ public abstract class NetHandler
         registerPacket(packet25entitypainting);
     }
 
-    public void handleNotePlay(Packet54PlayNoteBlock packet54playnoteblock)
+    public void handlePlayNoteBlock(Packet54PlayNoteBlock packet54playnoteblock)
     {
         registerPacket(packet54playnoteblock);
     }
@@ -278,7 +278,7 @@ public abstract class NetHandler
         registerPacket(packet71weather);
     }
 
-    public void processItemData(Packet131MapData packet131mapdata)
+    public void handleMapData(Packet131MapData packet131mapdata)
     {
         registerPacket(packet131mapdata);
     }

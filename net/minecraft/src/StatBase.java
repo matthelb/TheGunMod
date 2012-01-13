@@ -9,8 +9,8 @@ import java.text.NumberFormat;
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            StatList, AchievementMap, IStatType, StatTypeSimple, 
-//            StatTypeTime, StatTypeDistance
+//            StatList, AchievementMap, StatTypeSimple, StatTypeTime, 
+//            StatTypeDistance, IStatType
 
 public class StatBase
 {
@@ -52,36 +52,16 @@ public class StatBase
             throw new RuntimeException((new StringBuilder()).append("Duplicate stat id: \"").append(((StatBase)StatList.oneShotStats.get(Integer.valueOf(statId))).statName).append("\" and \"").append(statName).append("\" at id ").append(statId).toString());
         } else
         {
-            StatList.field_25188_a.add(this);
+            StatList.field_25123_a.add(this);
             StatList.oneShotStats.put(Integer.valueOf(statId), this);
             statGuid = AchievementMap.getGuid(statId);
             return this;
         }
     }
 
-    public boolean isAchievement()
-    {
-        return false;
-    }
-
-    public String func_27084_a(int i)
-    {
-        return type.format(i);
-    }
-
     public String toString()
     {
         return statName;
-    }
-
-    static NumberFormat getNumberFormat()
-    {
-        return numberFormat;
-    }
-
-    static DecimalFormat getDecimalFormat()
-    {
-        return decimalFormat;
     }
 
     static 

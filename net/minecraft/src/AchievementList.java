@@ -51,7 +51,7 @@ public class AchievementList
     {
     }
 
-    public static void func_27374_a()
+    public static void func_27097_a()
     {
     }
 

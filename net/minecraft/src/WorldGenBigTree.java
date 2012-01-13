@@ -15,7 +15,7 @@ public class WorldGenBigTree extends WorldGenerator
     static final byte otherCoordPairs[] = {
         2, 0, 0, 1, 2, 1
     };
-    Random rand;
+    Random random0;
     World worldObj;
     int basePos[] = {
         0, 0, 0
@@ -23,10 +23,10 @@ public class WorldGenBigTree extends WorldGenerator
     int heightLimit;
     int height;
     double heightAttenuation;
-    double field_875_h;
-    double field_874_i;
-    double field_873_j;
-    double field_872_k;
+    double field_753_h;
+    double field_752_i;
+    double field_751_j;
+    double field_750_k;
     int trunkSize;
     int heightLimitLimit;
     int leafDistanceLimit;
@@ -35,13 +35,13 @@ public class WorldGenBigTree extends WorldGenerator
     public WorldGenBigTree(boolean flag)
     {
         super(flag);
-        rand = new Random();
+        random0 = new Random();
         heightLimit = 0;
         heightAttenuation = 0.61799999999999999D;
-        field_875_h = 1.0D;
-        field_874_i = 0.38100000000000001D;
-        field_873_j = 1.0D;
-        field_872_k = 1.0D;
+        field_753_h = 1.0D;
+        field_752_i = 0.38100000000000001D;
+        field_751_j = 1.0D;
+        field_750_k = 1.0D;
         trunkSize = 1;
         heightLimitLimit = 12;
         leafDistanceLimit = 4;
@@ -54,7 +54,7 @@ public class WorldGenBigTree extends WorldGenerator
         {
             height = heightLimit - 1;
         }
-        int i = (int)(1.3819999999999999D + Math.pow((field_872_k * (double)heightLimit) / 13D, 2D));
+        int i = (int)(1.3819999999999999D + Math.pow((field_750_k * (double)heightLimit) / 13D, 2D));
         if(i < 1)
         {
             i = 1;
@@ -72,7 +72,7 @@ public class WorldGenBigTree extends WorldGenerator
         while(i1 >= 0) 
         {
             int j1 = 0;
-            float f = func_528_a(i1);
+            float f = func_431_a(i1);
             if(f < 0.0F)
             {
                 j--;
@@ -82,8 +82,8 @@ public class WorldGenBigTree extends WorldGenerator
                 double d = 0.5D;
                 for(; j1 < i; j1++)
                 {
-                    double d1 = field_873_j * ((double)f * ((double)rand.nextFloat() + 0.32800000000000001D));
-                    double d2 = (double)rand.nextFloat() * 2D * 3.1415899999999999D;
+                    double d1 = field_751_j * ((double)f * ((double)random0.nextFloat() + 0.32800000000000001D));
+                    double d2 = (double)random0.nextFloat() * 2D * 3.1415899999999999D;
                     int k1 = MathHelper.floor_double(d1 * Math.sin(d2) + (double)basePos[0] + d);
                     int l1 = MathHelper.floor_double(d1 * Math.cos(d2) + (double)basePos[2] + d);
                     int ai1[] = {
@@ -100,7 +100,7 @@ public class WorldGenBigTree extends WorldGenerator
                         basePos[0], basePos[1], basePos[2]
                     };
                     double d3 = Math.sqrt(Math.pow(Math.abs(basePos[0] - ai1[0]), 2D) + Math.pow(Math.abs(basePos[2] - ai1[2]), 2D));
-                    double d4 = d3 * field_874_i;
+                    double d4 = d3 * field_752_i;
                     if((double)ai1[1] - d4 > (double)l)
                     {
                         ai3[1] = l;
@@ -126,7 +126,7 @@ public class WorldGenBigTree extends WorldGenerator
         System.arraycopy(ai, 0, leafNodes, 0, k);
     }
 
-    void func_523_a(int i, int j, int k, float f, byte byte0, int l)
+    void func_426_a(int i, int j, int k, float f, byte byte0, int l)
     {
         int i1 = (int)((double)f + 0.61799999999999999D);
         byte byte1 = otherCoordPairs[byte0];
@@ -158,7 +158,7 @@ public class WorldGenBigTree extends WorldGenerator
                         l1++;
                     } else
                     {
-                        func_41060_a(worldObj, ai1[0], ai1[1], ai1[2], l, 0);
+                        func_41043_a(worldObj, ai1[0], ai1[1], ai1[2], l, 0);
                         l1++;
                     }
                 }
@@ -168,7 +168,7 @@ public class WorldGenBigTree extends WorldGenerator
 
     }
 
-    float func_528_a(int i)
+    float func_431_a(int i)
     {
         if((double)i < (double)(float)heightLimit * 0.29999999999999999D)
         {
@@ -192,7 +192,7 @@ public class WorldGenBigTree extends WorldGenerator
         return f2;
     }
 
-    float func_526_b(int i)
+    float func_429_b(int i)
     {
         if(i < 0 || i >= leafDistanceLimit)
         {
@@ -206,8 +206,8 @@ public class WorldGenBigTree extends WorldGenerator
         int l = j;
         for(int i1 = j + leafDistanceLimit; l < i1; l++)
         {
-            float f = func_526_b(l - j);
-            func_523_a(i, l, k, f, (byte)1, 18);
+            float f = func_429_b(l - j);
+            func_426_a(i, l, k, f, (byte)1, 18);
         }
 
     }
@@ -253,7 +253,7 @@ public class WorldGenBigTree extends WorldGenerator
             ai3[j] = MathHelper.floor_double((double)(ai[j] + k) + 0.5D);
             ai3[byte1] = MathHelper.floor_double((double)ai[byte1] + (double)k * d + 0.5D);
             ai3[byte2] = MathHelper.floor_double((double)ai[byte2] + (double)k * d1 + 0.5D);
-            func_41060_a(worldObj, ai3[0], ai3[1], ai3[2], i, 0);
+            func_41043_a(worldObj, ai3[0], ai3[1], ai3[2], i, 0);
         }
 
     }
@@ -416,28 +416,28 @@ public class WorldGenBigTree extends WorldGenerator
         }
     }
 
-    public void func_517_a(double d, double d1, double d2)
+    public void func_420_a(double d, double d1, double d2)
     {
         heightLimitLimit = (int)(d * 12D);
         if(d > 0.5D)
         {
             leafDistanceLimit = 5;
         }
-        field_873_j = d1;
-        field_872_k = d2;
+        field_751_j = d1;
+        field_750_k = d2;
     }
 
     public boolean generate(World world, Random random, int i, int j, int k)
     {
         worldObj = world;
         long l = random.nextLong();
-        rand.setSeed(l);
+        random0.setSeed(l);
         basePos[0] = i;
         basePos[1] = j;
         basePos[2] = k;
         if(heightLimit == 0)
         {
-            heightLimit = 5 + rand.nextInt(heightLimitLimit);
+            heightLimit = 5 + random0.nextInt(heightLimitLimit);
         }
         if(!validTreeLocation())
         {

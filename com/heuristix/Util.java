@@ -1,18 +1,15 @@
 package com.heuristix;
 
-import net.minecraft.client.Minecraft;
+import com.heuristix.net.PacketFireProjectile;
 import net.minecraft.src.*;
-import org.lwjgl.opengl.GL11;
-import paulscode.sound.SoundSystem;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
-import java.util.List;
 import java.util.jar.JarFile;
 
 /**
@@ -98,52 +95,6 @@ public class Util {
         return count;
     }
 
-    public static void renderTexture(Minecraft minecraft, String texture, float opacity) {
-        ScaledResolution sr = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
-        int width = sr.getScaledWidth();
-        int height = sr.getScaledHeight();
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthMask(false);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1, 1, 1, opacity);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.renderEngine.getTexture(texture));
-        Tessellator t = Tessellator.instance;
-        t.startDrawingQuads();
-        t.addVertexWithUV(0, height, -90, 0, 1);
-        t.addVertexWithUV(width, height, -90, 1, 1);
-        t.addVertexWithUV(width, 0, -90, 1, 0);
-        t.addVertexWithUV(0, 0, -90, 0, 0);
-        t.draw();
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glDisable(GL11.GL_BLEND);
-    }
-
-    public static void renderRect(Color color, int x, int y, int width, int height, float opacity) {
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthMask(false);
-        GL11.glBlendFunc(770, 771);
-        GL11.glColor4f((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, opacity);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        Tessellator t = Tessellator.instance;
-        t.startDrawingQuads();
-        t.setNormal(0.0F, 1.0F, 0.0F);
-        t.addVertexWithUV(x, y, 0, 0, 0);
-        t.addVertexWithUV(x + width, y, 0, 1, 0);
-        t.addVertexWithUV(x + width, y + height, 0, 1, 1);
-        t.addVertexWithUV(x, y + height, 0, 0, 1);
-        t.draw();
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glPopMatrix();
-    }
 
     public static float toRadians(double deg) {
         return (float) (deg / 180.0f * PI);
@@ -398,82 +349,13 @@ public class Util {
     }
 
     public static Vec3D getProjectedPoint(EntityLiving living, double distance) {
-        Vec3D pos = living.getPosition(1);
+        Vec3D pos = Vec3D.createVector(living.posX, living.posY, living.posZ);
         Vec3D look = living.getLook(1);
         return getProjectedPoint(pos, look, distance);
     }
 
     public static Vec3D getProjectedPoint(Vec3D pos, Vec3D look, double distance) {
         return pos.addVector(look.xCoord * distance, look.yCoord * distance, look.zCoord * distance);
-    }
-
-    public static void playStreamingAtEntity(Entity entity, String sound, String stream, float f, float f1, Minecraft minecraft) {
-        playStreaming(sound, stream, (float) entity.posX, (float) entity.posY, (float) entity.posZ, f, f1, minecraft);
-    }
-
-    public static void playStreaming(String sound, String stream, float x, float y, float z, float v1, float v2, Minecraft minecraft) {
-        SoundSystem sndSystem = getSoundSystem(minecraft);
-        if(sndSystem != null) {
-            if (sndSystem.playing(stream)) {
-                sndSystem.stop(stream);
-            }
-            if (sound == null) {
-                return;
-            }
-            SoundPoolEntry soundpoolentry = getSoundPools(minecraft.sndManager)[1].getRandomSoundFromSoundPool(sound);
-            if (soundpoolentry != null && v1 > 0) {
-                float f5 = 16F;
-                sndSystem.newStreamingSource(true, stream, soundpoolentry.soundUrl, soundpoolentry.soundName, false, x, y, z, 2, f5 * 4F);
-                GameSettings options = getGameSettings(minecraft.sndManager);
-                float volume = 1.0f;
-                if (options != null)
-                    volume = options.soundVolume;
-                sndSystem.setVolume(stream, 0.5f * volume);
-                sndSystem.play(stream);
-            }
-        }
-    }
-
-    public static SoundSystem getSoundSystem(Minecraft minecraft) {
-        if (minecraft != null) {
-            return getSoundSystem(minecraft.sndManager);
-        }
-        return null;
-    }
-
-    public static SoundSystem getSoundSystem(SoundManager sndManager) {
-        if (sndManager != null) {
-            return (SoundSystem) getPrivateValue(SoundManager.class, sndManager, "sndSystem", OBFUSCATED_FIELDS.get(SoundManager.class).get("sndSystem"));
-        }
-        return null;
-    }
-
-    private static final Map<Class, Map<String, String>> OBFUSCATED_FIELDS = new HashMap<Class, Map<String, String>>();
-
-    static {
-        HashMap<String, String> fields = new HashMap<String, String>();
-        fields.put("soundPoolSounds", "b");
-        fields.put("soundPoolStreaming", "c");
-        fields.put("soundPoolMusic", "d");
-        fields.put("sndSystem", "a");
-        fields.put("options", "f");
-        OBFUSCATED_FIELDS.put(SoundManager.class, (Map<String, String>) fields.clone());
-        fields.clear();
-        fields.put("mc", "");
-        OBFUSCATED_FIELDS.put(EntityPlayerSP.class, (Map<String, String>) fields.clone());
-    }
-
-    public static SoundPool[] getSoundPools(SoundManager sndManager) {
-        SoundPool[] soundPools = new SoundPool[3];
-        Map<String, String> fields = OBFUSCATED_FIELDS.get(SoundManager.class);
-        soundPools[0] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolSounds", fields.get("soundPoolSounds"));
-        soundPools[1] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolStreaming", fields.get("soundPoolStreaming"));
-        soundPools[2] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolMusic", fields.get("soundPoolMusic"));
-        return soundPools;
-    }
-
-    public static GameSettings getGameSettings(SoundManager sndManager) {
-        return (GameSettings) getPrivateValue(SoundManager.class, sndManager, "options", OBFUSCATED_FIELDS.get(SoundManager.class).get("options"));
     }
 
     public static void setPrivateValue(Class clazz, Object classInstance, String fieldName, String obfuscatedName, Object fieldValue) {
@@ -520,14 +402,6 @@ public class Util {
         return bytes;
     }
 
-    public static PlayerController getPlayerController(EntityPlayerSP owner) {
-        Minecraft mc = (Minecraft) getPrivateValue(EntityPlayerSP.class, owner, "mc", OBFUSCATED_FIELDS.get(EntityPlayerSP.class).get("mc"));
-        if(mc != null) {
-            return mc.playerController;
-        }
-        return null;
-    }
-
     public static BaseMod getLoadedMod(Class clazz) {
         List<BaseMod> mods = ModLoader.getLoadedMods();
         Iterator itr = mods.iterator();
@@ -547,10 +421,17 @@ public class Util {
         return getModMPId(getLoadedMod(clazz));
     }
 
-    public static String getStringFromBytes(int[] bytes) {
-        int i = 0;
-        while (bytes[i++] != 10) ;
-        return new String(bytes, 0, i - 1);
+    private static Method addIdClassMapping;
+    public static void setPacketId(Class packetClass, int id, boolean client, boolean server) throws InvocationTargetException, IllegalAccessException {
+        if(addIdClassMapping == null) {
+            try {
+                addIdClassMapping = Packet.class.getDeclaredMethod("addIdClassMapping", int.class, boolean.class, boolean.class, Class.class);
+                addIdClassMapping.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                return;
+            }
+        }
+        addIdClassMapping.invoke(null, id, client, server, packetClass);
     }
-
 }

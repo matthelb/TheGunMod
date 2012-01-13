@@ -9,8 +9,7 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            EntityWeatherEffect, World, MathHelper, Block, 
-//            BlockFire, AxisAlignedBB, Entity, NBTTagCompound, 
-//            Vec3D
+//            BlockFire, AxisAlignedBB, Entity, NBTTagCompound
 
 public class EntityLightningBolt extends EntityWeatherEffect
 {
@@ -106,10 +105,5 @@ public class EntityLightningBolt extends EntityWeatherEffect
 
     protected void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {
-    }
-
-    public boolean isInRangeToRenderVec3D(Vec3D vec3d)
-    {
-        return lightningState >= 0;
     }
 }

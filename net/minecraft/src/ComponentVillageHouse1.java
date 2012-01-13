@@ -28,10 +28,10 @@ public class ComponentVillageHouse1 extends ComponentVillage
     {
     }
 
-    public static ComponentVillageHouse1 func_35095_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentVillageHouse1 func_35397_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 9, 9, 6, l);
-        if(!canVillageGoDeeper(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else

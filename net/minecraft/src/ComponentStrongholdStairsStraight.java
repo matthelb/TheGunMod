@@ -14,25 +14,25 @@ import java.util.Random;
 public class ComponentStrongholdStairsStraight extends ComponentStronghold
 {
 
-    private final EnumDoor field_35054_a;
+    private final EnumDoor field_35345_a;
 
     public ComponentStrongholdStairsStraight(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
         coordBaseMode = j;
-        field_35054_a = getRandomDoor(random);
+        field_35345_a = func_35322_a(random);
         boundingBox = structureboundingbox;
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        func_35028_a((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
+        func_35324_a((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
     }
 
-    public static ComponentStrongholdStairsStraight func_35053_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentStrongholdStairsStraight func_35344_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -7, 0, 5, 11, 8, l);
-        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -48,7 +48,7 @@ public class ComponentStrongholdStairsStraight extends ComponentStronghold
             return false;
         }
         fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 4, 10, 7, true, random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(world, random, structureboundingbox, field_35054_a, 1, 7, 0);
+        placeDoor(world, random, structureboundingbox, field_35345_a, 1, 7, 0);
         placeDoor(world, random, structureboundingbox, EnumDoor.OPENING, 1, 1, 7);
         int i = getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 2);
         for(int j = 0; j < 6; j++)

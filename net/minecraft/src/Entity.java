@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            AxisAlignedBB, DataWatcher, World, Profiler, 
-//            MathHelper, DamageSource, Block, StepSound, 
-//            Material, BlockFluid, Vec3D, NBTTagCompound, 
-//            NBTTagList, NBTTagDouble, NBTTagFloat, EntityList, 
-//            ItemStack, EntityItem, EntityPlayer, EntityLightningBolt, 
-//            EntityLiving
+//            AxisAlignedBB, DataWatcher, Profiler, MathHelper, 
+//            World, DamageSource, Block, StepSound, 
+//            Material, BlockFluid, NBTTagCompound, NBTTagList, 
+//            NBTTagDouble, NBTTagFloat, EntityList, ItemStack, 
+//            EntityItem, StatCollector, EntityPlayer, Vec3D, 
+//            EntityLightningBolt, EntityLiving
 
 public abstract class Entity
 {
@@ -45,7 +45,7 @@ public abstract class Entity
     public boolean isCollided;
     public boolean velocityChanged;
     protected boolean isInWeb;
-    public boolean field_9293_aM;
+    public boolean field_9077_F;
     public boolean isDead;
     public float yOffset;
     public float width;
@@ -68,8 +68,6 @@ public abstract class Entity
     protected boolean inWater;
     public int heartsLife;
     private boolean firstUpdate;
-    public String skinUrl;
-    public String cloakUrl;
     protected boolean isImmuneToFire;
     protected DataWatcher dataWatcher;
     private double entityRiderPitchDelta;
@@ -78,10 +76,7 @@ public abstract class Entity
     public int chunkCoordX;
     public int chunkCoordY;
     public int chunkCoordZ;
-    public int serverPosX;
-    public int serverPosY;
-    public int serverPosZ;
-    public boolean ignoreFrustumCheck;
+    public boolean ignoreFrustrumCheck;
     public boolean isAirBorne;
 
     public Entity(World world)
@@ -92,7 +87,7 @@ public abstract class Entity
         onGround = false;
         isCollided = false;
         velocityChanged = false;
-        field_9293_aM = true;
+        field_9077_F = true;
         isDead = false;
         yOffset = 0.0F;
         width = 0.6F;
@@ -145,29 +140,6 @@ public abstract class Entity
         return entityId;
     }
 
-    protected void preparePlayerToSpawn()
-    {
-        if(worldObj == null)
-        {
-            return;
-        }
-        do
-        {
-            if(posY <= 0.0D)
-            {
-                break;
-            }
-            setPosition(posX, posY, posZ);
-            if(worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0)
-            {
-                break;
-            }
-            posY++;
-        } while(true);
-        motionX = motionY = motionZ = 0.0D;
-        rotationPitch = 0.0F;
-    }
-
     public void setEntityDead()
     {
         isDead = true;
@@ -193,24 +165,6 @@ public abstract class Entity
         float f = width / 2.0F;
         float f1 = height;
         boundingBox.setBounds(d - (double)f, (d1 - (double)yOffset) + (double)ySize, d2 - (double)f, d + (double)f, (d1 - (double)yOffset) + (double)ySize + (double)f1, d2 + (double)f);
-    }
-
-    public void setAngles(float f, float f1)
-    {
-        float f2 = rotationPitch;
-        float f3 = rotationYaw;
-        rotationYaw += (double)f * 0.14999999999999999D;
-        rotationPitch -= (double)f1 * 0.14999999999999999D;
-        if(rotationPitch < -90F)
-        {
-            rotationPitch = -90F;
-        }
-        if(rotationPitch > 90F)
-        {
-            rotationPitch = 90F;
-        }
-        prevRotationPitch += rotationPitch - f2;
-        prevRotationYaw += rotationYaw - f3;
     }
 
     public void onUpdate()
@@ -276,7 +230,7 @@ public abstract class Entity
         {
             inWater = false;
         }
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
             fire = 0;
         } else
@@ -307,7 +261,7 @@ public abstract class Entity
         {
             kill();
         }
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             setFlag(0, fire > 0);
             setFlag(2, ridingEntity != null);
@@ -427,7 +381,7 @@ public abstract class Entity
         }
 
         boundingBox.offset(0.0D, d1, 0.0D);
-        if(!field_9293_aM && d6 != d1)
+        if(!field_9077_F && d6 != d1)
         {
             d = d1 = d2 = 0.0D;
         }
@@ -438,7 +392,7 @@ public abstract class Entity
         }
 
         boundingBox.offset(d, 0.0D, 0.0D);
-        if(!field_9293_aM && d5 != d)
+        if(!field_9077_F && d5 != d)
         {
             d = d1 = d2 = 0.0D;
         }
@@ -448,7 +402,7 @@ public abstract class Entity
         }
 
         boundingBox.offset(0.0D, 0.0D, d2);
-        if(!field_9293_aM && d7 != d2)
+        if(!field_9077_F && d7 != d2)
         {
             d = d1 = d2 = 0.0D;
         }
@@ -469,7 +423,7 @@ public abstract class Entity
             }
 
             boundingBox.offset(0.0D, d1, 0.0D);
-            if(!field_9293_aM && d6 != d1)
+            if(!field_9077_F && d6 != d1)
             {
                 d = d1 = d2 = 0.0D;
             }
@@ -479,7 +433,7 @@ public abstract class Entity
             }
 
             boundingBox.offset(d, 0.0D, 0.0D);
-            if(!field_9293_aM && d5 != d)
+            if(!field_9077_F && d5 != d)
             {
                 d = d1 = d2 = 0.0D;
             }
@@ -489,11 +443,11 @@ public abstract class Entity
             }
 
             boundingBox.offset(0.0D, 0.0D, d2);
-            if(!field_9293_aM && d7 != d2)
+            if(!field_9077_F && d7 != d2)
             {
                 d = d1 = d2 = 0.0D;
             }
-            if(!field_9293_aM && d6 != d1)
+            if(!field_9077_F && d6 != d1)
             {
                 d = d1 = d2 = 0.0D;
             } else
@@ -559,7 +513,7 @@ public abstract class Entity
             if(distanceWalkedModified > (float)nextStepDistance && j3 > 0)
             {
                 nextStepDistance = (int)distanceWalkedModified + 1;
-                func_41002_a(l, j1, l1, j3);
+                func_41011_a(l, j1, l1, j3);
                 Block.blocksList[j3].onEntityWalking(worldObj, l, j1, l1, this);
             }
         }
@@ -614,17 +568,17 @@ public abstract class Entity
         Profiler.endSection();
     }
 
-    protected void func_41002_a(int i, int j, int k, int l)
+    protected void func_41011_a(int i, int j, int k, int l)
     {
         StepSound stepsound = Block.blocksList[l].stepSound;
         if(worldObj.getBlockId(i, j + 1, k) == Block.snow.blockID)
         {
             stepsound = Block.snow.stepSound;
-            worldObj.playSoundAtEntity(this, stepsound.stepSoundDir2(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
+            worldObj.playSoundAtEntity(this, stepsound.stepSoundDir(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
         } else
         if(!Block.blocksList[l].blockMaterial.getIsLiquid())
         {
-            worldObj.playSoundAtEntity(this, stepsound.stepSoundDir2(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
+            worldObj.playSoundAtEntity(this, stepsound.stepSoundDir(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
         }
     }
 
@@ -736,21 +690,6 @@ public abstract class Entity
         float f5 = MathHelper.cos((rotationYaw * 3.141593F) / 180F);
         motionX += f * f5 - f1 * f4;
         motionZ += f1 * f5 + f * f4;
-    }
-
-    public int getEntityBrightnessForRender(float f)
-    {
-        int i = MathHelper.floor_double(posX);
-        int j = MathHelper.floor_double(posZ);
-        if(worldObj.blockExists(i, worldObj.worldHeight / 2, j))
-        {
-            double d = (boundingBox.maxY - boundingBox.minY) * 0.66000000000000003D;
-            int k = MathHelper.floor_double((posY - (double)yOffset) + d);
-            return worldObj.getLightBrightnessForSkyBlocks(i, k, j, 0);
-        } else
-        {
-            return 0;
-        }
     }
 
     public float getEntityBrightness(float f)
@@ -905,27 +844,6 @@ public abstract class Entity
     {
     }
 
-    public boolean isInRangeToRenderVec3D(Vec3D vec3d)
-    {
-        double d = posX - vec3d.xCoord;
-        double d1 = posY - vec3d.yCoord;
-        double d2 = posZ - vec3d.zCoord;
-        double d3 = d * d + d1 * d1 + d2 * d2;
-        return isInRangeToRenderDist(d3);
-    }
-
-    public boolean isInRangeToRenderDist(double d)
-    {
-        double d1 = boundingBox.getAverageEdgeLength();
-        d1 *= 64D * renderDistanceWeight;
-        return d < d1 * d1;
-    }
-
-    public String getEntityTexture()
-    {
-        return null;
-    }
-
     public boolean addEntityID(NBTTagCompound nbttagcompound)
     {
         String s = getEntityString();
@@ -1027,11 +945,6 @@ public abstract class Entity
         }
 
         return nbttaglist;
-    }
-
-    public float getShadowSize()
-    {
-        return height / 2.0F;
     }
 
     public EntityItem dropItem(int i, int j)
@@ -1181,29 +1094,6 @@ public abstract class Entity
         entity.riddenByEntity = this;
     }
 
-    public void setPositionAndRotation2(double d, double d1, double d2, float f, 
-            float f1, int i)
-    {
-        setPosition(d, d1, d2);
-        setRotation(f, f1);
-        List list = worldObj.getCollidingBoundingBoxes(this, boundingBox.contract(0.03125D, 0.0D, 0.03125D));
-        if(list.size() > 0)
-        {
-            double d3 = 0.0D;
-            for(int j = 0; j < list.size(); j++)
-            {
-                AxisAlignedBB axisalignedbb = (AxisAlignedBB)list.get(j);
-                if(axisalignedbb.maxY > d3)
-                {
-                    d3 = axisalignedbb.maxY;
-                }
-            }
-
-            d1 += d3 - boundingBox.minY;
-            setPosition(d, d1, d2);
-        }
-    }
-
     public float getCollisionBorderSize()
     {
         return 0.1F;
@@ -1218,27 +1108,9 @@ public abstract class Entity
     {
     }
 
-    public void setVelocity(double d, double d1, double d2)
+    public ItemStack[] getInventory()
     {
-        motionX = d;
-        motionY = d1;
-        motionZ = d2;
-    }
-
-    public void handleHealthUpdate(byte byte0)
-    {
-    }
-
-    public void performHurtAnimation()
-    {
-    }
-
-    public void updateCloak()
-    {
-    }
-
-    public void outfitWithItem(int i, int j, int k)
-    {
+        return null;
     }
 
     public boolean isBurning()
@@ -1246,14 +1118,14 @@ public abstract class Entity
         return fire > 0 || getFlag(0);
     }
 
-    public boolean isRiding()
-    {
-        return ridingEntity != null || getFlag(2);
-    }
-
     public boolean isSneaking()
     {
         return getFlag(1);
+    }
+
+    public void setSneaking(boolean flag)
+    {
+        setFlag(1, flag);
     }
 
     public boolean isSprinting()
@@ -1264,11 +1136,6 @@ public abstract class Entity
     public void setSprinting(boolean flag)
     {
         setFlag(3, flag);
-    }
-
-    public boolean isEating()
-    {
-        return getFlag(4);
     }
 
     public void setEating(boolean flag)
@@ -1400,6 +1267,16 @@ public abstract class Entity
     public void setInWeb()
     {
         isInWeb = true;
+    }
+
+    public String func_35150_Y()
+    {
+        String s = EntityList.getEntityString(this);
+        if(s == null)
+        {
+            s = "generic";
+        }
+        return StatCollector.translateToLocal((new StringBuilder()).append("entity.").append(s).append(".name").toString());
     }
 
     public Entity[] getParts()

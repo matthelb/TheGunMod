@@ -15,7 +15,7 @@ import java.util.Random;
 public class BlockEndPortal extends BlockContainer
 {
 
-    public static boolean bossDefeated = false;
+    public static boolean field_41003_a = false;
 
     protected BlockEndPortal(int i, Material material)
     {
@@ -32,17 +32,6 @@ public class BlockEndPortal extends BlockContainer
     {
         float f = 0.0625F;
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
-    }
-
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        if(l != 0)
-        {
-            return false;
-        } else
-        {
-            return super.shouldSideBeRendered(iblockaccess, i, j, k, l);
-        }
     }
 
     public void getCollidingBoundingBoxes(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist)
@@ -66,21 +55,10 @@ public class BlockEndPortal extends BlockContainer
 
     public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
     {
-        if(entity.ridingEntity == null && entity.riddenByEntity == null && (entity instanceof EntityPlayer) && !world.multiplayerWorld)
+        if(entity.ridingEntity == null && entity.riddenByEntity == null && (entity instanceof EntityPlayer) && !world.singleplayerWorld)
         {
-            ((EntityPlayer)entity).func_40182_b(1);
+            ((EntityPlayer)entity).func_40107_e(1);
         }
-    }
-
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
-    {
-        double d = (float)i + random.nextFloat();
-        double d1 = (float)j + 0.8F;
-        double d2 = (float)k + random.nextFloat();
-        double d3 = 0.0D;
-        double d4 = 0.0D;
-        double d5 = 0.0D;
-        world.spawnParticle("smoke", d, d1, d2, d3, d4, d5);
     }
 
     public int getRenderType()
@@ -90,7 +68,7 @@ public class BlockEndPortal extends BlockContainer
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if(bossDefeated)
+        if(field_41003_a)
         {
             return;
         }

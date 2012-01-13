@@ -4,7 +4,8 @@
 
 package net.minecraft.src;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
 // Referenced classes of package net.minecraft.src:
 //            Packet, NetHandler
@@ -17,12 +18,10 @@ public class Packet254ServerPing extends Packet
     }
 
     public void readPacketData(DataInputStream datainputstream)
-        throws IOException
     {
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
-        throws IOException
     {
     }
 

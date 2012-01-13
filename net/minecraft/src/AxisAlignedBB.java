@@ -28,12 +28,6 @@ public class AxisAlignedBB
         return new AxisAlignedBB(d, d1, d2, d3, d4, d5);
     }
 
-    public static void clearBoundingBoxes()
-    {
-        boundingBoxes.clear();
-        numBoundingBoxesInUse = 0;
-    }
-
     public static void clearBoundingBoxPool()
     {
         numBoundingBoxesInUse = 0;
@@ -245,14 +239,6 @@ public class AxisAlignedBB
         return vec3d.zCoord > minZ && vec3d.zCoord < maxZ;
     }
 
-    public double getAverageEdgeLength()
-    {
-        double d = maxX - minX;
-        double d1 = maxY - minY;
-        double d2 = maxZ - minZ;
-        return (d + d1 + d2) / 3D;
-    }
-
     public AxisAlignedBB contract(double d, double d1, double d2)
     {
         double d3 = minX + d;
@@ -269,7 +255,7 @@ public class AxisAlignedBB
         return getBoundingBoxFromPool(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
-    public MovingObjectPosition func_1169_a(Vec3D vec3d, Vec3D vec3d1)
+    public MovingObjectPosition func_706_a(Vec3D vec3d, Vec3D vec3d1)
     {
         Vec3D vec3d2 = vec3d.getIntermediateWithXValue(vec3d1, minX);
         Vec3D vec3d3 = vec3d.getIntermediateWithXValue(vec3d1, maxX);

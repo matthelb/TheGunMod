@@ -13,24 +13,18 @@ import java.util.Random;
 public class EntityEnderCrystal extends Entity
 {
 
-    public int field_41032_a;
-    public int field_41031_b;
+    public int field_41023_a;
+    public int field_41022_b;
 
     public EntityEnderCrystal(World world)
     {
         super(world);
-        field_41032_a = 0;
+        field_41023_a = 0;
         preventEntitySpawning = true;
         setSize(2.0F, 2.0F);
         yOffset = height / 2.0F;
-        field_41031_b = 5;
-        field_41032_a = rand.nextInt(0x186a0);
-    }
-
-    public EntityEnderCrystal(World world, double d, double d1, double d2)
-    {
-        this(world);
-        setPosition(d, d1, d2);
+        field_41022_b = 5;
+        field_41023_a = rand.nextInt(0x186a0);
     }
 
     protected boolean canTriggerWalking()
@@ -40,7 +34,7 @@ public class EntityEnderCrystal extends Entity
 
     protected void entityInit()
     {
-        dataWatcher.addObject(8, Integer.valueOf(field_41031_b));
+        dataWatcher.addObject(8, Integer.valueOf(field_41022_b));
     }
 
     public void onUpdate()
@@ -48,8 +42,8 @@ public class EntityEnderCrystal extends Entity
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
-        field_41032_a++;
-        dataWatcher.updateObject(8, Integer.valueOf(field_41031_b));
+        field_41023_a++;
+        dataWatcher.updateObject(8, Integer.valueOf(field_41022_b));
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posY);
         int k = MathHelper.floor_double(posZ);
@@ -67,11 +61,6 @@ public class EntityEnderCrystal extends Entity
     {
     }
 
-    public float getShadowSize()
-    {
-        return 0.0F;
-    }
-
     public boolean canBeCollidedWith()
     {
         return true;
@@ -79,12 +68,12 @@ public class EntityEnderCrystal extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if(!isDead && !worldObj.multiplayerWorld)
+        if(!isDead && !worldObj.singleplayerWorld)
         {
-            field_41031_b = 0;
-            if(field_41031_b <= 0)
+            field_41022_b = 0;
+            if(field_41022_b <= 0)
             {
-                if(!worldObj.multiplayerWorld)
+                if(!worldObj.singleplayerWorld)
                 {
                     setEntityDead();
                     worldObj.createExplosion(null, posX, posY, posZ, 6F);

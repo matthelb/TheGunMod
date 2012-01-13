@@ -8,16 +8,11 @@ package net.minecraft.src;
 // Referenced classes of package net.minecraft.src:
 //            StepSound
 
-class StepSoundStone extends StepSound
+final class StepSoundStone extends StepSound
 {
 
     StepSoundStone(String s, float f, float f1)
     {
         super(s, f, f1);
-    }
-
-    public String stepSoundDir()
-    {
-        return "random.glass";
     }
 }

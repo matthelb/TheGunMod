@@ -34,7 +34,7 @@ public class MapGenCaves extends MapGenBase
         Random random = new Random(l);
         if(i1 <= 0)
         {
-            int j1 = range * 16 - 16;
+            int j1 = field_947_a * 16 - 16;
             i1 = j1 - random.nextInt(j1 / 4);
         }
         boolean flag = false;

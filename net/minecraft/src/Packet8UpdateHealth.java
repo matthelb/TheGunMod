@@ -20,6 +20,13 @@ public class Packet8UpdateHealth extends Packet
     {
     }
 
+    public Packet8UpdateHealth(int i, int j, float f)
+    {
+        healthMP = i;
+        food = j;
+        foodSaturation = f;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

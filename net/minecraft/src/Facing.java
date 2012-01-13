@@ -8,7 +8,7 @@ package net.minecraft.src;
 public class Facing
 {
 
-    public static final int field_31057_a[] = {
+    public static final int field_31052_a[] = {
         1, 0, 3, 2, 5, 4
     };
     public static final int offsetsXForSide[] = {

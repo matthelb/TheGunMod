@@ -17,6 +17,14 @@ public class Packet32EntityLook extends Packet30Entity
         rotating = true;
     }
 
+    public Packet32EntityLook(int i, byte byte0, byte byte1)
+    {
+        super(i);
+        yaw = byte0;
+        pitch = byte1;
+        rotating = true;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

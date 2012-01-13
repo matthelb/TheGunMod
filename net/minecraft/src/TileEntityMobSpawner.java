@@ -27,11 +27,6 @@ public class TileEntityMobSpawner extends TileEntity
         delay = 20;
     }
 
-    public String getMobID()
-    {
-        return mobID;
-    }
-
     public void setMobID(String s)
     {
         mobID = s;
@@ -60,7 +55,7 @@ public class TileEntityMobSpawner extends TileEntity
             yaw2 -= 360D;
         }
 
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             if(delay == -1)
             {

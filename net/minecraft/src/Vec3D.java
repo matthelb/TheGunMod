@@ -24,12 +24,6 @@ public class Vec3D
         return new Vec3D(d, d1, d2);
     }
 
-    public static void clearVectorList()
-    {
-        vectorList.clear();
-        nextVector = 0;
-    }
-
     public static void initialize()
     {
         nextVector = 0;
@@ -71,11 +65,6 @@ public class Vec3D
         return this;
     }
 
-    public Vec3D subtract(Vec3D vec3d)
-    {
-        return createVector(vec3d.xCoord - xCoord, vec3d.yCoord - yCoord, vec3d.zCoord - zCoord);
-    }
-
     public Vec3D normalize()
     {
         double d = MathHelper.sqrt_double(xCoord * xCoord + yCoord * yCoord + zCoord * zCoord);
@@ -91,11 +80,6 @@ public class Vec3D
     public double dotProduct(Vec3D vec3d)
     {
         return xCoord * vec3d.xCoord + yCoord * vec3d.yCoord + zCoord * vec3d.zCoord;
-    }
-
-    public Vec3D crossProduct(Vec3D vec3d)
-    {
-        return createVector(yCoord * vec3d.zCoord - zCoord * vec3d.yCoord, zCoord * vec3d.xCoord - xCoord * vec3d.zCoord, xCoord * vec3d.yCoord - yCoord * vec3d.xCoord);
     }
 
     public Vec3D addVector(double d, double d1, double d2)

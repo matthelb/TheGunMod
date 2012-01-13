@@ -14,12 +14,12 @@ public class ItemSword extends Item
 {
 
     private int weaponDamage;
-    private final EnumToolMaterial field_40439_b;
+    private final EnumToolMaterial field_40249_bQ;
 
     public ItemSword(int i, EnumToolMaterial enumtoolmaterial)
     {
         super(i);
-        field_40439_b = enumtoolmaterial;
+        field_40249_bQ = enumtoolmaterial;
         maxStackSize = 1;
         setMaxDamage(enumtoolmaterial.getMaxUses());
         weaponDamage = 4 + enumtoolmaterial.getDamageVsEntity();
@@ -47,12 +47,7 @@ public class ItemSword extends Item
         return weaponDamage;
     }
 
-    public boolean isFull3D()
-    {
-        return true;
-    }
-
-    public EnumAction getItemUseAction(ItemStack itemstack)
+    public EnumAction getAction(ItemStack itemstack)
     {
         return EnumAction.block;
     }
@@ -75,6 +70,6 @@ public class ItemSword extends Item
 
     public int getItemEnchantability()
     {
-        return field_40439_b.getEnchantability();
+        return field_40249_bQ.getEnchantability();
     }
 }

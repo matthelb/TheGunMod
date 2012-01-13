@@ -14,24 +14,24 @@ import java.util.Random;
 public class StructureNetherBridgeEnd extends ComponentNetherBridgePiece
 {
 
-    private int field_40024_a;
+    private int field_40302_a;
 
     public StructureNetherBridgeEnd(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
         coordBaseMode = j;
         boundingBox = structureboundingbox;
-        field_40024_a = random.nextInt();
+        field_40302_a = random.nextInt();
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
     }
 
-    public static StructureNetherBridgeEnd func_40023_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static StructureNetherBridgeEnd func_40301_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -3, 0, 5, 10, 8, l);
-        if(!func_40021_a(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -42,7 +42,7 @@ public class StructureNetherBridgeEnd extends ComponentNetherBridgePiece
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        Random random1 = new Random(field_40024_a);
+        Random random1 = new Random(field_40302_a);
         for(int i = 0; i <= 4; i++)
         {
             for(int i1 = 3; i1 <= 4; i1++)

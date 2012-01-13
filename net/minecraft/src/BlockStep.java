@@ -7,8 +7,7 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, Material, IBlockAccess, ItemStack, 
-//            World
+//            Block, Material, ItemStack, World
 
 public class BlockStep extends Block
 {
@@ -99,29 +98,6 @@ public class BlockStep extends Block
     public boolean renderAsNormalBlock()
     {
         return blockType;
-    }
-
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        if(this != Block.stairSingle)
-        {
-            super.shouldSideBeRendered(iblockaccess, i, j, k, l);
-        }
-        if(l == 1)
-        {
-            return true;
-        }
-        if(!super.shouldSideBeRendered(iblockaccess, i, j, k, l))
-        {
-            return false;
-        }
-        if(l == 0)
-        {
-            return true;
-        } else
-        {
-            return iblockaccess.getBlockId(i, j, k) != blockID;
-        }
     }
 
     protected ItemStack createStackedBlock(int i)

@@ -4,8 +4,7 @@
 
 package net.minecraft.src;
 
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
 //            Chunk, World, EnumSkyBlock, Entity, 
@@ -36,11 +35,7 @@ public class EmptyChunk extends Chunk
         return 0;
     }
 
-    public void func_1014_a()
-    {
-    }
-
-    public void generateHeightMap()
+    public void func_348_a()
     {
     }
 
@@ -48,7 +43,7 @@ public class EmptyChunk extends Chunk
     {
     }
 
-    public void func_4143_d()
+    public void func_4053_c()
     {
     }
 
@@ -150,19 +145,21 @@ public class EmptyChunk extends Chunk
         return false;
     }
 
-    public int setChunkData(byte abyte0[], int i, int j, int k, int l, int i1, int j1, 
+    public int getChunkData(byte abyte0[], int i, int j, int k, int l, int i1, int j1, 
             int k1)
     {
         int l1 = l - i;
         int i2 = i1 - j;
         int j2 = j1 - k;
         int k2 = l1 * i2 * j2;
-        return k2 + (k2 / 2) * 3;
+        int l2 = k2 + (k2 / 2) * 3;
+        Arrays.fill(abyte0, k1, k1 + l2, (byte)0);
+        return l2;
     }
 
     public Random getRandomWithSeed(long l)
     {
-        return new Random(worldObj.getWorldSeed() + (long)(xPosition * xPosition * 0x4c1906) + (long)(xPosition * 0x5ac0db) + (long)(zPosition * zPosition) * 0x4307a7L + (long)(zPosition * 0x5f24f) ^ l);
+        return new Random(worldObj.getRandomSeed() + (long)(xPosition * xPosition * 0x4c1906) + (long)(xPosition * 0x5ac0db) + (long)(zPosition * zPosition) * 0x4307a7L + (long)(zPosition * 0x5f24f) ^ l);
     }
 
     public boolean isEmpty()

@@ -7,8 +7,7 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, Material, IBlockAccess, ColorizerGrass, 
-//            WorldChunkManager, BiomeGenBase, World
+//            Block, Material, World
 
 public class BlockGrass extends Block
 {
@@ -29,40 +28,9 @@ public class BlockGrass extends Block
         return i != 0 ? 3 : 2;
     }
 
-    public int getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        if(l == 1)
-        {
-            return 0;
-        }
-        if(l == 0)
-        {
-            return 2;
-        }
-        Material material = iblockaccess.getBlockMaterial(i, j + 1, k);
-        return material != Material.snow && material != Material.craftedSnow ? 3 : 68;
-    }
-
-    public int getBlockColor()
-    {
-        double d = 0.5D;
-        double d1 = 1.0D;
-        return ColorizerGrass.getGrassColor(d, d1);
-    }
-
-    public int getRenderColor(int i)
-    {
-        return getBlockColor();
-    }
-
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).getGrassColorAtCoords(iblockaccess, i, j, k);
-    }
-
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }

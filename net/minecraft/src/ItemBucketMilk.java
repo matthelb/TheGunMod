@@ -21,9 +21,9 @@ public class ItemBucketMilk extends Item
     public ItemStack onFoodEaten(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
         itemstack.stackSize--;
-        if(!world.multiplayerWorld)
+        if(!world.singleplayerWorld)
         {
-            entityplayer.func_40112_aN();
+            entityplayer.func_40089_ar();
         }
         if(itemstack.stackSize <= 0)
         {
@@ -39,7 +39,7 @@ public class ItemBucketMilk extends Item
         return 32;
     }
 
-    public EnumAction getItemUseAction(ItemStack itemstack)
+    public EnumAction getAction(ItemStack itemstack)
     {
         return EnumAction.drink;
     }

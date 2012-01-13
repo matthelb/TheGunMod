@@ -14,7 +14,7 @@ import java.util.Random;
 public class ComponentVillageWell extends ComponentVillage
 {
 
-    private final boolean field_35104_a = true;
+    private final boolean field_35385_a = true;
     private int averageGroundLevel;
 
     public ComponentVillageWell(int i, Random random, int j, int k)
@@ -54,7 +54,7 @@ public class ComponentVillageWell extends ComponentVillage
             }
             boundingBox.offset(0, (averageGroundLevel - boundingBox.maxY) + 3, 0);
         }
-        if(!field_35104_a);
+        if(!field_35385_a);
         fillWithBlocks(world, structureboundingbox, 1, 0, 1, 4, 12, 4, Block.cobblestone.blockID, Block.waterMoving.blockID, false);
         placeBlockAtCurrentPosition(world, 0, 0, 2, 12, 2, structureboundingbox);
         placeBlockAtCurrentPosition(world, 0, 0, 3, 12, 2, structureboundingbox);

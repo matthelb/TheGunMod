@@ -33,6 +33,16 @@ public class Packet34EntityTeleport extends Packet
         pitch = (byte)(int)((entity.rotationPitch * 256F) / 360F);
     }
 
+    public Packet34EntityTeleport(int i, int j, int k, int l, byte byte0, byte byte1)
+    {
+        entityId = i;
+        xPosition = j;
+        yPosition = k;
+        zPosition = l;
+        yaw = byte0;
+        pitch = byte1;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

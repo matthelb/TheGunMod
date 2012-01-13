@@ -41,6 +41,11 @@ public class WatchableObject
         return objectType;
     }
 
+    public boolean getWatching()
+    {
+        return isWatching;
+    }
+
     public void setWatching(boolean flag)
     {
         isWatching = flag;

@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
+//            Packet, Entity, NetHandler
 
 public class Packet39AttachEntity extends Packet
 {
@@ -17,6 +17,12 @@ public class Packet39AttachEntity extends Packet
 
     public Packet39AttachEntity()
     {
+    }
+
+    public Packet39AttachEntity(Entity entity, Entity entity1)
+    {
+        entityId = entity.entityId;
+        vehicleEntityId = entity1 == null ? -1 : entity1.entityId;
     }
 
     public int getPacketSize()

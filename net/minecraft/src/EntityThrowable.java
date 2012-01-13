@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Entity, AxisAlignedBB, EntityLiving, MathHelper, 
-//            World, Vec3D, MovingObjectPosition, NBTTagCompound, 
+//            Entity, EntityLiving, MathHelper, World, 
+//            Vec3D, MovingObjectPosition, AxisAlignedBB, NBTTagCompound, 
 //            EntityPlayer
 
 public abstract class EntityThrowable extends Entity
@@ -21,7 +21,7 @@ public abstract class EntityThrowable extends Entity
     private int inTile;
     protected boolean inGround;
     public int throwableShake;
-    protected EntityLiving throwingEntity;
+    protected EntityLiving thrower;
     private int ticksInGround;
     private int ticksInAir;
 
@@ -42,13 +42,6 @@ public abstract class EntityThrowable extends Entity
     {
     }
 
-    public boolean isInRangeToRenderDist(double d)
-    {
-        double d1 = boundingBox.getAverageEdgeLength() * 4D;
-        d1 *= 64D;
-        return d < d1 * d1;
-    }
-
     public EntityThrowable(World world, EntityLiving entityliving)
     {
         super(world);
@@ -59,7 +52,7 @@ public abstract class EntityThrowable extends Entity
         inGround = false;
         throwableShake = 0;
         ticksInAir = 0;
-        throwingEntity = entityliving;
+        thrower = entityliving;
         setSize(0.25F, 0.25F);
         setLocationAndAngles(entityliving.posX, entityliving.posY + (double)entityliving.getEyeHeight(), entityliving.posZ, entityliving.rotationYaw, entityliving.rotationPitch);
         posX -= MathHelper.cos((rotationYaw / 180F) * 3.141593F) * 0.16F;
@@ -70,8 +63,8 @@ public abstract class EntityThrowable extends Entity
         float f = 0.4F;
         motionX = -MathHelper.sin((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F) * f;
         motionZ = MathHelper.cos((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F) * f;
-        motionY = -MathHelper.sin(((rotationPitch + func_40074_d()) / 180F) * 3.141593F) * f;
-        setThrowableHeading(motionX, motionY, motionZ, func_40077_c(), 1.0F);
+        motionY = -MathHelper.sin(((rotationPitch + func_40040_d()) / 180F) * 3.141593F) * f;
+        setThrowableHeading(motionX, motionY, motionZ, func_40044_c(), 1.0F);
     }
 
     public EntityThrowable(World world, double d, double d1, double d2)
@@ -90,12 +83,12 @@ public abstract class EntityThrowable extends Entity
         yOffset = 0.0F;
     }
 
-    protected float func_40077_c()
+    protected float func_40044_c()
     {
         return 1.5F;
     }
 
-    protected float func_40074_d()
+    protected float func_40040_d()
     {
         return 0.0F;
     }
@@ -120,19 +113,6 @@ public abstract class EntityThrowable extends Entity
         prevRotationYaw = rotationYaw = (float)((Math.atan2(d, d2) * 180D) / 3.1415927410125732D);
         prevRotationPitch = rotationPitch = (float)((Math.atan2(d1, f3) * 180D) / 3.1415927410125732D);
         ticksInGround = 0;
-    }
-
-    public void setVelocity(double d, double d1, double d2)
-    {
-        motionX = d;
-        motionY = d1;
-        motionZ = d2;
-        if(prevRotationPitch == 0.0F && prevRotationYaw == 0.0F)
-        {
-            float f = MathHelper.sqrt_double(d * d + d2 * d2);
-            prevRotationYaw = rotationYaw = (float)((Math.atan2(d, d2) * 180D) / 3.1415927410125732D);
-            prevRotationPitch = rotationPitch = (float)((Math.atan2(d1, f) * 180D) / 3.1415927410125732D);
-        }
     }
 
     public void onUpdate()
@@ -178,7 +158,7 @@ public abstract class EntityThrowable extends Entity
         {
             vec3d1 = Vec3D.createVector(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             Entity entity = null;
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
@@ -186,13 +166,13 @@ public abstract class EntityThrowable extends Entity
             for(int k = 0; k < list.size(); k++)
             {
                 Entity entity1 = (Entity)list.get(k);
-                if(!entity1.canBeCollidedWith() || entity1 == throwingEntity && ticksInAir < 5)
+                if(!entity1.canBeCollidedWith() || entity1 == thrower && ticksInAir < 5)
                 {
                     continue;
                 }
                 float f4 = 0.3F;
                 AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f4, f4, f4);
-                MovingObjectPosition movingobjectposition1 = axisalignedbb.func_1169_a(vec3d, vec3d1);
+                MovingObjectPosition movingobjectposition1 = axisalignedbb.func_706_a(vec3d, vec3d1);
                 if(movingobjectposition1 == null)
                 {
                     continue;
@@ -212,7 +192,7 @@ public abstract class EntityThrowable extends Entity
         }
         if(movingobjectposition != null)
         {
-            onThrowableCollision(movingobjectposition);
+            onImpact(movingobjectposition);
         }
         posX += motionX;
         posY += motionY;
@@ -226,7 +206,7 @@ public abstract class EntityThrowable extends Entity
         rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2F;
         rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2F;
         float f1 = 0.99F;
-        float f2 = func_40075_e();
+        float f2 = func_40042_e();
         if(isInWater())
         {
             for(int j = 0; j < 4; j++)
@@ -244,12 +224,12 @@ public abstract class EntityThrowable extends Entity
         setPosition(posX, posY, posZ);
     }
 
-    protected float func_40075_e()
+    protected float func_40042_e()
     {
         return 0.03F;
     }
 
-    protected abstract void onThrowableCollision(MovingObjectPosition movingobjectposition);
+    protected abstract void onImpact(MovingObjectPosition movingobjectposition);
 
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {
@@ -273,10 +253,5 @@ public abstract class EntityThrowable extends Entity
 
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
-    }
-
-    public float getShadowSize()
-    {
-        return 0.0F;
     }
 }

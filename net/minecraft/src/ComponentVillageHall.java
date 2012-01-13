@@ -28,10 +28,10 @@ public class ComponentVillageHall extends ComponentVillage
     {
     }
 
-    public static ComponentVillageHall func_35078_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentVillageHall func_35374_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 9, 7, 11, l);
-        if(!canVillageGoDeeper(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else

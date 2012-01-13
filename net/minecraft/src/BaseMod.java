@@ -4,14 +4,11 @@
 
 package net.minecraft.src;
 
-import java.util.Map;
 import java.util.Random;
-import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
 
 // Referenced classes of package net.minecraft.src:
-//            World, ItemStack, KeyBinding, EntityPlayer, 
-//            GuiScreen, RenderBlocks, Block, IBlockAccess, 
-//            IInventory
+//            World, ItemStack, EntityPlayer
 
 public abstract class BaseMod
 {
@@ -20,13 +17,9 @@ public abstract class BaseMod
     {
     }
 
-    public int AddFuel(int i, int j)
+    public int AddFuel(int i)
     {
         return 0;
-    }
-
-    public void AddRenderer(Map map)
-    {
     }
 
     public boolean DispenseEntity(World world, double d, double d1, double d2, 
@@ -43,56 +36,15 @@ public abstract class BaseMod
     {
     }
 
-    public String getName()
-    {
-        return getClass().getSimpleName();
-    }
-
-    public String getPriorities()
-    {
-        return "";
-    }
-
-    public abstract String getVersion();
-
-    public void KeyboardEvent(KeyBinding keybinding)
+    public void OnTickInGame(MinecraftServer minecraftserver)
     {
     }
-
-    public abstract void load();
 
     public void ModsLoaded()
     {
     }
 
-    public void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
-    {
-    }
-
-    public boolean OnTickInGame(float f, Minecraft minecraft)
-    {
-        return false;
-    }
-
-    public boolean OnTickInGUI(float f, Minecraft minecraft, GuiScreen guiscreen)
-    {
-        return false;
-    }
-
-    public void RegisterAnimation(Minecraft minecraft)
-    {
-    }
-
-    public void RenderInvBlock(RenderBlocks renderblocks, Block block, int i, int j)
-    {
-    }
-
-    public boolean RenderWorldBlock(RenderBlocks renderblocks, IBlockAccess iblockaccess, int i, int j, int k, Block block, int l)
-    {
-        return false;
-    }
-
-    public void TakenFromCrafting(EntityPlayer entityplayer, ItemStack itemstack, IInventory iinventory)
+    public void TakenFromCrafting(EntityPlayer entityplayer, ItemStack itemstack)
     {
     }
 
@@ -100,8 +52,14 @@ public abstract class BaseMod
     {
     }
 
+    public void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
+    {
+    }
+
     public String toString()
     {
-        return (new StringBuilder(String.valueOf(getName()))).append(' ').append(getVersion()).toString();
+        return (new StringBuilder(String.valueOf(getClass().getSimpleName()))).append(" ").append(Version()).toString();
     }
+
+    public abstract String Version();
 }

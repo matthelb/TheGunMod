@@ -8,7 +8,7 @@ import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            Container, Slot, SlotFurnace, InventoryPlayer, 
-//            ICrafting, TileEntityFurnace, ItemStack, EntityPlayer
+//            TileEntityFurnace, ICrafting, ItemStack, EntityPlayer
 
 public class ContainerFurnace extends Container
 {
@@ -43,6 +43,14 @@ public class ContainerFurnace extends Container
 
     }
 
+    public void onCraftGuiOpened(ICrafting icrafting)
+    {
+        super.onCraftGuiOpened(icrafting);
+        icrafting.updateCraftingInventoryInfo(this, 0, furnace.furnaceCookTime);
+        icrafting.updateCraftingInventoryInfo(this, 1, furnace.furnaceBurnTime);
+        icrafting.updateCraftingInventoryInfo(this, 2, furnace.currentItemBurnTime);
+    }
+
     public void updateCraftingResults()
     {
         super.updateCraftingResults();
@@ -66,22 +74,6 @@ public class ContainerFurnace extends Container
         lastCookTime = furnace.furnaceCookTime;
         lastBurnTime = furnace.furnaceBurnTime;
         lastItemBurnTime = furnace.currentItemBurnTime;
-    }
-
-    public void updateProgressBar(int i, int j)
-    {
-        if(i == 0)
-        {
-            furnace.furnaceCookTime = j;
-        }
-        if(i == 1)
-        {
-            furnace.furnaceBurnTime = j;
-        }
-        if(i == 2)
-        {
-            furnace.currentItemBurnTime = j;
-        }
     }
 
     public boolean canInteractWith(EntityPlayer entityplayer)

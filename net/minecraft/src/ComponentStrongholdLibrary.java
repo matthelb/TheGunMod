@@ -15,30 +15,30 @@ import java.util.Random;
 public class ComponentStrongholdLibrary extends ComponentStronghold
 {
 
-    private static final StructurePieceTreasure field_35056_b[];
-    protected final EnumDoor field_35058_a;
-    private final boolean field_35057_c;
+    private static final StructurePieceTreasure field_35335_b[];
+    protected final EnumDoor field_35337_a;
+    private final boolean field_35336_c;
 
     public ComponentStrongholdLibrary(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
         coordBaseMode = j;
-        field_35058_a = getRandomDoor(random);
+        field_35337_a = func_35322_a(random);
         boundingBox = structureboundingbox;
-        field_35057_c = structureboundingbox.getYSize() > 6;
+        field_35336_c = structureboundingbox.bbHeight() > 6;
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
     }
 
-    public static ComponentStrongholdLibrary func_35055_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentStrongholdLibrary func_35334_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -4, -1, 0, 14, 11, 15, l);
-        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -4, -1, 0, 14, 6, 15, l);
-            if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+            if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
             {
                 return null;
             }
@@ -53,12 +53,12 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
             return false;
         }
         byte byte0 = 11;
-        if(!field_35057_c)
+        if(!field_35336_c)
         {
             byte0 = 6;
         }
         fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 13, byte0 - 1, 14, true, random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(world, random, structureboundingbox, field_35058_a, 4, 1, 0);
+        placeDoor(world, random, structureboundingbox, field_35337_a, 4, 1, 0);
         randomlyFillWithBlocks(world, structureboundingbox, random, 0.07F, 2, 1, 1, 11, 4, 13, Block.web.blockID, Block.web.blockID, false);
         for(int i = 1; i <= 13; i++)
         {
@@ -68,7 +68,7 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
                 fillWithBlocks(world, structureboundingbox, 12, 1, i, 12, 4, i, Block.planks.blockID, Block.planks.blockID, false);
                 placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 2, 3, i, structureboundingbox);
                 placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 11, 3, i, structureboundingbox);
-                if(field_35057_c)
+                if(field_35336_c)
                 {
                     fillWithBlocks(world, structureboundingbox, 1, 6, i, 1, 9, i, Block.planks.blockID, Block.planks.blockID, false);
                     fillWithBlocks(world, structureboundingbox, 12, 6, i, 12, 9, i, Block.planks.blockID, Block.planks.blockID, false);
@@ -77,7 +77,7 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
             }
             fillWithBlocks(world, structureboundingbox, 1, 1, i, 1, 4, i, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
             fillWithBlocks(world, structureboundingbox, 12, 1, i, 12, 4, i, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
-            if(field_35057_c)
+            if(field_35336_c)
             {
                 fillWithBlocks(world, structureboundingbox, 1, 6, i, 1, 9, i, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
                 fillWithBlocks(world, structureboundingbox, 12, 6, i, 12, 9, i, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
@@ -91,7 +91,7 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
             fillWithBlocks(world, structureboundingbox, 9, 1, j, 10, 3, j, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
         }
 
-        if(field_35057_c)
+        if(field_35336_c)
         {
             fillWithBlocks(world, structureboundingbox, 1, 5, 1, 3, 5, 13, Block.planks.blockID, Block.planks.blockID, false);
             fillWithBlocks(world, structureboundingbox, 10, 5, 1, 12, 5, 13, Block.planks.blockID, Block.planks.blockID, false);
@@ -136,18 +136,18 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
             placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, byte1, 8, byte2 - 1, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, byte1, 8, byte2 + 1, structureboundingbox);
         }
-        createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 3, 3, 5, field_35056_b, 1 + random.nextInt(4));
-        if(field_35057_c)
+        createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 3, 3, 5, field_35335_b, 1 + random.nextInt(4));
+        if(field_35336_c)
         {
             placeBlockAtCurrentPosition(world, 0, 0, 12, 9, 1, structureboundingbox);
-            createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 12, 8, 1, field_35056_b, 1 + random.nextInt(4));
+            createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 12, 8, 1, field_35335_b, 1 + random.nextInt(4));
         }
         return true;
     }
 
     static 
     {
-        field_35056_b = (new StructurePieceTreasure[] {
+        field_35335_b = (new StructurePieceTreasure[] {
             new StructurePieceTreasure(Item.book.shiftedIndex, 0, 1, 3, 20), new StructurePieceTreasure(Item.paper.shiftedIndex, 0, 2, 7, 20), new StructurePieceTreasure(Item.map.shiftedIndex, 0, 1, 1, 1), new StructurePieceTreasure(Item.compass.shiftedIndex, 0, 1, 1, 1)
         });
     }

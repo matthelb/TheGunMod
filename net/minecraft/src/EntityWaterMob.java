@@ -7,9 +7,11 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            EntityCreature, World, NBTTagCompound, EntityPlayer
+//            EntityCreature, IAnimals, World, NBTTagCompound, 
+//            EntityPlayer
 
 public abstract class EntityWaterMob extends EntityCreature
+    implements IAnimals
 {
 
     public EntityWaterMob(World world)

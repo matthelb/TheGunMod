@@ -37,7 +37,7 @@ public abstract class EntityMob extends EntityCreature
     public void onUpdate()
     {
         super.onUpdate();
-        if(!worldObj.multiplayerWorld && worldObj.difficultySetting == 0)
+        if(!worldObj.singleplayerWorld && worldObj.difficultySetting == 0)
         {
             setEntityDead();
         }
@@ -113,7 +113,7 @@ public abstract class EntityMob extends EntityCreature
         super.readEntityFromNBT(nbttagcompound);
     }
 
-    protected boolean func_40147_Y()
+    protected boolean func_40123_y()
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
@@ -135,6 +135,6 @@ public abstract class EntityMob extends EntityCreature
 
     public boolean getCanSpawnHere()
     {
-        return func_40147_Y() && super.getCanSpawnHere();
+        return func_40123_y() && super.getCanSpawnHere();
     }
 }

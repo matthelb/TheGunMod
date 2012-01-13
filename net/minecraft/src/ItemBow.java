@@ -22,7 +22,7 @@ public class ItemBow extends Item
 
     public void onPlayerStoppedUsing(ItemStack itemstack, World world, EntityPlayer entityplayer, int i)
     {
-        if(entityplayer.capabilities.depleteBuckets || entityplayer.inventory.hasItem(Item.arrow.shiftedIndex))
+        if(entityplayer.capabilities.depleteBuckets || entityplayer.inventory.hasItemInInventory(Item.arrow.shiftedIndex))
         {
             int j = getMaxItemUseDuration(itemstack) - i;
             float f = (float)j / 20F;
@@ -43,7 +43,7 @@ public class ItemBow extends Item
             itemstack.damageItem(1, entityplayer);
             world.playSoundAtEntity(entityplayer, "random.bow", 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
             entityplayer.inventory.consumeInventoryItem(Item.arrow.shiftedIndex);
-            if(!world.multiplayerWorld)
+            if(!world.singleplayerWorld)
             {
                 world.spawnEntityInWorld(entityarrow);
             }
@@ -60,14 +60,14 @@ public class ItemBow extends Item
         return 0x11940;
     }
 
-    public EnumAction getItemUseAction(ItemStack itemstack)
+    public EnumAction getAction(ItemStack itemstack)
     {
         return EnumAction.bow;
     }
 
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        if(entityplayer.capabilities.depleteBuckets || entityplayer.inventory.hasItem(Item.arrow.shiftedIndex))
+        if(entityplayer.capabilities.depleteBuckets || entityplayer.inventory.hasItemInInventory(Item.arrow.shiftedIndex))
         {
             entityplayer.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
         }

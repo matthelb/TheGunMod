@@ -25,7 +25,7 @@ public abstract class StructureStart
         return boundingBox;
     }
 
-    public LinkedList func_40560_b()
+    public LinkedList func_40208_c()
     {
         return components;
     }
@@ -40,7 +40,7 @@ public abstract class StructureStart
                 break;
             }
             StructureComponent structurecomponent = (StructureComponent)iterator.next();
-            if(structurecomponent.getBoundingBox().intersectsWith(structureboundingbox) && !structurecomponent.addComponentParts(world, random, structureboundingbox))
+            if(structurecomponent.getStructureBoundingBox().canFitInside(structureboundingbox) && !structurecomponent.addComponentParts(world, random, structureboundingbox))
             {
                 iterator.remove();
             }
@@ -51,7 +51,7 @@ public abstract class StructureStart
     {
         boundingBox = StructureBoundingBox.getNewBoundingBox();
         StructureComponent structurecomponent;
-        for(Iterator iterator = components.iterator(); iterator.hasNext(); boundingBox.resizeBoundingBoxTo(structurecomponent.getBoundingBox()))
+        for(Iterator iterator = components.iterator(); iterator.hasNext(); boundingBox.expandTo(structurecomponent.getStructureBoundingBox()))
         {
             structurecomponent = (StructureComponent)iterator.next();
         }
@@ -60,8 +60,8 @@ public abstract class StructureStart
 
     protected void markAvailableHeight(World world, Random random, int i)
     {
-        int j = world.seaLevel - i;
-        int k = boundingBox.getYSize() + 1;
+        int j = world.worldOceanHeight - i;
+        int k = boundingBox.bbHeight() + 1;
         if(k < j)
         {
             k += random.nextInt(j - k);
@@ -69,16 +69,16 @@ public abstract class StructureStart
         int l = k - boundingBox.maxY;
         boundingBox.offset(0, l, 0);
         StructureComponent structurecomponent;
-        for(Iterator iterator = components.iterator(); iterator.hasNext(); structurecomponent.getBoundingBox().offset(0, l, 0))
+        for(Iterator iterator = components.iterator(); iterator.hasNext(); structurecomponent.getStructureBoundingBox().offset(0, l, 0))
         {
             structurecomponent = (StructureComponent)iterator.next();
         }
 
     }
 
-    protected void func_40559_a(World world, Random random, int i, int j)
+    protected void func_40209_a(World world, Random random, int i, int j)
     {
-        int k = ((j - i) + 1) - boundingBox.getYSize();
+        int k = ((j - i) + 1) - boundingBox.bbHeight();
         int l = 1;
         if(k > 1)
         {
@@ -90,7 +90,7 @@ public abstract class StructureStart
         int i1 = l - boundingBox.minY;
         boundingBox.offset(0, i1, 0);
         StructureComponent structurecomponent;
-        for(Iterator iterator = components.iterator(); iterator.hasNext(); structurecomponent.getBoundingBox().offset(0, i1, 0))
+        for(Iterator iterator = components.iterator(); iterator.hasNext(); structurecomponent.getStructureBoundingBox().offset(0, i1, 0))
         {
             structurecomponent = (StructureComponent)iterator.next();
         }

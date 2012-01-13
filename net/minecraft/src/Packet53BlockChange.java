@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
+//            Packet, World, NetHandler
 
 public class Packet53BlockChange extends Packet
 {
@@ -21,6 +21,16 @@ public class Packet53BlockChange extends Packet
     public Packet53BlockChange()
     {
         isChunkDataPacket = true;
+    }
+
+    public Packet53BlockChange(int i, int j, int k, World world)
+    {
+        isChunkDataPacket = true;
+        xPosition = i;
+        yPosition = j;
+        zPosition = k;
+        type = world.getBlockId(i, j, k);
+        metadata = world.getBlockMetadata(i, j, k);
     }
 
     public void readPacketData(DataInputStream datainputstream)

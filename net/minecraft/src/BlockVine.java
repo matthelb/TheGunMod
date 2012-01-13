@@ -8,9 +8,8 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, Material, IBlockAccess, World, 
-//            Direction, ColorizerFoliage, WorldChunkManager, BiomeGenBase, 
-//            EntityPlayer, ItemStack, Item, ItemShears, 
-//            StatList, AxisAlignedBB
+//            Direction, EntityPlayer, ItemStack, Item, 
+//            ItemShears, StatList, AxisAlignedBB
 
 public class BlockVine extends Block
 {
@@ -151,7 +150,7 @@ public class BlockVine extends Block
             for(int j1 = 0; j1 <= 3; j1++)
             {
                 int k1 = 1 << j1;
-                if((l & k1) != 0 && !canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[j1], j, k + Direction.field_35870_b[j1])) && (world.getBlockId(i, j + 1, k) != blockID || (world.getBlockMetadata(i, j + 1, k) & k1) == 0))
+                if((l & k1) != 0 && !canBePlacedOn(world.getBlockId(i + Direction.field_35612_a[j1], j, k + Direction.field_35610_b[j1])) && (world.getBlockId(i, j + 1, k) != blockID || (world.getBlockMetadata(i, j + 1, k) & k1) == 0))
                 {
                     i1 &= ~k1;
                 }
@@ -169,24 +168,9 @@ public class BlockVine extends Block
         return true;
     }
 
-    public int getBlockColor()
-    {
-        return ColorizerFoliage.getFoliageColorBasic();
-    }
-
-    public int getRenderColor(int i)
-    {
-        return ColorizerFoliage.getFoliageColorBasic();
-    }
-
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).getFoliageColorAtCoords(iblockaccess, i, j, k);
-    }
-
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if(!world.multiplayerWorld && !canVineStay(world, i, j, k))
+        if(!world.singleplayerWorld && !canVineStay(world, i, j, k))
         {
             dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
@@ -195,7 +179,7 @@ public class BlockVine extends Block
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(!world.multiplayerWorld && world.rand.nextInt(4) == 0)
+        if(!world.singleplayerWorld && world.rand.nextInt(4) == 0)
         {
             byte byte0 = 4;
             int l = 5;
@@ -231,7 +215,7 @@ label1:
             } while(true);
             i1 = world.getBlockMetadata(i, j, k);
             int k1 = world.rand.nextInt(6);
-            int i2 = Direction.field_35869_d[k1];
+            int i2 = Direction.field_35609_d[k1];
             if(k1 == 1 && j < world.worldHeight - 1 && world.isAirBlock(i, j + 1, k))
             {
                 if(flag)
@@ -243,7 +227,7 @@ label1:
                 {
                     for(int i3 = 0; i3 <= 3; i3++)
                     {
-                        if(!canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i3], j + 1, k + Direction.field_35870_b[i3])))
+                        if(!canBePlacedOn(world.getBlockId(i + Direction.field_35612_a[i3], j + 1, k + Direction.field_35610_b[i3])))
                         {
                             j2 &= ~(1 << i3);
                         }
@@ -261,30 +245,30 @@ label1:
                 {
                     return;
                 }
-                int k2 = world.getBlockId(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2]);
+                int k2 = world.getBlockId(i + Direction.field_35612_a[i2], j, k + Direction.field_35610_b[i2]);
                 if(k2 == 0 || Block.blocksList[k2] == null)
                 {
                     int j3 = i2 + 1 & 3;
                     int i4 = i2 + 3 & 3;
-                    if((i1 & 1 << j3) != 0 && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i2] + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[j3])))
+                    if((i1 & 1 << j3) != 0 && canBePlacedOn(world.getBlockId(i + Direction.field_35612_a[i2] + Direction.field_35612_a[j3], j, k + Direction.field_35610_b[i2] + Direction.field_35610_b[j3])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2], blockID, 1 << j3);
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35612_a[i2], j, k + Direction.field_35610_b[i2], blockID, 1 << j3);
                     } else
-                    if((i1 & 1 << i4) != 0 && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i2] + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[i4])))
+                    if((i1 & 1 << i4) != 0 && canBePlacedOn(world.getBlockId(i + Direction.field_35612_a[i2] + Direction.field_35612_a[i4], j, k + Direction.field_35610_b[i2] + Direction.field_35610_b[i4])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2], blockID, 1 << i4);
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35612_a[i2], j, k + Direction.field_35610_b[i2], blockID, 1 << i4);
                     } else
-                    if((i1 & 1 << j3) != 0 && world.isAirBlock(i + Direction.field_35871_a[i2] + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[j3]) && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[j3])))
+                    if((i1 & 1 << j3) != 0 && world.isAirBlock(i + Direction.field_35612_a[i2] + Direction.field_35612_a[j3], j, k + Direction.field_35610_b[i2] + Direction.field_35610_b[j3]) && canBePlacedOn(world.getBlockId(i + Direction.field_35612_a[j3], j, k + Direction.field_35610_b[j3])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2] + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[j3], blockID, 1 << (i2 + 2 & 3));
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35612_a[i2] + Direction.field_35612_a[j3], j, k + Direction.field_35610_b[i2] + Direction.field_35610_b[j3], blockID, 1 << (i2 + 2 & 3));
                     } else
-                    if((i1 & 1 << i4) != 0 && world.isAirBlock(i + Direction.field_35871_a[i2] + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[i4]) && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i4])))
+                    if((i1 & 1 << i4) != 0 && world.isAirBlock(i + Direction.field_35612_a[i2] + Direction.field_35612_a[i4], j, k + Direction.field_35610_b[i2] + Direction.field_35610_b[i4]) && canBePlacedOn(world.getBlockId(i + Direction.field_35612_a[i4], j, k + Direction.field_35610_b[i4])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2] + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[i4], blockID, 1 << (i2 + 2 & 3));
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35612_a[i2] + Direction.field_35612_a[i4], j, k + Direction.field_35610_b[i2] + Direction.field_35610_b[i4], blockID, 1 << (i2 + 2 & 3));
                     } else
-                    if(canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i2], j + 1, k + Direction.field_35870_b[i2])))
+                    if(canBePlacedOn(world.getBlockId(i + Direction.field_35612_a[i2], j + 1, k + Direction.field_35610_b[i2])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2], blockID, 0);
+                        world.setBlockAndMetadataWithNotify(i + Direction.field_35612_a[i2], j, k + Direction.field_35610_b[i2], blockID, 0);
                     }
                 } else
                 if(Block.blocksList[k2].blockMaterial.getIsOpaque() && Block.blocksList[k2].renderAsNormalBlock())
@@ -355,7 +339,7 @@ label1:
 
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
-        if(!world.multiplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
+        if(!world.singleplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
         {
             entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
             dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.vine, 1, 0));

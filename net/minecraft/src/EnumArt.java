@@ -67,7 +67,7 @@ public enum EnumArt
     public final int offsetY;
     private static final EnumArt allArt[]; /* synthetic field */
 /*
-    public static final EnumArt[] values()
+    public static EnumArt[] values()
     {
         return (EnumArt[])allArt.clone();
     }

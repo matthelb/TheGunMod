@@ -7,10 +7,8 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            BlockFlower, ColorizerGrass, ColorizerFoliage, IBlockAccess, 
-//            WorldChunkManager, BiomeGenBase, Item, World, 
-//            EntityPlayer, ItemStack, ItemShears, StatList, 
-//            Block
+//            BlockFlower, Item, World, EntityPlayer, 
+//            ItemStack, ItemShears, StatList, Block
 
 public class BlockTallGrass extends BlockFlower
 {
@@ -41,36 +39,6 @@ public class BlockTallGrass extends BlockFlower
         }
     }
 
-    public int getBlockColor()
-    {
-        double d = 0.5D;
-        double d1 = 1.0D;
-        return ColorizerGrass.getGrassColor(d, d1);
-    }
-
-    public int getRenderColor(int i)
-    {
-        if(i == 0)
-        {
-            return 0xffffff;
-        } else
-        {
-            return ColorizerFoliage.getFoliageColorBasic();
-        }
-    }
-
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        int l = iblockaccess.getBlockMetadata(i, j, k);
-        if(l == 0)
-        {
-            return 0xffffff;
-        } else
-        {
-            return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).getGrassColorAtCoords(iblockaccess, i, j, k);
-        }
-    }
-
     public int idDropped(int i, Random random, int j)
     {
         if(random.nextInt(8) == 0)
@@ -89,7 +57,7 @@ public class BlockTallGrass extends BlockFlower
 
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
-        if(!world.multiplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
+        if(!world.singleplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
         {
             entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
             dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.tallGrass, 1, l));

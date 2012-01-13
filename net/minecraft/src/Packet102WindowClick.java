@@ -23,16 +23,6 @@ public class Packet102WindowClick extends Packet
     {
     }
 
-    public Packet102WindowClick(int i, int j, int k, boolean flag, ItemStack itemstack, short word0)
-    {
-        window_Id = i;
-        inventorySlot = j;
-        mouseClick = k;
-        itemStack = itemstack;
-        action = word0;
-        holdingShift = flag;
-    }
-
     public void processPacket(NetHandler nethandler)
     {
         nethandler.handleWindowClick(this);
@@ -46,7 +36,7 @@ public class Packet102WindowClick extends Packet
         mouseClick = datainputstream.readByte();
         action = datainputstream.readShort();
         holdingShift = datainputstream.readBoolean();
-        itemStack = func_40187_b(datainputstream);
+        itemStack = func_40262_b(datainputstream);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)

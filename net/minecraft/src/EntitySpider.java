@@ -36,9 +36,9 @@ public class EntitySpider extends EntityMob
     public void onUpdate()
     {
         super.onUpdate();
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
-            func_40148_a(isCollidedHorizontally);
+            func_40125_a(isCollidedHorizontally);
         }
     }
 
@@ -136,16 +136,11 @@ public class EntitySpider extends EntityMob
 
     public boolean isOnLadder()
     {
-        return func_40149_l_();
+        return func_40124_p_();
     }
 
     public void setInWeb()
     {
-    }
-
-    public float spiderScaleAmount()
-    {
-        return 1.0F;
     }
 
     public EnumCreatureAttribute getCreatureAttribute()
@@ -153,23 +148,23 @@ public class EntitySpider extends EntityMob
         return EnumCreatureAttribute.ARTHROPOD;
     }
 
-    public boolean func_40126_a(PotionEffect potioneffect)
+    public boolean func_40096_a(PotionEffect potioneffect)
     {
         if(potioneffect.getPotionID() == Potion.poison.id)
         {
             return false;
         } else
         {
-            return super.func_40126_a(potioneffect);
+            return super.func_40096_a(potioneffect);
         }
     }
 
-    public boolean func_40149_l_()
+    public boolean func_40124_p_()
     {
         return (dataWatcher.getWatchableObjectByte(16) & 1) != 0;
     }
 
-    public void func_40148_a(boolean flag)
+    public void func_40125_a(boolean flag)
     {
         byte byte0 = dataWatcher.getWatchableObjectByte(16);
         if(flag)

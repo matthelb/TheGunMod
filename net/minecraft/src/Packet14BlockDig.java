@@ -22,15 +22,6 @@ public class Packet14BlockDig extends Packet
     {
     }
 
-    public Packet14BlockDig(int i, int j, int k, int l, int i1)
-    {
-        status = i;
-        xPosition = j;
-        yPosition = k;
-        zPosition = l;
-        face = i1;
-    }
-
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, Entity, NetHandler
+//            Packet, NetHandler
 
 public class Packet19EntityAction extends Packet
 {
@@ -17,12 +17,6 @@ public class Packet19EntityAction extends Packet
 
     public Packet19EntityAction()
     {
-    }
-
-    public Packet19EntityAction(Entity entity, int i)
-    {
-        entityId = entity.entityId;
-        state = i;
     }
 
     public void readPacketData(DataInputStream datainputstream)

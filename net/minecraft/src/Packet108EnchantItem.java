@@ -19,12 +19,6 @@ public class Packet108EnchantItem extends Packet
     {
     }
 
-    public Packet108EnchantItem(int i, int j)
-    {
-        windowId = i;
-        enchantment = j;
-    }
-
     public void processPacket(NetHandler nethandler)
     {
         nethandler.handleEnchantItem(this);

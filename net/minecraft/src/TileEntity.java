@@ -9,10 +9,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 // Referenced classes of package net.minecraft.src:
-//            NBTTagCompound, World, Block, TileEntityFurnace, 
-//            TileEntityChest, TileEntityRecordPlayer, TileEntityDispenser, TileEntitySign, 
-//            TileEntityMobSpawner, TileEntityNote, TileEntityPiston, TileEntityBrewingStand, 
-//            TileEntityEnchantmentTable, TileEntityEndPortal
+//            NBTTagCompound, World, TileEntityFurnace, TileEntityChest, 
+//            TileEntityRecordPlayer, TileEntityDispenser, TileEntitySign, TileEntityMobSpawner, 
+//            TileEntityNote, TileEntityPiston, TileEntityBrewingStand, TileEntityEnchantmentTable, 
+//            TileEntityEndPortal, Block, Packet
 
 public class TileEntity
 {
@@ -115,21 +115,9 @@ public class TileEntity
         }
     }
 
-    public double getDistanceFrom(double d, double d1, double d2)
+    public Packet getDescriptionPacket()
     {
-        double d3 = ((double)xCoord + 0.5D) - d;
-        double d4 = ((double)yCoord + 0.5D) - d1;
-        double d5 = ((double)zCoord + 0.5D) - d2;
-        return d3 * d3 + d4 * d4 + d5 * d5;
-    }
-
-    public Block getBlockType()
-    {
-        if(blockType == null)
-        {
-            blockType = Block.blocksList[worldObj.getBlockId(xCoord, yCoord, zCoord)];
-        }
-        return blockType;
+        return null;
     }
 
     public boolean isInvalid()

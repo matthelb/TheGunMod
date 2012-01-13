@@ -67,7 +67,7 @@ public abstract class EntityFlying extends EntityLiving
             motionY *= f2;
             motionZ *= f2;
         }
-        field_705_Q = field_704_R;
+        field_9142_bc = field_9141_bd;
         double d = posX - prevPosX;
         double d1 = posZ - prevPosZ;
         float f4 = MathHelper.sqrt_double(d * d + d1 * d1) * 4F;
@@ -75,8 +75,8 @@ public abstract class EntityFlying extends EntityLiving
         {
             f4 = 1.0F;
         }
-        field_704_R += (f4 - field_704_R) * 0.4F;
-        field_703_S += field_704_R;
+        field_9141_bd += (f4 - field_9141_bd) * 0.4F;
+        field_386_ba += field_9141_bd;
     }
 
     public boolean isOnLadder()

@@ -16,7 +16,7 @@ public class StatList
 {
 
     protected static Map oneShotStats = new HashMap();
-    public static List field_25188_a = new ArrayList();
+    public static List field_25123_a = new ArrayList();
     public static List generalStats = new ArrayList();
     public static List itemStats = new ArrayList();
     public static List objectMineStats = new ArrayList();
@@ -54,14 +54,14 @@ public class StatList
     {
     }
 
-    public static void func_27360_a()
+    public static void func_27092_a()
     {
     }
 
     public static void initBreakableStats()
     {
         objectUseStats = initUsableStats(objectUseStats, "stat.useItem", 0x1020000, 0, Block.blocksList.length);
-        objectBreakStats = func_25149_b(objectBreakStats, "stat.breakItem", 0x1030000, 0, Block.blocksList.length);
+        objectBreakStats = func_25087_b(objectBreakStats, "stat.breakItem", 0x1030000, 0, Block.blocksList.length);
         blockStatsInitialized = true;
         initCraftableStats();
     }
@@ -69,7 +69,7 @@ public class StatList
     public static void initStats()
     {
         objectUseStats = initUsableStats(objectUseStats, "stat.useItem", 0x1020000, Block.blocksList.length, 32000);
-        objectBreakStats = func_25149_b(objectBreakStats, "stat.breakItem", 0x1030000, Block.blocksList.length, 32000);
+        objectBreakStats = func_25087_b(objectBreakStats, "stat.breakItem", 0x1030000, Block.blocksList.length, 32000);
         itemStatsInitialized = true;
         initCraftableStats();
     }
@@ -158,7 +158,7 @@ public class StatList
         return astatbase;
     }
 
-    private static StatBase[] func_25149_b(StatBase astatbase[], String s, int i, int j, int k)
+    private static StatBase[] func_25087_b(StatBase astatbase[], String s, int i, int j, int k)
     {
         if(astatbase == null)
         {
@@ -202,17 +202,12 @@ public class StatList
             return;
         } else
         {
-            field_25188_a.remove(astatbase[i]);
+            field_25123_a.remove(astatbase[i]);
             objectMineStats.remove(astatbase[i]);
             generalStats.remove(astatbase[i]);
             astatbase[i] = astatbase[j];
             return;
         }
-    }
-
-    public static StatBase getOneShotStat(int i)
-    {
-        return (StatBase)oneShotStats.get(Integer.valueOf(i));
     }
 
     static 
@@ -227,7 +222,6 @@ public class StatList
         distanceByMinecartStat = (new StatBasic(2006, StatCollector.translateToLocal("stat.minecartOneCm"), StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByBoatStat = (new StatBasic(2007, StatCollector.translateToLocal("stat.boatOneCm"), StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByPigStat = (new StatBasic(2008, StatCollector.translateToLocal("stat.pigOneCm"), StatBase.distanceStatType)).initIndependentStat().registerStat();
-        if(mod_Guns.DEBUG)
-            AchievementList.func_27374_a();
+        AchievementList.func_27097_a();
     }
 }

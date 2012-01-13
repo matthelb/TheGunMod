@@ -54,28 +54,6 @@ public class EntityXPOrb extends Entity
     {
     }
 
-    public int getEntityBrightnessForRender(float f)
-    {
-        float f1 = 0.5F;
-        if(f1 < 0.0F)
-        {
-            f1 = 0.0F;
-        }
-        if(f1 > 1.0F)
-        {
-            f1 = 1.0F;
-        }
-        int i = super.getEntityBrightnessForRender(f);
-        int j = i & 0xff;
-        int k = i >> 16 & 0xff;
-        j += (int)(f1 * 15F * 16F);
-        if(j > 240)
-        {
-            j = 240;
-        }
-        return j | k << 16;
-    }
-
     public void onUpdate()
     {
         super.onUpdate();
@@ -175,7 +153,7 @@ public class EntityXPOrb extends Entity
 
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
             return;
         }
@@ -184,7 +162,7 @@ public class EntityXPOrb extends Entity
             entityplayer.xpCooldown = 2;
             worldObj.playSoundAtEntity(this, "random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
             entityplayer.onItemPickup(this, 1);
-            entityplayer.increaseXP(xpValue);
+            entityplayer.addExperience(xpValue);
             setEntityDead();
         }
     }
@@ -194,48 +172,7 @@ public class EntityXPOrb extends Entity
         return xpValue;
     }
 
-    public int getTextureByXP()
-    {
-        if(xpValue >= 2477)
-        {
-            return 10;
-        }
-        if(xpValue >= 1237)
-        {
-            return 9;
-        }
-        if(xpValue >= 617)
-        {
-            return 8;
-        }
-        if(xpValue >= 307)
-        {
-            return 7;
-        }
-        if(xpValue >= 149)
-        {
-            return 6;
-        }
-        if(xpValue >= 73)
-        {
-            return 5;
-        }
-        if(xpValue >= 37)
-        {
-            return 4;
-        }
-        if(xpValue >= 17)
-        {
-            return 3;
-        }
-        if(xpValue >= 7)
-        {
-            return 2;
-        }
-        return xpValue < 3 ? 0 : 1;
-    }
-
-    public static int getXPSplit(int i)
+    public static int getMore(int i)
     {
         if(i >= 2477)
         {

@@ -25,7 +25,7 @@ public class BlockFire extends Block
         setTickOnLoad(true);
     }
 
-    public void initializeBlock()
+    public void setFireBurnRates()
     {
         setBurnRate(Block.planks.blockID, 5, 20);
         setBurnRate(Block.fence.blockID, 5, 20);
@@ -97,7 +97,7 @@ public class BlockFire extends Block
             world.setBlockMetadata(i, j, k, l + random.nextInt(3) / 2);
         }
         world.scheduleBlockUpdate(i, j, k, blockID, tickRate());
-        if(!flag && !func_263_h(world, i, j, k))
+        if(!flag && !func_268_g(world, i, j, k))
         {
             if(!world.isBlockNormalCube(i, j - 1, k) || l > 3)
             {
@@ -180,7 +180,7 @@ public class BlockFire extends Block
         }
     }
 
-    private boolean func_263_h(World world, int i, int j, int k)
+    private boolean func_268_g(World world, int i, int j, int k)
     {
         if(canBlockCatchFire(world, i + 1, j, k))
         {
@@ -247,12 +247,12 @@ public class BlockFire extends Block
 
     public boolean canPlaceBlockAt(World world, int i, int j, int k)
     {
-        return world.isBlockNormalCube(i, j - 1, k) || func_263_h(world, i, j, k);
+        return world.isBlockNormalCube(i, j - 1, k) || func_268_g(world, i, j, k);
     }
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if(!world.isBlockNormalCube(i, j - 1, k) && !func_263_h(world, i, j, k))
+        if(!world.isBlockNormalCube(i, j - 1, k) && !func_268_g(world, i, j, k))
         {
             world.setBlockWithNotify(i, j, k, 0);
             return;
@@ -268,7 +268,7 @@ public class BlockFire extends Block
         {
             return;
         }
-        if(!world.isBlockNormalCube(i, j - 1, k) && !func_263_h(world, i, j, k))
+        if(!world.isBlockNormalCube(i, j - 1, k) && !func_268_g(world, i, j, k))
         {
             world.setBlockWithNotify(i, j, k, 0);
             return;
@@ -276,82 +276,6 @@ public class BlockFire extends Block
         {
             world.scheduleBlockUpdate(i, j, k, blockID, tickRate());
             return;
-        }
-    }
-
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
-    {
-        if(random.nextInt(24) == 0)
-        {
-            world.playSoundEffect((float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, "fire.fire", 1.0F + random.nextFloat(), random.nextFloat() * 0.7F + 0.3F);
-        }
-        if(world.isBlockNormalCube(i, j - 1, k) || Block.fire.canBlockCatchFire(world, i, j - 1, k))
-        {
-            for(int l = 0; l < 3; l++)
-            {
-                float f = (float)i + random.nextFloat();
-                float f6 = (float)j + random.nextFloat() * 0.5F + 0.5F;
-                float f12 = (float)k + random.nextFloat();
-                world.spawnParticle("largesmoke", f, f6, f12, 0.0D, 0.0D, 0.0D);
-            }
-
-        } else
-        {
-            if(Block.fire.canBlockCatchFire(world, i - 1, j, k))
-            {
-                for(int i1 = 0; i1 < 2; i1++)
-                {
-                    float f1 = (float)i + random.nextFloat() * 0.1F;
-                    float f7 = (float)j + random.nextFloat();
-                    float f13 = (float)k + random.nextFloat();
-                    world.spawnParticle("largesmoke", f1, f7, f13, 0.0D, 0.0D, 0.0D);
-                }
-
-            }
-            if(Block.fire.canBlockCatchFire(world, i + 1, j, k))
-            {
-                for(int j1 = 0; j1 < 2; j1++)
-                {
-                    float f2 = (float)(i + 1) - random.nextFloat() * 0.1F;
-                    float f8 = (float)j + random.nextFloat();
-                    float f14 = (float)k + random.nextFloat();
-                    world.spawnParticle("largesmoke", f2, f8, f14, 0.0D, 0.0D, 0.0D);
-                }
-
-            }
-            if(Block.fire.canBlockCatchFire(world, i, j, k - 1))
-            {
-                for(int k1 = 0; k1 < 2; k1++)
-                {
-                    float f3 = (float)i + random.nextFloat();
-                    float f9 = (float)j + random.nextFloat();
-                    float f15 = (float)k + random.nextFloat() * 0.1F;
-                    world.spawnParticle("largesmoke", f3, f9, f15, 0.0D, 0.0D, 0.0D);
-                }
-
-            }
-            if(Block.fire.canBlockCatchFire(world, i, j, k + 1))
-            {
-                for(int l1 = 0; l1 < 2; l1++)
-                {
-                    float f4 = (float)i + random.nextFloat();
-                    float f10 = (float)j + random.nextFloat();
-                    float f16 = (float)(k + 1) - random.nextFloat() * 0.1F;
-                    world.spawnParticle("largesmoke", f4, f10, f16, 0.0D, 0.0D, 0.0D);
-                }
-
-            }
-            if(Block.fire.canBlockCatchFire(world, i, j + 1, k))
-            {
-                for(int i2 = 0; i2 < 2; i2++)
-                {
-                    float f5 = (float)i + random.nextFloat();
-                    float f11 = (float)(j + 1) - random.nextFloat() * 0.1F;
-                    float f17 = (float)k + random.nextFloat();
-                    world.spawnParticle("largesmoke", f5, f11, f17, 0.0D, 0.0D, 0.0D);
-                }
-
-            }
         }
     }
 }

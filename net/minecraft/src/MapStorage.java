@@ -40,7 +40,7 @@ public class MapStorage
         {
             try
             {
-                File file = saveHandler.getMapFile(s);
+                File file = saveHandler.getMapFileFromName(s);
                 if(file != null && file.exists())
                 {
                     try
@@ -110,7 +110,7 @@ public class MapStorage
         }
         try
         {
-            File file = saveHandler.getMapFile(worldsaveddata.mapName);
+            File file = saveHandler.getMapFileFromName(worldsaveddata.mapName);
             if(file != null)
             {
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
@@ -137,7 +137,7 @@ public class MapStorage
             {
                 return;
             }
-            File file = saveHandler.getMapFile("idcounts");
+            File file = saveHandler.getMapFileFromName("idcounts");
             if(file != null && file.exists())
             {
                 DataInputStream datainputstream = new DataInputStream(new FileInputStream(file));
@@ -186,7 +186,7 @@ public class MapStorage
         }
         try
         {
-            File file = saveHandler.getMapFile("idcounts");
+            File file = saveHandler.getMapFileFromName("idcounts");
             if(file != null)
             {
                 NBTTagCompound nbttagcompound = new NBTTagCompound();

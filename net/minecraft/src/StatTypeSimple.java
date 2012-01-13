@@ -4,21 +4,15 @@
 
 package net.minecraft.src;
 
-import java.text.NumberFormat;
 
 // Referenced classes of package net.minecraft.src:
-//            IStatType, StatBase
+//            IStatType
 
-class StatTypeSimple
+final class StatTypeSimple
     implements IStatType
 {
 
     StatTypeSimple()
     {
-    }
-
-    public String format(int i)
-    {
-        return StatBase.getNumberFormat().format(i);
     }
 }

@@ -13,7 +13,7 @@ import java.util.List;
 public class BiomeCache
 {
 
-    private final WorldChunkManager chunkmanager;
+    private final WorldChunkManager worldChunkManager;
     private long lastCleanupTime;
     private LongHashMap cacheMap;
     private List cache;
@@ -23,7 +23,7 @@ public class BiomeCache
         lastCleanupTime = 0L;
         cacheMap = new LongHashMap();
         cache = new ArrayList();
-        chunkmanager = worldchunkmanager;
+        worldChunkManager = worldchunkmanager;
     }
 
     public BiomeCacheBlock getBiomeCacheBlock(int i, int j)
@@ -42,19 +42,14 @@ public class BiomeCache
         return biomecacheblock;
     }
 
-    public BiomeGenBase getBiomeGenAt(int i, int j)
+    public BiomeGenBase func_35683_a(int i, int j)
     {
-        return getBiomeCacheBlock(i, j).getBiomeGenAt(i, j);
+        return getBiomeCacheBlock(i, j).func_35700_a(i, j);
     }
 
-    public float getTemperature(int i, int j)
+    public float func_40625_c(int i, int j)
     {
-        return getBiomeCacheBlock(i, j).getTemperature(i, j);
-    }
-
-    public float getRainfall(int i, int j)
-    {
-        return getBiomeCacheBlock(i, j).getRainfall(i, j);
+        return getBiomeCacheBlock(i, j).func_40626_b(i, j);
     }
 
     public void cleanupCache()
@@ -84,8 +79,8 @@ public class BiomeCache
         return getBiomeCacheBlock(i, j).biomes;
     }
 
-    static WorldChunkManager getWorldChunkManager(BiomeCache biomecache)
+    static WorldChunkManager getChunkManager(BiomeCache biomecache)
     {
-        return biomecache.chunkmanager;
+        return biomecache.worldChunkManager;
     }
 }

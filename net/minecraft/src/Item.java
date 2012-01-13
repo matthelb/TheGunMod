@@ -5,24 +5,22 @@
 package net.minecraft.src;
 
 import java.io.PrintStream;
-import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            ItemStack, StatCollector, EnumAction, StringTranslate, 
-//            EnumRarity, EntityPlayer, Vec3D, MathHelper, 
-//            World, ItemSpade, EnumToolMaterial, ItemPickaxe, 
-//            ItemAxe, ItemFlintAndSteel, ItemFood, ItemBow, 
-//            ItemCoal, ItemSword, ItemSoup, PotionHelper, 
-//            ItemHoe, ItemSeeds, Block, ItemArmor, 
-//            EnumArmorMaterial, ItemPainting, ItemAppleGold, Potion, 
-//            ItemSign, ItemDoor, Material, ItemBucket, 
-//            ItemMinecart, ItemSaddle, ItemRedstone, ItemSnowball, 
-//            ItemBoat, ItemBucketMilk, ItemReed, ItemEgg, 
-//            ItemFishingRod, ItemDye, ItemBed, ItemMap, 
-//            ItemShears, ItemEnderPearl, ItemPotion, ItemGlassBottle, 
-//            ItemEnderEye, ItemRecord, StatList, EntityLiving, 
-//            Entity, MovingObjectPosition
+//            StatCollector, EnumAction, EntityPlayer, Vec3D, 
+//            MathHelper, World, ItemSpade, EnumToolMaterial, 
+//            ItemPickaxe, ItemAxe, ItemFlintAndSteel, ItemFood, 
+//            ItemBow, ItemCoal, ItemSword, ItemSoup, 
+//            PotionHelper, ItemHoe, ItemSeeds, Block, 
+//            ItemArmor, EnumArmorMaterial, ItemPainting, ItemAppleGold, 
+//            Potion, ItemSign, ItemDoor, Material, 
+//            ItemBucket, ItemMinecart, ItemSaddle, ItemRedstone, 
+//            ItemSnowball, ItemBoat, ItemBucketMilk, ItemReed, 
+//            ItemEgg, ItemFishingRod, ItemDye, ItemBed, 
+//            ItemMap, ItemShears, ItemEnderPearl, ItemPotion, 
+//            ItemGlassBottle, ItemEnderEye, ItemRecord, StatList, 
+//            ItemStack, EntityLiving, Entity, MovingObjectPosition
 
 public class Item
 {
@@ -174,7 +172,7 @@ public class Item
     protected boolean bFull3D;
     protected boolean hasSubtypes;
     private Item containerItem;
-    private String potionModifier;
+    private String potionInfo;
     private String itemName;
 
     protected Item(int i)
@@ -184,7 +182,7 @@ public class Item
         bFull3D = false;
         hasSubtypes = false;
         containerItem = null;
-        potionModifier = null;
+        potionInfo = null;
         shiftedIndex = 256 + i;
         if(itemsList[256 + i] != null)
         {
@@ -209,16 +207,6 @@ public class Item
     {
         iconIndex = i + j * 16;
         return this;
-    }
-
-    public int getIconFromDamage(int i)
-    {
-        return iconIndex;
-    }
-
-    public final int getIconIndex(ItemStack itemstack)
-    {
-        return getIconFromDamage(itemstack.getItemDamage());
     }
 
     public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
@@ -246,7 +234,7 @@ public class Item
         return maxStackSize;
     }
 
-    public int getPlacedBlockMetadata(int i)
+    public int getMetadata(int i)
     {
         return 0;
     }
@@ -298,7 +286,7 @@ public class Item
         return false;
     }
 
-    public void useItemOnEntity(ItemStack itemstack, EntityLiving entityliving)
+    public void saddleEntity(ItemStack itemstack, EntityLiving entityliving)
     {
     }
 
@@ -308,32 +296,10 @@ public class Item
         return this;
     }
 
-    public boolean isFull3D()
-    {
-        return bFull3D;
-    }
-
-    public boolean shouldRotateAroundWhenRendering()
-    {
-        return false;
-    }
-
     public Item setItemName(String s)
     {
         itemName = (new StringBuilder()).append("item.").append(s).toString();
         return this;
-    }
-
-    public String getLocalItemName(ItemStack itemstack)
-    {
-        String s = getItemNameIS(itemstack);
-        if(s == null)
-        {
-            return "";
-        } else
-        {
-            return StatCollector.translateToLocal(s);
-        }
     }
 
     public String getItemName()
@@ -373,11 +339,6 @@ public class Item
         return StatCollector.translateToLocal((new StringBuilder()).append(getItemName()).append(".name").toString());
     }
 
-    public int getColorFromDamage(int i)
-    {
-        return 0xffffff;
-    }
-
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag)
     {
     }
@@ -386,7 +347,12 @@ public class Item
     {
     }
 
-    public EnumAction getItemUseAction(ItemStack itemstack)
+    public boolean func_28019_b()
+    {
+        return false;
+    }
+
+    public EnumAction getAction(ItemStack itemstack)
     {
         return EnumAction.none;
     }
@@ -400,46 +366,20 @@ public class Item
     {
     }
 
-    protected Item setPotionModifier(String s)
+    protected Item setPotionInfo(String s)
     {
-        potionModifier = s;
+        potionInfo = s;
         return this;
     }
 
-    public String getPotionModifier()
+    public String getPotionInfo()
     {
-        return potionModifier;
+        return potionInfo;
     }
 
-    public boolean isValidBrewingIngredient()
+    public boolean isPotionIngredient()
     {
-        return potionModifier != null;
-    }
-
-    public void addInformation(ItemStack itemstack, List list)
-    {
-    }
-
-    public String getItemDisplayName(ItemStack itemstack)
-    {
-        String s = (new StringBuilder()).append("").append(StringTranslate.getInstance().translateNamedKey(getLocalItemName(itemstack))).toString().trim();
-        return s;
-    }
-
-    public boolean hasEffect(ItemStack itemstack)
-    {
-        return itemstack.isItemEnchanted();
-    }
-
-    public EnumRarity getRarity(ItemStack itemstack)
-    {
-        if(itemstack.isItemEnchanted())
-        {
-            return EnumRarity.rare;
-        } else
-        {
-            return EnumRarity.common;
-        }
+        return potionInfo != null;
     }
 
     public boolean isItemTool(ItemStack itemstack)
@@ -447,7 +387,7 @@ public class Item
         return getItemStackLimit() == 1 && isDamageable();
     }
 
-    protected MovingObjectPosition func_40402_a(World world, EntityPlayer entityplayer, boolean flag)
+    protected MovingObjectPosition func_40225_a(World world, EntityPlayer entityplayer, boolean flag)
     {
         float f = 1.0F;
         float f1 = entityplayer.prevRotationPitch + (entityplayer.rotationPitch - entityplayer.prevRotationPitch) * f;
@@ -496,7 +436,7 @@ public class Item
         shovelGold = (new ItemSpade(28, EnumToolMaterial.GOLD)).setIconCoord(4, 5).setItemName("shovelGold");
         pickaxeGold = (new ItemPickaxe(29, EnumToolMaterial.GOLD)).setIconCoord(4, 6).setItemName("pickaxeGold");
         axeGold = (new ItemAxe(30, EnumToolMaterial.GOLD)).setIconCoord(4, 7).setItemName("hatchetGold");
-        gunpowder = (new Item(33)).setIconCoord(8, 2).setItemName("sulphur").setPotionModifier(PotionHelper.gunpowderEffect);
+        gunpowder = (new Item(33)).setIconCoord(8, 2).setItemName("sulphur").setPotionInfo(PotionHelper.gunpowderEffect);
         hoeWood = (new ItemHoe(34, EnumToolMaterial.WOOD)).setIconCoord(0, 8).setItemName("hoeWood");
         hoeStone = (new ItemHoe(35, EnumToolMaterial.STONE)).setIconCoord(1, 8).setItemName("hoeStone");
         hoeSteel = (new ItemHoe(36, EnumToolMaterial.IRON)).setIconCoord(2, 8).setItemName("hoeIron");
@@ -529,26 +469,26 @@ public class Item
         bucketWater = (new ItemBucket(70, Block.waterMoving.blockID)).setIconCoord(11, 4).setItemName("bucketWater").setContainerItem(bucketEmpty);
         bucketLava = (new ItemBucket(71, Block.lavaMoving.blockID)).setIconCoord(12, 4).setItemName("bucketLava").setContainerItem(bucketEmpty);
         doorSteel = (new ItemDoor(74, Material.iron)).setIconCoord(12, 2).setItemName("doorIron");
-        redstone = (new ItemRedstone(75)).setIconCoord(8, 3).setItemName("redstone").setPotionModifier(PotionHelper.redstoneEffect);
+        redstone = (new ItemRedstone(75)).setIconCoord(8, 3).setItemName("redstone").setPotionInfo(PotionHelper.redstoneEffect);
         bucketMilk = (new ItemBucketMilk(79)).setIconCoord(13, 4).setItemName("milk").setContainerItem(bucketEmpty);
         reed = (new ItemReed(82, Block.reed)).setIconCoord(11, 1).setItemName("reeds");
-        lightStoneDust = (new Item(92)).setIconCoord(9, 4).setItemName("yellowDust").setPotionModifier(PotionHelper.glowstoneEffect);
-        sugar = (new Item(97)).setIconCoord(13, 0).setItemName("sugar").setPotionModifier(PotionHelper.sugarEffect);
+        lightStoneDust = (new Item(92)).setIconCoord(9, 4).setItemName("yellowDust").setPotionInfo(PotionHelper.glowstoneEffect);
+        sugar = (new Item(97)).setIconCoord(13, 0).setItemName("sugar").setPotionInfo(PotionHelper.sugarEffect);
         cake = (new ItemReed(98, Block.cake)).setMaxStackSize(1).setIconCoord(13, 1).setItemName("cake");
         redstoneRepeater = (new ItemReed(100, Block.redstoneRepeaterIdle)).setIconCoord(6, 5).setItemName("diode");
         pumpkinSeeds = (new ItemSeeds(105, Block.pumpkinStem.blockID, Block.tilledField.blockID)).setIconCoord(13, 3).setItemName("seeds_pumpkin");
         melonSeeds = (new ItemSeeds(106, Block.melonStem.blockID, Block.tilledField.blockID)).setIconCoord(14, 3).setItemName("seeds_melon");
         chickenRaw = (new ItemFood(109, 2, 0.3F, true)).setPotionEffect(Potion.hunger.id, 30, 0, 0.3F).setIconCoord(9, 7).setItemName("chickenRaw");
         rottenFlesh = (new ItemFood(111, 4, 0.1F, true)).setPotionEffect(Potion.hunger.id, 30, 0, 0.8F).setIconCoord(11, 5).setItemName("rottenFlesh");
-        ghastTear = (new Item(114)).setIconCoord(11, 7).setItemName("ghastTear").setPotionModifier(PotionHelper.ghastTearEffect);
-        netherStalkSeeds = (new ItemSeeds(116, Block.netherStalk.blockID, Block.slowSand.blockID)).setIconCoord(13, 7).setItemName("netherStalkSeeds").setPotionModifier("+4");
-        spiderEye = (new ItemFood(119, 2, 0.8F, false)).setPotionEffect(Potion.poison.id, 5, 0, 1.0F).setIconCoord(11, 8).setItemName("spiderEye").setPotionModifier(PotionHelper.spiderEyeEffect);
-        fermentedSpiderEye = (new Item(120)).setIconCoord(10, 8).setItemName("fermentedSpiderEye").setPotionModifier(PotionHelper.fermentedSpiderEyeEffect);
-        blazePowder = (new Item(121)).setIconCoord(13, 9).setItemName("blazePowder").setPotionModifier(PotionHelper.blazePowderEffect);
-        magmaCream = (new Item(122)).setIconCoord(13, 10).setItemName("magmaCream").setPotionModifier(PotionHelper.magmaCreamEffect);
+        ghastTear = (new Item(114)).setIconCoord(11, 7).setItemName("ghastTear").setPotionInfo(PotionHelper.ghastTearEffect);
+        netherStalkSeeds = (new ItemSeeds(116, Block.netherStalk.blockID, Block.slowSand.blockID)).setIconCoord(13, 7).setItemName("netherStalkSeeds").setPotionInfo("+4");
+        spiderEye = (new ItemFood(119, 2, 0.8F, false)).setPotionEffect(Potion.poison.id, 5, 0, 1.0F).setIconCoord(11, 8).setItemName("spiderEye").setPotionInfo(PotionHelper.spiderEyeEffect);
+        fermentedSpiderEye = (new Item(120)).setIconCoord(10, 8).setItemName("fermentedSpiderEye").setPotionInfo(PotionHelper.fermentedSpiderEyeEffect);
+        blazePowder = (new Item(121)).setIconCoord(13, 9).setItemName("blazePowder").setPotionInfo(PotionHelper.blazePowderEffect);
+        magmaCream = (new Item(122)).setIconCoord(13, 10).setItemName("magmaCream").setPotionInfo(PotionHelper.magmaCreamEffect);
         brewingStand = (new ItemReed(123, Block.brewingStand)).setIconCoord(12, 10).setItemName("brewingStand");
         cauldron = (new ItemReed(124, Block.cauldron)).setIconCoord(12, 9).setItemName("cauldron");
-        speckledMelon = (new Item(126)).setIconCoord(9, 8).setItemName("speckledMelon").setPotionModifier(PotionHelper.speckledMelonEffect);
+        speckledMelon = (new Item(126)).setIconCoord(9, 8).setItemName("speckledMelon").setPotionInfo(PotionHelper.speckledMelonEffect);
         StatList.initStats();
     }
 }

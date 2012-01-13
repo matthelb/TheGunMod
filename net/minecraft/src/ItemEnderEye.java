@@ -23,9 +23,9 @@ public class ItemEnderEye extends Item
     {
         int i1 = world.getBlockId(i, j, k);
         int j1 = world.getBlockMetadata(i, j, k);
-        if(entityplayer.canPlayerEdit(i, j, k) && i1 == Block.endPortalFrame.blockID && !BlockEndPortalFrame.isEnderEyeInserted(j1))
+        if(entityplayer.canPlayerEdit(i, j, k) && i1 == Block.endPortalFrame.blockID && !BlockEndPortalFrame.func_40179_c(j1))
         {
-            if(world.multiplayerWorld)
+            if(world.singleplayerWorld)
             {
                 return true;
             }
@@ -47,18 +47,18 @@ public class ItemEnderEye extends Item
             int j2 = 0;
             boolean flag = false;
             boolean flag1 = true;
-            int k2 = Direction.field_35867_f[l1];
+            int k2 = Direction.field_35607_f[l1];
             for(int l2 = -2; l2 <= 2; l2++)
             {
-                int l3 = i + Direction.field_35871_a[k2] * l2;
-                int l4 = k + Direction.field_35870_b[k2] * l2;
+                int l3 = i + Direction.field_35612_a[k2] * l2;
+                int l4 = k + Direction.field_35610_b[k2] * l2;
                 int l5 = world.getBlockId(l3, j, l4);
                 if(l5 != Block.endPortalFrame.blockID)
                 {
                     continue;
                 }
                 int l6 = world.getBlockMetadata(l3, j, l4);
-                if(!BlockEndPortalFrame.isEnderEyeInserted(l6))
+                if(!BlockEndPortalFrame.func_40179_c(l6))
                 {
                     flag1 = false;
                     break;
@@ -83,13 +83,13 @@ public class ItemEnderEye extends Item
                     {
                         break;
                     }
-                    int i4 = i + Direction.field_35871_a[k2] * i3;
-                    int i5 = k + Direction.field_35870_b[k2] * i3;
-                    i4 += Direction.field_35871_a[l1] * 4;
-                    i5 += Direction.field_35870_b[l1] * 4;
+                    int i4 = i + Direction.field_35612_a[k2] * i3;
+                    int i5 = k + Direction.field_35610_b[k2] * i3;
+                    i4 += Direction.field_35612_a[l1] * 4;
+                    i5 += Direction.field_35610_b[l1] * 4;
                     int i6 = world.getBlockId(i4, j, i5);
                     int i7 = world.getBlockMetadata(i4, j, i5);
-                    if(i6 != Block.endPortalFrame.blockID || !BlockEndPortalFrame.isEnderEyeInserted(i7))
+                    if(i6 != Block.endPortalFrame.blockID || !BlockEndPortalFrame.func_40179_c(i7))
                     {
                         flag1 = false;
                         break;
@@ -106,13 +106,13 @@ label0:
                         {
                             continue label0;
                         }
-                        int j5 = i + Direction.field_35871_a[k2] * j3;
-                        int j6 = k + Direction.field_35870_b[k2] * j3;
-                        j5 += Direction.field_35871_a[l1] * j4;
-                        j6 += Direction.field_35870_b[l1] * j4;
+                        int j5 = i + Direction.field_35612_a[k2] * j3;
+                        int j6 = k + Direction.field_35610_b[k2] * j3;
+                        j5 += Direction.field_35612_a[l1] * j4;
+                        j6 += Direction.field_35610_b[l1] * j4;
                         int j7 = world.getBlockId(j5, j, j6);
                         int k7 = world.getBlockMetadata(j5, j, j6);
-                        if(j7 != Block.endPortalFrame.blockID || !BlockEndPortalFrame.isEnderEyeInserted(k7))
+                        if(j7 != Block.endPortalFrame.blockID || !BlockEndPortalFrame.func_40179_c(k7))
                         {
                             flag1 = false;
                             continue label0;
@@ -127,10 +127,10 @@ label0:
                     {
                         for(int k4 = 1; k4 <= 3; k4++)
                         {
-                            int k5 = i + Direction.field_35871_a[k2] * k3;
-                            int k6 = k + Direction.field_35870_b[k2] * k3;
-                            k5 += Direction.field_35871_a[l1] * k4;
-                            k6 += Direction.field_35870_b[l1] * k4;
+                            int k5 = i + Direction.field_35612_a[k2] * k3;
+                            int k6 = k + Direction.field_35610_b[k2] * k3;
+                            k5 += Direction.field_35612_a[l1] * k4;
+                            k6 += Direction.field_35610_b[l1] * k4;
                             world.setBlockWithNotify(k5, j, k6, Block.endPortal.blockID);
                         }
 
@@ -147,7 +147,7 @@ label0:
 
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        MovingObjectPosition movingobjectposition = func_40402_a(world, entityplayer, false);
+        MovingObjectPosition movingobjectposition = func_40225_a(world, entityplayer, false);
         if(movingobjectposition != null && movingobjectposition.typeOfHit == EnumMovingObjectType.TILE)
         {
             int i = world.getBlockId(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
@@ -156,13 +156,13 @@ label0:
                 return itemstack;
             }
         }
-        if(!world.multiplayerWorld)
+        if(!world.singleplayerWorld)
         {
-            ChunkPosition chunkposition = world.func_40477_b("Stronghold", (int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ);
+            ChunkPosition chunkposition = world.func_40214_b("Stronghold", (int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ);
             if(chunkposition != null)
             {
                 EntityEnderEye entityendereye = new EntityEnderEye(world, entityplayer.posX, (entityplayer.posY + 1.6200000000000001D) - (double)entityplayer.yOffset, entityplayer.posZ);
-                entityendereye.func_40090_a(chunkposition.x, chunkposition.y, chunkposition.z);
+                entityendereye.func_40056_a(chunkposition.x, chunkposition.y, chunkposition.z);
                 world.spawnEntityInWorld(entityendereye);
                 world.playSoundAtEntity(entityplayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
                 world.playAuxSFXAtEntity(null, 1002, (int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ, 0);

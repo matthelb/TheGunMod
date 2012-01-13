@@ -19,6 +19,12 @@ public class Packet22Collect extends Packet
     {
     }
 
+    public Packet22Collect(int i, int j)
+    {
+        collectedEntityId = i;
+        collectorEntityId = j;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

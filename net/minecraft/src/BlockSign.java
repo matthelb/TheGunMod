@@ -32,12 +32,6 @@ public class BlockSign extends BlockContainer
         return null;
     }
 
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
-    {
-        setBlockBoundsBasedOnState(world, i, j, k);
-        return super.getSelectedBoundingBoxFromPool(world, i, j, k);
-    }
-
     public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
     {
         if(isFreestanding)

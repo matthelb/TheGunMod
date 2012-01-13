@@ -19,6 +19,12 @@ public class Packet38EntityStatus extends Packet
     {
     }
 
+    public Packet38EntityStatus(int i, byte byte0)
+    {
+        entityId = i;
+        entityStatus = byte0;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

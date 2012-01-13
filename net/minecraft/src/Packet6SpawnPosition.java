@@ -20,6 +20,13 @@ public class Packet6SpawnPosition extends Packet
     {
     }
 
+    public Packet6SpawnPosition(int i, int j, int k)
+    {
+        xPosition = i;
+        yPosition = j;
+        zPosition = k;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

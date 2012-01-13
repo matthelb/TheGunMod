@@ -119,7 +119,7 @@ public class BlockButton extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if(func_305_h(world, i, j, k))
+        if(redundantCanPlaceBlockAt(world, i, j, k))
         {
             int i1 = world.getBlockMetadata(i, j, k) & 7;
             boolean flag = false;
@@ -147,7 +147,7 @@ public class BlockButton extends Block
         }
     }
 
-    private boolean func_305_h(World world, int i, int j, int k)
+    private boolean redundantCanPlaceBlockAt(World world, int i, int j, int k)
     {
         if(!canPlaceBlockAt(world, i, j, k))
         {
@@ -301,7 +301,7 @@ public class BlockButton extends Block
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }

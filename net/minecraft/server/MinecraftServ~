@@ -1,0 +1,711 @@
+// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
+// Jad home page: http://www.kpdus.com/jad.html
+// Decompiler options: packimports(3) braces deadcode fieldsfirst 
+
+package net.minecraft.server;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.minecraft.src.AxisAlignedBB;
+import net.minecraft.src.ChunkCoordinates;
+import net.minecraft.src.ChunkProviderServer;
+import net.minecraft.src.ConsoleCommandHandler;
+import net.minecraft.src.ConsoleLogManager;
+import net.minecraft.src.ConvertProgressUpdater;
+import net.minecraft.src.EntityTracker;
+import net.minecraft.src.ICommandListener;
+import net.minecraft.src.ISaveFormat;
+import net.minecraft.src.IServer;
+import net.minecraft.src.IUpdatePlayerListBox;
+import net.minecraft.src.ModLoader;
+import net.minecraft.src.NetworkListenThread;
+import net.minecraft.src.Packet4UpdateTime;
+import net.minecraft.src.PropertyManager;
+import net.minecraft.src.RConConsoleSource;
+import net.minecraft.src.RConThreadMain;
+import net.minecraft.src.RConThreadQuery;
+import net.minecraft.src.SaveConverterMcRegion;
+import net.minecraft.src.SaveOldDir;
+import net.minecraft.src.ServerCommand;
+import net.minecraft.src.ServerConfigurationManager;
+import net.minecraft.src.ServerGUI;
+import net.minecraft.src.StatList;
+import net.minecraft.src.ThreadCommandReader;
+import net.minecraft.src.ThreadServerApplication;
+import net.minecraft.src.ThreadSleepForever;
+import net.minecraft.src.Vec3D;
+import net.minecraft.src.WorldInfo;
+import net.minecraft.src.WorldManager;
+import net.minecraft.src.WorldProvider;
+import net.minecraft.src.WorldServer;
+import net.minecraft.src.WorldServerMulti;
+import net.minecraft.src.WorldSettings;
+
+public class MinecraftServer
+    implements Runnable, ICommandListener, IServer
+{
+
+    public static Logger field_6038_a = Logger.getLogger("Minecraft");
+    public static HashMap field_6037_b = new HashMap();
+    private String field_40030_s;
+    private int field_40029_t;
+    public NetworkListenThread field_6036_c;
+    public PropertyManager field_6035_d;
+    public WorldServer field_6034_e[];
+    public long field_40027_f[];
+    public long field_40028_g[][];
+    public ServerConfigurationManager field_6033_f;
+    private ConsoleCommandHandler field_22005_o;
+    private boolean field_6025_n;
+    public boolean field_6032_g;
+    int field_9014_h;
+    public String field_9013_i;
+    public int field_9012_j;
+    private List field_9010_p;
+    private List field_6023_p;
+    public EntityTracker field_6028_k[];
+    public boolean field_6027_l;
+    public boolean field_6026_m;
+    public boolean field_9011_n;
+    public boolean field_27005_o;
+    public String field_35014_p;
+    private RConThreadQuery field_40032_y;
+    private RConThreadMain field_40031_z;
+
+    public MinecraftServer()
+    {
+        field_40027_f = new long[100];
+        field_6025_n = true;
+        field_6032_g = false;
+        field_9014_h = 0;
+        field_9010_p = new ArrayList();
+        field_6023_p = Collections.synchronizedList(new ArrayList());
+        field_6028_k = new EntityTracker[3];
+        new ThreadSleepForever(this);
+    }
+
+    private boolean func_6008_d()
+        throws UnknownHostException
+    {
+        field_22005_o = new ConsoleCommandHandler(this);
+        ThreadCommandReader threadcommandreader = new ThreadCommandReader(this);
+        threadcommandreader.setDaemon(true);
+        threadcommandreader.start();
+        ConsoleLogManager.func_641_a();
+        ModLoader.Init(this);
+        field_6038_a.info("Starting minecraft server version 1.0.1");
+        if(Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
+        {
+            field_6038_a.warning("**** NOT ENOUGH RAM!");
+            field_6038_a.warning("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
+        }
+        field_6038_a.info("Loading properties");
+        field_6035_d = new PropertyManager(new File("server.properties"));
+        field_40030_s = field_6035_d.func_720_a("server-ip", "");
+        field_6027_l = field_6035_d.func_724_a("online-mode", true);
+        field_6026_m = field_6035_d.func_724_a("spawn-animals", true);
+        field_9011_n = field_6035_d.func_724_a("pvp", true);
+        field_27005_o = field_6035_d.func_724_a("allow-flight", false);
+        field_35014_p = field_6035_d.func_720_a("motd", "A Minecraft Server");
+        field_35014_p.replace('\247', '$');
+        InetAddress inetaddress = null;
+        if(field_40030_s.length() > 0)
+        {
+            inetaddress = InetAddress.getByName(field_40030_s);
+        }
+        field_40029_t = field_6035_d.func_722_a("server-port", 25565);
+        field_6038_a.info((new StringBuilder()).append("Starting Minecraft server on ").append(field_40030_s.length() == 0 ? "*" : field_40030_s).append(":").append(field_40029_t).toString());
+        try
+        {
+            field_6036_c = new NetworkListenThread(this, inetaddress, field_40029_t);
+        }
+        catch(IOException ioexception)
+        {
+            field_6038_a.warning("**** FAILED TO BIND TO PORT!");
+            field_6038_a.log(Level.WARNING, (new StringBuilder()).append("The exception was: ").append(ioexception.toString()).toString());
+            field_6038_a.warning("Perhaps a server is already running on that port?");
+            return false;
+        }
+        if(!field_6027_l)
+        {
+            field_6038_a.warning("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
+            field_6038_a.warning("The server will make no attempt to authenticate usernames. Beware.");
+            field_6038_a.warning("While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.");
+            field_6038_a.warning("To change this, set \"online-mode\" to \"true\" in the server.settings file.");
+        }
+        field_6033_f = new ServerConfigurationManager(this);
+        field_6028_k[0] = new EntityTracker(this, 0);
+        field_6028_k[1] = new EntityTracker(this, -1);
+        field_6028_k[2] = new EntityTracker(this, 1);
+        long l = System.nanoTime();
+        String s = field_6035_d.func_720_a("level-name", "world");
+        String s1 = field_6035_d.func_720_a("level-seed", "");
+        long l1 = (new Random()).nextLong();
+        if(s1.length() > 0)
+        {
+            try
+            {
+                long l2 = Long.parseLong(s1);
+                if(l2 != 0L)
+                {
+                    l1 = l2;
+                }
+            }
+            catch(NumberFormatException numberformatexception)
+            {
+                l1 = s1.hashCode();
+            }
+        }
+        field_6038_a.info((new StringBuilder()).append("Preparing level \"").append(s).append("\"").toString());
+        func_6017_c(new SaveConverterMcRegion(new File(".")), s, l1);
+        field_6038_a.info((new StringBuilder()).append("Done (").append(System.nanoTime() - l).append("ns)! For help, type \"help\" or \"?\"").toString());
+        if(field_6035_d.func_724_a("enable-query", false))
+        {
+            field_6038_a.info("Starting GS4 status listener");
+            field_40032_y = new RConThreadQuery(this);
+            field_40032_y.func_40402_a();
+        }
+        if(field_6035_d.func_724_a("enable-rcon", false))
+        {
+            field_6038_a.info("Starting remote control listener");
+            field_40031_z = new RConThreadMain(this);
+            field_40031_z.func_40402_a();
+        }
+        return true;
+    }
+
+    private void func_6017_c(ISaveFormat isaveformat, String s, long l)
+    {
+        if(isaveformat.func_22102_a(s))
+        {
+            field_6038_a.info("Converting map!");
+            isaveformat.func_22101_a(s, new ConvertProgressUpdater(this));
+        }
+        field_6034_e = new WorldServer[3];
+        field_40028_g = new long[field_6034_e.length][100];
+        int i = field_6035_d.func_722_a("gamemode", 0);
+        i = WorldSettings.func_35037_a(i);
+        field_6038_a.info((new StringBuilder()).append("Default game type: ").append(i).toString());
+        WorldSettings worldsettings = new WorldSettings(l, i, true, false);
+        SaveOldDir saveolddir = new SaveOldDir(new File("."), s, true);
+        for(int j = 0; j < field_6034_e.length; j++)
+        {
+            byte byte0 = 0;
+            if(j == 1)
+            {
+                byte0 = -1;
+            }
+            if(j == 2)
+            {
+                byte0 = 1;
+            }
+            if(j == 0)
+            {
+                field_6034_e[j] = new WorldServer(this, saveolddir, s, byte0, worldsettings);
+            } else
+            {
+                field_6034_e[j] = new WorldServerMulti(this, saveolddir, s, byte0, worldsettings, field_6034_e[0]);
+            }
+            field_6034_e[j].func_4072_a(new WorldManager(this, field_6034_e[j]));
+            field_6034_e[j].field_804_l = field_6035_d.func_722_a("difficulty", 1);
+            field_6034_e[j].func_21116_a(field_6035_d.func_724_a("spawn-monsters", true), field_6026_m);
+            field_6034_e[j].func_22081_n().func_35500_d(i);
+            field_6033_f.func_618_a(field_6034_e);
+        }
+
+        char c = '\304';
+        long l1 = System.currentTimeMillis();
+label0:
+        for(int k = 0; k < 1; k++)
+        {
+            field_6038_a.info((new StringBuilder()).append("Preparing start region for level ").append(k).toString());
+            if(k != 0 && !field_6035_d.func_724_a("allow-nether", true))
+            {
+                continue;
+            }
+            WorldServer worldserver = field_6034_e[k];
+            ChunkCoordinates chunkcoordinates = worldserver.func_22078_l();
+            int i1 = -c;
+            do
+            {
+                if(i1 > c || !field_6025_n)
+                {
+                    continue label0;
+                }
+                for(int j1 = -c; j1 <= c && field_6025_n; j1 += 16)
+                {
+                    long l2 = System.currentTimeMillis();
+                    if(l2 < l1)
+                    {
+                        l1 = l2;
+                    }
+                    if(l2 > l1 + 1000L)
+                    {
+                        int k1 = (c * 2 + 1) * (c * 2 + 1);
+                        int i2 = (i1 + c) * (c * 2 + 1) + (j1 + 1);
+                        func_6019_a("Preparing spawn area", (i2 * 100) / k1);
+                        l1 = l2;
+                    }
+                    worldserver.field_20911_y.func_376_d(chunkcoordinates.field_22216_a + i1 >> 4, chunkcoordinates.field_528_b + j1 >> 4);
+                    while(worldserver.func_6156_d() && field_6025_n) ;
+                }
+
+                i1 += 16;
+            } while(true);
+        }
+
+        func_6011_e();
+    }
+
+    private void func_6019_a(String s, int i)
+    {
+        field_9013_i = s;
+        field_9012_j = i;
+        field_6038_a.info((new StringBuilder()).append(s).append(": ").append(i).append("%").toString());
+    }
+
+    private void func_6011_e()
+    {
+        field_9013_i = null;
+        field_9012_j = 0;
+    }
+
+    private void func_6012_f()
+    {
+        field_6038_a.info("Saving chunks");
+        for(int i = 0; i < field_6034_e.length; i++)
+        {
+            WorldServer worldserver = field_6034_e[i];
+            worldserver.func_485_a(true, null);
+            worldserver.func_30006_w();
+        }
+
+    }
+
+    private void func_6013_g()
+    {
+        field_6038_a.info("Stopping server");
+        if(field_6033_f != null)
+        {
+            field_6033_f.func_617_d();
+        }
+        for(int i = 0; i < field_6034_e.length; i++)
+        {
+            WorldServer worldserver = field_6034_e[i];
+            if(worldserver != null)
+            {
+                func_6012_f();
+            }
+        }
+
+    }
+
+    public void func_6016_a()
+    {
+        field_6025_n = false;
+    }
+
+    public void run()
+    {
+        try
+        {
+            if(func_6008_d())
+            {
+                long l = System.currentTimeMillis();
+                long l1 = 0L;
+                while(field_6025_n) 
+                {
+                    ModLoader.OnTick(this);
+                    long l2 = System.currentTimeMillis();
+                    long l3 = l2 - l;
+                    if(l3 > 2000L)
+                    {
+                        field_6038_a.warning("Can't keep up! Did the system time change, or is the server overloaded?");
+                        l3 = 2000L;
+                    }
+                    if(l3 < 0L)
+                    {
+                        field_6038_a.warning("Time ran backwards! Did the system time change?");
+                        l3 = 0L;
+                    }
+                    l1 += l3;
+                    l = l2;
+                    if(field_6034_e[0].func_22084_q())
+                    {
+                        func_6018_h();
+                        l1 = 0L;
+                    } else
+                    {
+                        while(l1 > 50L) 
+                        {
+                            l1 -= 50L;
+                            func_6018_h();
+                        }
+                    }
+                    Thread.sleep(1L);
+                }
+            } else
+            {
+                while(field_6025_n) 
+                {
+                    func_6021_b();
+                    try
+                    {
+                        Thread.sleep(10L);
+                    }
+                    catch(InterruptedException interruptedexception)
+                    {
+                        interruptedexception.printStackTrace();
+                    }
+                }
+            }
+        }
+        catch(Throwable throwable1)
+        {
+            throwable1.printStackTrace();
+            field_6038_a.log(Level.SEVERE, "Unexpected exception", throwable1);
+            while(field_6025_n) 
+            {
+                func_6021_b();
+                try
+                {
+                    Thread.sleep(10L);
+                }
+                catch(InterruptedException interruptedexception1)
+                {
+                    interruptedexception1.printStackTrace();
+                }
+            }
+            try
+            {
+                func_6013_g();
+                field_6032_g = true;
+            }
+            catch(Throwable throwable2)
+            {
+                throwable2.printStackTrace();
+            }
+            finally
+            {
+                System.exit(0);
+            }
+            break MISSING_BLOCK_LABEL_350;
+        }
+        try
+        {
+            func_6013_g();
+            field_6032_g = true;
+        }
+        catch(Throwable throwable)
+        {
+            throwable.printStackTrace();
+        }
+        finally
+        {
+            System.exit(0);
+        }
+        break MISSING_BLOCK_LABEL_350;
+        Exception exception2;
+        exception2;
+        try
+        {
+            func_6013_g();
+            field_6032_g = true;
+        }
+        catch(Throwable throwable3)
+        {
+            throwable3.printStackTrace();
+        }
+        finally
+        {
+            System.exit(0);
+        }
+        throw exception2;
+    }
+
+    private void func_6018_h()
+    {
+        long l = System.nanoTime();
+        ArrayList arraylist = new ArrayList();
+        for(Iterator iterator = field_6037_b.keySet().iterator(); iterator.hasNext();)
+        {
+            String s = (String)iterator.next();
+            int j1 = ((Integer)field_6037_b.get(s)).intValue();
+            if(j1 > 0)
+            {
+                field_6037_b.put(s, Integer.valueOf(j1 - 1));
+            } else
+            {
+                arraylist.add(s);
+            }
+        }
+
+        for(int i = 0; i < arraylist.size(); i++)
+        {
+            field_6037_b.remove(arraylist.get(i));
+        }
+
+        AxisAlignedBB.func_703_a();
+        Vec3D.func_761_a();
+        field_9014_h++;
+        for(int j = 0; j < field_6034_e.length; j++)
+        {
+            long l1 = System.nanoTime();
+            if(j == 0 || field_6035_d.func_724_a("allow-nether", true))
+            {
+                WorldServer worldserver = field_6034_e[j];
+                if(field_9014_h % 20 == 0)
+                {
+                    field_6033_f.func_28169_a(new Packet4UpdateTime(worldserver.func_22080_k()), worldserver.field_4272_q.field_6165_g);
+                }
+                worldserver.func_22077_g();
+                while(worldserver.func_6156_d()) ;
+                worldserver.func_459_b();
+            }
+            field_40028_g[j][field_9014_h % 100] = System.nanoTime() - l1;
+        }
+
+        field_6036_c.func_715_a();
+        field_6033_f.func_637_b();
+        for(int k = 0; k < field_6028_k.length; k++)
+        {
+            field_6028_k[k].func_607_a();
+        }
+
+        for(int i1 = 0; i1 < field_9010_p.size(); i1++)
+        {
+            ((IUpdatePlayerListBox)field_9010_p.get(i1)).func_690_a();
+        }
+
+        try
+        {
+            func_6021_b();
+        }
+        catch(Exception exception)
+        {
+            field_6038_a.log(Level.WARNING, "Unexpected exception while parsing console command", exception);
+        }
+        field_40027_f[field_9014_h % 100] = System.nanoTime() - l;
+    }
+
+    public void func_6010_a(String s, ICommandListener icommandlistener)
+    {
+        field_6023_p.add(new ServerCommand(s, icommandlistener));
+    }
+
+    public void func_6021_b()
+    {
+        ServerCommand servercommand;
+        for(; field_6023_p.size() > 0; field_22005_o.func_22114_a(servercommand))
+        {
+            servercommand = (ServerCommand)field_6023_p.remove(0);
+        }
+
+    }
+
+    public void func_6022_a(IUpdatePlayerListBox iupdateplayerlistbox)
+    {
+        field_9010_p.add(iupdateplayerlistbox);
+    }
+
+    public static void main(String args[])
+    {
+        StatList.func_27092_a();
+        try
+        {
+            MinecraftServer minecraftserver = new MinecraftServer();
+            if(!java.awt.GraphicsEnvironment.isHeadless() && (args.length <= 0 || !args[0].equals("nogui")))
+            {
+                ServerGUI.func_46_a(minecraftserver);
+            }
+            (new ThreadServerApplication("Server thread", minecraftserver)).start();
+        }
+        catch(Exception exception)
+        {
+            field_6038_a.log(Level.SEVERE, "Failed to start the minecraft server", exception);
+        }
+    }
+
+    public File func_6009_a(String s)
+    {
+        return new File(s);
+    }
+
+    public void func_2_b(String s)
+    {
+        field_6038_a.info(s);
+    }
+
+    public void func_25002_c(String s)
+    {
+        field_6038_a.warning(s);
+    }
+
+    public String func_1_c()
+    {
+        return "CONSOLE";
+    }
+
+    public WorldServer func_28004_a(int i)
+    {
+        if(i == -1)
+        {
+            return field_6034_e[1];
+        }
+        if(i == 1)
+        {
+            return field_6034_e[2];
+        } else
+        {
+            return field_6034_e[0];
+        }
+    }
+
+    public EntityTracker func_28003_b(int i)
+    {
+        if(i == -1)
+        {
+            return field_6028_k[1];
+        }
+        if(i == 1)
+        {
+            return field_6028_k[2];
+        } else
+        {
+            return field_6028_k[0];
+        }
+    }
+
+    public int func_40011_a(String s, int i)
+    {
+        return field_6035_d.func_722_a(s, i);
+    }
+
+    public String func_40023_a(String s, String s1)
+    {
+        return field_6035_d.func_720_a(s, s1);
+    }
+
+    public void func_40017_a(String s, Object obj)
+    {
+        field_6035_d.func_40657_a(s, obj);
+    }
+
+    public void func_40019_c()
+    {
+        field_6035_d.func_721_b();
+    }
+
+    public String func_40013_e()
+    {
+        File file = field_6035_d.func_40656_c();
+        if(file != null)
+        {
+            return file.getAbsolutePath();
+        } else
+        {
+            return "No settings file";
+        }
+    }
+
+    public String func_40009_f()
+    {
+        return field_40030_s;
+    }
+
+    public int func_40022_g()
+    {
+        return field_40029_t;
+    }
+
+    public String func_40014_h()
+    {
+        return field_35014_p;
+    }
+
+    public String func_40012_i()
+    {
+        return "1.0.1";
+    }
+
+    public int func_40018_j()
+    {
+        return field_6033_f.func_35481_g();
+    }
+
+    public int func_40015_k()
+    {
+        return field_6033_f.func_35480_h();
+    }
+
+    public String[] func_40016_l()
+    {
+        return field_6033_f.func_40575_d();
+    }
+
+    public String func_40024_m()
+    {
+        return field_6035_d.func_720_a("level-name", "world");
+    }
+
+    public String func_40020_n()
+    {
+        return "";
+    }
+
+    public void func_40010_o()
+    {
+    }
+
+    public String func_40008_d(String s)
+    {
+        RConConsoleSource.field_40005_a.func_40002_a();
+        field_22005_o.func_22114_a(new ServerCommand(s, RConConsoleSource.field_40005_a));
+        return RConConsoleSource.field_40005_a.func_40003_b();
+    }
+
+    public boolean func_40021_p()
+    {
+        return false;
+    }
+
+    public void func_40007_e(String s)
+    {
+        field_6038_a.log(Level.SEVERE, s);
+    }
+
+    public void func_40006_f(String s)
+    {
+        if(func_40021_p())
+        {
+            field_6038_a.log(Level.INFO, s);
+        }
+    }
+
+    public String[] func_40026_q()
+    {
+        return (String[])field_6033_f.func_40574_f().toArray(new String[0]);
+    }
+
+    public String[] func_40025_r()
+    {
+        return (String[])field_6033_f.func_40576_e().toArray(new String[0]);
+    }
+
+    public static boolean func_6015_a(MinecraftServer minecraftserver)
+    {
+        return minecraftserver.field_6025_n;
+    }
+
+}

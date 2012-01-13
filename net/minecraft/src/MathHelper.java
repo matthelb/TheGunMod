@@ -41,11 +41,6 @@ public class MathHelper
         return f >= (float)i ? i : i - 1;
     }
 
-    public static int func_40346_b(double d)
-    {
-        return (int)(d + 1024D) - 1024;
-    }
-
     public static int floor_double(double d)
     {
         int i = (int)d;
@@ -68,7 +63,7 @@ public class MathHelper
         return i < 0 ? -i : i;
     }
 
-    public static int clamp_int(int i, int j, int k)
+    public static int func_41051_a(int i, int j, int k)
     {
         if(i < j)
         {
@@ -94,22 +89,6 @@ public class MathHelper
             d1 = -d1;
         }
         return d <= d1 ? d1 : d;
-    }
-
-    public static int bucketInt(int i, int j)
-    {
-        if(i < 0)
-        {
-            return -((-i - 1) / j) - 1;
-        } else
-        {
-            return i / j;
-        }
-    }
-
-    public static boolean stringNullOrLengthZero(String s)
-    {
-        return s == null || s.length() == 0;
     }
 
     public static int getRandomIntegerInRange(Random random, int i, int j)

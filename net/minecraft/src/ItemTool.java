@@ -59,11 +59,6 @@ public class ItemTool extends Item
         return damageVsEntity;
     }
 
-    public boolean isFull3D()
-    {
-        return true;
-    }
-
     public int getItemEnchantability()
     {
         return toolMaterial.getEnchantability();

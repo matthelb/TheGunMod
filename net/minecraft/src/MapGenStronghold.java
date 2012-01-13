@@ -31,7 +31,7 @@ public class MapGenStronghold extends MapGenStructure
     {
         if(!ranBiomeCheck)
         {
-            rand.setSeed(worldObj.getWorldSeed());
+            rand.setSeed(worldObj.getRandomSeed());
             double d = rand.nextDouble() * 3.1415926535897931D * 2D;
             for(int l = 0; l < structureCoords.length; l++)
             {
@@ -47,7 +47,7 @@ public class MapGenStronghold extends MapGenStructure
                     arraylist.add(biomegenbase);
                 }
 
-                ChunkPosition chunkposition = worldObj.getWorldChunkManager().func_35556_a((j1 << 4) + 8, (k1 << 4) + 8, 112, arraylist, rand);
+                ChunkPosition chunkposition = worldObj.getWorldChunkManager().func_35139_a((j1 << 4) + 8, (k1 << 4) + 8, 112, arraylist, rand);
                 if(chunkposition != null)
                 {
                     j1 = chunkposition.x >> 4;
@@ -76,7 +76,7 @@ public class MapGenStronghold extends MapGenStructure
         return false;
     }
 
-    protected List func_40482_a()
+    protected List func_40203_a()
     {
         ArrayList arraylist = new ArrayList();
         ChunkCoordIntPair achunkcoordintpair[] = structureCoords;
@@ -86,7 +86,7 @@ public class MapGenStronghold extends MapGenStructure
             ChunkCoordIntPair chunkcoordintpair = achunkcoordintpair[j];
             if(chunkcoordintpair != null)
             {
-                arraylist.add(chunkcoordintpair.func_40737_a(64));
+                arraylist.add(chunkcoordintpair.func_40658_a(64));
             }
         }
 
@@ -96,7 +96,7 @@ public class MapGenStronghold extends MapGenStructure
     protected StructureStart getStructureStart(int i, int j)
     {
         StructureStrongholdStart structurestrongholdstart;
-        for(structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, i, j); structurestrongholdstart.func_40560_b().isEmpty() || ((ComponentStrongholdStairs2)structurestrongholdstart.func_40560_b().get(0)).field_40009_b == null; structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, i, j)) { }
+        for(structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, i, j); structurestrongholdstart.func_40208_c().isEmpty() || ((ComponentStrongholdStairs2)structurestrongholdstart.func_40208_c().get(0)).field_40317_b == null; structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, i, j)) { }
         return structurestrongholdstart;
     }
 }

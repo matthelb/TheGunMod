@@ -22,6 +22,12 @@ public class Packet70Bed extends Packet
     {
     }
 
+    public Packet70Bed(int i, int j)
+    {
+        bedState = i;
+        gameMode = j;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

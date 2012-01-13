@@ -21,7 +21,7 @@ public class EntityGuidedRocketGrenade extends EntityRocketGrenade {
 
     public void onUpdate() {
         super.onUpdate();
-        if (getOwner() != null) {
+        /*if (getOwner() != null) {
             Vec3D ownerPos = getOwner().getPosition(1);
             Vec3D projectedPos = Util.getProjectedPoint(ownerPos, getOwner().getLook(1), 1000);
             MovingObjectPosition rayTrace = worldObj.rayTraceBlocks(ownerPos, projectedPos);
@@ -42,7 +42,7 @@ public class EntityGuidedRocketGrenade extends EntityRocketGrenade {
             rotationPitch = angles[1];
             rotationYaw = angles[2];
             System.out.println("P: " + rotationPitch + " ; Y: " + rotationYaw);
-        }
+        }*/
     }
 
     public float getSpeed() {

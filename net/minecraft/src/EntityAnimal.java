@@ -8,12 +8,13 @@ import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            EntityCreature, DataWatcher, World, EntityPlayer, 
-//            Entity, Block, BlockGrass, NBTTagCompound, 
-//            AxisAlignedBB, MathHelper, ItemStack, Item, 
-//            InventoryPlayer, DamageSource
+//            EntityCreature, IAnimals, DataWatcher, World, 
+//            EntityPlayer, Entity, Block, BlockGrass, 
+//            NBTTagCompound, AxisAlignedBB, MathHelper, ItemStack, 
+//            Item, InventoryPlayer, DamageSource
 
 public abstract class EntityAnimal extends EntityCreature
+    implements IAnimals
 {
 
     private int inLove;
@@ -299,7 +300,7 @@ public abstract class EntityAnimal extends EntityCreature
         }
     }
 
-    public boolean isChild()
+    public boolean func_40104_l()
     {
         return getDelay() < 0;
     }

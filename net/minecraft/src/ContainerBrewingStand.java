@@ -8,7 +8,7 @@ import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            Container, SlotBrewingStandPotion, InventoryPlayer, SlotBrewingStandIngredient, 
-//            Slot, ICrafting, TileEntityBrewingStand, ItemStack, 
+//            Slot, TileEntityBrewingStand, ICrafting, ItemStack, 
 //            EntityPlayer
 
 public class ContainerBrewingStand extends Container
@@ -41,6 +41,12 @@ public class ContainerBrewingStand extends Container
 
     }
 
+    public void onCraftGuiOpened(ICrafting icrafting)
+    {
+        super.onCraftGuiOpened(icrafting);
+        icrafting.updateCraftingInventoryInfo(this, 0, tileBrewingStand.getBrewTime());
+    }
+
     public void updateCraftingResults()
     {
         super.updateCraftingResults();
@@ -54,14 +60,6 @@ public class ContainerBrewingStand extends Container
         }
 
         brewTime = tileBrewingStand.getBrewTime();
-    }
-
-    public void updateProgressBar(int i, int j)
-    {
-        if(i == 0)
-        {
-            tileBrewingStand.setBrewTime(j);
-        }
     }
 
     public boolean canInteractWith(EntityPlayer entityplayer)

@@ -128,7 +128,7 @@ public final class SpawnerAnimals
                                                             {
                                                                 if(var21 == null)
                                                                 {
-                                                                    var21 = var0.func_40474_a(var34, var17, var18, var19);
+                                                                    var21 = var0.func_40216_a(var34, var17, var18, var19);
                                                                     if(var21 == null)
                                                                     {
                                                                         break label101;
@@ -208,7 +208,7 @@ public final class SpawnerAnimals
         }
     }
 
-    public static void func_35957_a(World world, BiomeGenBase biomegenbase, int i, int j, int k, int l, Random random)
+    public static void func_35573_a(World world, BiomeGenBase biomegenbase, int i, int j, int k, int l, Random random)
     {
         List list = biomegenbase.getSpawnableList(EnumCreatureType.creature);
         if(list.isEmpty())
@@ -217,8 +217,8 @@ public final class SpawnerAnimals
         }
         while(random.nextFloat() < biomegenbase.getSpawningChance()) 
         {
-            SpawnListEntry spawnlistentry = (SpawnListEntry)WeightedRandom.func_35733_a(world.rand, list);
-            int i1 = spawnlistentry.field_35591_b + random.nextInt((1 + spawnlistentry.field_35592_c) - spawnlistentry.field_35591_b);
+            SpawnListEntry spawnlistentry = (SpawnListEntry)WeightedRandom.func_35689_a(world.rand, list);
+            int i1 = spawnlistentry.field_35484_b + random.nextInt((1 + spawnlistentry.field_35485_c) - spawnlistentry.field_35484_b);
             int j1 = i + random.nextInt(k);
             int k1 = j + random.nextInt(l);
             int l1 = j1;
@@ -229,7 +229,7 @@ public final class SpawnerAnimals
                 boolean flag = false;
                 for(int k2 = 0; !flag && k2 < 4; k2++)
                 {
-                    int l2 = world.getTopSolidOrLiquidBlock(j1, k1);
+                    int l2 = world.findTopSolidBlock(j1, k1);
                     if(canCreatureTypeSpawnAtLocation(EnumCreatureType.creature, world, j1, l2, k1))
                     {
                         float f = (float)j1 + 0.5F;

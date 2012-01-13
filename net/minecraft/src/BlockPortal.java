@@ -149,41 +149,9 @@ public class BlockPortal extends BlockBreakable
         }
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        if(iblockaccess.getBlockId(i, j, k) == blockID)
-        {
-            return false;
-        }
-        boolean flag = iblockaccess.getBlockId(i - 1, j, k) == blockID && iblockaccess.getBlockId(i - 2, j, k) != blockID;
-        boolean flag1 = iblockaccess.getBlockId(i + 1, j, k) == blockID && iblockaccess.getBlockId(i + 2, j, k) != blockID;
-        boolean flag2 = iblockaccess.getBlockId(i, j, k - 1) == blockID && iblockaccess.getBlockId(i, j, k - 2) != blockID;
-        boolean flag3 = iblockaccess.getBlockId(i, j, k + 1) == blockID && iblockaccess.getBlockId(i, j, k + 2) != blockID;
-        boolean flag4 = flag || flag1;
-        boolean flag5 = flag2 || flag3;
-        if(flag4 && l == 4)
-        {
-            return true;
-        }
-        if(flag4 && l == 5)
-        {
-            return true;
-        }
-        if(flag5 && l == 2)
-        {
-            return true;
-        }
-        return flag5 && l == 3;
-    }
-
     public int quantityDropped(Random random)
     {
         return 0;
-    }
-
-    public int getRenderBlockPass()
-    {
-        return 1;
     }
 
     public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
@@ -192,37 +160,5 @@ public class BlockPortal extends BlockBreakable
         {
             entity.setInPortal();
         }
-    }
-
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
-    {
-        if(random.nextInt(100) == 0)
-        {
-            world.playSoundEffect((double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F);
-        }
-        for(int l = 0; l < 4; l++)
-        {
-            double d = (float)i + random.nextFloat();
-            double d1 = (float)j + random.nextFloat();
-            double d2 = (float)k + random.nextFloat();
-            double d3 = 0.0D;
-            double d4 = 0.0D;
-            double d5 = 0.0D;
-            int i1 = random.nextInt(2) * 2 - 1;
-            d3 = ((double)random.nextFloat() - 0.5D) * 0.5D;
-            d4 = ((double)random.nextFloat() - 0.5D) * 0.5D;
-            d5 = ((double)random.nextFloat() - 0.5D) * 0.5D;
-            if(world.getBlockId(i - 1, j, k) == blockID || world.getBlockId(i + 1, j, k) == blockID)
-            {
-                d2 = (double)k + 0.5D + 0.25D * (double)i1;
-                d5 = random.nextFloat() * 2.0F * (float)i1;
-            } else
-            {
-                d = (double)i + 0.5D + 0.25D * (double)i1;
-                d3 = random.nextFloat() * 2.0F * (float)i1;
-            }
-            world.spawnParticle("portal", d, d1, d2, d3, d4, d5);
-        }
-
     }
 }

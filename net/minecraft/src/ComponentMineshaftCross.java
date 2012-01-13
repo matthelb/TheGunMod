@@ -14,18 +14,18 @@ import java.util.Random;
 public class ComponentMineshaftCross extends StructureComponent
 {
 
-    private final int field_35073_a;
-    private final boolean field_35072_b;
+    private final int field_35364_a;
+    private final boolean field_35363_b;
 
     public ComponentMineshaftCross(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
-        field_35073_a = j;
+        field_35364_a = j;
         boundingBox = structureboundingbox;
-        field_35072_b = structureboundingbox.getYSize() > 3;
+        field_35363_b = structureboundingbox.bbHeight() > 3;
     }
 
-    public static StructureBoundingBox func_35071_a(List list, Random random, int i, int j, int k, int l)
+    public static StructureBoundingBox func_35362_a(List list, Random random, int i, int j, int k, int l)
     {
         StructureBoundingBox structureboundingbox = new StructureBoundingBox(i, j, k, i, j + 2, k);
         if(random.nextInt(4) == 0)
@@ -58,7 +58,7 @@ public class ComponentMineshaftCross extends StructureComponent
             structureboundingbox.maxZ = k + 3;
             break;
         }
-        if(StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -70,7 +70,7 @@ public class ComponentMineshaftCross extends StructureComponent
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
         int i = getComponentType();
-        switch(field_35073_a)
+        switch(field_35364_a)
         {
         case 2: // '\002'
             StructureMineshaftPieces.getNextComponent(structurecomponent, list, random, boundingBox.minX + 1, boundingBox.minY, boundingBox.minZ - 1, 2, i);
@@ -96,7 +96,7 @@ public class ComponentMineshaftCross extends StructureComponent
             StructureMineshaftPieces.getNextComponent(structurecomponent, list, random, boundingBox.maxX + 1, boundingBox.minY, boundingBox.minZ + 1, 3, i);
             break;
         }
-        if(field_35072_b)
+        if(field_35363_b)
         {
             if(random.nextBoolean())
             {
@@ -123,7 +123,7 @@ public class ComponentMineshaftCross extends StructureComponent
         {
             return false;
         }
-        if(field_35072_b)
+        if(field_35363_b)
         {
             fillWithBlocks(world, structureboundingbox, boundingBox.minX + 1, boundingBox.minY, boundingBox.minZ, boundingBox.maxX - 1, (boundingBox.minY + 3) - 1, boundingBox.maxZ, 0, 0, false);
             fillWithBlocks(world, structureboundingbox, boundingBox.minX, boundingBox.minY, boundingBox.minZ + 1, boundingBox.maxX, (boundingBox.minY + 3) - 1, boundingBox.maxZ - 1, 0, 0, false);

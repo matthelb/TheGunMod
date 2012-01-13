@@ -17,7 +17,7 @@ public enum EnumMobType
 */
     private static final EnumMobType allMobTypes[]; /* synthetic field */
 /*
-    public static final EnumMobType[] values()
+    public static EnumMobType[] values()
     {
         return (EnumMobType[])allMobTypes.clone();
     }

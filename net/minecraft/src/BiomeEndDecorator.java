@@ -28,15 +28,15 @@ public class BiomeEndDecorator extends BiomeDecorator
         {
             int i = chunk_X + randomGenerator.nextInt(16) + 8;
             int j = chunk_Z + randomGenerator.nextInt(16) + 8;
-            int k = currentWorld.getTopSolidOrLiquidBlock(i, j);
+            int k = curWorldObj.findTopSolidBlock(i, j);
             if(k <= 0);
-            spikeGen.generate(currentWorld, randomGenerator, i, k, j);
+            spikeGen.generate(curWorldObj, randomGenerator, i, k, j);
         }
         if(chunk_X == 0 && chunk_Z == 0)
         {
-            EntityDragon entitydragon = new EntityDragon(currentWorld);
+            EntityDragon entitydragon = new EntityDragon(curWorldObj);
             entitydragon.setLocationAndAngles(0.0D, 128D, 0.0D, randomGenerator.nextFloat() * 360F, 0.0F);
-            currentWorld.spawnEntityInWorld(entitydragon);
+            curWorldObj.spawnEntityInWorld(entitydragon);
         }
     }
 }

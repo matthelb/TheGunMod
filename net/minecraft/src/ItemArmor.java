@@ -26,7 +26,7 @@ public class ItemArmor extends Item
         armorType = k;
         renderIndex = j;
         damageReduceAmount = enumarmormaterial.getDamageReductionAmount(k);
-        setMaxDamage(enumarmormaterial.func_40576_a(k));
+        setMaxDamage(enumarmormaterial.func_40497_a(k));
         maxStackSize = 1;
     }
 

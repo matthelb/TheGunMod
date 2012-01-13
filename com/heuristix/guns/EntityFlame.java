@@ -2,7 +2,10 @@ package com.heuristix.guns;
 
 import com.heuristix.EntityProjectile;
 import com.heuristix.Util;
-import net.minecraft.src.*;
+import net.minecraft.src.Block;
+import net.minecraft.src.EntityLiving;
+import net.minecraft.src.MovingObjectPosition;
+import net.minecraft.src.World;
 
 /**
  * Created by IntelliJ IDEA.
@@ -18,6 +21,10 @@ public class EntityFlame extends EntityProjectile {
 
     public EntityFlame(World world, EntityLiving entityliving) {
         super(world, entityliving);
+    }
+
+    public EntityFlame(World world, double x, double y, double z) {
+        super(world, x, y, z);
     }
 
     /*@Override

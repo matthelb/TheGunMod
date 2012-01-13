@@ -78,62 +78,6 @@ public class CompressedStreamTools
         return bytearrayoutputstream.toByteArray();
     }
 
-    public static void saveMapToFileWithBackup(NBTTagCompound nbttagcompound, File file)
-        throws IOException
-    {
-        File file1 = new File((new StringBuilder()).append(file.getAbsolutePath()).append("_tmp").toString());
-        if(file1.exists())
-        {
-            file1.delete();
-        }
-        saveMapToFile(nbttagcompound, file1);
-        if(file.exists())
-        {
-            file.delete();
-        }
-        if(file.exists())
-        {
-            throw new IOException((new StringBuilder()).append("Failed to delete ").append(file).toString());
-        } else
-        {
-            file1.renameTo(file);
-            return;
-        }
-    }
-
-    public static void saveMapToFile(NBTTagCompound nbttagcompound, File file)
-        throws IOException
-    {
-        DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(file));
-        try
-        {
-            writeTo(nbttagcompound, dataoutputstream);
-        }
-        finally
-        {
-            dataoutputstream.close();
-        }
-    }
-
-    public static NBTTagCompound writeMapToFileUncompressed(File file)
-        throws IOException
-    {
-        if(!file.exists())
-        {
-            return null;
-        }
-        DataInputStream datainputstream = new DataInputStream(new FileInputStream(file));
-        try
-        {
-            NBTTagCompound nbttagcompound = read(datainputstream);
-            return nbttagcompound;
-        }
-        finally
-        {
-            datainputstream.close();
-        }
-    }
-
     public static NBTTagCompound read(DataInput datainput)
         throws IOException
     {

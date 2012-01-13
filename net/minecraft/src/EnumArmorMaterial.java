@@ -37,7 +37,7 @@ public enum EnumArmorMaterial
     private int enchantability;
     private static final EnumArmorMaterial allArmorMaterials[]; /* synthetic field */
 /*
-    public static final EnumArmorMaterial[] values()
+    public static EnumArmorMaterial[] values()
     {
         return (EnumArmorMaterial[])allArmorMaterials.clone();
     }
@@ -55,7 +55,7 @@ public enum EnumArmorMaterial
         enchantability = k;
     }
 
-    public int func_40576_a(int i)
+    public int func_40497_a(int i)
     {
         return ItemArmor.getMaxDamageArray()[i] * maxDamageFactor;
     }

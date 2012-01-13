@@ -40,29 +40,6 @@ public class BlockLadder extends Block
         return super.getCollisionBoundingBoxFromPool(world, i, j, k);
     }
 
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
-    {
-        int l = world.getBlockMetadata(i, j, k);
-        float f = 0.125F;
-        if(l == 2)
-        {
-            setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
-        }
-        if(l == 3)
-        {
-            setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
-        }
-        if(l == 4)
-        {
-            setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-        }
-        if(l == 5)
-        {
-            setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
-        }
-        return super.getSelectedBoundingBoxFromPool(world, i, j, k);
-    }
-
     public boolean isOpaqueCube()
     {
         return false;

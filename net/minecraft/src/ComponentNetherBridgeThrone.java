@@ -14,7 +14,7 @@ import java.util.Random;
 public class ComponentNetherBridgeThrone extends ComponentNetherBridgePiece
 {
 
-    private boolean field_40027_a;
+    private boolean field_40305_a;
 
     public ComponentNetherBridgeThrone(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -27,10 +27,10 @@ public class ComponentNetherBridgeThrone extends ComponentNetherBridgePiece
     {
     }
 
-    public static ComponentNetherBridgeThrone func_40026_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentNetherBridgeThrone func_40304_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -2, 0, 0, 7, 8, 9, l);
-        if(!func_40021_a(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -59,14 +59,14 @@ public class ComponentNetherBridgeThrone extends ComponentNetherBridgePiece
         fillWithBlocks(world, structureboundingbox, 6, 6, 3, 6, 6, 8, Block.netherFence.blockID, Block.netherFence.blockID, false);
         fillWithBlocks(world, structureboundingbox, 1, 6, 8, 5, 7, 8, Block.netherFence.blockID, Block.netherFence.blockID, false);
         fillWithBlocks(world, structureboundingbox, 2, 8, 8, 4, 8, 8, Block.netherFence.blockID, Block.netherFence.blockID, false);
-        if(!field_40027_a)
+        if(!field_40305_a)
         {
             int i = getYWithOffset(5);
             int k = getXWithOffset(3, 5);
             int i1 = getZWithOffset(3, 5);
-            if(structureboundingbox.isVecInside(k, i, i1))
+            if(structureboundingbox.isInBbVolume(k, i, i1))
             {
-                field_40027_a = true;
+                field_40305_a = true;
                 world.setBlockWithNotify(k, i, i1, Block.mobSpawner.blockID);
                 TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getBlockTileEntity(k, i, i1);
                 if(tileentitymobspawner != null)

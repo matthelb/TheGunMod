@@ -30,10 +30,10 @@ public class BlockDragonEgg extends Block
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        fallIfPossible(world, i, j, k);
+        func_41005_c(world, i, j, k);
     }
 
-    private void fallIfPossible(World world, int i, int j, int k)
+    private void func_41005_c(World world, int i, int j, int k)
     {
         int l = i;
         int i1 = j;
@@ -59,22 +59,22 @@ public class BlockDragonEgg extends Block
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        teleportNearby(world, i, j, k);
+        func_41004_h(world, i, j, k);
         return true;
     }
 
     public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        teleportNearby(world, i, j, k);
+        func_41004_h(world, i, j, k);
     }
 
-    private void teleportNearby(World world, int i, int j, int k)
+    private void func_41004_h(World world, int i, int j, int k)
     {
         if(world.getBlockId(i, j, k) != blockID)
         {
             return;
         }
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }

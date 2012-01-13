@@ -23,10 +23,10 @@ public class ComponentStrongholdRightTurn extends ComponentStrongholdLeftTurn
     {
         if(coordBaseMode == 2 || coordBaseMode == 3)
         {
-            func_35029_c((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
+            func_35320_c((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
         } else
         {
-            func_35032_b((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
+            func_35321_b((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
         }
     }
 
@@ -37,7 +37,7 @@ public class ComponentStrongholdRightTurn extends ComponentStrongholdLeftTurn
             return false;
         }
         fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 4, 4, 4, true, random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(world, random, structureboundingbox, field_35046_a, 1, 1, 0);
+        placeDoor(world, random, structureboundingbox, field_35331_a, 1, 1, 0);
         if(coordBaseMode == 2 || coordBaseMode == 3)
         {
             fillWithBlocks(world, structureboundingbox, 4, 1, 1, 4, 3, 3, 0, 0, false);

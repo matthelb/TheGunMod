@@ -20,11 +20,11 @@ public class EntityMinecart extends Entity
 
     private ItemStack cargoItems[];
     private int fuel;
-    private boolean field_856_i;
+    private boolean field_469_aj;
     public int minecartType;
     public double pushX;
     public double pushZ;
-    private static final int field_855_j[][][] = {
+    private static final int field_468_ak[][][] = {
         {
             {
                 0, 0, -1
@@ -87,22 +87,19 @@ public class EntityMinecart extends Entity
             }
         }
     };
-    private int minecartPosRotationIncrements;
+    private int turnProgress;
     private double minecartX;
     private double minecartY;
     private double minecartZ;
-    private double minecartYaw;
+    private double field_9159_ar;
     private double minecartPitch;
-    private double velocityX;
-    private double velocityY;
-    private double velocityZ;
 
     public EntityMinecart(World world)
     {
         super(world);
         cargoItems = new ItemStack[36];
         fuel = 0;
-        field_856_i = false;
+        field_469_aj = false;
         preventEntitySpawning = true;
         setSize(0.98F, 0.7F);
         yOffset = height / 2.0F;
@@ -157,15 +154,15 @@ public class EntityMinecart extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if(worldObj.multiplayerWorld || isDead)
+        if(worldObj.singleplayerWorld || isDead)
         {
             return true;
         }
-        func_41029_h(-func_41030_m());
-        func_41028_c(10);
+        func_41016_d(-func_41021_q());
+        func_41014_b(10);
         setBeenAttacked();
-        func_41024_b(func_41025_i() + i * 10);
-        if(func_41025_i() > 40)
+        func_41018_e_(func_41020_o() + i * 10);
+        if(func_41020_o() > 40)
         {
             if(riddenByEntity != null)
             {
@@ -218,13 +215,6 @@ label0:
         return true;
     }
 
-    public void performHurtAnimation()
-    {
-        func_41029_h(-func_41030_m());
-        func_41028_c(10);
-        func_41024_b(func_41025_i() + func_41025_i() * 10);
-    }
-
     public boolean canBeCollidedWith()
     {
         return !isDead;
@@ -269,31 +259,31 @@ label0:
 
     public void onUpdate()
     {
-        if(func_41023_l() > 0)
+        if(func_41019_p() > 0)
         {
-            func_41028_c(func_41023_l() - 1);
+            func_41014_b(func_41019_p() - 1);
         }
-        if(func_41025_i() > 0)
+        if(func_41020_o() > 0)
         {
-            func_41024_b(func_41025_i() - 1);
+            func_41018_e_(func_41020_o() - 1);
         }
         if(isMinecartPowered() && rand.nextInt(4) == 0)
         {
             worldObj.spawnParticle("largesmoke", posX, posY + 0.80000000000000004D, posZ, 0.0D, 0.0D, 0.0D);
         }
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
-            if(minecartPosRotationIncrements > 0)
+            if(turnProgress > 0)
             {
-                double d = posX + (minecartX - posX) / (double)minecartPosRotationIncrements;
-                double d1 = posY + (minecartY - posY) / (double)minecartPosRotationIncrements;
-                double d3 = posZ + (minecartZ - posZ) / (double)minecartPosRotationIncrements;
+                double d = posX + (minecartX - posX) / (double)turnProgress;
+                double d1 = posY + (minecartY - posY) / (double)turnProgress;
+                double d3 = posZ + (minecartZ - posZ) / (double)turnProgress;
                 double d5;
-                for(d5 = minecartYaw - (double)rotationYaw; d5 < -180D; d5 += 360D) { }
+                for(d5 = field_9159_ar - (double)rotationYaw; d5 < -180D; d5 += 360D) { }
                 for(; d5 >= 180D; d5 -= 360D) { }
-                rotationYaw += d5 / (double)minecartPosRotationIncrements;
-                rotationPitch += (minecartPitch - (double)rotationPitch) / (double)minecartPosRotationIncrements;
-                minecartPosRotationIncrements--;
+                rotationYaw += d5 / (double)turnProgress;
+                rotationPitch += (minecartPitch - (double)rotationPitch) / (double)turnProgress;
+                turnProgress--;
                 setPosition(d, d1, d3);
                 setRotation(rotationYaw, rotationPitch);
             } else
@@ -319,7 +309,7 @@ label0:
         int l = worldObj.getBlockId(i, j, k);
         if(BlockRail.isRailBlock(l))
         {
-            Vec3D vec3d = func_514_g(posX, posY, posZ);
+            Vec3D vec3d = func_182_g(posX, posY, posZ);
             int i1 = worldObj.getBlockMetadata(i, j, k);
             posY = j;
             boolean flag = false;
@@ -353,7 +343,7 @@ label0:
             {
                 motionZ -= d4;
             }
-            int ai[][] = field_855_j[i1];
+            int ai[][] = field_468_ak[i1];
             double d9 = ai[1][0] - ai[0][0];
             double d10 = ai[1][2] - ai[0][2];
             double d11 = Math.sqrt(d9 * d9 + d10 * d10);
@@ -470,7 +460,7 @@ label0:
                 motionY *= 0.0D;
                 motionZ *= 0.95999997854232788D;
             }
-            Vec3D vec3d1 = func_514_g(posX, posY, posZ);
+            Vec3D vec3d1 = func_182_g(posX, posY, posZ);
             if(vec3d1 != null && vec3d != null)
             {
                 double d28 = (vec3d.yCoord - vec3d1.yCoord) * 0.050000000000000003D;
@@ -578,7 +568,7 @@ label0:
         if(d6 * d6 + d7 * d7 > 0.001D)
         {
             rotationYaw = (float)((Math.atan2(d7, d6) * 180D) / 3.1415926535897931D);
-            if(field_856_i)
+            if(field_469_aj)
             {
                 rotationYaw += 180F;
             }
@@ -589,7 +579,7 @@ label0:
         if(d8 < -170D || d8 >= 170D)
         {
             rotationYaw += 180F;
-            field_856_i = !field_856_i;
+            field_469_aj = !field_469_aj;
         }
         setRotation(rotationYaw, rotationPitch);
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
@@ -624,52 +614,7 @@ label0:
         setMinecartPowered(fuel > 0);
     }
 
-    public Vec3D func_515_a(double d, double d1, double d2, double d3)
-    {
-        int i = MathHelper.floor_double(d);
-        int j = MathHelper.floor_double(d1);
-        int k = MathHelper.floor_double(d2);
-        if(BlockRail.isRailBlockAt(worldObj, i, j - 1, k))
-        {
-            j--;
-        }
-        int l = worldObj.getBlockId(i, j, k);
-        if(BlockRail.isRailBlock(l))
-        {
-            int i1 = worldObj.getBlockMetadata(i, j, k);
-            if(((BlockRail)Block.blocksList[l]).getIsPowered())
-            {
-                i1 &= 7;
-            }
-            d1 = j;
-            if(i1 >= 2 && i1 <= 5)
-            {
-                d1 = j + 1;
-            }
-            int ai[][] = field_855_j[i1];
-            double d4 = ai[1][0] - ai[0][0];
-            double d5 = ai[1][2] - ai[0][2];
-            double d6 = Math.sqrt(d4 * d4 + d5 * d5);
-            d4 /= d6;
-            d5 /= d6;
-            d += d4 * d3;
-            d2 += d5 * d3;
-            if(ai[0][1] != 0 && MathHelper.floor_double(d) - i == ai[0][0] && MathHelper.floor_double(d2) - k == ai[0][2])
-            {
-                d1 += ai[0][1];
-            } else
-            if(ai[1][1] != 0 && MathHelper.floor_double(d) - i == ai[1][0] && MathHelper.floor_double(d2) - k == ai[1][2])
-            {
-                d1 += ai[1][1];
-            }
-            return func_514_g(d, d1, d2);
-        } else
-        {
-            return null;
-        }
-    }
-
-    public Vec3D func_514_g(double d, double d1, double d2)
+    public Vec3D func_182_g(double d, double d1, double d2)
     {
         int i = MathHelper.floor_double(d);
         int j = MathHelper.floor_double(d1);
@@ -691,7 +636,7 @@ label0:
             {
                 d1 = j + 1;
             }
-            int ai[][] = field_855_j[i1];
+            int ai[][] = field_468_ak[i1];
             double d3 = 0.0D;
             double d4 = (double)i + 0.5D + (double)ai[0][0] * 0.5D;
             double d5 = (double)j + 0.5D + (double)ai[0][1] * 0.5D;
@@ -789,14 +734,9 @@ label0:
         }
     }
 
-    public float getShadowSize()
-    {
-        return 0.0F;
-    }
-
     public void applyEntityCollision(Entity entity)
     {
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
             return;
         }
@@ -939,14 +879,14 @@ label0:
             {
                 return true;
             }
-            if(!worldObj.multiplayerWorld)
+            if(!worldObj.singleplayerWorld)
             {
                 entityplayer.mountEntity(this);
             }
         } else
         if(minecartType == 1)
         {
-            if(!worldObj.multiplayerWorld)
+            if(!worldObj.singleplayerWorld)
             {
                 entityplayer.displayGUIChest(this);
             }
@@ -966,27 +906,6 @@ label0:
             pushZ = posZ - entityplayer.posZ;
         }
         return true;
-    }
-
-    public void setPositionAndRotation2(double d, double d1, double d2, float f, 
-            float f1, int i)
-    {
-        minecartX = d;
-        minecartY = d1;
-        minecartZ = d2;
-        minecartYaw = f;
-        minecartPitch = f1;
-        minecartPosRotationIncrements = i + 2;
-        motionX = velocityX;
-        motionY = velocityY;
-        motionZ = velocityZ;
-    }
-
-    public void setVelocity(double d, double d1, double d2)
-    {
-        velocityX = motionX = d;
-        velocityY = motionY = d1;
-        velocityZ = motionZ = d2;
     }
 
     public boolean isUseableByPlayer(EntityPlayer entityplayer)
@@ -1022,32 +941,32 @@ label0:
     {
     }
 
-    public void func_41024_b(int i)
+    public void func_41018_e_(int i)
     {
         dataWatcher.updateObject(19, Integer.valueOf(i));
     }
 
-    public int func_41025_i()
+    public int func_41020_o()
     {
         return dataWatcher.getWatchableObjectInt(19);
     }
 
-    public void func_41028_c(int i)
+    public void func_41014_b(int i)
     {
         dataWatcher.updateObject(17, Integer.valueOf(i));
     }
 
-    public int func_41023_l()
+    public int func_41019_p()
     {
         return dataWatcher.getWatchableObjectInt(17);
     }
 
-    public void func_41029_h(int i)
+    public void func_41016_d(int i)
     {
         dataWatcher.updateObject(18, Integer.valueOf(i));
     }
 
-    public int func_41030_m()
+    public int func_41021_q()
     {
         return dataWatcher.getWatchableObjectInt(18);
     }

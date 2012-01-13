@@ -6,8 +6,7 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            ItemBlock, Block, BlockCloth, ItemDye, 
-//            ItemStack
+//            ItemBlock, ItemDye, ItemStack, BlockCloth
 
 public class ItemCloth extends ItemBlock
 {
@@ -19,12 +18,7 @@ public class ItemCloth extends ItemBlock
         setHasSubtypes(true);
     }
 
-    public int getIconFromDamage(int i)
-    {
-        return Block.cloth.getBlockTextureFromSideAndMetadata(2, BlockCloth.getBlockFromDye(i));
-    }
-
-    public int getPlacedBlockMetadata(int i)
+    public int getMetadata(int i)
     {
         return i;
     }

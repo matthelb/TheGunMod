@@ -217,14 +217,14 @@ public abstract class EntityCreature extends EntityLiving
         return entityToAttack;
     }
 
-    public void setEntityToAttack(Entity entity)
+    public void setTarget(Entity entity)
     {
         entityToAttack = entity;
     }
 
-    protected float getSpeedModifier()
+    protected float getPotionSpeedMultiplier()
     {
-        float f = super.getSpeedModifier();
+        float f = super.getPotionSpeedMultiplier();
         if(fleeingTick > 0)
         {
             f *= 2.0F;

@@ -93,32 +93,6 @@ public class EntityList
         return entity;
     }
 
-    public static Entity createEntity(int i, World world)
-    {
-        Entity entity = null;
-        try
-        {
-            Class class1 = (Class)IDtoClassMapping.get(Integer.valueOf(i));
-            if(class1 != null)
-            {
-                entity = (Entity)class1.getConstructor(new Class[] {
-                    net.minecraft.src.World.class
-                }).newInstance(new Object[] {
-                    world
-                });
-            }
-        }
-        catch(Exception exception)
-        {
-            exception.printStackTrace();
-        }
-        if(entity == null)
-        {
-            System.out.println((new StringBuilder()).append("Skipping Entity with id ").append(i).toString());
-        }
-        return entity;
-    }
-
     public static int getEntityID(Entity entity)
     {
         return ((Integer)classToIDMapping.get(entity.getClass())).intValue();

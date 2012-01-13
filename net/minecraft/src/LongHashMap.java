@@ -14,7 +14,7 @@ public class LongHashMap
     private transient LongHashMapEntry hashArray[];
     private transient int numHashElements;
     private int capacity;
-    private final float percent = 0.75F;
+    private final float percentUsable = 0.75F;
     private volatile transient int modCount;
 
     public LongHashMap()
@@ -37,11 +37,6 @@ public class LongHashMap
     private static int getHashIndex(int i, int j)
     {
         return i & j - 1;
-    }
-
-    public int getNumHashElements()
-    {
-        return numHashElements;
     }
 
     public Object getValueByKey(long l)
@@ -106,7 +101,7 @@ public class LongHashMap
             LongHashMapEntry alonghashmapentry1[] = new LongHashMapEntry[i];
             copyHashTableTo(alonghashmapentry1);
             hashArray = alonghashmapentry1;
-            capacity = (int)((float)i * percent);
+            capacity = (int)((float)i * percentUsable);
             return;
         }
     }
@@ -126,7 +121,7 @@ public class LongHashMap
             do
             {
                 LongHashMapEntry longhashmapentry1 = longhashmapentry.nextEntry;
-                int k = getHashIndex(longhashmapentry.field_35831_d, i);
+                int k = getHashIndex(longhashmapentry.field_1026_d, i);
                 longhashmapentry.nextEntry = alonghashmapentry[k];
                 alonghashmapentry[k] = longhashmapentry;
                 longhashmapentry = longhashmapentry1;

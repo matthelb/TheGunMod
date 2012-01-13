@@ -86,7 +86,7 @@ public class EntitySheep extends EntityAnimal
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if(itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && !getSheared())
         {
-            if(!worldObj.multiplayerWorld)
+            if(!worldObj.singleplayerWorld)
             {
                 setSheared(true);
                 int i = 2 + rand.nextInt(3);

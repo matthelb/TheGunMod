@@ -20,6 +20,13 @@ public class Packet105UpdateProgressbar extends Packet
     {
     }
 
+    public Packet105UpdateProgressbar(int i, int j, int k)
+    {
+        windowId = i;
+        progressBar = j;
+        progressBarValue = k;
+    }
+
     public void processPacket(NetHandler nethandler)
     {
         nethandler.handleUpdateProgressbar(this);

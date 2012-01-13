@@ -89,11 +89,6 @@ public class BlockRedstoneRepeater extends Block
         }
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        return l != 0 && l != 1;
-    }
-
     public int getRenderType()
     {
         return 15;
@@ -224,63 +219,6 @@ public class BlockRedstoneRepeater extends Block
     public int idDropped(int i, Random random, int j)
     {
         return Item.redstoneRepeater.shiftedIndex;
-    }
-
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
-    {
-        if(!isRepeaterPowered)
-        {
-            return;
-        }
-        int l = world.getBlockMetadata(i, j, k);
-        double d = (double)((float)i + 0.5F) + (double)(random.nextFloat() - 0.5F) * 0.20000000000000001D;
-        double d1 = (double)((float)j + 0.4F) + (double)(random.nextFloat() - 0.5F) * 0.20000000000000001D;
-        double d2 = (double)((float)k + 0.5F) + (double)(random.nextFloat() - 0.5F) * 0.20000000000000001D;
-        double d3 = 0.0D;
-        double d4 = 0.0D;
-        if(random.nextInt(2) == 0)
-        {
-            switch(l & 3)
-            {
-            case 0: // '\0'
-                d4 = -0.3125D;
-                break;
-
-            case 2: // '\002'
-                d4 = 0.3125D;
-                break;
-
-            case 3: // '\003'
-                d3 = -0.3125D;
-                break;
-
-            case 1: // '\001'
-                d3 = 0.3125D;
-                break;
-            }
-        } else
-        {
-            int i1 = (l & 0xc) >> 2;
-            switch(l & 3)
-            {
-            case 0: // '\0'
-                d4 = repeaterTorchOffset[i1];
-                break;
-
-            case 2: // '\002'
-                d4 = -repeaterTorchOffset[i1];
-                break;
-
-            case 3: // '\003'
-                d3 = repeaterTorchOffset[i1];
-                break;
-
-            case 1: // '\001'
-                d3 = -repeaterTorchOffset[i1];
-                break;
-            }
-        }
-        world.spawnParticle("reddust", d + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
     }
 
 }

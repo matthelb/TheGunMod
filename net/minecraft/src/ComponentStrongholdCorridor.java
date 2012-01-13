@@ -14,34 +14,34 @@ import java.util.Random;
 public class ComponentStrongholdCorridor extends ComponentStronghold
 {
 
-    private final int field_35052_a;
+    private final int field_35343_a;
 
     public ComponentStrongholdCorridor(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
         coordBaseMode = j;
         boundingBox = structureboundingbox;
-        field_35052_a = j != 2 && j != 0 ? structureboundingbox.getXSize() : structureboundingbox.getZSize();
+        field_35343_a = j != 2 && j != 0 ? structureboundingbox.bbWidth() : structureboundingbox.bbDepth();
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
     }
 
-    public static StructureBoundingBox func_35051_a(List list, Random random, int i, int j, int k, int l)
+    public static StructureBoundingBox func_35342_a(List list, Random random, int i, int j, int k, int l)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -1, 0, 5, 5, 4, l);
-        StructureComponent structurecomponent = StructureComponent.getIntersectingStructureComponent(list, structureboundingbox);
+        StructureComponent structurecomponent = StructureComponent.canFitInside(list, structureboundingbox);
         if(structurecomponent == null)
         {
             return null;
         }
-        if(structurecomponent.getBoundingBox().minY == structureboundingbox.minY)
+        if(structurecomponent.getStructureBoundingBox().minY == structureboundingbox.minY)
         {
             for(int i1 = 3; i1 >= 1; i1--)
             {
                 StructureBoundingBox structureboundingbox1 = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -1, 0, 5, 5, i1 - 1, l);
-                if(!structurecomponent.getBoundingBox().intersectsWith(structureboundingbox1))
+                if(!structurecomponent.getStructureBoundingBox().canFitInside(structureboundingbox1))
                 {
                     return StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -1, 0, 5, 5, i1, l);
                 }
@@ -57,7 +57,7 @@ public class ComponentStrongholdCorridor extends ComponentStronghold
         {
             return false;
         }
-        for(int i = 0; i < field_35052_a; i++)
+        for(int i = 0; i < field_35343_a; i++)
         {
             placeBlockAtCurrentPosition(world, Block.stoneBrick.blockID, 0, 0, 0, i, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.stoneBrick.blockID, 0, 1, 0, i, structureboundingbox);

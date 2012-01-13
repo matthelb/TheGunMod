@@ -8,9 +8,9 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockContainer, Material, World, EntityLiving, 
-//            MathHelper, Block, IBlockAccess, TileEntityChest, 
-//            IInventory, ItemStack, EntityItem, NBTTagCompound, 
-//            InventoryLargeChest, EntityPlayer, TileEntity
+//            MathHelper, Block, TileEntityChest, IInventory, 
+//            ItemStack, EntityItem, NBTTagCompound, InventoryLargeChest, 
+//            EntityPlayer, TileEntity
 
 public class BlockChest extends BlockContainer
 {
@@ -121,7 +121,7 @@ public class BlockChest extends BlockContainer
 
     public void unifyAdjacentChests(World world, int i, int j, int k)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }
@@ -202,96 +202,6 @@ public class BlockChest extends BlockContainer
             }
         }
         world.setBlockMetadataWithNotify(i, j, k, byte0);
-    }
-
-    public int getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        if(l == 1)
-        {
-            return blockIndexInTexture - 1;
-        }
-        if(l == 0)
-        {
-            return blockIndexInTexture - 1;
-        }
-        int i1 = iblockaccess.getBlockId(i, j, k - 1);
-        int j1 = iblockaccess.getBlockId(i, j, k + 1);
-        int k1 = iblockaccess.getBlockId(i - 1, j, k);
-        int l1 = iblockaccess.getBlockId(i + 1, j, k);
-        if(i1 == blockID || j1 == blockID)
-        {
-            if(l == 2 || l == 3)
-            {
-                return blockIndexInTexture;
-            }
-            int i2 = 0;
-            if(i1 == blockID)
-            {
-                i2 = -1;
-            }
-            int k2 = iblockaccess.getBlockId(i - 1, j, i1 != blockID ? k + 1 : k - 1);
-            int i3 = iblockaccess.getBlockId(i + 1, j, i1 != blockID ? k + 1 : k - 1);
-            if(l == 4)
-            {
-                i2 = -1 - i2;
-            }
-            byte byte1 = 5;
-            if((Block.opaqueCubeLookup[k1] || Block.opaqueCubeLookup[k2]) && !Block.opaqueCubeLookup[l1] && !Block.opaqueCubeLookup[i3])
-            {
-                byte1 = 5;
-            }
-            if((Block.opaqueCubeLookup[l1] || Block.opaqueCubeLookup[i3]) && !Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[k2])
-            {
-                byte1 = 4;
-            }
-            return (l != byte1 ? blockIndexInTexture + 32 : blockIndexInTexture + 16) + i2;
-        }
-        if(k1 == blockID || l1 == blockID)
-        {
-            if(l == 4 || l == 5)
-            {
-                return blockIndexInTexture;
-            }
-            int j2 = 0;
-            if(k1 == blockID)
-            {
-                j2 = -1;
-            }
-            int l2 = iblockaccess.getBlockId(k1 != blockID ? i + 1 : i - 1, j, k - 1);
-            int j3 = iblockaccess.getBlockId(k1 != blockID ? i + 1 : i - 1, j, k + 1);
-            if(l == 3)
-            {
-                j2 = -1 - j2;
-            }
-            byte byte2 = 3;
-            if((Block.opaqueCubeLookup[i1] || Block.opaqueCubeLookup[l2]) && !Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[j3])
-            {
-                byte2 = 3;
-            }
-            if((Block.opaqueCubeLookup[j1] || Block.opaqueCubeLookup[j3]) && !Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l2])
-            {
-                byte2 = 2;
-            }
-            return (l != byte2 ? blockIndexInTexture + 32 : blockIndexInTexture + 16) + j2;
-        }
-        byte byte0 = 3;
-        if(Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[j1])
-        {
-            byte0 = 3;
-        }
-        if(Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[i1])
-        {
-            byte0 = 2;
-        }
-        if(Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[l1])
-        {
-            byte0 = 5;
-        }
-        if(Block.opaqueCubeLookup[l1] && !Block.opaqueCubeLookup[k1])
-        {
-            byte0 = 4;
-        }
-        return l != byte0 ? blockIndexInTexture : blockIndexInTexture + 1;
     }
 
     public int getBlockTextureFromSide(int i)
@@ -412,7 +322,7 @@ public class BlockChest extends BlockContainer
                     entityitem.motionZ = (float)random.nextGaussian() * f3;
                     if(itemstack.hasTagCompound())
                     {
-                        entityitem.item.setTagCompound((NBTTagCompound)itemstack.getTagCompound().cloneTag());
+                        entityitem.item.setNBTData((NBTTagCompound)itemstack.getTagCompound().cloneTag());
                     }
                     world.spawnEntityInWorld(entityitem);
                 }
@@ -465,7 +375,7 @@ public class BlockChest extends BlockContainer
         {
             obj = new InventoryLargeChest("Large chest", ((IInventory) (obj)), (TileEntityChest)world.getBlockTileEntity(i, j, k + 1));
         }
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return true;
         } else

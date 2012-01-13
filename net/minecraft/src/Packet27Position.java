@@ -54,4 +54,34 @@ public class Packet27Position extends Packet
     {
         return 18;
     }
+
+    public float getStrafeMovement()
+    {
+        return strafeMovement;
+    }
+
+    public float getPitchRotation()
+    {
+        return pitchRotation;
+    }
+
+    public float getForwardMovement()
+    {
+        return fowardMovement;
+    }
+
+    public float getYawRotation()
+    {
+        return yawRotation;
+    }
+
+    public boolean isSneaking()
+    {
+        return isSneaking;
+    }
+
+    public boolean isInJump()
+    {
+        return isInJump;
+    }
 }

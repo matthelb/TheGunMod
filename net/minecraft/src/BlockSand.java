@@ -52,7 +52,7 @@ public class BlockSand extends Block
                     world.setBlockWithNotify(i, j, k, blockID);
                 }
             } else
-            if(!world.multiplayerWorld)
+            if(!world.singleplayerWorld)
             {
                 EntityFallingSand entityfallingsand = new EntityFallingSand(world, (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, blockID);
                 world.spawnEntityInWorld(entityfallingsand);

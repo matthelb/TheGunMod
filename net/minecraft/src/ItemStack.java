@@ -4,13 +4,12 @@
 
 package net.minecraft.src;
 
-import java.util.*;
+import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, Item, NBTTagCompound, StatList, 
 //            EntityPlayer, EnchantmentHelper, EntityLiving, World, 
-//            NBTTagList, Enchantment, Entity, EnumAction, 
-//            EnumRarity
+//            NBTTagList, Enchantment, Entity, EnumAction
 
 public final class ItemStack
 {
@@ -18,7 +17,7 @@ public final class ItemStack
     public int stackSize;
     public int animationsToGo;
     public int itemID;
-    public NBTTagCompound stackTagCompound;
+    public NBTTagCompound itemNBT;
     private int itemDamage;
 
     public ItemStack(Block block)
@@ -74,9 +73,9 @@ public final class ItemStack
     public ItemStack splitStack(int i)
     {
         ItemStack itemstack = new ItemStack(itemID, i, itemDamage);
-        if(stackTagCompound != null)
+        if(itemNBT != null)
         {
-            itemstack.stackTagCompound = (NBTTagCompound)stackTagCompound.cloneTag();
+            itemstack.itemNBT = (NBTTagCompound)itemNBT.cloneTag();
         }
         stackSize -= i;
         return itemstack;
@@ -85,11 +84,6 @@ public final class ItemStack
     public Item getItem()
     {
         return Item.itemsList[itemID];
-    }
-
-    public int getIconIndex()
-    {
-        return getItem().getIconIndex(this);
     }
 
     public boolean useItem(EntityPlayer entityplayer, World world, int i, int j, int k, int l)
@@ -122,9 +116,9 @@ public final class ItemStack
         nbttagcompound.setShort("id", (short)itemID);
         nbttagcompound.setByte("Count", (byte)stackSize);
         nbttagcompound.setShort("Damage", (short)itemDamage);
-        if(stackTagCompound != null)
+        if(itemNBT != null)
         {
-            nbttagcompound.setTag("tag", stackTagCompound);
+            nbttagcompound.setTag("tag", itemNBT);
         }
         return nbttagcompound;
     }
@@ -136,7 +130,7 @@ public final class ItemStack
         itemDamage = nbttagcompound.getShort("Damage");
         if(nbttagcompound.hasKey("tag"))
         {
-            stackTagCompound = nbttagcompound.getCompoundTag("tag");
+            itemNBT = nbttagcompound.getCompoundTag("tag");
         }
     }
 
@@ -202,7 +196,7 @@ public final class ItemStack
         itemDamage += i;
         if(itemDamage > getMaxDamage())
         {
-            entityliving.func_41005_b(this);
+            entityliving.func_41030_c(this);
             if(entityliving instanceof EntityPlayer)
             {
                 ((EntityPlayer)entityliving).addStat(StatList.objectBreakStats[itemID], 1);
@@ -250,16 +244,16 @@ public final class ItemStack
 
     public void useItemOnEntity(EntityLiving entityliving)
     {
-        Item.itemsList[itemID].useItemOnEntity(this, entityliving);
+        Item.itemsList[itemID].saddleEntity(this, entityliving);
     }
 
     public ItemStack copy()
     {
         ItemStack itemstack = new ItemStack(itemID, stackSize, itemDamage);
-        if(stackTagCompound != null)
+        if(itemNBT != null)
         {
-            itemstack.stackTagCompound = (NBTTagCompound)stackTagCompound.cloneTag();
-            if(!itemstack.stackTagCompound.equals(stackTagCompound))
+            itemstack.itemNBT = (NBTTagCompound)itemNBT.cloneTag();
+            if(!itemstack.itemNBT.equals(itemNBT))
             {
                 return itemstack;
             }
@@ -296,16 +290,21 @@ public final class ItemStack
         {
             return false;
         }
-        if(stackTagCompound == null && itemstack.stackTagCompound != null)
+        if(itemNBT == null && itemstack.itemNBT != null)
         {
             return false;
         }
-        return stackTagCompound == null || stackTagCompound.equals(itemstack.stackTagCompound);
+        return itemNBT == null || itemNBT.equals(itemstack.itemNBT);
     }
 
     public boolean isItemEqual(ItemStack itemstack)
     {
         return itemID == itemstack.itemID && itemDamage == itemstack.itemDamage;
+    }
+
+    public String func_35616_k()
+    {
+        return Item.itemsList[itemID].getItemNameIS(this);
     }
 
     public static ItemStack copyItemStack(ItemStack itemstack)
@@ -345,7 +344,7 @@ public final class ItemStack
 
     public EnumAction getItemUseAction()
     {
-        return getItem().getItemUseAction(this);
+        return getItem().getAction(this);
     }
 
     public void onPlayerStoppedUsing(World world, EntityPlayer entityplayer, int i)
@@ -355,71 +354,35 @@ public final class ItemStack
 
     public boolean hasTagCompound()
     {
-        return stackTagCompound != null;
+        return itemNBT != null;
     }
 
     public NBTTagCompound getTagCompound()
     {
-        return stackTagCompound;
+        return itemNBT;
     }
 
     public NBTTagList getEnchantmentTagList()
     {
-        if(stackTagCompound == null)
+        if(itemNBT == null)
         {
             return null;
         } else
         {
-            return (NBTTagList)stackTagCompound.getTag("ench");
+            return (NBTTagList)itemNBT.getTag("ench");
         }
     }
 
-    public void setTagCompound(NBTTagCompound nbttagcompound)
+    public void setNBTData(NBTTagCompound nbttagcompound)
     {
         if(Item.itemsList[itemID].getItemStackLimit() != 1)
         {
             throw new IllegalArgumentException("Cannot add tag data to a stackable item");
         } else
         {
-            stackTagCompound = nbttagcompound;
+            itemNBT = nbttagcompound;
             return;
         }
-    }
-
-    public List getItemNameandInformation()
-    {
-        ArrayList arraylist = new ArrayList();
-        Item item = Item.itemsList[itemID];
-        arraylist.add(item.getItemDisplayName(this));
-        item.addInformation(this, arraylist);
-        if(hasTagCompound())
-        {
-            NBTTagList nbttaglist = getEnchantmentTagList();
-            if(nbttaglist != null)
-            {
-                for(int i = 0; i < nbttaglist.tagCount(); i++)
-                {
-                    short word0 = ((NBTTagCompound)nbttaglist.tagAt(i)).getShort("id");
-                    short word1 = ((NBTTagCompound)nbttaglist.tagAt(i)).getShort("lvl");
-                    if(Enchantment.enchantmentsList[word0] != null)
-                    {
-                        arraylist.add(Enchantment.enchantmentsList[word0].getTranslatedName(word1));
-                    }
-                }
-
-            }
-        }
-        return arraylist;
-    }
-
-    public boolean func_40713_r()
-    {
-        return getItem().hasEffect(this);
-    }
-
-    public EnumRarity func_40707_s()
-    {
-        return getItem().getRarity(this);
     }
 
     public boolean isItemEnchantable()
@@ -433,15 +396,15 @@ public final class ItemStack
 
     public void addEnchantment(Enchantment enchantment, int i)
     {
-        if(stackTagCompound == null)
+        if(itemNBT == null)
         {
-            setTagCompound(new NBTTagCompound());
+            setNBTData(new NBTTagCompound());
         }
-        if(!stackTagCompound.hasKey("ench"))
+        if(!itemNBT.hasKey("ench"))
         {
-            stackTagCompound.setTag("ench", new NBTTagList("ench"));
+            itemNBT.setTag("ench", new NBTTagList("ench"));
         }
-        NBTTagList nbttaglist = (NBTTagList)stackTagCompound.getTag("ench");
+        NBTTagList nbttaglist = (NBTTagList)itemNBT.getTag("ench");
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         nbttagcompound.setShort("id", (short)enchantment.effectId);
         nbttagcompound.setShort("lvl", (byte)i);
@@ -450,6 +413,6 @@ public final class ItemStack
 
     public boolean isItemEnchanted()
     {
-        return stackTagCompound != null && stackTagCompound.hasKey("ench");
+        return itemNBT != null && itemNBT.hasKey("ench");
     }
 }

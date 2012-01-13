@@ -13,7 +13,7 @@ public class Slot
 
     private final int slotIndex;
     public final IInventory inventory;
-    public int slotNumber;
+    public int id;
     public int xDisplayPosition;
     public int yDisplayPosition;
 
@@ -61,13 +61,13 @@ public class Slot
         return inventory.getInventoryStackLimit();
     }
 
-    public int getBackgroundIconIndex()
-    {
-        return -1;
-    }
-
     public ItemStack decrStackSize(int i)
     {
         return inventory.decrStackSize(slotIndex, i);
+    }
+
+    public boolean isHere(IInventory iinventory, int i)
+    {
+        return iinventory == inventory && i == slotIndex;
     }
 }

@@ -19,6 +19,12 @@ public class Packet200Statistic extends Packet
     {
     }
 
+    public Packet200Statistic(int i, int j)
+    {
+        statisticId = i;
+        amount = j;
+    }
+
     public void processPacket(NetHandler nethandler)
     {
         nethandler.handleStatistic(this);

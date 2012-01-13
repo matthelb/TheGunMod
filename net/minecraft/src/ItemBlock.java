@@ -75,14 +75,14 @@ public class ItemBlock extends Item
         if(world.canBlockBePlacedAt(blockID, i, j, k, false, l))
         {
             Block block = Block.blocksList[blockID];
-            if(world.setBlockAndMetadataWithNotify(i, j, k, blockID, getPlacedBlockMetadata(itemstack.getItemDamage())))
+            if(world.setBlockAndMetadataWithNotify(i, j, k, blockID, getMetadata(itemstack.getItemDamage())))
             {
                 if(world.getBlockId(i, j, k) == blockID)
                 {
                     Block.blocksList[blockID].onBlockPlaced(world, i, j, k, l);
                     Block.blocksList[blockID].onBlockPlacedBy(world, i, j, k, entityplayer);
                 }
-                world.playSoundEffect((float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, block.stepSound.stepSoundDir2(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+                world.playSoundEffect((float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, block.stepSound.stepSoundDir(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
                 itemstack.stackSize--;
             }
             return true;

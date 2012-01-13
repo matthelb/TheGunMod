@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
+//            Packet, World, Chunk, NetHandler
 
 public class Packet52MultiBlockChange extends Packet
 {
@@ -22,6 +22,28 @@ public class Packet52MultiBlockChange extends Packet
     public Packet52MultiBlockChange()
     {
         isChunkDataPacket = true;
+    }
+
+    public Packet52MultiBlockChange(int i, int j, short aword0[], int k, World world)
+    {
+        isChunkDataPacket = true;
+        xPosition = i;
+        zPosition = j;
+        size = k;
+        coordinateArray = new short[k];
+        typeArray = new byte[k];
+        metadataArray = new byte[k];
+        Chunk chunk = world.getChunkFromChunkCoords(i, j);
+        for(int l = 0; l < k; l++)
+        {
+            int i1 = aword0[l] >> 12 & 0xf;
+            int j1 = aword0[l] >> 8 & 0xf;
+            int k1 = aword0[l] & 0xff;
+            coordinateArray[l] = aword0[l];
+            typeArray[l] = (byte)chunk.getBlockID(i1, k1, j1);
+            metadataArray[l] = (byte)chunk.getBlockMetadata(i1, k1, j1);
+        }
+
     }
 
     public void readPacketData(DataInputStream datainputstream)

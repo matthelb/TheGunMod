@@ -35,17 +35,17 @@ public class EntityPotion extends EntityThrowable
         potionDamage = i;
     }
 
-    protected float func_40075_e()
+    protected float func_40042_e()
     {
         return 0.05F;
     }
 
-    protected float func_40077_c()
+    protected float func_40044_c()
     {
         return 0.5F;
     }
 
-    protected float func_40074_d()
+    protected float func_40040_d()
     {
         return -20F;
     }
@@ -55,11 +55,11 @@ public class EntityPotion extends EntityThrowable
         return potionDamage;
     }
 
-    protected void onThrowableCollision(MovingObjectPosition movingobjectposition)
+    protected void onImpact(MovingObjectPosition movingobjectposition)
     {
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
-            List list = Item.potion.getEffectNamesFromDamage(potionDamage);
+            List list = Item.potion.getPotionEffectsForDamage(potionDamage);
             if(list != null && !list.isEmpty())
             {
                 AxisAlignedBB axisalignedbb = boundingBox.expand(4D, 2D, 4D);
@@ -84,7 +84,7 @@ public class EntityPotion extends EntityThrowable
                                 int i = potioneffect.getPotionID();
                                 if(Potion.potionTypes[i].isInstant())
                                 {
-                                    Potion.potionTypes[i].affectEntity(throwingEntity, (EntityLiving)entity, potioneffect.getAmplifier(), d1);
+                                    Potion.potionTypes[i].affectEntity(thrower, (EntityLiving)entity, potioneffect.getAmplifier(), d1);
                                 } else
                                 {
                                     int j = (int)(d1 * (double)potioneffect.getDuration() + 0.5D);

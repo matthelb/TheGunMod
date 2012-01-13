@@ -41,7 +41,7 @@ public class BlockNote extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return true;
         }
@@ -56,7 +56,7 @@ public class BlockNote extends BlockContainer
 
     public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }

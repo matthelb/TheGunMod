@@ -68,7 +68,7 @@ public class BlockPistonMoving extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(!world.multiplayerWorld && world.getBlockTileEntity(i, j, k) == null)
+        if(!world.singleplayerWorld && world.getBlockTileEntity(i, j, k) == null)
         {
             world.setBlockWithNotify(i, j, k, 0);
             return true;
@@ -85,7 +85,7 @@ public class BlockPistonMoving extends BlockContainer
 
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }
@@ -102,13 +102,13 @@ public class BlockPistonMoving extends BlockContainer
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if(!world.multiplayerWorld)
+        if(!world.singleplayerWorld)
         {
             if(world.getBlockTileEntity(i, j, k) != null);
         }
     }
 
-    public static TileEntity getNewTileEntity(int i, int j, int k, boolean flag, boolean flag1)
+    public static TileEntity getTileEntity(int i, int j, int k, boolean flag, boolean flag1)
     {
         return new TileEntityPiston(i, j, k, flag, flag1);
     }
@@ -120,12 +120,12 @@ public class BlockPistonMoving extends BlockContainer
         {
             return null;
         }
-        float f = tileentitypiston.func_31008_a(0.0F);
-        if(tileentitypiston.func_31015_b())
+        float f = tileentitypiston.func_31007_a(0.0F);
+        if(tileentitypiston.func_31010_c())
         {
             f = 1.0F - f;
         }
-        return getAxisAlignedBB(world, i, j, k, tileentitypiston.getStoredBlockID(), f, tileentitypiston.func_31009_d());
+        return getAxisAlignedBB(world, i, j, k, tileentitypiston.getStoredBlockID(), f, tileentitypiston.func_31008_d());
     }
 
     public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
@@ -139,12 +139,12 @@ public class BlockPistonMoving extends BlockContainer
                 return;
             }
             block.setBlockBoundsBasedOnState(iblockaccess, i, j, k);
-            float f = tileentitypiston.func_31008_a(0.0F);
-            if(tileentitypiston.func_31015_b())
+            float f = tileentitypiston.func_31007_a(0.0F);
+            if(tileentitypiston.func_31010_c())
             {
                 f = 1.0F - f;
             }
-            int l = tileentitypiston.func_31009_d();
+            int l = tileentitypiston.func_31008_d();
             minX = block.minX - (double)((float)Facing.offsetsXForSide[l] * f);
             minY = block.minY - (double)((float)Facing.offsetsYForSide[l] * f);
             minZ = block.minZ - (double)((float)Facing.offsetsZForSide[l] * f);

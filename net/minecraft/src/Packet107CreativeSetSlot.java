@@ -19,12 +19,6 @@ public class Packet107CreativeSetSlot extends Packet
     {
     }
 
-    public Packet107CreativeSetSlot(int i, ItemStack itemstack)
-    {
-        slot = i;
-        itemStack = itemstack;
-    }
-
     public void processPacket(NetHandler nethandler)
     {
         nethandler.handleCreativeSetSlot(this);
@@ -34,7 +28,7 @@ public class Packet107CreativeSetSlot extends Packet
         throws IOException
     {
         slot = datainputstream.readShort();
-        itemStack = func_40187_b(datainputstream);
+        itemStack = func_40262_b(datainputstream);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)

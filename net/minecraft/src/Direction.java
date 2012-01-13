@@ -8,25 +8,25 @@ package net.minecraft.src;
 public class Direction
 {
 
-    public static final int field_35871_a[] = {
+    public static final int field_35612_a[] = {
         0, -1, 0, 1
     };
-    public static final int field_35870_b[] = {
+    public static final int field_35610_b[] = {
         1, 0, -1, 0
     };
     public static final int headInvisibleFace[] = {
         3, 4, 2, 5
     };
-    public static final int field_35869_d[] = {
+    public static final int field_35609_d[] = {
         -1, -1, 2, 0, 1, 3
     };
     public static final int footInvisibleFaceRemap[] = {
         2, 3, 0, 1
     };
-    public static final int field_35867_f[] = {
+    public static final int field_35607_f[] = {
         1, 2, 3, 0
     };
-    public static final int field_35868_g[] = {
+    public static final int field_35608_g[] = {
         3, 0, 1, 2
     };
     public static final int bedDirection[][] = {

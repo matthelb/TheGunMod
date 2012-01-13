@@ -19,7 +19,7 @@ public enum EnumDoor
 */
     private static final EnumDoor allDoors[]; /* synthetic field */
 /*
-    public static final EnumDoor[] values()
+    public static EnumDoor[] values()
     {
         return (EnumDoor[])allDoors.clone();
     }

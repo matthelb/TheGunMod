@@ -23,8 +23,8 @@ class StructureVillageStart extends StructureStart
         ComponentVillageStartPiece componentvillagestartpiece = new ComponentVillageStartPiece(world.getWorldChunkManager(), 0, random, (i << 4) + 2, (j << 4) + 2, arraylist, k);
         components.add(componentvillagestartpiece);
         componentvillagestartpiece.buildComponent(componentvillagestartpiece, components, random);
-        ArrayList arraylist1 = componentvillagestartpiece.field_35106_f;
-        for(ArrayList arraylist2 = componentvillagestartpiece.field_35108_e; !arraylist1.isEmpty() || !arraylist2.isEmpty();)
+        ArrayList arraylist1 = componentvillagestartpiece.field_35387_f;
+        for(ArrayList arraylist2 = componentvillagestartpiece.field_35389_e; !arraylist1.isEmpty() || !arraylist2.isEmpty();)
         {
             if(!arraylist1.isEmpty())
             {

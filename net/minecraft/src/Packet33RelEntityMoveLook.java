@@ -17,6 +17,17 @@ public class Packet33RelEntityMoveLook extends Packet30Entity
         rotating = true;
     }
 
+    public Packet33RelEntityMoveLook(int i, byte byte0, byte byte1, byte byte2, byte byte3, byte byte4)
+    {
+        super(i);
+        xPosition = byte0;
+        yPosition = byte1;
+        zPosition = byte2;
+        yaw = byte3;
+        pitch = byte4;
+        rotating = true;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

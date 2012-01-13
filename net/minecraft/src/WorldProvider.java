@@ -7,16 +7,15 @@ package net.minecraft.src;
 
 // Referenced classes of package net.minecraft.src:
 //            WorldChunkManager, ChunkProviderGenerate, World, WorldInfo, 
-//            Block, BlockGrass, MathHelper, Vec3D, 
-//            WorldProviderHell, WorldProviderSurface, WorldProviderEnd, IChunkProvider, 
-//            ChunkCoordinates
+//            Block, BlockGrass, WorldProviderHell, WorldProviderSurface, 
+//            WorldProviderEnd, IChunkProvider, ChunkCoordinates
 
 public abstract class WorldProvider
 {
 
     public World worldObj;
     public WorldChunkManager worldChunkMgr;
-    public boolean isAlternateDimension;
+    public boolean canSleepInWorld;
     public boolean isHellWorld;
     public boolean hasNoSky;
     public float lightBrightnessTable[];
@@ -25,7 +24,7 @@ public abstract class WorldProvider
 
     public WorldProvider()
     {
-        isAlternateDimension = false;
+        canSleepInWorld = false;
         isHellWorld = false;
         hasNoSky = false;
         lightBrightnessTable = new float[16];
@@ -58,7 +57,7 @@ public abstract class WorldProvider
 
     public IChunkProvider getChunkProvider()
     {
-        return new ChunkProviderGenerate(worldObj, worldObj.getWorldSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
+        return new ChunkProviderGenerate(worldObj, worldObj.getRandomSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
     }
 
     public boolean canCoordinateBeSpawn(int i, int j)
@@ -85,52 +84,6 @@ public abstract class WorldProvider
         return f1;
     }
 
-    public int func_40470_b(long l, float f)
-    {
-        return (int)(l / 24000L) % 8;
-    }
-
-    public float[] calcSunriseSunsetColors(float f, float f1)
-    {
-        float f2 = 0.4F;
-        float f3 = MathHelper.cos(f * 3.141593F * 2.0F) - 0.0F;
-        float f4 = -0F;
-        if(f3 >= f4 - f2 && f3 <= f4 + f2)
-        {
-            float f5 = ((f3 - f4) / f2) * 0.5F + 0.5F;
-            float f6 = 1.0F - (1.0F - MathHelper.sin(f5 * 3.141593F)) * 0.99F;
-            f6 *= f6;
-            colorsSunriseSunset[0] = f5 * 0.3F + 0.7F;
-            colorsSunriseSunset[1] = f5 * f5 * 0.7F + 0.2F;
-            colorsSunriseSunset[2] = f5 * f5 * 0.0F + 0.2F;
-            colorsSunriseSunset[3] = f6;
-            return colorsSunriseSunset;
-        } else
-        {
-            return null;
-        }
-    }
-
-    public Vec3D getFogColor(float f, float f1)
-    {
-        float f2 = MathHelper.cos(f * 3.141593F * 2.0F) * 2.0F + 0.5F;
-        if(f2 < 0.0F)
-        {
-            f2 = 0.0F;
-        }
-        if(f2 > 1.0F)
-        {
-            f2 = 1.0F;
-        }
-        float f3 = 0.7529412F;
-        float f4 = 0.8470588F;
-        float f5 = 1.0F;
-        f3 *= f2 * 0.94F + 0.06F;
-        f4 *= f2 * 0.94F + 0.06F;
-        f5 *= f2 * 0.91F + 0.09F;
-        return Vec3D.createVector(f3, f4, f5);
-    }
-
     public boolean canRespawnHere()
     {
         return true;
@@ -153,16 +106,6 @@ public abstract class WorldProvider
         {
             return null;
         }
-    }
-
-    public float getCloudHeight()
-    {
-        return (float)worldObj.worldHeight;
-    }
-
-    public boolean func_28112_c()
-    {
-        return true;
     }
 
     public ChunkCoordinates getEntrancePortalLocation()

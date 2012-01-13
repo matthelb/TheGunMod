@@ -15,7 +15,7 @@ import java.util.Random;
 public class ComponentStrongholdPortalRoom extends ComponentStronghold
 {
 
-    private boolean field_40015_a;
+    private boolean field_40316_a;
 
     public ComponentStrongholdPortalRoom(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -28,14 +28,14 @@ public class ComponentStrongholdPortalRoom extends ComponentStronghold
     {
         if(structurecomponent != null)
         {
-            ((ComponentStrongholdStairs2)structurecomponent).field_40009_b = this;
+            ((ComponentStrongholdStairs2)structurecomponent).field_40317_b = this;
         }
     }
 
-    public static ComponentStrongholdPortalRoom func_40014_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentStrongholdPortalRoom func_40315_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -4, -1, 0, 11, 8, 16, l);
-        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -118,14 +118,14 @@ public class ComponentStrongholdPortalRoom extends ComponentStronghold
         placeBlockAtCurrentPosition(world, Block.endPortalFrame.blockID, byte4 + (random.nextFloat() <= 0.9F ? 0 : 4), 7, 3, 9, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.endPortalFrame.blockID, byte4 + (random.nextFloat() <= 0.9F ? 0 : 4), 7, 3, 10, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.endPortalFrame.blockID, byte4 + (random.nextFloat() <= 0.9F ? 0 : 4), 7, 3, 11, structureboundingbox);
-        if(!field_40015_a)
+        if(!field_40316_a)
         {
             int i = getYWithOffset(3);
             int j1 = getXWithOffset(5, 6);
             int k1 = getZWithOffset(5, 6);
-            if(structureboundingbox.isVecInside(j1, i, k1))
+            if(structureboundingbox.isInBbVolume(j1, i, k1))
             {
-                field_40015_a = true;
+                field_40316_a = true;
                 world.setBlockWithNotify(j1, i, k1, Block.mobSpawner.blockID);
                 TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getBlockTileEntity(j1, i, k1);
                 if(tileentitymobspawner != null)

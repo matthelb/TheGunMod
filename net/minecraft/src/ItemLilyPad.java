@@ -20,7 +20,7 @@ public class ItemLilyPad extends ItemColored
 
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        MovingObjectPosition movingobjectposition = func_40402_a(world, entityplayer, true);
+        MovingObjectPosition movingobjectposition = func_40225_a(world, entityplayer, true);
         if(movingobjectposition == null)
         {
             return itemstack;
@@ -48,10 +48,5 @@ public class ItemLilyPad extends ItemColored
             }
         }
         return itemstack;
-    }
-
-    public int getColorFromDamage(int i)
-    {
-        return Block.waterlily.getRenderColor(i);
     }
 }

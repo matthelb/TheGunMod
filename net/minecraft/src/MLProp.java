@@ -17,4 +17,6 @@ public interface MLProp
     public abstract double min();
 
     public abstract double max();
+
+    public abstract int reobf();
 }

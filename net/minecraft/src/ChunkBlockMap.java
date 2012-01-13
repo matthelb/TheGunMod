@@ -17,7 +17,7 @@ public class ChunkBlockMap
     {
     }
 
-    public static void removeUnknownBlockIDs(byte abyte0[])
+    public static void func_26001_a(byte abyte0[])
     {
         for(int i = 0; i < abyte0.length; i++)
         {

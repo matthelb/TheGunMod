@@ -22,6 +22,15 @@ public class Packet61DoorChange extends Packet
     {
     }
 
+    public Packet61DoorChange(int i, int j, int k, int l, int i1)
+    {
+        sfxID = i;
+        posX = j;
+        posY = k;
+        posZ = l;
+        auxData = i1;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

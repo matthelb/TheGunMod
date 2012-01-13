@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Entity, AxisAlignedBB, MathHelper, EntityLiving, 
-//            World, Vec3D, MovingObjectPosition, DamageSource, 
+//            Entity, EntityLiving, MathHelper, World, 
+//            Vec3D, MovingObjectPosition, AxisAlignedBB, DamageSource, 
 //            NBTTagCompound
 
 public class EntityFireball extends Entity
@@ -43,32 +43,6 @@ public class EntityFireball extends Entity
     {
     }
 
-    public boolean isInRangeToRenderDist(double d)
-    {
-        double d1 = boundingBox.getAverageEdgeLength() * 4D;
-        d1 *= 64D;
-        return d < d1 * d1;
-    }
-
-    public EntityFireball(World world, double d, double d1, double d2, 
-            double d3, double d4, double d5)
-    {
-        super(world);
-        xTile = -1;
-        yTile = -1;
-        zTile = -1;
-        inTile = 0;
-        inGround = false;
-        ticksInAir = 0;
-        setSize(1.0F, 1.0F);
-        setLocationAndAngles(d, d1, d2, rotationYaw, rotationPitch);
-        setPosition(d, d1, d2);
-        double d6 = MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5);
-        accelerationX = (d3 / d6) * 0.10000000000000001D;
-        accelerationY = (d4 / d6) * 0.10000000000000001D;
-        accelerationZ = (d5 / d6) * 0.10000000000000001D;
-    }
-
     public EntityFireball(World world, EntityLiving entityliving, double d, double d1, double d2)
     {
         super(world);
@@ -97,7 +71,7 @@ public class EntityFireball extends Entity
     {
         super.onUpdate();
         setFire(1);
-        if(!worldObj.multiplayerWorld && (shootingEntity == null || shootingEntity.isDead))
+        if(!worldObj.singleplayerWorld && (shootingEntity == null || shootingEntity.isDead))
         {
             setEntityDead();
         }
@@ -146,7 +120,7 @@ public class EntityFireball extends Entity
             }
             float f2 = 0.3F;
             AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f2, f2, f2);
-            MovingObjectPosition movingobjectposition1 = axisalignedbb.func_1169_a(vec3d, vec3d1);
+            MovingObjectPosition movingobjectposition1 = axisalignedbb.func_706_a(vec3d, vec3d1);
             if(movingobjectposition1 == null)
             {
                 continue;
@@ -165,7 +139,7 @@ public class EntityFireball extends Entity
         }
         if(movingobjectposition != null)
         {
-            func_40071_a(movingobjectposition);
+            func_40063_a(movingobjectposition);
         }
         posX += motionX;
         posY += motionY;
@@ -199,9 +173,9 @@ public class EntityFireball extends Entity
         setPosition(posX, posY, posZ);
     }
 
-    protected void func_40071_a(MovingObjectPosition movingobjectposition)
+    protected void func_40063_a(MovingObjectPosition movingobjectposition)
     {
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             if(movingobjectposition.entityHit != null)
             {
@@ -266,18 +240,8 @@ public class EntityFireball extends Entity
         }
     }
 
-    public float getShadowSize()
-    {
-        return 0.0F;
-    }
-
     public float getEntityBrightness(float f)
     {
         return 1.0F;
-    }
-
-    public int getEntityBrightnessForRender(float f)
-    {
-        return 0xf000f0;
     }
 }

@@ -75,6 +75,11 @@ public class DataWatcher
         }
     }
 
+    public boolean hasObjectChanged()
+    {
+        return objectChanged;
+    }
+
     public static void writeObjectsInListToStream(List list, DataOutputStream dataoutputstream)
         throws IOException
     {
@@ -88,6 +93,34 @@ public class DataWatcher
 
         }
         dataoutputstream.writeByte(127);
+    }
+
+    public ArrayList getChangedObjects()
+    {
+        ArrayList arraylist = null;
+        if(objectChanged)
+        {
+            Iterator iterator = watchedObjects.values().iterator();
+            do
+            {
+                if(!iterator.hasNext())
+                {
+                    break;
+                }
+                WatchableObject watchableobject = (WatchableObject)iterator.next();
+                if(watchableobject.getWatching())
+                {
+                    watchableobject.setWatching(false);
+                    if(arraylist == null)
+                    {
+                        arraylist = new ArrayList();
+                    }
+                    arraylist.add(watchableobject);
+                }
+            } while(true);
+        }
+        objectChanged = false;
+        return arraylist;
     }
 
     public void writeWatchableObjects(DataOutputStream dataoutputstream)
@@ -198,24 +231,6 @@ public class DataWatcher
         }
 
         return arraylist;
-    }
-
-    public void updateWatchedObjectsFromList(List list)
-    {
-        Iterator iterator = list.iterator();
-        do
-        {
-            if(!iterator.hasNext())
-            {
-                break;
-            }
-            WatchableObject watchableobject = (WatchableObject)iterator.next();
-            WatchableObject watchableobject1 = (WatchableObject)watchedObjects.get(Integer.valueOf(watchableobject.getDataValueId()));
-            if(watchableobject1 != null)
-            {
-                watchableobject1.setObject(watchableobject.getObject());
-            }
-        } while(true);
     }
 
     static Class _mthclass$(String s)

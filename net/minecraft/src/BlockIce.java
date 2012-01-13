@@ -8,7 +8,7 @@ import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockBreakable, Material, World, Block, 
-//            EnumSkyBlock, IBlockAccess, EntityPlayer, ItemStack
+//            EnumSkyBlock, EntityPlayer, ItemStack
 
 public class BlockIce extends BlockBreakable
 {
@@ -18,16 +18,6 @@ public class BlockIce extends BlockBreakable
         super(i, j, Material.ice, false);
         slipperiness = 0.98F;
         setTickOnLoad(true);
-    }
-
-    public int getRenderBlockPass()
-    {
-        return 1;
-    }
-
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        return super.shouldSideBeRendered(iblockaccess, i, j, k, 1 - l);
     }
 
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)

@@ -49,7 +49,7 @@ public class NoiseGeneratorPerlin extends NoiseGenerator
         return d1 + d * (d2 - d1);
     }
 
-    public final double func_4110_a(int i, double d, double d1)
+    public final double func_4102_a(int i, double d, double d1)
     {
         int j = i & 0xf;
         double d2 = (double)(1 - ((j & 8) >> 3)) * d;
@@ -65,7 +65,7 @@ public class NoiseGeneratorPerlin extends NoiseGenerator
         return ((j & 1) != 0 ? -d3 : d3) + ((j & 2) != 0 ? -d4 : d4);
     }
 
-    public void func_805_a(double ad[], double d, double d1, double d2, 
+    public void func_646_a(double ad[], double d, double d1, double d2, 
             int i, int j, int k, double d3, double d4, 
             double d5, double d6)
     {
@@ -105,7 +105,7 @@ public class NoiseGeneratorPerlin extends NoiseGenerator
                     int j1 = permutations[l] + l5;
                     int k1 = permutations[k4 + 1] + 0;
                     int l1 = permutations[k1] + l5;
-                    double d9 = lerp(d17, func_4110_a(permutations[j1], d14, d19), grad(permutations[l1], d14 - 1.0D, 0.0D, d19));
+                    double d9 = lerp(d17, func_4102_a(permutations[j1], d14, d19), grad(permutations[l1], d14 - 1.0D, 0.0D, d19));
                     double d11 = lerp(d17, grad(permutations[j1 + 1], d14, 0.0D, d19 - 1.0D), grad(permutations[l1 + 1], d14 - 1.0D, 0.0D, d19 - 1.0D));
                     double d23 = lerp(d21, d9, d11);
                     ad[j3++] += d23 * d12;

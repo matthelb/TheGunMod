@@ -24,9 +24,4 @@ public class BiomeGenEnd extends BiomeGenBase
         fillerBlock = (byte)Block.dirt.blockID;
         biomeDecorator = new BiomeEndDecorator(this);
     }
-
-    public int getSkyColorByTemp(float f)
-    {
-        return 0;
-    }
 }

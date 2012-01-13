@@ -23,7 +23,7 @@ public enum EnumStatus
 */
     private static final EnumStatus allStatuses[]; /* synthetic field */
 /*
-    public static final EnumStatus[] values()
+    public static EnumStatus[] values()
     {
         return (EnumStatus[])allStatuses.clone();
     }

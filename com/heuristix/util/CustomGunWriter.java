@@ -35,7 +35,7 @@ public final class CustomGunWriter {
      *             Gun file name
      * @throws NoSuchFieldException
      * @throws IllegalAccessException
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public static void main(String[] args) throws NoSuchFieldException, IllegalAccessException, IOException {
         if (args.length != 12) {

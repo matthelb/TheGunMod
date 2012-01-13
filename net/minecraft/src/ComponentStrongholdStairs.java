@@ -15,13 +15,13 @@ import java.util.Random;
 public class ComponentStrongholdStairs extends ComponentStronghold
 {
 
-    private final boolean field_35036_a;
+    private final boolean field_35327_a;
     private final EnumDoor doorType;
 
     public ComponentStrongholdStairs(int i, Random random, int j, int k)
     {
         super(i);
-        field_35036_a = true;
+        field_35327_a = true;
         coordBaseMode = random.nextInt(4);
         doorType = EnumDoor.OPENING;
         switch(coordBaseMode)
@@ -40,25 +40,25 @@ public class ComponentStrongholdStairs extends ComponentStronghold
     public ComponentStrongholdStairs(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
-        field_35036_a = false;
+        field_35327_a = false;
         coordBaseMode = j;
-        doorType = getRandomDoor(random);
+        doorType = func_35322_a(random);
         boundingBox = structureboundingbox;
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        if(field_35036_a)
+        if(field_35327_a)
         {
-            StructureStrongholdPieces.func_40751_a(net.minecraft.src.ComponentStrongholdCrossing.class);
+            StructureStrongholdPieces.func_40541_a(net.minecraft.src.ComponentStrongholdCrossing.class);
         }
-        func_35028_a((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
+        func_35324_a((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
     }
 
     public static ComponentStrongholdStairs getStrongholdStairsComponent(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -7, 0, 5, 11, 5, l);
-        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -74,7 +74,7 @@ public class ComponentStrongholdStairs extends ComponentStronghold
             return false;
         } else
         {
-            if(!field_35036_a);
+            if(!field_35327_a);
             fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 4, 10, 4, true, random, StructureStrongholdPieces.getStrongholdStones());
             placeDoor(world, random, structureboundingbox, doorType, 1, 7, 0);
             placeDoor(world, random, structureboundingbox, EnumDoor.OPENING, 1, 1, 4);

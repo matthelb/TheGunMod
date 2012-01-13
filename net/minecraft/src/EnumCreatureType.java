@@ -24,7 +24,7 @@ public enum EnumCreatureType
     private final boolean isPeacefulCreature;
     private static final EnumCreatureType allCreatureTypes[]; /* synthetic field */
 /*
-    public static final EnumCreatureType[] values()
+    public static EnumCreatureType[] values()
     {
         return (EnumCreatureType[])allCreatureTypes.clone();
     }

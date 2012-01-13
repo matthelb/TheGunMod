@@ -14,17 +14,17 @@ import java.util.Random;
 public class EntitySquid extends EntityWaterMob
 {
 
-    public float field_21089_a;
-    public float field_21088_b;
-    public float field_21087_c;
-    public float field_21086_f;
-    public float field_21085_g;
-    public float field_21084_h;
+    public float field_21063_a;
+    public float field_21062_b;
+    public float field_21061_c;
+    public float field_21059_f;
+    public float field_21060_ak;
+    public float field_21058_al;
     public float tentacleAngle;
     public float lastTentacleAngle;
     private float randomMotionSpeed;
-    private float field_21080_l;
-    private float field_21079_m;
+    private float field_21054_ap;
+    private float field_21053_aq;
     private float randomMotionVecX;
     private float randomMotionVecY;
     private float randomMotionVecZ;
@@ -32,23 +32,23 @@ public class EntitySquid extends EntityWaterMob
     public EntitySquid(World world)
     {
         super(world);
-        field_21089_a = 0.0F;
-        field_21088_b = 0.0F;
-        field_21087_c = 0.0F;
-        field_21086_f = 0.0F;
-        field_21085_g = 0.0F;
-        field_21084_h = 0.0F;
+        field_21063_a = 0.0F;
+        field_21062_b = 0.0F;
+        field_21061_c = 0.0F;
+        field_21059_f = 0.0F;
+        field_21060_ak = 0.0F;
+        field_21058_al = 0.0F;
         tentacleAngle = 0.0F;
         lastTentacleAngle = 0.0F;
         randomMotionSpeed = 0.0F;
-        field_21080_l = 0.0F;
-        field_21079_m = 0.0F;
+        field_21054_ap = 0.0F;
+        field_21053_aq = 0.0F;
         randomMotionVecX = 0.0F;
         randomMotionVecY = 0.0F;
         randomMotionVecZ = 0.0F;
         texture = "/mob/squid.png";
         setSize(0.95F, 0.95F);
-        field_21080_l = (1.0F / (rand.nextFloat() + 1.0F)) * 0.2F;
+        field_21054_ap = (1.0F / (rand.nextFloat() + 1.0F)) * 0.2F;
     }
 
     public int getMaxHealth()
@@ -114,38 +114,38 @@ public class EntitySquid extends EntityWaterMob
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        field_21088_b = field_21089_a;
-        field_21086_f = field_21087_c;
-        field_21084_h = field_21085_g;
+        field_21062_b = field_21063_a;
+        field_21059_f = field_21061_c;
+        field_21058_al = field_21060_ak;
         lastTentacleAngle = tentacleAngle;
-        field_21085_g += field_21080_l;
-        if(field_21085_g > 6.283185F)
+        field_21060_ak += field_21054_ap;
+        if(field_21060_ak > 6.283185F)
         {
-            field_21085_g -= 6.283185F;
+            field_21060_ak -= 6.283185F;
             if(rand.nextInt(10) == 0)
             {
-                field_21080_l = (1.0F / (rand.nextFloat() + 1.0F)) * 0.2F;
+                field_21054_ap = (1.0F / (rand.nextFloat() + 1.0F)) * 0.2F;
             }
         }
         if(isInWater())
         {
-            if(field_21085_g < 3.141593F)
+            if(field_21060_ak < 3.141593F)
             {
-                float f = field_21085_g / 3.141593F;
+                float f = field_21060_ak / 3.141593F;
                 tentacleAngle = MathHelper.sin(f * f * 3.141593F) * 3.141593F * 0.25F;
                 if((double)f > 0.75D)
                 {
                     randomMotionSpeed = 1.0F;
-                    field_21079_m = 1.0F;
+                    field_21053_aq = 1.0F;
                 } else
                 {
-                    field_21079_m = field_21079_m * 0.8F;
+                    field_21053_aq = field_21053_aq * 0.8F;
                 }
             } else
             {
                 tentacleAngle = 0.0F;
                 randomMotionSpeed = randomMotionSpeed * 0.9F;
-                field_21079_m = field_21079_m * 0.99F;
+                field_21053_aq = field_21053_aq * 0.99F;
             }
             if(!isMultiplayerEntity)
             {
@@ -156,11 +156,11 @@ public class EntitySquid extends EntityWaterMob
             float f1 = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
             renderYawOffset += ((-(float)Math.atan2(motionX, motionZ) * 180F) / 3.141593F - renderYawOffset) * 0.1F;
             rotationYaw = renderYawOffset;
-            field_21087_c = field_21087_c + 3.141593F * field_21079_m * 1.5F;
-            field_21089_a += ((-(float)Math.atan2(f1, motionY) * 180F) / 3.141593F - field_21089_a) * 0.1F;
+            field_21061_c = field_21061_c + 3.141593F * field_21053_aq * 1.5F;
+            field_21063_a += ((-(float)Math.atan2(f1, motionY) * 180F) / 3.141593F - field_21063_a) * 0.1F;
         } else
         {
-            tentacleAngle = MathHelper.abs(MathHelper.sin(field_21085_g)) * 3.141593F * 0.25F;
+            tentacleAngle = MathHelper.abs(MathHelper.sin(field_21060_ak)) * 3.141593F * 0.25F;
             if(!isMultiplayerEntity)
             {
                 motionX = 0.0D;
@@ -168,7 +168,7 @@ public class EntitySquid extends EntityWaterMob
                 motionY *= 0.98000001907348633D;
                 motionZ = 0.0D;
             }
-            field_21089_a += (double)(-90F - field_21089_a) * 0.02D;
+            field_21063_a += (double)(-90F - field_21063_a) * 0.02D;
         }
     }
 
@@ -196,6 +196,6 @@ public class EntitySquid extends EntityWaterMob
 
     public boolean getCanSpawnHere()
     {
-        return posY > 45D && posY < (double)worldObj.seaLevel && super.getCanSpawnHere();
+        return posY > 45D && posY < (double)worldObj.worldOceanHeight && super.getCanSpawnHere();
     }
 }

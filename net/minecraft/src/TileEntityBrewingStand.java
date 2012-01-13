@@ -81,7 +81,7 @@ public class TileEntityBrewingStand extends TileEntity
             return false;
         }
         ItemStack itemstack = brewingItemStacks[3];
-        if(!Item.itemsList[itemstack.itemID].isValidBrewingIngredient())
+        if(!Item.itemsList[itemstack.itemID].isPotionIngredient())
         {
             return false;
         }
@@ -93,14 +93,14 @@ public class TileEntityBrewingStand extends TileEntity
                 continue;
             }
             int j = brewingItemStacks[i].getItemDamage();
-            int k = getPotionResult(j, itemstack);
+            int k = applyPotionIngredient(j, itemstack);
             if(!ItemPotion.isSplash(j) && ItemPotion.isSplash(k))
             {
                 flag = true;
                 break;
             }
-            java.util.List list = Item.potion.getEffectNamesFromDamage(j);
-            java.util.List list1 = Item.potion.getEffectNamesFromDamage(k);
+            java.util.List list = Item.potion.getPotionEffectsForDamage(j);
+            java.util.List list1 = Item.potion.getPotionEffectsForDamage(k);
             if(j > 0 && list == list1 || list != null && (list.equals(list1) || list1 == null) || j == k)
             {
                 continue;
@@ -126,9 +126,9 @@ public class TileEntityBrewingStand extends TileEntity
                 continue;
             }
             int j = brewingItemStacks[i].getItemDamage();
-            int k = getPotionResult(j, itemstack);
-            java.util.List list = Item.potion.getEffectNamesFromDamage(j);
-            java.util.List list1 = Item.potion.getEffectNamesFromDamage(k);
+            int k = applyPotionIngredient(j, itemstack);
+            java.util.List list = Item.potion.getPotionEffectsForDamage(j);
+            java.util.List list1 = Item.potion.getPotionEffectsForDamage(k);
             if(j > 0 && list == list1 || list != null && (list.equals(list1) || list1 == null))
             {
                 if(!ItemPotion.isSplash(j) && ItemPotion.isSplash(k))
@@ -156,15 +156,15 @@ public class TileEntityBrewingStand extends TileEntity
         }
     }
 
-    private int getPotionResult(int i, ItemStack itemstack)
+    private int applyPotionIngredient(int i, ItemStack itemstack)
     {
         if(itemstack == null)
         {
             return i;
         }
-        if(Item.itemsList[itemstack.itemID].isValidBrewingIngredient())
+        if(Item.itemsList[itemstack.itemID].isPotionIngredient())
         {
-            return PotionHelper.brewPotionData(i, Item.itemsList[itemstack.itemID].getPotionModifier());
+            return PotionHelper.applyIngredient(i, Item.itemsList[itemstack.itemID].getPotionInfo());
         } else
         {
             return i;
@@ -260,11 +260,6 @@ public class TileEntityBrewingStand extends TileEntity
 
     public void closeChest()
     {
-    }
-
-    public void setBrewTime(int i)
-    {
-        brewTime = i;
     }
 
     public int getFilledSlots()

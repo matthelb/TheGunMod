@@ -22,15 +22,6 @@ public class Packet15Place extends Packet
     {
     }
 
-    public Packet15Place(int i, int j, int k, int l, ItemStack itemstack)
-    {
-        xPosition = i;
-        yPosition = j;
-        zPosition = k;
-        direction = l;
-        itemStack = itemstack;
-    }
-
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {
@@ -38,7 +29,7 @@ public class Packet15Place extends Packet
         yPosition = datainputstream.read();
         zPosition = datainputstream.readInt();
         direction = datainputstream.read();
-        itemStack = func_40187_b(datainputstream);
+        itemStack = func_40262_b(datainputstream);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)

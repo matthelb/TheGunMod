@@ -76,17 +76,17 @@ public class StructureBoundingBox
         maxZ = l;
     }
 
-    public boolean intersectsWith(StructureBoundingBox structureboundingbox)
+    public boolean canFitInside(StructureBoundingBox structureboundingbox)
     {
         return maxX >= structureboundingbox.minX && minX <= structureboundingbox.maxX && maxZ >= structureboundingbox.minZ && minZ <= structureboundingbox.maxZ && maxY >= structureboundingbox.minY && minY <= structureboundingbox.maxY;
     }
 
-    public boolean isInsideStructureBB(int i, int j, int k, int l)
+    public boolean isInBbArea(int i, int j, int k, int l)
     {
         return maxX >= i && minX <= k && maxZ >= j && minZ <= l;
     }
 
-    public void resizeBoundingBoxTo(StructureBoundingBox structureboundingbox)
+    public void expandTo(StructureBoundingBox structureboundingbox)
     {
         minX = Math.min(minX, structureboundingbox.minX);
         minY = Math.min(minY, structureboundingbox.minY);
@@ -106,37 +106,37 @@ public class StructureBoundingBox
         maxZ += k;
     }
 
-    public boolean isVecInside(int i, int j, int k)
+    public boolean isInBbVolume(int i, int j, int k)
     {
         return i >= minX && i <= maxX && k >= minZ && k <= maxZ && j >= minY && j <= maxY;
     }
 
-    public int getXSize()
+    public int bbWidth()
     {
         return (maxX - minX) + 1;
     }
 
-    public int getYSize()
+    public int bbHeight()
     {
         return (maxY - minY) + 1;
     }
 
-    public int getZSize()
+    public int bbDepth()
     {
         return (maxZ - minZ) + 1;
     }
 
-    public int func_40597_e()
+    public int func_40623_e()
     {
         return minX + ((maxX - minX) + 1) / 2;
     }
 
-    public int func_40596_f()
+    public int func_40622_f()
     {
         return minY + ((maxY - minY) + 1) / 2;
     }
 
-    public int func_40598_g()
+    public int func_40624_g()
     {
         return minZ + ((maxZ - minZ) + 1) / 2;
     }

@@ -8,27 +8,27 @@ import java.io.PrintStream;
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            IBlockAccess, WorldProvider, WorldInfo, MapStorage, 
-//            ISaveHandler, ChunkProvider, WorldChunkManager, ChunkPosition, 
-//            EntityPlayer, ChunkProviderLoadOrGenerate, MathHelper, IChunkProvider, 
-//            IProgressUpdate, Chunk, Material, Block, 
-//            IWorldAccess, EnumSkyBlock, Vec3D, Entity, 
-//            AxisAlignedBB, BiomeGenBase, NextTickListEntry, Profiler, 
-//            TileEntity, BlockFire, BlockFluid, Explosion, 
-//            ThreadedFileIOBase, SpawnerAnimals, ChunkCoordIntPair, EntityLightningBolt, 
-//            ChunkCache, PathFinder, PlayerCapabilities, ChunkCoordinates, 
-//            WeightedRandom, SpawnListEntry, WorldSettings, MovingObjectPosition, 
-//            PathEntity, WorldSavedData, EnumCreatureType
+//            IBlockAccess, WorldProvider, MapStorage, ISaveHandler, 
+//            WorldInfo, ChunkProvider, WorldChunkManager, ChunkPosition, 
+//            IChunkProvider, IProgressUpdate, Chunk, Material, 
+//            Block, IWorldAccess, EnumSkyBlock, Vec3D, 
+//            MathHelper, Entity, EntityPlayer, AxisAlignedBB, 
+//            NextTickListEntry, Profiler, TileEntity, BlockFire, 
+//            BlockFluid, Explosion, SpawnerAnimals, ChunkCoordIntPair, 
+//            EntityLightningBolt, ChunkCache, PathFinder, PlayerCapabilities, 
+//            ChunkCoordinates, BiomeGenBase, WeightedRandom, SpawnListEntry, 
+//            WorldSettings, MovingObjectPosition, PathEntity, WorldSavedData, 
+//            EnumCreatureType
 
 public class World
     implements IBlockAccess
 {
 
-    public int heightShift;
+    public int worldYBits;
     public int xShift;
     public int worldHeight;
-    public int worldMaxY;
-    public int seaLevel;
+    public int worldYMask;
+    public int worldOceanHeight;
     public boolean scheduledUpdatesAreImmediate;
     public List loadedEntityList;
     private List unloadedEntityList;
@@ -38,10 +38,10 @@ public class World
     private List addedTileEntityList;
     private List entityRemoval;
     public List playerEntities;
-    public List weatherEffects;
+    public List lightningEntities;
     private long cloudColour;
     public int skylightSubtracted;
-    protected int updateLCG;
+    protected int distHashCounter;
     protected final int DIST_HASH_MAGIC = 0x3c6ef35f;
     protected float prevRainingStrength;
     protected float rainingStrength;
@@ -58,131 +58,33 @@ public class World
     public final WorldProvider worldProvider;
     protected List worldAccesses;
     protected IChunkProvider chunkProvider;
-    protected final ISaveHandler saveHandler;
+    protected final ISaveHandler worldFile;
     protected WorldInfo worldInfo;
-    public boolean findingSpawnPoint;
+    public boolean worldChunkLoadOverride;
     private boolean allPlayersSleeping;
     public MapStorage mapStorage;
     private ArrayList collidingBoundingBoxes;
     private boolean scanningTileEntities;
     protected boolean spawnHostileMobs;
     protected boolean spawnPeacefulMobs;
-    private Set positionsToUpdate;
-    private int soundCounter;
+    private Set activeChunkSet;
+    private int ambientTickCountdown;
     int lightUpdateBlockList[];
     private List entitiesWithinAABBExcludingEntity;
-    public boolean multiplayerWorld;
+    public boolean singleplayerWorld;
 
     public WorldChunkManager getWorldChunkManager()
     {
         return worldProvider.worldChunkMgr;
     }
 
-    public World(ISaveHandler isavehandler, String s, WorldProvider worldprovider, WorldSettings worldsettings)
-    {
-        heightShift = 7;
-        xShift = heightShift + 4;
-        worldHeight = 1 << heightShift;
-        worldMaxY = worldHeight - 1;
-        seaLevel = worldHeight / 2 - 1;
-        scheduledUpdatesAreImmediate = false;
-        loadedEntityList = new ArrayList();
-        unloadedEntityList = new ArrayList();
-        scheduledTickTreeSet = new TreeSet();
-        scheduledTickSet = new HashSet();
-        loadedTileEntityList = new ArrayList();
-        addedTileEntityList = new ArrayList();
-        entityRemoval = new ArrayList();
-        playerEntities = new ArrayList();
-        weatherEffects = new ArrayList();
-        cloudColour = 0xffffffL;
-        skylightSubtracted = 0;
-        updateLCG = (new Random()).nextInt();
-        lastLightningBolt = 0;
-        lightningFlash = 0;
-        editingBlocks = false;
-        lockTimestamp = System.currentTimeMillis();
-        autosavePeriod = 40;
-        rand = new Random();
-        isNewWorld = false;
-        worldAccesses = new ArrayList();
-        collidingBoundingBoxes = new ArrayList();
-        spawnHostileMobs = true;
-        spawnPeacefulMobs = true;
-        positionsToUpdate = new HashSet();
-        soundCounter = rand.nextInt(12000);
-        lightUpdateBlockList = new int[32768];
-        entitiesWithinAABBExcludingEntity = new ArrayList();
-        multiplayerWorld = false;
-        saveHandler = isavehandler;
-        worldInfo = new WorldInfo(worldsettings, s);
-        worldProvider = worldprovider;
-        mapStorage = new MapStorage(isavehandler);
-        worldprovider.registerWorld(this);
-        chunkProvider = getChunkProvider();
-        calculateInitialSkylight();
-        calculateInitialWeather();
-    }
-
-    public World(World world, WorldProvider worldprovider)
-    {
-        heightShift = 7;
-        xShift = heightShift + 4;
-        worldHeight = 1 << heightShift;
-        worldMaxY = worldHeight - 1;
-        seaLevel = worldHeight / 2 - 1;
-        scheduledUpdatesAreImmediate = false;
-        loadedEntityList = new ArrayList();
-        unloadedEntityList = new ArrayList();
-        scheduledTickTreeSet = new TreeSet();
-        scheduledTickSet = new HashSet();
-        loadedTileEntityList = new ArrayList();
-        addedTileEntityList = new ArrayList();
-        entityRemoval = new ArrayList();
-        playerEntities = new ArrayList();
-        weatherEffects = new ArrayList();
-        cloudColour = 0xffffffL;
-        skylightSubtracted = 0;
-        updateLCG = (new Random()).nextInt();
-        lastLightningBolt = 0;
-        lightningFlash = 0;
-        editingBlocks = false;
-        lockTimestamp = System.currentTimeMillis();
-        autosavePeriod = 40;
-        rand = new Random();
-        isNewWorld = false;
-        worldAccesses = new ArrayList();
-        collidingBoundingBoxes = new ArrayList();
-        spawnHostileMobs = true;
-        spawnPeacefulMobs = true;
-        positionsToUpdate = new HashSet();
-        soundCounter = rand.nextInt(12000);
-        lightUpdateBlockList = new int[32768];
-        entitiesWithinAABBExcludingEntity = new ArrayList();
-        multiplayerWorld = false;
-        lockTimestamp = world.lockTimestamp;
-        saveHandler = world.saveHandler;
-        worldInfo = new WorldInfo(world.worldInfo);
-        mapStorage = new MapStorage(saveHandler);
-        worldProvider = worldprovider;
-        worldprovider.registerWorld(this);
-        chunkProvider = getChunkProvider();
-        calculateInitialSkylight();
-        calculateInitialWeather();
-    }
-
-    public World(ISaveHandler isavehandler, String s, WorldSettings worldsettings)
-    {
-        this(isavehandler, s, worldsettings, ((WorldProvider) (null)));
-    }
-
     public World(ISaveHandler isavehandler, String s, WorldSettings worldsettings, WorldProvider worldprovider)
     {
-        heightShift = 7;
-        xShift = heightShift + 4;
-        worldHeight = 1 << heightShift;
-        worldMaxY = worldHeight - 1;
-        seaLevel = worldHeight / 2 - 1;
+        worldYBits = 7;
+        xShift = worldYBits + 4;
+        worldHeight = 1 << worldYBits;
+        worldYMask = worldHeight - 1;
+        worldOceanHeight = worldHeight / 2 - 1;
         scheduledUpdatesAreImmediate = false;
         loadedEntityList = new ArrayList();
         unloadedEntityList = new ArrayList();
@@ -192,10 +94,10 @@ public class World
         addedTileEntityList = new ArrayList();
         entityRemoval = new ArrayList();
         playerEntities = new ArrayList();
-        weatherEffects = new ArrayList();
+        lightningEntities = new ArrayList();
         cloudColour = 0xffffffL;
         skylightSubtracted = 0;
-        updateLCG = (new Random()).nextInt();
+        distHashCounter = (new Random()).nextInt();
         lastLightningBolt = 0;
         lightningFlash = 0;
         editingBlocks = false;
@@ -207,12 +109,12 @@ public class World
         collidingBoundingBoxes = new ArrayList();
         spawnHostileMobs = true;
         spawnPeacefulMobs = true;
-        positionsToUpdate = new HashSet();
-        soundCounter = rand.nextInt(12000);
+        activeChunkSet = new HashSet();
+        ambientTickCountdown = rand.nextInt(12000);
         lightUpdateBlockList = new int[32768];
         entitiesWithinAABBExcludingEntity = new ArrayList();
-        multiplayerWorld = false;
-        saveHandler = isavehandler;
+        singleplayerWorld = false;
+        worldFile = isavehandler;
         mapStorage = new MapStorage(isavehandler);
         worldInfo = isavehandler.loadWorldInfo();
         isNewWorld = worldInfo == null;
@@ -237,28 +139,28 @@ public class World
             worldInfo.setWorldName(s);
         }
         worldProvider.registerWorld(this);
-        chunkProvider = getChunkProvider();
+        chunkProvider = createChunkProvider();
         if(flag)
         {
-            getInitialSpawnLocation();
+            generateSpawnPoint();
         }
         calculateInitialSkylight();
-        calculateInitialWeather();
+        updateRainAndThunder();
     }
 
-    protected IChunkProvider getChunkProvider()
+    protected IChunkProvider createChunkProvider()
     {
-        IChunkLoader ichunkloader = saveHandler.getChunkLoader(worldProvider);
+        IChunkLoader ichunkloader = worldFile.getChunkLoader(worldProvider);
         return new ChunkProvider(this, ichunkloader, worldProvider.getChunkProvider());
     }
 
-    protected void getInitialSpawnLocation()
+    protected void generateSpawnPoint()
     {
-        findingSpawnPoint = true;
+        worldChunkLoadOverride = true;
         WorldChunkManager worldchunkmanager = getWorldChunkManager();
         List list = worldchunkmanager.getBiomesToSpawnIn();
-        Random random = new Random(getWorldSeed());
-        ChunkPosition chunkposition = worldchunkmanager.func_35556_a(0, 0, 256, list, random);
+        Random random = new Random(getRandomSeed());
+        ChunkPosition chunkposition = worldchunkmanager.func_35139_a(0, 0, 256, list, random);
         int i = 0;
         int j = worldHeight / 2;
         int k = 0;
@@ -280,71 +182,20 @@ public class World
             i += random.nextInt(64) - random.nextInt(64);
             k += random.nextInt(64) - random.nextInt(64);
         } while(++l != 1000);
-        worldInfo.setSpawn(i, j, k);
-        findingSpawnPoint = false;
+        worldInfo.setSpawnPosition(i, j, k);
+        worldChunkLoadOverride = false;
     }
 
-    public ChunkCoordinates getEntrancePortalLocation()
+    public ChunkCoordinates func_40212_d()
     {
         return worldProvider.getEntrancePortalLocation();
-    }
-
-    public void setSpawnLocation()
-    {
-        if(worldInfo.getSpawnY() <= 0)
-        {
-            worldInfo.setSpawnY(worldHeight / 2);
-        }
-        int i = worldInfo.getSpawnX();
-        int j = worldInfo.getSpawnZ();
-        int k = 0;
-        do
-        {
-            if(getFirstUncoveredBlock(i, j) != 0)
-            {
-                break;
-            }
-            i += rand.nextInt(8) - rand.nextInt(8);
-            j += rand.nextInt(8) - rand.nextInt(8);
-        } while(++k != 10000);
-        worldInfo.setSpawnX(i);
-        worldInfo.setSpawnZ(j);
     }
 
     public int getFirstUncoveredBlock(int i, int j)
     {
         int k;
-        for(k = seaLevel; !isAirBlock(i, k + 1, j); k++) { }
+        for(k = worldOceanHeight; !isAirBlock(i, k + 1, j); k++) { }
         return getBlockId(i, k, j);
-    }
-
-    public void emptyMethod1()
-    {
-    }
-
-    public void spawnPlayerWithLoadedChunks(EntityPlayer entityplayer)
-    {
-        try
-        {
-            NBTTagCompound nbttagcompound = worldInfo.getPlayerNBTTagCompound();
-            if(nbttagcompound != null)
-            {
-                entityplayer.readFromNBT(nbttagcompound);
-                worldInfo.setPlayerNBTTagCompound(null);
-            }
-            if(chunkProvider instanceof ChunkProviderLoadOrGenerate)
-            {
-                ChunkProviderLoadOrGenerate chunkproviderloadorgenerate = (ChunkProviderLoadOrGenerate)chunkProvider;
-                int i = MathHelper.floor_float((int)entityplayer.posX) >> 4;
-                int j = MathHelper.floor_float((int)entityplayer.posZ) >> 4;
-                chunkproviderloadorgenerate.setCurrentChunkOver(i, j);
-            }
-            spawnEntityInWorld(entityplayer);
-        }
-        catch(Exception exception)
-        {
-            exception.printStackTrace();
-        }
     }
 
     public void saveWorld(boolean flag, IProgressUpdate iprogressupdate)
@@ -368,21 +219,8 @@ public class World
     private void saveLevel()
     {
         checkSessionLock();
-        saveHandler.saveWorldInfoAndPlayer(worldInfo, playerEntities);
+        worldFile.saveWorldInfoAndPlayer(worldInfo, playerEntities);
         mapStorage.saveAllData();
-    }
-
-    public boolean quickSaveWorld(int i)
-    {
-        if(!chunkProvider.canSave())
-        {
-            return true;
-        }
-        if(i == 0)
-        {
-            saveLevel();
-        }
-        return chunkProvider.saveChunks(false, null);
     }
 
     public int getBlockId(int i, int j, int k)
@@ -610,7 +448,7 @@ public class World
     {
         for(int l = 0; l < worldAccesses.size(); l++)
         {
-            ((IWorldAccess)worldAccesses.get(l)).markBlockAndNeighborsNeedsUpdate(i, j, k);
+            ((IWorldAccess)worldAccesses.get(l)).markBlockNeedsUpdate(i, j, k);
         }
 
     }
@@ -670,7 +508,7 @@ public class World
 
     private void notifyBlockOfNeighborChange(int i, int j, int k, int l)
     {
-        if(editingBlocks || multiplayerWorld)
+        if(editingBlocks || singleplayerWorld)
         {
             return;
         }
@@ -769,61 +607,6 @@ public class World
         }
     }
 
-    public int getSkyBlockTypeBrightness(EnumSkyBlock enumskyblock, int i, int j, int k)
-    {
-        if(worldProvider.hasNoSky && enumskyblock == EnumSkyBlock.Sky)
-        {
-            return 0;
-        }
-        if(j < 0)
-        {
-            j = 0;
-        }
-        if(j >= worldHeight && enumskyblock == EnumSkyBlock.Sky)
-        {
-            return 15;
-        }
-        if(j < 0 || j >= worldHeight || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k >= 0x1c9c380)
-        {
-            return enumskyblock.defaultLightValue;
-        }
-        int l = i >> 4;
-        int i1 = k >> 4;
-        if(!chunkExists(l, i1))
-        {
-            return 0;
-        }
-        if(Block.useNeighborBrightness[getBlockId(i, j, k)])
-        {
-            int j1 = getSavedLightValue(enumskyblock, i, j + 1, k);
-            int k1 = getSavedLightValue(enumskyblock, i + 1, j, k);
-            int l1 = getSavedLightValue(enumskyblock, i - 1, j, k);
-            int i2 = getSavedLightValue(enumskyblock, i, j, k + 1);
-            int j2 = getSavedLightValue(enumskyblock, i, j, k - 1);
-            if(k1 > j1)
-            {
-                j1 = k1;
-            }
-            if(l1 > j1)
-            {
-                j1 = l1;
-            }
-            if(i2 > j1)
-            {
-                j1 = i2;
-            }
-            if(j2 > j1)
-            {
-                j1 = j2;
-            }
-            return j1;
-        } else
-        {
-            Chunk chunk = getChunkFromChunkCoords(l, i1);
-            return chunk.getSavedLightValue(enumskyblock, i & 0xf, j, k & 0xf);
-        }
-    }
-
     public int getSavedLightValue(EnumSkyBlock enumskyblock, int i, int j, int k)
     {
         if(j < 0)
@@ -872,30 +655,9 @@ public class World
         chunk.setLightValue(enumskyblock, i & 0xf, j, k & 0xf, l);
         for(int i1 = 0; i1 < worldAccesses.size(); i1++)
         {
-            ((IWorldAccess)worldAccesses.get(i1)).markBlockAndNeighborsNeedsUpdate(i, j, k);
+            ((IWorldAccess)worldAccesses.get(i1)).markBlockNeedsUpdate(i, j, k);
         }
 
-    }
-
-    public int getLightBrightnessForSkyBlocks(int i, int j, int k, int l)
-    {
-        int i1 = getSkyBlockTypeBrightness(EnumSkyBlock.Sky, i, j, k);
-        int j1 = getSkyBlockTypeBrightness(EnumSkyBlock.Block, i, j, k);
-        if(j1 < l)
-        {
-            j1 = l;
-        }
-        return i1 << 20 | j1 << 4;
-    }
-
-    public float getBrightness(int i, int j, int k, int l)
-    {
-        int i1 = getBlockLightValue(i, j, k);
-        if(i1 < l)
-        {
-            i1 = l;
-        }
-        return worldProvider.lightBrightnessTable[i1];
     }
 
     public float getLightBrightness(int i, int j, int k)
@@ -1124,9 +886,9 @@ public class World
 
     }
 
-    public boolean addWeatherEffect(Entity entity)
+    public boolean addLightningBolt(Entity entity)
     {
-        weatherEffects.add(entity);
+        lightningEntities.add(entity);
         return true;
     }
 
@@ -1175,7 +937,7 @@ public class World
 
     }
 
-    public void setEntityDead(Entity entity)
+    public void removePlayerForLogoff(Entity entity)
     {
         if(entity.riddenByEntity != null)
         {
@@ -1193,14 +955,27 @@ public class World
         }
     }
 
+    public void removePlayer(Entity entity)
+    {
+        entity.setEntityDead();
+        if(entity instanceof EntityPlayer)
+        {
+            playerEntities.remove((EntityPlayer)entity);
+            updateAllPlayersSleepingFlag();
+        }
+        int i = entity.chunkCoordX;
+        int j = entity.chunkCoordZ;
+        if(entity.addedToChunk && chunkExists(i, j))
+        {
+            getChunkFromChunkCoords(i, j).removeEntity(entity);
+        }
+        loadedEntityList.remove(entity);
+        releaseEntitySkin(entity);
+    }
+
     public void addWorldAccess(IWorldAccess iworldaccess)
     {
         worldAccesses.add(iworldaccess);
-    }
-
-    public void removeWorldAccess(IWorldAccess iworldaccess)
-    {
-        worldAccesses.remove(iworldaccess);
     }
 
     public List getCollidingBoundingBoxes(Entity entity, AxisAlignedBB axisalignedbb)
@@ -1265,83 +1040,10 @@ public class World
             f2 = 1.0F;
         }
         f2 = 1.0F - f2;
-        f2 = (float)((double)f2 * (1.0D - (double)(getRainStrength(f) * 5F) / 16D));
+        f2 = (float)((double)f2 * (1.0D - (double)(setRainStrength(f) * 5F) / 16D));
         f2 = (float)((double)f2 * (1.0D - (double)(getWeightedThunderStrength(f) * 5F) / 16D));
         f2 = 1.0F - f2;
         return (int)(f2 * 11F);
-    }
-
-    public float func_35464_b(float f)
-    {
-        float f1 = getCelestialAngle(f);
-        float f2 = 1.0F - (MathHelper.cos(f1 * 3.141593F * 2.0F) * 2.0F + 0.2F);
-        if(f2 < 0.0F)
-        {
-            f2 = 0.0F;
-        }
-        if(f2 > 1.0F)
-        {
-            f2 = 1.0F;
-        }
-        f2 = 1.0F - f2;
-        f2 = (float)((double)f2 * (1.0D - (double)(getRainStrength(f) * 5F) / 16D));
-        f2 = (float)((double)f2 * (1.0D - (double)(getWeightedThunderStrength(f) * 5F) / 16D));
-        return f2 * 0.8F + 0.2F;
-    }
-
-    public Vec3D getSkyColor(Entity entity, float f)
-    {
-        float f1 = getCelestialAngle(f);
-        float f2 = MathHelper.cos(f1 * 3.141593F * 2.0F) * 2.0F + 0.5F;
-        if(f2 < 0.0F)
-        {
-            f2 = 0.0F;
-        }
-        if(f2 > 1.0F)
-        {
-            f2 = 1.0F;
-        }
-        int i = MathHelper.floor_double(entity.posX);
-        int j = MathHelper.floor_double(entity.posZ);
-        float f3 = getWorldChunkManager().getTemperature(i, 64, j);
-        int k = getWorldChunkManager().getBiomeGenAt(i, j).getSkyColorByTemp(f3);
-        float f4 = (float)(k >> 16 & 0xff) / 255F;
-        float f5 = (float)(k >> 8 & 0xff) / 255F;
-        float f6 = (float)(k & 0xff) / 255F;
-        f4 *= f2;
-        f5 *= f2;
-        f6 *= f2;
-        float f7 = getRainStrength(f);
-        if(f7 > 0.0F)
-        {
-            float f8 = (f4 * 0.3F + f5 * 0.59F + f6 * 0.11F) * 0.6F;
-            float f10 = 1.0F - f7 * 0.75F;
-            f4 = f4 * f10 + f8 * (1.0F - f10);
-            f5 = f5 * f10 + f8 * (1.0F - f10);
-            f6 = f6 * f10 + f8 * (1.0F - f10);
-        }
-        float f9 = getWeightedThunderStrength(f);
-        if(f9 > 0.0F)
-        {
-            float f11 = (f4 * 0.3F + f5 * 0.59F + f6 * 0.11F) * 0.2F;
-            float f13 = 1.0F - f9 * 0.75F;
-            f4 = f4 * f13 + f11 * (1.0F - f13);
-            f5 = f5 * f13 + f11 * (1.0F - f13);
-            f6 = f6 * f13 + f11 * (1.0F - f13);
-        }
-        if(lightningFlash > 0)
-        {
-            float f12 = (float)lightningFlash - f;
-            if(f12 > 1.0F)
-            {
-                f12 = 1.0F;
-            }
-            f12 *= 0.45F;
-            f4 = f4 * (1.0F - f12) + 0.8F * f12;
-            f5 = f5 * (1.0F - f12) + 0.8F * f12;
-            f6 = f6 * (1.0F - f12) + 1.0F * f12;
-        }
-        return Vec3D.createVector(f4, f5, f6);
     }
 
     public float getCelestialAngle(float f)
@@ -1349,68 +1051,12 @@ public class World
         return worldProvider.calculateCelestialAngle(worldInfo.getWorldTime(), f);
     }
 
-    public int func_40475_d(float f)
-    {
-        return worldProvider.func_40470_b(worldInfo.getWorldTime(), f);
-    }
-
-    public float getCelestialAngleRadians(float f)
-    {
-        float f1 = getCelestialAngle(f);
-        return f1 * 3.141593F * 2.0F;
-    }
-
-    public Vec3D drawClouds(float f)
-    {
-        float f1 = getCelestialAngle(f);
-        float f2 = MathHelper.cos(f1 * 3.141593F * 2.0F) * 2.0F + 0.5F;
-        if(f2 < 0.0F)
-        {
-            f2 = 0.0F;
-        }
-        if(f2 > 1.0F)
-        {
-            f2 = 1.0F;
-        }
-        float f3 = (float)(cloudColour >> 16 & 255L) / 255F;
-        float f4 = (float)(cloudColour >> 8 & 255L) / 255F;
-        float f5 = (float)(cloudColour & 255L) / 255F;
-        float f6 = getRainStrength(f);
-        if(f6 > 0.0F)
-        {
-            float f7 = (f3 * 0.3F + f4 * 0.59F + f5 * 0.11F) * 0.6F;
-            float f9 = 1.0F - f6 * 0.95F;
-            f3 = f3 * f9 + f7 * (1.0F - f9);
-            f4 = f4 * f9 + f7 * (1.0F - f9);
-            f5 = f5 * f9 + f7 * (1.0F - f9);
-        }
-        f3 *= f2 * 0.9F + 0.1F;
-        f4 *= f2 * 0.9F + 0.1F;
-        f5 *= f2 * 0.85F + 0.15F;
-        float f8 = getWeightedThunderStrength(f);
-        if(f8 > 0.0F)
-        {
-            float f10 = (f3 * 0.3F + f4 * 0.59F + f5 * 0.11F) * 0.2F;
-            float f11 = 1.0F - f8 * 0.95F;
-            f3 = f3 * f11 + f10 * (1.0F - f11);
-            f4 = f4 * f11 + f10 * (1.0F - f11);
-            f5 = f5 * f11 + f10 * (1.0F - f11);
-        }
-        return Vec3D.createVector(f3, f4, f5);
-    }
-
-    public Vec3D getFogColor(float f)
-    {
-        float f1 = getCelestialAngle(f);
-        return worldProvider.getFogColor(f1, f);
-    }
-
-    public int getPrecipitationHeight(int i, int j)
+    public int getTopSolidOrLiquidBlock(int i, int j)
     {
         return getChunkFromBlockCoords(i, j).getPrecipitationHeight(i & 0xf, j & 0xf);
     }
 
-    public int getTopSolidOrLiquidBlock(int i, int j)
+    public int findTopSolidBlock(int i, int j)
     {
         Chunk chunk = getChunkFromBlockCoords(i, j);
         int k = worldHeight - 1;
@@ -1428,21 +1074,6 @@ public class World
             }
         }
         return -1;
-    }
-
-    public float getStarBrightness(float f)
-    {
-        float f1 = getCelestialAngle(f);
-        float f2 = 1.0F - (MathHelper.cos(f1 * 3.141593F * 2.0F) * 2.0F + 0.75F);
-        if(f2 < 0.0F)
-        {
-            f2 = 0.0F;
-        }
-        if(f2 > 1.0F)
-        {
-            f2 = 1.0F;
-        }
-        return f2 * f2 * 0.5F;
     }
 
     public void scheduleBlockUpdate(int i, int j, int k, int l, int i1)
@@ -1475,7 +1106,7 @@ public class World
         }
     }
 
-    public void func_41083_e(int i, int j, int k, int l, int i1)
+    public void func_41045_d(int i, int j, int k, int l, int i1)
     {
         NextTickListEntry nextticklistentry = new NextTickListEntry(i, j, k, l);
         if(l > 0)
@@ -1493,13 +1124,13 @@ public class World
     {
         Profiler.startSection("entities");
         Profiler.startSection("global");
-        for(int i = 0; i < weatherEffects.size(); i++)
+        for(int i = 0; i < lightningEntities.size(); i++)
         {
-            Entity entity = (Entity)weatherEffects.get(i);
+            Entity entity = (Entity)lightningEntities.get(i);
             entity.onUpdate();
             if(entity.isDead)
             {
-                weatherEffects.remove(i--);
+                lightningEntities.remove(i--);
             }
         }
 
@@ -1729,6 +1360,46 @@ public class World
         return true;
     }
 
+    public boolean isAABBEmpty(AxisAlignedBB axisalignedbb)
+    {
+        int i = MathHelper.floor_double(axisalignedbb.minX);
+        int j = MathHelper.floor_double(axisalignedbb.maxX + 1.0D);
+        int k = MathHelper.floor_double(axisalignedbb.minY);
+        int l = MathHelper.floor_double(axisalignedbb.maxY + 1.0D);
+        int i1 = MathHelper.floor_double(axisalignedbb.minZ);
+        int j1 = MathHelper.floor_double(axisalignedbb.maxZ + 1.0D);
+        if(axisalignedbb.minX < 0.0D)
+        {
+            i--;
+        }
+        if(axisalignedbb.minY < 0.0D)
+        {
+            k--;
+        }
+        if(axisalignedbb.minZ < 0.0D)
+        {
+            i1--;
+        }
+        for(int k1 = i; k1 < j; k1++)
+        {
+            for(int l1 = k; l1 < l; l1++)
+            {
+                for(int i2 = i1; i2 < j1; i2++)
+                {
+                    Block block = Block.blocksList[getBlockId(k1, l1, i2)];
+                    if(block != null)
+                    {
+                        return true;
+                    }
+                }
+
+            }
+
+        }
+
+        return false;
+    }
+
     public boolean getIsAnyLiquid(AxisAlignedBB axisalignedbb)
     {
         int i = MathHelper.floor_double(axisalignedbb.minX);
@@ -1930,7 +1601,7 @@ public class World
         return explosion;
     }
 
-    public float func_675_a(Vec3D vec3d, AxisAlignedBB axisalignedbb)
+    public float func_494_a(Vec3D vec3d, AxisAlignedBB axisalignedbb)
     {
         double d = 1.0D / ((axisalignedbb.maxX - axisalignedbb.minX) * 2D + 1.0D);
         double d1 = 1.0D / ((axisalignedbb.maxY - axisalignedbb.minY) * 2D + 1.0D);
@@ -1991,21 +1662,6 @@ public class World
             playAuxSFXAtEntity(entityplayer, 1004, i, j, k, 0);
             setBlockWithNotify(i, j, k, 0);
         }
-    }
-
-    public Entity func_4085_a(Class class1)
-    {
-        return null;
-    }
-
-    public String getDebugLoadedEntities()
-    {
-        return (new StringBuilder()).append("All: ").append(loadedEntityList.size()).toString();
-    }
-
-    public String func_21119_g()
-    {
-        return chunkProvider.makeString();
     }
 
     public TileEntity getBlockTileEntity(int i, int j, int k)
@@ -2115,7 +1771,7 @@ label1:
         }
     }
 
-    public boolean func_41082_b(int i, int j, int k, boolean flag)
+    public boolean func_41047_b(int i, int j, int k, boolean flag)
     {
         if(i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k >= 0x1c9c380)
         {
@@ -2136,19 +1792,6 @@ label1:
         }
     }
 
-    public void saveWorldIndirectly(IProgressUpdate iprogressupdate)
-    {
-        saveWorld(true, iprogressupdate);
-        try
-        {
-            ThreadedFileIOBase.threadedIOInstance.waitForFinish();
-        }
-        catch(InterruptedException interruptedexception)
-        {
-            interruptedexception.printStackTrace();
-        }
-    }
-
     public void calculateInitialSkylight()
     {
         int i = calculateSkylightSubtracted(1.0F);
@@ -2158,7 +1801,7 @@ label1:
         }
     }
 
-    public void setAllowedMobSpawns(boolean flag, boolean flag1)
+    public void setAllowedSpawnTypes(boolean flag, boolean flag1)
     {
         spawnHostileMobs = flag;
         spawnPeacefulMobs = flag1;
@@ -2170,7 +1813,7 @@ label1:
         {
             difficultySetting = 3;
         }
-        getWorldChunkManager().cleanupCache();
+        getWorldChunkManager().func_35138_b();
         updateWeather();
         if(isAllPlayersFullyAsleep())
         {
@@ -2205,11 +1848,11 @@ label1:
         Profiler.endStartSection("tickPending");
         tickUpdates(false);
         Profiler.endStartSection("tickTiles");
-        updateBlocksAndPlayCaveSounds();
+        doRandomUpdateTicks();
         Profiler.endSection();
     }
 
-    private void calculateInitialWeather()
+    private void updateRainAndThunder()
     {
         if(worldInfo.getIsRaining())
         {
@@ -2303,7 +1946,7 @@ label1:
         }
     }
 
-    private void stopPrecipitation()
+    private void clearWeather()
     {
         worldInfo.setRainTime(0);
         worldInfo.setIsRaining(false);
@@ -2311,9 +1954,14 @@ label1:
         worldInfo.setIsThundering(false);
     }
 
-    protected void updateBlocksAndPlayCaveSounds()
+    public void commandToggleDownfall()
     {
-        positionsToUpdate.clear();
+        worldInfo.setRainTime(1);
+    }
+
+    protected void doRandomUpdateTicks()
+    {
+        activeChunkSet.clear();
         Profiler.startSection("buildList");
         for(int i = 0; i < playerEntities.size(); i++)
         {
@@ -2325,21 +1973,21 @@ label1:
             {
                 for(int i2 = -byte0; i2 <= byte0; i2++)
                 {
-                    positionsToUpdate.add(new ChunkCoordIntPair(k1 + l, i2 + i1));
+                    activeChunkSet.add(new ChunkCoordIntPair(k1 + l, i2 + i1));
                 }
 
             }
 
         }
 
-        if(soundCounter > 0)
+        if(ambientTickCountdown > 0)
         {
-            soundCounter--;
+            ambientTickCountdown--;
         }
         int j = 0;
         int k = 0;
         Profiler.endSection();
-        for(Iterator iterator = positionsToUpdate.iterator(); iterator.hasNext(); Profiler.endSection())
+        for(Iterator iterator = activeChunkSet.iterator(); iterator.hasNext(); Profiler.endSection())
         {
             ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair)iterator.next();
             int j1 = chunkcoordintpair.chunkXPos * 16;
@@ -2349,13 +1997,13 @@ label1:
             Profiler.endStartSection("tickChunk");
             chunk.updateSkylight();
             Profiler.endStartSection("moodSound");
-            if(soundCounter == 0)
+            if(ambientTickCountdown == 0)
             {
-                updateLCG = updateLCG * 3 + 0x3c6ef35f;
-                int j2 = updateLCG >> 2;
+                distHashCounter = distHashCounter * 3 + 0x3c6ef35f;
+                int j2 = distHashCounter >> 2;
                 int j3 = j2 & 0xf;
                 int j4 = j2 >> 8 & 0xf;
-                int j5 = j2 >> 16 & worldMaxY;
+                int j5 = j2 >> 16 & worldYMask;
                 int j6 = chunk.getBlockID(j3, j5, j4);
                 j3 += j1;
                 j4 += l1;
@@ -2365,31 +2013,31 @@ label1:
                     if(entityplayer1 != null && entityplayer1.getDistanceSq((double)j3 + 0.5D, (double)j5 + 0.5D, (double)j4 + 0.5D) > 4D)
                     {
                         playSoundEffect((double)j3 + 0.5D, (double)j5 + 0.5D, (double)j4 + 0.5D, "ambient.cave.cave", 0.7F, 0.8F + rand.nextFloat() * 0.2F);
-                        soundCounter = rand.nextInt(12000) + 6000;
+                        ambientTickCountdown = rand.nextInt(12000) + 6000;
                     }
                 }
             }
             Profiler.endStartSection("thunder");
             if(rand.nextInt(0x186a0) == 0 && isRaining() && getIsThundering())
             {
-                updateLCG = updateLCG * 3 + 0x3c6ef35f;
-                int k2 = updateLCG >> 2;
+                distHashCounter = distHashCounter * 3 + 0x3c6ef35f;
+                int k2 = distHashCounter >> 2;
                 int k3 = j1 + (k2 & 0xf);
                 int k4 = l1 + (k2 >> 8 & 0xf);
-                int k5 = getPrecipitationHeight(k3, k4);
+                int k5 = getTopSolidOrLiquidBlock(k3, k4);
                 if(canLightningStrikeAt(k3, k5, k4))
                 {
-                    addWeatherEffect(new EntityLightningBolt(this, k3, k5, k4));
+                    addLightningBolt(new EntityLightningBolt(this, k3, k5, k4));
                     lastLightningBolt = 2;
                 }
             }
             Profiler.endStartSection("iceandsnow");
-            updateLCG = updateLCG * 3 + 0x3c6ef35f;
-            int l2 = updateLCG >> 2;
+            distHashCounter = distHashCounter * 3 + 0x3c6ef35f;
+            int l2 = distHashCounter >> 2;
             int l3 = l2 & 0xf;
             int l4 = l2 >> 8 & 0xf;
-            int l5 = getPrecipitationHeight(l3 + j1, l4 + l1);
-            if(func_40481_q(l3 + j1, l5 - 1, l4 + l1))
+            int l5 = getTopSolidOrLiquidBlock(l3 + j1, l4 + l1);
+            if(func_40217_q(l3 + j1, l5 - 1, l4 + l1))
             {
                 setBlockWithNotify(l3 + j1, l5 - 1, l4 + l1, Block.ice.blockID);
             }
@@ -2402,12 +2050,12 @@ label1:
             Profiler.endStartSection("tickTiles");
             for(int i3 = 0; i3 < 20; i3++)
             {
-                updateLCG = updateLCG * 3 + 0x3c6ef35f;
-                int i4 = updateLCG >> 2;
+                distHashCounter = distHashCounter * 3 + 0x3c6ef35f;
+                int i4 = distHashCounter >> 2;
                 int i5 = i4 & 0xf;
                 int i6 = i4 >> 8 & 0xf;
-                int k6 = i4 >> 16 & worldMaxY;
-                int l6 = chunk.blocks[i5 << xShift | i6 << heightShift | k6] & 0xff;
+                int k6 = i4 >> 16 & worldYMask;
+                int l6 = chunk.blocks[i5 << xShift | i6 << worldYBits | k6] & 0xff;
                 k++;
                 if(Block.tickOnLoad[l6])
                 {
@@ -2420,19 +2068,19 @@ label1:
 
     }
 
-    public boolean func_40471_p(int i, int j, int k)
+    public boolean func_40210_p(int i, int j, int k)
     {
         return isBlockHydrated(i, j, k, false);
     }
 
-    public boolean func_40481_q(int i, int j, int k)
+    public boolean func_40217_q(int i, int j, int k)
     {
         return isBlockHydrated(i, j, k, true);
     }
 
     public boolean isBlockHydrated(int i, int j, int k, boolean flag)
     {
-        float f = getWorldChunkManager().getTemperature(i, j, k);
+        float f = getWorldChunkManager().func_40579_a(i, j, k);
         if(f > 0.15F)
         {
             return false;
@@ -2474,7 +2122,7 @@ label1:
 
     public boolean canSnowAt(int i, int j, int k)
     {
-        float f = getWorldChunkManager().getTemperature(i, j, k);
+        float f = getWorldChunkManager().func_40579_a(i, j, k);
         if(f > 0.15F)
         {
             return false;
@@ -2770,7 +2418,7 @@ label1:
         return scheduledTickTreeSet.size() != 0;
     }
 
-    public List func_41081_a(Chunk chunk, boolean flag)
+    public List func_41046_a(Chunk chunk, boolean flag)
     {
         ArrayList arraylist = null;
         ChunkCoordIntPair chunkcoordintpair = chunk.getChunkCoordIntPair();
@@ -2801,28 +2449,6 @@ label1:
             }
         } while(true);
         return arraylist;
-    }
-
-    public void randomDisplayUpdates(int i, int j, int k)
-    {
-        byte byte0 = 16;
-        Random random = new Random();
-        for(int l = 0; l < 1000; l++)
-        {
-            int i1 = (i + rand.nextInt(byte0)) - rand.nextInt(byte0);
-            int j1 = (j + rand.nextInt(byte0)) - rand.nextInt(byte0);
-            int k1 = (k + rand.nextInt(byte0)) - rand.nextInt(byte0);
-            int l1 = getBlockId(i1, j1, k1);
-            if(rand.nextInt(8) > j1 && l1 == 0)
-            {
-                spawnParticle("depthsuspend", (float)i1 + rand.nextFloat(), (float)j1 + rand.nextFloat(), (float)k1 + rand.nextFloat(), 0.0D, 0.0D, 0.0D);
-            }
-            if(l1 > 0)
-            {
-                Block.blocksList[l1].randomDisplayTick(this, i1, j1, k1, random);
-            }
-        }
-
     }
 
     public List getEntitiesWithinAABBExcludingEntity(Entity entity, AxisAlignedBB axisalignedbb)
@@ -2869,11 +2495,6 @@ label1:
         return arraylist;
     }
 
-    public List getLoadedEntityList()
-    {
-        return loadedEntityList;
-    }
-
     public void updateTileEntityChunkAndDoNothing(int i, int j, int k, TileEntity tileentity)
     {
         if(blockExists(i, j, k))
@@ -2915,11 +2536,6 @@ label1:
     public void unloadEntities(List list)
     {
         unloadedEntityList.addAll(list);
-    }
-
-    public void dropOldChunks()
-    {
-        while(chunkProvider.unload100OldestChunks()) ;
     }
 
     public boolean canBlockBePlacedAt(int i, int j, int k, int l, boolean flag, int i1)
@@ -3122,8 +2738,9 @@ label1:
         return null;
     }
 
-    public void setChunkData(int i, int j, int k, int l, int i1, int j1, byte abyte0[])
+    public byte[] getChunkData(int i, int j, int k, int l, int i1, int j1)
     {
+        byte abyte0[] = new byte[(l * i1 * j1 * 5) / 2];
         int k1 = i >> 4;
         int l1 = k >> 4;
         int i2 = (i + l) - 1 >> 4;
@@ -3163,21 +2780,17 @@ label1:
                 {
                     k4 = 16;
                 }
-                k2 = getChunkFromChunkCoords(j3, i4).setChunkData(abyte0, k3, l2, j4, l3, i3, k4, k2);
-                markBlocksDirty(j3 * 16 + k3, l2, i4 * 16 + j4, j3 * 16 + l3, i3, i4 * 16 + k4);
+                k2 = getChunkFromChunkCoords(j3, i4).getChunkData(abyte0, k3, l2, j4, l3, i3, k4, k2);
             }
 
         }
 
-    }
-
-    public void sendQuittingDisconnectingPacket()
-    {
+        return abyte0;
     }
 
     public void checkSessionLock()
     {
-        saveHandler.checkSessionLock();
+        worldFile.checkSessionLock();
     }
 
     public void setWorldTime(long l)
@@ -3185,7 +2798,19 @@ label1:
         worldInfo.setWorldTime(l);
     }
 
-    public long getWorldSeed()
+    public void advanceTime(long l)
+    {
+        long l1 = l - worldInfo.getWorldTime();
+        for(Iterator iterator = scheduledTickSet.iterator(); iterator.hasNext();)
+        {
+            NextTickListEntry nextticklistentry = (NextTickListEntry)iterator.next();
+            nextticklistentry.scheduledTime += l1;
+        }
+
+        setWorldTime(l);
+    }
+
+    public long getRandomSeed()
     {
         return worldInfo.getRandomSeed();
     }
@@ -3200,89 +2825,16 @@ label1:
         return new ChunkCoordinates(worldInfo.getSpawnX(), worldInfo.getSpawnY(), worldInfo.getSpawnZ());
     }
 
-    public void setSpawnPoint(ChunkCoordinates chunkcoordinates)
-    {
-        worldInfo.setSpawn(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ);
-    }
-
-    public void joinEntityInSurroundings(Entity entity)
-    {
-        int i = MathHelper.floor_double(entity.posX / 16D);
-        int j = MathHelper.floor_double(entity.posZ / 16D);
-        byte byte0 = 2;
-        for(int k = i - byte0; k <= i + byte0; k++)
-        {
-            for(int l = j - byte0; l <= j + byte0; l++)
-            {
-                getChunkFromChunkCoords(k, l);
-            }
-
-        }
-
-        if(!loadedEntityList.contains(entity))
-        {
-            loadedEntityList.add(entity);
-        }
-    }
-
     public boolean canMineBlock(EntityPlayer entityplayer, int i, int j, int k)
     {
         return true;
     }
 
-    public void setEntityState(Entity entity, byte byte0)
+    public void sendTrackedEntityStatusUpdatePacket(Entity entity, byte byte0)
     {
     }
 
-    public void updateEntityList()
-    {
-        loadedEntityList.removeAll(unloadedEntityList);
-        for(int i = 0; i < unloadedEntityList.size(); i++)
-        {
-            Entity entity = (Entity)unloadedEntityList.get(i);
-            int l = entity.chunkCoordX;
-            int j1 = entity.chunkCoordZ;
-            if(entity.addedToChunk && chunkExists(l, j1))
-            {
-                getChunkFromChunkCoords(l, j1).removeEntity(entity);
-            }
-        }
-
-        for(int j = 0; j < unloadedEntityList.size(); j++)
-        {
-            releaseEntitySkin((Entity)unloadedEntityList.get(j));
-        }
-
-        unloadedEntityList.clear();
-        for(int k = 0; k < loadedEntityList.size(); k++)
-        {
-            Entity entity1 = (Entity)loadedEntityList.get(k);
-            if(entity1.ridingEntity != null)
-            {
-                if(!entity1.ridingEntity.isDead && entity1.ridingEntity.riddenByEntity == entity1)
-                {
-                    continue;
-                }
-                entity1.ridingEntity.riddenByEntity = null;
-                entity1.ridingEntity = null;
-            }
-            if(!entity1.isDead)
-            {
-                continue;
-            }
-            int i1 = entity1.chunkCoordX;
-            int k1 = entity1.chunkCoordZ;
-            if(entity1.addedToChunk && chunkExists(i1, k1))
-            {
-                getChunkFromChunkCoords(i1, k1).removeEntity(entity1);
-            }
-            loadedEntityList.remove(k--);
-            releaseEntitySkin(entity1);
-        }
-
-    }
-
-    public IChunkProvider getIChunkProvider()
+    public IChunkProvider getChunkProvider()
     {
         return chunkProvider;
     }
@@ -3296,9 +2848,9 @@ label1:
         }
     }
 
-    public ISaveHandler getSaveHandler()
+    public ISaveHandler getWorldFile()
     {
-        return saveHandler;
+        return worldFile;
     }
 
     public WorldInfo getWorldInfo()
@@ -3342,12 +2894,12 @@ label1:
                 entityplayer.wakeUpPlayer(false, false, true);
             }
         } while(true);
-        stopPrecipitation();
+        clearWeather();
     }
 
     public boolean isAllPlayersFullyAsleep()
     {
-        if(allPlayersSleeping && !multiplayerWorld)
+        if(allPlayersSleeping && !singleplayerWorld)
         {
             for(Iterator iterator = playerEntities.iterator(); iterator.hasNext();)
             {
@@ -3367,18 +2919,12 @@ label1:
 
     public float getWeightedThunderStrength(float f)
     {
-        return (prevThunderingStrength + (thunderingStrength - prevThunderingStrength) * f) * getRainStrength(f);
+        return (prevThunderingStrength + (thunderingStrength - prevThunderingStrength) * f) * setRainStrength(f);
     }
 
-    public float getRainStrength(float f)
+    public float setRainStrength(float f)
     {
         return prevRainingStrength + (rainingStrength - prevRainingStrength) * f;
-    }
-
-    public void setRainStrength(float f)
-    {
-        prevRainingStrength = f;
-        rainingStrength = f;
     }
 
     public boolean getIsThundering()
@@ -3388,7 +2934,7 @@ label1:
 
     public boolean isRaining()
     {
-        return (double)getRainStrength(1.0F) > 0.20000000000000001D;
+        return (double)setRainStrength(1.0F) > 0.20000000000000001D;
     }
 
     public boolean canLightningStrikeAt(int i, int j, int k)
@@ -3401,7 +2947,7 @@ label1:
         {
             return false;
         }
-        if(getPrecipitationHeight(i, k) > j)
+        if(getTopSolidOrLiquidBlock(i, k) > j)
         {
             return false;
         }
@@ -3444,11 +2990,6 @@ label1:
 
     }
 
-    public int getWorldHeight()
-    {
-        return worldHeight;
-    }
-
     public Random setRandomSeed(int i, int j, int k)
     {
         long l = (long)i * 0x4f9939f508L + (long)j * 0x1ef1565bd5L + getWorldInfo().getRandomSeed() + (long)k;
@@ -3465,20 +3006,20 @@ label1:
     {
     }
 
-    public SpawnListEntry func_40474_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public SpawnListEntry func_40216_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
-        List list = getIChunkProvider().func_40377_a(enumcreaturetype, i, j, k);
+        List list = getChunkProvider().func_40181_a(enumcreaturetype, i, j, k);
         if(list == null || list.isEmpty())
         {
             return null;
         } else
         {
-            return (SpawnListEntry)WeightedRandom.func_35733_a(rand, list);
+            return (SpawnListEntry)WeightedRandom.func_35689_a(rand, list);
         }
     }
 
-    public ChunkPosition func_40477_b(String s, int i, int j, int k)
+    public ChunkPosition func_40214_b(String s, int i, int j, int k)
     {
-        return getIChunkProvider().func_40376_a(this, s, i, j, k);
+        return getChunkProvider().func_40182_a(this, s, i, j, k);
     }
 }

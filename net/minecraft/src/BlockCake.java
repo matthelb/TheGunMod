@@ -44,15 +44,6 @@ public class BlockCake extends Block
         return AxisAlignedBB.getBoundingBoxFromPool((float)i + f1, j, (float)k + f, (float)(i + 1) - f, ((float)j + f2) - f, (float)(k + 1) - f);
     }
 
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
-    {
-        int l = world.getBlockMetadata(i, j, k);
-        float f = 0.0625F;
-        float f1 = (float)(1 + l * 2) / 16F;
-        float f2 = 0.5F;
-        return AxisAlignedBB.getBoundingBoxFromPool((float)i + f1, j, (float)k + f, (float)(i + 1) - f, (float)j + f2, (float)(k + 1) - f);
-    }
-
     public int getBlockTextureFromSideAndMetadata(int i, int j)
     {
         if(i == 1)
@@ -112,7 +103,7 @@ public class BlockCake extends Block
     {
         if(entityplayer.canEat(false))
         {
-            entityplayer.getFoodStats().addStats(2, 0.1F);
+            entityplayer.getFoodStats().addFoodAndSaturationLevel(2, 0.1F);
             int l = world.getBlockMetadata(i, j, k) + 1;
             if(l >= 6)
             {

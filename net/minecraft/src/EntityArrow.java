@@ -117,23 +117,6 @@ public class EntityArrow extends Entity
         ticksInGround = 0;
     }
 
-    public void setVelocity(double d, double d1, double d2)
-    {
-        motionX = d;
-        motionY = d1;
-        motionZ = d2;
-        if(prevRotationPitch == 0.0F && prevRotationYaw == 0.0F)
-        {
-            float f = MathHelper.sqrt_double(d * d + d2 * d2);
-            prevRotationYaw = rotationYaw = (float)((Math.atan2(d, d2) * 180D) / 3.1415927410125732D);
-            prevRotationPitch = rotationPitch = (float)((Math.atan2(d1, f) * 180D) / 3.1415927410125732D);
-            prevRotationPitch = rotationPitch;
-            prevRotationYaw = rotationYaw;
-            setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
-            ticksInGround = 0;
-        }
-    }
-
     public void onUpdate()
     {
         super.onUpdate();
@@ -200,7 +183,7 @@ public class EntityArrow extends Entity
             }
             float f5 = 0.3F;
             AxisAlignedBB axisalignedbb1 = entity1.boundingBox.expand(f5, f5, f5);
-            MovingObjectPosition movingobjectposition1 = axisalignedbb1.func_1169_a(vec3d, vec3d1);
+            MovingObjectPosition movingobjectposition1 = axisalignedbb1.func_706_a(vec3d, vec3d1);
             if(movingobjectposition1 == null)
             {
                 continue;
@@ -239,7 +222,7 @@ public class EntityArrow extends Entity
                 {
                     if(movingobjectposition.entityHit instanceof EntityLiving)
                     {
-                        ((EntityLiving)movingobjectposition.entityHit).arrowHitTempCounter++;
+                        ((EntityLiving)movingobjectposition.entityHit).field_35189_aD++;
                     }
                     worldObj.playSoundAtEntity(this, "random.bowhit", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
                     setEntityDead();
@@ -336,7 +319,7 @@ public class EntityArrow extends Entity
 
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
             return;
         }
@@ -346,10 +329,5 @@ public class EntityArrow extends Entity
             entityplayer.onItemPickup(this, 1);
             setEntityDead();
         }
-    }
-
-    public float getShadowSize()
-    {
-        return 0.0F;
     }
 }

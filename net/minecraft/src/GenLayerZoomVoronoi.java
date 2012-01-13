@@ -17,7 +17,7 @@ public class GenLayerZoomVoronoi extends GenLayer
         super.parent = genlayer;
     }
 
-    public int[] getInts(int i, int j, int k, int l)
+    public int[] func_35018_a(int i, int j, int k, int l)
     {
         i -= 2;
         j -= 2;
@@ -27,7 +27,7 @@ public class GenLayerZoomVoronoi extends GenLayer
         int k1 = j >> byte0;
         int l1 = (k >> byte0) + 3;
         int i2 = (l >> byte0) + 3;
-        int ai[] = parent.getInts(j1, k1, l1, i2);
+        int ai[] = parent.func_35018_a(j1, k1, l1, i2);
         int j2 = l1 << byte0;
         int k2 = i2 << byte0;
         int ai1[] = IntCache.getIntCache(j2 * k2);
@@ -38,16 +38,16 @@ public class GenLayerZoomVoronoi extends GenLayer
             for(int l3 = 0; l3 < l1 - 1; l3++)
             {
                 double d = (double)i1 * 0.90000000000000002D;
-                initChunkSeed(l3 + j1 << byte0, l2 + k1 << byte0);
+                func_35017_a(l3 + j1 << byte0, l2 + k1 << byte0);
                 double d1 = ((double)nextInt(1024) / 1024D - 0.5D) * d;
                 double d2 = ((double)nextInt(1024) / 1024D - 0.5D) * d;
-                initChunkSeed(l3 + j1 + 1 << byte0, l2 + k1 << byte0);
+                func_35017_a(l3 + j1 + 1 << byte0, l2 + k1 << byte0);
                 double d3 = ((double)nextInt(1024) / 1024D - 0.5D) * d + (double)i1;
                 double d4 = ((double)nextInt(1024) / 1024D - 0.5D) * d;
-                initChunkSeed(l3 + j1 << byte0, l2 + k1 + 1 << byte0);
+                func_35017_a(l3 + j1 << byte0, l2 + k1 + 1 << byte0);
                 double d5 = ((double)nextInt(1024) / 1024D - 0.5D) * d;
                 double d6 = ((double)nextInt(1024) / 1024D - 0.5D) * d + (double)i1;
-                initChunkSeed(l3 + j1 + 1 << byte0, l2 + k1 + 1 << byte0);
+                func_35017_a(l3 + j1 + 1 << byte0, l2 + k1 + 1 << byte0);
                 double d7 = ((double)nextInt(1024) / 1024D - 0.5D) * d + (double)i1;
                 double d8 = ((double)nextInt(1024) / 1024D - 0.5D) * d + (double)i1;
                 int i4 = ai[l3 + 1 + (l2 + 0) * l1];

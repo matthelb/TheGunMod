@@ -6,10 +6,10 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            ItemMapBase, MapData, World, ItemStack, 
+//            ItemMapBase, ItemStack, MapData, World, 
 //            WorldInfo, WorldProvider, Entity, MathHelper, 
 //            Block, Chunk, Material, MapColor, 
-//            EntityPlayer
+//            EntityPlayer, Packet131MapData, Item, Packet
 
 public class ItemMap extends ItemMapBase
 {
@@ -18,20 +18,6 @@ public class ItemMap extends ItemMapBase
     {
         super(i);
         setMaxStackSize(1);
-    }
-
-    public static MapData getMPMapData(short word0, World world)
-    {
-        String s = (new StringBuilder()).append("map_").append(word0).toString();
-        MapData mapdata = (MapData)world.loadItemData(net.minecraft.src.MapData.class, (new StringBuilder()).append("map_").append(word0).toString());
-        if(mapdata == null)
-        {
-            int i = world.getUniqueDataId("map");
-            String s1 = (new StringBuilder()).append("map_").append(i).toString();
-            mapdata = new MapData(s1);
-            world.setItemData(s1, mapdata);
-        }
-        return mapdata;
     }
 
     public MapData getMapData(ItemStack itemstack, World world)
@@ -71,10 +57,10 @@ public class ItemMap extends ItemMapBase
         {
             j1 /= 2;
         }
-        mapdata.field_28175_g++;
+        mapdata.field_28159_g++;
         for(int k1 = (l - j1) + 1; k1 < l + j1; k1++)
         {
-            if((k1 & 0xf) != (mapdata.field_28175_g & 0xf))
+            if((k1 & 0xf) != (mapdata.field_28159_g & 0xf))
             {
                 continue;
             }
@@ -228,7 +214,7 @@ public class ItemMap extends ItemMapBase
 
             if(l1 <= i2)
             {
-                mapdata.func_28170_a(k1, l1, i2);
+                mapdata.func_28153_a(k1, l1, i2);
             }
         }
 
@@ -236,7 +222,7 @@ public class ItemMap extends ItemMapBase
 
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }
@@ -244,7 +230,7 @@ public class ItemMap extends ItemMapBase
         if(entity instanceof EntityPlayer)
         {
             EntityPlayer entityplayer = (EntityPlayer)entity;
-            mapdata.func_28169_a(entityplayer, itemstack);
+            mapdata.func_28155_a(entityplayer, itemstack);
         }
         if(flag)
         {
@@ -263,5 +249,17 @@ public class ItemMap extends ItemMapBase
         mapdata.scale = 3;
         mapdata.dimension = (byte)world.worldProvider.worldType;
         mapdata.markDirty();
+    }
+
+    public Packet getUpdatePacket(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    {
+        byte abyte0[] = getMapData(itemstack, world).func_28154_a(itemstack, world, entityplayer);
+        if(abyte0 == null)
+        {
+            return null;
+        } else
+        {
+            return new Packet131MapData((short)Item.map.shiftedIndex, (short)itemstack.getItemDamage(), abyte0);
+        }
     }
 }

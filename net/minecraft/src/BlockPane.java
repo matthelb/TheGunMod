@@ -8,25 +8,25 @@ import java.util.ArrayList;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, IBlockAccess, World, Material, 
+//            Block, World, IBlockAccess, Material, 
 //            AxisAlignedBB
 
 public class BlockPane extends Block
 {
 
-    private int sideTextureIndex;
-    private final boolean canDropItself;
+    private int field_35064_a;
+    private final boolean field_40178_b;
 
     protected BlockPane(int i, int j, int k, Material material, boolean flag)
     {
         super(i, j, material);
-        sideTextureIndex = k;
-        canDropItself = flag;
+        field_35064_a = k;
+        field_40178_b = flag;
     }
 
     public int idDropped(int i, Random random, int j)
     {
-        if(!canDropItself)
+        if(!field_40178_b)
         {
             return 0;
         } else
@@ -50,24 +50,12 @@ public class BlockPane extends Block
         return 18;
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        int i1 = iblockaccess.getBlockId(i, j, k);
-        if(i1 == blockID)
-        {
-            return false;
-        } else
-        {
-            return super.shouldSideBeRendered(iblockaccess, i, j, k, l);
-        }
-    }
-
     public void getCollidingBoundingBoxes(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist)
     {
-        boolean flag = func_35298_d(world.getBlockId(i, j, k - 1));
-        boolean flag1 = func_35298_d(world.getBlockId(i, j, k + 1));
-        boolean flag2 = func_35298_d(world.getBlockId(i - 1, j, k));
-        boolean flag3 = func_35298_d(world.getBlockId(i + 1, j, k));
+        boolean flag = func_35063_c(world.getBlockId(i, j, k - 1));
+        boolean flag1 = func_35063_c(world.getBlockId(i, j, k + 1));
+        boolean flag2 = func_35063_c(world.getBlockId(i - 1, j, k));
+        boolean flag3 = func_35063_c(world.getBlockId(i + 1, j, k));
         if(flag2 && flag3 || !flag2 && !flag3 && !flag && !flag1)
         {
             setBlockBounds(0.0F, 0.0F, 0.4375F, 1.0F, 1.0F, 0.5625F);
@@ -111,10 +99,10 @@ public class BlockPane extends Block
         float f1 = 0.5625F;
         float f2 = 0.4375F;
         float f3 = 0.5625F;
-        boolean flag = func_35298_d(iblockaccess.getBlockId(i, j, k - 1));
-        boolean flag1 = func_35298_d(iblockaccess.getBlockId(i, j, k + 1));
-        boolean flag2 = func_35298_d(iblockaccess.getBlockId(i - 1, j, k));
-        boolean flag3 = func_35298_d(iblockaccess.getBlockId(i + 1, j, k));
+        boolean flag = func_35063_c(iblockaccess.getBlockId(i, j, k - 1));
+        boolean flag1 = func_35063_c(iblockaccess.getBlockId(i, j, k + 1));
+        boolean flag2 = func_35063_c(iblockaccess.getBlockId(i - 1, j, k));
+        boolean flag3 = func_35063_c(iblockaccess.getBlockId(i + 1, j, k));
         if(flag2 && flag3 || !flag2 && !flag3 && !flag && !flag1)
         {
             f = 0.0F;
@@ -144,12 +132,7 @@ public class BlockPane extends Block
         setBlockBounds(f, 0.0F, f2, f1, 1.0F, f3);
     }
 
-    public int getSideTextureIndex()
-    {
-        return sideTextureIndex;
-    }
-
-    public final boolean func_35298_d(int i)
+    public final boolean func_35063_c(int i)
     {
         return Block.opaqueCubeLookup[i] || i == blockID || i == Block.glass.blockID;
     }

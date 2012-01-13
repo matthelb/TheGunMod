@@ -21,9 +21,6 @@ public class EntityBoat extends Entity
     private double boatZ;
     private double boatYaw;
     private double boatPitch;
-    private double velocityX;
-    private double velocityY;
-    private double velocityZ;
 
     public EntityBoat(World world)
     {
@@ -79,7 +76,7 @@ public class EntityBoat extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if(worldObj.multiplayerWorld || isDead)
+        if(worldObj.singleplayerWorld || isDead)
         {
             return true;
         }
@@ -108,37 +105,9 @@ public class EntityBoat extends Entity
         return true;
     }
 
-    public void performHurtAnimation()
-    {
-        setForwardDirection(-getForwardDirection());
-        setTimeSinceHit(10);
-        setDamageTaken(getDamageTaken() * 11);
-    }
-
     public boolean canBeCollidedWith()
     {
         return !isDead;
-    }
-
-    public void setPositionAndRotation2(double d, double d1, double d2, float f, 
-            float f1, int i)
-    {
-        boatX = d;
-        boatY = d1;
-        boatZ = d2;
-        boatYaw = f;
-        boatPitch = f1;
-        boatPosRotationIncrements = i + 4;
-        motionX = velocityX;
-        motionY = velocityY;
-        motionZ = velocityZ;
-    }
-
-    public void setVelocity(double d, double d1, double d2)
-    {
-        velocityX = motionX = d;
-        velocityY = motionY = d1;
-        velocityZ = motionZ = d2;
     }
 
     public void onUpdate()
@@ -191,7 +160,7 @@ public class EntityBoat extends Entity
             }
 
         }
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
             if(boatPosRotationIncrements > 0)
             {
@@ -267,7 +236,7 @@ public class EntityBoat extends Entity
         moveEntity(motionX, motionY, motionZ);
         if(isCollidedHorizontally && d1 > 0.20000000000000001D)
         {
-            if(!worldObj.multiplayerWorld)
+            if(!worldObj.singleplayerWorld)
             {
                 setEntityDead();
                 for(int k = 0; k < 3; k++)
@@ -360,18 +329,13 @@ public class EntityBoat extends Entity
     {
     }
 
-    public float getShadowSize()
-    {
-        return 0.0F;
-    }
-
     public boolean interact(EntityPlayer entityplayer)
     {
         if(riddenByEntity != null && (riddenByEntity instanceof EntityPlayer) && riddenByEntity != entityplayer)
         {
             return true;
         }
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             entityplayer.mountEntity(this);
         }

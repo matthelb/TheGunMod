@@ -30,7 +30,7 @@ public abstract class StructureComponent
 
     public abstract boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox);
 
-    public StructureBoundingBox getBoundingBox()
+    public StructureBoundingBox getStructureBoundingBox()
     {
         return boundingBox;
     }
@@ -40,12 +40,12 @@ public abstract class StructureComponent
         return componentType;
     }
 
-    public static StructureComponent getIntersectingStructureComponent(List list, StructureBoundingBox structureboundingbox)
+    public static StructureComponent canFitInside(List list, StructureBoundingBox structureboundingbox)
     {
         for(Iterator iterator = list.iterator(); iterator.hasNext();)
         {
             StructureComponent structurecomponent = (StructureComponent)iterator.next();
-            if(structurecomponent.getBoundingBox() != null && structurecomponent.getBoundingBox().intersectsWith(structureboundingbox))
+            if(structurecomponent.getStructureBoundingBox() != null && structurecomponent.getStructureBoundingBox().canFitInside(structureboundingbox))
             {
                 return structurecomponent;
             }
@@ -54,9 +54,9 @@ public abstract class StructureComponent
         return null;
     }
 
-    public ChunkPosition func_40008_a_()
+    public ChunkPosition func_40281_b_()
     {
-        return new ChunkPosition(boundingBox.func_40597_e(), boundingBox.func_40596_f(), boundingBox.func_40598_g());
+        return new ChunkPosition(boundingBox.func_40623_e(), boundingBox.func_40622_f(), boundingBox.func_40624_g());
     }
 
     protected boolean isLiquidInStructureBoundingBox(World world, StructureBoundingBox structureboundingbox)
@@ -366,7 +366,7 @@ public abstract class StructureComponent
         int j1 = getXWithOffset(k, i1);
         int k1 = getYWithOffset(l);
         int l1 = getZWithOffset(k, i1);
-        if(!structureboundingbox.isVecInside(j1, k1, l1))
+        if(!structureboundingbox.isInBbVolume(j1, k1, l1))
         {
             return;
         } else
@@ -381,7 +381,7 @@ public abstract class StructureComponent
         int l = getXWithOffset(i, k);
         int i1 = getYWithOffset(j);
         int j1 = getZWithOffset(i, k);
-        if(!structureboundingbox.isVecInside(l, i1, j1))
+        if(!structureboundingbox.isInBbVolume(l, i1, j1))
         {
             return 0;
         } else
@@ -516,11 +516,11 @@ public abstract class StructureComponent
         int l = getXWithOffset(i, k);
         int i1 = getYWithOffset(j);
         int j1 = getZWithOffset(i, k);
-        if(!structureboundingbox.isVecInside(l, i1, j1))
+        if(!structureboundingbox.isInBbVolume(l, i1, j1))
         {
             return;
         }
-        for(; !world.isAirBlock(l, i1, j1) && i1 < world.worldMaxY; i1++)
+        for(; !world.isAirBlock(l, i1, j1) && i1 < world.worldYMask; i1++)
         {
             world.setBlockAndMetadata(l, i1, j1, 0, 0);
         }
@@ -532,7 +532,7 @@ public abstract class StructureComponent
         int j1 = getXWithOffset(k, i1);
         int k1 = getYWithOffset(l);
         int l1 = getZWithOffset(k, i1);
-        if(!structureboundingbox.isVecInside(j1, k1, l1))
+        if(!structureboundingbox.isInBbVolume(j1, k1, l1))
         {
             return;
         }
@@ -549,7 +549,7 @@ public abstract class StructureComponent
         int i1 = getXWithOffset(i, k);
         int j1 = getYWithOffset(j);
         int k1 = getZWithOffset(i, k);
-        if(structureboundingbox.isVecInside(i1, j1, k1) && world.getBlockId(i1, j1, k1) != Block.chest.blockID)
+        if(structureboundingbox.isInBbVolume(i1, j1, k1) && world.getBlockId(i1, j1, k1) != Block.chest.blockID)
         {
             world.setBlockWithNotify(i1, j1, k1, Block.chest.blockID);
             TileEntityChest tileentitychest = (TileEntityChest)world.getBlockTileEntity(i1, j1, k1);
@@ -585,7 +585,7 @@ public abstract class StructureComponent
         int i1 = getXWithOffset(i, k);
         int j1 = getYWithOffset(j);
         int k1 = getZWithOffset(i, k);
-        if(structureboundingbox.isVecInside(i1, j1, k1))
+        if(structureboundingbox.isInBbVolume(i1, j1, k1))
         {
             ItemDoor.placeDoorBlock(world, i1, j1, k1, l, Block.doorWood);
         }

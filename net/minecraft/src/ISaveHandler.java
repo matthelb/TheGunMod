@@ -8,7 +8,7 @@ import java.io.File;
 import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
-//            WorldInfo, WorldProvider, IChunkLoader
+//            WorldInfo, WorldProvider, IChunkLoader, IPlayerFileData
 
 public interface ISaveHandler
 {
@@ -23,7 +23,9 @@ public interface ISaveHandler
 
     public abstract void saveWorldInfo(WorldInfo worldinfo);
 
-    public abstract File getMapFile(String s);
+    public abstract IPlayerFileData getPlayerNBTManager();
 
-    public abstract String getSaveDirectoryName();
+    public abstract void func_22093_e();
+
+    public abstract File getMapFileFromName(String s);
 }

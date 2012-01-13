@@ -68,7 +68,7 @@ public class BlockCauldron extends Block
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return true;
         }

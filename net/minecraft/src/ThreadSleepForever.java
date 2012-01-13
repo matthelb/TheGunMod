@@ -4,30 +4,30 @@
 
 package net.minecraft.src;
 
-import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
 
 public class ThreadSleepForever extends Thread
 {
 
-    final Minecraft mc; /* synthetic field */
+    final MinecraftServer mc; /* synthetic field */
 
-    public ThreadSleepForever(Minecraft minecraft, String s)
+    public ThreadSleepForever(MinecraftServer minecraftserver)
     {
-        super(s);
-        mc = minecraft;
+        mc = minecraftserver;
+//        super();
         setDaemon(true);
         start();
     }
 
     public void run()
     {
-        while(mc.running) 
+        do
         {
             try
             {
                 Thread.sleep(0x7fffffffL);
             }
             catch(InterruptedException interruptedexception) { }
-        }
+        } while(true);
     }
 }

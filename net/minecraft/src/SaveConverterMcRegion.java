@@ -9,9 +9,9 @@ import java.util.*;
 import java.util.zip.GZIPInputStream;
 
 // Referenced classes of package net.minecraft.src:
-//            SaveFormatOld, WorldInfo, MathHelper, SaveFormatComparator, 
-//            RegionFileCache, SaveOldDir, IProgressUpdate, ISaveHandler, 
-//            ChunkFolderPattern, ChunkFilePattern, ChunkFile, RegionFile
+//            SaveFormatOld, SaveOldDir, WorldInfo, IProgressUpdate, 
+//            ISaveHandler, ChunkFolderPattern, ChunkFilePattern, ChunkFile, 
+//            RegionFileCache, RegionFile
 
 public class SaveConverterMcRegion extends SaveFormatOld
 {
@@ -21,54 +21,12 @@ public class SaveConverterMcRegion extends SaveFormatOld
         super(file);
     }
 
-    public String getFormatName()
-    {
-        return "Scaevolus' McRegion";
-    }
-
-    public List getSaveList()
-    {
-        ArrayList arraylist = new ArrayList();
-        File afile[] = savesDirectory.listFiles();
-        File afile1[] = afile;
-        int i = afile1.length;
-        for(int j = 0; j < i; j++)
-        {
-            File file = afile1[j];
-            if(!file.isDirectory())
-            {
-                continue;
-            }
-            String s = file.getName();
-            WorldInfo worldinfo = getWorldInfo(s);
-            if(worldinfo == null)
-            {
-                continue;
-            }
-            boolean flag = worldinfo.getSaveVersion() != 19132;
-            String s1 = worldinfo.getWorldName();
-            if(s1 == null || MathHelper.stringNullOrLengthZero(s1))
-            {
-                s1 = s;
-            }
-            long l = 0L;
-            arraylist.add(new SaveFormatComparator(s, s1, worldinfo.getLastTimePlayed(), l, worldinfo.getGameType(), flag, worldinfo.isHardcoreModeEnabled()));
-        }
-
-        return arraylist;
-    }
-
-    public void flushCache()
-    {
-        RegionFileCache.clearRegionFileReferences();
-    }
-
     public ISaveHandler getSaveLoader(String s, boolean flag)
     {
-        return new SaveOldDir(savesDirectory, s, flag);
+        return new SaveOldDir(field_22106_a, s, flag);
     }
 
-    public boolean isOldMapFormat(String s)
+    public boolean isOldSaveType(String s)
     {
         WorldInfo worldinfo = getWorldInfo(s);
         return worldinfo != null && worldinfo.getSaveVersion() == 0;
@@ -83,37 +41,37 @@ public class SaveConverterMcRegion extends SaveFormatOld
         ArrayList arraylist3 = new ArrayList();
         ArrayList arraylist4 = new ArrayList();
         ArrayList arraylist5 = new ArrayList();
-        File file = new File(savesDirectory, s);
+        File file = new File(field_22106_a, s);
         File file1 = new File(file, "DIM-1");
         File file2 = new File(file, "DIM1");
         System.out.println("Scanning folders...");
-        func_22183_a(file, arraylist, arraylist1);
+        func_22108_a(file, arraylist, arraylist1);
         if(file1.exists())
         {
-            func_22183_a(file1, arraylist2, arraylist3);
+            func_22108_a(file1, arraylist2, arraylist3);
         }
         if(file2.exists())
         {
-            func_22183_a(file2, arraylist4, arraylist5);
+            func_22108_a(file2, arraylist4, arraylist5);
         }
         int i = arraylist.size() + arraylist2.size() + arraylist4.size() + arraylist1.size() + arraylist3.size() + arraylist5.size();
         System.out.println((new StringBuilder()).append("Total conversion count is ").append(i).toString());
-        func_22181_a(file, arraylist, 0, i, iprogressupdate);
-        func_22181_a(file1, arraylist2, arraylist.size(), i, iprogressupdate);
-        func_22181_a(file2, arraylist4, arraylist.size() + arraylist2.size(), i, iprogressupdate);
+        func_22107_a(file, arraylist, 0, i, iprogressupdate);
+        func_22107_a(file1, arraylist2, arraylist.size(), i, iprogressupdate);
+        func_22107_a(file2, arraylist4, arraylist.size() + arraylist2.size(), i, iprogressupdate);
         WorldInfo worldinfo = getWorldInfo(s);
         worldinfo.setSaveVersion(19132);
         ISaveHandler isavehandler = getSaveLoader(s, false);
         isavehandler.saveWorldInfo(worldinfo);
-        func_22182_a(arraylist1, arraylist.size() + arraylist2.size(), i, iprogressupdate);
+        func_22109_a(arraylist1, arraylist.size() + arraylist2.size(), i, iprogressupdate);
         if(file1.exists())
         {
-            func_22182_a(arraylist3, arraylist.size() + arraylist2.size() + arraylist1.size(), i, iprogressupdate);
+            func_22109_a(arraylist3, arraylist.size() + arraylist2.size() + arraylist1.size(), i, iprogressupdate);
         }
         return true;
     }
 
-    private void func_22183_a(File file, ArrayList arraylist, ArrayList arraylist1)
+    private void func_22108_a(File file, ArrayList arraylist, ArrayList arraylist1)
     {
         ChunkFolderPattern chunkfolderpattern = new ChunkFolderPattern(null);
         ChunkFilePattern chunkfilepattern = new ChunkFilePattern(null);
@@ -145,7 +103,7 @@ public class SaveConverterMcRegion extends SaveFormatOld
 
     }
 
-    private void func_22181_a(File file, ArrayList arraylist, int i, int j, IProgressUpdate iprogressupdate)
+    private void func_22107_a(File file, ArrayList arraylist, int i, int j, IProgressUpdate iprogressupdate)
     {
         Collections.sort(arraylist);
         byte abyte0[] = new byte[4096];
@@ -182,7 +140,7 @@ public class SaveConverterMcRegion extends SaveFormatOld
         RegionFileCache.clearRegionFileReferences();
     }
 
-    private void func_22182_a(ArrayList arraylist, int i, int j, IProgressUpdate iprogressupdate)
+    private void func_22109_a(ArrayList arraylist, int i, int j, IProgressUpdate iprogressupdate)
     {
         int k;
         for(Iterator iterator = arraylist.iterator(); iterator.hasNext(); iprogressupdate.setLoadingProgress(k))

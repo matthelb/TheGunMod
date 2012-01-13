@@ -76,7 +76,7 @@ public class EntityFallingSand extends Entity
         {
             worldObj.setBlockWithNotify(i, j, k, 0);
         } else
-        if(!worldObj.multiplayerWorld && fallTime == 1)
+        if(!worldObj.singleplayerWorld && fallTime == 1)
         {
             setEntityDead();
         }
@@ -88,13 +88,13 @@ public class EntityFallingSand extends Entity
             if(worldObj.getBlockId(i, j, k) != Block.pistonMoving.blockID)
             {
                 setEntityDead();
-                if((!worldObj.canBlockBePlacedAt(blockID, i, j, k, true, 1) || BlockSand.canFallBelow(worldObj, i, j - 1, k) || !worldObj.setBlockWithNotify(i, j, k, blockID)) && !worldObj.multiplayerWorld)
+                if((!worldObj.canBlockBePlacedAt(blockID, i, j, k, true, 1) || BlockSand.canFallBelow(worldObj, i, j - 1, k) || !worldObj.setBlockWithNotify(i, j, k, blockID)) && !worldObj.singleplayerWorld)
                 {
                     dropItem(blockID, 1);
                 }
             }
         } else
-        if(fallTime > 100 && !worldObj.multiplayerWorld)
+        if(fallTime > 100 && !worldObj.singleplayerWorld)
         {
             dropItem(blockID, 1);
             setEntityDead();
@@ -109,15 +109,5 @@ public class EntityFallingSand extends Entity
     protected void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
         blockID = nbttagcompound.getByte("Tile") & 0xff;
-    }
-
-    public float getShadowSize()
-    {
-        return 0.0F;
-    }
-
-    public World getWorld()
-    {
-        return worldObj;
     }
 }

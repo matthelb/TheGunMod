@@ -14,14 +14,14 @@ import java.util.Random;
 public class EntityBlaze extends EntityMob
 {
 
-    private float heightOffset;
-    private int heightOffsetUpdateTime;
-    private int field_40152_d;
+    private float field_40130_a;
+    private int field_40129_b;
+    private int field_40128_g;
 
     public EntityBlaze(World world)
     {
         super(world);
-        heightOffset = 0.5F;
+        field_40130_a = 0.5F;
         texture = "/mob/fire.png";
         isImmuneToFire = true;
         attackStrength = 6;
@@ -64,11 +64,6 @@ public class EntityBlaze extends EntityMob
         super.onDeath(damagesource);
     }
 
-    public int getEntityBrightnessForRender(float f)
-    {
-        return 0xf000f0;
-    }
-
     public float getEntityBrightness(float f)
     {
         return 1.0F;
@@ -76,19 +71,19 @@ public class EntityBlaze extends EntityMob
 
     public void onLivingUpdate()
     {
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             if(isWet())
             {
                 attackEntityFrom(DamageSource.drown, 1);
             }
-            heightOffsetUpdateTime--;
-            if(heightOffsetUpdateTime <= 0)
+            field_40129_b--;
+            if(field_40129_b <= 0)
             {
-                heightOffsetUpdateTime = 100;
-                heightOffset = 0.5F + (float)rand.nextGaussian() * 3F;
+                field_40129_b = 100;
+                field_40130_a = 0.5F + (float)rand.nextGaussian() * 3F;
             }
-            if(getEntityToAttack() != null && getEntityToAttack().posY + (double)getEntityToAttack().getEyeHeight() > posY + (double)getEyeHeight() + (double)heightOffset)
+            if(getEntityToAttack() != null && getEntityToAttack().posY + (double)getEntityToAttack().getEyeHeight() > posY + (double)getEyeHeight() + (double)field_40130_a)
             {
                 motionY = motionY + (0.30000001192092896D - motionY) * 0.30000001192092896D;
             }
@@ -123,22 +118,22 @@ public class EntityBlaze extends EntityMob
             double d2 = entity.posZ - posZ;
             if(attackTime == 0)
             {
-                field_40152_d++;
-                if(field_40152_d == 1)
+                field_40128_g++;
+                if(field_40128_g == 1)
                 {
                     attackTime = 60;
-                    func_40150_a(true);
+                    func_40127_a(true);
                 } else
-                if(field_40152_d <= 4)
+                if(field_40128_g <= 4)
                 {
                     attackTime = 6;
                 } else
                 {
                     attackTime = 100;
-                    field_40152_d = 0;
-                    func_40150_a(false);
+                    field_40128_g = 0;
+                    func_40127_a(false);
                 }
-                if(field_40152_d > 1)
+                if(field_40128_g > 1)
                 {
                     float f1 = MathHelper.sqrt_float(f) * 0.5F;
                     worldObj.playAuxSFXAtEntity(null, 1009, (int)posX, (int)posY, (int)posZ, 0);
@@ -177,7 +172,7 @@ public class EntityBlaze extends EntityMob
 
     public boolean isBurning()
     {
-        return func_40151_ac();
+        return func_40126_A();
     }
 
     protected void dropFewItems(boolean flag, int i)
@@ -193,12 +188,12 @@ public class EntityBlaze extends EntityMob
         }
     }
 
-    public boolean func_40151_ac()
+    public boolean func_40126_A()
     {
         return (dataWatcher.getWatchableObjectByte(16) & 1) != 0;
     }
 
-    public void func_40150_a(boolean flag)
+    public void func_40127_a(boolean flag)
     {
         byte byte0 = dataWatcher.getWatchableObjectByte(16);
         if(flag)
@@ -211,7 +206,7 @@ public class EntityBlaze extends EntityMob
         dataWatcher.updateObject(16, Byte.valueOf(byte0));
     }
 
-    protected boolean func_40147_Y()
+    protected boolean func_40123_y()
     {
         return true;
     }

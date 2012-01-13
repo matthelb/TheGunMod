@@ -5,11 +5,10 @@
 package net.minecraft.src;
 
 import java.io.*;
-import java.util.zip.DataFormatException;
-import java.util.zip.Inflater;
+import java.util.zip.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
+//            Packet, World, NetHandler
 
 public class Packet51MapChunk extends Packet
 {
@@ -26,6 +25,30 @@ public class Packet51MapChunk extends Packet
     public Packet51MapChunk()
     {
         isChunkDataPacket = true;
+    }
+
+    public Packet51MapChunk(int i, int j, int k, int l, int i1, int j1, World world)
+    {
+        isChunkDataPacket = true;
+        xPosition = i;
+        yPosition = j;
+        zPosition = k;
+        xSize = l;
+        ySize = i1;
+        zSize = j1;
+        byte abyte0[] = world.getChunkData(i, j, k, l, i1, j1);
+        Deflater deflater = new Deflater(-1);
+        try
+        {
+            deflater.setInput(abyte0);
+            deflater.finish();
+            chunk = new byte[(l * i1 * j1 * 5) / 2];
+            chunkSize = deflater.deflate(chunk);
+        }
+        finally
+        {
+            deflater.end();
+        }
     }
 
     public void readPacketData(DataInputStream datainputstream)

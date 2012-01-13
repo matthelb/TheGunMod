@@ -68,7 +68,7 @@ public class EntityTNTPrimed extends Entity
         }
         if(fuse-- <= 0)
         {
-            if(!worldObj.multiplayerWorld)
+            if(!worldObj.singleplayerWorld)
             {
                 setEntityDead();
                 explode();
@@ -96,10 +96,5 @@ public class EntityTNTPrimed extends Entity
     protected void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
         fuse = nbttagcompound.getByte("Fuse");
-    }
-
-    public float getShadowSize()
-    {
-        return 0.0F;
     }
 }

@@ -229,7 +229,7 @@ public class Block
         return this;
     }
 
-    protected void initializeBlock()
+    protected void setFireBurnRates()
     {
     }
 
@@ -310,55 +310,9 @@ public class Block
         maxZ = f5;
     }
 
-    public float getBlockBrightness(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return iblockaccess.getBrightness(i, j, k, lightValue[blockID]);
-    }
-
-    public int getMixedBrightnessForBlock(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return iblockaccess.getLightBrightnessForSkyBlocks(i, j, k, lightValue[blockID]);
-    }
-
     public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
     {
-        if(l == 0 && minY > 0.0D)
-        {
-            return true;
-        }
-        if(l == 1 && maxY < 1.0D)
-        {
-            return true;
-        }
-        if(l == 2 && minZ > 0.0D)
-        {
-            return true;
-        }
-        if(l == 3 && maxZ < 1.0D)
-        {
-            return true;
-        }
-        if(l == 4 && minX > 0.0D)
-        {
-            return true;
-        }
-        if(l == 5 && maxX < 1.0D)
-        {
-            return true;
-        } else
-        {
-            return !iblockaccess.isBlockOpaqueCube(i, j, k);
-        }
-    }
-
-    public boolean getIsBlockSolid(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
         return iblockaccess.getBlockMaterial(i, j, k).isSolid();
-    }
-
-    public int getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        return getBlockTextureFromSideAndMetadata(l, iblockaccess.getBlockMetadata(i, j, k));
     }
 
     public int getBlockTextureFromSideAndMetadata(int i, int j)
@@ -369,11 +323,6 @@ public class Block
     public int getBlockTextureFromSide(int i)
     {
         return blockIndexInTexture;
-    }
-
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
-    {
-        return AxisAlignedBB.getBoundingBoxFromPool((double)i + minX, (double)j + minY, (double)k + minZ, (double)i + maxX, (double)j + maxY, (double)k + maxZ);
     }
 
     public void getCollidingBoundingBoxes(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist)
@@ -406,10 +355,6 @@ public class Block
     }
 
     public void updateTick(World world, int i, int j, int k, Random random)
-    {
-    }
-
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
     {
     }
 
@@ -466,7 +411,7 @@ public class Block
 
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }
@@ -488,7 +433,7 @@ public class Block
 
     protected void dropBlockAsItem_do(World world, int i, int j, int k, ItemStack itemstack)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         } else
@@ -643,11 +588,6 @@ public class Block
     {
     }
 
-    public int getRenderBlockPass()
-    {
-        return 0;
-    }
-
     public boolean canPlaceBlockOnSide(World world, int i, int j, int k, int l)
     {
         return canPlaceBlockAt(world, i, j, k);
@@ -682,21 +622,6 @@ public class Block
 
     public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
     {
-    }
-
-    public int getBlockColor()
-    {
-        return 0xffffff;
-    }
-
-    public int getRenderColor(int i)
-    {
-        return 0xffffff;
-    }
-
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return 0xffffff;
     }
 
     public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k, int l)
@@ -798,11 +723,6 @@ public class Block
     public int getMobilityFlag()
     {
         return blockMaterial.getMaterialMobility();
-    }
-
-    public float getAmbientOcclusionLightValue(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return iblockaccess.isBlockNormalCube(i, j, k) ? 0.2F : 1.0F;
     }
 
     static Class _mthclass$(String s)
@@ -960,7 +880,7 @@ public class Block
         Item.itemsList[sapling.blockID] = (new ItemSapling(sapling.blockID - 256)).setItemName("sapling");
         Item.itemsList[leaves.blockID] = (new ItemLeaves(leaves.blockID - 256)).setItemName("leaves");
         Item.itemsList[vine.blockID] = new ItemColored(vine.blockID - 256, false);
-        Item.itemsList[tallGrass.blockID] = (new ItemColored(tallGrass.blockID - 256, true)).setBlockNames(new String[] {
+        Item.itemsList[tallGrass.blockID] = (new ItemColored(tallGrass.blockID - 256, true)).func_41040_a(new String[] {
             "shrub", "grass", "fern"
         });
         Item.itemsList[waterlily.blockID] = new ItemLilyPad(waterlily.blockID - 256);
@@ -975,7 +895,7 @@ public class Block
             if(Item.itemsList[i] == null)
             {
                 Item.itemsList[i] = new ItemBlock(i - 256);
-                blocksList[i].initializeBlock();
+                blocksList[i].setFireBurnRates();
             }
             boolean flag = false;
             if(i > 0 && blocksList[i].getRenderType() == 10)

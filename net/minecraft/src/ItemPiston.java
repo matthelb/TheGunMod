@@ -16,7 +16,7 @@ public class ItemPiston extends ItemBlock
         super(i);
     }
 
-    public int getPlacedBlockMetadata(int i)
+    public int getMetadata(int i)
     {
         return 7;
     }

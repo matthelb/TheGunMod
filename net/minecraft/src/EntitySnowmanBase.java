@@ -6,9 +6,10 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            EntityCreature, World, NBTTagCompound
+//            EntityCreature, IAnimals, World, NBTTagCompound
 
 public abstract class EntitySnowmanBase extends EntityCreature
+    implements IAnimals
 {
 
     public EntitySnowmanBase(World world)

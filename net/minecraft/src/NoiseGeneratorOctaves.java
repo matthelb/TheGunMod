@@ -54,14 +54,14 @@ public class NoiseGeneratorOctaves extends NoiseGenerator
             l3 %= 0x1000000L;
             d4 += l2;
             d6 += l3;
-            generatorCollection[l1].func_805_a(ad, d4, d5, d6, l, i1, j1, d * d3, d1 * d3, d2 * d3, d3);
+            generatorCollection[l1].func_646_a(ad, d4, d5, d6, l, i1, j1, d * d3, d1 * d3, d2 * d3, d3);
             d3 /= 2D;
         }
 
         return ad;
     }
 
-    public double[] func_4109_a(double ad[], int i, int j, int k, int l, double d, 
+    public double[] func_4103_a(double ad[], int i, int j, int k, int l, double d, 
             double d1, double d2)
     {
         return generateNoiseOctaves(ad, i, 10, j, k, 1, l, d, 1.0D, d1);

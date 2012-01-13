@@ -137,11 +137,6 @@ public class EntityPigZombie extends EntityZombie
         return Item.rottenFlesh.shiftedIndex;
     }
 
-    public ItemStack getHeldItem()
-    {
-        return defaultHeldItem;
-    }
-
     static 
     {
         defaultHeldItem = new ItemStack(Item.swordGold, 1);

@@ -52,7 +52,7 @@ public class IntHashMap
         return null;
     }
 
-    public boolean containsKey(int i)
+    public boolean containsItem(int i)
     {
         return lookupEntry(i) != null;
     }
@@ -186,11 +186,6 @@ public class IntHashMap
         {
             grow(2 * slots.length);
         }
-    }
-
-    public Set getKeySet()
-    {
-        return keySet;
     }
 
     static int getHash(int i)

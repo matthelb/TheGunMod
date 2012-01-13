@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler, ItemStack
+//            Packet, ItemStack, NetHandler
 
 public class Packet103SetSlot extends Packet
 {
@@ -20,6 +20,13 @@ public class Packet103SetSlot extends Packet
     {
     }
 
+    public Packet103SetSlot(int i, int j, ItemStack itemstack)
+    {
+        windowId = i;
+        itemSlot = j;
+        myItemStack = itemstack != null ? itemstack.copy() : itemstack;
+    }
+
     public void processPacket(NetHandler nethandler)
     {
         nethandler.handleSetSlot(this);
@@ -30,7 +37,7 @@ public class Packet103SetSlot extends Packet
     {
         windowId = datainputstream.readByte();
         itemSlot = datainputstream.readShort();
-        myItemStack = func_40187_b(datainputstream);
+        myItemStack = func_40262_b(datainputstream);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)

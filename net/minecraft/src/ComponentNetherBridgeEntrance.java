@@ -23,13 +23,13 @@ public class ComponentNetherBridgeEntrance extends ComponentNetherBridgePiece
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        func_40022_a((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 5, 3, true);
+        func_40287_a((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 5, 3, true);
     }
 
-    public static ComponentNetherBridgeEntrance func_40030_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentNetherBridgeEntrance func_40307_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -5, -3, 0, 13, 14, 13, l);
-        if(!func_40021_a(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -111,7 +111,7 @@ public class ComponentNetherBridgeEntrance extends ComponentNetherBridgePiece
         int i1 = getXWithOffset(6, 6);
         int l1 = getYWithOffset(5);
         int i2 = getZWithOffset(6, 6);
-        if(structureboundingbox.isVecInside(i1, l1, i2))
+        if(structureboundingbox.isInBbVolume(i1, l1, i2))
         {
             world.scheduledUpdatesAreImmediate = true;
             Block.blocksList[Block.lavaMoving.blockID].updateTick(world, i1, l1, i2, random);

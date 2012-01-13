@@ -4,11 +4,10 @@
 
 package net.minecraft.src;
 
-import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            Item, World, Block, BlockJukeBox, 
-//            ItemStack, EnumRarity, EntityPlayer
+//            ItemStack, EntityPlayer
 
 public class ItemRecord extends Item
 {
@@ -26,7 +25,7 @@ public class ItemRecord extends Item
     {
         if(world.getBlockId(i, j, k) == Block.jukebox.blockID && world.getBlockMetadata(i, j, k) == 0)
         {
-            if(world.multiplayerWorld)
+            if(world.singleplayerWorld)
             {
                 return true;
             } else
@@ -40,15 +39,5 @@ public class ItemRecord extends Item
         {
             return false;
         }
-    }
-
-    public void addInformation(ItemStack itemstack, List list)
-    {
-        list.add((new StringBuilder()).append("C418 - ").append(recordName).toString());
-    }
-
-    public EnumRarity getRarity(ItemStack itemstack)
-    {
-        return EnumRarity.rare;
     }
 }

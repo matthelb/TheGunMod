@@ -8,7 +8,7 @@ import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
 //            WorldSavedData, NBTTagCompound, MapInfo, EntityPlayer, 
-//            InventoryPlayer, MapCoord, ItemStack
+//            InventoryPlayer, MapCoord, ItemStack, World
 
 public class MapData extends WorldSavedData
 {
@@ -18,17 +18,17 @@ public class MapData extends WorldSavedData
     public byte dimension;
     public byte scale;
     public byte colors[];
-    public int field_28175_g;
-    public List field_28174_h;
-    private Map field_28172_j;
+    public int field_28159_g;
+    public List field_28158_h;
+    private Map field_28156_j;
     public List playersVisibleOnMap;
 
     public MapData(String s)
     {
         super(s);
         colors = new byte[16384];
-        field_28174_h = new ArrayList();
-        field_28172_j = new HashMap();
+        field_28158_h = new ArrayList();
+        field_28156_j = new HashMap();
         playersVisibleOnMap = new ArrayList();
     }
 
@@ -89,22 +89,22 @@ public class MapData extends WorldSavedData
         nbttagcompound.setByteArray("colors", colors);
     }
 
-    public void func_28169_a(EntityPlayer entityplayer, ItemStack itemstack)
+    public void func_28155_a(EntityPlayer entityplayer, ItemStack itemstack)
     {
-        if(!field_28172_j.containsKey(entityplayer))
+        if(!field_28156_j.containsKey(entityplayer))
         {
             MapInfo mapinfo = new MapInfo(this, entityplayer);
-            field_28172_j.put(entityplayer, mapinfo);
-            field_28174_h.add(mapinfo);
+            field_28156_j.put(entityplayer, mapinfo);
+            field_28158_h.add(mapinfo);
         }
         playersVisibleOnMap.clear();
-        for(int i = 0; i < field_28174_h.size(); i++)
+        for(int i = 0; i < field_28158_h.size(); i++)
         {
-            MapInfo mapinfo1 = (MapInfo)field_28174_h.get(i);
+            MapInfo mapinfo1 = (MapInfo)field_28158_h.get(i);
             if(mapinfo1.entityplayerObj.isDead || !mapinfo1.entityplayerObj.inventory.hasItemStack(itemstack))
             {
-                field_28172_j.remove(mapinfo1.entityplayerObj);
-                field_28174_h.remove(mapinfo1);
+                field_28156_j.remove(mapinfo1.entityplayerObj);
+                field_28158_h.remove(mapinfo1);
                 continue;
             }
             float f = (float)(mapinfo1.entityplayerObj.posX - (double)xCenter) / (float)(1 << scale);
@@ -121,7 +121,7 @@ public class MapData extends WorldSavedData
             byte byte3 = (byte)(int)((double)((entityplayer.rotationYaw * 16F) / 360F) + 0.5D);
             if(dimension < 0)
             {
-                int l = field_28175_g / 10;
+                int l = field_28159_g / 10;
                 byte3 = (byte)(l * l * 0x209a771 + l * 121 >> 15 & 0xf);
             }
             if(mapinfo1.entityplayerObj.dimension == dimension)
@@ -132,49 +132,34 @@ public class MapData extends WorldSavedData
 
     }
 
-    public void func_28170_a(int i, int j, int k)
+    public byte[] func_28154_a(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    {
+        MapInfo mapinfo = (MapInfo)field_28156_j.get(entityplayer);
+        if(mapinfo == null)
+        {
+            return null;
+        } else
+        {
+            byte abyte0[] = mapinfo.func_28118_a(itemstack);
+            return abyte0;
+        }
+    }
+
+    public void func_28153_a(int i, int j, int k)
     {
         super.markDirty();
-        for(int l = 0; l < field_28174_h.size(); l++)
+        for(int l = 0; l < field_28158_h.size(); l++)
         {
-            MapInfo mapinfo = (MapInfo)field_28174_h.get(l);
+            MapInfo mapinfo = (MapInfo)field_28158_h.get(l);
             if(mapinfo.field_28119_b[i] < 0 || mapinfo.field_28119_b[i] > j)
             {
                 mapinfo.field_28119_b[i] = j;
             }
-            if(mapinfo.field_28124_c[i] < 0 || mapinfo.field_28124_c[i] < k)
+            if(mapinfo.field_28125_c[i] < 0 || mapinfo.field_28125_c[i] < k)
             {
-                mapinfo.field_28124_c[i] = k;
+                mapinfo.field_28125_c[i] = k;
             }
         }
 
-    }
-
-    public void func_28171_a(byte abyte0[])
-    {
-        if(abyte0[0] == 0)
-        {
-            int i = abyte0[1] & 0xff;
-            int k = abyte0[2] & 0xff;
-            for(int l = 0; l < abyte0.length - 3; l++)
-            {
-                colors[(l + k) * 128 + i] = abyte0[l + 3];
-            }
-
-            markDirty();
-        } else
-        if(abyte0[0] == 1)
-        {
-            playersVisibleOnMap.clear();
-            for(int j = 0; j < (abyte0.length - 1) / 3; j++)
-            {
-                byte byte0 = (byte)(abyte0[j * 3 + 1] % 16);
-                byte byte1 = abyte0[j * 3 + 2];
-                byte byte2 = abyte0[j * 3 + 3];
-                byte byte3 = (byte)(abyte0[j * 3 + 1] / 16);
-                playersVisibleOnMap.add(new MapCoord(this, byte0, byte1, byte2, byte3));
-            }
-
-        }
     }
 }

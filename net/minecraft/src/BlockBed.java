@@ -34,7 +34,7 @@ public class BlockBed extends Block
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return true;
         }
@@ -82,7 +82,7 @@ public class BlockBed extends Block
                 EntityPlayer entityplayer2 = (EntityPlayer)iterator.next();
                 if(entityplayer2.isPlayerSleeping())
                 {
-                    ChunkCoordinates chunkcoordinates = entityplayer2.bedChunkCoordinates;
+                    ChunkCoordinates chunkcoordinates = entityplayer2.playerLocation;
                     if(chunkcoordinates.posX == i && chunkcoordinates.posY == j && chunkcoordinates.posZ == k)
                     {
                         entityplayer1 = entityplayer2;
@@ -184,7 +184,7 @@ public class BlockBed extends Block
         if(world.getBlockId(i + headBlockToFootBlockMap[j1][0], j, k + headBlockToFootBlockMap[j1][1]) != blockID)
         {
             world.setBlockWithNotify(i, j, k, 0);
-            if(!world.multiplayerWorld)
+            if(!world.singleplayerWorld)
             {
                 dropBlockAsItem(world, i, j, k, i1, 0);
             }

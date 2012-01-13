@@ -15,19 +15,19 @@ public class EntitySlime extends EntityLiving
     implements IMob
 {
 
-    public float field_40139_a;
-    public float field_768_a;
-    public float field_767_b;
-    private int slimeJumpDelay;
+    public float field_40122_a;
+    public float field_401_a;
+    public float field_400_b;
+    private int ticksTillJump;
 
     public EntitySlime(World world)
     {
         super(world);
-        slimeJumpDelay = 0;
+        ticksTillJump = 0;
         texture = "/mob/slime.png";
         int i = 1 << rand.nextInt(3);
         yOffset = 0.0F;
-        slimeJumpDelay = rand.nextInt(20) + 10;
+        ticksTillJump = rand.nextInt(20) + 10;
         setSlimeSize(i);
         experienceValue = i;
     }
@@ -69,24 +69,24 @@ public class EntitySlime extends EntityLiving
         setSlimeSize(nbttagcompound.getInteger("Size") + 1);
     }
 
-    protected String func_40135_ac()
+    protected String func_40120_w()
     {
         return "slime";
     }
 
-    protected String func_40138_aj()
+    protected String func_40118_E()
     {
         return "mob.slime";
     }
 
     public void onUpdate()
     {
-        if(!worldObj.multiplayerWorld && worldObj.difficultySetting == 0 && getSlimeSize() > 0)
+        if(!worldObj.singleplayerWorld && worldObj.difficultySetting == 0 && getSlimeSize() > 0)
         {
             isDead = true;
         }
-        field_768_a = field_768_a + (field_40139_a - field_768_a) * 0.5F;
-        field_767_b = field_768_a;
+        field_401_a = field_401_a + (field_40122_a - field_401_a) * 0.5F;
+        field_400_b = field_401_a;
         boolean flag = onGround;
         super.onUpdate();
         if(onGround && !flag)
@@ -98,16 +98,16 @@ public class EntitySlime extends EntityLiving
                 float f1 = rand.nextFloat() * 0.5F + 0.5F;
                 float f2 = MathHelper.sin(f) * (float)i * 0.5F * f1;
                 float f3 = MathHelper.cos(f) * (float)i * 0.5F * f1;
-                worldObj.spawnParticle(func_40135_ac(), posX + (double)f2, boundingBox.minY, posZ + (double)f3, 0.0D, 0.0D, 0.0D);
+                worldObj.spawnParticle(func_40120_w(), posX + (double)f2, boundingBox.minY, posZ + (double)f3, 0.0D, 0.0D, 0.0D);
             }
 
-            if(func_40134_ak())
+            if(func_40121_G())
             {
-                worldObj.playSoundAtEntity(this, func_40138_aj(), getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) / 0.8F);
+                worldObj.playSoundAtEntity(this, func_40118_E(), getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) / 0.8F);
             }
-            field_40139_a = -0.5F;
+            field_40122_a = -0.5F;
         }
-        func_40136_ag();
+        func_40116_B();
     }
 
     protected void updateEntityActionState()
@@ -118,19 +118,19 @@ public class EntitySlime extends EntityLiving
         {
             faceEntity(entityplayer, 10F, 20F);
         }
-        if(onGround && slimeJumpDelay-- <= 0)
+        if(onGround && ticksTillJump-- <= 0)
         {
-            slimeJumpDelay = func_40131_af();
+            ticksTillJump = func_40115_A();
             if(entityplayer != null)
             {
-                slimeJumpDelay /= 3;
+                ticksTillJump /= 3;
             }
             isJumping = true;
-            if(func_40133_ao())
+            if(func_40117_I())
             {
-                worldObj.playSoundAtEntity(this, func_40138_aj(), getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 0.8F);
+                worldObj.playSoundAtEntity(this, func_40118_E(), getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 0.8F);
             }
-            field_40139_a = 1.0F;
+            field_40122_a = 1.0F;
             moveStrafing = 1.0F - rand.nextFloat() * 2.0F;
             moveForward = 1 * getSlimeSize();
         } else
@@ -143,17 +143,17 @@ public class EntitySlime extends EntityLiving
         }
     }
 
-    protected void func_40136_ag()
+    protected void func_40116_B()
     {
-        field_40139_a = field_40139_a * 0.6F;
+        field_40122_a = field_40122_a * 0.6F;
     }
 
-    protected int func_40131_af()
+    protected int func_40115_A()
     {
         return rand.nextInt(20) + 10;
     }
 
-    protected EntitySlime func_40132_ae()
+    protected EntitySlime func_40114_y()
     {
         return new EntitySlime(worldObj);
     }
@@ -161,14 +161,14 @@ public class EntitySlime extends EntityLiving
     public void setEntityDead()
     {
         int i = getSlimeSize();
-        if(!worldObj.multiplayerWorld && i > 1 && getEntityHealth() <= 0)
+        if(!worldObj.singleplayerWorld && i > 1 && getEntityHealth() <= 0)
         {
             int j = 2 + rand.nextInt(3);
             for(int k = 0; k < j; k++)
             {
                 float f = (((float)(k % 2) - 0.5F) * (float)i) / 4F;
                 float f1 = (((float)(k / 2) - 0.5F) * (float)i) / 4F;
-                EntitySlime entityslime = func_40132_ae();
+                EntitySlime entityslime = func_40114_y();
                 entityslime.setSlimeSize(i / 2);
                 entityslime.setLocationAndAngles(posX + (double)f, posY + 0.5D, posZ + (double)f1, rand.nextFloat() * 360F, 0.0F);
                 worldObj.spawnEntityInWorld(entityslime);
@@ -180,22 +180,22 @@ public class EntitySlime extends EntityLiving
 
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
-        if(func_40137_ah())
+        if(func_40119_C())
         {
             int i = getSlimeSize();
-            if(canEntityBeSeen(entityplayer) && (double)getDistanceToEntity(entityplayer) < 0.59999999999999998D * (double)i && entityplayer.attackEntityFrom(DamageSource.causeMobDamage(this), func_40130_ai()))
+            if(canEntityBeSeen(entityplayer) && (double)getDistanceToEntity(entityplayer) < 0.59999999999999998D * (double)i && entityplayer.attackEntityFrom(DamageSource.causeMobDamage(this), func_40113_D()))
             {
                 worldObj.playSoundAtEntity(this, "mob.slimeattack", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             }
         }
     }
 
-    protected boolean func_40137_ah()
+    protected boolean func_40119_C()
     {
         return getSlimeSize() > 1;
     }
 
-    protected int func_40130_ai()
+    protected int func_40113_D()
     {
         return getSlimeSize();
     }
@@ -243,12 +243,12 @@ public class EntitySlime extends EntityLiving
         return 0;
     }
 
-    protected boolean func_40133_ao()
+    protected boolean func_40117_I()
     {
         return getSlimeSize() > 1;
     }
 
-    protected boolean func_40134_ak()
+    protected boolean func_40121_G()
     {
         return getSlimeSize() > 2;
     }

@@ -66,7 +66,7 @@ public class BlockTNT extends Block
 
     public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }

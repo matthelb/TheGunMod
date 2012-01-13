@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Slot, ItemStack, ICrafting, EntityPlayer, 
+//            Slot, ICrafting, ItemStack, EntityPlayer, 
 //            InventoryPlayer, IInventory
 
 public abstract class Container
@@ -16,25 +16,50 @@ public abstract class Container
     public List inventoryItemStacks;
     public List inventorySlots;
     public int windowId;
-    private short field_20917_a;
+    private short field_20132_a;
     protected List crafters;
-    private Set field_20918_b;
+    private Set field_20131_b;
 
     public Container()
     {
         inventoryItemStacks = new ArrayList();
         inventorySlots = new ArrayList();
         windowId = 0;
-        field_20917_a = 0;
+        field_20132_a = 0;
         crafters = new ArrayList();
-        field_20918_b = new HashSet();
+        field_20131_b = new HashSet();
     }
 
     protected void addSlot(Slot slot)
     {
-        slot.slotNumber = inventorySlots.size();
+        slot.id = inventorySlots.size();
         inventorySlots.add(slot);
         inventoryItemStacks.add(null);
+    }
+
+    public void onCraftGuiOpened(ICrafting icrafting)
+    {
+        if(crafters.contains(icrafting))
+        {
+            throw new IllegalArgumentException("Listener already listening");
+        } else
+        {
+            crafters.add(icrafting);
+            icrafting.updateCraftingInventory(this, func_28127_b());
+            updateCraftingResults();
+            return;
+        }
+    }
+
+    public List func_28127_b()
+    {
+        ArrayList arraylist = new ArrayList();
+        for(int i = 0; i < inventorySlots.size(); i++)
+        {
+            arraylist.add(((Slot)inventorySlots.get(i)).getStack());
+        }
+
+        return arraylist;
     }
 
     public void updateCraftingResults()
@@ -61,6 +86,20 @@ public abstract class Container
     public boolean enchantItem(EntityPlayer entityplayer, int i)
     {
         return false;
+    }
+
+    public Slot func_20127_a(IInventory iinventory, int i)
+    {
+        for(int j = 0; j < inventorySlots.size(); j++)
+        {
+            Slot slot = (Slot)inventorySlots.get(j);
+            if(slot.isHere(iinventory, i))
+            {
+                return slot;
+            }
+        }
+
+        return null;
     }
 
     public Slot getSlot(int i)
@@ -119,7 +158,7 @@ public abstract class Container
                     Slot slot1 = (Slot)inventorySlots.get(i);
                     if(slot1 != null && slot1.getStack() != null && slot1.getStack().itemID == k)
                     {
-                        func_35373_b(i, j, flag, entityplayer);
+                        func_35497_b(i, j, flag, entityplayer);
                     }
                 }
             } else
@@ -214,7 +253,7 @@ public abstract class Container
         return itemstack;
     }
 
-    protected void func_35373_b(int i, int j, boolean flag, EntityPlayer entityplayer)
+    protected void func_35497_b(int i, int j, boolean flag, EntityPlayer entityplayer)
     {
         slotClick(i, j, flag, entityplayer);
     }
@@ -239,31 +278,20 @@ public abstract class Container
         getSlot(i).putStack(itemstack);
     }
 
-    public void putStacksInSlots(ItemStack aitemstack[])
+    public boolean getCanCraft(EntityPlayer entityplayer)
     {
-        for(int i = 0; i < aitemstack.length; i++)
+        return !field_20131_b.contains(entityplayer);
+    }
+
+    public void setCanCraft(EntityPlayer entityplayer, boolean flag)
+    {
+        if(flag)
         {
-            getSlot(i).putStack(aitemstack[i]);
+            field_20131_b.remove(entityplayer);
+        } else
+        {
+            field_20131_b.add(entityplayer);
         }
-
-    }
-
-    public void updateProgressBar(int i, int j)
-    {
-    }
-
-    public short func_20111_a(InventoryPlayer inventoryplayer)
-    {
-        field_20917_a++;
-        return field_20917_a;
-    }
-
-    public void func_20113_a(short word0)
-    {
-    }
-
-    public void func_20110_b(short word0)
-    {
     }
 
     public abstract boolean canInteractWith(EntityPlayer entityplayer);

@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Block, Material, IBlockAccess, World
+//            Block, Material, World
 
 public class BlockMycelium extends Block
 {
@@ -28,23 +28,9 @@ public class BlockMycelium extends Block
         return i != 0 ? 77 : 2;
     }
 
-    public int getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
-    {
-        if(l == 1)
-        {
-            return 78;
-        }
-        if(l == 0)
-        {
-            return 2;
-        }
-        Material material = iblockaccess.getBlockMaterial(i, j + 1, k);
-        return material != Material.snow && material != Material.craftedSnow ? 77 : 68;
-    }
-
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }
@@ -66,15 +52,6 @@ public class BlockMycelium extends Block
                 }
             }
 
-        }
-    }
-
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
-    {
-        super.randomDisplayTick(world, i, j, k, random);
-        if(random.nextInt(10) == 0)
-        {
-            world.spawnParticle("townaura", (float)i + random.nextFloat(), (float)j + 1.1F, (float)k + random.nextFloat(), 0.0D, 0.0D, 0.0D);
         }
     }
 

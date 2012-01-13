@@ -21,6 +21,14 @@ public class Packet100OpenWindow extends Packet
     {
     }
 
+    public Packet100OpenWindow(int i, int j, String s, int k)
+    {
+        windowId = i;
+        inventoryType = j;
+        windowTitle = s;
+        slotsCount = k;
+    }
+
     public void processPacket(NetHandler nethandler)
     {
         nethandler.handleOpenWindow(this);

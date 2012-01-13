@@ -29,7 +29,7 @@ public class Packet106Transaction extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.handleContainerTransaction(this);
+        nethandler.handleTransaction(this);
     }
 
     public void readPacketData(DataInputStream datainputstream)

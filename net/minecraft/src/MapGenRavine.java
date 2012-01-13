@@ -13,14 +13,14 @@ import java.util.Random;
 public class MapGenRavine extends MapGenBase
 {
 
-    private float field_35627_a[];
+    private float field_35540_a[];
 
     public MapGenRavine()
     {
-        field_35627_a = new float[1024];
+        field_35540_a = new float[1024];
     }
 
-    protected void func_35626_a(long l, int i, int j, byte abyte0[], double d, 
+    protected void func_35539_a(long l, int i, int j, byte abyte0[], double d, 
             double d1, double d2, float f, float f1, float f2, 
             int k, int i1, double d3)
     {
@@ -31,7 +31,7 @@ public class MapGenRavine extends MapGenBase
         float f4 = 0.0F;
         if(i1 <= 0)
         {
-            int j1 = range * 16 - 16;
+            int j1 = field_947_a * 16 - 16;
             i1 = j1 - random.nextInt(j1 / 4);
         }
         boolean flag = false;
@@ -47,7 +47,7 @@ public class MapGenRavine extends MapGenBase
             {
                 f5 = 1.0F + random.nextFloat() * random.nextFloat() * 1.0F;
             }
-            field_35627_a[k1] = f5 * f5;
+            field_35540_a[k1] = f5 * f5;
         }
 
         for(; k < i1; k++)
@@ -165,7 +165,7 @@ label0:
                             continue label0;
                         }
                         double d14 = (((double)j4 + 0.5D) - d1) / d7;
-                        if((d12 * d12 + d13 * d13) * (double)field_35627_a[j4] + (d14 * d14) / 6D < 1.0D)
+                        if((d12 * d12 + d13 * d13) * (double)field_35540_a[j4] + (d14 * d14) / 6D < 1.0D)
                         {
                             byte byte0 = abyte0[i4];
                             if(byte0 == Block.grass.blockID)
@@ -217,7 +217,7 @@ label0:
             float f = rand.nextFloat() * 3.141593F * 2.0F;
             float f1 = ((rand.nextFloat() - 0.5F) * 2.0F) / 8F;
             float f2 = (rand.nextFloat() * 2.0F + rand.nextFloat()) * 2.0F;
-            func_35626_a(rand.nextLong(), k, l, abyte0, d, d1, d2, f2, f, f1, 0, 0, 3D);
+            func_35539_a(rand.nextLong(), k, l, abyte0, d, d1, d2, f2, f, f1, 0, 0, 3D);
         }
 
     }

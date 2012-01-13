@@ -8,10 +8,11 @@ import java.io.File;
 import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
-//            SaveHandler, WorldProviderHell, ThreadedChunkLoader, WorldProviderEnd, 
-//            WorldInfo, WorldProvider, IChunkLoader
+//            PlayerNBTManager, WorldProviderHell, ThreadedChunkLoader, WorldProviderEnd, 
+//            WorldInfo, ThreadedFileIOBase, RegionFileCache, WorldProvider, 
+//            IChunkLoader
 
-public class SaveOldDir extends SaveHandler
+public class SaveOldDir extends PlayerNBTManager
 {
 
     public SaveOldDir(File file, String s, boolean flag)
@@ -21,7 +22,7 @@ public class SaveOldDir extends SaveHandler
 
     public IChunkLoader getChunkLoader(WorldProvider worldprovider)
     {
-        File file = getSaveDirectory();
+        File file = getWorldDir();
         if(worldprovider instanceof WorldProviderHell)
         {
             File file1 = new File(file, "DIM-1");
@@ -43,5 +44,18 @@ public class SaveOldDir extends SaveHandler
     {
         worldinfo.setSaveVersion(19132);
         super.saveWorldInfoAndPlayer(worldinfo, list);
+    }
+
+    public void func_22093_e()
+    {
+        try
+        {
+            ThreadedFileIOBase.threadedIOInstance.waitForFinish();
+        }
+        catch(InterruptedException interruptedexception)
+        {
+            interruptedexception.printStackTrace();
+        }
+        RegionFileCache.clearRegionFileReferences();
     }
 }

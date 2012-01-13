@@ -80,14 +80,6 @@ public class BlockRedstoneOre extends Block
         return 4 + random.nextInt(2);
     }
 
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
-    {
-        if(glowing)
-        {
-            sparkle(world, i, j, k);
-        }
-    }
-
     private void sparkle(World world, int i, int j, int k)
     {
         Random random = world.rand;

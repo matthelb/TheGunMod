@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
+//            Packet, Entity, NetHandler
 
 public class Packet17Sleep extends Packet
 {
@@ -16,17 +16,26 @@ public class Packet17Sleep extends Packet
     public int bedX;
     public int bedY;
     public int bedZ;
-    public int field_22046_e;
+    public int field_22042_e;
 
     public Packet17Sleep()
     {
+    }
+
+    public Packet17Sleep(Entity entity, int i, int j, int k, int l)
+    {
+        field_22042_e = i;
+        bedX = j;
+        bedY = k;
+        bedZ = l;
+        entityID = entity.entityId;
     }
 
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {
         entityID = datainputstream.readInt();
-        field_22046_e = datainputstream.readByte();
+        field_22042_e = datainputstream.readByte();
         bedX = datainputstream.readInt();
         bedY = datainputstream.readByte();
         bedZ = datainputstream.readInt();
@@ -36,7 +45,7 @@ public class Packet17Sleep extends Packet
         throws IOException
     {
         dataoutputstream.writeInt(entityID);
-        dataoutputstream.writeByte(field_22046_e);
+        dataoutputstream.writeByte(field_22042_e);
         dataoutputstream.writeInt(bedX);
         dataoutputstream.writeByte(bedY);
         dataoutputstream.writeInt(bedZ);

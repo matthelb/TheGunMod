@@ -7,7 +7,7 @@ package net.minecraft.src;
 import java.io.*;
 
 // Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
+//            Packet, Entity, MathHelper, NetHandler
 
 public class Packet23VehicleSpawn extends Packet
 {
@@ -24,6 +24,55 @@ public class Packet23VehicleSpawn extends Packet
 
     public Packet23VehicleSpawn()
     {
+    }
+
+    public Packet23VehicleSpawn(Entity entity, int i)
+    {
+        this(entity, i, 0);
+    }
+
+    public Packet23VehicleSpawn(Entity entity, int i, int j)
+    {
+        entityId = entity.entityId;
+        xPosition = MathHelper.floor_double(entity.posX * 32D);
+        yPosition = MathHelper.floor_double(entity.posY * 32D);
+        zPosition = MathHelper.floor_double(entity.posZ * 32D);
+        type = i;
+        throwerEntityId = j;
+        if(j > 0)
+        {
+            double d = entity.motionX;
+            double d1 = entity.motionY;
+            double d2 = entity.motionZ;
+            double d3 = 3.8999999999999999D;
+            if(d < -d3)
+            {
+                d = -d3;
+            }
+            if(d1 < -d3)
+            {
+                d1 = -d3;
+            }
+            if(d2 < -d3)
+            {
+                d2 = -d3;
+            }
+            if(d > d3)
+            {
+                d = d3;
+            }
+            if(d1 > d3)
+            {
+                d1 = d3;
+            }
+            if(d2 > d3)
+            {
+                d2 = d3;
+            }
+            speedX = (int)(d * 8000D);
+            speedY = (int)(d1 * 8000D);
+            speedZ = (int)(d2 * 8000D);
+        }
     }
 
     public void readPacketData(DataInputStream datainputstream)

@@ -15,7 +15,7 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
 {
 
     private int averageGroundLevel;
-    private final boolean field_35083_b;
+    private final boolean field_35402_b;
 
     public ComponentVillageHouse4_Garden(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -23,17 +23,17 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
         averageGroundLevel = -1;
         coordBaseMode = j;
         boundingBox = structureboundingbox;
-        field_35083_b = random.nextBoolean();
+        field_35402_b = random.nextBoolean();
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
     }
 
-    public static ComponentVillageHouse4_Garden func_35082_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentVillageHouse4_Garden func_35401_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 5, 6, 5, l);
-        if(StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -86,7 +86,7 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
             placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), 2, 0, -1, structureboundingbox);
         }
         fillWithBlocks(world, structureboundingbox, 1, 1, 1, 3, 3, 3, 0, 0, false);
-        if(field_35083_b)
+        if(field_35402_b)
         {
             placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 0, 5, 0, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 1, 5, 0, structureboundingbox);
@@ -105,7 +105,7 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
             placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 0, 5, 2, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 0, 5, 3, structureboundingbox);
         }
-        if(field_35083_b)
+        if(field_35402_b)
         {
             int i = getMetadataWithOffset(Block.ladder.blockID, 3);
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, i, 3, 1, 3, structureboundingbox);

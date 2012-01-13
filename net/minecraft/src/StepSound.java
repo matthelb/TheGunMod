@@ -33,9 +33,4 @@ public class StepSound
     {
         return (new StringBuilder()).append("step.").append(stepSoundName).toString();
     }
-
-    public String stepSoundDir2()
-    {
-        return (new StringBuilder()).append("step.").append(stepSoundName).toString();
-    }
 }

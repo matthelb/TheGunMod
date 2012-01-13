@@ -4,12 +4,15 @@
 
 package net.minecraft.src;
 
+import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            Container, ItemStack
 
 public interface ICrafting
 {
+
+    public abstract void updateCraftingInventory(Container container, List list);
 
     public abstract void updateCraftingInventorySlot(Container container, int i, ItemStack itemstack);
 

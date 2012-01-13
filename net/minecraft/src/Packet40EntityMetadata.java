@@ -20,6 +20,12 @@ public class Packet40EntityMetadata extends Packet
     {
     }
 
+    public Packet40EntityMetadata(int i, DataWatcher datawatcher)
+    {
+        entityId = i;
+        metadata = datawatcher.getChangedObjects();
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {
@@ -42,10 +48,5 @@ public class Packet40EntityMetadata extends Packet
     public int getPacketSize()
     {
         return 5;
-    }
-
-    public List getMetadata()
-    {
-        return metadata;
     }
 }

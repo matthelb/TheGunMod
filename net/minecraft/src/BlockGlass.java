@@ -21,9 +21,4 @@ public class BlockGlass extends BlockBreakable
     {
         return 0;
     }
-
-    public int getRenderBlockPass()
-    {
-        return 0;
-    }
 }

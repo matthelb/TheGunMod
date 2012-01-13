@@ -54,7 +54,7 @@ public class BlockEndPortalFrame extends Block
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.8125F, 1.0F);
         super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
         int l = world.getBlockMetadata(i, j, k);
-        if(isEnderEyeInserted(l))
+        if(func_40179_c(l))
         {
             setBlockBounds(0.3125F, 0.8125F, 0.3125F, 0.6875F, 1.0F, 0.6875F);
             super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
@@ -62,7 +62,7 @@ public class BlockEndPortalFrame extends Block
         setBlockBoundsForItemRender();
     }
 
-    public static boolean isEnderEyeInserted(int i)
+    public static boolean func_40179_c(int i)
     {
         return (i & 4) != 0;
     }

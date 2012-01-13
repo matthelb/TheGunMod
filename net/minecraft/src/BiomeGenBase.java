@@ -4,9 +4,7 @@
 
 package net.minecraft.src;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 // Referenced classes of package net.minecraft.src:
 //            Block, BlockGrass, WorldGenTrees, WorldGenBigTree, 
@@ -14,7 +12,6 @@ import java.util.Random;
 //            EntityPig, EntityChicken, EntityCow, EntitySpider, 
 //            EntityZombie, EntitySkeleton, EntityCreeper, EntitySlime, 
 //            EntityEnderman, EntitySquid, BiomeDecorator, EnumCreatureType, 
-//            IBlockAccess, WorldChunkManager, ColorizerGrass, ColorizerFoliage, 
 //            BiomeGenOcean, BiomeGenPlains, BiomeGenDesert, BiomeGenHills, 
 //            BiomeGenForest, BiomeGenTaiga, BiomeGenSwamp, BiomeGenRiver, 
 //            BiomeGenHell, BiomeGenEnd, BiomeGenSnow, BiomeGenMushroomIsland, 
@@ -28,9 +25,9 @@ public abstract class BiomeGenBase
     public static final BiomeGenBase plains = (new BiomeGenPlains(1)).setColor(0x8db360).setBiomeName("Plains").setTemperatureRainfall(0.8F, 0.4F);
     public static final BiomeGenBase desert = (new BiomeGenDesert(2)).setColor(0xfa9418).setBiomeName("Desert").setDisableRain().setTemperatureRainfall(2.0F, 0.0F).setMinMaxHeight(0.1F, 0.2F);
     public static final BiomeGenBase extremeHills = (new BiomeGenHills(3)).setColor(0x606060).setBiomeName("Extreme Hills").setMinMaxHeight(0.2F, 1.8F).setTemperatureRainfall(0.2F, 0.3F);
-    public static final BiomeGenBase forest = (new BiomeGenForest(4)).setColor(0x56621).setBiomeName("Forest").func_4124_a(0x4eba31).setTemperatureRainfall(0.7F, 0.8F);
-    public static final BiomeGenBase taiga = (new BiomeGenTaiga(5)).setColor(0xb6659).setBiomeName("Taiga").func_4124_a(0x4eba31).setTemperatureRainfall(0.3F, 0.8F).setMinMaxHeight(0.1F, 0.4F);
-    public static final BiomeGenBase swampland = (new BiomeGenSwamp(6)).setColor(0x7f9b2).setBiomeName("Swampland").func_4124_a(0x8baf48).setMinMaxHeight(-0.2F, 0.1F).setTemperatureRainfall(0.8F, 0.9F);
+    public static final BiomeGenBase forest = (new BiomeGenForest(4)).setColor(0x56621).setBiomeName("Forest").func_4080_a(0x4eba31).setTemperatureRainfall(0.7F, 0.8F);
+    public static final BiomeGenBase taiga = (new BiomeGenTaiga(5)).setColor(0xb6659).setBiomeName("Taiga").func_4080_a(0x4eba31).setTemperatureRainfall(0.3F, 0.8F).setMinMaxHeight(0.1F, 0.4F);
+    public static final BiomeGenBase swampland = (new BiomeGenSwamp(6)).setColor(0x7f9b2).setBiomeName("Swampland").func_4080_a(0x8baf48).setMinMaxHeight(-0.2F, 0.1F).setTemperatureRainfall(0.8F, 0.9F);
     public static final BiomeGenBase river = (new BiomeGenRiver(7)).setColor(255).setBiomeName("River").setMinMaxHeight(-0.5F, 0.0F);
     public static final BiomeGenBase hell = (new BiomeGenHell(8)).setColor(0xff0000).setBiomeName("Hell").setDisableRain().setTemperatureRainfall(2.0F, 0.0F);
     public static final BiomeGenBase sky = (new BiomeGenEnd(9)).setColor(0x8080ff).setBiomeName("Sky").setDisableRain();
@@ -44,7 +41,7 @@ public abstract class BiomeGenBase
     public int color;
     public byte topBlock;
     public byte fillerBlock;
-    public int field_6502_q;
+    public int field_6161_q;
     public float minHeight;
     public float maxHeight;
     public float temperature;
@@ -66,7 +63,7 @@ public abstract class BiomeGenBase
     {
         topBlock = (byte)Block.grass.blockID;
         fillerBlock = (byte)Block.dirt.blockID;
-        field_6502_q = 0x4ee031;
+        field_6161_q = 0x4ee031;
         minHeight = 0.1F;
         maxHeight = 0.3F;
         temperature = 0.5F;
@@ -144,9 +141,9 @@ public abstract class BiomeGenBase
         return this;
     }
 
-    protected BiomeGenBase func_4124_a(int i)
+    protected BiomeGenBase func_4080_a(int i)
     {
-        field_6502_q = i;
+        field_6161_q = i;
         return this;
     }
 
@@ -154,20 +151,6 @@ public abstract class BiomeGenBase
     {
         color = i;
         return this;
-    }
-
-    public int getSkyColorByTemp(float f)
-    {
-        f /= 3F;
-        if(f < -1F)
-        {
-            f = -1F;
-        }
-        if(f > 1.0F)
-        {
-            f = 1.0F;
-        }
-        return java.awt.Color.getHSBColor(0.6222222F - f * 0.05F, 0.5F + f * 0.1F, 1.0F).getRGB();
     }
 
     public List getSpawnableList(EnumCreatureType enumcreaturetype)
@@ -220,23 +203,9 @@ public abstract class BiomeGenBase
         return (int)(temperature * 65536F);
     }
 
-    public void func_35477_a(World world, Random random, int i, int j)
+    public void func_35513_a(World world, Random random, int i, int j)
     {
         biomeDecorator.decorate(world, random, i, j);
-    }
-
-    public int getGrassColorAtCoords(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        double d = iblockaccess.getWorldChunkManager().getTemperature(i, j, k);
-        double d1 = iblockaccess.getWorldChunkManager().getRainfall(i, k);
-        return ColorizerGrass.getGrassColor(d, d1);
-    }
-
-    public int getFoliageColorAtCoords(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        double d = iblockaccess.getWorldChunkManager().getTemperature(i, j, k);
-        double d1 = iblockaccess.getWorldChunkManager().getRainfall(i, k);
-        return ColorizerFoliage.getFoliageColor(d, d1);
     }
 
 }

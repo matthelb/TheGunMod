@@ -10,25 +10,25 @@ public class NibbleArray
 
     public final byte data[];
     private final int chunkSizeYShift;
-    private final int chunkSizeYZShift;
+    private final int field_35662_c;
 
     public NibbleArray(int i, int j)
     {
         data = new byte[i >> 1];
         chunkSizeYShift = j;
-        chunkSizeYZShift = j + 4;
+        field_35662_c = j + 4;
     }
 
     public NibbleArray(byte abyte0[], int i)
     {
         data = abyte0;
         chunkSizeYShift = i;
-        chunkSizeYZShift = i + 4;
+        field_35662_c = i + 4;
     }
 
     public int getNibble(int i, int j, int k)
     {
-        int l = i << chunkSizeYZShift | k << chunkSizeYShift | j;
+        int l = i << field_35662_c | k << chunkSizeYShift | j;
         int i1 = l >> 1;
         int j1 = l & 1;
         if(j1 == 0)
@@ -42,7 +42,7 @@ public class NibbleArray
 
     public void setNibble(int i, int j, int k, int l)
     {
-        int i1 = i << chunkSizeYZShift | k << chunkSizeYShift | j;
+        int i1 = i << field_35662_c | k << chunkSizeYShift | j;
         int j1 = i1 >> 1;
         int k1 = i1 & 1;
         if(k1 == 0)

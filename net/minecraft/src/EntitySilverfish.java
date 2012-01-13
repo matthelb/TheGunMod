@@ -14,7 +14,7 @@ import java.util.Random;
 public class EntitySilverfish extends EntityMob
 {
 
-    private int field_35189_a;
+    private int field_35237_a;
 
     public EntitySilverfish(World world)
     {
@@ -58,9 +58,9 @@ public class EntitySilverfish extends EntityMob
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if(field_35189_a <= 0 && (damagesource instanceof EntityDamageSource))
+        if(field_35237_a <= 0 && (damagesource instanceof EntityDamageSource))
         {
-            field_35189_a = 20;
+            field_35237_a = 20;
         }
         return super.attackEntityFrom(damagesource, i);
     }
@@ -74,7 +74,7 @@ public class EntitySilverfish extends EntityMob
         }
     }
 
-    protected void func_41002_a(int i, int j, int k, int l)
+    protected void func_41011_a(int i, int j, int k, int l)
     {
         worldObj.playSoundAtEntity(this, "mob.silverfish.step", 1.0F, 1.0F);
     }
@@ -103,14 +103,14 @@ public class EntitySilverfish extends EntityMob
     protected void updateEntityActionState()
     {
         super.updateEntityActionState();
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
             return;
         }
-        if(field_35189_a > 0)
+        if(field_35237_a > 0)
         {
-            field_35189_a--;
-            if(field_35189_a == 0)
+            field_35237_a--;
+            if(field_35237_a == 0)
             {
                 int i = MathHelper.floor_double(posX);
                 int k = MathHelper.floor_double(posY);
@@ -153,7 +153,7 @@ public class EntitySilverfish extends EntityMob
             int i2 = worldObj.getBlockId(j + Facing.offsetsXForSide[k1], l + Facing.offsetsYForSide[k1], j1 + Facing.offsetsZForSide[k1]);
             if(BlockSilverfish.getPosingIdByMetadata(i2))
             {
-                worldObj.setBlockAndMetadataWithNotify(j + Facing.offsetsXForSide[k1], l + Facing.offsetsYForSide[k1], j1 + Facing.offsetsZForSide[k1], Block.silverfish.blockID, BlockSilverfish.func_35304_f(i2));
+                worldObj.setBlockAndMetadataWithNotify(j + Facing.offsetsXForSide[k1], l + Facing.offsetsYForSide[k1], j1 + Facing.offsetsZForSide[k1], Block.silverfish.blockID, BlockSilverfish.func_35061_d(i2));
                 spawnExplosionParticle();
                 setEntityDead();
             } else
@@ -178,7 +178,7 @@ public class EntitySilverfish extends EntityMob
         }
     }
 
-    protected boolean func_40147_Y()
+    protected boolean func_40123_y()
     {
         return true;
     }

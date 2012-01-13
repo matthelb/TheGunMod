@@ -20,13 +20,6 @@ public class Packet7UseEntity extends Packet
     {
     }
 
-    public Packet7UseEntity(int i, int j, int k)
-    {
-        playerEntityId = i;
-        targetEntity = j;
-        isLeftClick = k;
-    }
-
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

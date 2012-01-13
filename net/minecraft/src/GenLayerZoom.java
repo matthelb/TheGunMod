@@ -17,13 +17,13 @@ public class GenLayerZoom extends GenLayer
         super.parent = genlayer;
     }
 
-    public int[] getInts(int i, int j, int k, int l)
+    public int[] func_35018_a(int i, int j, int k, int l)
     {
         int i1 = i >> 1;
         int j1 = j >> 1;
         int k1 = (k >> 1) + 3;
         int l1 = (l >> 1) + 3;
-        int ai[] = parent.getInts(i1, j1, k1, l1);
+        int ai[] = parent.func_35018_a(i1, j1, k1, l1);
         int ai1[] = IntCache.getIntCache(k1 * 2 * (l1 * 2));
         int i2 = k1 << 1;
         for(int j2 = 0; j2 < l1 - 1; j2++)
@@ -34,13 +34,13 @@ public class GenLayerZoom extends GenLayer
             int k3 = ai[0 + (j2 + 1) * k1];
             for(int l3 = 0; l3 < k1 - 1; l3++)
             {
-                initChunkSeed(l3 + i1 << 1, j2 + j1 << 1);
+                func_35017_a(l3 + i1 << 1, j2 + j1 << 1);
                 int i4 = ai[l3 + 1 + (j2 + 0) * k1];
                 int j4 = ai[l3 + 1 + (j2 + 1) * k1];
                 ai1[i3] = j3;
-                ai1[i3++ + i2] = func_35516_a(j3, k3);
-                ai1[i3] = func_35516_a(j3, i4);
-                ai1[i3++ + i2] = func_35514_b(j3, i4, k3, j4);
+                ai1[i3++ + i2] = func_35026_a(j3, k3);
+                ai1[i3] = func_35026_a(j3, i4);
+                ai1[i3++ + i2] = func_35024_b(j3, i4, k3, j4);
                 j3 = i4;
                 k3 = j4;
             }
@@ -56,12 +56,12 @@ public class GenLayerZoom extends GenLayer
         return ai2;
     }
 
-    protected int func_35516_a(int i, int j)
+    protected int func_35026_a(int i, int j)
     {
         return nextInt(2) != 0 ? j : i;
     }
 
-    protected int func_35514_b(int i, int j, int k, int l)
+    protected int func_35024_b(int i, int j, int k, int l)
     {
         if(j == k && k == l)
         {
@@ -145,7 +145,7 @@ public class GenLayerZoom extends GenLayer
         }
     }
 
-    public static GenLayer func_35515_a(long l, GenLayer genlayer, int i)
+    public static GenLayer func_35025_a(long l, GenLayer genlayer, int i)
     {
         Object obj = genlayer;
         for(int j = 0; j < i; j++)

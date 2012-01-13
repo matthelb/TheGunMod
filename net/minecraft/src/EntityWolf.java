@@ -16,10 +16,10 @@ public class EntityWolf extends EntityAnimal
 {
 
     private boolean looksWithInterest;
-    private float field_25048_b;
-    private float field_25054_c;
-    private boolean isShaking;
-    private boolean field_25052_g;
+    private float field_25038_b;
+    private float field_25044_c;
+    private boolean isWet;
+    private boolean field_25042_g;
     private float timeWolfIsShaking;
     private float prevTimeWolfIsShaking;
 
@@ -48,21 +48,6 @@ public class EntityWolf extends EntityAnimal
     protected boolean canTriggerWalking()
     {
         return false;
-    }
-
-    public String getEntityTexture()
-    {
-        if(isTamed())
-        {
-            return "/mob/wolf_tame.png";
-        }
-        if(isAngry())
-        {
-            return "/mob/wolf_angry.png";
-        } else
-        {
-            return super.getEntityTexture();
-        }
     }
 
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
@@ -149,7 +134,7 @@ public class EntityWolf extends EntityAnimal
                 float f = entityplayer.getDistanceToEntity(this);
                 if(f > 5F)
                 {
-                    getPathOrWalkableBlock(entityplayer, f);
+                    setPathEntity(entityplayer, f);
                 }
             } else
             if(!isInWater())
@@ -162,14 +147,14 @@ public class EntityWolf extends EntityAnimal
             List list = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntitySheep.class, AxisAlignedBB.getBoundingBoxFromPool(posX, posY, posZ, posX + 1.0D, posY + 1.0D, posZ + 1.0D).expand(16D, 4D, 16D));
             if(!list.isEmpty())
             {
-                setEntityToAttack((Entity)list.get(worldObj.rand.nextInt(list.size())));
+                setTarget((Entity)list.get(worldObj.rand.nextInt(list.size())));
             }
         }
         if(isInWater())
         {
             setIsSitting(false);
         }
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             dataWatcher.updateObject(18, Integer.valueOf(getEntityHealth()));
         }
@@ -199,25 +184,25 @@ public class EntityWolf extends EntityAnimal
                 }
             }
         }
-        if(!isMultiplayerEntity && isShaking && !field_25052_g && !hasPath() && onGround)
+        if(!isMultiplayerEntity && isWet && !field_25042_g && !hasPath() && onGround)
         {
-            field_25052_g = true;
+            field_25042_g = true;
             timeWolfIsShaking = 0.0F;
             prevTimeWolfIsShaking = 0.0F;
-            worldObj.setEntityState(this, (byte)8);
+            worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)8);
         }
     }
 
     public void onUpdate()
     {
         super.onUpdate();
-        field_25054_c = field_25048_b;
+        field_25044_c = field_25038_b;
         if(looksWithInterest)
         {
-            field_25048_b = field_25048_b + (1.0F - field_25048_b) * 0.4F;
+            field_25038_b = field_25038_b + (1.0F - field_25038_b) * 0.4F;
         } else
         {
-            field_25048_b = field_25048_b + (0.0F - field_25048_b) * 0.4F;
+            field_25038_b = field_25038_b + (0.0F - field_25038_b) * 0.4F;
         }
         if(looksWithInterest)
         {
@@ -225,12 +210,12 @@ public class EntityWolf extends EntityAnimal
         }
         if(isWet())
         {
-            isShaking = true;
-            field_25052_g = false;
+            isWet = true;
+            field_25042_g = false;
             timeWolfIsShaking = 0.0F;
             prevTimeWolfIsShaking = 0.0F;
         } else
-        if((isShaking || field_25052_g) && field_25052_g)
+        if((isWet || field_25042_g) && field_25042_g)
         {
             if(timeWolfIsShaking == 0.0F)
             {
@@ -240,8 +225,8 @@ public class EntityWolf extends EntityAnimal
             timeWolfIsShaking += 0.05F;
             if(prevTimeWolfIsShaking >= 2.0F)
             {
-                isShaking = false;
-                field_25052_g = false;
+                isWet = false;
+                field_25042_g = false;
                 prevTimeWolfIsShaking = 0.0F;
                 timeWolfIsShaking = 0.0F;
             }
@@ -260,35 +245,6 @@ public class EntityWolf extends EntityAnimal
         }
     }
 
-    public boolean getWolfShaking()
-    {
-        return isShaking;
-    }
-
-    public float getShadingWhileShaking(float f)
-    {
-        return 0.75F + ((prevTimeWolfIsShaking + (timeWolfIsShaking - prevTimeWolfIsShaking) * f) / 2.0F) * 0.25F;
-    }
-
-    public float getShakeAngle(float f, float f1)
-    {
-        float f2 = (prevTimeWolfIsShaking + (timeWolfIsShaking - prevTimeWolfIsShaking) * f + f1) / 1.8F;
-        if(f2 < 0.0F)
-        {
-            f2 = 0.0F;
-        } else
-        if(f2 > 1.0F)
-        {
-            f2 = 1.0F;
-        }
-        return MathHelper.sin(f2 * 3.141593F) * MathHelper.sin(f2 * 3.141593F * 11F) * 0.15F * 3.141593F;
-    }
-
-    public float getInterestedAngle(float f)
-    {
-        return (field_25054_c + (field_25048_b - field_25054_c) * f) * 0.15F * 3.141593F;
-    }
-
     public float getEyeHeight()
     {
         return height * 0.8F;
@@ -305,7 +261,7 @@ public class EntityWolf extends EntityAnimal
         }
     }
 
-    private void getPathOrWalkableBlock(Entity entity, float f)
+    private void setPathEntity(Entity entity, float f)
     {
         PathEntity pathentity = worldObj.getPathToEntity(this, entity, 16F);
         if(pathentity == null && f > 12F)
@@ -334,7 +290,7 @@ public class EntityWolf extends EntityAnimal
 
     protected boolean isMovementCeased()
     {
-        return isSitting() || field_25052_g;
+        return isSitting() || field_25042_g;
     }
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
@@ -445,7 +401,7 @@ public class EntityWolf extends EntityAnimal
                 {
                     entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 }
-                if(!worldObj.multiplayerWorld)
+                if(!worldObj.singleplayerWorld)
                 {
                     if(rand.nextInt(3) == 0)
                     {
@@ -454,12 +410,12 @@ public class EntityWolf extends EntityAnimal
                         setIsSitting(true);
                         setEntityHealth(20);
                         setOwner(entityplayer.username);
-                        showHeartsOrSmokeFX(true);
-                        worldObj.setEntityState(this, (byte)7);
+                        isNowTamed(true);
+                        worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)7);
                     } else
                     {
-                        showHeartsOrSmokeFX(false);
-                        worldObj.setEntityState(this, (byte)6);
+                        isNowTamed(false);
+                        worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)6);
                     }
                 }
                 return true;
@@ -482,7 +438,7 @@ public class EntityWolf extends EntityAnimal
             }
             if(entityplayer.username.equalsIgnoreCase(getOwner()))
             {
-                if(!worldObj.multiplayerWorld)
+                if(!worldObj.singleplayerWorld)
                 {
                     setIsSitting(!isSitting());
                     isJumping = false;
@@ -494,7 +450,7 @@ public class EntityWolf extends EntityAnimal
         return super.interact(entityplayer);
     }
 
-    void showHeartsOrSmokeFX(boolean flag)
+    void isNowTamed(boolean flag)
     {
         String s = "heart";
         if(!flag)
@@ -509,42 +465,6 @@ public class EntityWolf extends EntityAnimal
             worldObj.spawnParticle(s, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
         }
 
-    }
-
-    public void handleHealthUpdate(byte byte0)
-    {
-        if(byte0 == 7)
-        {
-            showHeartsOrSmokeFX(true);
-        } else
-        if(byte0 == 6)
-        {
-            showHeartsOrSmokeFX(false);
-        } else
-        if(byte0 == 8)
-        {
-            field_25052_g = true;
-            timeWolfIsShaking = 0.0F;
-            prevTimeWolfIsShaking = 0.0F;
-        } else
-        {
-            super.handleHealthUpdate(byte0);
-        }
-    }
-
-    public float setTailRotation()
-    {
-        if(isAngry())
-        {
-            return 1.53938F;
-        }
-        if(isTamed())
-        {
-            return (0.55F - (float)(20 - dataWatcher.getWatchableObjectInt(18)) * 0.02F) * 3.141593F;
-        } else
-        {
-            return 0.6283185F;
-        }
     }
 
     public int getMaxSpawnedInChunk()

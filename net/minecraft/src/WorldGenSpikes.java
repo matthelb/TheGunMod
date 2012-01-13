@@ -13,16 +13,16 @@ import java.util.Random;
 public class WorldGenSpikes extends WorldGenerator
 {
 
-    private int field_40197_a;
+    private int field_40207_a;
 
     public WorldGenSpikes(int i)
     {
-        field_40197_a = i;
+        field_40207_a = i;
     }
 
     public boolean generate(World world, Random random, int i, int j, int k)
     {
-        if(!world.isAirBlock(i, j, k) || world.getBlockId(i, j - 1, k) != field_40197_a)
+        if(!world.isAirBlock(i, j, k) || world.getBlockId(i, j - 1, k) != field_40207_a)
         {
             return false;
         }
@@ -34,7 +34,7 @@ public class WorldGenSpikes extends WorldGenerator
             {
                 int j2 = j1 - i;
                 int l2 = l1 - k;
-                if(j2 * j2 + l2 * l2 <= i1 * i1 + 1 && world.getBlockId(j1, j - 1, l1) != field_40197_a)
+                if(j2 * j2 + l2 * l2 <= i1 * i1 + 1 && world.getBlockId(j1, j - 1, l1) != field_40207_a)
                 {
                     return false;
                 }

@@ -23,13 +23,13 @@ public class ComponentNetherBridgeStraight extends ComponentNetherBridgePiece
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        func_40022_a((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 1, 3, false);
+        func_40287_a((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 1, 3, false);
     }
 
-    public static ComponentNetherBridgeStraight func_40029_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentNetherBridgeStraight func_40289_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -3, 0, 5, 10, 19, l);
-        if(!func_40021_a(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else

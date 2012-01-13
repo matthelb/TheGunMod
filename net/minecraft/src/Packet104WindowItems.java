@@ -5,6 +5,7 @@
 package net.minecraft.src;
 
 import java.io.*;
+import java.util.List;
 
 // Referenced classes of package net.minecraft.src:
 //            Packet, ItemStack, NetHandler
@@ -19,6 +20,18 @@ public class Packet104WindowItems extends Packet
     {
     }
 
+    public Packet104WindowItems(int i, List list)
+    {
+        windowId = i;
+        itemStack = new ItemStack[list.size()];
+        for(int j = 0; j < itemStack.length; j++)
+        {
+            ItemStack itemstack = (ItemStack)list.get(j);
+            itemStack[j] = itemstack != null ? itemstack.copy() : null;
+        }
+
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {
@@ -27,7 +40,7 @@ public class Packet104WindowItems extends Packet
         itemStack = new ItemStack[word0];
         for(int i = 0; i < word0; i++)
         {
-            itemStack[i] = func_40187_b(datainputstream);
+            itemStack[i] = func_40262_b(datainputstream);
         }
 
     }

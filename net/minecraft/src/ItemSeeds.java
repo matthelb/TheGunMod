@@ -12,13 +12,13 @@ public class ItemSeeds extends Item
 {
 
     private int blockType;
-    private int field_40438_b;
+    private int field_40253_bQ;
 
     public ItemSeeds(int i, int j, int k)
     {
         super(i);
         blockType = j;
-        field_40438_b = k;
+        field_40253_bQ = k;
     }
 
     public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
@@ -32,7 +32,7 @@ public class ItemSeeds extends Item
             return false;
         }
         int i1 = world.getBlockId(i, j, k);
-        if(i1 == field_40438_b && world.isAirBlock(i, j + 1, k))
+        if(i1 == field_40253_bQ && world.isAirBlock(i, j + 1, k))
         {
             world.setBlockWithNotify(i, j + 1, k, blockType);
             itemstack.stackSize--;

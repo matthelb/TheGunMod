@@ -6,9 +6,10 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            EntityCreature, NBTTagCompound, World
+//            EntityCreature, INpc, NBTTagCompound, World
 
 public class EntityVillager extends EntityCreature
+    implements INpc
 {
 
     private int profession;

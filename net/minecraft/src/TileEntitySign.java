@@ -6,7 +6,7 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            TileEntity, NBTTagCompound
+//            TileEntity, NBTTagCompound, Packet130UpdateSign, Packet
 
 public class TileEntitySign extends TileEntity
 {
@@ -45,5 +45,21 @@ public class TileEntitySign extends TileEntity
             }
         }
 
+    }
+
+    public Packet getDescriptionPacket()
+    {
+        String as[] = new String[4];
+        for(int i = 0; i < 4; i++)
+        {
+            as[i] = signText[i];
+        }
+
+        return new Packet130UpdateSign(xCoord, yCoord, zCoord, as);
+    }
+
+    public boolean getIsEditAble()
+    {
+        return isEditable;
     }
 }

@@ -20,6 +20,13 @@ public class Packet43Experience extends Packet
     {
     }
 
+    public Packet43Experience(float f, int i, int j)
+    {
+        experience = f;
+        experienceTotal = i;
+        experienceLevel = j;
+    }
+
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

@@ -15,7 +15,7 @@ public enum EnumMovingObjectType
 */
     private static final EnumMovingObjectType allMovingObjectTypes[]; /* synthetic field */
 /*
-    public static final EnumMovingObjectType[] values()
+    public static EnumMovingObjectType[] values()
     {
         return (EnumMovingObjectType[])allMovingObjectTypes.clone();
     }

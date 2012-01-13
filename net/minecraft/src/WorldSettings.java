@@ -40,4 +40,15 @@ public final class WorldSettings
     {
         return mapFeaturesEnabled;
     }
+
+    public static int validGameType(int i)
+    {
+        switch(i)
+        {
+        case 0: // '\0'
+        case 1: // '\001'
+            return i;
+        }
+        return 0;
+    }
 }

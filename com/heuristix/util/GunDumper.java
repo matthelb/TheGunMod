@@ -2,10 +2,10 @@ package com.heuristix.util;
 
 import com.heuristix.*;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.lang.reflect.Constructor;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -68,7 +68,7 @@ public final class GunDumper {
                         out.close();
                     }
                 } catch (IllegalArgumentException e) {
-                    System.out.println("Could not read gun file: " + f.toString());
+                    System.out.println("Could not load gun file: " + f.toString());
                 }
             } else {
                 Object[] data = readOldGun(f);

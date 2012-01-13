@@ -20,7 +20,7 @@ public class ItemGlassBottle extends Item
 
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        MovingObjectPosition movingobjectposition = func_40402_a(world, entityplayer, true);
+        MovingObjectPosition movingobjectposition = func_40225_a(world, entityplayer, true);
         if(movingobjectposition == null)
         {
             return itemstack;

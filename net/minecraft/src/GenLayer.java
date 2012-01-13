@@ -20,7 +20,7 @@ public abstract class GenLayer
     private long chunkSeed;
     private long baseSeed;
 
-    public static GenLayer[] func_35497_a(long l)
+    public static GenLayer[] func_35019_a(long l)
     {
         GenLayer obj = new LayerIsland(1L);
         obj = new GenLayerZoomFuzzy(2000L, ((GenLayer) (obj)));
@@ -35,15 +35,15 @@ public abstract class GenLayer
         obj = new GenLayerMushroomIsland(5L, ((GenLayer) (obj)));
         byte byte0 = 4;
         GenLayer obj1 = obj;
-        obj1 = GenLayerZoom.func_35515_a(1000L, ((GenLayer) (obj1)), 0);
+        obj1 = GenLayerZoom.func_35025_a(1000L, ((GenLayer) (obj1)), 0);
         obj1 = new GenLayerRiverInit(100L, ((GenLayer) (obj1)));
-        obj1 = GenLayerZoom.func_35515_a(1000L, ((GenLayer) (obj1)), byte0 + 2);
+        obj1 = GenLayerZoom.func_35025_a(1000L, ((GenLayer) (obj1)), byte0 + 2);
         obj1 = new GenLayerRiver(1L, ((GenLayer) (obj1)));
         obj1 = new GenLayerSmooth(1000L, ((GenLayer) (obj1)));
         GenLayer obj2 = obj;
-        obj2 = GenLayerZoom.func_35515_a(1000L, ((GenLayer) (obj2)), 0);
+        obj2 = GenLayerZoom.func_35025_a(1000L, ((GenLayer) (obj2)), 0);
         obj2 = new GenLayerVillageLandscape(200L, ((GenLayer) (obj2)));
-        obj2 = GenLayerZoom.func_35515_a(1000L, ((GenLayer) (obj2)), 2);
+        obj2 = GenLayerZoom.func_35025_a(1000L, ((GenLayer) (obj2)), 2);
         GenLayer obj3 = new GenLayerTemperature(((GenLayer) (obj2)));
         GenLayer obj4 = new GenLayerDownfall(((GenLayer) (obj2)));
         for(int i = 0; i < byte0; i++)
@@ -66,13 +66,13 @@ public abstract class GenLayer
         obj2 = new GenLayerSmooth(1000L, ((GenLayer) (obj2)));
         obj2 = new GenLayerRiverMix(100L, ((GenLayer) (obj2)), ((GenLayer) (obj1)));
         GenLayerRiverMix genlayerrivermix = ((GenLayerRiverMix) (obj2));
-        obj3 = GenLayerSmoothZoom.func_35517_a(1000L, ((GenLayer) (obj3)), 2);
-        obj4 = GenLayerSmoothZoom.func_35517_a(1000L, ((GenLayer) (obj4)), 2);
+        obj3 = GenLayerSmoothZoom.func_35030_a(1000L, ((GenLayer) (obj3)), 2);
+        obj4 = GenLayerSmoothZoom.func_35030_a(1000L, ((GenLayer) (obj4)), 2);
         GenLayerZoomVoronoi genlayerzoomvoronoi = new GenLayerZoomVoronoi(10L, ((GenLayer) (obj2)));
-        ((GenLayer) (obj2)).initWorldGenSeed(l);
-        ((GenLayer) (obj3)).initWorldGenSeed(l);
-        ((GenLayer) (obj4)).initWorldGenSeed(l);
-        genlayerzoomvoronoi.initWorldGenSeed(l);
+        ((GenLayer) (obj2)).func_35015_b(l);
+        ((GenLayer) (obj3)).func_35015_b(l);
+        ((GenLayer) (obj4)).func_35015_b(l);
+        genlayerzoomvoronoi.func_35015_b(l);
         return (new GenLayer[] {
             obj2, genlayerzoomvoronoi, obj3, obj4, genlayerrivermix
         });
@@ -89,12 +89,12 @@ public abstract class GenLayer
         baseSeed += l;
     }
 
-    public void initWorldGenSeed(long l)
+    public void func_35015_b(long l)
     {
         worldGenSeed = l;
         if(parent != null)
         {
-            parent.initWorldGenSeed(l);
+            parent.func_35015_b(l);
         }
         worldGenSeed *= worldGenSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
         worldGenSeed += baseSeed;
@@ -104,7 +104,7 @@ public abstract class GenLayer
         worldGenSeed += baseSeed;
     }
 
-    public void initChunkSeed(long l, long l1)
+    public void func_35017_a(long l, long l1)
     {
         chunkSeed = worldGenSeed;
         chunkSeed *= chunkSeed * 0x5851f42d4c957f2dL + 0x14057b7ef767814fL;
@@ -129,5 +129,5 @@ public abstract class GenLayer
         return j;
     }
 
-    public abstract int[] getInts(int i, int j, int k, int l);
+    public abstract int[] func_35018_a(int i, int j, int k, int l);
 }

@@ -14,31 +14,21 @@ import java.util.Random;
 public class BlockPistonExtension extends Block
 {
 
-    private int field_31053_a;
+    private int field_31046_a;
 
     public BlockPistonExtension(int i, int j)
     {
         super(i, j, Material.piston);
-        field_31053_a = -1;
+        field_31046_a = -1;
         setStepSound(soundStoneFootstep);
         setHardness(0.5F);
-    }
-
-    public void func_31052_a_(int i)
-    {
-        field_31053_a = i;
-    }
-
-    public void func_31051_a()
-    {
-        field_31053_a = -1;
     }
 
     public void onBlockRemoval(World world, int i, int j, int k)
     {
         super.onBlockRemoval(world, i, j, k);
         int l = world.getBlockMetadata(i, j, k);
-        int j1 = Facing.field_31057_a[func_31050_c(l)];
+        int j1 = Facing.field_31052_a[func_31045_b(l)];
         i += Facing.offsetsXForSide[j1];
         j += Facing.offsetsYForSide[j1];
         k += Facing.offsetsZForSide[j1];
@@ -56,12 +46,12 @@ public class BlockPistonExtension extends Block
 
     public int getBlockTextureFromSideAndMetadata(int i, int j)
     {
-        int k = func_31050_c(j);
+        int k = func_31045_b(j);
         if(i == k)
         {
-            if(field_31053_a >= 0)
+            if(field_31046_a >= 0)
             {
-                return field_31053_a;
+                return field_31046_a;
             }
             if((j & 8) != 0)
             {
@@ -71,7 +61,7 @@ public class BlockPistonExtension extends Block
                 return blockIndexInTexture;
             }
         }
-        return i != Facing.field_31057_a[k] ? 108 : 107;
+        return i != Facing.field_31052_a[k] ? 108 : 107;
     }
 
     public int getRenderType()
@@ -107,7 +97,7 @@ public class BlockPistonExtension extends Block
     public void getCollidingBoundingBoxes(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist)
     {
         int l = world.getBlockMetadata(i, j, k);
-        switch(func_31050_c(l))
+        switch(func_31045_b(l))
         {
         case 0: // '\0'
             setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);
@@ -157,7 +147,7 @@ public class BlockPistonExtension extends Block
     public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
     {
         int l = iblockaccess.getBlockMetadata(i, j, k);
-        switch(func_31050_c(l))
+        switch(func_31045_b(l))
         {
         case 0: // '\0'
             setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);
@@ -187,7 +177,7 @@ public class BlockPistonExtension extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        int i1 = func_31050_c(world.getBlockMetadata(i, j, k));
+        int i1 = func_31045_b(world.getBlockMetadata(i, j, k));
         int j1 = world.getBlockId(i - Facing.offsetsXForSide[i1], j - Facing.offsetsYForSide[i1], k - Facing.offsetsZForSide[i1]);
         if(j1 != Block.pistonBase.blockID && j1 != Block.pistonStickyBase.blockID)
         {
@@ -198,7 +188,7 @@ public class BlockPistonExtension extends Block
         }
     }
 
-    public static int func_31050_c(int i)
+    public static int func_31045_b(int i)
     {
         return i & 7;
     }

@@ -1,7 +1,9 @@
 package com.heuristix;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
+
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.World;
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,10 +37,10 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     public abstract String getReloadSound();
 
-    public boolean handleAmmunitionConsumption(EntityPlayer player, Minecraft mc) {
+    public boolean handleAmmunitionConsumption(EntityPlayer player) {
         ItemStack gun = player.getCurrentEquippedItem();
         if (isReloading())
-            stopReloading(mc);
+            stopReloading();
         if (gun.getItemDamage() < gun.getMaxDamage()) {
             gun.damageItem(1, player);
             return true;
@@ -46,24 +48,12 @@ public abstract class ItemGun extends ItemProjectileShooter {
         return false;
     }
 
-    @Override
-    public void onFire(World world, EntityPlayer player) {
-        double factor = Math.max(0.75, Math.min(Util.nextGaussian() + 1, 1.25));
-        mod_Guns.recoilY += Math.min(factor * getRecoilY(), player.rotationPitch + 90.0F);
-        mod_Guns.recoilX += factor * getRecoilX();
-        Vec3D pos = Util.getProjectedPoint(player, 0.8);
-        float radians = Util.toRadians(player.rotationYaw);
-        world.spawnParticle("smoke", pos.xCoord - (MathHelper.cos(radians) * 0.3f), pos.yCoord, pos.zCoord - (MathHelper.sin(radians) * 0.3f), 0, 0, 0);
-        //world.entityJoinedWorld(new EntityFlash(world, player.posX, player.posY + player.getEyeHeight(), player.posZ, 15, 1, 2));
-    }
-
-    public boolean reload(EntityPlayer player, Minecraft mc) {
+    public boolean reload(EntityPlayer player) {
         ItemStack equipped = player.getCurrentEquippedItem();
         if (equipped != null && equipped.itemID == shiftedIndex && equipped.getItemDamage() > 0) {
             if (!reloading) {
                 int slot = Util.getItemSlot(player.inventory, getProjectile().shiftedIndex);
                 if (slot != -1) {
-                    Util.playStreamingAtEntity(player, getReloadSound(), "guns.reloading", 1.0f, 1.0f / (itemRand.nextFloat() * 0.4f + 0.8f), mc);
                     reloading = true;
                     reloadFinishTime = System.currentTimeMillis() + getReloadTime();
                     reloadingPlayer = player;
@@ -76,15 +66,14 @@ public abstract class ItemGun extends ItemProjectileShooter {
         return false;
     }
 
-    public void finishReloading(Minecraft mc) {
+    public void finishReloading() {
         int amount = Math.min(Util.getCount(reloadingPlayer.inventory, getProjectile().shiftedIndex), Math.min(reloadingStack.getItemDamage(), reloadingStack.getMaxDamage()));
         reloadingStack.damageItem(-amount, reloadingPlayer);
         Util.remove(reloadingPlayer.inventory, getProjectile().shiftedIndex, amount);
-        stopReloading(mc);
+        stopReloading();
     }
 
-    public void stopReloading(Minecraft mc) {
-        Util.playStreamingAtEntity(reloadingPlayer, null, "guns.reloading", 0.0f, 0.0f, mc);
+    public void stopReloading() {
         reloadFinishTime = System.currentTimeMillis();
         reloading = false;
     }

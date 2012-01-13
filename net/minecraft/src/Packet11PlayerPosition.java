@@ -17,16 +17,6 @@ public class Packet11PlayerPosition extends Packet10Flying
         moving = true;
     }
 
-    public Packet11PlayerPosition(double d, double d1, double d2, double d3, boolean flag)
-    {
-        xPosition = d;
-        yPosition = d1;
-        stance = d2;
-        zPosition = d3;
-        onGround = flag;
-        moving = true;
-    }
-
     public void readPacketData(DataInputStream datainputstream)
         throws IOException
     {

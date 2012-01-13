@@ -70,7 +70,7 @@ public class BlockFenceGate extends Block
         } else
         {
             int i1 = (MathHelper.floor_double((double)((entityplayer.rotationYaw * 4F) / 360F) + 0.5D) & 3) % 4;
-            int j1 = func_35290_f(l);
+            int j1 = func_35071_d(l);
             if(j1 == (i1 + 2) % 4)
             {
                 l = i1;
@@ -86,7 +86,7 @@ public class BlockFenceGate extends Block
         return (i & 4) != 0;
     }
 
-    public static int func_35290_f(int i)
+    public static int func_35071_d(int i)
     {
         return i & 3;
     }

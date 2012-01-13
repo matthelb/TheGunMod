@@ -6,8 +6,8 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            EntityDamageSource, EntityDamageSourceIndirect, EntityLiving, EntityPlayer, 
-//            EntityArrow, Entity, EntityFireball
+//            EntityDamageSource, EntityDamageSourceIndirect, EntityPlayer, StatCollector, 
+//            EntityLiving, EntityArrow, Entity, EntityFireball
 
 public class DamageSource
 {
@@ -122,6 +122,13 @@ public class DamageSource
     {
         fireDamage = true;
         return this;
+    }
+
+    public String func_35075_a(EntityPlayer entityplayer)
+    {
+        return StatCollector.translateToLocalFormatted((new StringBuilder()).append("death.").append(damageType).toString(), new Object[] {
+            entityplayer.username
+        });
     }
 
     public boolean fireDamage()

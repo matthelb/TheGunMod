@@ -104,7 +104,7 @@ public class BlockRail extends Block
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if(!world.multiplayerWorld)
+        if(!world.singleplayerWorld)
         {
             refreshTrackShape(world, i, j, k, true);
         }
@@ -112,7 +112,7 @@ public class BlockRail extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         }
@@ -180,7 +180,7 @@ public class BlockRail extends Block
 
     private void refreshTrackShape(World world, int i, int j, int k, boolean flag)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return;
         } else

@@ -4,6 +4,8 @@
 
 package net.minecraft.src;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
@@ -18,8 +20,8 @@ public class StringTranslate
         translateTable = new Properties();
         try
         {
-            translateTable.load((net.minecraft.src.StringTranslate.class).getResourceAsStream("/lang/en_US.lang"));
-            translateTable.load((net.minecraft.src.StringTranslate.class).getResourceAsStream("/lang/stats_US.lang"));
+            translateTable.load(new FileInputStream(new File("C:\\Users\\Matt\\My Files\\Developement\\minecraft-mods\\MCP-MP\\server\\lang\\en_US.lang")));
+            translateTable.load(new FileInputStream(new File("C:\\Users\\Matt\\My Files\\Developement\\minecraft-mods\\MCP-MP\\server\\lang\\stats_US.lang")));
         }
         catch(IOException ioexception)
         {
@@ -41,11 +43,6 @@ public class StringTranslate
     {
         String s1 = translateTable.getProperty(s, s);
         return String.format(s1, aobj);
-    }
-
-    public String translateNamedKey(String s)
-    {
-        return translateTable.getProperty((new StringBuilder()).append(s).append(".name").toString(), "");
     }
 
 }

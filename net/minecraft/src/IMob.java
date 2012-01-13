@@ -5,6 +5,10 @@
 package net.minecraft.src;
 
 
+// Referenced classes of package net.minecraft.src:
+//            IAnimals
+
 public interface IMob
+    extends IAnimals
 {
 }

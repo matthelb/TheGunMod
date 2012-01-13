@@ -20,14 +20,14 @@ public class EntityEnderman extends EntityMob
     private static boolean canCarryBlocks[];
     public boolean isAttacking;
     private int teleportDelay;
-    private int field_35185_e;
+    private int field_35236_h;
 
     public EntityEnderman(World world)
     {
         super(world);
         isAttacking = false;
         teleportDelay = 0;
-        field_35185_e = 0;
+        field_35236_h = 0;
         texture = "/mob/enderman.png";
         moveSpeed = 0.2F;
         attackStrength = 7;
@@ -68,22 +68,17 @@ public class EntityEnderman extends EntityMob
         {
             if(shouldAttackPlayer(entityplayer))
             {
-                if(field_35185_e++ == 5)
+                if(field_35236_h++ == 5)
                 {
-                    field_35185_e = 0;
+                    field_35236_h = 0;
                     return entityplayer;
                 }
             } else
             {
-                field_35185_e = 0;
+                field_35236_h = 0;
             }
         }
         return null;
-    }
-
-    public int getEntityBrightnessForRender(float f)
-    {
-        return super.getEntityBrightnessForRender(f);
     }
 
     public float getEntityBrightness(float f)
@@ -120,7 +115,7 @@ public class EntityEnderman extends EntityMob
         }
         isAttacking = entityToAttack != null;
         moveSpeed = entityToAttack == null ? 0.3F : 6.5F;
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             if(getCarried() == 0)
             {
@@ -157,7 +152,7 @@ public class EntityEnderman extends EntityMob
             worldObj.spawnParticle("portal", posX + (rand.nextDouble() - 0.5D) * (double)width, (posY + rand.nextDouble() * (double)height) - 0.25D, posZ + (rand.nextDouble() - 0.5D) * (double)width, (rand.nextDouble() - 0.5D) * 2D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2D);
         }
 
-        if(worldObj.isDaytime() && !worldObj.multiplayerWorld)
+        if(worldObj.isDaytime() && !worldObj.singleplayerWorld)
         {
             float f = getEntityBrightness(1.0F);
             if(f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
@@ -176,7 +171,7 @@ public class EntityEnderman extends EntityMob
         {
             faceEntity(entityToAttack, 100F, 100F);
         }
-        if(!worldObj.multiplayerWorld && isEntityAlive())
+        if(!worldObj.singleplayerWorld && isEntityAlive())
         {
             if(entityToAttack != null)
             {

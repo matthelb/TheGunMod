@@ -7,7 +7,7 @@ package net.minecraft.src;
 
 // Referenced classes of package net.minecraft.src:
 //            BlockFlower, AxisAlignedBB, Block, World, 
-//            Material, IBlockAccess
+//            Material
 
 public class BlockLilyPad extends BlockFlower
 {
@@ -30,24 +30,9 @@ public class BlockLilyPad extends BlockFlower
         return AxisAlignedBB.getBoundingBoxFromPool((double)i + minX, (double)j + minY, (double)k + minZ, (double)i + maxX, (double)j + maxY, (double)k + maxZ);
     }
 
-    public int getBlockColor()
-    {
-        return 0x208030;
-    }
-
-    public int getRenderColor(int i)
-    {
-        return 0x208030;
-    }
-
     public boolean canPlaceBlockAt(World world, int i, int j, int k)
     {
         return super.canPlaceBlockAt(world, i, j, k);
-    }
-
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
-    {
-        return 0x208030;
     }
 
     protected boolean canThisPlantGrowOnThisBlockID(int i)

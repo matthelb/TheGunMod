@@ -18,9 +18,9 @@ public class StructureStrongholdPieces
 
     private static final StructureStrongholdPieceWeight pieceWeightArray[];
     private static List structurePieceList;
-    private static Class field_40752_d;
+    private static Class field_40542_d;
     static int totalWeight = 0;
-    private static final StructureStrongholdStones field_35854_d = new StructureStrongholdStones(null);
+    private static final StructureStrongholdStones field_35627_d = new StructureStrongholdStones(null);
 
     public StructureStrongholdPieces()
     {
@@ -38,7 +38,7 @@ public class StructureStrongholdPieces
             structurePieceList.add(structurestrongholdpieceweight);
         }
 
-        field_40752_d = null;
+        field_40542_d = null;
     }
 
     private static boolean canAddStructurePieces()
@@ -63,27 +63,27 @@ public class StructureStrongholdPieces
         Object obj = null;
         if(class1 == (net.minecraft.src.ComponentStrongholdStraight.class))
         {
-            obj = ComponentStrongholdStraight.func_35047_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdStraight.func_35338_a(list, random, i, j, k, l, i1);
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdPrison.class))
         {
-            obj = ComponentStrongholdPrison.func_35063_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdPrison.func_35332_a(list, random, i, j, k, l, i1);
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdLeftTurn.class))
         {
-            obj = ComponentStrongholdLeftTurn.func_35045_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdLeftTurn.func_35330_a(list, random, i, j, k, l, i1);
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdRightTurn.class))
         {
-            obj = ComponentStrongholdRightTurn.func_35045_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdRightTurn.func_35330_a(list, random, i, j, k, l, i1);
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdRoomCrossing.class))
         {
-            obj = ComponentStrongholdRoomCrossing.func_35059_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdRoomCrossing.func_35346_a(list, random, i, j, k, l, i1);
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdStairsStraight.class))
         {
-            obj = ComponentStrongholdStairsStraight.func_35053_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdStairsStraight.func_35344_a(list, random, i, j, k, l, i1);
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdStairs.class))
         {
@@ -91,24 +91,24 @@ public class StructureStrongholdPieces
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdCrossing.class))
         {
-            obj = ComponentStrongholdCrossing.func_35039_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdCrossing.func_35350_a(list, random, i, j, k, l, i1);
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdChestCorridor.class))
         {
-            obj = ComponentStrongholdChestCorridor.func_40010_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdChestCorridor.func_40311_a(list, random, i, j, k, l, i1);
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdLibrary.class))
         {
-            obj = ComponentStrongholdLibrary.func_35055_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdLibrary.func_35334_a(list, random, i, j, k, l, i1);
         } else
         if(class1 == (net.minecraft.src.ComponentStrongholdPortalRoom.class))
         {
-            obj = ComponentStrongholdPortalRoom.func_40014_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdPortalRoom.func_40315_a(list, random, i, j, k, l, i1);
         }
         return ((ComponentStronghold) (obj));
     }
 
-    private static ComponentStronghold func_35847_b(ComponentStrongholdStairs2 var0, List var1, Random var2, int var3, int var4, int var5, int var6, int var7)
+    private static ComponentStronghold func_35623_b(ComponentStrongholdStairs2 var0, List var1, Random var2, int var3, int var4, int var5, int var6, int var7)
     {
         if(!canAddStructurePieces())
         {
@@ -116,10 +116,10 @@ public class StructureStrongholdPieces
         }
         else
         {
-            if(field_40752_d != null)
+            if(field_40542_d != null)
             {
-                ComponentStronghold var8 = getStrongholdComponentFromWeightedPiece(field_40752_d, var1, var2, var3, var4, var5, var6, var7);
-                field_40752_d = null;
+                ComponentStronghold var8 = getStrongholdComponentFromWeightedPiece(field_40542_d, var1, var2, var3, var4, var5, var6, var7);
+                field_40542_d = null;
                 if(var8 != null)
                 {
                     return var8;
@@ -140,7 +140,7 @@ public class StructureStrongholdPieces
                     var9 -= var11.pieceWeight;
                     if(var9 < 0)
                     {
-                        if(!var11.canSpawnMoreStructuresOfType(var7) || var11 == var0.field_35038_a)
+                        if(!var11.canSpawnMoreStructuresOfType(var7) || var11 == var0.field_35329_a)
                         {
                             break;
                         }
@@ -149,7 +149,7 @@ public class StructureStrongholdPieces
                         if(var12 != null)
                         {
                             ++var11.instancesSpawned;
-                            var0.field_35038_a = var11;
+                            var0.field_35329_a = var11;
                             if(!var11.canSpawnMoreStructures())
                             {
                                 structurePieceList.remove(var11);
@@ -161,7 +161,7 @@ public class StructureStrongholdPieces
                 }
             }
 
-            StructureBoundingBox var14 = ComponentStrongholdCorridor.func_35051_a(var1, var2, var3, var4, var5, var6);
+            StructureBoundingBox var14 = ComponentStrongholdCorridor.func_35342_a(var1, var2, var3, var4, var5, var6);
             if(var14 != null && var14.minY > 1)
             {
                 return new ComponentStrongholdCorridor(var7, var2, var14, var6);
@@ -173,38 +173,38 @@ public class StructureStrongholdPieces
         }
     }
 
-    private static StructureComponent func_35848_c(ComponentStrongholdStairs2 componentstrongholdstairs2, List list, Random random, int i, int j, int k, int l, int i1)
+    private static StructureComponent func_35621_c(ComponentStrongholdStairs2 componentstrongholdstairs2, List list, Random random, int i, int j, int k, int l, int i1)
     {
         if(i1 > 50)
         {
             return null;
         }
-        if(Math.abs(i - componentstrongholdstairs2.getBoundingBox().minX) > 112 || Math.abs(k - componentstrongholdstairs2.getBoundingBox().minZ) > 112)
+        if(Math.abs(i - componentstrongholdstairs2.getStructureBoundingBox().minX) > 112 || Math.abs(k - componentstrongholdstairs2.getStructureBoundingBox().minZ) > 112)
         {
             return null;
         }
-        ComponentStronghold componentstronghold = func_35847_b(componentstrongholdstairs2, list, random, i, j, k, l, i1 + 1);
+        ComponentStronghold componentstronghold = func_35623_b(componentstrongholdstairs2, list, random, i, j, k, l, i1 + 1);
         if(componentstronghold != null)
         {
             list.add(componentstronghold);
-            componentstrongholdstairs2.field_35037_b.add(componentstronghold);
+            componentstrongholdstairs2.field_35328_b.add(componentstronghold);
         }
         return componentstronghold;
     }
 
-    static StructureComponent func_35850_a(ComponentStrongholdStairs2 componentstrongholdstairs2, List list, Random random, int i, int j, int k, int l, int i1)
+    static StructureComponent func_35624_a(ComponentStrongholdStairs2 componentstrongholdstairs2, List list, Random random, int i, int j, int k, int l, int i1)
     {
-        return func_35848_c(componentstrongholdstairs2, list, random, i, j, k, l, i1);
+        return func_35621_c(componentstrongholdstairs2, list, random, i, j, k, l, i1);
     }
 
-    static Class func_40751_a(Class class1)
+    static Class func_40541_a(Class class1)
     {
-        return field_40752_d = class1;
+        return field_40542_d = class1;
     }
 
     static StructureStrongholdStones getStrongholdStones()
     {
-        return field_35854_d;
+        return field_35627_d;
     }
 
     static 

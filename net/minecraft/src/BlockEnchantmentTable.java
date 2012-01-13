@@ -4,11 +4,10 @@
 
 package net.minecraft.src;
 
-import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            BlockContainer, Material, World, Block, 
-//            TileEntityEnchantmentTable, EntityPlayer, TileEntity
+//            BlockContainer, Material, TileEntityEnchantmentTable, World, 
+//            EntityPlayer, TileEntity
 
 public class BlockEnchantmentTable extends BlockContainer
 {
@@ -23,40 +22,6 @@ public class BlockEnchantmentTable extends BlockContainer
     public boolean renderAsNormalBlock()
     {
         return false;
-    }
-
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
-    {
-        super.randomDisplayTick(world, i, j, k, random);
-        for(int l = i - 2; l <= i + 2; l++)
-        {
-            for(int i1 = k - 2; i1 <= k + 2; i1++)
-            {
-                if(l > i - 2 && l < i + 2 && i1 == k - 1)
-                {
-                    i1 = k + 2;
-                }
-                if(random.nextInt(16) != 0)
-                {
-                    continue;
-                }
-                for(int j1 = j; j1 <= j + 1; j1++)
-                {
-                    if(world.getBlockId(l, j1, i1) != Block.bookShelf.blockID)
-                    {
-                        continue;
-                    }
-                    if(!world.isAirBlock((l - i) / 2 + i, j1, (i1 - k) / 2 + k))
-                    {
-                        break;
-                    }
-                    world.spawnParticle("enchantmenttable", (double)i + 0.5D, (double)j + 2D, (double)k + 0.5D, (double)((float)(l - i) + random.nextFloat()) - 0.5D, (float)(j1 - j) - random.nextFloat() - 1.0F, (double)((float)(i1 - k) + random.nextFloat()) - 0.5D);
-                }
-
-            }
-
-        }
-
     }
 
     public boolean isOpaqueCube()
@@ -91,7 +56,7 @@ public class BlockEnchantmentTable extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.multiplayerWorld)
+        if(world.singleplayerWorld)
         {
             return true;
         } else

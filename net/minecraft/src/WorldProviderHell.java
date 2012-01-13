@@ -6,8 +6,8 @@ package net.minecraft.src;
 
 
 // Referenced classes of package net.minecraft.src:
-//            WorldProvider, WorldChunkManagerHell, BiomeGenBase, Vec3D, 
-//            ChunkProviderHell, World, Block, IChunkProvider
+//            WorldProvider, WorldChunkManagerHell, BiomeGenBase, ChunkProviderHell, 
+//            World, Block, IChunkProvider
 
 public class WorldProviderHell extends WorldProvider
 {
@@ -19,15 +19,10 @@ public class WorldProviderHell extends WorldProvider
     public void registerWorldChunkManager()
     {
         worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.hell, 1.0F, 0.0F);
-        isAlternateDimension = true;
+        canSleepInWorld = true;
         isHellWorld = true;
         hasNoSky = true;
         worldType = -1;
-    }
-
-    public Vec3D getFogColor(float f, float f1)
-    {
-        return Vec3D.createVector(0.20000000298023224D, 0.029999999329447746D, 0.029999999329447746D);
     }
 
     protected void generateLightBrightnessTable()
@@ -43,7 +38,7 @@ public class WorldProviderHell extends WorldProvider
 
     public IChunkProvider getChunkProvider()
     {
-        return new ChunkProviderHell(worldObj, worldObj.getWorldSeed());
+        return new ChunkProviderHell(worldObj, worldObj.getRandomSeed());
     }
 
     public boolean canCoordinateBeSpawn(int i, int j)

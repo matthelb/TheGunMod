@@ -7,8 +7,8 @@ package net.minecraft.src;
 
 // Referenced classes of package net.minecraft.src:
 //            TileEntity, IInventory, ItemStack, NBTTagCompound, 
-//            NBTTagList, World, Item, BlockFurnace, 
-//            FurnaceRecipes, Block, Material, ModLoader, 
+//            NBTTagList, World, BlockFurnace, FurnaceRecipes, 
+//            Item, Block, Material, ModLoader, 
 //            EntityPlayer
 
 public class TileEntityFurnace extends TileEntity
@@ -119,20 +119,6 @@ public class TileEntityFurnace extends TileEntity
         return 64;
     }
 
-    public int getCookProgressScaled(int i)
-    {
-        return (furnaceCookTime * i) / 200;
-    }
-
-    public int getBurnTimeRemainingScaled(int i)
-    {
-        if(currentItemBurnTime == 0)
-        {
-            currentItemBurnTime = 200;
-        }
-        return (furnaceBurnTime * i) / currentItemBurnTime;
-    }
-
     public boolean isBurning()
     {
         return furnaceBurnTime > 0;
@@ -146,7 +132,7 @@ public class TileEntityFurnace extends TileEntity
         {
             furnaceBurnTime--;
         }
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             if(furnaceBurnTime == 0 && canSmelt())
             {
@@ -156,13 +142,7 @@ public class TileEntityFurnace extends TileEntity
                     flag1 = true;
                     if(furnaceItemStacks[1] != null)
                     {
-                        if(furnaceItemStacks[1].getItem().hasContainerItem())
-                        {
-                            furnaceItemStacks[1] = new ItemStack(furnaceItemStacks[1].getItem().getContainerItem());
-                        } else
-                        {
-                            furnaceItemStacks[1].stackSize--;
-                        }
+                        furnaceItemStacks[1].stackSize--;
                         if(furnaceItemStacks[1].stackSize == 0)
                         {
                             furnaceItemStacks[1] = null;
@@ -217,8 +197,10 @@ public class TileEntityFurnace extends TileEntity
         if(furnaceItemStacks[2].stackSize < getInventoryStackLimit() && furnaceItemStacks[2].stackSize < furnaceItemStacks[2].getMaxStackSize())
         {
             return true;
+        } else
+        {
+            return furnaceItemStacks[2].stackSize < itemstack.getMaxStackSize();
         }
-        return furnaceItemStacks[2].stackSize < itemstack.getMaxStackSize();
     }
 
     public void smeltItem()
@@ -236,13 +218,7 @@ public class TileEntityFurnace extends TileEntity
         {
             furnaceItemStacks[2].stackSize++;
         }
-        if(furnaceItemStacks[0].getItem().hasContainerItem())
-        {
-            furnaceItemStacks[0] = new ItemStack(furnaceItemStacks[0].getItem().getContainerItem());
-        } else
-        {
-            furnaceItemStacks[0].stackSize--;
-        }
+        furnaceItemStacks[0].stackSize--;
         if(furnaceItemStacks[0].stackSize <= 0)
         {
             furnaceItemStacks[0] = null;
@@ -275,13 +251,9 @@ public class TileEntityFurnace extends TileEntity
         if(i == Block.sapling.blockID)
         {
             return 100;
-        }
-        if(i == Item.blazeRod.shiftedIndex)
-        {
-            return 2400;
         } else
         {
-            return ModLoader.AddAllFuel(i, itemstack.getItemDamage());
+            return i != Item.blazeRod.shiftedIndex ? ModLoader.AddAllFuel(i) : 2400;
         }
     }
 
@@ -290,8 +262,10 @@ public class TileEntityFurnace extends TileEntity
         if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
         {
             return false;
+        } else
+        {
+            return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
         }
-        return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
     }
 
     public void openChest()

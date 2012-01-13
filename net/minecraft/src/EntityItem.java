@@ -10,17 +10,17 @@ import java.util.Random;
 //            Entity, MathHelper, World, Material, 
 //            AxisAlignedBB, Block, DamageSource, NBTTagCompound, 
 //            ItemStack, EntityPlayer, InventoryPlayer, AchievementList, 
-//            Item, ModLoader
+//            Item, StatCollector
 
 public class EntityItem extends Entity
 {
 
     public ItemStack item;
-    private int field_803_e;
+    private int field_9170_e;
     public int age;
     public int delayBeforeCanPickup;
     private int health;
-    public float field_804_d;
+    public float field_432_ae;
 
     public EntityItem(World world, double d, double d1, double d2, 
             ItemStack itemstack)
@@ -28,15 +28,15 @@ public class EntityItem extends Entity
         super(world);
         age = 0;
         health = 5;
-        field_804_d = (float)(Math.random() * 3.1415926535897931D * 2D);
+        field_432_ae = (float)(Math.random() * 3.1415926535897931D * 2D);
         setSize(0.25F, 0.25F);
         yOffset = height / 2.0F;
         setPosition(d, d1, d2);
         item = itemstack;
         rotationYaw = (float)(Math.random() * 360D);
-        motionX = (float)(Math.random() * 0.20000000298023221D - 0.10000000149011611D);
-        motionY = 0.20000000298023221D;
-        motionZ = (float)(Math.random() * 0.20000000298023221D - 0.10000000149011611D);
+        motionX = (float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D);
+        motionY = 0.20000000298023224D;
+        motionZ = (float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D);
     }
 
     protected boolean canTriggerWalking()
@@ -49,7 +49,7 @@ public class EntityItem extends Entity
         super(world);
         age = 0;
         health = 5;
-        field_804_d = (float)(Math.random() * 3.1415926535897931D * 2D);
+        field_432_ae = (float)(Math.random() * 3.1415926535897931D * 2D);
         setSize(0.25F, 0.25F);
         yOffset = height / 2.0F;
     }
@@ -71,7 +71,7 @@ public class EntityItem extends Entity
         motionY -= 0.039999999105930328D;
         if(worldObj.getBlockMaterial(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) == Material.lava)
         {
-            motionY = 0.20000000298023221D;
+            motionY = 0.20000000298023224D;
             motionX = (rand.nextFloat() - rand.nextFloat()) * 0.2F;
             motionZ = (rand.nextFloat() - rand.nextFloat()) * 0.2F;
             worldObj.playSoundAtEntity(this, "random.fizz", 0.4F, 2.0F + rand.nextFloat() * 0.4F);
@@ -95,7 +95,7 @@ public class EntityItem extends Entity
         {
             motionY *= -0.5D;
         }
-        field_803_e++;
+        field_9170_e++;
         age++;
         if(age >= 6000)
         {
@@ -145,7 +145,7 @@ public class EntityItem extends Entity
 
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
-        if(worldObj.multiplayerWorld)
+        if(worldObj.singleplayerWorld)
         {
             return;
         }
@@ -168,7 +168,6 @@ public class EntityItem extends Entity
             {
                 entityplayer.triggerAchievement(AchievementList.blazeRod);
             }
-            ModLoader.OnItemPickup(entityplayer, item);
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
             entityplayer.onItemPickup(this, i);
             if(item.stackSize <= 0)
@@ -176,5 +175,10 @@ public class EntityItem extends Entity
                 setEntityDead();
             }
         }
+    }
+
+    public String func_35150_Y()
+    {
+        return StatCollector.translateToLocal((new StringBuilder()).append("item.").append(item.func_35616_k()).toString());
     }
 }

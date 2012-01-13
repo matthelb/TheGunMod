@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Random;
 
 // Referenced classes of package net.minecraft.src:
-//            Entity, EntityPlayer, MathHelper, AxisAlignedBB, 
-//            World, ItemStack, Item, Vec3D, 
+//            Entity, EntityPlayer, MathHelper, World, 
+//            ItemStack, Item, AxisAlignedBB, Vec3D, 
 //            MovingObjectPosition, DamageSource, Material, NBTTagCompound, 
 //            EntityItem, StatList
 
@@ -33,9 +33,6 @@ public class EntityFishHook extends Entity
     private double fishZ;
     private double fishYaw;
     private double fishPitch;
-    private double velocityX;
-    private double velocityY;
-    private double velocityZ;
 
     public EntityFishHook(World world)
     {
@@ -50,14 +47,7 @@ public class EntityFishHook extends Entity
         ticksCatchable = 0;
         bobber = null;
         setSize(0.25F, 0.25F);
-        ignoreFrustumCheck = true;
-    }
-
-    public EntityFishHook(World world, double d, double d1, double d2)
-    {
-        this(world);
-        setPosition(d, d1, d2);
-        ignoreFrustumCheck = true;
+        ignoreFrustrumCheck = true;
     }
 
     public EntityFishHook(World world, EntityPlayer entityplayer)
@@ -72,7 +62,7 @@ public class EntityFishHook extends Entity
         ticksInAir = 0;
         ticksCatchable = 0;
         bobber = null;
-        ignoreFrustumCheck = true;
+        ignoreFrustrumCheck = true;
         angler = entityplayer;
         angler.fishEntity = this;
         setSize(0.25F, 0.25F);
@@ -91,13 +81,6 @@ public class EntityFishHook extends Entity
 
     protected void entityInit()
     {
-    }
-
-    public boolean isInRangeToRenderDist(double d)
-    {
-        double d1 = boundingBox.getAverageEdgeLength() * 4D;
-        d1 *= 64D;
-        return d < d1 * d1;
     }
 
     public void calculateVelocity(double d, double d1, double d2, float f, 
@@ -122,27 +105,6 @@ public class EntityFishHook extends Entity
         ticksInGround = 0;
     }
 
-    public void setPositionAndRotation2(double d, double d1, double d2, float f, 
-            float f1, int i)
-    {
-        fishX = d;
-        fishY = d1;
-        fishZ = d2;
-        fishYaw = f;
-        fishPitch = f1;
-        fishPosRotationIncrements = i;
-        motionX = velocityX;
-        motionY = velocityY;
-        motionZ = velocityZ;
-    }
-
-    public void setVelocity(double d, double d1, double d2)
-    {
-        velocityX = motionX = d;
-        velocityY = motionY = d1;
-        velocityZ = motionZ = d2;
-    }
-
     public void onUpdate()
     {
         super.onUpdate();
@@ -161,7 +123,7 @@ public class EntityFishHook extends Entity
             setRotation(rotationYaw, rotationPitch);
             return;
         }
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             ItemStack itemstack = angler.getCurrentEquippedItem();
             if(angler.isDead || !angler.isEntityAlive() || itemstack == null || itemstack.getItem() != Item.fishingRod || getDistanceSqToEntity(angler) > 1024D)
@@ -233,7 +195,7 @@ public class EntityFishHook extends Entity
             }
             float f2 = 0.3F;
             AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f2, f2, f2);
-            MovingObjectPosition movingobjectposition1 = axisalignedbb.func_1169_a(vec3d, vec3d1);
+            MovingObjectPosition movingobjectposition1 = axisalignedbb.func_706_a(vec3d, vec3d1);
             if(movingobjectposition1 == null)
             {
                 continue;
@@ -364,11 +326,6 @@ public class EntityFishHook extends Entity
         inTile = nbttagcompound.getByte("inTile") & 0xff;
         shake = nbttagcompound.getByte("shake") & 0xff;
         inGround = nbttagcompound.getByte("inGround") == 1;
-    }
-
-    public float getShadowSize()
-    {
-        return 0.0F;
     }
 
     public int catchFish()

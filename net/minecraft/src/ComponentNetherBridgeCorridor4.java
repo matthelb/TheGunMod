@@ -28,14 +28,14 @@ public class ComponentNetherBridgeCorridor4 extends ComponentNetherBridgePiece
         {
             byte0 = 5;
         }
-        func_40019_b((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 0, byte0, random.nextInt(8) > 0);
-        func_40016_c((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 0, byte0, random.nextInt(8) > 0);
+        func_40285_b((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 0, byte0, random.nextInt(8) > 0);
+        func_40288_c((ComponentNetherBridgeStartPiece)structurecomponent, list, random, 0, byte0, random.nextInt(8) > 0);
     }
 
-    public static ComponentNetherBridgeCorridor4 func_40039_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentNetherBridgeCorridor4 func_40298_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -3, 0, 0, 9, 7, 9, l);
-        if(!func_40021_a(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else

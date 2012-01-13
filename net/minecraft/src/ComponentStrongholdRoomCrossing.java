@@ -15,30 +15,30 @@ import java.util.Random;
 public class ComponentStrongholdRoomCrossing extends ComponentStronghold
 {
 
-    private static final StructurePieceTreasure field_35061_c[];
-    protected final EnumDoor field_35062_a;
-    protected final int field_35060_b;
+    private static final StructurePieceTreasure field_35348_c[];
+    protected final EnumDoor field_35349_a;
+    protected final int field_35347_b;
 
     public ComponentStrongholdRoomCrossing(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
         super(i);
         coordBaseMode = j;
-        field_35062_a = getRandomDoor(random);
+        field_35349_a = func_35322_a(random);
         boundingBox = structureboundingbox;
-        field_35060_b = random.nextInt(5);
+        field_35347_b = random.nextInt(5);
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
-        func_35028_a((ComponentStrongholdStairs2)structurecomponent, list, random, 4, 1);
-        func_35032_b((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 4);
-        func_35029_c((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 4);
+        func_35324_a((ComponentStrongholdStairs2)structurecomponent, list, random, 4, 1);
+        func_35321_b((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 4);
+        func_35320_c((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 4);
     }
 
-    public static ComponentStrongholdRoomCrossing func_35059_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentStrongholdRoomCrossing func_35346_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -4, -1, 0, 11, 7, 11, l);
-        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
@@ -54,11 +54,11 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
             return false;
         }
         fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 10, 6, 10, true, random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(world, random, structureboundingbox, field_35062_a, 4, 1, 0);
+        placeDoor(world, random, structureboundingbox, field_35349_a, 4, 1, 0);
         fillWithBlocks(world, structureboundingbox, 4, 1, 10, 6, 3, 10, 0, 0, false);
         fillWithBlocks(world, structureboundingbox, 0, 1, 4, 0, 3, 6, 0, 0, false);
         fillWithBlocks(world, structureboundingbox, 10, 1, 4, 10, 3, 6, 0, 0, false);
-        switch(field_35060_b)
+        switch(field_35347_b)
         {
         default:
             break;
@@ -143,7 +143,7 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, getMetadataWithOffset(Block.ladder.blockID, 4), 9, 1, 3, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, getMetadataWithOffset(Block.ladder.blockID, 4), 9, 2, 3, structureboundingbox);
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, getMetadataWithOffset(Block.ladder.blockID, 4), 9, 3, 3, structureboundingbox);
-            createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 3, 4, 8, field_35061_c, 1 + random.nextInt(4));
+            createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 3, 4, 8, field_35348_c, 1 + random.nextInt(4));
             break;
         }
         return true;
@@ -151,7 +151,7 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
 
     static 
     {
-        field_35061_c = (new StructurePieceTreasure[] {
+        field_35348_c = (new StructurePieceTreasure[] {
             new StructurePieceTreasure(Item.ingotIron.shiftedIndex, 0, 1, 5, 10), new StructurePieceTreasure(Item.ingotGold.shiftedIndex, 0, 1, 3, 5), new StructurePieceTreasure(Item.redstone.shiftedIndex, 0, 4, 9, 5), new StructurePieceTreasure(Item.coal.shiftedIndex, 0, 3, 8, 10), new StructurePieceTreasure(Item.bread.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.appleRed.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.pickaxeSteel.shiftedIndex, 0, 1, 1, 1)
         });
     }

@@ -75,9 +75,4 @@ public class Packet24MobSpawn extends Packet
     {
         return 20;
     }
-
-    public List getMetadata()
-    {
-        return receivedMetadata;
-    }
 }

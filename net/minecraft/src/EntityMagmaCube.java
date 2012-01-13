@@ -30,22 +30,17 @@ public class EntityMagmaCube extends EntitySlime
         return getSlimeSize() * 3;
     }
 
-    public int getEntityBrightnessForRender(float f)
-    {
-        return 0xf000f0;
-    }
-
     public float getEntityBrightness(float f)
     {
         return 1.0F;
     }
 
-    protected String func_40135_ac()
+    protected String func_40120_w()
     {
         return "flame";
     }
 
-    protected EntitySlime func_40132_ae()
+    protected EntitySlime func_40114_y()
     {
         return new EntityMagmaCube(worldObj);
     }
@@ -60,14 +55,14 @@ public class EntityMagmaCube extends EntitySlime
         return false;
     }
 
-    protected int func_40131_af()
+    protected int func_40115_A()
     {
-        return super.func_40131_af() * 4;
+        return super.func_40115_A() * 4;
     }
 
-    protected void func_40136_ag()
+    protected void func_40116_B()
     {
-        field_40139_a = field_40139_a * 0.9F;
+        field_40122_a = field_40122_a * 0.9F;
     }
 
     protected void jump()
@@ -80,14 +75,14 @@ public class EntityMagmaCube extends EntitySlime
     {
     }
 
-    protected boolean func_40137_ah()
+    protected boolean func_40119_C()
     {
         return true;
     }
 
-    protected int func_40130_ai()
+    protected int func_40113_D()
     {
-        return super.func_40130_ai() + 2;
+        return super.func_40113_D() + 2;
     }
 
     protected String getHurtSound()
@@ -100,7 +95,7 @@ public class EntityMagmaCube extends EntitySlime
         return "mob.slime";
     }
 
-    protected String func_40138_aj()
+    protected String func_40118_E()
     {
         if(getSlimeSize() > 1)
         {
@@ -116,7 +111,7 @@ public class EntityMagmaCube extends EntitySlime
         return false;
     }
 
-    protected boolean func_40134_ak()
+    protected boolean func_40121_G()
     {
         return true;
     }

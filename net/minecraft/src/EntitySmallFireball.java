@@ -24,16 +24,9 @@ public class EntitySmallFireball extends EntityFireball
         setSize(0.3125F, 0.3125F);
     }
 
-    public EntitySmallFireball(World world, double d, double d1, double d2, 
-            double d3, double d4, double d5)
+    protected void func_40063_a(MovingObjectPosition movingobjectposition)
     {
-        super(world, d, d1, d2, d3, d4, d5);
-        setSize(0.3125F, 0.3125F);
-    }
-
-    protected void func_40071_a(MovingObjectPosition movingobjectposition)
-    {
-        if(!worldObj.multiplayerWorld)
+        if(!worldObj.singleplayerWorld)
         {
             if(movingobjectposition.entityHit != null)
             {

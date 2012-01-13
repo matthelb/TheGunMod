@@ -28,10 +28,10 @@ public class ComponentVillageTorch extends ComponentVillage
     {
     }
 
-    public static StructureBoundingBox func_35099_a(List list, Random random, int i, int j, int k, int l)
+    public static StructureBoundingBox func_35382_a(List list, Random random, int i, int j, int k, int l)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 3, 4, 2, l);
-        if(StructureComponent.getIntersectingStructureComponent(list, structureboundingbox) != null)
+        if(StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
         } else
