@@ -14,7 +14,7 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
 
-    private EntityLiving owner;
+    public EntityLiving owner;
     private Vec3D start;
 
     private int xTile;
