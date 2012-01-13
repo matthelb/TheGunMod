@@ -84,7 +84,7 @@ public class mod_Guns extends ModMP {
         try {
         loadConfig(getConfig());
         } catch (IOException e) {
-            System.out.println("Failed to load config file");
+            System.out.println("Failed to read config file");
         }
         try {
             initItems();
@@ -116,19 +116,19 @@ public class mod_Guns extends ModMP {
         zoomKeybinding = new KeyBinding("key.zoom", Keyboard.getKeyIndex(config.getProperty("key.zoom")));
     }
 
-    private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException {
+    private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException, ClassNotFoundException {
         File gunsDir = Util.getHeuristixDir("guns");
         if (gunsDir != null) {
             if (!gunsDir.exists()) {
                 gunsDir.mkdirs();
             } else {
+                GunCreator gc = null;
                 for (File f : gunsDir.listFiles(new FilenameFilter() {
                     public boolean accept(File dir, String name) {
                         return name.toLowerCase().endsWith(".gun2");
                     }
                 })) {
                     Gun gun = new Gun(Util.read(f));
-                    GunCreator gc = null;
                     if(gun != null) {
                         int[] versionCreated = gun.getProperties().get("versionCreated");
                         if(versionCreated == null || !Util.getStringFromBytes(versionCreated).equals(GunCreator.VERSION)) {

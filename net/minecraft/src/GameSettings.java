@@ -553,7 +553,7 @@ public class GameSettings
         }
         catch(Exception exception)
         {
-            System.out.println("Failed to load options");
+            System.out.println("Failed to read options");
             exception.printStackTrace();
         }
     }
