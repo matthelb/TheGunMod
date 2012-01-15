@@ -45,7 +45,7 @@ public class mod_Guns extends ModMP {
 
     @Override
     public String getVersion() {
-        return "0.9.3" + " for " + CURRENT_VERSION;
+        return "0.9.4" + " for " + CURRENT_VERSION;
     }
 
     public void load() {
@@ -100,7 +100,6 @@ public class mod_Guns extends ModMP {
             String entityLivingClass = (DEBUG) ? "net/minecraft/src/EntityLiving" : obfuscatedClasses.get(EntityLiving.class);
             for (int i = 0; i < GunCreator.OBFUSCATED_CLASS_NAMES.size(); i++) {
                 Pair<String, String> obfuscatedNames = GunCreator.OBFUSCATED_CLASS_NAMES.get(i);
-
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(L" + worldClass + ";L" + entityLivingClass + ";)V",
                         new InvokeMethod(GunCreator.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(L" + worldClass + ";L" + entityLivingClass + ";)V", false, true, false)));
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(L" + worldClass + ";)V",
