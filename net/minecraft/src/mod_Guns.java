@@ -53,15 +53,15 @@ public class mod_Guns extends ModMP {
         HashMap<String, String> values = new HashMap<String, String>();
         values.put("itemRenderer", "f");
         obfuscatedFields.put(RenderManager.class, (Map<String, String>) values.clone());
-        values.put("itemRenderer", "c");
         values.put("cameraZoom", "V");
+        values.put("itemRenderer", "c");
         obfuscatedFields.put(EntityRenderer.class, (Map<String, String>) values.clone());
         values.clear();
-        values.put("prevEquippedProgress", "d");
         values.put("equippedProgress", "c");
-        values.put("mc", "a");
         values.put("itemToRender", "b");
         values.put("mapItemRenderer", "f");
+        values.put("mc", "a");
+        values.put("prevEquippedProgress", "d");
         obfuscatedFields.put(ItemRenderer.class, (Map<String, String>) values.clone());
 
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
@@ -76,7 +76,7 @@ public class mod_Guns extends ModMP {
 
     @Override
     public String getVersion() {
-        return "0.9.3" + " for " + CURRENT_VERSION;
+        return "0.9.4" + " for " + CURRENT_VERSION;
     }
 
     @Override

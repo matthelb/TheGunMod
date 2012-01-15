@@ -454,14 +454,14 @@ public class Util {
 
     static {
         HashMap<String, String> fields = new HashMap<String, String>();
+        fields.put("options", "f");
+        fields.put("sndSystem", "a");
+        fields.put("soundPoolMusic", "d");
         fields.put("soundPoolSounds", "b");
         fields.put("soundPoolStreaming", "c");
-        fields.put("soundPoolMusic", "d");
-        fields.put("sndSystem", "a");
-        fields.put("options", "f");
         OBFUSCATED_FIELDS.put(SoundManager.class, (Map<String, String>) fields.clone());
         fields.clear();
-        fields.put("mc", "");
+        fields.put("mc", "b");
         OBFUSCATED_FIELDS.put(EntityPlayerSP.class, (Map<String, String>) fields.clone());
     }
 
