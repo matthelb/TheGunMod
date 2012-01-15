@@ -99,7 +99,7 @@ public abstract class EntityProjectile extends Entity {
             }
             float expandAmount = 0.3f;
             AxisAlignedBB aabb = entity.boundingBox.expand(expandAmount, expandAmount, expandAmount);
-            MovingObjectPosition position1 = aabb.func_1169_a(currentLocation, newLocation);
+            MovingObjectPosition position1 = aabb.calculateIntercept(currentLocation, newLocation);
             if (position1 == null) {
                 continue;
             }
