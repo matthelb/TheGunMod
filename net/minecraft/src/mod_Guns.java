@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 import com.heuristix.*;
 import com.heuristix.asm.Opcodes;
+import com.heuristix.net.PacketDamageItem;
 import com.heuristix.net.PacketFireProjectile;
 import com.heuristix.swing.GunCreator;
 import com.heuristix.util.ExtensibleClassAdapter;
@@ -51,6 +52,7 @@ public class mod_Guns extends ModMP {
         }
         try {
             Util.setPacketId(PacketFireProjectile.class, PacketFireProjectile.PACKET_ID, true, true);
+            Util.setPacketId(PacketDamageItem.class, PacketDamageItem.PACKET_ID, true, true);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -127,7 +129,7 @@ public class mod_Guns extends ModMP {
         }
         itemBullet.putProjectileClass(itemGun, entityBulletClass);
         projectiles.put(gunClasses.get(1).getFirst(), itemBullet);
-        ModLoaderMp.RegisterEntityTrackerEntry(entityBulletClass, getUniqueEntityProjectileId());
+        ModLoaderMp.RegisterEntityTrackerEntry(entityBulletClass, true ,getUniqueEntityProjectileId());
         ModLoaderMp.RegisterEntityTracker(entityBulletClass, 256, 1);
     }
 
@@ -138,6 +140,12 @@ public class mod_Guns extends ModMP {
                 ItemProjectileShooter shooter = getEquippedShooter(player);
                 if(shooter != null && shooter.shiftedIndex == packet.dataInt[0]) {
                     shooter.spawnProjectile(player.worldObj, player);
+                }
+                break;
+            case 1:
+                ItemStack stack = player.getCurrentEquippedItem();
+                if(stack != null && stack.itemID == packet.dataInt[0] && player.inventory.currentItem == packet.dataInt[1]) {
+                    stack.damageItem(packet.dataInt[2], player);
                 }
                 break;
             default:

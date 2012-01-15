@@ -65,16 +65,18 @@ public class EntityBullet extends EntityProjectile {
     }
 
     public boolean onBlockHit(MovingObjectPosition position) {
-        /*if(getOwner() instanceof EntityPlayerMP) {
-            PlayerController controller = Util.getPlayerController((EntityPlayerMP) getOwner());
-            if(controller != null) {
-                Block block = Block.blocksList[worldObj.getBlockId(position.blockX, position.blockY, position.blockZ)];
-                if(block.blockMaterial.equals(Material.glass)) {
-                    controller.onPlayerDestroyBlock(position.blockX, position.blockY, position.blockZ, block.blockID);
+        if(!worldObj.singleplayerWorld) {
+            if(getOwner() instanceof EntityPlayerMP) {
+                ItemInWorldManager controller = ((EntityPlayerMP) getOwner()).itemInWorldManager;
+                if(controller != null) {
+                    Block block = Block.blocksList[worldObj.getBlockId(position.blockX, position.blockY, position.blockZ)];
+                    if(block != null && block.blockMaterial.equals(Material.glass)) {
+                        controller.blockHarvessted(position.blockX, position.blockY, position.blockZ);
+                    }
+                    return true;
                 }
-                return true;
             }
-        }*/
+        }
         return false;
     }
 

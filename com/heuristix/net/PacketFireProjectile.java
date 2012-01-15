@@ -17,7 +17,6 @@ public class PacketFireProjectile extends Packet230ModLoader {
     public static final int PACKET_ID = 231;
 
     public PacketFireProjectile() {
-        super();
         this.packetType = 0;
     }
 }
