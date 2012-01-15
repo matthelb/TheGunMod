@@ -1,14 +1,8 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
 
 public final class ProfilerResult
     implements Comparable
 {
-
     public double sectionPercentage;
     public double globalPercentage;
     public String name;
@@ -22,14 +16,15 @@ public final class ProfilerResult
 
     public int compareProfilerResult(ProfilerResult profilerresult)
     {
-        if(profilerresult.sectionPercentage < sectionPercentage)
+        if (profilerresult.sectionPercentage < sectionPercentage)
         {
             return -1;
         }
-        if(profilerresult.sectionPercentage > sectionPercentage)
+        if (profilerresult.sectionPercentage > sectionPercentage)
         {
             return 1;
-        } else
+        }
+        else
         {
             return profilerresult.name.compareTo(name);
         }

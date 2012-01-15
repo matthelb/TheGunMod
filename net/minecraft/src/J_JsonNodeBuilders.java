@@ -1,17 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            J_JsonNullNodeBuilder, J_JsonTrueNodeBuilder, J_JsonFalseNodeBuilder, J_JsonNumberNodeBuilder, 
-//            J_JsonStringNodeBuilder, J_JsonObjectNodeBuilder, J_JsonArrayNodeBuilder, J_JsonNodeBuilder
 
 public final class J_JsonNodeBuilders
 {
-
     private J_JsonNodeBuilders()
     {
     }

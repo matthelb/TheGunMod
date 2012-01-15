@@ -1,28 +1,19 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            BiomeGenBase, BiomeCache, WorldChunkManager
 
 public class BiomeCacheBlock
 {
-
     public float temperatureValues[];
     public float rainfallValues[];
     public BiomeGenBase biomes[];
     public int xPosition;
     public int zPosition;
     public long lastAccessTime;
-    final BiomeCache biomeCache; /* synthetic field */
+    final BiomeCache biomeCache;
 
     public BiomeCacheBlock(BiomeCache biomecache, int i, int j)
     {
         biomeCache = biomecache;
-//        super();
+
         temperatureValues = new float[256];
         rainfallValues = new float[256];
         biomes = new BiomeGenBase[256];

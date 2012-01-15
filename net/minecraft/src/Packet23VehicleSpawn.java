@@ -1,17 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 
-// Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
-
 public class Packet23VehicleSpawn extends Packet
 {
-
     public int entityId;
     public int xPosition;
     public int yPosition;
@@ -27,7 +19,7 @@ public class Packet23VehicleSpawn extends Packet
     }
 
     public void readPacketData(DataInputStream datainputstream)
-        throws IOException
+    throws IOException
     {
         entityId = datainputstream.readInt();
         type = datainputstream.readByte();
@@ -35,7 +27,7 @@ public class Packet23VehicleSpawn extends Packet
         yPosition = datainputstream.readInt();
         zPosition = datainputstream.readInt();
         throwerEntityId = datainputstream.readInt();
-        if(throwerEntityId > 0)
+        if (throwerEntityId > 0)
         {
             speedX = datainputstream.readShort();
             speedY = datainputstream.readShort();
@@ -44,7 +36,7 @@ public class Packet23VehicleSpawn extends Packet
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
-        throws IOException
+    throws IOException
     {
         dataoutputstream.writeInt(entityId);
         dataoutputstream.writeByte(type);
@@ -52,7 +44,7 @@ public class Packet23VehicleSpawn extends Packet
         dataoutputstream.writeInt(yPosition);
         dataoutputstream.writeInt(zPosition);
         dataoutputstream.writeInt(throwerEntityId);
-        if(throwerEntityId > 0)
+        if (throwerEntityId > 0)
         {
             dataoutputstream.writeShort(speedX);
             dataoutputstream.writeShort(speedY);

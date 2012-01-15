@@ -1,18 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
 
-// Referenced classes of package net.minecraft.src:
-//            Render, RenderBlocks, Block, EntityFallingSand, 
-//            Tessellator, MathHelper, Entity
-
 public class RenderFallingSand extends Render
 {
-
     private RenderBlocks renderBlocks;
 
     public RenderFallingSand()
@@ -21,7 +12,7 @@ public class RenderFallingSand extends Render
         shadowSize = 0.5F;
     }
 
-    public void doRenderFallingSand(EntityFallingSand entityfallingsand, double d, double d1, double d2, 
+    public void doRenderFallingSand(EntityFallingSand entityfallingsand, double d, double d1, double d2,
             float f, float f1)
     {
         GL11.glPushMatrix();
@@ -30,7 +21,7 @@ public class RenderFallingSand extends Render
         Block block = Block.blocksList[entityfallingsand.blockID];
         World world = entityfallingsand.getWorld();
         GL11.glDisable(2896 /*GL_LIGHTING*/);
-        if(block == Block.dragonEgg)
+        if (block == Block.dragonEgg)
         {
             renderBlocks.blockAccess = world;
             Tessellator tessellator = Tessellator.instance;
@@ -39,7 +30,8 @@ public class RenderFallingSand extends Render
             renderBlocks.renderBlockByRenderType(block, MathHelper.floor_double(entityfallingsand.posX), MathHelper.floor_double(entityfallingsand.posY), MathHelper.floor_double(entityfallingsand.posZ));
             tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
             tessellator.draw();
-        } else
+        }
+        else
         {
             renderBlocks.renderBlockFallingSand(block, world, MathHelper.floor_double(entityfallingsand.posX), MathHelper.floor_double(entityfallingsand.posY), MathHelper.floor_double(entityfallingsand.posZ));
         }
@@ -47,7 +39,7 @@ public class RenderFallingSand extends Render
         GL11.glPopMatrix();
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2, 
+    public void doRender(Entity entity, double d, double d1, double d2,
             float f, float f1)
     {
         doRenderFallingSand((EntityFallingSand)entity, d, d1, d2, f, f1);

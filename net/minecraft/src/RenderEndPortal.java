@@ -1,20 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.nio.FloatBuffer;
 import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
-// Referenced classes of package net.minecraft.src:
-//            TileEntitySpecialRenderer, GLAllocation, TileEntityRenderer, ActiveRenderInfo, 
-//            Tessellator, TileEntityEndPortal, TileEntity
-
 public class RenderEndPortal extends TileEntitySpecialRenderer
 {
-
     FloatBuffer field_40448_a;
 
     public RenderEndPortal()
@@ -22,7 +13,7 @@ public class RenderEndPortal extends TileEntitySpecialRenderer
         field_40448_a = GLAllocation.createDirectFloatBuffer(16);
     }
 
-    public void func_40446_a(TileEntityEndPortal tileentityendportal, double d, double d1, double d2, 
+    public void func_40446_a(TileEntityEndPortal tileentityendportal, double d, double d1, double d2,
             float f)
     {
         float f1 = (float)tileEntityRenderer.playerX;
@@ -31,13 +22,13 @@ public class RenderEndPortal extends TileEntitySpecialRenderer
         GL11.glDisable(2896 /*GL_LIGHTING*/);
         Random random = new Random(31100L);
         float f4 = 0.75F;
-        for(int i = 0; i < 16; i++)
+        for (int i = 0; i < 16; i++)
         {
             GL11.glPushMatrix();
             float f5 = 16 - i;
             float f6 = 0.0625F;
             float f7 = 1.0F / (f5 + 1.0F);
-            if(i == 0)
+            if (i == 0)
             {
                 bindTextureByName("/misc/tunnel.png");
                 f7 = 0.1F;
@@ -46,7 +37,7 @@ public class RenderEndPortal extends TileEntitySpecialRenderer
                 GL11.glEnable(3042 /*GL_BLEND*/);
                 GL11.glBlendFunc(770, 771);
             }
-            if(i == 1)
+            if (i == 1)
             {
                 bindTextureByName("/misc/particlefield.png");
                 GL11.glEnable(3042 /*GL_BLEND*/);
@@ -88,7 +79,7 @@ public class RenderEndPortal extends TileEntitySpecialRenderer
             f11 = random.nextFloat() * 0.5F + 0.1F;
             float f12 = random.nextFloat() * 0.5F + 0.4F;
             float f13 = random.nextFloat() * 0.5F + 0.5F;
-            if(i == 0)
+            if (i == 0)
             {
                 f11 = f12 = f13 = 1.0F;
             }
@@ -118,7 +109,7 @@ public class RenderEndPortal extends TileEntitySpecialRenderer
         return field_40448_a;
     }
 
-    public void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2, 
+    public void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2,
             float f)
     {
         func_40446_a((TileEntityEndPortal)tileentity, d, d1, d2, f);

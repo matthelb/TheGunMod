@@ -1,16 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            LongHashMapEntry
 
 public class LongHashMap
 {
-
     private transient LongHashMapEntry hashArray[];
     private transient int numHashElements;
     private int capacity;
@@ -47,9 +38,9 @@ public class LongHashMap
     public Object getValueByKey(long l)
     {
         int i = getHashedKey(l);
-        for(LongHashMapEntry longhashmapentry = hashArray[getHashIndex(i, hashArray.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
+        for (LongHashMapEntry longhashmapentry = hashArray[getHashIndex(i, hashArray.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
         {
-            if(longhashmapentry.key == l)
+            if (longhashmapentry.key == l)
             {
                 return longhashmapentry.value;
             }
@@ -66,9 +57,9 @@ public class LongHashMap
     final LongHashMapEntry getEntry(long l)
     {
         int i = getHashedKey(l);
-        for(LongHashMapEntry longhashmapentry = hashArray[getHashIndex(i, hashArray.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
+        for (LongHashMapEntry longhashmapentry = hashArray[getHashIndex(i, hashArray.length)]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
         {
-            if(longhashmapentry.key == l)
+            if (longhashmapentry.key == l)
             {
                 return longhashmapentry;
             }
@@ -81,9 +72,9 @@ public class LongHashMap
     {
         int i = getHashedKey(l);
         int j = getHashIndex(i, hashArray.length);
-        for(LongHashMapEntry longhashmapentry = hashArray[j]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
+        for (LongHashMapEntry longhashmapentry = hashArray[j]; longhashmapentry != null; longhashmapentry = longhashmapentry.nextEntry)
         {
-            if(longhashmapentry.key == l)
+            if (longhashmapentry.key == l)
             {
                 longhashmapentry.value = obj;
             }
@@ -97,11 +88,12 @@ public class LongHashMap
     {
         LongHashMapEntry alonghashmapentry[] = hashArray;
         int j = alonghashmapentry.length;
-        if(j == 0x40000000)
+        if (j == 0x40000000)
         {
             capacity = 0x7fffffff;
             return;
-        } else
+        }
+        else
         {
             LongHashMapEntry alonghashmapentry1[] = new LongHashMapEntry[i];
             copyHashTableTo(alonghashmapentry1);
@@ -115,10 +107,10 @@ public class LongHashMap
     {
         LongHashMapEntry alonghashmapentry1[] = hashArray;
         int i = alonghashmapentry.length;
-        for(int j = 0; j < alonghashmapentry1.length; j++)
+        for (int j = 0; j < alonghashmapentry1.length; j++)
         {
             LongHashMapEntry longhashmapentry = alonghashmapentry1[j];
-            if(longhashmapentry == null)
+            if (longhashmapentry == null)
             {
                 continue;
             }
@@ -130,9 +122,9 @@ public class LongHashMap
                 longhashmapentry.nextEntry = alonghashmapentry[k];
                 alonghashmapentry[k] = longhashmapentry;
                 longhashmapentry = longhashmapentry1;
-            } while(longhashmapentry != null);
+            }
+            while (longhashmapentry != null);
         }
-
     }
 
     public Object remove(long l)
@@ -148,17 +140,18 @@ public class LongHashMap
         LongHashMapEntry longhashmapentry = hashArray[j];
         LongHashMapEntry longhashmapentry1;
         LongHashMapEntry longhashmapentry2;
-        for(longhashmapentry1 = longhashmapentry; longhashmapentry1 != null; longhashmapentry1 = longhashmapentry2)
+        for (longhashmapentry1 = longhashmapentry; longhashmapentry1 != null; longhashmapentry1 = longhashmapentry2)
         {
             longhashmapentry2 = longhashmapentry1.nextEntry;
-            if(longhashmapentry1.key == l)
+            if (longhashmapentry1.key == l)
             {
                 modCount++;
                 numHashElements--;
-                if(longhashmapentry == longhashmapentry1)
+                if (longhashmapentry == longhashmapentry1)
                 {
                     hashArray[j] = longhashmapentry2;
-                } else
+                }
+                else
                 {
                     longhashmapentry.nextEntry = longhashmapentry2;
                 }
@@ -174,7 +167,7 @@ public class LongHashMap
     {
         LongHashMapEntry longhashmapentry = hashArray[j];
         hashArray[j] = new LongHashMapEntry(i, l, obj, longhashmapentry);
-        if(numHashElements++ >= capacity)
+        if (numHashElements++ >= capacity)
         {
             resizeTable(2 * hashArray.length);
         }

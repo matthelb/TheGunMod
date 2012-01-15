@@ -1,21 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Map;
 import java.util.Random;
 import net.minecraft.client.Minecraft;
 
-// Referenced classes of package net.minecraft.src:
-//            World, ItemStack, KeyBinding, EntityPlayer, 
-//            GuiScreen, RenderBlocks, Block, IBlockAccess, 
-//            IInventory
-
 public abstract class BaseMod
 {
-
     public BaseMod()
     {
     }
@@ -29,7 +19,7 @@ public abstract class BaseMod
     {
     }
 
-    public boolean DispenseEntity(World world, double d, double d1, double d2, 
+    public boolean DispenseEntity(World world, double d, double d1, double d2,
             int i, int j, ItemStack itemstack)
     {
         return false;

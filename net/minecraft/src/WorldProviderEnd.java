@@ -1,18 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            WorldProvider, WorldChunkManagerHell, BiomeGenBase, ChunkProviderEnd, 
-//            World, MathHelper, Vec3D, Block, 
-//            Material, ChunkCoordinates, IChunkProvider
 
 public class WorldProviderEnd extends WorldProvider
 {
-
     public WorldProviderEnd()
     {
     }
@@ -44,11 +33,11 @@ public class WorldProviderEnd extends WorldProvider
     {
         int i = 0x8080a0;
         float f2 = MathHelper.cos(f * 3.141593F * 2.0F) * 2.0F + 0.5F;
-        if(f2 < 0.0F)
+        if (f2 < 0.0F)
         {
             f2 = 0.0F;
         }
-        if(f2 > 1.0F)
+        if (f2 > 1.0F)
         {
             f2 = 1.0F;
         }
@@ -79,10 +68,11 @@ public class WorldProviderEnd extends WorldProvider
     public boolean canCoordinateBeSpawn(int i, int j)
     {
         int k = worldObj.getFirstUncoveredBlock(i, j);
-        if(k == 0)
+        if (k == 0)
         {
             return false;
-        } else
+        }
+        else
         {
             return Block.blocksList[k].blockMaterial.getIsSolid();
         }
@@ -91,5 +81,10 @@ public class WorldProviderEnd extends WorldProvider
     public ChunkCoordinates getEntrancePortalLocation()
     {
         return new ChunkCoordinates(100, 50, 0);
+    }
+
+    public int func_46066_g()
+    {
+        return 50;
     }
 }

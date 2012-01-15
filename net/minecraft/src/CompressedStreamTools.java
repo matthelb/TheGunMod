@@ -1,25 +1,17 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-// Referenced classes of package net.minecraft.src:
-//            NBTBase, NBTTagCompound
-
 public class CompressedStreamTools
 {
-
     public CompressedStreamTools()
     {
     }
 
     public static NBTTagCompound loadGzippedCompoundFromOutputStream(InputStream inputstream)
-        throws IOException
+    throws IOException
     {
         DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(inputstream)));
         try
@@ -34,7 +26,7 @@ public class CompressedStreamTools
     }
 
     public static void writeGzippedCompoundToOutputStream(NBTTagCompound nbttagcompound, OutputStream outputstream)
-        throws IOException
+    throws IOException
     {
         DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(outputstream));
         try
@@ -48,7 +40,7 @@ public class CompressedStreamTools
     }
 
     public static NBTTagCompound loadMapFromByteArray(byte abyte0[])
-        throws IOException
+    throws IOException
     {
         DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(abyte0))));
         try
@@ -63,7 +55,7 @@ public class CompressedStreamTools
     }
 
     public static byte[] writeMapToByteArray(NBTTagCompound nbttagcompound)
-        throws IOException
+    throws IOException
     {
         ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
         DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(bytearrayoutputstream));
@@ -79,22 +71,23 @@ public class CompressedStreamTools
     }
 
     public static void saveMapToFileWithBackup(NBTTagCompound nbttagcompound, File file)
-        throws IOException
+    throws IOException
     {
         File file1 = new File((new StringBuilder()).append(file.getAbsolutePath()).append("_tmp").toString());
-        if(file1.exists())
+        if (file1.exists())
         {
             file1.delete();
         }
         saveMapToFile(nbttagcompound, file1);
-        if(file.exists())
+        if (file.exists())
         {
             file.delete();
         }
-        if(file.exists())
+        if (file.exists())
         {
             throw new IOException((new StringBuilder()).append("Failed to delete ").append(file).toString());
-        } else
+        }
+        else
         {
             file1.renameTo(file);
             return;
@@ -102,7 +95,7 @@ public class CompressedStreamTools
     }
 
     public static void saveMapToFile(NBTTagCompound nbttagcompound, File file)
-        throws IOException
+    throws IOException
     {
         DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(file));
         try
@@ -116,9 +109,9 @@ public class CompressedStreamTools
     }
 
     public static NBTTagCompound writeMapToFileUncompressed(File file)
-        throws IOException
+    throws IOException
     {
-        if(!file.exists())
+        if (!file.exists())
         {
             return null;
         }
@@ -135,20 +128,21 @@ public class CompressedStreamTools
     }
 
     public static NBTTagCompound read(DataInput datainput)
-        throws IOException
+    throws IOException
     {
         NBTBase nbtbase = NBTBase.readTag(datainput);
-        if(nbtbase instanceof NBTTagCompound)
+        if (nbtbase instanceof NBTTagCompound)
         {
             return (NBTTagCompound)nbtbase;
-        } else
+        }
+        else
         {
             throw new IOException("Root tag must be a named compound tag");
         }
     }
 
     public static void writeTo(NBTTagCompound nbttagcompound, DataOutput dataoutput)
-        throws IOException
+    throws IOException
     {
         NBTBase.writeTag(nbttagcompound, dataoutput);
     }

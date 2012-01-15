@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.awt.Graphics2D;
@@ -9,12 +5,8 @@ import java.awt.image.BufferedImage;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
-// Referenced classes of package net.minecraft.src:
-//            TextureFX, ModLoader
-
 public class ModTextureAnimation extends TextureFX
 {
-
     private final int tickRate;
     private final byte images[][];
     private int index;
@@ -40,12 +32,12 @@ public class ModTextureAnimation extends TextureFX
         int k1 = bufferedimage.getWidth();
         int l1 = bufferedimage.getHeight();
         int i2 = (int)Math.floor(l1 / k1);
-        if(i2 <= 0)
+        if (i2 <= 0)
         {
             throw new IllegalArgumentException("source has no complete images");
         }
         images = new byte[i2][];
-        if(k1 != i1)
+        if (k1 != i1)
         {
             BufferedImage bufferedimage1 = new BufferedImage(i1, j1 * i2, 6);
             Graphics2D graphics2d = bufferedimage1.createGraphics();
@@ -53,12 +45,12 @@ public class ModTextureAnimation extends TextureFX
             graphics2d.dispose();
             bufferedimage = bufferedimage1;
         }
-        for(int j2 = 0; j2 < i2; j2++)
+        for (int j2 = 0; j2 < i2; j2++)
         {
             int ai[] = new int[i1 * j1];
             bufferedimage.getRGB(0, j1 * j2, i1, j1, ai, 0, i1);
             images[j2] = new byte[i1 * j1 * 4];
-            for(int k2 = 0; k2 < ai.length; k2++)
+            for (int k2 = 0; k2 < ai.length; k2++)
             {
                 int l2 = ai[k2] >> 24 & 0xff;
                 int i3 = ai[k2] >> 16 & 0xff;
@@ -69,17 +61,15 @@ public class ModTextureAnimation extends TextureFX
                 images[j2][k2 * 4 + 2] = (byte)k3;
                 images[j2][k2 * 4 + 3] = (byte)l2;
             }
-
         }
-
     }
 
     public void onTick()
     {
-        if(ticks >= tickRate)
+        if (ticks >= tickRate)
         {
             index++;
-            if(index >= images.length)
+            if (index >= images.length)
             {
                 index = 0;
             }

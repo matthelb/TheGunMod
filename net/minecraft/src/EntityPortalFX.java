@@ -1,23 +1,15 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            EntityFX, World, Tessellator
-
 public class EntityPortalFX extends EntityFX
 {
-
     private float portalParticleScale;
     private double portalPosX;
     private double portalPosY;
     private double portalPosZ;
 
-    public EntityPortalFX(World world, double d, double d1, double d2, 
+    public EntityPortalFX(World world, double d, double d1, double d2,
             double d3, double d4, double d5)
     {
         super(world, d, d1, d2, d3, d4, d5);
@@ -56,7 +48,7 @@ public class EntityPortalFX extends EntityFX
         int j = i & 0xff;
         int k = i >> 16 & 0xff;
         k += (int)(f1 * 15F * 16F);
-        if(k > 240)
+        if (k > 240)
         {
             k = 240;
         }
@@ -84,7 +76,7 @@ public class EntityPortalFX extends EntityFX
         posX = portalPosX + motionX * (double)f;
         posY = portalPosY + motionY * (double)f + (double)(1.0F - f1);
         posZ = portalPosZ + motionZ * (double)f;
-        if(particleAge++ >= particleMaxAge)
+        if (particleAge++ >= particleMaxAge)
         {
             setEntityDead();
         }

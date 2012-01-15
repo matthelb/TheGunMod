@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            TileEntity, IInventory, ItemStack, NBTTagCompound, 
-//            NBTTagList, World, EntityPlayer, Block
-
 public class TileEntityChest extends TileEntity
     implements IInventory
 {
-
     private ItemStack chestContents[];
     public boolean adjacentChestChecked;
     public TileEntityChest adjacentChestZNeg;
@@ -43,9 +34,9 @@ public class TileEntityChest extends TileEntity
 
     public ItemStack decrStackSize(int i, int j)
     {
-        if(chestContents[i] != null)
+        if (chestContents[i] != null)
         {
-            if(chestContents[i].stackSize <= j)
+            if (chestContents[i].stackSize <= j)
             {
                 ItemStack itemstack = chestContents[i];
                 chestContents[i] = null;
@@ -53,13 +44,14 @@ public class TileEntityChest extends TileEntity
                 return itemstack;
             }
             ItemStack itemstack1 = chestContents[i].splitStack(j);
-            if(chestContents[i].stackSize == 0)
+            if (chestContents[i].stackSize == 0)
             {
                 chestContents[i] = null;
             }
             onInventoryChanged();
             return itemstack1;
-        } else
+        }
+        else
         {
             return null;
         }
@@ -68,7 +60,7 @@ public class TileEntityChest extends TileEntity
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
         chestContents[i] = itemstack;
-        if(itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+        if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
         {
             itemstack.stackSize = getInventoryStackLimit();
         }
@@ -85,25 +77,24 @@ public class TileEntityChest extends TileEntity
         super.readFromNBT(nbttagcompound);
         NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
         chestContents = new ItemStack[getSizeInventory()];
-        for(int i = 0; i < nbttaglist.tagCount(); i++)
+        for (int i = 0; i < nbttaglist.tagCount(); i++)
         {
             NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
             int j = nbttagcompound1.getByte("Slot") & 0xff;
-            if(j >= 0 && j < chestContents.length)
+            if (j >= 0 && j < chestContents.length)
             {
                 chestContents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
             }
         }
-
     }
 
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
         super.writeToNBT(nbttagcompound);
         NBTTagList nbttaglist = new NBTTagList();
-        for(int i = 0; i < chestContents.length; i++)
+        for (int i = 0; i < chestContents.length; i++)
         {
-            if(chestContents[i] != null)
+            if (chestContents[i] != null)
             {
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                 nbttagcompound1.setByte("Slot", (byte)i);
@@ -122,7 +113,7 @@ public class TileEntityChest extends TileEntity
 
     public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
-        if(worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
+        if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
         {
             return false;
         }
@@ -137,7 +128,7 @@ public class TileEntityChest extends TileEntity
 
     public void checkForAdjacentChests()
     {
-        if(adjacentChestChecked)
+        if (adjacentChestChecked)
         {
             return;
         }
@@ -146,35 +137,35 @@ public class TileEntityChest extends TileEntity
         adjacentChestXPos = null;
         adjacentChestXNeg = null;
         adjacentChestZPos = null;
-        if(worldObj.getBlockId(xCoord - 1, yCoord, zCoord) == Block.chest.blockID)
+        if (worldObj.getBlockId(xCoord - 1, yCoord, zCoord) == Block.chest.blockID)
         {
             adjacentChestXNeg = (TileEntityChest)worldObj.getBlockTileEntity(xCoord - 1, yCoord, zCoord);
         }
-        if(worldObj.getBlockId(xCoord + 1, yCoord, zCoord) == Block.chest.blockID)
+        if (worldObj.getBlockId(xCoord + 1, yCoord, zCoord) == Block.chest.blockID)
         {
             adjacentChestXPos = (TileEntityChest)worldObj.getBlockTileEntity(xCoord + 1, yCoord, zCoord);
         }
-        if(worldObj.getBlockId(xCoord, yCoord, zCoord - 1) == Block.chest.blockID)
+        if (worldObj.getBlockId(xCoord, yCoord, zCoord - 1) == Block.chest.blockID)
         {
             adjacentChestZNeg = (TileEntityChest)worldObj.getBlockTileEntity(xCoord, yCoord, zCoord - 1);
         }
-        if(worldObj.getBlockId(xCoord, yCoord, zCoord + 1) == Block.chest.blockID)
+        if (worldObj.getBlockId(xCoord, yCoord, zCoord + 1) == Block.chest.blockID)
         {
             adjacentChestZPos = (TileEntityChest)worldObj.getBlockTileEntity(xCoord, yCoord, zCoord + 1);
         }
-        if(adjacentChestZNeg != null)
+        if (adjacentChestZNeg != null)
         {
             adjacentChestZNeg.updateContainingBlockInfo();
         }
-        if(adjacentChestZPos != null)
+        if (adjacentChestZPos != null)
         {
             adjacentChestZPos.updateContainingBlockInfo();
         }
-        if(adjacentChestXPos != null)
+        if (adjacentChestXPos != null)
         {
             adjacentChestXPos.updateContainingBlockInfo();
         }
-        if(adjacentChestXNeg != null)
+        if (adjacentChestXNeg != null)
         {
             adjacentChestXNeg.updateContainingBlockInfo();
         }
@@ -184,56 +175,57 @@ public class TileEntityChest extends TileEntity
     {
         super.updateEntity();
         checkForAdjacentChests();
-        if((++ticksSinceSync % 20) * 4 == 0)
+        if ((++ticksSinceSync % 20) * 4 == 0)
         {
             worldObj.playNoteAt(xCoord, yCoord, zCoord, 1, numUsingPlayers);
         }
         prevLidAngle = lidAngle;
         float f = 0.1F;
-        if(numUsingPlayers > 0 && lidAngle == 0.0F && adjacentChestZNeg == null && adjacentChestXNeg == null)
+        if (numUsingPlayers > 0 && lidAngle == 0.0F && adjacentChestZNeg == null && adjacentChestXNeg == null)
         {
             double d = (double)xCoord + 0.5D;
             double d1 = (double)zCoord + 0.5D;
-            if(adjacentChestZPos != null)
+            if (adjacentChestZPos != null)
             {
                 d1 += 0.5D;
             }
-            if(adjacentChestXPos != null)
+            if (adjacentChestXPos != null)
             {
                 d += 0.5D;
             }
             worldObj.playSoundEffect(d, (double)yCoord + 0.5D, d1, "random.chestopen", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
-        if(numUsingPlayers == 0 && lidAngle > 0.0F || numUsingPlayers > 0 && lidAngle < 1.0F)
+        if (numUsingPlayers == 0 && lidAngle > 0.0F || numUsingPlayers > 0 && lidAngle < 1.0F)
         {
             float f1 = lidAngle;
-            if(numUsingPlayers > 0)
+            if (numUsingPlayers > 0)
             {
                 lidAngle += f;
-            } else
+            }
+            else
             {
                 lidAngle -= f;
             }
-            if(lidAngle > 1.0F)
+            if (lidAngle > 1.0F)
             {
                 lidAngle = 1.0F;
             }
             float f2 = 0.5F;
-            if(lidAngle < f2 && f1 >= f2 && adjacentChestZNeg == null && adjacentChestXNeg == null)
+            if (lidAngle < f2 && f1 >= f2 && adjacentChestZNeg == null && adjacentChestXNeg == null)
             {
                 double d2 = (double)xCoord + 0.5D;
                 double d3 = (double)zCoord + 0.5D;
-                if(adjacentChestZPos != null)
+                if (adjacentChestZPos != null)
                 {
                     d3 += 0.5D;
                 }
-                if(adjacentChestXPos != null)
+                if (adjacentChestXPos != null)
                 {
                     d2 += 0.5D;
                 }
                 worldObj.playSoundEffect(d2, (double)yCoord + 0.5D, d3, "random.chestclosed", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
             }
-            if(lidAngle < 0.0F)
+            if (lidAngle < 0.0F)
             {
                 lidAngle = 0.0F;
             }
@@ -242,7 +234,7 @@ public class TileEntityChest extends TileEntity
 
     public void onTileEntityPowered(int i, int j)
     {
-        if(i == 1)
+        if (i == 1)
         {
             numUsingPlayers = j;
         }

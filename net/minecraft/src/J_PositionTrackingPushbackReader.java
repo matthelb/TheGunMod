@@ -1,18 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 
-// Referenced classes of package net.minecraft.src:
-//            J_ThingWithPosition
-
 final class J_PositionTrackingPushbackReader
     implements J_ThingWithPosition
 {
-
     private final PushbackReader pushbackReader;
     private int characterCount;
     private int lineCount;
@@ -27,10 +19,10 @@ final class J_PositionTrackingPushbackReader
     }
 
     public void unread(char c)
-        throws IOException
+    throws IOException
     {
         characterCount--;
-        if(characterCount < 0)
+        if (characterCount < 0)
         {
             characterCount = 0;
         }
@@ -40,14 +32,14 @@ final class J_PositionTrackingPushbackReader
     public void uncount(char ac[])
     {
         characterCount = characterCount - ac.length;
-        if(characterCount < 0)
+        if (characterCount < 0)
         {
             characterCount = 0;
         }
     }
 
     public int read()
-        throws IOException
+    throws IOException
     {
         int i = pushbackReader.read();
         updateCharacterAndLineCounts(i);
@@ -55,12 +47,12 @@ final class J_PositionTrackingPushbackReader
     }
 
     public int read(char ac[])
-        throws IOException
+    throws IOException
     {
         int i = pushbackReader.read(ac);
         char ac1[] = ac;
         int j = ac1.length;
-        for(int k = 0; k < j; k++)
+        for (int k = 0; k < j; k++)
         {
             char c = ac1[k];
             updateCharacterAndLineCounts(c);
@@ -71,18 +63,20 @@ final class J_PositionTrackingPushbackReader
 
     private void updateCharacterAndLineCounts(int i)
     {
-        if(13 == i)
+        if (13 == i)
         {
             characterCount = 0;
             lineCount++;
             lastCharacterWasCarriageReturn = true;
-        } else
+        }
+        else
         {
-            if(10 == i && !lastCharacterWasCarriageReturn)
+            if (10 == i && !lastCharacterWasCarriageReturn)
             {
                 characterCount = 0;
                 lineCount++;
-            } else
+            }
+            else
             {
                 characterCount++;
             }

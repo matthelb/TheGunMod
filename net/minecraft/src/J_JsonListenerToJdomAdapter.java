@@ -1,20 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Stack;
 
-// Referenced classes of package net.minecraft.src:
-//            J_JsonListener, J_JsonNodeBuilder, J_JsonRootNode, J_JsonNodeBuilders, 
-//            J_ArrayNodeContainer, J_ObjectNodeContainer, J_JsonFieldBuilder, J_NodeContainer, 
-//            J_FieldNodeContainer
-
 final class J_JsonListenerToJdomAdapter
     implements J_JsonListener
 {
-
     private final Stack stack = new Stack();
     private J_JsonNodeBuilder root;
 
@@ -98,10 +88,11 @@ final class J_JsonListenerToJdomAdapter
 
     private void addRootNode(J_JsonNodeBuilder j_jsonnodebuilder)
     {
-        if(root == null)
+        if (root == null)
         {
             root = j_jsonnodebuilder;
-        } else
+        }
+        else
         {
             addValue(j_jsonnodebuilder);
         }

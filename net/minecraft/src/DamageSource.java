@@ -1,17 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            EntityDamageSource, EntityDamageSourceIndirect, EntityLiving, EntityPlayer, 
-//            EntityArrow, Entity, EntityFireball
 
 public class DamageSource
 {
-
     public static DamageSource inFire = (new DamageSource("inFire")).setFireDamage();
     public static DamageSource onFire = (new DamageSource("onFire")).setDamageBypassesArmor().setFireDamage();
     public static DamageSource lava = (new DamageSource("lava")).setFireDamage();
@@ -133,5 +123,4 @@ public class DamageSource
     {
         return damageType;
     }
-
 }

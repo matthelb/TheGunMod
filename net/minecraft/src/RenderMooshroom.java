@@ -1,25 +1,15 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
 
-// Referenced classes of package net.minecraft.src:
-//            RenderLiving, EntityMooshroom, Block, RenderBlocks, 
-//            ModelQuadruped, ModelRenderer, ModelBase, EntityLiving, 
-//            Entity
-
 public class RenderMooshroom extends RenderLiving
 {
-
     public RenderMooshroom(ModelBase modelbase, float f)
     {
         super(modelbase, f);
     }
 
-    public void func_40273_a(EntityMooshroom entitymooshroom, double d, double d1, double d2, 
+    public void func_40273_a(EntityMooshroom entitymooshroom, double d, double d1, double d2,
             float f, float f1)
     {
         super.doRenderLiving(entitymooshroom, d, d1, d2, f, f1);
@@ -28,10 +18,11 @@ public class RenderMooshroom extends RenderLiving
     protected void func_40272_a(EntityMooshroom entitymooshroom, float f)
     {
         super.renderEquippedItems(entitymooshroom, f);
-        if(entitymooshroom.isChild())
+        if (entitymooshroom.isChild())
         {
             return;
-        } else
+        }
+        else
         {
             loadTexture("/terrain.png");
             GL11.glEnable(2884 /*GL_CULL_FACE*/);
@@ -61,13 +52,13 @@ public class RenderMooshroom extends RenderLiving
         func_40272_a((EntityMooshroom)entityliving, f);
     }
 
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2, 
+    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2,
             float f, float f1)
     {
         func_40273_a((EntityMooshroom)entityliving, d, d1, d2, f, f1);
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2, 
+    public void doRender(Entity entity, double d, double d1, double d2,
             float f, float f1)
     {
         func_40273_a((EntityMooshroom)entity, d, d1, d2, f, f1);

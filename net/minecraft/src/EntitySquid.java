@@ -1,19 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            EntityWaterMob, ItemStack, Item, AxisAlignedBB, 
-//            Material, World, MathHelper, NBTTagCompound, 
-//            EntityPlayer
-
 public class EntitySquid extends EntityWaterMob
 {
-
     public float field_21089_a;
     public float field_21088_b;
     public float field_21087_c;
@@ -94,11 +84,10 @@ public class EntitySquid extends EntityWaterMob
     protected void dropFewItems(boolean flag, int i)
     {
         int j = rand.nextInt(3 + i) + 1;
-        for(int k = 0; k < j; k++)
+        for (int k = 0; k < j; k++)
         {
             entityDropItem(new ItemStack(Item.dyePowder, 1, 0), 0.0F);
         }
-
     }
 
     public boolean interact(EntityPlayer entityplayer)
@@ -119,35 +108,37 @@ public class EntitySquid extends EntityWaterMob
         field_21084_h = field_21085_g;
         lastTentacleAngle = tentacleAngle;
         field_21085_g += field_21080_l;
-        if(field_21085_g > 6.283185F)
+        if (field_21085_g > 6.283185F)
         {
             field_21085_g -= 6.283185F;
-            if(rand.nextInt(10) == 0)
+            if (rand.nextInt(10) == 0)
             {
                 field_21080_l = (1.0F / (rand.nextFloat() + 1.0F)) * 0.2F;
             }
         }
-        if(isInWater())
+        if (isInWater())
         {
-            if(field_21085_g < 3.141593F)
+            if (field_21085_g < 3.141593F)
             {
                 float f = field_21085_g / 3.141593F;
                 tentacleAngle = MathHelper.sin(f * f * 3.141593F) * 3.141593F * 0.25F;
-                if((double)f > 0.75D)
+                if ((double)f > 0.75D)
                 {
                     randomMotionSpeed = 1.0F;
                     field_21079_m = 1.0F;
-                } else
+                }
+                else
                 {
                     field_21079_m = field_21079_m * 0.8F;
                 }
-            } else
+            }
+            else
             {
                 tentacleAngle = 0.0F;
                 randomMotionSpeed = randomMotionSpeed * 0.9F;
                 field_21079_m = field_21079_m * 0.99F;
             }
-            if(!isMultiplayerEntity)
+            if (!worldObj.multiplayerWorld)
             {
                 motionX = randomMotionVecX * randomMotionSpeed;
                 motionY = randomMotionVecY * randomMotionSpeed;
@@ -158,10 +149,11 @@ public class EntitySquid extends EntityWaterMob
             rotationYaw = renderYawOffset;
             field_21087_c = field_21087_c + 3.141593F * field_21079_m * 1.5F;
             field_21089_a += ((-(float)Math.atan2(f1, motionY) * 180F) / 3.141593F - field_21089_a) * 0.1F;
-        } else
+        }
+        else
         {
             tentacleAngle = MathHelper.abs(MathHelper.sin(field_21085_g)) * 3.141593F * 0.25F;
-            if(!isMultiplayerEntity)
+            if (!worldObj.multiplayerWorld)
             {
                 motionX = 0.0D;
                 motionY -= 0.080000000000000002D;
@@ -180,11 +172,11 @@ public class EntitySquid extends EntityWaterMob
     protected void updateEntityActionState()
     {
         entityAge++;
-        if(entityAge > 100)
+        if (entityAge > 100)
         {
             randomMotionVecX = randomMotionVecY = randomMotionVecZ = 0.0F;
-        } else
-        if(rand.nextInt(50) == 0 || !inWater || randomMotionVecX == 0.0F && randomMotionVecY == 0.0F && randomMotionVecZ == 0.0F)
+        }
+        else if (rand.nextInt(50) == 0 || !inWater || randomMotionVecX == 0.0F && randomMotionVecY == 0.0F && randomMotionVecZ == 0.0F)
         {
             float f = rand.nextFloat() * 3.141593F * 2.0F;
             randomMotionVecX = MathHelper.cos(f) * 0.2F;

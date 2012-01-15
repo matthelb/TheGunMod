@@ -1,18 +1,8 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            EntityFX, Item, Block, Tessellator, 
-//            World
 
 public class EntityBreakingFX extends EntityFX
 {
-
-    public EntityBreakingFX(World world, double d, double d1, double d2, 
+    public EntityBreakingFX(World world, double d, double d1, double d2,
             Item item)
     {
         super(world, d, d1, d2, 0.0D, 0.0D, 0.0D);
@@ -22,7 +12,7 @@ public class EntityBreakingFX extends EntityFX
         particleScale /= 2.0F;
     }
 
-    public EntityBreakingFX(World world, double d, double d1, double d2, 
+    public EntityBreakingFX(World world, double d, double d1, double d2,
             double d3, double d4, double d5, Item item)
     {
         this(world, d, d1, d2, item);

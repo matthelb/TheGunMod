@@ -1,18 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            EntityFX, World, Tessellator
-
 public class EntityExplodeFX extends EntityFX
 {
-
-    public EntityExplodeFX(World world, double d, double d1, double d2, 
+    public EntityExplodeFX(World world, double d, double d1, double d2,
             double d3, double d4, double d5)
     {
         super(world, d, d1, d2, d3, d4, d5);
@@ -34,7 +26,7 @@ public class EntityExplodeFX extends EntityFX
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
-        if(particleAge++ >= particleMaxAge)
+        if (particleAge++ >= particleMaxAge)
         {
             setEntityDead();
         }
@@ -44,7 +36,7 @@ public class EntityExplodeFX extends EntityFX
         motionX *= 0.89999997615814209D;
         motionY *= 0.89999997615814209D;
         motionZ *= 0.89999997615814209D;
-        if(onGround)
+        if (onGround)
         {
             motionX *= 0.69999998807907104D;
             motionZ *= 0.69999998807907104D;

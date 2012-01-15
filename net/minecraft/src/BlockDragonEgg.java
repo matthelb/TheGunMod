@@ -1,18 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            Block, Material, World, BlockSand, 
-//            EntityFallingSand, EntityPlayer
-
 public class BlockDragonEgg extends Block
 {
-
     public BlockDragonEgg(int i, int j)
     {
         super(i, j, Material.dragonEgg);
@@ -38,18 +29,19 @@ public class BlockDragonEgg extends Block
         int l = i;
         int i1 = j;
         int j1 = k;
-        if(BlockSand.canFallBelow(world, l, i1 - 1, j1) && i1 >= 0)
+        if (BlockSand.canFallBelow(world, l, i1 - 1, j1) && i1 >= 0)
         {
             byte byte0 = 32;
-            if(BlockSand.fallInstantly || !world.checkChunksExist(i - byte0, j - byte0, k - byte0, i + byte0, j + byte0, k + byte0))
+            if (BlockSand.fallInstantly || !world.checkChunksExist(i - byte0, j - byte0, k - byte0, i + byte0, j + byte0, k + byte0))
             {
                 world.setBlockWithNotify(i, j, k, 0);
-                for(; BlockSand.canFallBelow(world, i, j - 1, k) && j > 0; j--) { }
-                if(j > 0)
+                for (; BlockSand.canFallBelow(world, i, j - 1, k) && j > 0; j--) { }
+                if (j > 0)
                 {
                     world.setBlockWithNotify(i, j, k, blockID);
                 }
-            } else
+            }
+            else
             {
                 EntityFallingSand entityfallingsand = new EntityFallingSand(world, (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, blockID);
                 world.spawnEntityInWorld(entityfallingsand);
@@ -70,25 +62,25 @@ public class BlockDragonEgg extends Block
 
     private void teleportNearby(World world, int i, int j, int k)
     {
-        if(world.getBlockId(i, j, k) != blockID)
+        if (world.getBlockId(i, j, k) != blockID)
         {
             return;
         }
-        if(world.multiplayerWorld)
+        if (world.multiplayerWorld)
         {
             return;
         }
-        for(int l = 0; l < 1000; l++)
+        for (int l = 0; l < 1000; l++)
         {
             int i1 = (i + world.rand.nextInt(16)) - world.rand.nextInt(16);
             int j1 = (j + world.rand.nextInt(8)) - world.rand.nextInt(8);
             int k1 = (k + world.rand.nextInt(16)) - world.rand.nextInt(16);
-            if(world.getBlockId(i1, j1, k1) == 0)
+            if (world.getBlockId(i1, j1, k1) == 0)
             {
                 world.setBlockAndMetadataWithNotify(i1, j1, k1, blockID, world.getBlockMetadata(i, j, k));
                 world.setBlockWithNotify(i, j, k, 0);
                 char c = '\200';
-                for(int l1 = 0; l1 < c; l1++)
+                for (int l1 = 0; l1 < c; l1++)
                 {
                     double d = world.rand.nextDouble();
                     float f = (world.rand.nextFloat() - 0.5F) * 0.2F;
@@ -103,7 +95,6 @@ public class BlockDragonEgg extends Block
                 return;
             }
         }
-
     }
 
     public int tickRate()

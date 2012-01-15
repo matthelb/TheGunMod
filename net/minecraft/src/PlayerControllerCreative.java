@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
 
-// Referenced classes of package net.minecraft.src:
-//            PlayerController, EntityPlayer, PlayerCapabilities, InventoryPlayer, 
-//            ItemStack, Session, Block, World
-
 public class PlayerControllerCreative extends PlayerController
 {
-
     private int field_35647_c;
 
     public PlayerControllerCreative(Minecraft minecraft)
@@ -40,14 +31,13 @@ public class PlayerControllerCreative extends PlayerController
     public void func_6473_b(EntityPlayer entityplayer)
     {
         enableAbilities(entityplayer);
-        for(int i = 0; i < 9; i++)
+        for (int i = 0; i < 9; i++)
         {
-            if(entityplayer.inventory.mainInventory[i] == null)
+            if (entityplayer.inventory.mainInventory[i] == null)
             {
                 entityplayer.inventory.mainInventory[i] = new ItemStack((Block)Session.registeredBlocksList.get(i));
             }
         }
-
     }
 
     public static void clickBlockCreative(Minecraft minecraft, PlayerController playercontroller, int i, int j, int k, int l)
@@ -59,14 +49,15 @@ public class PlayerControllerCreative extends PlayerController
     public boolean onPlayerRightClick(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l)
     {
         int i1 = world.getBlockId(i, j, k);
-        if(i1 > 0 && Block.blocksList[i1].blockActivated(world, i, j, k, entityplayer))
+        if (i1 > 0 && Block.blocksList[i1].blockActivated(world, i, j, k, entityplayer))
         {
             return true;
         }
-        if(itemstack == null)
+        if (itemstack == null)
         {
             return false;
-        } else
+        }
+        else
         {
             int j1 = itemstack.getItemDamage();
             int k1 = itemstack.stackSize;
@@ -86,7 +77,7 @@ public class PlayerControllerCreative extends PlayerController
     public void onPlayerDamageBlock(int i, int j, int k, int l)
     {
         field_35647_c--;
-        if(field_35647_c <= 0)
+        if (field_35647_c <= 0)
         {
             field_35647_c = 5;
             clickBlockCreative(mc, this, i, j, k, l);
