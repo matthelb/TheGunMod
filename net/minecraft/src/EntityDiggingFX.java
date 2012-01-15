@@ -1,20 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            EntityFX, Block, Tessellator, World
 
 public class EntityDiggingFX extends EntityFX
 {
-
     private Block blockInstance;
 
-    public EntityDiggingFX(World world, double d, double d1, double d2, 
-            double d3, double d4, double d5, Block block, 
+    public EntityDiggingFX(World world, double d, double d1, double d2,
+            double d3, double d4, double d5, Block block,
             int i, int j)
     {
         super(world, d, d1, d2, d3, d4, d5);
@@ -27,10 +18,11 @@ public class EntityDiggingFX extends EntityFX
 
     public EntityDiggingFX func_4041_a(int i, int j, int k)
     {
-        if(blockInstance == Block.grass)
+        if (blockInstance == Block.grass)
         {
             return this;
-        } else
+        }
+        else
         {
             int l = blockInstance.colorMultiplier(worldObj, i, j, k);
             particleRed *= (float)(l >> 16 & 0xff) / 255F;

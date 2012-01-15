@@ -1,18 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.LinkedList;
 import java.util.List;
 
-// Referenced classes of package net.minecraft.src:
-//            J_JsonNodeDoesNotMatchJsonNodeSelectorException, J_JsonNodeSelector, J_Functor
-
 public final class J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException extends J_JsonNodeDoesNotMatchJsonNodeSelectorException
 {
-
     final J_Functor failedNode;
     final List failPath;
 
@@ -45,10 +37,10 @@ public final class J_JsonNodeDoesNotMatchChainedJsonNodeSelectorException extend
     static String getShortFormFailPath(List list)
     {
         StringBuilder stringbuilder = new StringBuilder();
-        for(int i = list.size() - 1; i >= 0; i--)
+        for (int i = list.size() - 1; i >= 0; i--)
         {
             stringbuilder.append(((J_JsonNodeSelector)list.get(i)).shortForm());
-            if(i != 0)
+            if (i != 0)
             {
                 stringbuilder.append(".");
             }

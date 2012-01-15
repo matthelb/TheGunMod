@@ -1,20 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            LayerIsland, GenLayerZoomFuzzy, GenLayerIsland, GenLayerZoom, 
-//            GenLayerSnow, GenLayerMushroomIsland, GenLayerRiverInit, GenLayerRiver, 
-//            GenLayerSmooth, GenLayerVillageLandscape, GenLayerTemperature, GenLayerDownfall, 
-//            GenLayerShore, GenLayerSmoothZoom, GenLayerTemperatureMix, GenLayerDownfallMix, 
-//            GenLayerRiverMix, GenLayerZoomVoronoi
 
 public abstract class GenLayer
 {
-
     private long worldGenSeed;
     protected GenLayer parent;
     private long chunkSeed;
@@ -44,18 +31,23 @@ public abstract class GenLayer
         obj2 = GenLayerZoom.func_35515_a(1000L, ((GenLayer) (obj2)), 0);
         obj2 = new GenLayerVillageLandscape(200L, ((GenLayer) (obj2)));
         obj2 = GenLayerZoom.func_35515_a(1000L, ((GenLayer) (obj2)), 2);
+        obj2 = new GenLayerHills(1000L, ((GenLayer) (obj2)));
         GenLayer obj3 = new GenLayerTemperature(((GenLayer) (obj2)));
         GenLayer obj4 = new GenLayerDownfall(((GenLayer) (obj2)));
-        for(int i = 0; i < byte0; i++)
+        for (int i = 0; i < byte0; i++)
         {
             obj2 = new GenLayerZoom(1000 + i, ((GenLayer) (obj2)));
-            if(i == 0)
+            if (i == 0)
             {
                 obj2 = new GenLayerIsland(3L, ((GenLayer) (obj2)));
             }
-            if(i == 0)
+            if (i == 1)
             {
                 obj2 = new GenLayerShore(1000L, ((GenLayer) (obj2)));
+            }
+            if (i == 1)
+            {
+                obj2 = new GenLayerSwampRivers(1000L, ((GenLayer) (obj2)));
             }
             obj3 = new GenLayerSmoothZoom(1000 + i, ((GenLayer) (obj3)));
             obj3 = new GenLayerTemperatureMix(((GenLayer) (obj3)), ((GenLayer) (obj2)), i);
@@ -73,9 +65,10 @@ public abstract class GenLayer
         ((GenLayer) (obj3)).initWorldGenSeed(l);
         ((GenLayer) (obj4)).initWorldGenSeed(l);
         genlayerzoomvoronoi.initWorldGenSeed(l);
-        return (new GenLayer[] {
-            obj2, genlayerzoomvoronoi, obj3, obj4, genlayerrivermix
-        });
+        return (new GenLayer[]
+                {
+                    obj2, genlayerzoomvoronoi, obj3, obj4, genlayerrivermix
+                });
     }
 
     public GenLayer(long l)
@@ -92,7 +85,7 @@ public abstract class GenLayer
     public void initWorldGenSeed(long l)
     {
         worldGenSeed = l;
-        if(parent != null)
+        if (parent != null)
         {
             parent.initWorldGenSeed(l);
         }
@@ -120,7 +113,7 @@ public abstract class GenLayer
     protected int nextInt(int i)
     {
         int j = (int)((chunkSeed >> 24) % (long)i);
-        if(j < 0)
+        if (j < 0)
         {
             j += i;
         }

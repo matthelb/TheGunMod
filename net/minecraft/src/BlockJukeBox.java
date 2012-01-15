@@ -1,18 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            BlockContainer, Material, World, TileEntityRecordPlayer, 
-//            EntityItem, ItemStack, EntityPlayer, TileEntity
-
 public class BlockJukeBox extends BlockContainer
 {
-
     protected BlockJukeBox(int i, int j)
     {
         super(i, j, Material.wood);
@@ -25,10 +16,11 @@ public class BlockJukeBox extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.getBlockMetadata(i, j, k) == 0)
+        if (world.getBlockMetadata(i, j, k) == 0)
         {
             return false;
-        } else
+        }
+        else
         {
             insertDisc(world, i, j, k);
             return true;
@@ -37,15 +29,16 @@ public class BlockJukeBox extends BlockContainer
 
     public void ejectRecord(World world, int i, int j, int k, int l)
     {
-        if(world.multiplayerWorld)
+        if (world.multiplayerWorld)
         {
             return;
         }
         TileEntityRecordPlayer tileentityrecordplayer = (TileEntityRecordPlayer)world.getBlockTileEntity(i, j, k);
-        if(tileentityrecordplayer == null)
+        if (tileentityrecordplayer == null)
         {
             return;
-        } else
+        }
+        else
         {
             tileentityrecordplayer.record = l;
             tileentityrecordplayer.onInventoryChanged();
@@ -56,20 +49,21 @@ public class BlockJukeBox extends BlockContainer
 
     public void insertDisc(World world, int i, int j, int k)
     {
-        if(world.multiplayerWorld)
+        if (world.multiplayerWorld)
         {
             return;
         }
         TileEntityRecordPlayer tileentityrecordplayer = (TileEntityRecordPlayer)world.getBlockTileEntity(i, j, k);
-        if(tileentityrecordplayer == null)
+        if (tileentityrecordplayer == null)
         {
             return;
         }
         int l = tileentityrecordplayer.record;
-        if(l == 0)
+        if (l == 0)
         {
             return;
-        } else
+        }
+        else
         {
             world.playAuxSFX(1005, i, j, k, 0);
             world.playRecord(null, i, j, k);
@@ -96,10 +90,11 @@ public class BlockJukeBox extends BlockContainer
 
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        if(world.multiplayerWorld)
+        if (world.multiplayerWorld)
         {
             return;
-        } else
+        }
+        else
         {
             super.dropBlockAsItemWithChance(world, i, j, k, l, f, 0);
             return;

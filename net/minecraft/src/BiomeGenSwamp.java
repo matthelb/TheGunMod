@@ -1,18 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            BiomeGenBase, BiomeDecorator, IBlockAccess, WorldChunkManager, 
-//            ColorizerGrass, ColorizerFoliage, WorldGenerator
-
 public class BiomeGenSwamp extends BiomeGenBase
 {
-
     protected BiomeGenSwamp(int i)
     {
         super(i);
@@ -23,7 +14,7 @@ public class BiomeGenSwamp extends BiomeGenBase
         biomeDecorator.reedsPerChunk = 10;
         biomeDecorator.clayPerChunk = 1;
         biomeDecorator.waterlilyPerChunk = 4;
-        waterColorMultiplier = 0xe0ff70;
+        waterColorMultiplier = 0xe0ffae;
     }
 
     public WorldGenerator getRandomWorldGenForTrees(Random random)

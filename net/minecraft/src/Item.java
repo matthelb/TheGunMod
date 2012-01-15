@@ -1,32 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            ItemStack, StatCollector, EnumAction, StringTranslate, 
-//            EnumRarity, EntityPlayer, Vec3D, MathHelper, 
-//            World, ItemSpade, EnumToolMaterial, ItemPickaxe, 
-//            ItemAxe, ItemFlintAndSteel, ItemFood, ItemBow, 
-//            ItemCoal, ItemSword, ItemSoup, PotionHelper, 
-//            ItemHoe, ItemSeeds, Block, ItemArmor, 
-//            EnumArmorMaterial, ItemPainting, ItemAppleGold, Potion, 
-//            ItemSign, ItemDoor, Material, ItemBucket, 
-//            ItemMinecart, ItemSaddle, ItemRedstone, ItemSnowball, 
-//            ItemBoat, ItemBucketMilk, ItemReed, ItemEgg, 
-//            ItemFishingRod, ItemDye, ItemBed, ItemMap, 
-//            ItemShears, ItemEnderPearl, ItemPotion, ItemGlassBottle, 
-//            ItemEnderEye, ItemRecord, StatList, EntityLiving, 
-//            Entity, MovingObjectPosition
-
 public class Item
 {
-
     protected static Random itemRand = new Random();
     public static Item itemsList[] = new Item[32000];
     public static Item shovelSteel;
@@ -156,6 +135,7 @@ public class Item
     public static Item cauldron;
     public static Item eyeOfEnder = (new ItemEnderEye(125)).setIconCoord(11, 9).setItemName("eyeOfEnder");
     public static Item speckledMelon;
+    public static Item field_44019_bC = (new ItemMonsterPlacer(127)).setIconCoord(9, 9).setItemName("monsterPlacer");
     public static Item record13 = (new ItemRecord(2000, "13")).setIconCoord(0, 15).setItemName("record");
     public static Item recordCat = (new ItemRecord(2001, "cat")).setIconCoord(1, 15).setItemName("record");
     public static Item recordBlocks = (new ItemRecord(2002, "blocks")).setIconCoord(2, 15).setItemName("record");
@@ -186,7 +166,7 @@ public class Item
         containerItem = null;
         potionModifier = null;
         shiftedIndex = 256 + i;
-        if(itemsList[256 + i] != null)
+        if (itemsList[256 + i] != null)
         {
             System.out.println((new StringBuilder()).append("CONFLICT @ ").append(i).toString());
         }
@@ -246,7 +226,7 @@ public class Item
         return maxStackSize;
     }
 
-    public int getPlacedBlockMetadata(int i)
+    public int getMetadata(int i)
     {
         return 0;
     }
@@ -327,10 +307,11 @@ public class Item
     public String getLocalItemName(ItemStack itemstack)
     {
         String s = getItemNameIS(itemstack);
-        if(s == null)
+        if (s == null)
         {
             return "";
-        } else
+        }
+        else
         {
             return StatCollector.translateToLocal(s);
         }
@@ -348,14 +329,18 @@ public class Item
 
     public Item setContainerItem(Item item)
     {
-        if(maxStackSize > 1)
-        {
-            throw new IllegalArgumentException("Max stack size must be 1 for items with crafting results");
-        } else
-        {
-            containerItem = item;
-            return this;
-        }
+        containerItem = item;
+        return this;
+    }
+
+    public boolean func_46059_i(ItemStack itemstack)
+    {
+        return true;
+    }
+
+    public boolean func_46056_k()
+    {
+        return false;
     }
 
     public Item getContainerItem()
@@ -373,7 +358,7 @@ public class Item
         return StatCollector.translateToLocal((new StringBuilder()).append(getItemName()).append(".name").toString());
     }
 
-    public int getColorFromDamage(int i)
+    public int getColorFromDamage(int i, int j)
     {
         return 0xffffff;
     }
@@ -433,10 +418,11 @@ public class Item
 
     public EnumRarity getRarity(ItemStack itemstack)
     {
-        if(itemstack.isItemEnchanted())
+        if (itemstack.isItemEnchanted())
         {
             return EnumRarity.rare;
-        } else
+        }
+        else
         {
             return EnumRarity.common;
         }
@@ -474,7 +460,17 @@ public class Item
         return 0;
     }
 
-    static 
+    public boolean func_46058_c()
+    {
+        return false;
+    }
+
+    public int func_46057_a(int i, int j)
+    {
+        return getIconFromDamage(i);
+    }
+
+    static
     {
         shovelSteel = (new ItemSpade(0, EnumToolMaterial.IRON)).setIconCoord(2, 5).setItemName("shovelIron");
         pickaxeSteel = (new ItemPickaxe(1, EnumToolMaterial.IRON)).setIconCoord(2, 6).setItemName("pickaxeIron");
@@ -523,7 +519,7 @@ public class Item
         plateGold = (new ItemArmor(59, EnumArmorMaterial.GOLD, 4, 1)).setIconCoord(4, 1).setItemName("chestplateGold");
         legsGold = (new ItemArmor(60, EnumArmorMaterial.GOLD, 4, 2)).setIconCoord(4, 2).setItemName("leggingsGold");
         bootsGold = (new ItemArmor(61, EnumArmorMaterial.GOLD, 4, 3)).setIconCoord(4, 3).setItemName("bootsGold");
-        appleGold = (new ItemAppleGold(66, 10, 1.2F, false)).setAlwaysEdible().setPotionEffect(Potion.regeneration.id, 30, 0, 1.0F).setIconCoord(11, 0).setItemName("appleGold");
+        appleGold = (new ItemAppleGold(66, 4, 1.2F, false)).setAlwaysEdible().setPotionEffect(Potion.regeneration.id, 5, 0, 1.0F).setIconCoord(11, 0).setItemName("appleGold");
         doorWood = (new ItemDoor(68, Material.wood)).setIconCoord(11, 2).setItemName("doorWood");
         bucketEmpty = (new ItemBucket(69, 0)).setIconCoord(10, 4).setItemName("bucket");
         bucketWater = (new ItemBucket(70, Block.waterMoving.blockID)).setIconCoord(11, 4).setItemName("bucketWater").setContainerItem(bucketEmpty);

@@ -1,23 +1,14 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            BlockFluid, Material, World, Block, 
-//            BlockFire
-
 public class BlockStationary extends BlockFluid
 {
-
     protected BlockStationary(int i, Material material)
     {
         super(i, material);
         setTickOnLoad(false);
-        if(material == Material.lava)
+        if (material == Material.lava)
         {
             setTickOnLoad(true);
         }
@@ -26,7 +17,7 @@ public class BlockStationary extends BlockFluid
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
         super.onNeighborBlockChange(world, i, j, k, l);
-        if(world.getBlockId(i, j, k) == blockID)
+        if (world.getBlockId(i, j, k) == blockID)
         {
             setNotStationary(world, i, j, k);
         }
@@ -44,30 +35,29 @@ public class BlockStationary extends BlockFluid
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if(blockMaterial == Material.lava)
+        if (blockMaterial == Material.lava)
         {
             int l = random.nextInt(3);
-            for(int i1 = 0; i1 < l; i1++)
+            for (int i1 = 0; i1 < l; i1++)
             {
                 i += random.nextInt(3) - 1;
                 j++;
                 k += random.nextInt(3) - 1;
                 int j1 = world.getBlockId(i, j, k);
-                if(j1 == 0)
+                if (j1 == 0)
                 {
-                    if(isFlammable(world, i - 1, j, k) || isFlammable(world, i + 1, j, k) || isFlammable(world, i, j, k - 1) || isFlammable(world, i, j, k + 1) || isFlammable(world, i, j - 1, k) || isFlammable(world, i, j + 1, k))
+                    if (isFlammable(world, i - 1, j, k) || isFlammable(world, i + 1, j, k) || isFlammable(world, i, j, k - 1) || isFlammable(world, i, j, k + 1) || isFlammable(world, i, j - 1, k) || isFlammable(world, i, j + 1, k))
                     {
                         world.setBlockWithNotify(i, j, k, Block.fire.blockID);
                         return;
                     }
                     continue;
                 }
-                if(Block.blocksList[j1].blockMaterial.getIsSolid())
+                if (Block.blocksList[j1].blockMaterial.getIsSolid())
                 {
                     return;
                 }
             }
-
         }
     }
 

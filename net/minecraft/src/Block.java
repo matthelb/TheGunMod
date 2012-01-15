@@ -1,46 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            Material, IBlockAccess, AxisAlignedBB, EntityPlayer, 
-//            World, ItemStack, EntityItem, Vec3D, 
-//            MovingObjectPosition, StatList, EnchantmentHelper, Item, 
-//            StatCollector, StepSound, StepSoundStone, StepSoundSand, 
-//            BlockStone, BlockGrass, BlockDirt, BlockSapling, 
-//            BlockFlowing, BlockStationary, BlockSand, BlockGravel, 
-//            BlockOre, BlockLog, BlockLeaves, BlockSponge, 
-//            BlockGlass, BlockDispenser, BlockSandStone, BlockNote, 
-//            BlockBed, BlockRail, BlockDetectorRail, BlockPistonBase, 
-//            BlockWeb, BlockTallGrass, BlockDeadBush, BlockPistonExtension, 
-//            BlockCloth, BlockPistonMoving, BlockFlower, BlockMushroom, 
-//            BlockOreStorage, BlockStep, BlockTNT, BlockBookshelf, 
-//            BlockObsidian, BlockTorch, BlockFire, BlockMobSpawner, 
-//            BlockStairs, BlockChest, BlockRedstoneWire, BlockWorkbench, 
-//            BlockCrops, BlockFarmland, BlockFurnace, BlockSign, 
-//            TileEntitySign, BlockDoor, BlockLadder, BlockLever, 
-//            BlockPressurePlate, EnumMobType, BlockRedstoneOre, BlockRedstoneTorch, 
-//            BlockButton, BlockSnow, BlockIce, BlockSnowBlock, 
-//            BlockCactus, BlockClay, BlockReed, BlockJukeBox, 
-//            BlockFence, BlockPumpkin, BlockNetherrack, BlockSoulSand, 
-//            BlockGlowStone, BlockPortal, BlockCake, BlockRedstoneRepeater, 
-//            BlockLockedChest, BlockTrapDoor, BlockSilverfish, BlockStoneBrick, 
-//            BlockMushroomCap, BlockPane, BlockMelon, BlockStem, 
-//            BlockVine, BlockFenceGate, BlockMycelium, BlockLilyPad, 
-//            BlockNetherStalk, BlockEnchantmentTable, BlockBrewingStand, BlockCauldron, 
-//            BlockEndPortal, BlockEndPortalFrame, BlockDragonEgg, ItemCloth, 
-//            ItemMetadata, ItemSlab, ItemSapling, ItemLeaves, 
-//            ItemColored, ItemLilyPad, ItemPiston, ItemBlock, 
-//            Entity, EntityLiving
-
 public class Block
 {
-
     public static final StepSound soundPowderFootstep;
     public static final StepSound soundWoodFootstep;
     public static final StepSound soundGravelFootstep;
@@ -206,10 +170,11 @@ public class Block
         stepSound = soundPowderFootstep;
         blockParticleGravity = 1.0F;
         slipperiness = 0.6F;
-        if(blocksList[i] != null)
+        if (blocksList[i] != null)
         {
             throw new IllegalArgumentException((new StringBuilder()).append("Slot ").append(i).append(" is already occupied by ").append(blocksList[i]).append(" when adding ").append(this).toString());
-        } else
+        }
+        else
         {
             blockMaterial = material;
             blocksList[i] = this;
@@ -276,7 +241,7 @@ public class Block
     protected Block setHardness(float f)
     {
         blockHardness = f;
-        if(blockResistance < f * 5F)
+        if (blockResistance < f * 5F)
         {
             blockResistance = f * 5F;
         }
@@ -322,30 +287,31 @@ public class Block
 
     public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
     {
-        if(l == 0 && minY > 0.0D)
+        if (l == 0 && minY > 0.0D)
         {
             return true;
         }
-        if(l == 1 && maxY < 1.0D)
+        if (l == 1 && maxY < 1.0D)
         {
             return true;
         }
-        if(l == 2 && minZ > 0.0D)
+        if (l == 2 && minZ > 0.0D)
         {
             return true;
         }
-        if(l == 3 && maxZ < 1.0D)
+        if (l == 3 && maxZ < 1.0D)
         {
             return true;
         }
-        if(l == 4 && minX > 0.0D)
+        if (l == 4 && minX > 0.0D)
         {
             return true;
         }
-        if(l == 5 && maxX < 1.0D)
+        if (l == 5 && maxX < 1.0D)
         {
             return true;
-        } else
+        }
+        else
         {
             return !iblockaccess.isBlockOpaqueCube(i, j, k);
         }
@@ -379,7 +345,7 @@ public class Block
     public void getCollidingBoundingBoxes(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist)
     {
         AxisAlignedBB axisalignedbb1 = getCollisionBoundingBoxFromPool(world, i, j, k);
-        if(axisalignedbb1 != null && axisalignedbb.intersectsWith(axisalignedbb1))
+        if (axisalignedbb1 != null && axisalignedbb.intersectsWith(axisalignedbb1))
         {
             arraylist.add(axisalignedbb1);
         }
@@ -446,14 +412,15 @@ public class Block
 
     public float blockStrength(EntityPlayer entityplayer)
     {
-        if(blockHardness < 0.0F)
+        if (blockHardness < 0.0F)
         {
             return 0.0F;
         }
-        if(!entityplayer.canHarvestBlock(this))
+        if (!entityplayer.canHarvestBlock(this))
         {
             return 1.0F / blockHardness / 100F;
-        } else
+        }
+        else
         {
             return entityplayer.getCurrentPlayerStrVsBlock(this) / blockHardness / 30F;
         }
@@ -466,32 +433,32 @@ public class Block
 
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        if(world.multiplayerWorld)
+        if (world.multiplayerWorld)
         {
             return;
         }
         int j1 = quantityDroppedWithBonus(i1, world.rand);
-        for(int k1 = 0; k1 < j1; k1++)
+        for (int k1 = 0; k1 < j1; k1++)
         {
-            if(world.rand.nextFloat() > f)
+            if (world.rand.nextFloat() > f)
             {
                 continue;
             }
             int l1 = idDropped(l, world.rand, i1);
-            if(l1 > 0)
+            if (l1 > 0)
             {
                 dropBlockAsItem_do(world, i, j, k, new ItemStack(l1, 1, damageDropped(l)));
             }
         }
-
     }
 
     protected void dropBlockAsItem_do(World world, int i, int j, int k, ItemStack itemstack)
     {
-        if(world.multiplayerWorld)
+        if (world.multiplayerWorld)
         {
             return;
-        } else
+        }
+        else
         {
             float f = 0.7F;
             double d = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
@@ -525,81 +492,81 @@ public class Block
         Vec3D vec3d5 = vec3d.getIntermediateWithYValue(vec3d1, maxY);
         Vec3D vec3d6 = vec3d.getIntermediateWithZValue(vec3d1, minZ);
         Vec3D vec3d7 = vec3d.getIntermediateWithZValue(vec3d1, maxZ);
-        if(!isVecInsideYZBounds(vec3d2))
+        if (!isVecInsideYZBounds(vec3d2))
         {
             vec3d2 = null;
         }
-        if(!isVecInsideYZBounds(vec3d3))
+        if (!isVecInsideYZBounds(vec3d3))
         {
             vec3d3 = null;
         }
-        if(!isVecInsideXZBounds(vec3d4))
+        if (!isVecInsideXZBounds(vec3d4))
         {
             vec3d4 = null;
         }
-        if(!isVecInsideXZBounds(vec3d5))
+        if (!isVecInsideXZBounds(vec3d5))
         {
             vec3d5 = null;
         }
-        if(!isVecInsideXYBounds(vec3d6))
+        if (!isVecInsideXYBounds(vec3d6))
         {
             vec3d6 = null;
         }
-        if(!isVecInsideXYBounds(vec3d7))
+        if (!isVecInsideXYBounds(vec3d7))
         {
             vec3d7 = null;
         }
         Vec3D vec3d8 = null;
-        if(vec3d2 != null && (vec3d8 == null || vec3d.distanceTo(vec3d2) < vec3d.distanceTo(vec3d8)))
+        if (vec3d2 != null && (vec3d8 == null || vec3d.distanceTo(vec3d2) < vec3d.distanceTo(vec3d8)))
         {
             vec3d8 = vec3d2;
         }
-        if(vec3d3 != null && (vec3d8 == null || vec3d.distanceTo(vec3d3) < vec3d.distanceTo(vec3d8)))
+        if (vec3d3 != null && (vec3d8 == null || vec3d.distanceTo(vec3d3) < vec3d.distanceTo(vec3d8)))
         {
             vec3d8 = vec3d3;
         }
-        if(vec3d4 != null && (vec3d8 == null || vec3d.distanceTo(vec3d4) < vec3d.distanceTo(vec3d8)))
+        if (vec3d4 != null && (vec3d8 == null || vec3d.distanceTo(vec3d4) < vec3d.distanceTo(vec3d8)))
         {
             vec3d8 = vec3d4;
         }
-        if(vec3d5 != null && (vec3d8 == null || vec3d.distanceTo(vec3d5) < vec3d.distanceTo(vec3d8)))
+        if (vec3d5 != null && (vec3d8 == null || vec3d.distanceTo(vec3d5) < vec3d.distanceTo(vec3d8)))
         {
             vec3d8 = vec3d5;
         }
-        if(vec3d6 != null && (vec3d8 == null || vec3d.distanceTo(vec3d6) < vec3d.distanceTo(vec3d8)))
+        if (vec3d6 != null && (vec3d8 == null || vec3d.distanceTo(vec3d6) < vec3d.distanceTo(vec3d8)))
         {
             vec3d8 = vec3d6;
         }
-        if(vec3d7 != null && (vec3d8 == null || vec3d.distanceTo(vec3d7) < vec3d.distanceTo(vec3d8)))
+        if (vec3d7 != null && (vec3d8 == null || vec3d.distanceTo(vec3d7) < vec3d.distanceTo(vec3d8)))
         {
             vec3d8 = vec3d7;
         }
-        if(vec3d8 == null)
+        if (vec3d8 == null)
         {
             return null;
         }
         byte byte0 = -1;
-        if(vec3d8 == vec3d2)
+        if (vec3d8 == vec3d2)
         {
             byte0 = 4;
         }
-        if(vec3d8 == vec3d3)
+        if (vec3d8 == vec3d3)
         {
             byte0 = 5;
         }
-        if(vec3d8 == vec3d4)
+        if (vec3d8 == vec3d4)
         {
             byte0 = 0;
         }
-        if(vec3d8 == vec3d5)
+        if (vec3d8 == vec3d5)
         {
             byte0 = 1;
         }
-        if(vec3d8 == vec3d6)
+        if (vec3d8 == vec3d6)
         {
             byte0 = 2;
         }
-        if(vec3d8 == vec3d7)
+        if (vec3d8 == vec3d7)
         {
             byte0 = 3;
         }
@@ -608,10 +575,11 @@ public class Block
 
     private boolean isVecInsideYZBounds(Vec3D vec3d)
     {
-        if(vec3d == null)
+        if (vec3d == null)
         {
             return false;
-        } else
+        }
+        else
         {
             return vec3d.yCoord >= minY && vec3d.yCoord <= maxY && vec3d.zCoord >= minZ && vec3d.zCoord <= maxZ;
         }
@@ -619,10 +587,11 @@ public class Block
 
     private boolean isVecInsideXZBounds(Vec3D vec3d)
     {
-        if(vec3d == null)
+        if (vec3d == null)
         {
             return false;
-        } else
+        }
+        else
         {
             return vec3d.xCoord >= minX && vec3d.xCoord <= maxX && vec3d.zCoord >= minZ && vec3d.zCoord <= maxZ;
         }
@@ -630,10 +599,11 @@ public class Block
 
     private boolean isVecInsideXYBounds(Vec3D vec3d)
     {
-        if(vec3d == null)
+        if (vec3d == null)
         {
             return false;
-        } else
+        }
+        else
         {
             return vec3d.xCoord >= minX && vec3d.xCoord <= maxX && vec3d.yCoord >= minY && vec3d.yCoord <= maxY;
         }
@@ -726,14 +696,15 @@ public class Block
     {
         entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
         entityplayer.addExhaustion(0.025F);
-        if(renderAsNormalBlock() && !isBlockContainer[blockID] && EnchantmentHelper.getSilkTouchModifier(entityplayer.inventory))
+        if (renderAsNormalBlock() && !isBlockContainer[blockID] && EnchantmentHelper.getSilkTouchModifier(entityplayer.inventory))
         {
             ItemStack itemstack = createStackedBlock(l);
-            if(itemstack != null)
+            if (itemstack != null)
             {
                 dropBlockAsItem_do(world, i, j, k, itemstack);
             }
-        } else
+        }
+        else
         {
             int i1 = EnchantmentHelper.getFortuneModifier(entityplayer.inventory);
             dropBlockAsItem(world, i, j, k, l, i1);
@@ -743,7 +714,7 @@ public class Block
     protected ItemStack createStackedBlock(int i)
     {
         int j = 0;
-        if(blockID >= 0 && blockID < Item.itemsList.length && Item.itemsList[blockID].getHasSubtypes())
+        if (blockID >= 0 && blockID < Item.itemsList.length && Item.itemsList[blockID].getHasSubtypes())
         {
             j = i;
         }
@@ -805,19 +776,23 @@ public class Block
         return iblockaccess.isBlockNormalCube(i, j, k) ? 0.2F : 1.0F;
     }
 
+    public void func_43001_a(World world, int i, int j, int k, Entity entity, float f)
+    {
+    }
+
     static Class _mthclass$(String s)
     {
         try
         {
             return Class.forName(s);
         }
-        catch(ClassNotFoundException classnotfoundexception)
+        catch (ClassNotFoundException classnotfoundexception)
         {
             throw new NoClassDefFoundError(classnotfoundexception.getMessage());
         }
     }
 
-    static 
+    static
     {
         soundPowderFootstep = new StepSound("stone", 1.0F, 1.0F);
         soundWoodFootstep = new StepSound("wood", 1.0F, 1.0F);
@@ -960,33 +935,34 @@ public class Block
         Item.itemsList[sapling.blockID] = (new ItemSapling(sapling.blockID - 256)).setItemName("sapling");
         Item.itemsList[leaves.blockID] = (new ItemLeaves(leaves.blockID - 256)).setItemName("leaves");
         Item.itemsList[vine.blockID] = new ItemColored(vine.blockID - 256, false);
-        Item.itemsList[tallGrass.blockID] = (new ItemColored(tallGrass.blockID - 256, true)).setBlockNames(new String[] {
-            "shrub", "grass", "fern"
-        });
+        Item.itemsList[tallGrass.blockID] = (new ItemColored(tallGrass.blockID - 256, true)).setBlockNames(new String[]
+                {
+                    "shrub", "grass", "fern"
+                });
         Item.itemsList[waterlily.blockID] = new ItemLilyPad(waterlily.blockID - 256);
         Item.itemsList[pistonBase.blockID] = new ItemPiston(pistonBase.blockID - 256);
         Item.itemsList[pistonStickyBase.blockID] = new ItemPiston(pistonStickyBase.blockID - 256);
-        for(int i = 0; i < 256; i++)
+        for (int i = 0; i < 256; i++)
         {
-            if(blocksList[i] == null)
+            if (blocksList[i] == null)
             {
                 continue;
             }
-            if(Item.itemsList[i] == null)
+            if (Item.itemsList[i] == null)
             {
                 Item.itemsList[i] = new ItemBlock(i - 256);
                 blocksList[i].initializeBlock();
             }
             boolean flag = false;
-            if(i > 0 && blocksList[i].getRenderType() == 10)
+            if (i > 0 && blocksList[i].getRenderType() == 10)
             {
                 flag = true;
             }
-            if(i > 0 && (blocksList[i] instanceof BlockStep))
+            if (i > 0 && (blocksList[i] instanceof BlockStep))
             {
                 flag = true;
             }
-            if(i == tilledField.blockID)
+            if (i == tilledField.blockID)
             {
                 flag = true;
             }

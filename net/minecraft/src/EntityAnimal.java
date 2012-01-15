@@ -1,21 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            EntityCreature, DataWatcher, World, EntityPlayer, 
-//            Entity, Block, BlockGrass, NBTTagCompound, 
-//            AxisAlignedBB, MathHelper, ItemStack, Item, 
-//            InventoryPlayer, DamageSource
-
 public abstract class EntityAnimal extends EntityCreature
 {
-
     private int inLove;
     private int breeding;
 
@@ -45,28 +34,29 @@ public abstract class EntityAnimal extends EntityCreature
     {
         super.onLivingUpdate();
         int i = getDelay();
-        if(i < 0)
+        if (i < 0)
         {
             i++;
             setDelay(i);
-        } else
-        if(i > 0)
+        }
+        else if (i > 0)
         {
             i--;
             setDelay(i);
         }
-        if(inLove > 0)
+        if (inLove > 0)
         {
             inLove--;
             String s = "heart";
-            if(inLove % 10 == 0)
+            if (inLove % 10 == 0)
             {
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
                 double d2 = rand.nextGaussian() * 0.02D;
                 worldObj.spawnParticle(s, (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
             }
-        } else
+        }
+        else
         {
             breeding = 0;
         }
@@ -74,9 +64,9 @@ public abstract class EntityAnimal extends EntityCreature
 
     protected void attackEntity(Entity entity, float f)
     {
-        if(entity instanceof EntityPlayer)
+        if (entity instanceof EntityPlayer)
         {
-            if(f < 3F)
+            if (f < 3F)
             {
                 double d = entity.posX - posX;
                 double d1 = entity.posZ - posZ;
@@ -84,55 +74,58 @@ public abstract class EntityAnimal extends EntityCreature
                 hasAttacked = true;
             }
             EntityPlayer entityplayer = (EntityPlayer)entity;
-            if(entityplayer.getCurrentEquippedItem() == null || !isWheat(entityplayer.getCurrentEquippedItem()))
+            if (entityplayer.getCurrentEquippedItem() == null || !isWheat(entityplayer.getCurrentEquippedItem()))
             {
                 entityToAttack = null;
             }
-        } else
-        if(entity instanceof EntityAnimal)
+        }
+        else if (entity instanceof EntityAnimal)
         {
             EntityAnimal entityanimal = (EntityAnimal)entity;
-            if(getDelay() > 0 && entityanimal.getDelay() < 0)
+            if (getDelay() > 0 && entityanimal.getDelay() < 0)
             {
-                if((double)f < 2.5D)
+                if ((double)f < 2.5D)
                 {
                     hasAttacked = true;
                 }
-            } else
-            if(inLove > 0 && entityanimal.inLove > 0)
+            }
+            else if (inLove > 0 && entityanimal.inLove > 0)
             {
-                if(entityanimal.entityToAttack == null)
+                if (entityanimal.entityToAttack == null)
                 {
                     entityanimal.entityToAttack = this;
                 }
-                if(entityanimal.entityToAttack == this && (double)f < 3.5D)
+                if (entityanimal.entityToAttack == this && (double)f < 3.5D)
                 {
                     entityanimal.inLove++;
                     inLove++;
                     breeding++;
-                    if(breeding % 4 == 0)
+                    if (breeding % 4 == 0)
                     {
                         worldObj.spawnParticle("heart", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, 0.0D, 0.0D, 0.0D);
                     }
-                    if(breeding == 60)
+                    if (breeding == 60)
                     {
-                        proceate((EntityAnimal)entity);
+                        procreate((EntityAnimal)entity);
                     }
-                } else
+                }
+                else
                 {
                     breeding = 0;
                 }
-            } else
+            }
+            else
             {
                 breeding = 0;
+                entityToAttack = null;
             }
         }
     }
 
-    private void proceate(EntityAnimal entityanimal)
+    private void procreate(EntityAnimal entityanimal)
     {
         EntityAnimal entityanimal1 = spawnBabyAnimal(entityanimal);
-        if(entityanimal1 != null)
+        if (entityanimal1 != null)
         {
             setDelay(6000);
             entityanimal.setDelay(6000);
@@ -144,7 +137,7 @@ public abstract class EntityAnimal extends EntityCreature
             entityanimal.inLove = 0;
             entityanimal1.setDelay(-24000);
             entityanimal1.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
-            for(int i = 0; i < 7; i++)
+            for (int i = 0; i < 7; i++)
             {
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
@@ -170,12 +163,13 @@ public abstract class EntityAnimal extends EntityCreature
         return super.attackEntityFrom(damagesource, i);
     }
 
-    protected float getBlockPathWeight(int i, int j, int k)
+    public float getBlockPathWeight(int i, int j, int k)
     {
-        if(worldObj.getBlockId(i, j - 1, k) == Block.grass.blockID)
+        if (worldObj.getBlockId(i, j - 1, k) == Block.grass.blockID)
         {
             return 10F;
-        } else
+        }
+        else
         {
             return worldObj.getLightBrightness(i, j, k) - 0.5F;
         }
@@ -197,49 +191,46 @@ public abstract class EntityAnimal extends EntityCreature
 
     protected Entity findPlayerToAttack()
     {
-        if(fleeingTick > 0)
+        if (fleeingTick > 0)
         {
             return null;
         }
         float f = 8F;
-        if(inLove > 0)
+        if (inLove > 0)
         {
-            List list = worldObj.getEntitiesWithinAABB(getClass(), boundingBox.addCoord(f, f, f));
-            for(int i = 0; i < list.size(); i++)
+            List list = worldObj.getEntitiesWithinAABB(getClass(), boundingBox.expand(f, f, f));
+            for (int i = 0; i < list.size(); i++)
             {
                 EntityAnimal entityanimal = (EntityAnimal)list.get(i);
-                if(entityanimal != this && entityanimal.inLove > 0)
+                if (entityanimal != this && entityanimal.inLove > 0)
                 {
                     return entityanimal;
                 }
             }
-
-        } else
-        if(getDelay() == 0)
+        }
+        else if (getDelay() == 0)
         {
-            List list1 = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityPlayer.class, boundingBox.addCoord(f, f, f));
-            for(int j = 0; j < list1.size(); j++)
+            List list1 = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityPlayer.class, boundingBox.expand(f, f, f));
+            for (int j = 0; j < list1.size(); j++)
             {
                 EntityPlayer entityplayer = (EntityPlayer)list1.get(j);
-                if(entityplayer.getCurrentEquippedItem() != null && isWheat(entityplayer.getCurrentEquippedItem()))
+                if (entityplayer.getCurrentEquippedItem() != null && isWheat(entityplayer.getCurrentEquippedItem()))
                 {
                     return entityplayer;
                 }
             }
-
-        } else
-        if(getDelay() > 0)
+        }
+        else if (getDelay() > 0)
         {
-            List list2 = worldObj.getEntitiesWithinAABB(getClass(), boundingBox.addCoord(f, f, f));
-            for(int k = 0; k < list2.size(); k++)
+            List list2 = worldObj.getEntitiesWithinAABB(getClass(), boundingBox.expand(f, f, f));
+            for (int k = 0; k < list2.size(); k++)
             {
                 EntityAnimal entityanimal1 = (EntityAnimal)list2.get(k);
-                if(entityanimal1 != this && entityanimal1.getDelay() < 0)
+                if (entityanimal1 != this && entityanimal1.getDelay() < 0)
                 {
                     return entityanimal1;
                 }
             }
-
         }
         return null;
     }
@@ -275,16 +266,16 @@ public abstract class EntityAnimal extends EntityCreature
     public boolean interact(EntityPlayer entityplayer)
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if(itemstack != null && isWheat(itemstack) && getDelay() == 0)
+        if (itemstack != null && isWheat(itemstack) && getDelay() == 0)
         {
             itemstack.stackSize--;
-            if(itemstack.stackSize <= 0)
+            if (itemstack.stackSize <= 0)
             {
                 entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
             }
             inLove = 600;
             entityToAttack = null;
-            for(int i = 0; i < 7; i++)
+            for (int i = 0; i < 7; i++)
             {
                 double d = rand.nextGaussian() * 0.02D;
                 double d1 = rand.nextGaussian() * 0.02D;
@@ -293,7 +284,8 @@ public abstract class EntityAnimal extends EntityCreature
             }
 
             return true;
-        } else
+        }
+        else
         {
             return super.interact(entityplayer);
         }

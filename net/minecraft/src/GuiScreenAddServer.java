@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import org.lwjgl.input.Keyboard;
 
-// Referenced classes of package net.minecraft.src:
-//            GuiScreen, GuiTextField, StringTranslate, GuiButton, 
-//            ServerNBTStorage
-
 public class GuiScreenAddServer extends GuiScreen
 {
-
     private GuiScreen field_35362_a;
     private GuiTextField serverAddress;
     private GuiTextField serverName;
@@ -53,15 +44,15 @@ public class GuiScreenAddServer extends GuiScreen
 
     protected void actionPerformed(GuiButton guibutton)
     {
-        if(!guibutton.enabled)
+        if (!guibutton.enabled)
         {
             return;
         }
-        if(guibutton.id == 1)
+        if (guibutton.id == 1)
         {
             field_35362_a.deleteWorld(false, 0);
-        } else
-        if(guibutton.id == 0)
+        }
+        else if (guibutton.id == 0)
         {
             serverNBTStorage.name = serverName.getText();
             serverNBTStorage.host = serverAddress.getText();
@@ -73,28 +64,29 @@ public class GuiScreenAddServer extends GuiScreen
     {
         serverName.textboxKeyTyped(c, i);
         serverAddress.textboxKeyTyped(c, i);
-        if(c == '\t')
+        if (c == '\t')
         {
-            if(serverName.isFocused)
+            if (serverName.isFocused)
             {
                 serverName.isFocused = false;
                 serverAddress.isFocused = true;
-            } else
+            }
+            else
             {
                 serverName.isFocused = true;
                 serverAddress.isFocused = false;
             }
         }
-        if(c == '\r')
+        if (c == '\r')
         {
             actionPerformed((GuiButton)controlList.get(0));
         }
         ((GuiButton)controlList.get(0)).enabled = serverAddress.getText().length() > 0 && serverName.getText().length() > 0;
-        if(((GuiButton)controlList.get(0)).enabled)
+        if (((GuiButton)controlList.get(0)).enabled)
         {
             String s = serverAddress.getText().trim();
             String as[] = s.split(":");
-            if(as.length > 2)
+            if (as.length > 2)
             {
                 ((GuiButton)controlList.get(0)).enabled = false;
             }

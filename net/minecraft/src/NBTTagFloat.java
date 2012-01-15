@@ -1,17 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 
-// Referenced classes of package net.minecraft.src:
-//            NBTBase
-
 public class NBTTagFloat extends NBTBase
 {
-
     public float floatValue;
 
     public NBTTagFloat(String s)
@@ -26,13 +18,13 @@ public class NBTTagFloat extends NBTBase
     }
 
     void writeTagContents(DataOutput dataoutput)
-        throws IOException
+    throws IOException
     {
         dataoutput.writeFloat(floatValue);
     }
 
     void readTagContents(DataInput datainput)
-        throws IOException
+    throws IOException
     {
         floatValue = datainput.readFloat();
     }
@@ -54,11 +46,12 @@ public class NBTTagFloat extends NBTBase
 
     public boolean equals(Object obj)
     {
-        if(super.equals(obj))
+        if (super.equals(obj))
         {
             NBTTagFloat nbttagfloat = (NBTTagFloat)obj;
             return floatValue == nbttagfloat.floatValue;
-        } else
+        }
+        else
         {
             return false;
         }

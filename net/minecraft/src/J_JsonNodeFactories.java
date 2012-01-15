@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Arrays;
 import java.util.Map;
 
-// Referenced classes of package net.minecraft.src:
-//            J_JsonConstants, J_JsonStringNode, J_JsonNumberNode, J_JsonArray, 
-//            J_JsonObject, J_JsonNode, J_JsonRootNode
-
 public final class J_JsonNodeFactories
 {
-
     private J_JsonNodeFactories()
     {
     }

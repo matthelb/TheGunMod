@@ -1,14 +1,8 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
 
 public class SaveFormatComparator
     implements Comparable
 {
-
     private final String fileName;
     private final String displayName;
     private final long lastTimePlayed;
@@ -17,7 +11,7 @@ public class SaveFormatComparator
     private final int gameType;
     private final boolean hardcore;
 
-    public SaveFormatComparator(String s, String s1, long l, long l1, int i, 
+    public SaveFormatComparator(String s, String s1, long l, long l1, int i,
             boolean flag, boolean flag1)
     {
         fileName = s;
@@ -51,14 +45,15 @@ public class SaveFormatComparator
 
     public int compareTo(SaveFormatComparator saveformatcomparator)
     {
-        if(lastTimePlayed < saveformatcomparator.lastTimePlayed)
+        if (lastTimePlayed < saveformatcomparator.lastTimePlayed)
         {
             return 1;
         }
-        if(lastTimePlayed > saveformatcomparator.lastTimePlayed)
+        if (lastTimePlayed > saveformatcomparator.lastTimePlayed)
         {
             return -1;
-        } else
+        }
+        else
         {
             return fileName.compareTo(saveformatcomparator.fileName);
         }

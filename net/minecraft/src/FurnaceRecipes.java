@@ -1,18 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.HashMap;
 import java.util.Map;
 
-// Referenced classes of package net.minecraft.src:
-//            Block, ItemStack, Item
-
 public class FurnaceRecipes
 {
-
     private static final FurnaceRecipes smeltingBase = new FurnaceRecipes();
     private Map smeltingList;
 
@@ -55,5 +47,4 @@ public class FurnaceRecipes
     {
         return smeltingList;
     }
-
 }

@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.ArrayList;
@@ -9,7 +5,6 @@ import java.util.List;
 
 public class IntCache
 {
-
     private static int intCacheSize = 256;
     private static List freeSmallArrays = new ArrayList();
     private static List inUseSmallArrays = new ArrayList();
@@ -22,21 +17,22 @@ public class IntCache
 
     public static int[] getIntCache(int i)
     {
-        if(i <= 256)
+        if (i <= 256)
         {
-            if(freeSmallArrays.size() == 0)
+            if (freeSmallArrays.size() == 0)
             {
                 int ai[] = new int[256];
                 inUseSmallArrays.add(ai);
                 return ai;
-            } else
+            }
+            else
             {
                 int ai1[] = (int[])freeSmallArrays.remove(freeSmallArrays.size() - 1);
                 inUseSmallArrays.add(ai1);
                 return ai1;
             }
         }
-        if(i > intCacheSize)
+        if (i > intCacheSize)
         {
             intCacheSize = i;
             freeLargeArrays.clear();
@@ -45,12 +41,13 @@ public class IntCache
             inUseLargeArrays.add(ai2);
             return ai2;
         }
-        if(freeLargeArrays.size() == 0)
+        if (freeLargeArrays.size() == 0)
         {
             int ai3[] = new int[intCacheSize];
             inUseLargeArrays.add(ai3);
             return ai3;
-        } else
+        }
+        else
         {
             int ai4[] = (int[])freeLargeArrays.remove(freeLargeArrays.size() - 1);
             inUseLargeArrays.add(ai4);
@@ -60,11 +57,11 @@ public class IntCache
 
     public static void resetIntCache()
     {
-        if(freeLargeArrays.size() > 0)
+        if (freeLargeArrays.size() > 0)
         {
             freeLargeArrays.remove(freeLargeArrays.size() - 1);
         }
-        if(freeSmallArrays.size() > 0)
+        if (freeSmallArrays.size() > 0)
         {
             freeSmallArrays.remove(freeSmallArrays.size() - 1);
         }
@@ -73,5 +70,4 @@ public class IntCache
         inUseLargeArrays.clear();
         inUseSmallArrays.clear();
     }
-
 }

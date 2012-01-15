@@ -1,20 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.LinkedList;
 import java.util.List;
 
-// Referenced classes of package net.minecraft.src:
-//            J_JsonNodeBuilder, J_JsonObjectNodeList, J_JsonNodeFactories, J_JsonFieldBuilder, 
-//            J_JsonRootNode, J_JsonNode
-
 public final class J_JsonObjectNodeBuilder
     implements J_JsonNodeBuilder
 {
-
     private final List fieldBuilders = new LinkedList();
 
     J_JsonObjectNodeBuilder()

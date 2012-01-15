@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.PrintStream;
@@ -10,15 +6,8 @@ import java.util.*;
 import java.util.logging.Logger;
 import net.minecraft.client.Minecraft;
 
-// Referenced classes of package net.minecraft.src:
-//            Packet230ModLoader, ISpawnable, NetClientHandlerEntity, World, 
-//            ModLoader, Entity, WorldClient, BaseMod, 
-//            BaseModMp, Packet100OpenWindow, EntityPlayerSP, Container, 
-//            GuiScreen, Packet, NetClientHandler
-
 public class ModLoaderMp
 {
-
     public static final String NAME = "ModLoaderMP";
     public static final String VERSION = "1.0.0";
     private static boolean hasInit = false;
@@ -28,7 +17,7 @@ public class ModLoaderMp
 
     public static void Init()
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
@@ -36,79 +25,83 @@ public class ModLoaderMp
 
     public static void HandleAllPackets(Packet230ModLoader packet230modloader)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
         packet230Received = true;
-        if(packet230modloader.modId == "ModLoaderMP".hashCode())
+        if (packet230modloader.modId == "ModLoaderMP".hashCode())
         {
-            switch(packet230modloader.packetType)
+            switch (packet230modloader.packetType)
             {
-            case 0: // '\0'
-                handleModCheck(packet230modloader);
-                break;
+                case 0:
+                    handleModCheck(packet230modloader);
+                    break;
 
-            case 1: // '\001'
-                handleTileEntityPacket(packet230modloader);
-                break;
+                case 1:
+                    handleTileEntityPacket(packet230modloader);
+                    break;
             }
-        } else
-        if(packet230modloader.modId == "Spawn".hashCode())
+        }
+        else if (packet230modloader.modId == "Spawn".hashCode())
         {
             NetClientHandlerEntity netclienthandlerentity = HandleNetClientHandlerEntities(packet230modloader.packetType);
-            if(netclienthandlerentity != null && (net.minecraft.src.ISpawnable.class).isAssignableFrom(netclienthandlerentity.entityClass))
+            if (netclienthandlerentity != null && (net.minecraft.src.ISpawnable.class).isAssignableFrom(netclienthandlerentity.entityClass))
             {
                 try
                 {
-                    Entity entity = (Entity)netclienthandlerentity.entityClass.getConstructor(new Class[] {
-                        net.minecraft.src.World.class
-                    }).newInstance(new Object[] {
-                        ModLoader.getMinecraftInstance().theWorld
-                    });
+                    Entity entity = (Entity)netclienthandlerentity.entityClass.getConstructor(new Class[]
+                            {
+                                net.minecraft.src.World.class
+                            }).newInstance(new Object[]
+                                    {
+                                        ModLoader.getMinecraftInstance().theWorld
+                                    });
                     ((ISpawnable)entity).spawn(packet230modloader);
                     ((WorldClient)ModLoader.getMinecraftInstance().theWorld).addEntityToWorld(entity.entityId, entity);
                 }
-                catch(Exception exception)
+                catch (Exception exception)
                 {
                     ModLoader.getLogger().throwing("ModLoader", "handleCustomSpawn", exception);
-                    ModLoader.ThrowException(String.format("Error initializing entity of type %s.", new Object[] {
-                        Integer.valueOf(packet230modloader.packetType)
-                    }), exception);
+                    ModLoader.ThrowException(String.format("Error initializing entity of type %s.", new Object[]
+                            {
+                                Integer.valueOf(packet230modloader.packetType)
+                            }), exception);
                     return;
                 }
             }
-        } else
+        }
+        else
         {
-            for(int i = 0; i < ModLoader.getLoadedMods().size(); i++)
+            for (int i = 0; i < ModLoader.getLoadedMods().size(); i++)
             {
                 BaseMod basemod = (BaseMod)ModLoader.getLoadedMods().get(i);
-                if(!(basemod instanceof BaseModMp))
+                if (!(basemod instanceof BaseModMp))
                 {
                     continue;
                 }
                 BaseModMp basemodmp = (BaseModMp)basemod;
-                if(basemodmp.getId() != packet230modloader.modId)
+                if (basemodmp.getId() != packet230modloader.modId)
                 {
                     continue;
                 }
                 basemodmp.HandlePacket(packet230modloader);
                 break;
             }
-
         }
     }
 
     public static NetClientHandlerEntity HandleNetClientHandlerEntities(int i)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(netClientHandlerEntityMap.containsKey(Integer.valueOf(i)))
+        if (netClientHandlerEntityMap.containsKey(Integer.valueOf(i)))
         {
             return (NetClientHandlerEntity)netClientHandlerEntityMap.get(Integer.valueOf(i));
-        } else
+        }
+        else
         {
             return null;
         }
@@ -116,16 +109,17 @@ public class ModLoaderMp
 
     public static void SendPacket(BaseModMp basemodmp, Packet230ModLoader packet230modloader)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(basemodmp == null)
+        if (basemodmp == null)
         {
             IllegalArgumentException illegalargumentexception = new IllegalArgumentException("baseModMp cannot be null.");
             ModLoader.getLogger().throwing("ModLoaderMp", "SendPacket", illegalargumentexception);
             ModLoader.ThrowException("baseModMp cannot be null.", illegalargumentexception);
-        } else
+        }
+        else
         {
             packet230modloader.modId = basemodmp.getId();
             sendPacket(packet230modloader);
@@ -134,14 +128,15 @@ public class ModLoaderMp
 
     public static void RegisterGUI(BaseModMp basemodmp, int i)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(guiModMap.containsKey(Integer.valueOf(i)))
+        if (guiModMap.containsKey(Integer.valueOf(i)))
         {
             Log("RegisterGUI error: inventoryType already registered.");
-        } else
+        }
+        else
         {
             guiModMap.put(Integer.valueOf(i), basemodmp);
         }
@@ -149,13 +144,13 @@ public class ModLoaderMp
 
     public static void HandleGUI(Packet100OpenWindow packet100openwindow)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
         BaseModMp basemodmp = (BaseModMp)guiModMap.get(Integer.valueOf(packet100openwindow.inventoryType));
         GuiScreen guiscreen = basemodmp.HandleGUI(packet100openwindow.inventoryType);
-        if(guiscreen != null)
+        if (guiscreen != null)
         {
             ModLoader.OpenGUI(ModLoader.getMinecraftInstance().thePlayer, guiscreen);
             ModLoader.getMinecraftInstance().thePlayer.craftingInventory.windowId = packet100openwindow.windowId;
@@ -169,20 +164,21 @@ public class ModLoaderMp
 
     public static void RegisterNetClientHandlerEntity(Class class1, boolean flag, int i)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(i > 255)
+        if (i > 255)
         {
             Log("RegisterNetClientHandlerEntity error: entityId cannot be greater than 255.");
-        } else
-        if(netClientHandlerEntityMap.containsKey(Integer.valueOf(i)))
+        }
+        else if (netClientHandlerEntityMap.containsKey(Integer.valueOf(i)))
         {
             Log("RegisterNetClientHandlerEntity error: entityId already registered.");
-        } else
+        }
+        else
         {
-            if(i > 127)
+            if (i > 127)
             {
                 i -= 256;
             }
@@ -192,23 +188,25 @@ public class ModLoaderMp
 
     public static void SendKey(BaseModMp basemodmp, int i)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(basemodmp == null)
+        if (basemodmp == null)
         {
             IllegalArgumentException illegalargumentexception = new IllegalArgumentException("baseModMp cannot be null.");
             ModLoader.getLogger().throwing("ModLoaderMp", "SendKey", illegalargumentexception);
             ModLoader.ThrowException("baseModMp cannot be null.", illegalargumentexception);
-        } else
+        }
+        else
         {
             Packet230ModLoader packet230modloader = new Packet230ModLoader();
             packet230modloader.modId = "ModLoaderMP".hashCode();
             packet230modloader.packetType = 1;
-            packet230modloader.dataInt = (new int[] {
-                basemodmp.getId(), i
-            });
+            packet230modloader.dataInt = (new int[]
+                    {
+                        basemodmp.getId(), i
+                    });
             sendPacket(packet230modloader);
         }
     }
@@ -227,42 +225,45 @@ public class ModLoaderMp
             Method method;
             try
             {
-                method = (net.minecraft.src.Packet.class).getDeclaredMethod("a", new Class[] {
-                    Integer.TYPE, Boolean.TYPE, Boolean.TYPE, java.lang.Class.class
-                });
+                method = (net.minecraft.src.Packet.class).getDeclaredMethod("a", new Class[]
+                        {
+                            Integer.TYPE, Boolean.TYPE, Boolean.TYPE, java.lang.Class.class
+                        });
             }
-            catch(NoSuchMethodException nosuchmethodexception1)
+            catch (NoSuchMethodException nosuchmethodexception1)
             {
-                method = (net.minecraft.src.Packet.class).getDeclaredMethod("addIdClassMapping", new Class[] {
-                    Integer.TYPE, Boolean.TYPE, Boolean.TYPE, java.lang.Class.class
-                });
+                method = (net.minecraft.src.Packet.class).getDeclaredMethod("addIdClassMapping", new Class[]
+                        {
+                            Integer.TYPE, Boolean.TYPE, Boolean.TYPE, java.lang.Class.class
+                        });
             }
             method.setAccessible(true);
-            method.invoke(null, new Object[] {
-                Integer.valueOf(230), Boolean.valueOf(true), Boolean.valueOf(true), net.minecraft.src.Packet230ModLoader.class
-            });
+            method.invoke(null, new Object[]
+                    {
+                        Integer.valueOf(230), Boolean.valueOf(true), Boolean.valueOf(true), net.minecraft.src.Packet230ModLoader.class
+                    });
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMp", "init", illegalaccessexception);
             ModLoader.ThrowException("An impossible error has occurred!", illegalaccessexception);
         }
-        catch(IllegalArgumentException illegalargumentexception)
+        catch (IllegalArgumentException illegalargumentexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMp", "init", illegalargumentexception);
             ModLoader.ThrowException("An impossible error has occurred!", illegalargumentexception);
         }
-        catch(InvocationTargetException invocationtargetexception)
+        catch (InvocationTargetException invocationtargetexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMp", "init", invocationtargetexception);
             ModLoader.ThrowException("An impossible error has occurred!", invocationtargetexception);
         }
-        catch(NoSuchMethodException nosuchmethodexception)
+        catch (NoSuchMethodException nosuchmethodexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMp", "init", nosuchmethodexception);
             ModLoader.ThrowException("An impossible error has occurred!", nosuchmethodexception);
         }
-        catch(SecurityException securityexception)
+        catch (SecurityException securityexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMp", "init", securityexception);
             ModLoader.ThrowException("An impossible error has occurred!", securityexception);
@@ -276,7 +277,7 @@ public class ModLoaderMp
         packet230modloader1.modId = "ModLoaderMP".hashCode();
         packet230modloader1.packetType = 0;
         packet230modloader1.dataString = new String[ModLoader.getLoadedMods().size()];
-        for(int i = 0; i < ModLoader.getLoadedMods().size(); i++)
+        for (int i = 0; i < ModLoader.getLoadedMods().size(); i++)
         {
             packet230modloader1.dataString[i] = ((BaseMod)ModLoader.getLoadedMods().get(i)).toString();
         }
@@ -286,10 +287,11 @@ public class ModLoaderMp
 
     private static void handleTileEntityPacket(Packet230ModLoader packet230modloader)
     {
-        if(packet230modloader.dataInt == null || packet230modloader.dataInt.length < 5)
+        if (packet230modloader.dataInt == null || packet230modloader.dataInt.length < 5)
         {
             Log("Bad TileEntityPacket received.");
-        } else
+        }
+        else
         {
             int i = packet230modloader.dataInt[0];
             int j = packet230modloader.dataInt[1];
@@ -300,28 +302,27 @@ public class ModLoaderMp
             System.arraycopy(packet230modloader.dataInt, 5, ai, 0, packet230modloader.dataInt.length - 5);
             float af[] = packet230modloader.dataFloat;
             String as[] = packet230modloader.dataString;
-            for(int j1 = 0; j1 < ModLoader.getLoadedMods().size(); j1++)
+            for (int j1 = 0; j1 < ModLoader.getLoadedMods().size(); j1++)
             {
                 BaseMod basemod = (BaseMod)ModLoader.getLoadedMods().get(j1);
-                if(!(basemod instanceof BaseModMp))
+                if (!(basemod instanceof BaseModMp))
                 {
                     continue;
                 }
                 BaseModMp basemodmp = (BaseModMp)basemod;
-                if(basemodmp.getId() != i)
+                if (basemodmp.getId() != i)
                 {
                     continue;
                 }
                 basemodmp.HandleTileEntityPacket(j, k, l, i1, ai, af, as);
                 break;
             }
-
         }
     }
 
     private static void sendPacket(Packet230ModLoader packet230modloader)
     {
-        if(packet230Received && ModLoader.getMinecraftInstance().theWorld != null && ModLoader.getMinecraftInstance().theWorld.multiplayerWorld)
+        if (packet230Received && ModLoader.getMinecraftInstance().theWorld != null && ModLoader.getMinecraftInstance().theWorld.multiplayerWorld)
         {
             ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet230modloader);
         }
@@ -329,15 +330,15 @@ public class ModLoaderMp
 
     public static BaseModMp GetModInstance(Class class1)
     {
-        for(int i = 0; i < ModLoader.getLoadedMods().size(); i++)
+        for (int i = 0; i < ModLoader.getLoadedMods().size(); i++)
         {
             BaseMod basemod = (BaseMod)ModLoader.getLoadedMods().get(i);
-            if(!(basemod instanceof BaseModMp))
+            if (!(basemod instanceof BaseModMp))
             {
                 continue;
             }
             BaseModMp basemodmp = (BaseModMp)basemod;
-            if(class1.isInstance(basemodmp))
+            if (class1.isInstance(basemodmp))
             {
                 return (BaseModMp)ModLoader.getLoadedMods().get(i);
             }
@@ -349,5 +350,4 @@ public class ModLoaderMp
     private ModLoaderMp()
     {
     }
-
 }

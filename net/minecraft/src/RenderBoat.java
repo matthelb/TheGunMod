@@ -1,18 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
 
-// Referenced classes of package net.minecraft.src:
-//            Render, ModelBoat, EntityBoat, MathHelper, 
-//            ModelBase, Entity
-
 public class RenderBoat extends Render
 {
-
     protected ModelBase modelBoat;
 
     public RenderBoat()
@@ -21,7 +12,7 @@ public class RenderBoat extends Render
         modelBoat = new ModelBoat();
     }
 
-    public void renderBoat(EntityBoat entityboat, double d, double d1, double d2, 
+    public void renderBoat(EntityBoat entityboat, double d, double d1, double d2,
             float f, float f1)
     {
         GL11.glPushMatrix();
@@ -29,11 +20,11 @@ public class RenderBoat extends Render
         GL11.glRotatef(180F - f, 0.0F, 1.0F, 0.0F);
         float f2 = (float)entityboat.getTimeSinceHit() - f1;
         float f3 = (float)entityboat.getDamageTaken() - f1;
-        if(f3 < 0.0F)
+        if (f3 < 0.0F)
         {
             f3 = 0.0F;
         }
-        if(f2 > 0.0F)
+        if (f2 > 0.0F)
         {
             GL11.glRotatef(((MathHelper.sin(f2) * f2 * f3) / 10F) * (float)entityboat.getForwardDirection(), 1.0F, 0.0F, 0.0F);
         }
@@ -47,7 +38,7 @@ public class RenderBoat extends Render
         GL11.glPopMatrix();
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2, 
+    public void doRender(Entity entity, double d, double d1, double d2,
             float f, float f1)
     {
         renderBoat((EntityBoat)entity, d, d1, d2, f, f1);

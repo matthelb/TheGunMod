@@ -87,7 +87,7 @@ public class NetClientHandler extends NetHandler
     {
         field_1212_e.field_6327_b = new PlayerControllerMP(field_1212_e, this);
         field_1212_e.field_25001_G.func_25100_a(StatList.field_25181_h, 1);
-        field_1211_f = new WorldClient(this, new WorldSettings(packet1login.field_4074_d, packet1login.field_35249_d, false, false), packet1login.field_35250_e, packet1login.field_35247_f);
+        field_1211_f = new WorldClient(this, new WorldSettings(packet1login.field_4074_d, packet1login.field_35249_d, false, false, packet1login.field_46032_d), packet1login.field_35250_e, packet1login.field_35247_f);
         field_1211_f.field_1026_y = true;
         field_1212_e.func_6261_a(field_1211_f);
         field_1212_e.field_6322_g.field_4129_m = packet1login.field_35250_e;
@@ -631,7 +631,7 @@ public class NetClientHandler extends NetHandler
         } else
         if(packet2handshake.field_532_a.equals("-"))
         {
-            func_847_a(new Packet1Login(field_1212_e.field_6320_i.field_1666_b, 22));
+            func_847_a(new Packet1Login(field_1212_e.field_6320_i.field_1666_b, 23));
         } else
         {
             try
@@ -642,7 +642,7 @@ public class NetClientHandler extends NetHandler
                 bufferedreader.close();
                 if(s1.equalsIgnoreCase("ok"))
                 {
-                    func_847_a(new Packet1Login(field_1212_e.field_6320_i.field_1666_b, 22));
+                    func_847_a(new Packet1Login(field_1212_e.field_6320_i.field_1666_b, 23));
                 } else
                 {
                     field_1213_d.func_974_a("disconnect.loginFailedInfo", new Object[] {
@@ -690,7 +690,6 @@ public class NetClientHandler extends NetHandler
         }
         entityliving.field_620_ab = packet24mobspawn.field_547_a;
         entityliving.func_399_b(d, d1, d2, f, f1);
-        entityliving.field_9343_G = true;
         field_1211_f.func_712_a(packet24mobspawn.field_547_a, entityliving);
         List list = packet24mobspawn.func_21053_b();
         if(list != null)
@@ -765,7 +764,7 @@ public class NetClientHandler extends NetHandler
         if(packet9respawn.field_35244_b != field_1212_e.field_6322_g.field_4129_m || packet9respawn.field_35246_a != field_1212_e.field_6322_g.field_615_ag.func_22138_q())
         {
             field_1210_g = false;
-            field_1211_f = new WorldClient(this, new WorldSettings(packet9respawn.field_35246_a, packet9respawn.field_35243_e, false, false), packet9respawn.field_35244_b, packet9respawn.field_35245_c);
+            field_1211_f = new WorldClient(this, new WorldSettings(packet9respawn.field_35246_a, packet9respawn.field_35243_e, false, false, packet9respawn.field_46031_f), packet9respawn.field_35244_b, packet9respawn.field_35245_c);
             field_1211_f.field_1026_y = true;
             field_1212_e.func_6261_a(field_1211_f);
             field_1212_e.field_6322_g.field_4129_m = packet9respawn.field_35244_b;

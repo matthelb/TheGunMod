@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.nio.FloatBuffer;
@@ -9,14 +5,8 @@ import java.nio.IntBuffer;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
-// Referenced classes of package net.minecraft.src:
-//            EntityPlayer, MathHelper, EntityLiving, Vec3D, 
-//            ChunkPosition, World, Block, Material, 
-//            BlockFluid, GLAllocation
-
 public class ActiveRenderInfo
 {
-
     public static float objectX = 0.0F;
     public static float objectY = 0.0F;
     public static float objectZ = 0.0F;
@@ -71,16 +61,15 @@ public class ActiveRenderInfo
         Vec3D vec3d = projectViewFromEntity(entityliving, f);
         ChunkPosition chunkposition = new ChunkPosition(vec3d);
         int i = world.getBlockId(chunkposition.x, chunkposition.y, chunkposition.z);
-        if(i != 0 && Block.blocksList[i].blockMaterial.getIsLiquid())
+        if (i != 0 && Block.blocksList[i].blockMaterial.getIsLiquid())
         {
             float f1 = BlockFluid.getFluidHeightPercent(world.getBlockMetadata(chunkposition.x, chunkposition.y, chunkposition.z)) - 0.1111111F;
             float f2 = (float)(chunkposition.y + 1) - f1;
-            if(vec3d.yCoord >= (double)f2)
+            if (vec3d.yCoord >= (double)f2)
             {
                 i = world.getBlockId(chunkposition.x, chunkposition.y + 1, chunkposition.z);
             }
         }
         return i;
     }
-
 }

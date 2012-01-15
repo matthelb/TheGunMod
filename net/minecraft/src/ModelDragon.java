@@ -1,18 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import org.lwjgl.opengl.GL11;
 
-// Referenced classes of package net.minecraft.src:
-//            ModelBase, ModelRenderer, EntityDragon, EntityLiving, 
-//            Entity
-
 public class ModelDragon extends ModelBase
 {
-
     private ModelRenderer head;
     private ModelRenderer neck;
     private ModelRenderer jaw;
@@ -133,7 +124,7 @@ public class ModelDragon extends ModelBase
         float f15 = f6 * 3.141593F * 2.0F;
         f8 = 20F;
         f9 = -12F;
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             double ad3[] = entitydragon.func_40160_a(5 - i, field_40317_s);
             f14 = (float)Math.cos((float)i * 0.45F + f15) * 0.15F;
@@ -162,7 +153,7 @@ public class ModelDragon extends ModelBase
         GL11.glTranslatef(0.0F, -1F, 0.0F);
         body.rotateAngleZ = 0.0F;
         body.render(f5);
-        for(int j = 0; j < 2; j++)
+        for (int j = 0; j < 2; j++)
         {
             GL11.glEnable(2884 /*GL_CULL_FACE*/);
             float f16 = f6 * 3.141593F * 2.0F;
@@ -180,7 +171,7 @@ public class ModelDragon extends ModelBase
             frontLeg.render(f5);
             rearLeg.render(f5);
             GL11.glScalef(-1F, 1.0F, 1.0F);
-            if(j == 0)
+            if (j == 0)
             {
                 GL11.glCullFace(1028 /*GL_FRONT*/);
             }
@@ -195,7 +186,7 @@ public class ModelDragon extends ModelBase
         f9 = 60F;
         f10 = 0.0F;
         ad = entitydragon.func_40160_a(11, field_40317_s);
-        for(int k = 0; k < 12; k++)
+        for (int k = 0; k < 12; k++)
         {
             double ad2[] = entitydragon.func_40160_a(12 + k, field_40317_s);
             f14 = (float)((double)f14 + Math.sin((float)k * 0.45F + f15) * 0.05000000074505806D);
@@ -221,8 +212,8 @@ public class ModelDragon extends ModelBase
 
     private float updateRotations(double d)
     {
-        for(; d >= 180D; d -= 360D) { }
-        for(; d < -180D; d += 360D) { }
+        for (; d >= 180D; d -= 360D) { }
+        for (; d < -180D; d += 360D) { }
         return (float)d;
     }
 }

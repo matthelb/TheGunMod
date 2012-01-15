@@ -1,16 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            LongHashMap
 
 class LongHashMapEntry
 {
-
     final long key;
     Object value;
     LongHashMapEntry nextEntry;
@@ -36,18 +27,18 @@ class LongHashMapEntry
 
     public final boolean equals(Object obj)
     {
-        if(!(obj instanceof LongHashMapEntry))
+        if (!(obj instanceof LongHashMapEntry))
         {
             return false;
         }
         LongHashMapEntry longhashmapentry = (LongHashMapEntry)obj;
         Long long1 = Long.valueOf(func_35830_a());
         Long long2 = Long.valueOf(longhashmapentry.func_35830_a());
-        if(long1 == long2 || long1 != null && long1.equals(long2))
+        if (long1 == long2 || long1 != null && long1.equals(long2))
         {
             Object obj1 = func_35829_b();
             Object obj2 = longhashmapentry.func_35829_b();
-            if(obj1 == obj2 || obj1 != null && obj1.equals(obj2))
+            if (obj1 == obj2 || obj1 != null && obj1.equals(obj2))
             {
                 return true;
             }
