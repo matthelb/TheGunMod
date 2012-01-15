@@ -40,7 +40,7 @@ public abstract class ItemGun extends ItemProjectileShooter {
         if (isReloading())
             stopReloading(mc);
         if (gun.getItemDamage() < gun.getMaxDamage()) {
-            gun.damageItem(1, player);
+            Util.damageItem(gun, player, 1, mod_Guns.class, mc.theWorld);
             return true;
         }
         return false;
@@ -78,7 +78,7 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     public void finishReloading(Minecraft mc) {
         int amount = Math.min(Util.getCount(reloadingPlayer.inventory, getProjectile().shiftedIndex), Math.min(reloadingStack.getItemDamage(), reloadingStack.getMaxDamage()));
-        reloadingStack.damageItem(-amount, reloadingPlayer);
+        Util.damageItem(reloadingStack, reloadingPlayer, -amount, mod_Guns.class, mc.theWorld);
         Util.remove(reloadingPlayer.inventory, getProjectile().shiftedIndex, amount);
         stopReloading(mc);
     }

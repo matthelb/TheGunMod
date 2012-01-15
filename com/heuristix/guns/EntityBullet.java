@@ -65,14 +65,16 @@ public class EntityBullet extends EntityProjectile {
     }
 
     public boolean onBlockHit(MovingObjectPosition position) {
-        if(getOwner() instanceof EntityPlayerSP) {
-            PlayerController controller = Util.getPlayerController((EntityPlayerSP) getOwner());
-            if(controller != null) {
-                Block block = Block.blocksList[worldObj.getBlockId(position.blockX, position.blockY, position.blockZ)];
-                if(block.blockMaterial.equals(Material.glass)) {
-                    controller.onPlayerDestroyBlock(position.blockX, position.blockY, position.blockZ, block.blockID);
+        if(!worldObj.multiplayerWorld) {
+            if(getOwner() instanceof EntityPlayerSP) {
+                PlayerController controller = Util.getPlayerController((EntityPlayerSP) getOwner());
+                if(controller != null) {
+                    Block block = Block.blocksList[worldObj.getBlockId(position.blockX, position.blockY, position.blockZ)];
+                    if(block != null && block.blockMaterial.equals(Material.glass)) {
+                        controller.onPlayerDestroyBlock(position.blockX, position.blockY, position.blockZ, block.blockID);
+                    }
+                    return true;
                 }
-                return true;
             }
         }
         return false;

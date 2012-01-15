@@ -1,5 +1,6 @@
 package com.heuristix;
 
+import com.heuristix.net.PacketDamageItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -571,6 +572,13 @@ public class Util {
         int i = 0;
         while (bytes[i++] != 10) ;
         return new String(bytes, 0, i - 1);
+    }
+
+    public static void damageItem(ItemStack item, EntityPlayer player, int damage, Class modClass, World world) {
+        if(world.multiplayerWorld) {
+            Util.sendPacket(new PacketDamageItem(item.itemID, player.inventory.currentItem, damage), modClass);
+        }
+        item.damageItem(damage, player);
     }
 
 }
