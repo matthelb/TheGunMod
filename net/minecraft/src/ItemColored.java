@@ -1,16 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            ItemBlock, Block, ItemStack
 
 public class ItemColored extends ItemBlock
 {
-
     private final Block field_35421_a;
     private String field_41041_b[];
 
@@ -18,7 +9,7 @@ public class ItemColored extends ItemBlock
     {
         super(i);
         field_35421_a = Block.blocksList[getBlockID()];
-        if(flag)
+        if (flag)
         {
             setMaxDamage(0);
             setHasSubtypes(true);
@@ -30,7 +21,7 @@ public class ItemColored extends ItemBlock
         return i;
     }
 
-    public ItemColored func_41040_a(String as[])
+    public ItemColored setBlockNames(String as[])
     {
         field_41041_b = as;
         return this;
@@ -38,15 +29,16 @@ public class ItemColored extends ItemBlock
 
     public String getItemNameIS(ItemStack itemstack)
     {
-        if(field_41041_b == null)
+        if (field_41041_b == null)
         {
             return super.getItemNameIS(itemstack);
         }
         int i = itemstack.getItemDamage();
-        if(i >= 0 && i < field_41041_b.length)
+        if (i >= 0 && i < field_41041_b.length)
         {
             return (new StringBuilder()).append(super.getItemNameIS(itemstack)).append(".").append(field_41041_b[i]).toString();
-        } else
+        }
+        else
         {
             return super.getItemNameIS(itemstack);
         }

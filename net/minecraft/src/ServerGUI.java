@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.awt.BorderLayout;
@@ -12,14 +8,9 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            ICommandListener, ServerWindowAdapter, GuiStatsComponent, PlayerListBox, 
-//            GuiLogOutputHandler, ServerGuiCommandListener, ServerGuiFocusAdapter
-
 public class ServerGUI extends JComponent
     implements ICommandListener
 {
-
     public static Logger logger = Logger.getLogger("Minecraft");
     private MinecraftServer mcServer;
 
@@ -29,7 +20,7 @@ public class ServerGUI extends JComponent
         {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
-        catch(Exception exception) { }
+        catch (Exception exception) { }
         ServerGUI servergui = new ServerGUI(minecraftserver);
         JFrame jframe = new JFrame("Minecraft server");
         jframe.add(servergui);
@@ -49,7 +40,7 @@ public class ServerGUI extends JComponent
             add(getLogComponent(), "Center");
             add(getStatsComponent(), "West");
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             exception.printStackTrace();
         }
@@ -102,5 +93,4 @@ public class ServerGUI extends JComponent
     {
         return servergui.mcServer;
     }
-
 }

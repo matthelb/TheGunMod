@@ -1,17 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 
-// Referenced classes of package net.minecraft.src:
-//            Packet, Entity, NetHandler
-
 public class Packet39AttachEntity extends Packet
 {
-
     public int entityId;
     public int vehicleEntityId;
 
@@ -31,14 +23,14 @@ public class Packet39AttachEntity extends Packet
     }
 
     public void readPacketData(DataInputStream datainputstream)
-        throws IOException
+    throws IOException
     {
         entityId = datainputstream.readInt();
         vehicleEntityId = datainputstream.readInt();
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
-        throws IOException
+    throws IOException
     {
         dataoutputstream.writeInt(entityId);
         dataoutputstream.writeInt(vehicleEntityId);

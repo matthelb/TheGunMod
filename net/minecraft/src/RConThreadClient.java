@@ -1,19 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
-// Referenced classes of package net.minecraft.src:
-//            RConThreadBase, IServer, RConUtils
-
 public class RConThreadClient extends RConThreadBase
 {
-
     private boolean loggedIn;
     private Socket clientSocket;
     private byte buffer[];
@@ -33,9 +25,9 @@ public class RConThreadClient extends RConThreadBase
     {
         try
         {
-            while(true) 
+            while (true)
             {
-                if(!running)
+                if (!running)
                 {
                     break;
                 }
@@ -43,13 +35,13 @@ public class RConThreadClient extends RConThreadBase
                 {
                     BufferedInputStream bufferedinputstream = new BufferedInputStream(clientSocket.getInputStream());
                     int i = bufferedinputstream.read(buffer, 0, 1460);
-                    if(10 > i)
+                    if (10 > i)
                     {
                         return;
                     }
                     int j = 0;
                     int k = RConUtils.getBytesAsLEInt(buffer, 0, i);
-                    if(k != i - 4)
+                    if (k != i - 4)
                     {
                         return;
                     }
@@ -58,58 +50,61 @@ public class RConThreadClient extends RConThreadBase
                     j += 4;
                     int i1 = RConUtils.getRemainingBytesAsLEInt(buffer, j);
                     j += 4;
-                    switch(i1)
+                    switch (i1)
                     {
-                    case 3: // '\003'
-                        String s = RConUtils.getBytesAsString(buffer, j, i);
-                        j += s.length();
-                        if(0 != s.length() && s.equals(rconPassword))
-                        {
-                            loggedIn = true;
-                            sendResponse(l, 2, "");
-                        } else
-                        {
-                            loggedIn = false;
-                            sendLoginFailedResponse();
-                        }
-                        break;
-
-                    case 2: // '\002'
-                        if(loggedIn)
-                        {
-                            String s1 = RConUtils.getBytesAsString(buffer, j, i);
-                            try
+                        case 3:
+                            String s = RConUtils.getBytesAsString(buffer, j, i);
+                            j += s.length();
+                            if (0 != s.length() && s.equals(rconPassword))
                             {
-                                sendMultipacketResponse(l, server.handleRConCommand(s1));
+                                loggedIn = true;
+                                sendResponse(l, 2, "");
                             }
-                            catch(Exception exception1)
+                            else
                             {
-                                sendMultipacketResponse(l, (new StringBuilder()).append("Error executing: ").append(s1).append(" (").append(exception1.getMessage()).append(")").toString());
+                                loggedIn = false;
+                                sendLoginFailedResponse();
                             }
-                        } else
-                        {
-                            sendLoginFailedResponse();
-                        }
-                        break;
+                            break;
 
-                    default:
-                        sendMultipacketResponse(l, String.format("Unknown request %s", new Object[] {
-                            Integer.toHexString(i1)
-                        }));
-                        break;
+                        case 2:
+                            if (loggedIn)
+                            {
+                                String s1 = RConUtils.getBytesAsString(buffer, j, i);
+                                try
+                                {
+                                    sendMultipacketResponse(l, server.handleRConCommand(s1));
+                                }
+                                catch (Exception exception1)
+                                {
+                                    sendMultipacketResponse(l, (new StringBuilder()).append("Error executing: ").append(s1).append(" (").append(exception1.getMessage()).append(")").toString());
+                                }
+                            }
+                            else
+                            {
+                                sendLoginFailedResponse();
+                            }
+                            break;
+
+                        default:
+                            sendMultipacketResponse(l, String.format("Unknown request %s", new Object[]
+                                    {
+                                        Integer.toHexString(i1)
+                                }));
+                            break;
                     }
                 }
-                catch(SocketTimeoutException sockettimeoutexception) { }
-                catch(IOException ioexception)
+                catch (SocketTimeoutException sockettimeoutexception) { }
+                catch (IOException ioexception)
                 {
-                    if(running)
+                    if (running)
                     {
                         log((new StringBuilder()).append("IO: ").append(ioexception.getMessage()).toString());
                     }
                 }
             }
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             System.out.println(exception);
         }
@@ -120,7 +115,7 @@ public class RConThreadClient extends RConThreadBase
     }
 
     private void sendResponse(int i, int j, String s)
-        throws IOException
+    throws IOException
     {
         ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(1248);
         DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
@@ -134,13 +129,13 @@ public class RConThreadClient extends RConThreadBase
     }
 
     private void sendLoginFailedResponse()
-        throws IOException
+    throws IOException
     {
         sendResponse(-1, 2, "");
     }
 
     private void sendMultipacketResponse(int i, String s)
-        throws IOException
+    throws IOException
     {
         int j = s.length();
         do
@@ -149,12 +144,13 @@ public class RConThreadClient extends RConThreadBase
             sendResponse(i, 0, s.substring(0, k));
             s = s.substring(k);
             j = s.length();
-        } while(0 != j);
+        }
+        while (0 != j);
     }
 
     private void closeSocket()
     {
-        if(null == clientSocket)
+        if (null == clientSocket)
         {
             return;
         }
@@ -162,7 +158,7 @@ public class RConThreadClient extends RConThreadBase
         {
             clientSocket.close();
         }
-        catch(IOException ioexception)
+        catch (IOException ioexception)
         {
             logWarning((new StringBuilder()).append("IO: ").append(ioexception.getMessage()).toString());
         }

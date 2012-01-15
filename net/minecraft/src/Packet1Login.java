@@ -1,20 +1,13 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 
-// Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
-
 public class Packet1Login extends Packet
 {
-
     public int protocolVersion;
     public String username;
     public long mapSeed;
+    public EnumWorldType field_46001_d;
     public int serverMode;
     public byte worldType;
     public byte difficultySetting;
@@ -25,12 +18,13 @@ public class Packet1Login extends Packet
     {
     }
 
-    public Packet1Login(String s, int i, long l, int j, byte byte0, byte byte1, 
-            byte byte2, byte byte3)
+    public Packet1Login(String s, int i, long l, EnumWorldType enumworldtype, int j, byte byte0,
+            byte byte1, byte byte2, byte byte3)
     {
         username = s;
         protocolVersion = i;
         mapSeed = l;
+        field_46001_d = enumworldtype;
         worldType = byte0;
         difficultySetting = byte1;
         serverMode = j;
@@ -39,11 +33,17 @@ public class Packet1Login extends Packet
     }
 
     public void readPacketData(DataInputStream datainputstream)
-        throws IOException
+    throws IOException
     {
         protocolVersion = datainputstream.readInt();
         username = readString(datainputstream, 16);
         mapSeed = datainputstream.readLong();
+        String s = readString(datainputstream, 16);
+        field_46001_d = EnumWorldType.func_46049_a(s);
+        if (field_46001_d == null)
+        {
+            field_46001_d = EnumWorldType.DEFAULT;
+        }
         serverMode = datainputstream.readInt();
         worldType = datainputstream.readByte();
         difficultySetting = datainputstream.readByte();
@@ -52,11 +52,19 @@ public class Packet1Login extends Packet
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
-        throws IOException
+    throws IOException
     {
         dataoutputstream.writeInt(protocolVersion);
         writeString(username, dataoutputstream);
         dataoutputstream.writeLong(mapSeed);
+        if (field_46001_d == null)
+        {
+            writeString("", dataoutputstream);
+        }
+        else
+        {
+            writeString(field_46001_d.name(), dataoutputstream);
+        }
         dataoutputstream.writeInt(serverMode);
         dataoutputstream.writeByte(worldType);
         dataoutputstream.writeByte(difficultySetting);
@@ -71,6 +79,11 @@ public class Packet1Login extends Packet
 
     public int getPacketSize()
     {
-        return 4 + username.length() + 4 + 7 + 4;
+        int i = 0;
+        if (field_46001_d != null)
+        {
+            i = field_46001_d.name().length();
+        }
+        return 4 + username.length() + 4 + 7 + 4 + i;
     }
 }

@@ -1,19 +1,8 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            IInventory, ItemStack, EntityPlayer, PlayerCapabilities, 
-//            NBTTagCompound, NBTTagList, Block, Material, 
-//            ItemArmor, Entity
 
 public class InventoryPlayer
     implements IInventory
 {
-
     public ItemStack mainInventory[];
     public ItemStack armorInventory[];
     public int currentItem;
@@ -32,10 +21,11 @@ public class InventoryPlayer
 
     public ItemStack getCurrentItem()
     {
-        if(currentItem < 9 && currentItem >= 0)
+        if (currentItem < 9 && currentItem >= 0)
         {
             return mainInventory[currentItem];
-        } else
+        }
+        else
         {
             return null;
         }
@@ -48,9 +38,9 @@ public class InventoryPlayer
 
     private int getInventorySlotContainItem(int i)
     {
-        for(int j = 0; j < mainInventory.length; j++)
+        for (int j = 0; j < mainInventory.length; j++)
         {
-            if(mainInventory[j] != null && mainInventory[j].itemID == i)
+            if (mainInventory[j] != null && mainInventory[j].itemID == i)
             {
                 return j;
             }
@@ -61,9 +51,9 @@ public class InventoryPlayer
 
     private int storeItemStack(ItemStack itemstack)
     {
-        for(int i = 0; i < mainInventory.length; i++)
+        for (int i = 0; i < mainInventory.length; i++)
         {
-            if(mainInventory[i] != null && mainInventory[i].itemID == itemstack.itemID && mainInventory[i].isStackable() && mainInventory[i].stackSize < mainInventory[i].getMaxStackSize() && mainInventory[i].stackSize < getInventoryStackLimit() && (!mainInventory[i].getHasSubtypes() || mainInventory[i].getItemDamage() == itemstack.getItemDamage()))
+            if (mainInventory[i] != null && mainInventory[i].itemID == itemstack.itemID && mainInventory[i].isStackable() && mainInventory[i].stackSize < mainInventory[i].getMaxStackSize() && mainInventory[i].stackSize < getInventoryStackLimit() && (!mainInventory[i].getHasSubtypes() || mainInventory[i].getItemDamage() == itemstack.getItemDamage()) && ItemStack.func_46124_a(mainInventory[i], itemstack))
             {
                 return i;
             }
@@ -74,9 +64,9 @@ public class InventoryPlayer
 
     private int getFirstEmptyStack()
     {
-        for(int i = 0; i < mainInventory.length; i++)
+        for (int i = 0; i < mainInventory.length; i++)
         {
-            if(mainInventory[i] == null)
+            if (mainInventory[i] == null)
             {
                 return i;
             }
@@ -89,45 +79,50 @@ public class InventoryPlayer
     {
         int i = itemstack.itemID;
         int j = itemstack.stackSize;
-        if(itemstack.getMaxStackSize() == 1)
+        if (itemstack.getMaxStackSize() == 1)
         {
             int k = getFirstEmptyStack();
-            if(k < 0)
+            if (k < 0)
             {
                 return j;
             }
-            if(mainInventory[k] == null)
+            if (mainInventory[k] == null)
             {
                 mainInventory[k] = ItemStack.copyItemStack(itemstack);
             }
             return 0;
         }
         int l = storeItemStack(itemstack);
-        if(l < 0)
+        if (l < 0)
         {
             l = getFirstEmptyStack();
         }
-        if(l < 0)
+        if (l < 0)
         {
             return j;
         }
-        if(mainInventory[l] == null)
+        if (mainInventory[l] == null)
         {
             mainInventory[l] = new ItemStack(i, 0, itemstack.getItemDamage());
+            if (itemstack.hasTagCompound())
+            {
+                mainInventory[l].setNBTData((NBTTagCompound)itemstack.getTagCompound().cloneTag());
+            }
         }
         int i1 = j;
-        if(i1 > mainInventory[l].getMaxStackSize() - mainInventory[l].stackSize)
+        if (i1 > mainInventory[l].getMaxStackSize() - mainInventory[l].stackSize)
         {
             i1 = mainInventory[l].getMaxStackSize() - mainInventory[l].stackSize;
         }
-        if(i1 > getInventoryStackLimit() - mainInventory[l].stackSize)
+        if (i1 > getInventoryStackLimit() - mainInventory[l].stackSize)
         {
             i1 = getInventoryStackLimit() - mainInventory[l].stackSize;
         }
-        if(i1 == 0)
+        if (i1 == 0)
         {
             return j;
-        } else
+        }
+        else
         {
             j -= i1;
             mainInventory[l].stackSize += i1;
@@ -138,24 +133,23 @@ public class InventoryPlayer
 
     public void decrementAnimations()
     {
-        for(int i = 0; i < mainInventory.length; i++)
+        for (int i = 0; i < mainInventory.length; i++)
         {
-            if(mainInventory[i] != null)
+            if (mainInventory[i] != null)
             {
                 mainInventory[i].updateAnimation(player.worldObj, player, i, currentItem == i);
             }
         }
-
     }
 
     public boolean consumeInventoryItem(int i)
     {
         int j = getInventorySlotContainItem(i);
-        if(j < 0)
+        if (j < 0)
         {
             return false;
         }
-        if(--mainInventory[j].stackSize <= 0)
+        if (--mainInventory[j].stackSize <= 0)
         {
             mainInventory[j] = null;
         }
@@ -170,36 +164,39 @@ public class InventoryPlayer
 
     public boolean addItemStackToInventory(ItemStack itemstack)
     {
-        if(!itemstack.isItemDamaged())
+        if (!itemstack.isItemDamaged())
         {
             int i;
             do
             {
                 i = itemstack.stackSize;
                 itemstack.stackSize = storePartialItemStack(itemstack);
-            } while(itemstack.stackSize > 0 && itemstack.stackSize < i);
-            if(itemstack.stackSize == i && player.capabilities.depleteBuckets)
+            }
+            while (itemstack.stackSize > 0 && itemstack.stackSize < i);
+            if (itemstack.stackSize == i && player.capabilities.depleteBuckets)
             {
                 itemstack.stackSize = 0;
                 return true;
-            } else
+            }
+            else
             {
                 return itemstack.stackSize < i;
             }
         }
         int j = getFirstEmptyStack();
-        if(j >= 0)
+        if (j >= 0)
         {
             mainInventory[j] = ItemStack.copyItemStack(itemstack);
             mainInventory[j].animationsToGo = 5;
             itemstack.stackSize = 0;
             return true;
         }
-        if(player.capabilities.depleteBuckets)
+        if (player.capabilities.depleteBuckets)
         {
             itemstack.stackSize = 0;
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -208,26 +205,27 @@ public class InventoryPlayer
     public ItemStack decrStackSize(int i, int j)
     {
         ItemStack aitemstack[] = mainInventory;
-        if(i >= mainInventory.length)
+        if (i >= mainInventory.length)
         {
             aitemstack = armorInventory;
             i -= mainInventory.length;
         }
-        if(aitemstack[i] != null)
+        if (aitemstack[i] != null)
         {
-            if(aitemstack[i].stackSize <= j)
+            if (aitemstack[i].stackSize <= j)
             {
                 ItemStack itemstack = aitemstack[i];
                 aitemstack[i] = null;
                 return itemstack;
             }
             ItemStack itemstack1 = aitemstack[i].splitStack(j);
-            if(aitemstack[i].stackSize == 0)
+            if (aitemstack[i].stackSize == 0)
             {
                 aitemstack[i] = null;
             }
             return itemstack1;
-        } else
+        }
+        else
         {
             return null;
         }
@@ -236,7 +234,7 @@ public class InventoryPlayer
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
         ItemStack aitemstack[] = mainInventory;
-        if(i >= aitemstack.length)
+        if (i >= aitemstack.length)
         {
             i -= aitemstack.length;
             aitemstack = armorInventory;
@@ -247,7 +245,7 @@ public class InventoryPlayer
     public float getStrVsBlock(Block block)
     {
         float f = 1.0F;
-        if(mainInventory[currentItem] != null)
+        if (mainInventory[currentItem] != null)
         {
             f *= mainInventory[currentItem].getStrVsBlock(block);
         }
@@ -256,9 +254,9 @@ public class InventoryPlayer
 
     public NBTTagList writeToNBT(NBTTagList nbttaglist)
     {
-        for(int i = 0; i < mainInventory.length; i++)
+        for (int i = 0; i < mainInventory.length; i++)
         {
-            if(mainInventory[i] != null)
+            if (mainInventory[i] != null)
             {
                 NBTTagCompound nbttagcompound = new NBTTagCompound();
                 nbttagcompound.setByte("Slot", (byte)i);
@@ -267,9 +265,9 @@ public class InventoryPlayer
             }
         }
 
-        for(int j = 0; j < armorInventory.length; j++)
+        for (int j = 0; j < armorInventory.length; j++)
         {
-            if(armorInventory[j] != null)
+            if (armorInventory[j] != null)
             {
                 NBTTagCompound nbttagcompound1 = new NBTTagCompound();
                 nbttagcompound1.setByte("Slot", (byte)(j + 100));
@@ -285,25 +283,24 @@ public class InventoryPlayer
     {
         mainInventory = new ItemStack[36];
         armorInventory = new ItemStack[4];
-        for(int i = 0; i < nbttaglist.tagCount(); i++)
+        for (int i = 0; i < nbttaglist.tagCount(); i++)
         {
             NBTTagCompound nbttagcompound = (NBTTagCompound)nbttaglist.tagAt(i);
             int j = nbttagcompound.getByte("Slot") & 0xff;
             ItemStack itemstack = ItemStack.loadItemStackFromNBT(nbttagcompound);
-            if(itemstack == null)
+            if (itemstack == null)
             {
                 continue;
             }
-            if(j >= 0 && j < mainInventory.length)
+            if (j >= 0 && j < mainInventory.length)
             {
                 mainInventory[j] = itemstack;
             }
-            if(j >= 100 && j < armorInventory.length + 100)
+            if (j >= 100 && j < armorInventory.length + 100)
             {
                 armorInventory[j - 100] = itemstack;
             }
         }
-
     }
 
     public int getSizeInventory()
@@ -314,7 +311,7 @@ public class InventoryPlayer
     public ItemStack getStackInSlot(int i)
     {
         ItemStack aitemstack[] = mainInventory;
-        if(i >= aitemstack.length)
+        if (i >= aitemstack.length)
         {
             i -= aitemstack.length;
             aitemstack = armorInventory;
@@ -335,10 +332,11 @@ public class InventoryPlayer
     public int getDamageVsEntity(Entity entity)
     {
         ItemStack itemstack = getStackInSlot(currentItem);
-        if(itemstack != null)
+        if (itemstack != null)
         {
             return itemstack.getDamageVsEntity(entity);
-        } else
+        }
+        else
         {
             return 1;
         }
@@ -346,15 +344,16 @@ public class InventoryPlayer
 
     public boolean canHarvestBlock(Block block)
     {
-        if(block.blockMaterial.getIsHarvestable())
+        if (block.blockMaterial.getIsHarvestable())
         {
             return true;
         }
         ItemStack itemstack = getStackInSlot(currentItem);
-        if(itemstack != null)
+        if (itemstack != null)
         {
             return itemstack.canHarvestBlock(block);
-        } else
+        }
+        else
         {
             return false;
         }
@@ -363,9 +362,9 @@ public class InventoryPlayer
     public int getTotalArmorValue()
     {
         int i = 0;
-        for(int j = 0; j < armorInventory.length; j++)
+        for (int j = 0; j < armorInventory.length; j++)
         {
-            if(armorInventory[j] != null && (armorInventory[j].getItem() instanceof ItemArmor))
+            if (armorInventory[j] != null && (armorInventory[j].getItem() instanceof ItemArmor))
             {
                 int k = ((ItemArmor)armorInventory[j].getItem()).damageReduceAmount;
                 i += k;
@@ -378,46 +377,44 @@ public class InventoryPlayer
     public void damageArmor(int i)
     {
         i /= 4;
-        if(i < 1)
+        if (i < 1)
         {
             i = 1;
         }
-        for(int j = 0; j < armorInventory.length; j++)
+        for (int j = 0; j < armorInventory.length; j++)
         {
-            if(armorInventory[j] == null || !(armorInventory[j].getItem() instanceof ItemArmor))
+            if (armorInventory[j] == null || !(armorInventory[j].getItem() instanceof ItemArmor))
             {
                 continue;
             }
             armorInventory[j].damageItem(i, player);
-            if(armorInventory[j].stackSize == 0)
+            if (armorInventory[j].stackSize == 0)
             {
                 armorInventory[j].onItemDestroyedByUse(player);
                 armorInventory[j] = null;
             }
         }
-
     }
 
     public void dropAllItems()
     {
-        for(int i = 0; i < mainInventory.length; i++)
+        for (int i = 0; i < mainInventory.length; i++)
         {
-            if(mainInventory[i] != null)
+            if (mainInventory[i] != null)
             {
                 player.dropPlayerItemWithRandomChoice(mainInventory[i], true);
                 mainInventory[i] = null;
             }
         }
 
-        for(int j = 0; j < armorInventory.length; j++)
+        for (int j = 0; j < armorInventory.length; j++)
         {
-            if(armorInventory[j] != null)
+            if (armorInventory[j] != null)
             {
                 player.dropPlayerItemWithRandomChoice(armorInventory[j], true);
                 armorInventory[j] = null;
             }
         }
-
     }
 
     public void onInventoryChanged()
@@ -438,7 +435,7 @@ public class InventoryPlayer
 
     public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
-        if(player.isDead)
+        if (player.isDead)
         {
             return false;
         }
@@ -447,17 +444,17 @@ public class InventoryPlayer
 
     public boolean hasItemStack(ItemStack itemstack)
     {
-        for(int i = 0; i < armorInventory.length; i++)
+        for (int i = 0; i < armorInventory.length; i++)
         {
-            if(armorInventory[i] != null && armorInventory[i].isStackEqual(itemstack))
+            if (armorInventory[i] != null && armorInventory[i].isStackEqual(itemstack))
             {
                 return true;
             }
         }
 
-        for(int j = 0; j < mainInventory.length; j++)
+        for (int j = 0; j < mainInventory.length; j++)
         {
-            if(mainInventory[j] != null && mainInventory[j].isStackEqual(itemstack))
+            if (mainInventory[j] != null && mainInventory[j].isStackEqual(itemstack))
             {
                 return true;
             }
@@ -476,15 +473,14 @@ public class InventoryPlayer
 
     public void copyInventory(InventoryPlayer inventoryplayer)
     {
-        for(int i = 0; i < mainInventory.length; i++)
+        for (int i = 0; i < mainInventory.length; i++)
         {
             mainInventory[i] = ItemStack.copyItemStack(inventoryplayer.mainInventory[i]);
         }
 
-        for(int j = 0; j < armorInventory.length; j++)
+        for (int j = 0; j < armorInventory.length; j++)
         {
             armorInventory[j] = ItemStack.copyItemStack(inventoryplayer.armorInventory[j]);
         }
-
     }
 }

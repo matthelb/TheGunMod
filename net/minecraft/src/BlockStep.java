@@ -1,18 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            Block, Material, ItemStack, World
-
 public class BlockStep extends Block
 {
-
-    public static final String blockStepTypes[] = {
+    public static final String blockStepTypes[] =
+    {
         "stone", "sand", "wood", "cobble", "brick", "smoothStoneBrick"
     };
     private boolean blockType;
@@ -21,10 +14,11 @@ public class BlockStep extends Block
     {
         super(i, 6, Material.rock);
         blockType = flag;
-        if(!flag)
+        if (!flag)
         {
             setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
-        } else
+        }
+        else
         {
             opaqueCubeLookup[i] = true;
         }
@@ -33,34 +27,35 @@ public class BlockStep extends Block
 
     public int getBlockTextureFromSideAndMetadata(int i, int j)
     {
-        if(j == 0)
+        if (j == 0)
         {
             return i > 1 ? 5 : 6;
         }
-        if(j == 1)
+        if (j == 1)
         {
-            if(i == 0)
+            if (i == 0)
             {
                 return 208;
             }
             return i != 1 ? 192 : 176;
         }
-        if(j == 2)
+        if (j == 2)
         {
             return 4;
         }
-        if(j == 3)
+        if (j == 3)
         {
             return 16;
         }
-        if(j == 4)
+        if (j == 4)
         {
             return Block.brick.blockIndexInTexture;
         }
-        if(j == 5)
+        if (j == 5)
         {
             return Block.stoneBrick.blockIndexInTexture;
-        } else
+        }
+        else
         {
             return 6;
         }
@@ -104,5 +99,4 @@ public class BlockStep extends Block
     {
         return new ItemStack(Block.stairSingle.blockID, 1, i);
     }
-
 }

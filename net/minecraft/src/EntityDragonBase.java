@@ -1,16 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            EntityLiving, World, DragonPart, DamageSource
 
 public class EntityDragonBase extends EntityLiving
 {
-
     protected int maxHealth;
 
     public EntityDragonBase(World world)
@@ -34,7 +25,7 @@ public class EntityDragonBase extends EntityLiving
         return false;
     }
 
-    protected boolean func_40137_e(DamageSource damagesource, int i)
+    protected boolean superAttackFrom(DamageSource damagesource, int i)
     {
         return super.attackEntityFrom(damagesource, i);
     }

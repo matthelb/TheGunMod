@@ -1,19 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.*;
 
-// Referenced classes of package net.minecraft.src:
-//            Item, ItemStack, PotionHelper, World, 
-//            PotionEffect, EntityPlayer, InventoryPlayer, EnumAction, 
-//            EntityPotion
-
 public class ItemPotion extends Item
 {
-
     private HashMap effectCache;
 
     public ItemPotion(int i)
@@ -33,7 +23,7 @@ public class ItemPotion extends Item
     public List getPotionEffectsForDamage(int i)
     {
         List list = (List)effectCache.get(Integer.valueOf(i));
-        if(list == null)
+        if (list == null)
         {
             list = PotionHelper.getPotionEffects(i, false);
             effectCache.put(Integer.valueOf(i), list);
@@ -44,23 +34,23 @@ public class ItemPotion extends Item
     public ItemStack onFoodEaten(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
         itemstack.stackSize--;
-        if(!world.singleplayerWorld)
+        if (!world.singleplayerWorld)
         {
             List list = getPotionEffectsForItemStack(itemstack);
-            if(list != null)
+            if (list != null)
             {
                 PotionEffect potioneffect;
-                for(Iterator iterator = list.iterator(); iterator.hasNext(); entityplayer.addPotionEffect(new PotionEffect(potioneffect)))
+                for (Iterator iterator = list.iterator(); iterator.hasNext(); entityplayer.addPotionEffect(new PotionEffect(potioneffect)))
                 {
                     potioneffect = (PotionEffect)iterator.next();
                 }
-
             }
         }
-        if(itemstack.stackSize <= 0)
+        if (itemstack.stackSize <= 0)
         {
             return new ItemStack(Item.glassBottle);
-        } else
+        }
+        else
         {
             entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.glassBottle));
             return itemstack;
@@ -79,16 +69,17 @@ public class ItemPotion extends Item
 
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        if(isSplash(itemstack.getItemDamage()))
+        if (isSplash(itemstack.getItemDamage()))
         {
             itemstack.stackSize--;
             world.playSoundAtEntity(entityplayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-            if(!world.singleplayerWorld)
+            if (!world.singleplayerWorld)
             {
                 world.spawnEntityInWorld(new EntityPotion(world, entityplayer, itemstack.getItemDamage()));
             }
             return itemstack;
-        } else
+        }
+        else
         {
             entityplayer.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
             return itemstack;

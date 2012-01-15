@@ -24,6 +24,7 @@ import net.minecraft.src.ConsoleCommandHandler;
 import net.minecraft.src.ConsoleLogManager;
 import net.minecraft.src.ConvertProgressUpdater;
 import net.minecraft.src.EntityTracker;
+import net.minecraft.src.EnumWorldType;
 import net.minecraft.src.ICommandListener;
 import net.minecraft.src.ISaveFormat;
 import net.minecraft.src.IServer;
@@ -77,6 +78,7 @@ public class MinecraftServer
     public EntityTracker field_6028_k[];
     public boolean field_6027_l;
     public boolean field_6026_m;
+    public boolean field_44002_p;
     public boolean field_9011_n;
     public boolean field_27005_o;
     public String field_35014_p;
@@ -104,7 +106,7 @@ public class MinecraftServer
         threadcommandreader.start();
         ConsoleLogManager.func_641_a();
         ModLoader.Init(this);
-        field_6038_a.info("Starting minecraft server version 1.0.1");
+        field_6038_a.info("Starting minecraft server version 1.1");
         if(Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
         {
             field_6038_a.warning("**** NOT ENOUGH RAM!");
@@ -115,6 +117,7 @@ public class MinecraftServer
         field_40030_s = field_6035_d.func_720_a("server-ip", "");
         field_6027_l = field_6035_d.func_724_a("online-mode", true);
         field_6026_m = field_6035_d.func_724_a("spawn-animals", true);
+        field_44002_p = field_6035_d.func_724_a("spawn-npcs", true);
         field_9011_n = field_6035_d.func_724_a("pvp", true);
         field_27005_o = field_6035_d.func_724_a("allow-flight", false);
         field_35014_p = field_6035_d.func_720_a("motd", "A Minecraft Server");
@@ -151,6 +154,7 @@ public class MinecraftServer
         long l = System.nanoTime();
         String s = field_6035_d.func_720_a("level-name", "world");
         String s1 = field_6035_d.func_720_a("level-seed", "");
+        String s2 = field_6035_d.func_720_a("level-type", "DEFAULT");
         long l1 = (new Random()).nextLong();
         if(s1.length() > 0)
         {
@@ -167,8 +171,13 @@ public class MinecraftServer
                 l1 = s1.hashCode();
             }
         }
+        EnumWorldType enumworldtype = EnumWorldType.func_46049_a(s2);
+        if(enumworldtype == null)
+        {
+            enumworldtype = EnumWorldType.DEFAULT;
+        }
         field_6038_a.info((new StringBuilder()).append("Preparing level \"").append(s).append("\"").toString());
-        func_6017_c(new SaveConverterMcRegion(new File(".")), s, l1);
+        func_6017_c(new SaveConverterMcRegion(new File(".")), s, l1, enumworldtype);
         field_6038_a.info((new StringBuilder()).append("Done (").append(System.nanoTime() - l).append("ns)! For help, type \"help\" or \"?\"").toString());
         if(field_6035_d.func_724_a("enable-query", false))
         {
@@ -185,7 +194,7 @@ public class MinecraftServer
         return true;
     }
 
-    private void func_6017_c(ISaveFormat isaveformat, String s, long l)
+    private void func_6017_c(ISaveFormat isaveformat, String s, long l, EnumWorldType enumworldtype)
     {
         if(isaveformat.func_22102_a(s))
         {
@@ -197,7 +206,8 @@ public class MinecraftServer
         int i = field_6035_d.func_722_a("gamemode", 0);
         i = WorldSettings.func_35037_a(i);
         field_6038_a.info((new StringBuilder()).append("Default game type: ").append(i).toString());
-        WorldSettings worldsettings = new WorldSettings(l, i, true, false);
+        boolean flag = field_6035_d.func_724_a("generate-structures", true);
+        WorldSettings worldsettings = new WorldSettings(l, i, flag, false, enumworldtype);
         SaveOldDir saveolddir = new SaveOldDir(new File("."), s, true);
         for(int j = 0; j < field_6034_e.length; j++)
         {
@@ -226,23 +236,13 @@ public class MinecraftServer
 
         char c = '\304';
         long l1 = System.currentTimeMillis();
-label0:
         for(int k = 0; k < 1; k++)
         {
             field_6038_a.info((new StringBuilder()).append("Preparing start region for level ").append(k).toString());
-            if(k != 0 && !field_6035_d.func_724_a("allow-nether", true))
-            {
-                continue;
-            }
             WorldServer worldserver = field_6034_e[k];
             ChunkCoordinates chunkcoordinates = worldserver.func_22078_l();
-            int i1 = -c;
-            do
+            for(int i1 = -c; i1 <= c && field_6025_n; i1 += 16)
             {
-                if(i1 > c || !field_6025_n)
-                {
-                    continue label0;
-                }
                 for(int j1 = -c; j1 <= c && field_6025_n; j1 += 16)
                 {
                     long l2 = System.currentTimeMillis();
@@ -261,8 +261,8 @@ label0:
                     while(worldserver.func_6156_d() && field_6025_n) ;
                 }
 
-                i1 += 16;
-            } while(true);
+            }
+
         }
 
         func_6011_e();
@@ -636,7 +636,7 @@ label0:
 
     public String func_40012_i()
     {
-        return "1.0.1";
+        return "1.1";
     }
 
     public int func_40018_j()

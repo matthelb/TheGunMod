@@ -1,18 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            BlockFlower, Item, World, EntityPlayer, 
-//            ItemStack, ItemShears, StatList, Block
-
 public class BlockTallGrass extends BlockFlower
 {
-
     protected BlockTallGrass(int i, int j)
     {
         super(i, j);
@@ -22,18 +13,19 @@ public class BlockTallGrass extends BlockFlower
 
     public int getBlockTextureFromSideAndMetadata(int i, int j)
     {
-        if(j == 1)
+        if (j == 1)
         {
             return blockIndexInTexture;
         }
-        if(j == 2)
+        if (j == 2)
         {
             return blockIndexInTexture + 16 + 1;
         }
-        if(j == 0)
+        if (j == 0)
         {
             return blockIndexInTexture + 16;
-        } else
+        }
+        else
         {
             return blockIndexInTexture;
         }
@@ -41,10 +33,11 @@ public class BlockTallGrass extends BlockFlower
 
     public int idDropped(int i, Random random, int j)
     {
-        if(random.nextInt(8) == 0)
+        if (random.nextInt(8) == 0)
         {
             return Item.seeds.shiftedIndex;
-        } else
+        }
+        else
         {
             return -1;
         }
@@ -57,11 +50,12 @@ public class BlockTallGrass extends BlockFlower
 
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
-        if(!world.singleplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
+        if (!world.singleplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
         {
             entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
             dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.tallGrass, 1, l));
-        } else
+        }
+        else
         {
             super.harvestBlock(world, entityplayer, i, j, k, l);
         }

@@ -1,20 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            IWorldAccess, WorldServer, WorldProvider, EntityTracker, 
-//            ServerConfigurationManager, Packet61DoorChange, Entity, TileEntity, 
-//            EntityPlayer
-
 public class WorldManager
     implements IWorldAccess
 {
-
     private MinecraftServer mcServer;
     private WorldServer world;
 
@@ -24,7 +14,7 @@ public class WorldManager
         world = worldserver;
     }
 
-    public void spawnParticle(String s, double d, double d1, double d2, 
+    public void spawnParticle(String s, double d, double d1, double d2,
             double d3, double d4, double d5)
     {
     }
@@ -39,7 +29,7 @@ public class WorldManager
         mcServer.getEntityTracker(world.worldProvider.worldType).untrackEntity(entity);
     }
 
-    public void playSound(String s, double d, double d1, double d2, 
+    public void playSound(String s, double d, double d1, double d2,
             float f, float f1)
     {
     }

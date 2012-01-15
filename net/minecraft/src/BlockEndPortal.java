@@ -1,21 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            BlockContainer, TileEntityEndPortal, Entity, EntityPlayer, 
-//            World, WorldProvider, Material, TileEntity, 
-//            IBlockAccess, AxisAlignedBB
-
 public class BlockEndPortal extends BlockContainer
 {
-
-    public static boolean field_41003_a = false;
+    public static boolean bossDefeated = false;
 
     protected BlockEndPortal(int i, Material material)
     {
@@ -55,7 +45,7 @@ public class BlockEndPortal extends BlockContainer
 
     public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
     {
-        if(entity.ridingEntity == null && entity.riddenByEntity == null && (entity instanceof EntityPlayer) && !world.singleplayerWorld)
+        if (entity.ridingEntity == null && entity.riddenByEntity == null && (entity instanceof EntityPlayer) && !world.singleplayerWorld)
         {
             ((EntityPlayer)entity).func_40107_e(1);
         }
@@ -68,18 +58,18 @@ public class BlockEndPortal extends BlockContainer
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if(field_41003_a)
+        if (bossDefeated)
         {
             return;
         }
-        if(world.worldProvider.worldType != 0)
+        if (world.worldProvider.worldType != 0)
         {
             world.setBlockWithNotify(i, j, k, 0);
             return;
-        } else
+        }
+        else
         {
             return;
         }
     }
-
 }

@@ -1,14 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
 public class MathHelper
 {
-
     private static float SIN_TABLE[];
 
     public MathHelper()
@@ -65,14 +60,15 @@ public class MathHelper
 
     public static int func_41051_a(int i, int j, int k)
     {
-        if(i < j)
+        if (i < j)
         {
             return j;
         }
-        if(i > k)
+        if (i > k)
         {
             return k;
-        } else
+        }
+        else
         {
             return i;
         }
@@ -80,11 +76,11 @@ public class MathHelper
 
     public static double abs_max(double d, double d1)
     {
-        if(d < 0.0D)
+        if (d < 0.0D)
         {
             d = -d;
         }
-        if(d1 < 0.0D)
+        if (d1 < 0.0D)
         {
             d1 = -d1;
         }
@@ -93,22 +89,22 @@ public class MathHelper
 
     public static int getRandomIntegerInRange(Random random, int i, int j)
     {
-        if(i >= j)
+        if (i >= j)
         {
             return i;
-        } else
+        }
+        else
         {
             return random.nextInt((j - i) + 1) + i;
         }
     }
 
-    static 
+    static
     {
         SIN_TABLE = new float[0x10000];
-        for(int i = 0; i < 0x10000; i++)
+        for (int i = 0; i < 0x10000; i++)
         {
             SIN_TABLE[i] = (float)Math.sin(((double)i * 3.1415926535897931D * 2D) / 65536D);
         }
-
     }
 }

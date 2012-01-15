@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            ComponentVillage, StructureBoundingBox, StructureComponent, Block, 
-//            World
-
 public class ComponentVillageHall extends ComponentVillage
 {
-
     private int averageGroundLevel;
 
     public ComponentVillageHall(int i, Random random, StructureBoundingBox structureboundingbox, int j)
@@ -31,10 +22,11 @@ public class ComponentVillageHall extends ComponentVillage
     public static ComponentVillageHall func_35374_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 9, 7, 11, l);
-        if(!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
-        } else
+        }
+        else
         {
             return new ComponentVillageHall(i1, random, structureboundingbox, l);
         }
@@ -42,10 +34,10 @@ public class ComponentVillageHall extends ComponentVillage
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(averageGroundLevel < 0)
+        if (averageGroundLevel < 0)
         {
             averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
-            if(averageGroundLevel < 0)
+            if (averageGroundLevel < 0)
             {
                 return true;
             }
@@ -74,14 +66,13 @@ public class ComponentVillageHall extends ComponentVillage
         placeBlockAtCurrentPosition(world, Block.planks.blockID, 0, 8, 4, 3, structureboundingbox);
         int i = getMetadataWithOffset(Block.stairCompactPlanks.blockID, 3);
         int j = getMetadataWithOffset(Block.stairCompactPlanks.blockID, 2);
-        for(int k = -1; k <= 2; k++)
+        for (int k = -1; k <= 2; k++)
         {
-            for(int i1 = 0; i1 <= 8; i1++)
+            for (int i1 = 0; i1 <= 8; i1++)
             {
                 placeBlockAtCurrentPosition(world, Block.stairCompactPlanks.blockID, i, i1, 4 + k, k, structureboundingbox);
                 placeBlockAtCurrentPosition(world, Block.stairCompactPlanks.blockID, j, i1, 4 + k, 5 - k, structureboundingbox);
             }
-
         }
 
         placeBlockAtCurrentPosition(world, Block.wood.blockID, 0, 0, 2, 1, structureboundingbox);
@@ -108,7 +99,7 @@ public class ComponentVillageHall extends ComponentVillage
         placeBlockAtCurrentPosition(world, 0, 0, 2, 2, 0, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 2, 3, 1, structureboundingbox);
         placeDoorAtCurrentPosition(world, structureboundingbox, random, 2, 1, 0, getMetadataWithOffset(Block.doorWood.blockID, 1));
-        if(getBlockIdAtCurrentPosition(world, 2, 0, -1, structureboundingbox) == 0 && getBlockIdAtCurrentPosition(world, 2, -1, -1, structureboundingbox) != 0)
+        if (getBlockIdAtCurrentPosition(world, 2, 0, -1, structureboundingbox) == 0 && getBlockIdAtCurrentPosition(world, 2, -1, -1, structureboundingbox) != 0)
         {
             placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), 2, 0, -1, structureboundingbox);
         }
@@ -116,14 +107,13 @@ public class ComponentVillageHall extends ComponentVillage
         placeBlockAtCurrentPosition(world, 0, 0, 6, 2, 5, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 6, 3, 4, structureboundingbox);
         placeDoorAtCurrentPosition(world, structureboundingbox, random, 6, 1, 5, getMetadataWithOffset(Block.doorWood.blockID, 1));
-        for(int l = 0; l < 5; l++)
+        for (int l = 0; l < 5; l++)
         {
-            for(int j1 = 0; j1 < 9; j1++)
+            for (int j1 = 0; j1 < 9; j1++)
             {
                 clearCurrentPositionBlocksUpwards(world, j1, 7, l, structureboundingbox);
                 fillCurrentPositionBlocksDownwards(world, Block.cobblestone.blockID, 0, j1, -1, l, structureboundingbox);
             }
-
         }
 
         spawnVillagers(world, structureboundingbox, 4, 1, 2, 2);

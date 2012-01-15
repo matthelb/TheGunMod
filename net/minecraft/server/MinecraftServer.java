@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.server;
 
 import java.io.File;
@@ -24,6 +20,7 @@ import net.minecraft.src.ConsoleCommandHandler;
 import net.minecraft.src.ConsoleLogManager;
 import net.minecraft.src.ConvertProgressUpdater;
 import net.minecraft.src.EntityTracker;
+import net.minecraft.src.EnumWorldType;
 import net.minecraft.src.ICommandListener;
 import net.minecraft.src.ISaveFormat;
 import net.minecraft.src.IServer;
@@ -55,7 +52,6 @@ import net.minecraft.src.WorldSettings;
 public class MinecraftServer
     implements Runnable, ICommandListener, IServer
 {
-
     public static Logger logger = Logger.getLogger("Minecraft");
     public static HashMap field_6037_b = new HashMap();
     private String hostname;
@@ -77,6 +73,7 @@ public class MinecraftServer
     public EntityTracker entityTracker[];
     public boolean onlineMode;
     public boolean spawnPeacefulMobs;
+    public boolean field_44002_p;
     public boolean pvpOn;
     public boolean allowFlight;
     public String motd;
@@ -96,7 +93,7 @@ public class MinecraftServer
     }
 
     private boolean startServer()
-        throws UnknownHostException
+    throws UnknownHostException
     {
         commandHandler = new ConsoleCommandHandler(this);
         ThreadCommandReader threadcommandreader = new ThreadCommandReader(this);
@@ -104,8 +101,8 @@ public class MinecraftServer
         threadcommandreader.start();
         ConsoleLogManager.init();
         ModLoader.Init(this);
-        logger.info("Starting minecraft server version 1.0.1");
-        if(Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
+        logger.info("Starting minecraft server version 1.1");
+        if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
         {
             logger.warning("**** NOT ENOUGH RAM!");
             logger.warning("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
@@ -115,12 +112,13 @@ public class MinecraftServer
         hostname = propertyManagerObj.getStringProperty("server-ip", "");
         onlineMode = propertyManagerObj.getBooleanProperty("online-mode", true);
         spawnPeacefulMobs = propertyManagerObj.getBooleanProperty("spawn-animals", true);
+        field_44002_p = propertyManagerObj.getBooleanProperty("spawn-npcs", true);
         pvpOn = propertyManagerObj.getBooleanProperty("pvp", true);
         allowFlight = propertyManagerObj.getBooleanProperty("allow-flight", false);
         motd = propertyManagerObj.getStringProperty("motd", "A Minecraft Server");
         motd.replace('\247', '$');
         InetAddress inetaddress = null;
-        if(hostname.length() > 0)
+        if (hostname.length() > 0)
         {
             inetaddress = InetAddress.getByName(hostname);
         }
@@ -130,14 +128,14 @@ public class MinecraftServer
         {
             networkServer = new NetworkListenThread(this, inetaddress, serverPort);
         }
-        catch(IOException ioexception)
+        catch (IOException ioexception)
         {
             logger.warning("**** FAILED TO BIND TO PORT!");
             logger.log(Level.WARNING, (new StringBuilder()).append("The exception was: ").append(ioexception.toString()).toString());
             logger.warning("Perhaps a server is already running on that port?");
             return false;
         }
-        if(!onlineMode)
+        if (!onlineMode)
         {
             logger.warning("**** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!");
             logger.warning("The server will make no attempt to authenticate usernames. Beware.");
@@ -151,32 +149,38 @@ public class MinecraftServer
         long l = System.nanoTime();
         String s = propertyManagerObj.getStringProperty("level-name", "world");
         String s1 = propertyManagerObj.getStringProperty("level-seed", "");
+        String s2 = propertyManagerObj.getStringProperty("level-type", "DEFAULT");
         long l1 = (new Random()).nextLong();
-        if(s1.length() > 0)
+        if (s1.length() > 0)
         {
             try
             {
                 long l2 = Long.parseLong(s1);
-                if(l2 != 0L)
+                if (l2 != 0L)
                 {
                     l1 = l2;
                 }
             }
-            catch(NumberFormatException numberformatexception)
+            catch (NumberFormatException numberformatexception)
             {
                 l1 = s1.hashCode();
             }
         }
+        EnumWorldType enumworldtype = EnumWorldType.func_46049_a(s2);
+        if (enumworldtype == null)
+        {
+            enumworldtype = EnumWorldType.DEFAULT;
+        }
         logger.info((new StringBuilder()).append("Preparing level \"").append(s).append("\"").toString());
-        initWorld(new SaveConverterMcRegion(new File(".")), s, l1);
+        initWorld(new SaveConverterMcRegion(new File(".")), s, l1, enumworldtype);
         logger.info((new StringBuilder()).append("Done (").append(System.nanoTime() - l).append("ns)! For help, type \"help\" or \"?\"").toString());
-        if(propertyManagerObj.getBooleanProperty("enable-query", false))
+        if (propertyManagerObj.getBooleanProperty("enable-query", false))
         {
             logger.info("Starting GS4 status listener");
             rconQueryThread = new RConThreadQuery(this);
             rconQueryThread.startThread();
         }
-        if(propertyManagerObj.getBooleanProperty("enable-rcon", false))
+        if (propertyManagerObj.getBooleanProperty("enable-rcon", false))
         {
             logger.info("Starting remote control listener");
             rconMainThread = new RConThreadMain(this);
@@ -185,9 +189,9 @@ public class MinecraftServer
         return true;
     }
 
-    private void initWorld(ISaveFormat isaveformat, String s, long l)
+    private void initWorld(ISaveFormat isaveformat, String s, long l, EnumWorldType enumworldtype)
     {
-        if(isaveformat.isOldSaveType(s))
+        if (isaveformat.isOldSaveType(s))
         {
             logger.info("Converting map!");
             isaveformat.convertMapFormat(s, new ConvertProgressUpdater(this));
@@ -197,23 +201,25 @@ public class MinecraftServer
         int i = propertyManagerObj.getIntProperty("gamemode", 0);
         i = WorldSettings.validGameType(i);
         logger.info((new StringBuilder()).append("Default game type: ").append(i).toString());
-        WorldSettings worldsettings = new WorldSettings(l, i, true, false);
+        boolean flag = propertyManagerObj.getBooleanProperty("generate-structures", true);
+        WorldSettings worldsettings = new WorldSettings(l, i, flag, false, enumworldtype);
         SaveOldDir saveolddir = new SaveOldDir(new File("."), s, true);
-        for(int j = 0; j < worldMngr.length; j++)
+        for (int j = 0; j < worldMngr.length; j++)
         {
             byte byte0 = 0;
-            if(j == 1)
+            if (j == 1)
             {
                 byte0 = -1;
             }
-            if(j == 2)
+            if (j == 2)
             {
                 byte0 = 1;
             }
-            if(j == 0)
+            if (j == 0)
             {
                 worldMngr[j] = new WorldServer(this, saveolddir, s, byte0, worldsettings);
-            } else
+            }
+            else
             {
                 worldMngr[j] = new WorldServerMulti(this, saveolddir, s, byte0, worldsettings, worldMngr[0]);
             }
@@ -226,31 +232,21 @@ public class MinecraftServer
 
         char c = '\304';
         long l1 = System.currentTimeMillis();
-label0:
-        for(int k = 0; k < 1; k++)
+        for (int k = 0; k < 1; k++)
         {
             logger.info((new StringBuilder()).append("Preparing start region for level ").append(k).toString());
-            if(k != 0 && !propertyManagerObj.getBooleanProperty("allow-nether", true))
-            {
-                continue;
-            }
             WorldServer worldserver = worldMngr[k];
             ChunkCoordinates chunkcoordinates = worldserver.getSpawnPoint();
-            int i1 = -c;
-            do
+            for (int i1 = -c; i1 <= c && serverRunning; i1 += 16)
             {
-                if(i1 > c || !serverRunning)
-                {
-                    continue label0;
-                }
-                for(int j1 = -c; j1 <= c && serverRunning; j1 += 16)
+                for (int j1 = -c; j1 <= c && serverRunning; j1 += 16)
                 {
                     long l2 = System.currentTimeMillis();
-                    if(l2 < l1)
+                    if (l2 < l1)
                     {
                         l1 = l2;
                     }
-                    if(l2 > l1 + 1000L)
+                    if (l2 > l1 + 1000L)
                     {
                         int k1 = (c * 2 + 1) * (c * 2 + 1);
                         int i2 = (i1 + c) * (c * 2 + 1) + (j1 + 1);
@@ -258,11 +254,9 @@ label0:
                         l1 = l2;
                     }
                     worldserver.chunkProviderServer.loadChunk(chunkcoordinates.posX + i1 >> 4, chunkcoordinates.posZ + j1 >> 4);
-                    while(worldserver.updatingLighting() && serverRunning) ;
+                    while (worldserver.updatingLighting() && serverRunning) ;
                 }
-
-                i1 += 16;
-            } while(true);
+            }
         }
 
         clearCurrentTask();
@@ -284,31 +278,29 @@ label0:
     private void saveServerWorld()
     {
         logger.info("Saving chunks");
-        for(int i = 0; i < worldMngr.length; i++)
+        for (int i = 0; i < worldMngr.length; i++)
         {
             WorldServer worldserver = worldMngr[i];
             worldserver.saveWorld(true, null);
             worldserver.func_30006_w();
         }
-
     }
 
     private void stopServer()
     {
         logger.info("Stopping server");
-        if(configManager != null)
+        if (configManager != null)
         {
             configManager.savePlayerStates();
         }
-        for(int i = 0; i < worldMngr.length; i++)
+        for (int i = 0; i < worldMngr.length; i++)
         {
             WorldServer worldserver = worldMngr[i];
-            if(worldserver != null)
+            if (worldserver != null)
             {
                 saveServerWorld();
             }
         }
-
     }
 
     public void initiateShutdown()
@@ -320,34 +312,35 @@ label0:
     {
         try
         {
-            if(startServer())
+            if (startServer())
             {
                 long l = System.currentTimeMillis();
                 long l1 = 0L;
-                while(serverRunning) 
+                while (serverRunning)
                 {
                     ModLoader.OnTick(this);
                     long l2 = System.currentTimeMillis();
                     long l3 = l2 - l;
-                    if(l3 > 2000L)
+                    if (l3 > 2000L)
                     {
                         logger.warning("Can't keep up! Did the system time change, or is the server overloaded?");
                         l3 = 2000L;
                     }
-                    if(l3 < 0L)
+                    if (l3 < 0L)
                     {
                         logger.warning("Time ran backwards! Did the system time change?");
                         l3 = 0L;
                     }
                     l1 += l3;
                     l = l2;
-                    if(worldMngr[0].isAllPlayersFullyAsleep())
+                    if (worldMngr[0].isAllPlayersFullyAsleep())
                     {
                         doTick();
                         l1 = 0L;
-                    } else
+                    }
+                    else
                     {
-                        while(l1 > 50L) 
+                        while (l1 > 50L)
                         {
                             l1 -= 50L;
                             doTick();
@@ -355,34 +348,35 @@ label0:
                     }
                     Thread.sleep(1L);
                 }
-            } else
+            }
+            else
             {
-                while(serverRunning) 
+                while (serverRunning)
                 {
                     commandLineParser();
                     try
                     {
                         Thread.sleep(10L);
                     }
-                    catch(InterruptedException interruptedexception)
+                    catch (InterruptedException interruptedexception)
                     {
                         interruptedexception.printStackTrace();
                     }
                 }
             }
         }
-        catch(Throwable throwable1)
+        catch (Throwable throwable1)
         {
             throwable1.printStackTrace();
             logger.log(Level.SEVERE, "Unexpected exception", throwable1);
-            while(serverRunning) 
+            while (serverRunning)
             {
                 commandLineParser();
                 try
                 {
                     Thread.sleep(10L);
                 }
-                catch(InterruptedException interruptedexception1)
+                catch (InterruptedException interruptedexception1)
                 {
                     interruptedexception1.printStackTrace();
                 }
@@ -395,7 +389,7 @@ label0:
                 stopServer();
                 serverStopped = true;
             }
-            catch(Throwable throwable2)
+            catch (Throwable throwable2)
             {
                 throwable2.printStackTrace();
             }
@@ -403,13 +397,14 @@ label0:
             {
                 System.exit(0);
             }
+            break MISSING_BLOCK_LABEL_350;
         }
         try
         {
             stopServer();
             serverStopped = true;
         }
-        catch(Throwable throwable)
+        catch (Throwable throwable)
         {
             throwable.printStackTrace();
         }
@@ -417,12 +412,15 @@ label0:
         {
             System.exit(0);
         }
+        break MISSING_BLOCK_LABEL_350;
+        Exception exception2;
+        exception2;
         try
         {
             stopServer();
             serverStopped = true;
         }
-        catch(Throwable throwable3)
+        catch (Throwable throwable3)
         {
             throwable3.printStackTrace();
         }
@@ -430,26 +428,28 @@ label0:
         {
             System.exit(0);
         }
+        throw exception2;
     }
 
     private void doTick()
     {
         long l = System.nanoTime();
         ArrayList arraylist = new ArrayList();
-        for(Iterator iterator = field_6037_b.keySet().iterator(); iterator.hasNext();)
+        for (Iterator iterator = field_6037_b.keySet().iterator(); iterator.hasNext();)
         {
             String s = (String)iterator.next();
             int j1 = ((Integer)field_6037_b.get(s)).intValue();
-            if(j1 > 0)
+            if (j1 > 0)
             {
                 field_6037_b.put(s, Integer.valueOf(j1 - 1));
-            } else
+            }
+            else
             {
                 arraylist.add(s);
             }
         }
 
-        for(int i = 0; i < arraylist.size(); i++)
+        for (int i = 0; i < arraylist.size(); i++)
         {
             field_6037_b.remove(arraylist.get(i));
         }
@@ -457,18 +457,18 @@ label0:
         AxisAlignedBB.clearBoundingBoxPool();
         Vec3D.initialize();
         deathTime++;
-        for(int j = 0; j < worldMngr.length; j++)
+        for (int j = 0; j < worldMngr.length; j++)
         {
             long l1 = System.nanoTime();
-            if(j == 0 || propertyManagerObj.getBooleanProperty("allow-nether", true))
+            if (j == 0 || propertyManagerObj.getBooleanProperty("allow-nether", true))
             {
                 WorldServer worldserver = worldMngr[j];
-                if(deathTime % 20 == 0)
+                if (deathTime % 20 == 0)
                 {
                     configManager.sendPacketToAllPlayersInDimension(new Packet4UpdateTime(worldserver.getWorldTime()), worldserver.worldProvider.worldType);
                 }
                 worldserver.tick();
-                while(worldserver.updatingLighting()) ;
+                while (worldserver.updatingLighting()) ;
                 worldserver.updateEntities();
             }
             field_40028_g[j][deathTime % 100] = System.nanoTime() - l1;
@@ -476,12 +476,12 @@ label0:
 
         networkServer.handleNetworkListenThread();
         configManager.onTick();
-        for(int k = 0; k < entityTracker.length; k++)
+        for (int k = 0; k < entityTracker.length; k++)
         {
             entityTracker[k].updateTrackedEntities();
         }
 
-        for(int i1 = 0; i1 < playersOnline.size(); i1++)
+        for (int i1 = 0; i1 < playersOnline.size(); i1++)
         {
             ((IUpdatePlayerListBox)playersOnline.get(i1)).update();
         }
@@ -490,7 +490,7 @@ label0:
         {
             commandLineParser();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.log(Level.WARNING, "Unexpected exception while parsing console command", exception);
         }
@@ -505,11 +505,10 @@ label0:
     public void commandLineParser()
     {
         ServerCommand servercommand;
-        for(; commands.size() > 0; commandHandler.handleCommand(servercommand))
+        for (; commands.size() > 0; commandHandler.handleCommand(servercommand))
         {
             servercommand = (ServerCommand)commands.remove(0);
         }
-
     }
 
     public void addToOnlinePlayerList(IUpdatePlayerListBox iupdateplayerlistbox)
@@ -523,13 +522,13 @@ label0:
         try
         {
             MinecraftServer minecraftserver = new MinecraftServer();
-            if(!java.awt.GraphicsEnvironment.isHeadless() && (args.length <= 0 || !args[0].equals("nogui")))
+            if (!java.awt.GraphicsEnvironment.isHeadless() && (args.length <= 0 || !args[0].equals("nogui")))
             {
                 ServerGUI.initGui(minecraftserver);
             }
             (new ThreadServerApplication("Server thread", minecraftserver)).start();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.log(Level.SEVERE, "Failed to start the minecraft server", exception);
         }
@@ -557,14 +556,15 @@ label0:
 
     public WorldServer getWorldManager(int i)
     {
-        if(i == -1)
+        if (i == -1)
         {
             return worldMngr[1];
         }
-        if(i == 1)
+        if (i == 1)
         {
             return worldMngr[2];
-        } else
+        }
+        else
         {
             return worldMngr[0];
         }
@@ -572,14 +572,15 @@ label0:
 
     public EntityTracker getEntityTracker(int i)
     {
-        if(i == -1)
+        if (i == -1)
         {
             return entityTracker[1];
         }
-        if(i == 1)
+        if (i == 1)
         {
             return entityTracker[2];
-        } else
+        }
+        else
         {
             return entityTracker[0];
         }
@@ -608,10 +609,11 @@ label0:
     public String getSettingsFilename()
     {
         File file = propertyManagerObj.func_40656_c();
-        if(file != null)
+        if (file != null)
         {
             return file.getAbsolutePath();
-        } else
+        }
+        else
         {
             return "No settings file";
         }
@@ -634,7 +636,7 @@ label0:
 
     public String getVersionString()
     {
-        return "1.0.1";
+        return "1.1";
     }
 
     public int playersOnline()
@@ -685,7 +687,7 @@ label0:
 
     public void logIn(String s)
     {
-        if(isDebuggingEnabled())
+        if (isDebuggingEnabled())
         {
             logger.log(Level.INFO, s);
         }
@@ -705,5 +707,4 @@ label0:
     {
         return minecraftserver.serverRunning;
     }
-
 }

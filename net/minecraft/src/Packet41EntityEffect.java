@@ -1,17 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 
-// Referenced classes of package net.minecraft.src:
-//            Packet, PotionEffect, NetHandler
-
 public class Packet41EntityEffect extends Packet
 {
-
     public int entityId;
     public byte effectId;
     public byte effectAmp;
@@ -30,7 +22,7 @@ public class Packet41EntityEffect extends Packet
     }
 
     public void readPacketData(DataInputStream datainputstream)
-        throws IOException
+    throws IOException
     {
         entityId = datainputstream.readInt();
         effectId = datainputstream.readByte();
@@ -39,7 +31,7 @@ public class Packet41EntityEffect extends Packet
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
-        throws IOException
+    throws IOException
     {
         dataoutputstream.writeInt(entityId);
         dataoutputstream.writeByte(effectId);

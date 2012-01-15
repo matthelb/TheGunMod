@@ -1,19 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            EnchantmentProtection, EnchantmentOxygen, EnchantmentWaterWorker, EnchantmentDamage, 
-//            EnchantmentKnockback, EnchantmentFireAspect, EnchantmentLootBonus, EnumEnchantmentType, 
-//            EnchantmentDigging, EnchantmentUntouching, EnchantmentDurability, DamageSource, 
-//            EntityLiving
 
 public abstract class Enchantment
 {
-
     public static final Enchantment enchantmentsList[] = new Enchantment[256];
     public static final Enchantment protection = new EnchantmentProtection(0, 10, 0);
     public static final Enchantment fireProtection = new EnchantmentProtection(1, 5, 1);
@@ -32,6 +20,10 @@ public abstract class Enchantment
     public static final Enchantment silkTouch = new EnchantmentUntouching(33, 1);
     public static final Enchantment unbreaking = new EnchantmentDurability(34, 5);
     public static final Enchantment fortune;
+    public static final Enchantment field_46057_t = new EnchantmentArrowDamage(48, 10);
+    public static final Enchantment field_46056_u = new EnchantmentArrowKnockback(49, 2);
+    public static final Enchantment field_46055_v = new EnchantmentArrowFire(50, 2);
+    public static final Enchantment field_46054_w = new EnchantmentArrowInfinite(51, 1);
     public final int effectId;
     private final int weight;
     public EnumEnchantmentType type;
@@ -42,10 +34,11 @@ public abstract class Enchantment
         effectId = i;
         weight = j;
         type = enumenchantmenttype;
-        if(enchantmentsList[i] != null)
+        if (enchantmentsList[i] != null)
         {
             throw new IllegalArgumentException("Duplicate enchantment id!");
-        } else
+        }
+        else
         {
             enchantmentsList[i] = this;
             return;
@@ -98,7 +91,7 @@ public abstract class Enchantment
         return this;
     }
 
-    static 
+    static
     {
         looting = new EnchantmentLootBonus(21, 2, EnumEnchantmentType.weapon);
         fortune = new EnchantmentLootBonus(35, 2, EnumEnchantmentType.digger);

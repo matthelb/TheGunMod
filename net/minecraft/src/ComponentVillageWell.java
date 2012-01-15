@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            ComponentVillage, StructureBoundingBox, ComponentVillageStartPiece, StructureVillagePieces, 
-//            Block, StructureComponent, World
-
 public class ComponentVillageWell extends ComponentVillage
 {
-
     private final boolean field_35385_a = true;
     private int averageGroundLevel;
 
@@ -22,16 +13,16 @@ public class ComponentVillageWell extends ComponentVillage
         super(i);
         averageGroundLevel = -1;
         coordBaseMode = random.nextInt(4);
-        switch(coordBaseMode)
+        switch (coordBaseMode)
         {
-        case 0: // '\0'
-        case 2: // '\002'
-            boundingBox = new StructureBoundingBox(j, 64, k, (j + 6) - 1, 78, (k + 6) - 1);
-            break;
+            case 0:
+            case 2:
+                boundingBox = new StructureBoundingBox(j, 64, k, (j + 6) - 1, 78, (k + 6) - 1);
+                break;
 
-        default:
-            boundingBox = new StructureBoundingBox(j, 64, k, (j + 6) - 1, 78, (k + 6) - 1);
-            break;
+            default:
+                boundingBox = new StructureBoundingBox(j, 64, k, (j + 6) - 1, 78, (k + 6) - 1);
+                break;
         }
     }
 
@@ -45,16 +36,16 @@ public class ComponentVillageWell extends ComponentVillage
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(averageGroundLevel < 0)
+        if (averageGroundLevel < 0)
         {
             averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
-            if(averageGroundLevel < 0)
+            if (averageGroundLevel < 0)
             {
                 return true;
             }
             boundingBox.offset(0, (averageGroundLevel - boundingBox.maxY) + 3, 0);
         }
-        if(!field_35385_a);
+        if (!field_35385_a);
         fillWithBlocks(world, structureboundingbox, 1, 0, 1, 4, 12, 4, Block.cobblestone.blockID, Block.waterMoving.blockID, false);
         placeBlockAtCurrentPosition(world, 0, 0, 2, 12, 2, structureboundingbox);
         placeBlockAtCurrentPosition(world, 0, 0, 3, 12, 2, structureboundingbox);
@@ -69,17 +60,16 @@ public class ComponentVillageWell extends ComponentVillage
         placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 4, 13, 4, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 4, 14, 4, structureboundingbox);
         fillWithBlocks(world, structureboundingbox, 1, 15, 1, 4, 15, 4, Block.cobblestone.blockID, Block.cobblestone.blockID, false);
-        for(int i = 0; i <= 5; i++)
+        for (int i = 0; i <= 5; i++)
         {
-            for(int j = 0; j <= 5; j++)
+            for (int j = 0; j <= 5; j++)
             {
-                if(j == 0 || j == 5 || i == 0 || i == 5)
+                if (j == 0 || j == 5 || i == 0 || i == 5)
                 {
                     placeBlockAtCurrentPosition(world, Block.gravel.blockID, 0, j, 11, i, structureboundingbox);
                     clearCurrentPositionBlocksUpwards(world, j, 12, i, structureboundingbox);
                 }
             }
-
         }
 
         return true;

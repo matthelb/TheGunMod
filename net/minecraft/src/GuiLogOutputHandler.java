@@ -1,19 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.logging.*;
 import javax.swing.JTextArea;
 import javax.swing.text.Document;
 
-// Referenced classes of package net.minecraft.src:
-//            GuiLogFormatter
-
 public class GuiLogOutputHandler extends Handler
 {
-
     private int field_998_b[];
     private int field_1001_c;
     Formatter field_999_a;
@@ -42,7 +34,7 @@ public class GuiLogOutputHandler extends Handler
         field_1000_d.append(field_999_a.format(logrecord));
         field_1000_d.setCaretPosition(field_1000_d.getDocument().getLength());
         int j = field_1000_d.getDocument().getLength() - i;
-        if(field_998_b[field_1001_c] != 0)
+        if (field_998_b[field_1001_c] != 0)
         {
             field_1000_d.replaceRange("", 0, field_998_b[field_1001_c]);
         }

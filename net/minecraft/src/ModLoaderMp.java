@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
@@ -11,18 +7,10 @@ import java.util.*;
 import java.util.logging.Logger;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            Pair, EntityTrackerEntry2, ModLoader, BaseMod, 
-//            BaseModMp, Packet230ModLoader, EntityTracker, ServerConfigurationManager, 
-//            EntityPlayerMP, NetServerHandler, World, Packet, 
-//            Packet3Chat, TileEntity, Entity, EntityPlayer, 
-//            ICommandListener
-
 public class ModLoaderMp
 {
-
     public static final String NAME = "ModLoaderMP";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.1";
     private static boolean hasInit = false;
     private static Map entityTrackerMap = new HashMap();
     private static Map entityTrackerEntryMap = new HashMap();
@@ -34,24 +22,25 @@ public class ModLoaderMp
 
     public static void InitModLoaderMp()
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
     }
 
-    public static void RegisterEntityTracker(Class entityClass, int maxTrackingDistanceThreshold, int updateTicks)
+    public static void RegisterEntityTracker(Class class1, int i, int j)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(entityTrackerMap.containsKey(entityClass))
+        if (entityTrackerMap.containsKey(class1))
         {
             System.out.println("RegisterEntityTracker error: entityClass already registered.");
-        } else
+        }
+        else
         {
-            entityTrackerMap.put(entityClass, new Pair(Integer.valueOf(maxTrackingDistanceThreshold), Integer.valueOf(updateTicks)));
+            entityTrackerMap.put(class1, new Pair(Integer.valueOf(i), Integer.valueOf(j)));
         }
     }
 
@@ -62,18 +51,19 @@ public class ModLoaderMp
 
     public static void RegisterEntityTrackerEntry(Class class1, boolean flag, int i)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(i > 255)
+        if (i > 255)
         {
             System.out.println("RegisterEntityTrackerEntry error: entityId cannot be greater than 255.");
         }
-        if(entityTrackerEntryMap.containsKey(class1))
+        if (entityTrackerEntryMap.containsKey(class1))
         {
             System.out.println("RegisterEntityTrackerEntry error: entityClass already registered.");
-        } else
+        }
+        else
         {
             entityTrackerEntryMap.put(class1, new EntityTrackerEntry2(i, flag));
         }
@@ -81,89 +71,88 @@ public class ModLoaderMp
 
     public static void HandleAllLogins(EntityPlayerMP entityplayermp)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
         sendModCheck(entityplayermp);
-        for(int i = 0; i < ModLoader.getLoadedMods().size(); i++)
+        for (int i = 0; i < ModLoader.getLoadedMods().size(); i++)
         {
             BaseMod basemod = (BaseMod)ModLoader.getLoadedMods().get(i);
-            if(basemod instanceof BaseModMp)
+            if (basemod instanceof BaseModMp)
             {
                 ((BaseModMp)basemod).HandleLogin(entityplayermp);
             }
         }
-
     }
 
     public static void HandleAllPackets(Packet230ModLoader packet230modloader, EntityPlayerMP entityplayermp)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(packet230modloader.modId == "ModLoaderMP".hashCode())
+        if (packet230modloader.modId == "ModLoaderMP".hashCode())
         {
-            switch(packet230modloader.packetType)
+            switch (packet230modloader.packetType)
             {
-            case 0: // '\0'
-                handleModCheckResponse(packet230modloader, entityplayermp);
-                break;
+                case 0:
+                    handleModCheckResponse(packet230modloader, entityplayermp);
+                    break;
 
-            case 1: // '\001'
-                handleSendKey(packet230modloader, entityplayermp);
-                break;
+                case 1:
+                    handleSendKey(packet230modloader, entityplayermp);
+                    break;
             }
-        } else
+        }
+        else
         {
-            for(int i = 0; i < ModLoader.getLoadedMods().size(); i++)
+            for (int i = 0; i < ModLoader.getLoadedMods().size(); i++)
             {
                 BaseMod basemod = (BaseMod)ModLoader.getLoadedMods().get(i);
-                if(!(basemod instanceof BaseModMp))
+                if (!(basemod instanceof BaseModMp))
                 {
                     continue;
                 }
                 BaseModMp basemodmp = (BaseModMp)basemod;
-                if(basemodmp.getId() != packet230modloader.modId)
+                if (basemodmp.getId() != packet230modloader.modId)
                 {
                     continue;
                 }
                 basemodmp.HandlePacket(packet230modloader, entityplayermp);
                 break;
             }
-
         }
     }
 
     public static void HandleEntityTrackers(EntityTracker entitytracker, Entity entity)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        for(Iterator iterator = entityTrackerMap.entrySet().iterator(); iterator.hasNext();)
+        for (Iterator iterator = entityTrackerMap.entrySet().iterator(); iterator.hasNext();)
         {
             java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
-            if(((Class)entry.getKey()).isInstance(entity))
+            if (((Class)entry.getKey()).isInstance(entity))
             {
                 entitytracker.trackEntity(entity, ((Integer)((Pair)entry.getValue()).getLeft()).intValue(), ((Integer)((Pair)entry.getValue()).getRight()).intValue(), true);
                 return;
             }
         }
-
     }
 
     public static EntityTrackerEntry2 HandleEntityTrackerEntries(Entity entity)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(entityTrackerEntryMap.containsKey(entity.getClass()))
+        if (entityTrackerEntryMap.containsKey(entity.getClass()))
         {
             return (EntityTrackerEntry2)entityTrackerEntryMap.get(entity.getClass());
-        } else
+        }
+        else
         {
             return null;
         }
@@ -171,17 +160,18 @@ public class ModLoaderMp
 
     public static void SendPacketToAll(BaseModMp basemodmp, Packet230ModLoader packet230modloader)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(basemodmp == null)
+        if (basemodmp == null)
         {
             IllegalArgumentException illegalargumentexception = new IllegalArgumentException("baseModMp cannot be null.");
             ModLoader.getLogger().throwing("ModLoaderMP", "SendPacketToAll", illegalargumentexception);
             ModLoader.ThrowException("baseModMp cannot be null.", illegalargumentexception);
             return;
-        } else
+        }
+        else
         {
             packet230modloader.modId = basemodmp.getId();
             sendPacketToAll(packet230modloader);
@@ -191,29 +181,29 @@ public class ModLoaderMp
 
     private static void sendPacketToAll(Packet packet)
     {
-        if(packet != null)
+        if (packet != null)
         {
-            for(int i = 0; i < ModLoader.getMinecraftServerInstance().configManager.playerEntities.size(); i++)
+            for (int i = 0; i < ModLoader.getMinecraftServerInstance().configManager.playerEntities.size(); i++)
             {
                 ((EntityPlayerMP)ModLoader.getMinecraftServerInstance().configManager.playerEntities.get(i)).playerNetServerHandler.sendPacket(packet);
             }
-
         }
     }
 
     public static void SendPacketTo(BaseModMp basemodmp, EntityPlayerMP entityplayermp, Packet230ModLoader packet230modloader)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(basemodmp == null)
+        if (basemodmp == null)
         {
             IllegalArgumentException illegalargumentexception = new IllegalArgumentException("baseModMp cannot be null.");
             ModLoader.getLogger().throwing("ModLoaderMP", "SendPacketTo", illegalargumentexception);
             ModLoader.ThrowException("baseModMp cannot be null.", illegalargumentexception);
             return;
-        } else
+        }
+        else
         {
             packet230modloader.modId = basemodmp.getId();
             sendPacketTo(entityplayermp, packet230modloader);
@@ -231,9 +221,9 @@ public class ModLoaderMp
     public static World GetPlayerWorld(EntityPlayer entityplayer)
     {
         WorldServer aworldserver[] = ModLoader.getMinecraftServerInstance().worldMngr;
-        for(int i = 0; i < aworldserver.length; i++)
+        for (int i = 0; i < aworldserver.length; i++)
         {
-            if(((World) (aworldserver[i])).playerEntities.contains(entityplayer))
+            if (((World) (aworldserver[i])).playerEntities.contains(entityplayer))
             {
                 return aworldserver[i];
             }
@@ -250,46 +240,49 @@ public class ModLoaderMp
             Method method;
             try
             {
-                method = (net.minecraft.src.Packet.class).getDeclaredMethod("a", new Class[] {
-                    Integer.TYPE, Boolean.TYPE, Boolean.TYPE, java.lang.Class.class
-                });
+                method = (net.minecraft.src.Packet.class).getDeclaredMethod("a", new Class[]
+                        {
+                            Integer.TYPE, Boolean.TYPE, Boolean.TYPE, java.lang.Class.class
+                        });
             }
-            catch(NoSuchMethodException nosuchmethodexception1)
+            catch (NoSuchMethodException nosuchmethodexception1)
             {
-                method = (net.minecraft.src.Packet.class).getDeclaredMethod("addIdClassMapping", new Class[] {
-                    Integer.TYPE, Boolean.TYPE, Boolean.TYPE, java.lang.Class.class
-                });
+                method = (net.minecraft.src.Packet.class).getDeclaredMethod("addIdClassMapping", new Class[]
+                        {
+                            Integer.TYPE, Boolean.TYPE, Boolean.TYPE, java.lang.Class.class
+                        });
             }
             method.setAccessible(true);
-            method.invoke(null, new Object[] {
-                Integer.valueOf(230), Boolean.valueOf(true), Boolean.valueOf(true), net.minecraft.src.Packet230ModLoader.class
-            });
+            method.invoke(null, new Object[]
+                    {
+                        Integer.valueOf(230), Boolean.valueOf(true), Boolean.valueOf(true), net.minecraft.src.Packet230ModLoader.class
+                    });
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMP", "AddCustomPacketMapping", illegalaccessexception);
             ModLoader.ThrowException("ModLoaderMP", illegalaccessexception);
             return;
         }
-        catch(IllegalArgumentException illegalargumentexception)
+        catch (IllegalArgumentException illegalargumentexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMP", "init", illegalargumentexception);
             ModLoader.ThrowException("ModLoaderMP", illegalargumentexception);
             return;
         }
-        catch(InvocationTargetException invocationtargetexception)
+        catch (InvocationTargetException invocationtargetexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMP", "init", invocationtargetexception);
             ModLoader.ThrowException("ModLoaderMP", invocationtargetexception);
             return;
         }
-        catch(NoSuchMethodException nosuchmethodexception)
+        catch (NoSuchMethodException nosuchmethodexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMP", "init", nosuchmethodexception);
             ModLoader.ThrowException("ModLoaderMP", nosuchmethodexception);
             return;
         }
-        catch(SecurityException securityexception)
+        catch (SecurityException securityexception)
         {
             ModLoader.getLogger().throwing("ModLoaderMP", "init", securityexception);
             ModLoader.ThrowException("ModLoaderMP", securityexception);
@@ -298,30 +291,30 @@ public class ModLoaderMp
         try
         {
             File file = ModLoader.getMinecraftServerInstance().getFile("banned-mods.txt");
-            if(!file.exists())
+            if (!file.exists())
             {
                 file.createNewFile();
             }
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
             String s;
-            while((s = bufferedreader.readLine()) != null) 
+            while ((s = bufferedreader.readLine()) != null)
             {
                 bannedMods.add(s);
             }
         }
-        catch(FileNotFoundException filenotfoundexception)
+        catch (FileNotFoundException filenotfoundexception)
         {
             ModLoader.getLogger().throwing("ModLoader", "init", filenotfoundexception);
             ModLoader.ThrowException("ModLoaderMultiplayer", filenotfoundexception);
             return;
         }
-        catch(IOException ioexception)
+        catch (IOException ioexception)
         {
             ModLoader.getLogger().throwing("ModLoader", "init", ioexception);
             ModLoader.ThrowException("ModLoaderMultiplayer", ioexception);
             return;
         }
-        Log("ModLoaderMP 1.0.0 Initialized");
+        Log("ModLoaderMP 1.1 Initialized");
     }
 
     private static void sendPacketTo(EntityPlayerMP entityplayermp, Packet230ModLoader packet230modloader)
@@ -340,56 +333,55 @@ public class ModLoaderMp
     private static void handleModCheckResponse(Packet230ModLoader packet230modloader, EntityPlayerMP entityplayermp)
     {
         StringBuilder stringbuilder = new StringBuilder();
-        if(packet230modloader.dataString.length != 0)
+        if (packet230modloader.dataString.length != 0)
         {
-            for(int i = 0; i < packet230modloader.dataString.length; i++)
+            for (int i = 0; i < packet230modloader.dataString.length; i++)
             {
-                if(packet230modloader.dataString[i].lastIndexOf("mod_") != -1)
+                if (packet230modloader.dataString[i].lastIndexOf("mod_") != -1)
                 {
-                    if(stringbuilder.length() != 0)
+                    if (stringbuilder.length() != 0)
                     {
                         stringbuilder.append(", ");
                     }
                     stringbuilder.append(packet230modloader.dataString[i].substring(packet230modloader.dataString[i].lastIndexOf("mod_")));
                 }
             }
-
-        } else
+        }
+        else
         {
             stringbuilder.append("no mods");
         }
         Log((new StringBuilder()).append(entityplayermp.username).append(" joined with ").append(stringbuilder.toString()).toString());
         ArrayList arraylist = new ArrayList();
-        for(int j = 0; j < bannedMods.size(); j++)
+        for (int j = 0; j < bannedMods.size(); j++)
         {
-            for(int k = 0; k < packet230modloader.dataString.length; k++)
+            for (int k = 0; k < packet230modloader.dataString.length; k++)
             {
-                if(packet230modloader.dataString[k].lastIndexOf("mod_") != -1 && packet230modloader.dataString[k].substring(packet230modloader.dataString[k].lastIndexOf("mod_")).startsWith((String)bannedMods.get(j)))
+                if (packet230modloader.dataString[k].lastIndexOf("mod_") != -1 && packet230modloader.dataString[k].substring(packet230modloader.dataString[k].lastIndexOf("mod_")).startsWith((String)bannedMods.get(j)))
                 {
                     arraylist.add(packet230modloader.dataString[k]);
                 }
             }
-
         }
 
         ArrayList arraylist1 = new ArrayList();
-        for(int l = 0; l < ModLoader.getLoadedMods().size(); l++)
+        for (int l = 0; l < ModLoader.getLoadedMods().size(); l++)
         {
             BaseModMp basemodmp = (BaseModMp)ModLoader.getLoadedMods().get(l);
-            if(!basemodmp.hasClientSide() || basemodmp.toString().lastIndexOf("mod_") == -1)
+            if (!basemodmp.hasClientSide() || basemodmp.toString().lastIndexOf("mod_") == -1)
             {
                 continue;
             }
             String s = basemodmp.toString().substring(basemodmp.toString().lastIndexOf("mod_"));
             boolean flag = false;
-            for(int l1 = 0; l1 < packet230modloader.dataString.length; l1++)
+            for (int l1 = 0; l1 < packet230modloader.dataString.length; l1++)
             {
-                if(packet230modloader.dataString[l1].lastIndexOf("mod_") == -1)
+                if (packet230modloader.dataString[l1].lastIndexOf("mod_") == -1)
                 {
                     continue;
                 }
                 String s1 = packet230modloader.dataString[l1].substring(packet230modloader.dataString[l1].lastIndexOf("mod_"));
-                if(!s.equals(s1))
+                if (!s.equals(s1))
                 {
                     continue;
                 }
@@ -397,22 +389,22 @@ public class ModLoaderMp
                 break;
             }
 
-            if(!flag)
+            if (!flag)
             {
                 arraylist1.add(s);
             }
         }
 
-        if(arraylist.size() != 0)
+        if (arraylist.size() != 0)
         {
             StringBuilder stringbuilder1 = new StringBuilder();
-            for(int i1 = 0; i1 < arraylist.size(); i1++)
+            for (int i1 = 0; i1 < arraylist.size(); i1++)
             {
-                if(((String)arraylist.get(i1)).lastIndexOf("mod_") == -1)
+                if (((String)arraylist.get(i1)).lastIndexOf("mod_") == -1)
                 {
                     continue;
                 }
-                if(stringbuilder1.length() != 0)
+                if (stringbuilder1.length() != 0)
                 {
                     stringbuilder1.append(", ");
                 }
@@ -421,9 +413,9 @@ public class ModLoaderMp
 
             Log((new StringBuilder()).append(entityplayermp.username).append(" kicked for having ").append(stringbuilder1.toString()).toString());
             StringBuilder stringbuilder3 = new StringBuilder();
-            for(int k1 = 0; k1 < arraylist.size(); k1++)
+            for (int k1 = 0; k1 < arraylist.size(); k1++)
             {
-                if(((String)arraylist.get(k1)).lastIndexOf("mod_") != -1)
+                if (((String)arraylist.get(k1)).lastIndexOf("mod_") != -1)
                 {
                     stringbuilder3.append("\n");
                     stringbuilder3.append(((String)arraylist.get(k1)).substring(((String)arraylist.get(k1)).lastIndexOf("mod_")));
@@ -431,13 +423,13 @@ public class ModLoaderMp
             }
 
             entityplayermp.playerNetServerHandler.kickPlayer((new StringBuilder()).append("The following mods are banned on this server:").append(stringbuilder3.toString()).toString());
-        } else
-        if(arraylist1.size() != 0)
+        }
+        else if (arraylist1.size() != 0)
         {
             StringBuilder stringbuilder2 = new StringBuilder();
-            for(int j1 = 0; j1 < arraylist1.size(); j1++)
+            for (int j1 = 0; j1 < arraylist1.size(); j1++)
             {
-                if(((String)arraylist1.get(j1)).lastIndexOf("mod_") != -1)
+                if (((String)arraylist1.get(j1)).lastIndexOf("mod_") != -1)
                 {
                     stringbuilder2.append("\n");
                     stringbuilder2.append(((String)arraylist1.get(j1)).substring(((String)arraylist1.get(j1)).lastIndexOf("mod_")));
@@ -450,58 +442,57 @@ public class ModLoaderMp
 
     private static void handleSendKey(Packet230ModLoader packet230modloader, EntityPlayerMP entityplayermp)
     {
-        if(packet230modloader.dataInt.length != 2)
+        if (packet230modloader.dataInt.length != 2)
         {
             System.out.println("SendKey packet received with missing data.");
-        } else
+        }
+        else
         {
             int i = packet230modloader.dataInt[0];
             int j = packet230modloader.dataInt[1];
-            for(int k = 0; k < ModLoader.getLoadedMods().size(); k++)
+            for (int k = 0; k < ModLoader.getLoadedMods().size(); k++)
             {
                 BaseMod basemod = (BaseMod)ModLoader.getLoadedMods().get(k);
-                if(!(basemod instanceof BaseModMp))
+                if (!(basemod instanceof BaseModMp))
                 {
                     continue;
                 }
                 BaseModMp basemodmp = (BaseModMp)basemod;
-                if(basemodmp.getId() != i)
+                if (basemodmp.getId() != i)
                 {
                     continue;
                 }
                 basemodmp.HandleSendKey(entityplayermp, j);
                 break;
             }
-
         }
     }
 
     public static void getCommandInfo(ICommandListener icommandlistener)
     {
-        for(int i = 0; i < ModLoader.getLoadedMods().size(); i++)
+        for (int i = 0; i < ModLoader.getLoadedMods().size(); i++)
         {
             BaseMod basemod = (BaseMod)ModLoader.getLoadedMods().get(i);
-            if(basemod instanceof BaseModMp)
+            if (basemod instanceof BaseModMp)
             {
                 BaseModMp basemodmp = (BaseModMp)basemod;
                 basemodmp.GetCommandInfo(icommandlistener);
             }
         }
-
     }
 
     public static boolean HandleCommand(String s, String s1, Logger logger, boolean flag)
     {
         boolean flag1 = false;
-        for(int i = 0; i < ModLoader.getLoadedMods().size(); i++)
+        for (int i = 0; i < ModLoader.getLoadedMods().size(); i++)
         {
             BaseMod basemod = (BaseMod)ModLoader.getLoadedMods().get(i);
-            if(!(basemod instanceof BaseModMp))
+            if (!(basemod instanceof BaseModMp))
             {
                 continue;
             }
             BaseModMp basemodmp = (BaseModMp)basemod;
-            if(basemodmp.HandleCommand(s, s1, logger, flag))
+            if (basemodmp.HandleCommand(s, s1, logger, flag))
             {
                 flag1 = true;
             }
@@ -519,7 +510,7 @@ public class ModLoaderMp
     public static void sendChatToAll(String s)
     {
         List list = ModLoader.getMinecraftServerInstance().configManager.playerEntities;
-        for(int i = 0; i < list.size(); i++)
+        for (int i = 0; i < list.size(); i++)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)list.get(i);
             entityplayermp.playerNetServerHandler.sendPacket(new Packet3Chat(s));
@@ -537,10 +528,10 @@ public class ModLoaderMp
     public static void sendChatToOps(String s)
     {
         List list = ModLoader.getMinecraftServerInstance().configManager.playerEntities;
-        for(int i = 0; i < list.size(); i++)
+        for (int i = 0; i < list.size(); i++)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)list.get(i);
-            if(ModLoader.getMinecraftServerInstance().configManager.isOp(entityplayermp.username))
+            if (ModLoader.getMinecraftServerInstance().configManager.isOp(entityplayermp.username))
             {
                 entityplayermp.playerNetServerHandler.sendPacket(new Packet3Chat(s));
             }
@@ -562,7 +553,7 @@ public class ModLoaderMp
         ai1[2] = j;
         ai1[3] = k;
         ai1[4] = l;
-        if(i1 != 0)
+        if (i1 != 0)
         {
             System.arraycopy(ai, 0, ai1, 5, ai.length);
         }
@@ -579,15 +570,15 @@ public class ModLoaderMp
 
     public static BaseModMp GetModInstance(Class class1)
     {
-        for(int i = 0; i < ModLoader.getLoadedMods().size(); i++)
+        for (int i = 0; i < ModLoader.getLoadedMods().size(); i++)
         {
             BaseMod basemod = (BaseMod)ModLoader.getLoadedMods().get(i);
-            if(!(basemod instanceof BaseModMp))
+            if (!(basemod instanceof BaseModMp))
             {
                 continue;
             }
             BaseModMp basemodmp = (BaseModMp)basemod;
-            if(class1.isInstance(basemodmp))
+            if (class1.isInstance(basemodmp))
             {
                 return (BaseModMp)ModLoader.getLoadedMods().get(i);
             }
@@ -595,5 +586,4 @@ public class ModLoaderMp
 
         return null;
     }
-
 }

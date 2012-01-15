@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.IOException;
@@ -10,17 +6,8 @@ import java.util.*;
 import java.util.logging.Logger;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            NetHandler, NetworkManager, Packet255KickDisconnect, Packet2Handshake, 
-//            Packet1Login, ThreadLoginVerifier, ServerConfigurationManager, EntityPlayerMP, 
-//            WorldServer, ItemInWorldManager, WorldInfo, NetServerHandler, 
-//            WorldProvider, Packet6SpawnPosition, ChunkCoordinates, Packet3Chat, 
-//            NetworkListenThread, Packet4UpdateTime, PotionEffect, Packet41EntityEffect, 
-//            ModLoaderMp, Packet254ServerPing, Packet
-
 public class NetLoginHandler extends NetHandler
 {
-
     public static Logger logger = Logger.getLogger("Minecraft");
     private static Random rand = new Random();
     public NetworkManager netManager;
@@ -32,7 +19,7 @@ public class NetLoginHandler extends NetHandler
     private String serverId;
 
     public NetLoginHandler(MinecraftServer minecraftserver, Socket socket, String s)
-        throws IOException
+    throws IOException
     {
         finishedProcessing = false;
         loginTimer = 0;
@@ -46,15 +33,16 @@ public class NetLoginHandler extends NetHandler
 
     public void tryLogin()
     {
-        if(packet1login != null)
+        if (packet1login != null)
         {
             doLogin(packet1login);
             packet1login = null;
         }
-        if(loginTimer++ == 600)
+        if (loginTimer++ == 600)
         {
             kickUser("Took too long to log in");
-        } else
+        }
+        else
         {
             netManager.processReadPackets();
         }
@@ -69,7 +57,7 @@ public class NetLoginHandler extends NetHandler
             netManager.serverShutdown();
             finishedProcessing = true;
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             exception.printStackTrace();
         }
@@ -77,11 +65,12 @@ public class NetLoginHandler extends NetHandler
 
     public void handleHandshake(Packet2Handshake packet2handshake)
     {
-        if(mcServer.onlineMode)
+        if (mcServer.onlineMode)
         {
             serverId = Long.toString(rand.nextLong(), 16);
             netManager.addToSendQueue(new Packet2Handshake(serverId));
-        } else
+        }
+        else
         {
             netManager.addToSendQueue(new Packet2Handshake("-"));
         }
@@ -90,21 +79,23 @@ public class NetLoginHandler extends NetHandler
     public void handleLogin(Packet1Login packet1login)
     {
         username = packet1login.username;
-        if(packet1login.protocolVersion != 22)
+        if (packet1login.protocolVersion != 23)
         {
-            if(packet1login.protocolVersion > 22)
+            if (packet1login.protocolVersion > 23)
             {
                 kickUser("Outdated server!");
-            } else
+            }
+            else
             {
                 kickUser("Outdated client!");
             }
             return;
         }
-        if(!mcServer.onlineMode)
+        if (!mcServer.onlineMode)
         {
             doLogin(packet1login);
-        } else
+        }
+        else
         {
             (new ThreadLoginVerifier(this, packet1login)).start();
         }
@@ -113,7 +104,7 @@ public class NetLoginHandler extends NetHandler
     public void doLogin(Packet1Login packet1login)
     {
         EntityPlayerMP entityplayermp = mcServer.configManager.login(this, packet1login.username);
-        if(entityplayermp != null)
+        if (entityplayermp != null)
         {
             mcServer.configManager.readPlayerDataFromFile(entityplayermp);
             entityplayermp.setWorld(mcServer.getWorldManager(entityplayermp.dimension));
@@ -123,7 +114,7 @@ public class NetLoginHandler extends NetHandler
             ChunkCoordinates chunkcoordinates = worldserver.getSpawnPoint();
             entityplayermp.itemInWorldManager.func_35695_b(worldserver.getWorldInfo().getGameType());
             NetServerHandler netserverhandler = new NetServerHandler(mcServer, netManager, entityplayermp);
-            netserverhandler.sendPacket(new Packet1Login("", entityplayermp.entityId, worldserver.getRandomSeed(), entityplayermp.itemInWorldManager.getGameType(), (byte)worldserver.worldProvider.worldType, (byte)worldserver.difficultySetting, (byte)worldserver.worldHeight, (byte)mcServer.configManager.getMaxPlayers()));
+            netserverhandler.sendPacket(new Packet1Login("", entityplayermp.entityId, worldserver.getRandomSeed(), worldserver.getWorldInfo().func_46069_q(), entityplayermp.itemInWorldManager.getGameType(), (byte)worldserver.worldProvider.worldType, (byte)worldserver.difficultySetting, (byte)worldserver.worldHeight, (byte)mcServer.configManager.getMaxPlayers()));
             netserverhandler.sendPacket(new Packet6SpawnPosition(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
             mcServer.configManager.func_28170_a(entityplayermp, worldserver);
             mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat((new StringBuilder()).append("\247e").append(entityplayermp.username).append(" joined the game.").toString()));
@@ -132,7 +123,7 @@ public class NetLoginHandler extends NetHandler
             mcServer.networkServer.addPlayer(netserverhandler);
             netserverhandler.sendPacket(new Packet4UpdateTime(worldserver.getWorldTime()));
             PotionEffect potioneffect;
-            for(Iterator iterator = entityplayermp.func_35183_ak().iterator(); iterator.hasNext(); netserverhandler.sendPacket(new Packet41EntityEffect(entityplayermp.entityId, potioneffect)))
+            for (Iterator iterator = entityplayermp.func_35183_ak().iterator(); iterator.hasNext(); netserverhandler.sendPacket(new Packet41EntityEffect(entityplayermp.entityId, potioneffect)))
             {
                 potioneffect = (PotionEffect)iterator.next();
             }
@@ -159,7 +150,7 @@ public class NetLoginHandler extends NetHandler
             mcServer.networkServer.func_35505_a(netManager.getSocket());
             finishedProcessing = true;
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             exception.printStackTrace();
         }
@@ -172,10 +163,11 @@ public class NetLoginHandler extends NetHandler
 
     public String getUserAndIPString()
     {
-        if(username != null)
+        if (username != null)
         {
             return (new StringBuilder()).append(username).append(" [").append(netManager.getRemoteAddress().toString()).append("]").toString();
-        } else
+        }
+        else
         {
             return netManager.getRemoteAddress().toString();
         }
@@ -195,5 +187,4 @@ public class NetLoginHandler extends NetHandler
     {
         return netloginhandler.packet1login = packet1login;
     }
-
 }

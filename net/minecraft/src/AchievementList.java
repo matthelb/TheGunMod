@@ -1,19 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-// Referenced classes of package net.minecraft.src:
-//            Achievement, Item, Block
-
 public class AchievementList
 {
-
     public static int minDisplayColumn;
     public static int minDisplayRow;
     public static int maxDisplayColumn;
@@ -55,7 +47,7 @@ public class AchievementList
     {
     }
 
-    static 
+    static
     {
         achievementList = new ArrayList();
         openInventory = (new Achievement(0, "openInventory", 0, 0, Item.book, null)).setIndependent().registerAchievement();

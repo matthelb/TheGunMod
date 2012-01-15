@@ -1,19 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            WorldChunkManager, ChunkProviderGenerate, World, WorldInfo, 
-//            Block, BlockGrass, WorldProviderHell, WorldProviderSurface, 
-//            WorldProviderEnd, IChunkProvider, ChunkCoordinates
 
 public abstract class WorldProvider
 {
-
     public World worldObj;
+    public EnumWorldType field_46120_b;
     public WorldChunkManager worldChunkMgr;
     public boolean canSleepInWorld;
     public boolean isHellWorld;
@@ -35,6 +25,7 @@ public abstract class WorldProvider
     public final void registerWorld(World world)
     {
         worldObj = world;
+        field_46120_b = world.getWorldInfo().func_46069_q();
         registerWorldChunkManager();
         generateLightBrightnessTable();
     }
@@ -42,22 +33,35 @@ public abstract class WorldProvider
     protected void generateLightBrightnessTable()
     {
         float f = 0.0F;
-        for(int i = 0; i <= 15; i++)
+        for (int i = 0; i <= 15; i++)
         {
             float f1 = 1.0F - (float)i / 15F;
             lightBrightnessTable[i] = ((1.0F - f1) / (f1 * 3F + 1.0F)) * (1.0F - f) + f;
         }
-
     }
 
     protected void registerWorldChunkManager()
     {
-        worldChunkMgr = new WorldChunkManager(worldObj);
+        if (worldObj.getWorldInfo().func_46069_q() == EnumWorldType.FLAT)
+        {
+            worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.plains, 0.5F, 0.5F);
+        }
+        else
+        {
+            worldChunkMgr = new WorldChunkManager(worldObj);
+        }
     }
 
     public IChunkProvider getChunkProvider()
     {
-        return new ChunkProviderGenerate(worldObj, worldObj.getRandomSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
+        if (field_46120_b == EnumWorldType.FLAT)
+        {
+            return new ChunkProviderFlat(worldObj, worldObj.getRandomSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
+        }
+        else
+        {
+            return new ChunkProviderGenerate(worldObj, worldObj.getRandomSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
+        }
     }
 
     public boolean canCoordinateBeSpawn(int i, int j)
@@ -70,11 +74,11 @@ public abstract class WorldProvider
     {
         int i = (int)(l % 24000L);
         float f1 = ((float)i + f) / 24000F - 0.25F;
-        if(f1 < 0.0F)
+        if (f1 < 0.0F)
         {
             f1++;
         }
-        if(f1 > 1.0F)
+        if (f1 > 1.0F)
         {
             f1--;
         }
@@ -91,18 +95,19 @@ public abstract class WorldProvider
 
     public static WorldProvider getProviderForDimension(int i)
     {
-        if(i == -1)
+        if (i == -1)
         {
             return new WorldProviderHell();
         }
-        if(i == 0)
+        if (i == 0)
         {
             return new WorldProviderSurface();
         }
-        if(i == 1)
+        if (i == 1)
         {
             return new WorldProviderEnd();
-        } else
+        }
+        else
         {
             return null;
         }
@@ -111,5 +116,17 @@ public abstract class WorldProvider
     public ChunkCoordinates getEntrancePortalLocation()
     {
         return null;
+    }
+
+    public int func_46119_e()
+    {
+        if (field_46120_b == EnumWorldType.FLAT)
+        {
+            return 4;
+        }
+        else
+        {
+            return worldObj.worldHeight / 2;
+        }
     }
 }

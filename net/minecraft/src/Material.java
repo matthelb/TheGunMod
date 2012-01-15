@@ -1,17 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            MaterialTransparent, MapColor, MaterialLiquid, MaterialLogic, 
-//            MaterialPortal, MaterialWeb
 
 public class Material
 {
-
     public static final Material air;
     public static final Material grass;
     public static final Material ground;
@@ -111,10 +101,11 @@ public class Material
 
     public boolean getIsOpaque()
     {
-        if(isTranslucent)
+        if (isTranslucent)
         {
             return false;
-        } else
+        }
+        else
         {
             return getIsSolid();
         }
@@ -142,7 +133,7 @@ public class Material
         return this;
     }
 
-    static 
+    static
     {
         air = new MaterialTransparent(MapColor.airColor);
         grass = new Material(MapColor.grassColor);

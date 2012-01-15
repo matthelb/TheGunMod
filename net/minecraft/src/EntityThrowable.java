@@ -1,20 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            Entity, EntityLiving, MathHelper, World, 
-//            Vec3D, MovingObjectPosition, AxisAlignedBB, NBTTagCompound, 
-//            EntityPlayer
-
 public abstract class EntityThrowable extends Entity
 {
-
     private int xTile;
     private int yTile;
     private int zTile;
@@ -93,7 +83,7 @@ public abstract class EntityThrowable extends Entity
         return 0.0F;
     }
 
-    public void setThrowableHeading(double d, double d1, double d2, float f, 
+    public void setThrowableHeading(double d, double d1, double d2, float f,
             float f1)
     {
         float f2 = MathHelper.sqrt_double(d * d + d1 * d1 + d2 * d2);
@@ -121,14 +111,14 @@ public abstract class EntityThrowable extends Entity
         lastTickPosY = posY;
         lastTickPosZ = posZ;
         super.onUpdate();
-        if(throwableShake > 0)
+        if (throwableShake > 0)
         {
             throwableShake--;
         }
-        if(inGround)
+        if (inGround)
         {
             int i = worldObj.getBlockId(xTile, yTile, zTile);
-            if(i != inTile)
+            if (i != inTile)
             {
                 inGround = false;
                 motionX *= rand.nextFloat() * 0.2F;
@@ -136,16 +126,18 @@ public abstract class EntityThrowable extends Entity
                 motionZ *= rand.nextFloat() * 0.2F;
                 ticksInGround = 0;
                 ticksInAir = 0;
-            } else
+            }
+            else
             {
                 ticksInGround++;
-                if(ticksInGround == 1200)
+                if (ticksInGround == 1200)
                 {
                     setEntityDead();
                 }
                 return;
             }
-        } else
+        }
+        else
         {
             ticksInAir++;
         }
@@ -154,43 +146,43 @@ public abstract class EntityThrowable extends Entity
         MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3d, vec3d1);
         vec3d = Vec3D.createVector(posX, posY, posZ);
         vec3d1 = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
-        if(movingobjectposition != null)
+        if (movingobjectposition != null)
         {
             vec3d1 = Vec3D.createVector(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
-        if(!worldObj.singleplayerWorld)
+        if (!worldObj.singleplayerWorld)
         {
             Entity entity = null;
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
             double d = 0.0D;
-            for(int k = 0; k < list.size(); k++)
+            for (int k = 0; k < list.size(); k++)
             {
                 Entity entity1 = (Entity)list.get(k);
-                if(!entity1.canBeCollidedWith() || entity1 == thrower && ticksInAir < 5)
+                if (!entity1.canBeCollidedWith() || entity1 == thrower && ticksInAir < 5)
                 {
                     continue;
                 }
                 float f4 = 0.3F;
                 AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f4, f4, f4);
-                MovingObjectPosition movingobjectposition1 = axisalignedbb.func_706_a(vec3d, vec3d1);
-                if(movingobjectposition1 == null)
+                MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3d, vec3d1);
+                if (movingobjectposition1 == null)
                 {
                     continue;
                 }
                 double d1 = vec3d.distanceTo(movingobjectposition1.hitVec);
-                if(d1 < d || d == 0.0D)
+                if (d1 < d || d == 0.0D)
                 {
                     entity = entity1;
                     d = d1;
                 }
             }
 
-            if(entity != null)
+            if (entity != null)
             {
                 movingobjectposition = new MovingObjectPosition(entity);
             }
         }
-        if(movingobjectposition != null)
+        if (movingobjectposition != null)
         {
             onImpact(movingobjectposition);
         }
@@ -199,17 +191,17 @@ public abstract class EntityThrowable extends Entity
         posZ += motionZ;
         float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
         rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180D) / 3.1415927410125732D);
-        for(rotationPitch = (float)((Math.atan2(motionY, f) * 180D) / 3.1415927410125732D); rotationPitch - prevRotationPitch < -180F; prevRotationPitch -= 360F) { }
-        for(; rotationPitch - prevRotationPitch >= 180F; prevRotationPitch += 360F) { }
-        for(; rotationYaw - prevRotationYaw < -180F; prevRotationYaw -= 360F) { }
-        for(; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
+        for (rotationPitch = (float)((Math.atan2(motionY, f) * 180D) / 3.1415927410125732D); rotationPitch - prevRotationPitch < -180F; prevRotationPitch -= 360F) { }
+        for (; rotationPitch - prevRotationPitch >= 180F; prevRotationPitch += 360F) { }
+        for (; rotationYaw - prevRotationYaw < -180F; prevRotationYaw -= 360F) { }
+        for (; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
         rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2F;
         rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2F;
         float f1 = 0.99F;
         float f2 = func_40042_e();
-        if(isInWater())
+        if (isInWater())
         {
-            for(int j = 0; j < 4; j++)
+            for (int j = 0; j < 4; j++)
             {
                 float f3 = 0.25F;
                 worldObj.spawnParticle("bubble", posX - motionX * (double)f3, posY - motionY * (double)f3, posZ - motionZ * (double)f3, motionX, motionY, motionZ);

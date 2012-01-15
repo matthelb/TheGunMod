@@ -1,19 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.*;
 
-// Referenced classes of package net.minecraft.src:
-//            Entity, EnumArt, AxisAlignedBB, World, 
-//            EntityItem, ItemStack, Item, MathHelper, 
-//            Material, NBTTagCompound, DamageSource
-
 public class EntityPainting extends Entity
 {
-
     private int tickCounter1;
     public int direction;
     public int xPosition;
@@ -39,18 +29,18 @@ public class EntityPainting extends Entity
         ArrayList arraylist = new ArrayList();
         EnumArt aenumart[] = EnumArt.values();
         int i1 = aenumart.length;
-        for(int j1 = 0; j1 < i1; j1++)
+        for (int j1 = 0; j1 < i1; j1++)
         {
             EnumArt enumart = aenumart[j1];
             art = enumart;
             func_179_a(l);
-            if(onValidSurface())
+            if (onValidSurface())
             {
                 arraylist.add(enumart);
             }
         }
 
-        if(arraylist.size() > 0)
+        if (arraylist.size() > 0)
         {
             art = (EnumArt)arraylist.get(rand.nextInt(arraylist.size()));
         }
@@ -68,10 +58,11 @@ public class EntityPainting extends Entity
         float f = art.sizeX;
         float f1 = art.sizeY;
         float f2 = art.sizeX;
-        if(i == 0 || i == 2)
+        if (i == 0 || i == 2)
         {
             f2 = 0.5F;
-        } else
+        }
+        else
         {
             f = 0.5F;
         }
@@ -82,35 +73,35 @@ public class EntityPainting extends Entity
         float f4 = (float)yPosition + 0.5F;
         float f5 = (float)zPosition + 0.5F;
         float f6 = 0.5625F;
-        if(i == 0)
+        if (i == 0)
         {
             f5 -= f6;
         }
-        if(i == 1)
+        if (i == 1)
         {
             f3 -= f6;
         }
-        if(i == 2)
+        if (i == 2)
         {
             f5 += f6;
         }
-        if(i == 3)
+        if (i == 3)
         {
             f3 += f6;
         }
-        if(i == 0)
+        if (i == 0)
         {
             f3 -= func_180_c(art.sizeX);
         }
-        if(i == 1)
+        if (i == 1)
         {
             f5 += func_180_c(art.sizeX);
         }
-        if(i == 2)
+        if (i == 2)
         {
             f3 += func_180_c(art.sizeX);
         }
-        if(i == 3)
+        if (i == 3)
         {
             f5 -= func_180_c(art.sizeX);
         }
@@ -122,7 +113,7 @@ public class EntityPainting extends Entity
 
     private float func_180_c(int i)
     {
-        if(i == 32)
+        if (i == 32)
         {
             return 0.5F;
         }
@@ -131,10 +122,10 @@ public class EntityPainting extends Entity
 
     public void onUpdate()
     {
-        if(tickCounter1++ == 100 && !worldObj.singleplayerWorld)
+        if (tickCounter1++ == 100 && !worldObj.singleplayerWorld)
         {
             tickCounter1 = 0;
-            if(!onValidSurface())
+            if (!onValidSurface())
             {
                 setEntityDead();
                 worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
@@ -144,7 +135,7 @@ public class EntityPainting extends Entity
 
     public boolean onValidSurface()
     {
-        if(worldObj.getCollidingBoundingBoxes(this, boundingBox).size() > 0)
+        if (worldObj.getCollidingBoundingBoxes(this, boundingBox).size() > 0)
         {
             return false;
         }
@@ -153,47 +144,47 @@ public class EntityPainting extends Entity
         int k = xPosition;
         int l = yPosition;
         int i1 = zPosition;
-        if(direction == 0)
+        if (direction == 0)
         {
             k = MathHelper.floor_double(posX - (double)((float)art.sizeX / 32F));
         }
-        if(direction == 1)
+        if (direction == 1)
         {
             i1 = MathHelper.floor_double(posZ - (double)((float)art.sizeX / 32F));
         }
-        if(direction == 2)
+        if (direction == 2)
         {
             k = MathHelper.floor_double(posX - (double)((float)art.sizeX / 32F));
         }
-        if(direction == 3)
+        if (direction == 3)
         {
             i1 = MathHelper.floor_double(posZ - (double)((float)art.sizeX / 32F));
         }
         l = MathHelper.floor_double(posY - (double)((float)art.sizeY / 32F));
-        for(int j1 = 0; j1 < i; j1++)
+        for (int j1 = 0; j1 < i; j1++)
         {
-            for(int k1 = 0; k1 < j; k1++)
+            for (int k1 = 0; k1 < j; k1++)
             {
                 Material material;
-                if(direction == 0 || direction == 2)
+                if (direction == 0 || direction == 2)
                 {
                     material = worldObj.getBlockMaterial(k + j1, l + k1, zPosition);
-                } else
+                }
+                else
                 {
                     material = worldObj.getBlockMaterial(xPosition, l + k1, i1 + j1);
                 }
-                if(!material.isSolid())
+                if (!material.isSolid())
                 {
                     return false;
                 }
             }
-
         }
 
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
-        for(int l1 = 0; l1 < list.size(); l1++)
+        for (int l1 = 0; l1 < list.size(); l1++)
         {
-            if(list.get(l1) instanceof EntityPainting)
+            if (list.get(l1) instanceof EntityPainting)
             {
                 return false;
             }
@@ -209,7 +200,7 @@ public class EntityPainting extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if(!isDead && !worldObj.singleplayerWorld)
+        if (!isDead && !worldObj.singleplayerWorld)
         {
             setEntityDead();
             setBeenAttacked();
@@ -236,16 +227,16 @@ public class EntityPainting extends Entity
         String s = nbttagcompound.getString("Motive");
         EnumArt aenumart[] = EnumArt.values();
         int i = aenumart.length;
-        for(int j = 0; j < i; j++)
+        for (int j = 0; j < i; j++)
         {
             EnumArt enumart = aenumart[j];
-            if(enumart.title.equals(s))
+            if (enumart.title.equals(s))
             {
                 art = enumart;
             }
         }
 
-        if(art == null)
+        if (art == null)
         {
             art = EnumArt.Kebab;
         }
@@ -254,7 +245,7 @@ public class EntityPainting extends Entity
 
     public void moveEntity(double d, double d1, double d2)
     {
-        if(!worldObj.singleplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if (!worldObj.singleplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
@@ -263,7 +254,7 @@ public class EntityPainting extends Entity
 
     public void addVelocity(double d, double d1, double d2)
     {
-        if(!worldObj.singleplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if (!worldObj.singleplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));

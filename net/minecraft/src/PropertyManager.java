@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
@@ -11,7 +7,6 @@ import java.util.logging.Logger;
 
 public class PropertyManager
 {
-
     public static Logger logger = Logger.getLogger("Minecraft");
     private Properties serverProperties;
     private File serverPropertiesFile;
@@ -20,18 +15,19 @@ public class PropertyManager
     {
         serverProperties = new Properties();
         serverPropertiesFile = file;
-        if(file.exists())
+        if (file.exists())
         {
             try
             {
                 serverProperties.load(new FileInputStream(file));
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 logger.log(Level.WARNING, (new StringBuilder()).append("Failed to load ").append(file).toString(), exception);
                 generateNewProperties();
             }
-        } else
+        }
+        else
         {
             logger.log(Level.WARNING, (new StringBuilder()).append(file).append(" does not exist").toString());
             generateNewProperties();
@@ -50,7 +46,7 @@ public class PropertyManager
         {
             serverProperties.store(new FileOutputStream(serverPropertiesFile), "Minecraft server properties");
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.log(Level.WARNING, (new StringBuilder()).append("Failed to save ").append(serverPropertiesFile).toString(), exception);
             generateNewProperties();
@@ -64,7 +60,7 @@ public class PropertyManager
 
     public String getStringProperty(String s, String s1)
     {
-        if(!serverProperties.containsKey(s))
+        if (!serverProperties.containsKey(s))
         {
             serverProperties.setProperty(s, s1);
             saveProperties();
@@ -78,7 +74,7 @@ public class PropertyManager
         {
             return Integer.parseInt(getStringProperty(s, (new StringBuilder()).append("").append(i).toString()));
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             serverProperties.setProperty(s, (new StringBuilder()).append("").append(i).toString());
         }
@@ -91,7 +87,7 @@ public class PropertyManager
         {
             return Boolean.parseBoolean(getStringProperty(s, (new StringBuilder()).append("").append(flag).toString()));
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             serverProperties.setProperty(s, (new StringBuilder()).append("").append(flag).toString());
         }
@@ -108,5 +104,4 @@ public class PropertyManager
         serverProperties.setProperty(s, (new StringBuilder()).append("").append(flag).toString());
         saveProperties();
     }
-
 }

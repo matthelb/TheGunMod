@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            ComponentStronghold, ComponentStrongholdStairs2, StructureBoundingBox, StructureComponent, 
-//            StructureStrongholdPieces, Block, EnumDoor, World
-
 public class ComponentStrongholdCrossing extends ComponentStronghold
 {
-
     protected final EnumDoor field_35355_a;
     private boolean field_35353_b;
     private boolean field_35354_c;
@@ -24,7 +15,7 @@ public class ComponentStrongholdCrossing extends ComponentStronghold
     {
         super(i);
         coordBaseMode = j;
-        field_35355_a = func_35322_a(random);
+        field_35355_a = getRandomDoor(random);
         boundingBox = structureboundingbox;
         field_35353_b = random.nextBoolean();
         field_35354_c = random.nextBoolean();
@@ -36,25 +27,25 @@ public class ComponentStrongholdCrossing extends ComponentStronghold
     {
         int i = 3;
         int j = 5;
-        if(coordBaseMode == 1 || coordBaseMode == 2)
+        if (coordBaseMode == 1 || coordBaseMode == 2)
         {
             i = 8 - i;
             j = 8 - j;
         }
         func_35324_a((ComponentStrongholdStairs2)structurecomponent, list, random, 5, 1);
-        if(field_35353_b)
+        if (field_35353_b)
         {
             func_35321_b((ComponentStrongholdStairs2)structurecomponent, list, random, i, 1);
         }
-        if(field_35354_c)
+        if (field_35354_c)
         {
             func_35321_b((ComponentStrongholdStairs2)structurecomponent, list, random, j, 7);
         }
-        if(field_35351_d)
+        if (field_35351_d)
         {
             func_35320_c((ComponentStrongholdStairs2)structurecomponent, list, random, i, 1);
         }
-        if(field_35352_e)
+        if (field_35352_e)
         {
             func_35320_c((ComponentStrongholdStairs2)structurecomponent, list, random, j, 7);
         }
@@ -63,10 +54,11 @@ public class ComponentStrongholdCrossing extends ComponentStronghold
     public static ComponentStrongholdCrossing func_35350_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -4, -3, 0, 10, 9, 11, l);
-        if(!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
-        } else
+        }
+        else
         {
             return new ComponentStrongholdCrossing(i1, random, structureboundingbox, l);
         }
@@ -74,25 +66,25 @@ public class ComponentStrongholdCrossing extends ComponentStronghold
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(isLiquidInStructureBoundingBox(world, structureboundingbox))
+        if (isLiquidInStructureBoundingBox(world, structureboundingbox))
         {
             return false;
         }
         fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 9, 8, 10, true, random, StructureStrongholdPieces.getStrongholdStones());
         placeDoor(world, random, structureboundingbox, field_35355_a, 4, 3, 0);
-        if(field_35353_b)
+        if (field_35353_b)
         {
             fillWithBlocks(world, structureboundingbox, 0, 3, 1, 0, 5, 3, 0, 0, false);
         }
-        if(field_35351_d)
+        if (field_35351_d)
         {
             fillWithBlocks(world, structureboundingbox, 9, 3, 1, 9, 5, 3, 0, 0, false);
         }
-        if(field_35354_c)
+        if (field_35354_c)
         {
             fillWithBlocks(world, structureboundingbox, 0, 5, 7, 0, 7, 9, 0, 0, false);
         }
-        if(field_35352_e)
+        if (field_35352_e)
         {
             fillWithBlocks(world, structureboundingbox, 9, 5, 7, 9, 7, 9, 0, 0, false);
         }

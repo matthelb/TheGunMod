@@ -1,16 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            EntityLiving, DamageSource, EntityPlayer, PotionHealth
 
 public class Potion
 {
-
     public static final Potion potionTypes[] = new Potion[32];
     public static final Potion field_35453_b = null;
     public static final Potion moveSpeed = (new Potion(1, false, 0x7cafc6)).setPotionName("potion.moveSpeed").setIconIndex(0, 0);
@@ -59,10 +50,11 @@ public class Potion
         id = i;
         potionTypes[i] = this;
         isBadEffect = flag;
-        if(flag)
+        if (flag)
         {
             field_40598_L = 0.5D;
-        } else
+        }
+        else
         {
             field_40598_L = 1.0D;
         }
@@ -82,29 +74,29 @@ public class Potion
 
     public void performEffect(EntityLiving entityliving, int i)
     {
-        if(id == regeneration.id)
+        if (id == regeneration.id)
         {
-            if(entityliving.getEntityHealth() < entityliving.getMaxHealth())
+            if (entityliving.getEntityHealth() < entityliving.getMaxHealth())
             {
                 entityliving.heal(1);
             }
-        } else
-        if(id == poison.id)
+        }
+        else if (id == poison.id)
         {
-            if(entityliving.getEntityHealth() > 1)
+            if (entityliving.getEntityHealth() > 1)
             {
                 entityliving.attackEntityFrom(DamageSource.magic, 1);
             }
-        } else
-        if(id == hunger.id && (entityliving instanceof EntityPlayer))
+        }
+        else if (id == hunger.id && (entityliving instanceof EntityPlayer))
         {
             ((EntityPlayer)entityliving).addExhaustion(0.025F * (float)(i + 1));
-        } else
-        if(id == heal.id && !entityliving.isEntityUndead() || id == harm.id && entityliving.isEntityUndead())
+        }
+        else if (id == heal.id && !entityliving.isEntityUndead() || id == harm.id && entityliving.isEntityUndead())
         {
             entityliving.heal(6 << i);
-        } else
-        if(id == harm.id && !entityliving.isEntityUndead() || id == heal.id && entityliving.isEntityUndead())
+        }
+        else if (id == harm.id && !entityliving.isEntityUndead() || id == heal.id && entityliving.isEntityUndead())
         {
             entityliving.attackEntityFrom(DamageSource.magic, 6 << i);
         }
@@ -112,18 +104,19 @@ public class Potion
 
     public void affectEntity(EntityLiving entityliving, EntityLiving entityliving1, int i, double d)
     {
-        if(id == heal.id && !entityliving1.isEntityUndead() || id == harm.id && entityliving1.isEntityUndead())
+        if (id == heal.id && !entityliving1.isEntityUndead() || id == harm.id && entityliving1.isEntityUndead())
         {
             int j = (int)(d * (double)(6 << i) + 0.5D);
             entityliving1.heal(j);
-        } else
-        if(id == harm.id && !entityliving1.isEntityUndead() || id == heal.id && entityliving1.isEntityUndead())
+        }
+        else if (id == harm.id && !entityliving1.isEntityUndead() || id == heal.id && entityliving1.isEntityUndead())
         {
             int k = (int)(d * (double)(6 << i) + 0.5D);
-            if(entityliving == null)
+            if (entityliving == null)
             {
                 entityliving1.attackEntityFrom(DamageSource.magic, k);
-            } else
+            }
+            else
             {
                 entityliving1.attackEntityFrom(DamageSource.causeIndirectMagicDamage(entityliving1, entityliving), k);
             }
@@ -137,13 +130,14 @@ public class Potion
 
     public boolean isReady(int i, int j)
     {
-        if(id == regeneration.id || id == poison.id)
+        if (id == regeneration.id || id == poison.id)
         {
             int k = 25 >> j;
-            if(k > 0)
+            if (k > 0)
             {
                 return i % k == 0;
-            } else
+            }
+            else
             {
                 return true;
             }
@@ -188,5 +182,4 @@ public class Potion
     {
         return liquidColor;
     }
-
 }

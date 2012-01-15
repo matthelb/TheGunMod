@@ -1,17 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            BlockContainer, Material, TileEntityEnchantmentTable, World, 
-//            EntityPlayer, TileEntity
 
 public class BlockEnchantmentTable extends BlockContainer
 {
-
     protected BlockEnchantmentTable(int i)
     {
         super(i, 166, Material.rock);
@@ -36,14 +26,15 @@ public class BlockEnchantmentTable extends BlockContainer
 
     public int getBlockTextureFromSide(int i)
     {
-        if(i == 0)
+        if (i == 0)
         {
             return blockIndexInTexture + 17;
         }
-        if(i == 1)
+        if (i == 1)
         {
             return blockIndexInTexture;
-        } else
+        }
+        else
         {
             return blockIndexInTexture + 16;
         }
@@ -56,10 +47,11 @@ public class BlockEnchantmentTable extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.singleplayerWorld)
+        if (world.singleplayerWorld)
         {
             return true;
-        } else
+        }
+        else
         {
             entityplayer.displayGUIEnchantment(i, j, k);
             return true;

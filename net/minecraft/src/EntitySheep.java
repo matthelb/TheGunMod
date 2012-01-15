@@ -1,20 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            EntityAnimal, DataWatcher, ItemStack, Block, 
-//            EntityPlayer, InventoryPlayer, Item, ItemShears, 
-//            World, EntityItem, NBTTagCompound
-
 public class EntitySheep extends EntityAnimal
 {
-
-    public static final float fleeceColorTable[][] = {
+    public static final float fleeceColorTable[][] =
+    {
         {
             1.0F, 1.0F, 1.0F
         }, {
@@ -49,6 +40,7 @@ public class EntitySheep extends EntityAnimal
             0.1F, 0.1F, 0.1F
         }
     };
+    private int field_44007_b;
 
     public EntitySheep(World world)
     {
@@ -70,7 +62,7 @@ public class EntitySheep extends EntityAnimal
 
     protected void dropFewItems(boolean flag, int i)
     {
-        if(!getSheared())
+        if (!getSheared())
         {
             entityDropItem(new ItemStack(Block.cloth.blockID, 1, getFleeceColor()), 0.0F);
         }
@@ -81,23 +73,92 @@ public class EntitySheep extends EntityAnimal
         return Block.cloth.blockID;
     }
 
+    public void onLivingUpdate()
+    {
+        super.onLivingUpdate();
+        if (field_44007_b > 0)
+        {
+            field_44007_b--;
+        }
+    }
+
+    protected void jump()
+    {
+        if (field_44007_b <= 0)
+        {
+            super.jump();
+        }
+    }
+
+    protected void updateEntityActionState()
+    {
+        super.updateEntityActionState();
+        if (!hasPath() && field_44007_b <= 0 && (isChild() && rand.nextInt(50) == 0 || rand.nextInt(1000) == 0))
+        {
+            int i = MathHelper.floor_double(posX);
+            int k = MathHelper.floor_double(posY);
+            int i1 = MathHelper.floor_double(posZ);
+            if (worldObj.getBlockId(i, k, i1) == Block.tallGrass.blockID && worldObj.getBlockMetadata(i, k, i1) == 1 || worldObj.getBlockId(i, k - 1, i1) == Block.grass.blockID)
+            {
+                field_44007_b = 40;
+                worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)10);
+            }
+        }
+        else if (field_44007_b == 4)
+        {
+            int j = MathHelper.floor_double(posX);
+            int l = MathHelper.floor_double(posY);
+            int j1 = MathHelper.floor_double(posZ);
+            boolean flag = false;
+            if (worldObj.getBlockId(j, l, j1) == Block.tallGrass.blockID)
+            {
+                worldObj.playAuxSFX(2001, j, l, j1, Block.tallGrass.blockID + 256);
+                worldObj.setBlockWithNotify(j, l, j1, 0);
+                flag = true;
+            }
+            else if (worldObj.getBlockId(j, l - 1, j1) == Block.grass.blockID)
+            {
+                worldObj.playAuxSFX(2001, j, l - 1, j1, Block.grass.blockID);
+                worldObj.setBlockWithNotify(j, l - 1, j1, Block.dirt.blockID);
+                flag = true;
+            }
+            if (flag)
+            {
+                setSheared(false);
+                if (isChild())
+                {
+                    int k1 = getDelay() + 1200;
+                    if (k1 > 0)
+                    {
+                        k1 = 0;
+                    }
+                    setDelay(k1);
+                }
+            }
+        }
+    }
+
+    protected boolean isMovementCeased()
+    {
+        return field_44007_b > 0;
+    }
+
     public boolean interact(EntityPlayer entityplayer)
     {
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if(itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && !getSheared())
+        if (itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && !getSheared() && !isChild())
         {
-            if(!worldObj.singleplayerWorld)
+            if (!worldObj.singleplayerWorld)
             {
                 setSheared(true);
-                int i = 2 + rand.nextInt(3);
-                for(int j = 0; j < i; j++)
+                int i = 1 + rand.nextInt(3);
+                for (int j = 0; j < i; j++)
                 {
                     EntityItem entityitem = entityDropItem(new ItemStack(Block.cloth.blockID, 1, getFleeceColor()), 1.0F);
                     entityitem.motionY += rand.nextFloat() * 0.05F;
                     entityitem.motionX += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
                     entityitem.motionZ += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
                 }
-
             }
             itemstack.damageItem(1, entityplayer);
         }
@@ -152,10 +213,11 @@ public class EntitySheep extends EntityAnimal
     public void setSheared(boolean flag)
     {
         byte byte0 = dataWatcher.getWatchableObjectByte(16);
-        if(flag)
+        if (flag)
         {
             dataWatcher.updateObject(16, Byte.valueOf((byte)(byte0 | 0x10)));
-        } else
+        }
+        else
         {
             dataWatcher.updateObject(16, Byte.valueOf((byte)(byte0 & 0xffffffef)));
         }
@@ -164,19 +226,19 @@ public class EntitySheep extends EntityAnimal
     public static int getRandomFleeceColor(Random random)
     {
         int i = random.nextInt(100);
-        if(i < 5)
+        if (i < 5)
         {
             return 15;
         }
-        if(i < 10)
+        if (i < 10)
         {
             return 7;
         }
-        if(i < 15)
+        if (i < 15)
         {
             return 8;
         }
-        if(i < 18)
+        if (i < 18)
         {
             return 12;
         }
@@ -187,14 +249,14 @@ public class EntitySheep extends EntityAnimal
     {
         EntitySheep entitysheep = (EntitySheep)entityanimal;
         EntitySheep entitysheep1 = new EntitySheep(worldObj);
-        if(rand.nextBoolean())
+        if (rand.nextBoolean())
         {
             entitysheep1.setFleeceColor(getFleeceColor());
-        } else
+        }
+        else
         {
             entitysheep1.setFleeceColor(entitysheep.getFleeceColor());
         }
         return entitysheep1;
     }
-
 }

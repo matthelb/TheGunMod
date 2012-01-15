@@ -1,18 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            Block, Material, IBlockAccess, World, 
-//            AxisAlignedBB, EntityPlayer, FoodStats
-
 public class BlockCake extends Block
 {
-
     protected BlockCake(int i, int j)
     {
         super(i, j, Material.cake);
@@ -46,18 +37,19 @@ public class BlockCake extends Block
 
     public int getBlockTextureFromSideAndMetadata(int i, int j)
     {
-        if(i == 1)
+        if (i == 1)
         {
             return blockIndexInTexture;
         }
-        if(i == 0)
+        if (i == 0)
         {
             return blockIndexInTexture + 3;
         }
-        if(j > 0 && i == 4)
+        if (j > 0 && i == 4)
         {
             return blockIndexInTexture + 2;
-        } else
+        }
+        else
         {
             return blockIndexInTexture + 1;
         }
@@ -65,14 +57,15 @@ public class BlockCake extends Block
 
     public int getBlockTextureFromSide(int i)
     {
-        if(i == 1)
+        if (i == 1)
         {
             return blockIndexInTexture;
         }
-        if(i == 0)
+        if (i == 0)
         {
             return blockIndexInTexture + 3;
-        } else
+        }
+        else
         {
             return blockIndexInTexture + 1;
         }
@@ -101,14 +94,15 @@ public class BlockCake extends Block
 
     private void eatCakeSlice(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(entityplayer.canEat(false))
+        if (entityplayer.canEat(false))
         {
             entityplayer.getFoodStats().addFoodAndSaturationLevel(2, 0.1F);
             int l = world.getBlockMetadata(i, j, k) + 1;
-            if(l >= 6)
+            if (l >= 6)
             {
                 world.setBlockWithNotify(i, j, k, 0);
-            } else
+            }
+            else
             {
                 world.setBlockMetadataWithNotify(i, j, k, l);
                 world.markBlockAsNeedsUpdate(i, j, k);
@@ -118,10 +112,11 @@ public class BlockCake extends Block
 
     public boolean canPlaceBlockAt(World world, int i, int j, int k)
     {
-        if(!super.canPlaceBlockAt(world, i, j, k))
+        if (!super.canPlaceBlockAt(world, i, j, k))
         {
             return false;
-        } else
+        }
+        else
         {
             return canBlockStay(world, i, j, k);
         }
@@ -129,7 +124,7 @@ public class BlockCake extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if(!canBlockStay(world, i, j, k))
+        if (!canBlockStay(world, i, j, k))
         {
             dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);

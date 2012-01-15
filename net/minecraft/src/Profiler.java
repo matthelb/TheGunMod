@@ -1,14 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.*;
 
 public class Profiler
 {
-
     public static boolean profilingEnabled = false;
     private static List sectionList = new ArrayList();
     private static List timestampList = new ArrayList();
@@ -21,11 +16,11 @@ public class Profiler
 
     public static void startSection(String s)
     {
-        if(!profilingEnabled)
+        if (!profilingEnabled)
         {
             return;
         }
-        if(profilingSection.length() > 0)
+        if (profilingSection.length() > 0)
         {
             profilingSection = (new StringBuilder()).append(profilingSection).append(".").toString();
         }
@@ -36,7 +31,7 @@ public class Profiler
 
     public static void endSection()
     {
-        if(!profilingEnabled)
+        if (!profilingEnabled)
         {
             return;
         }
@@ -44,10 +39,11 @@ public class Profiler
         long l1 = ((Long)timestampList.remove(timestampList.size() - 1)).longValue();
         sectionList.remove(sectionList.size() - 1);
         long l2 = l - l1;
-        if(profilingMap.containsKey(profilingSection))
+        if (profilingMap.containsKey(profilingSection))
         {
             profilingMap.put(profilingSection, Long.valueOf(((Long)profilingMap.get(profilingSection)).longValue() + l2));
-        } else
+        }
+        else
         {
             profilingMap.put(profilingSection, Long.valueOf(l2));
         }
@@ -59,5 +55,4 @@ public class Profiler
         endSection();
         startSection(s);
     }
-
 }

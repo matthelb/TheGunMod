@@ -1,18 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            EntityPlayer, PlayerCapabilities, World, Block, 
-//            EntityPlayerMP, Packet53BlockChange, NetServerHandler, ItemStack, 
-//            InventoryPlayer, WorldServer
 
 public class ItemInWorldManager
 {
-
     public World thisWorld;
     public EntityPlayer thisPlayer;
     private int gameType;
@@ -38,13 +27,14 @@ public class ItemInWorldManager
     public void toggleGameType(int i)
     {
         gameType = i;
-        if(i == 0)
+        if (i == 0)
         {
             thisPlayer.capabilities.allowFlying = false;
             thisPlayer.capabilities.isFlying = false;
             thisPlayer.capabilities.depleteBuckets = false;
             thisPlayer.capabilities.disableDamage = false;
-        } else
+        }
+        else
         {
             thisPlayer.capabilities.allowFlying = true;
             thisPlayer.capabilities.depleteBuckets = true;
@@ -64,7 +54,7 @@ public class ItemInWorldManager
 
     public void func_35695_b(int i)
     {
-        if(gameType == -1)
+        if (gameType == -1)
         {
             gameType = i;
         }
@@ -74,20 +64,21 @@ public class ItemInWorldManager
     public void updateBlockRemoving()
     {
         curblockDamage++;
-        if(field_22050_k)
+        if (field_22050_k)
         {
             int i = curblockDamage - field_22046_o;
             int j = thisWorld.getBlockId(field_22049_l, field_22048_m, field_22047_n);
-            if(j != 0)
+            if (j != 0)
             {
                 Block block = Block.blocksList[j];
                 float f = block.blockStrength(thisPlayer) * (float)(i + 1);
-                if(f >= 1.0F)
+                if (f >= 1.0F)
                 {
                     field_22050_k = false;
                     blockHarvessted(field_22049_l, field_22048_m, field_22047_n);
                 }
-            } else
+            }
+            else
             {
                 field_22050_k = false;
             }
@@ -97,21 +88,22 @@ public class ItemInWorldManager
     public void blockClicked(int i, int j, int k, int l)
     {
         thisWorld.onBlockHit(null, i, j, k, l);
-        if(isCreative())
+        if (isCreative())
         {
             blockHarvessted(i, j, k);
             return;
         }
         initialDamage = curblockDamage;
         int i1 = thisWorld.getBlockId(i, j, k);
-        if(i1 > 0)
+        if (i1 > 0)
         {
             Block.blocksList[i1].onBlockClicked(thisWorld, i, j, k, thisPlayer);
         }
-        if(i1 > 0 && Block.blocksList[i1].blockStrength(thisPlayer) >= 1.0F)
+        if (i1 > 0 && Block.blocksList[i1].blockStrength(thisPlayer) >= 1.0F)
         {
             blockHarvessted(i, j, k);
-        } else
+        }
+        else
         {
             curBlockX = i;
             curBlockY = j;
@@ -121,19 +113,19 @@ public class ItemInWorldManager
 
     public void blockRemoving(int i, int j, int k)
     {
-        if(i == curBlockX && j == curBlockY && k == curBlockZ)
+        if (i == curBlockX && j == curBlockY && k == curBlockZ)
         {
             int l = curblockDamage - initialDamage;
             int i1 = thisWorld.getBlockId(i, j, k);
-            if(i1 != 0)
+            if (i1 != 0)
             {
                 Block block = Block.blocksList[i1];
                 float f = block.blockStrength(thisPlayer) * (float)(l + 1);
-                if(f >= 0.7F)
+                if (f >= 0.7F)
                 {
                     blockHarvessted(i, j, k);
-                } else
-                if(!field_22050_k)
+                }
+                else if (!field_22050_k)
                 {
                     field_22050_k = true;
                     field_22049_l = i;
@@ -151,7 +143,7 @@ public class ItemInWorldManager
         Block block = Block.blocksList[thisWorld.getBlockId(i, j, k)];
         int l = thisWorld.getBlockMetadata(i, j, k);
         boolean flag = thisWorld.setBlockWithNotify(i, j, k, 0);
-        if(block != null && flag)
+        if (block != null && flag)
         {
             block.onBlockDestroyedByPlayer(thisWorld, i, j, k, l);
         }
@@ -164,23 +156,24 @@ public class ItemInWorldManager
         int i1 = thisWorld.getBlockMetadata(i, j, k);
         thisWorld.playAuxSFXAtEntity(thisPlayer, 2001, i, j, k, l + thisWorld.getBlockMetadata(i, j, k) * 256);
         boolean flag = removeBlock(i, j, k);
-        if(isCreative())
+        if (isCreative())
         {
             ((EntityPlayerMP)thisPlayer).playerNetServerHandler.sendPacket(new Packet53BlockChange(i, j, k, thisWorld));
-        } else
+        }
+        else
         {
             ItemStack itemstack = thisPlayer.getCurrentEquippedItem();
             boolean flag1 = thisPlayer.canHarvestBlock(Block.blocksList[l]);
-            if(itemstack != null)
+            if (itemstack != null)
             {
                 itemstack.onDestroyBlock(l, i, j, k, thisPlayer);
-                if(itemstack.stackSize == 0)
+                if (itemstack.stackSize == 0)
                 {
                     itemstack.onItemDestroyedByUse(thisPlayer);
                     thisPlayer.destroyCurrentEquippedItem();
                 }
             }
-            if(flag && flag1)
+            if (flag && flag1)
             {
                 Block.blocksList[l].harvestBlock(thisWorld, thisPlayer, i, j, k, i1);
             }
@@ -193,20 +186,21 @@ public class ItemInWorldManager
         int i = itemstack.stackSize;
         int j = itemstack.getItemDamage();
         ItemStack itemstack1 = itemstack.useItemRightClick(world, entityplayer);
-        if(itemstack1 != itemstack || itemstack1 != null && itemstack1.stackSize != i || itemstack1 != null && itemstack1.getMaxItemUseDuration() > 0)
+        if (itemstack1 != itemstack || itemstack1 != null && itemstack1.stackSize != i || itemstack1 != null && itemstack1.getMaxItemUseDuration() > 0)
         {
             entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = itemstack1;
-            if(isCreative())
+            if (isCreative())
             {
                 itemstack1.stackSize = i;
                 itemstack1.setItemDamage(j);
             }
-            if(itemstack1.stackSize == 0)
+            if (itemstack1.stackSize == 0)
             {
                 entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = null;
             }
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -215,15 +209,15 @@ public class ItemInWorldManager
     public boolean activeBlockOrUseItem(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l)
     {
         int i1 = world.getBlockId(i, j, k);
-        if(i1 > 0 && Block.blocksList[i1].blockActivated(world, i, j, k, entityplayer))
+        if (i1 > 0 && Block.blocksList[i1].blockActivated(world, i, j, k, entityplayer))
         {
             return true;
         }
-        if(itemstack == null)
+        if (itemstack == null)
         {
             return false;
         }
-        if(isCreative())
+        if (isCreative())
         {
             int j1 = itemstack.getItemDamage();
             int k1 = itemstack.stackSize;
@@ -231,7 +225,8 @@ public class ItemInWorldManager
             itemstack.setItemDamage(j1);
             itemstack.stackSize = k1;
             return flag;
-        } else
+        }
+        else
         {
             return itemstack.useItem(entityplayer, world, i, j, k, l);
         }

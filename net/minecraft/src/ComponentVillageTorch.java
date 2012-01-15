@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            ComponentVillage, StructureBoundingBox, StructureComponent, Block, 
-//            World
-
 public class ComponentVillageTorch extends ComponentVillage
 {
-
     private int averageGroundLevel;
 
     public ComponentVillageTorch(int i, Random random, StructureBoundingBox structureboundingbox, int j)
@@ -31,10 +22,11 @@ public class ComponentVillageTorch extends ComponentVillage
     public static StructureBoundingBox func_35382_a(List list, Random random, int i, int j, int k, int l)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 3, 4, 2, l);
-        if(StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
-        } else
+        }
+        else
         {
             return structureboundingbox;
         }
@@ -42,10 +34,10 @@ public class ComponentVillageTorch extends ComponentVillage
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(averageGroundLevel < 0)
+        if (averageGroundLevel < 0)
         {
             averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
-            if(averageGroundLevel < 0)
+            if (averageGroundLevel < 0)
             {
                 return true;
             }

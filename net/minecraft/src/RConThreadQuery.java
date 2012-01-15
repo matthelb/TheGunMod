@@ -1,20 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.IOException;
 import java.net.*;
 import java.util.*;
 
-// Referenced classes of package net.minecraft.src:
-//            RConThreadBase, IServer, RConOutputStream, RConUtils, 
-//            RConThreadQueryAuth
-
 public class RConThreadQuery extends RConThreadBase
 {
-
     private long lastAuthCheckTime;
     private int queryPort;
     private int serverPort;
@@ -46,7 +37,7 @@ public class RConThreadQuery extends RConThreadBase
         worldName = iserver.getWorldName();
         lastQueryResponseTime = 0L;
         queryHostname = "0.0.0.0";
-        if(0 == serverHostname.length() || queryHostname.equals(serverHostname))
+        if (0 == serverHostname.length() || queryHostname.equals(serverHostname))
         {
             serverHostname = "0.0.0.0";
             try
@@ -54,15 +45,16 @@ public class RConThreadQuery extends RConThreadBase
                 InetAddress inetaddress = InetAddress.getLocalHost();
                 queryHostname = inetaddress.getHostAddress();
             }
-            catch(UnknownHostException unknownhostexception)
+            catch (UnknownHostException unknownhostexception)
             {
                 logWarning((new StringBuilder()).append("Unable to determine local host IP, please set server-ip in '").append(iserver.getSettingsFilename()).append("' : ").append(unknownhostexception.getMessage()).toString());
             }
-        } else
+        }
+        else
         {
             queryHostname = serverHostname;
         }
-        if(0 == queryPort)
+        if (0 == queryPort)
         {
             queryPort = serverPort;
             log((new StringBuilder()).append("Setting default query port to ").append(queryPort).toString());
@@ -77,66 +69,67 @@ public class RConThreadQuery extends RConThreadBase
     }
 
     private void sendResponsePacket(byte abyte0[], DatagramPacket datagrampacket)
-        throws SocketException, IOException
+    throws SocketException, IOException
     {
         querySocket.send(new DatagramPacket(abyte0, abyte0.length, datagrampacket.getSocketAddress()));
     }
 
     private boolean parseIncomingPacket(DatagramPacket datagrampacket)
-        throws IOException
+    throws IOException
     {
         byte abyte0[] = datagrampacket.getData();
         int i = datagrampacket.getLength();
         SocketAddress socketaddress = datagrampacket.getSocketAddress();
         logInfo((new StringBuilder()).append("Packet len ").append(i).append(" [").append(socketaddress).append("]").toString());
-        if(3 > i || -2 != abyte0[0] || -3 != abyte0[1])
+        if (3 > i || -2 != abyte0[0] || -3 != abyte0[1])
         {
             logInfo((new StringBuilder()).append("Invalid packet [").append(socketaddress).append("]").toString());
             return false;
         }
         logInfo((new StringBuilder()).append("Packet '").append(RConUtils.getByteAsHexString(abyte0[2])).append("' [").append(socketaddress).append("]").toString());
-        switch(abyte0[2])
+        switch (abyte0[2])
         {
-        case 9: // '\t'
-            sendAuthChallenge(datagrampacket);
-            logInfo((new StringBuilder()).append("Challenge [").append(socketaddress).append("]").toString());
-            return true;
+            case 9:
+                sendAuthChallenge(datagrampacket);
+                logInfo((new StringBuilder()).append("Challenge [").append(socketaddress).append("]").toString());
+                return true;
 
-        case 0: // '\0'
-            if(!verifyClientAuth(datagrampacket).booleanValue())
-            {
-                logInfo((new StringBuilder()).append("Invalid challenge [").append(socketaddress).append("]").toString());
-                return false;
-            }
-            if(15 != i)
-            {
-                RConOutputStream rconoutputstream = new RConOutputStream(1460);
-                rconoutputstream.writeInt(0);
-                rconoutputstream.writeByteArray(getRequestID(datagrampacket.getSocketAddress()));
-                rconoutputstream.writeString(serverMotd);
-                rconoutputstream.writeString("SMP");
-                rconoutputstream.writeString(worldName);
-                rconoutputstream.writeString(Integer.toString(getNumberOfPlayers()));
-                rconoutputstream.writeString(Integer.toString(maxPlayers));
-                rconoutputstream.writeShort((short)serverPort);
-                rconoutputstream.writeString(queryHostname);
-                sendResponsePacket(rconoutputstream.toByteArray(), datagrampacket);
-                logInfo((new StringBuilder()).append("Status [").append(socketaddress).append("]").toString());
-            } else
-            {
-                sendResponsePacket(createQueryResponse(datagrampacket), datagrampacket);
-                logInfo((new StringBuilder()).append("Rules [").append(socketaddress).append("]").toString());
-            }
-            break;
+            case 0:
+                if (!verifyClientAuth(datagrampacket).booleanValue())
+                {
+                    logInfo((new StringBuilder()).append("Invalid challenge [").append(socketaddress).append("]").toString());
+                    return false;
+                }
+                if (15 != i)
+                {
+                    RConOutputStream rconoutputstream = new RConOutputStream(1460);
+                    rconoutputstream.writeInt(0);
+                    rconoutputstream.writeByteArray(getRequestID(datagrampacket.getSocketAddress()));
+                    rconoutputstream.writeString(serverMotd);
+                    rconoutputstream.writeString("SMP");
+                    rconoutputstream.writeString(worldName);
+                    rconoutputstream.writeString(Integer.toString(getNumberOfPlayers()));
+                    rconoutputstream.writeString(Integer.toString(maxPlayers));
+                    rconoutputstream.writeShort((short)serverPort);
+                    rconoutputstream.writeString(queryHostname);
+                    sendResponsePacket(rconoutputstream.toByteArray(), datagrampacket);
+                    logInfo((new StringBuilder()).append("Status [").append(socketaddress).append("]").toString());
+                }
+                else
+                {
+                    sendResponsePacket(createQueryResponse(datagrampacket), datagrampacket);
+                    logInfo((new StringBuilder()).append("Rules [").append(socketaddress).append("]").toString());
+                }
+                break;
         }
         return true;
     }
 
     private byte[] createQueryResponse(DatagramPacket datagrampacket)
-        throws IOException
+    throws IOException
     {
         long l = System.currentTimeMillis();
-        if(l < lastQueryResponseTime + 5000L)
+        if (l < lastQueryResponseTime + 5000L)
         {
             byte abyte0[] = output.toByteArray();
             byte abyte1[] = getRequestID(datagrampacket.getSocketAddress());
@@ -179,7 +172,7 @@ public class RConThreadQuery extends RConThreadBase
         output.writeInt(0);
         String as[] = server.getPlayerNamesAsList();
         byte byte0 = (byte)as.length;
-        for(byte byte1 = (byte)(byte0 - 1); byte1 >= 0; byte1--)
+        for (byte byte1 = (byte)(byte0 - 1); byte1 >= 0; byte1--)
         {
             output.writeString(as[byte1]);
         }
@@ -196,22 +189,23 @@ public class RConThreadQuery extends RConThreadBase
     private Boolean verifyClientAuth(DatagramPacket datagrampacket)
     {
         SocketAddress socketaddress = datagrampacket.getSocketAddress();
-        if(!queryClients.containsKey(socketaddress))
+        if (!queryClients.containsKey(socketaddress))
         {
             return Boolean.valueOf(false);
         }
         byte abyte0[] = datagrampacket.getData();
-        if(((RConThreadQueryAuth)queryClients.get(socketaddress)).getRandomChallenge() != RConUtils.getBytesAsBEint(abyte0, 7, datagrampacket.getLength()))
+        if (((RConThreadQueryAuth)queryClients.get(socketaddress)).getRandomChallenge() != RConUtils.getBytesAsBEint(abyte0, 7, datagrampacket.getLength()))
         {
             return Boolean.valueOf(false);
-        } else
+        }
+        else
         {
             return Boolean.valueOf(true);
         }
     }
 
     private void sendAuthChallenge(DatagramPacket datagrampacket)
-        throws SocketException, IOException
+    throws SocketException, IOException
     {
         RConThreadQueryAuth rconthreadqueryauth = new RConThreadQueryAuth(this, datagrampacket);
         queryClients.put(datagrampacket.getSocketAddress(), rconthreadqueryauth);
@@ -220,12 +214,12 @@ public class RConThreadQuery extends RConThreadBase
 
     private void cleanQueryClientsMap()
     {
-        if(!running)
+        if (!running)
         {
             return;
         }
         long l = System.currentTimeMillis();
-        if(l < lastAuthCheckTime + 30000L)
+        if (l < lastAuthCheckTime + 30000L)
         {
             return;
         }
@@ -233,16 +227,17 @@ public class RConThreadQuery extends RConThreadBase
         Iterator iterator = queryClients.entrySet().iterator();
         do
         {
-            if(!iterator.hasNext())
+            if (!iterator.hasNext())
             {
                 break;
             }
             java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
-            if(((RConThreadQueryAuth)entry.getValue()).hasExpired(l).booleanValue())
+            if (((RConThreadQueryAuth)entry.getValue()).hasExpired(l).booleanValue())
             {
                 iterator.remove();
             }
-        } while(true);
+        }
+        while (true);
     }
 
     public void run()
@@ -252,7 +247,7 @@ public class RConThreadQuery extends RConThreadBase
         incomingPacket = new DatagramPacket(buffer, buffer.length);
         try
         {
-            while(running) 
+            while (running)
             {
                 try
                 {
@@ -260,12 +255,12 @@ public class RConThreadQuery extends RConThreadBase
                     cleanQueryClientsMap();
                     parseIncomingPacket(incomingPacket);
                 }
-                catch(SocketTimeoutException sockettimeoutexception)
+                catch (SocketTimeoutException sockettimeoutexception)
                 {
                     cleanQueryClientsMap();
                 }
-                catch(PortUnreachableException portunreachableexception) { }
-                catch(IOException ioexception)
+                catch (PortUnreachableException portunreachableexception) { }
+                catch (IOException ioexception)
                 {
                     stopWithException(ioexception);
                 }
@@ -279,16 +274,16 @@ public class RConThreadQuery extends RConThreadBase
 
     public void startThread()
     {
-        if(running)
+        if (running)
         {
             return;
         }
-        if(0 >= queryPort || 65535 < queryPort)
+        if (0 >= queryPort || 65535 < queryPort)
         {
             logWarning((new StringBuilder()).append("Invalid query port ").append(queryPort).append(" found in '").append(server.getSettingsFilename()).append("' (queries disabled)").toString());
             return;
         }
-        if(initQuerySystem())
+        if (initQuerySystem())
         {
             super.startThread();
         }
@@ -296,12 +291,12 @@ public class RConThreadQuery extends RConThreadBase
 
     private void stopWithException(Exception exception)
     {
-        if(!running)
+        if (!running)
         {
             return;
         }
         logWarning((new StringBuilder()).append("Unexpected exception, buggy JRE? (").append(exception.toString()).append(")").toString());
-        if(!initQuerySystem())
+        if (!initQuerySystem())
         {
             logSevere("Failed to recover from buggy JRE, shutting down!");
             running = false;
@@ -318,15 +313,15 @@ public class RConThreadQuery extends RConThreadBase
             querySocket.setSoTimeout(500);
             return true;
         }
-        catch(SocketException socketexception)
+        catch (SocketException socketexception)
         {
             logWarning((new StringBuilder()).append("Unable to initialise query system on ").append(serverHostname).append(":").append(queryPort).append(" (Socket): ").append(socketexception.getMessage()).toString());
         }
-        catch(UnknownHostException unknownhostexception)
+        catch (UnknownHostException unknownhostexception)
         {
             logWarning((new StringBuilder()).append("Unable to initialise query system on ").append(serverHostname).append(":").append(queryPort).append(" (Unknown Host): ").append(unknownhostexception.getMessage()).toString());
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logWarning((new StringBuilder()).append("Unable to initialise query system on ").append(serverHostname).append(":").append(queryPort).append(" (E): ").append(exception.getMessage()).toString());
         }

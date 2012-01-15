@@ -1,19 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            BlockContainer, Material, Block, World, 
-//            TileEntityFurnace, EntityPlayer, TileEntity, EntityLiving, 
-//            MathHelper, IInventory, ItemStack, EntityItem
-
 public class BlockFurnace extends BlockContainer
 {
-
     private Random furnaceRand;
     private final boolean isActive;
     private static boolean keepFurnaceInventory = false;
@@ -39,7 +29,7 @@ public class BlockFurnace extends BlockContainer
 
     private void setDefaultDirection(World world, int i, int j, int k)
     {
-        if(world.singleplayerWorld)
+        if (world.singleplayerWorld)
         {
             return;
         }
@@ -48,19 +38,19 @@ public class BlockFurnace extends BlockContainer
         int j1 = world.getBlockId(i - 1, j, k);
         int k1 = world.getBlockId(i + 1, j, k);
         byte byte0 = 3;
-        if(Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1])
+        if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1])
         {
             byte0 = 3;
         }
-        if(Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l])
+        if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l])
         {
             byte0 = 2;
         }
-        if(Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1])
+        if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1])
         {
             byte0 = 5;
         }
-        if(Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1])
+        if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1])
         {
             byte0 = 4;
         }
@@ -69,18 +59,19 @@ public class BlockFurnace extends BlockContainer
 
     public int getBlockTextureFromSide(int i)
     {
-        if(i == 1)
+        if (i == 1)
         {
             return blockIndexInTexture + 17;
         }
-        if(i == 0)
+        if (i == 0)
         {
             return blockIndexInTexture + 17;
         }
-        if(i == 3)
+        if (i == 3)
         {
             return blockIndexInTexture - 1;
-        } else
+        }
+        else
         {
             return blockIndexInTexture;
         }
@@ -88,12 +79,12 @@ public class BlockFurnace extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if(world.singleplayerWorld)
+        if (world.singleplayerWorld)
         {
             return true;
         }
         TileEntityFurnace tileentityfurnace = (TileEntityFurnace)world.getBlockTileEntity(i, j, k);
-        if(tileentityfurnace != null)
+        if (tileentityfurnace != null)
         {
             entityplayer.displayGUIFurnace(tileentityfurnace);
         }
@@ -105,16 +96,17 @@ public class BlockFurnace extends BlockContainer
         int l = world.getBlockMetadata(i, j, k);
         TileEntity tileentity = world.getBlockTileEntity(i, j, k);
         keepFurnaceInventory = true;
-        if(flag)
+        if (flag)
         {
             world.setBlockWithNotify(i, j, k, Block.stoneOvenActive.blockID);
-        } else
+        }
+        else
         {
             world.setBlockWithNotify(i, j, k, Block.stoneOvenIdle.blockID);
         }
         keepFurnaceInventory = false;
         world.setBlockMetadataWithNotify(i, j, k, l);
-        if(tileentity != null)
+        if (tileentity != null)
         {
             tileentity.validate();
             world.setBlockTileEntity(i, j, k, tileentity);
@@ -129,19 +121,19 @@ public class BlockFurnace extends BlockContainer
     public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving entityliving)
     {
         int l = MathHelper.floor_double((double)((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-        if(l == 0)
+        if (l == 0)
         {
             world.setBlockMetadataWithNotify(i, j, k, 2);
         }
-        if(l == 1)
+        if (l == 1)
         {
             world.setBlockMetadataWithNotify(i, j, k, 5);
         }
-        if(l == 2)
+        if (l == 2)
         {
             world.setBlockMetadataWithNotify(i, j, k, 3);
         }
-        if(l == 3)
+        if (l == 3)
         {
             world.setBlockMetadataWithNotify(i, j, k, 4);
         }
@@ -149,16 +141,16 @@ public class BlockFurnace extends BlockContainer
 
     public void onBlockRemoval(World world, int i, int j, int k)
     {
-        if(!keepFurnaceInventory)
+        if (!keepFurnaceInventory)
         {
             TileEntityFurnace tileentityfurnace = (TileEntityFurnace)world.getBlockTileEntity(i, j, k);
-            if(tileentityfurnace != null)
+            if (tileentityfurnace != null)
             {
-label0:
-                for(int l = 0; l < tileentityfurnace.getSizeInventory(); l++)
+                label0:
+                for (int l = 0; l < tileentityfurnace.getSizeInventory(); l++)
                 {
                     ItemStack itemstack = tileentityfurnace.getStackInSlot(l);
-                    if(itemstack == null)
+                    if (itemstack == null)
                     {
                         continue;
                     }
@@ -167,12 +159,12 @@ label0:
                     float f2 = furnaceRand.nextFloat() * 0.8F + 0.1F;
                     do
                     {
-                        if(itemstack.stackSize <= 0)
+                        if (itemstack.stackSize <= 0)
                         {
                             continue label0;
                         }
                         int i1 = furnaceRand.nextInt(21) + 10;
-                        if(i1 > itemstack.stackSize)
+                        if (i1 > itemstack.stackSize)
                         {
                             i1 = itemstack.stackSize;
                         }
@@ -183,12 +175,11 @@ label0:
                         entityitem.motionY = (float)furnaceRand.nextGaussian() * f3 + 0.2F;
                         entityitem.motionZ = (float)furnaceRand.nextGaussian() * f3;
                         world.spawnEntityInWorld(entityitem);
-                    } while(true);
+                    }
+                    while (true);
                 }
-
             }
         }
         super.onBlockRemoval(world, i, j, k);
     }
-
 }

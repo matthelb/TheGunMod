@@ -1,18 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.*;
 
-// Referenced classes of package net.minecraft.src:
-//            IThreadedFileIO
-
 public class ThreadedFileIOBase
     implements Runnable
 {
-
     public static final ThreadedFileIOBase threadedIOInstance = new ThreadedFileIOBase();
     private List threadedIOQueue;
     private volatile long writeQueuedCounter;
@@ -35,43 +27,45 @@ public class ThreadedFileIOBase
         do
         {
             func_40509_b();
-        } while(true);
+        }
+        while (true);
     }
 
     private void func_40509_b()
     {
-        for(int i = 0; i < threadedIOQueue.size(); i++)
+        for (int i = 0; i < threadedIOQueue.size(); i++)
         {
             IThreadedFileIO ithreadedfileio = (IThreadedFileIO)threadedIOQueue.get(i);
             boolean flag = ithreadedfileio.writeNextIO();
-            if(!flag)
+            if (!flag)
             {
                 threadedIOQueue.remove(i--);
                 savedIOCounter++;
             }
             try
             {
-                if(!isThreadWaiting)
+                if (!isThreadWaiting)
                 {
                     Thread.sleep(10L);
-                } else
+                }
+                else
                 {
                     Thread.sleep(0L);
                 }
             }
-            catch(InterruptedException interruptedexception1)
+            catch (InterruptedException interruptedexception1)
             {
                 interruptedexception1.printStackTrace();
             }
         }
 
-        if(threadedIOQueue.isEmpty())
+        if (threadedIOQueue.isEmpty())
         {
             try
             {
                 Thread.sleep(25L);
             }
-            catch(InterruptedException interruptedexception)
+            catch (InterruptedException interruptedexception)
             {
                 interruptedexception.printStackTrace();
             }
@@ -80,10 +74,11 @@ public class ThreadedFileIOBase
 
     public void queueIO(IThreadedFileIO ithreadedfileio)
     {
-        if(threadedIOQueue.contains(ithreadedfileio))
+        if (threadedIOQueue.contains(ithreadedfileio))
         {
             return;
-        } else
+        }
+        else
         {
             writeQueuedCounter++;
             threadedIOQueue.add(ithreadedfileio);
@@ -92,14 +87,13 @@ public class ThreadedFileIOBase
     }
 
     public void waitForFinish()
-        throws InterruptedException
+    throws InterruptedException
     {
         isThreadWaiting = true;
-        while(writeQueuedCounter != savedIOCounter) 
+        while (writeQueuedCounter != savedIOCounter)
         {
             Thread.sleep(10L);
         }
         isThreadWaiting = false;
     }
-
 }

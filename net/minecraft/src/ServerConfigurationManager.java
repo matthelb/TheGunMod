@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
@@ -9,17 +5,8 @@ import java.util.*;
 import java.util.logging.Logger;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            PlayerManager, PropertyManager, WorldServer, ISaveHandler, 
-//            EntityPlayerMP, ChunkProviderServer, IPlayerFileData, Packet201PlayerInfo, 
-//            NetServerHandler, NetLoginHandler, NetworkManager, ItemInWorldManager, 
-//            EntityTracker, WorldInfo, EntityPlayer, ChunkCoordinates, 
-//            Packet70Bed, Packet9Respawn, World, Teleporter, 
-//            Packet3Chat, Packet4UpdateTime, Packet, TileEntity
-
 public class ServerConfigurationManager
 {
-
     public static Logger logger = Logger.getLogger("Minecraft");
     public List playerEntities;
     private MinecraftServer mcServer;
@@ -89,18 +76,19 @@ public class ServerConfigurationManager
 
     private PlayerManager getPlayerManager(int i)
     {
-        if(i == -1)
+        if (i == -1)
         {
             return playerManagerObj[1];
         }
-        if(i == 0)
+        if (i == 0)
         {
             return playerManagerObj[0];
         }
-        if(i == 1)
+        if (i == 1)
         {
             return playerManagerObj[2];
-        } else
+        }
+        else
         {
             return null;
         }
@@ -117,15 +105,14 @@ public class ServerConfigurationManager
         playerEntities.add(entityplayermp);
         WorldServer worldserver = mcServer.getWorldManager(entityplayermp.dimension);
         worldserver.chunkProviderServer.loadChunk((int)entityplayermp.posX >> 4, (int)entityplayermp.posZ >> 4);
-        for(; worldserver.getCollidingBoundingBoxes(entityplayermp, entityplayermp.boundingBox).size() != 0; entityplayermp.setPosition(entityplayermp.posX, entityplayermp.posY + 1.0D, entityplayermp.posZ)) { }
+        for (; worldserver.getCollidingBoundingBoxes(entityplayermp, entityplayermp.boundingBox).size() != 0; entityplayermp.setPosition(entityplayermp.posX, entityplayermp.posY + 1.0D, entityplayermp.posZ)) { }
         worldserver.spawnEntityInWorld(entityplayermp);
         getPlayerManager(entityplayermp.dimension).addPlayer(entityplayermp);
-        for(int i = 0; i < playerEntities.size(); i++)
+        for (int i = 0; i < playerEntities.size(); i++)
         {
             EntityPlayerMP entityplayermp1 = (EntityPlayerMP)playerEntities.get(i);
             entityplayermp.playerNetServerHandler.sendPacket(new Packet201PlayerInfo(entityplayermp1.username, true, entityplayermp1.ping));
         }
-
     }
 
     public void serverUpdateMountedMovingPlayer(EntityPlayerMP entityplayermp)
@@ -144,12 +131,12 @@ public class ServerConfigurationManager
 
     public EntityPlayerMP login(NetLoginHandler netloginhandler, String s)
     {
-        if(bannedPlayers.contains(s.trim().toLowerCase()))
+        if (bannedPlayers.contains(s.trim().toLowerCase()))
         {
             netloginhandler.kickUser("You are banned from this server!");
             return null;
         }
-        if(!isAllowedToLogin(s))
+        if (!isAllowedToLogin(s))
         {
             netloginhandler.kickUser("You are not white-listed on this server!");
             return null;
@@ -157,20 +144,20 @@ public class ServerConfigurationManager
         String s1 = netloginhandler.netManager.getRemoteAddress().toString();
         s1 = s1.substring(s1.indexOf("/") + 1);
         s1 = s1.substring(0, s1.indexOf(":"));
-        if(bannedIPs.contains(s1))
+        if (bannedIPs.contains(s1))
         {
             netloginhandler.kickUser("Your IP address is banned from this server!");
             return null;
         }
-        if(playerEntities.size() >= maxPlayers)
+        if (playerEntities.size() >= maxPlayers)
         {
             netloginhandler.kickUser("The server is full!");
             return null;
         }
-        for(int i = 0; i < playerEntities.size(); i++)
+        for (int i = 0; i < playerEntities.size(); i++)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)playerEntities.get(i);
-            if(entityplayermp.username.equalsIgnoreCase(s))
+            if (entityplayermp.username.equalsIgnoreCase(s))
             {
                 entityplayermp.playerNetServerHandler.kickPlayer("You logged in from another location");
             }
@@ -189,7 +176,7 @@ public class ServerConfigurationManager
         ChunkCoordinates chunkcoordinates = entityplayermp.getSpawnChunk();
         entityplayermp.dimension = i;
         EntityPlayerMP entityplayermp1 = new EntityPlayerMP(mcServer, mcServer.getWorldManager(entityplayermp.dimension), entityplayermp.username, new ItemInWorldManager(mcServer.getWorldManager(entityplayermp.dimension)));
-        if(flag)
+        if (flag)
         {
             entityplayermp1.copyPlayer(entityplayermp);
         }
@@ -198,21 +185,22 @@ public class ServerConfigurationManager
         WorldServer worldserver = mcServer.getWorldManager(entityplayermp.dimension);
         entityplayermp1.itemInWorldManager.toggleGameType(entityplayermp.itemInWorldManager.getGameType());
         entityplayermp1.itemInWorldManager.func_35695_b(worldserver.getWorldInfo().getGameType());
-        if(chunkcoordinates != null)
+        if (chunkcoordinates != null)
         {
             ChunkCoordinates chunkcoordinates1 = EntityPlayer.verifyBedCoordinates(mcServer.getWorldManager(entityplayermp.dimension), chunkcoordinates);
-            if(chunkcoordinates1 != null)
+            if (chunkcoordinates1 != null)
             {
                 entityplayermp1.setLocationAndAngles((float)chunkcoordinates1.posX + 0.5F, (float)chunkcoordinates1.posY + 0.1F, (float)chunkcoordinates1.posZ + 0.5F, 0.0F, 0.0F);
                 entityplayermp1.setSpawnChunk(chunkcoordinates);
-            } else
+            }
+            else
             {
                 entityplayermp1.playerNetServerHandler.sendPacket(new Packet70Bed(0, 0));
             }
         }
         worldserver.chunkProviderServer.loadChunk((int)entityplayermp1.posX >> 4, (int)entityplayermp1.posZ >> 4);
-        for(; worldserver.getCollidingBoundingBoxes(entityplayermp1, entityplayermp1.boundingBox).size() != 0; entityplayermp1.setPosition(entityplayermp1.posX, entityplayermp1.posY + 1.0D, entityplayermp1.posZ)) { }
-        entityplayermp1.playerNetServerHandler.sendPacket(new Packet9Respawn((byte)entityplayermp1.dimension, (byte)entityplayermp1.worldObj.difficultySetting, entityplayermp1.worldObj.getRandomSeed(), entityplayermp1.worldObj.worldHeight, entityplayermp1.itemInWorldManager.getGameType()));
+        for (; worldserver.getCollidingBoundingBoxes(entityplayermp1, entityplayermp1.boundingBox).size() != 0; entityplayermp1.setPosition(entityplayermp1.posX, entityplayermp1.posY + 1.0D, entityplayermp1.posZ)) { }
+        entityplayermp1.playerNetServerHandler.sendPacket(new Packet9Respawn((byte)entityplayermp1.dimension, (byte)entityplayermp1.worldObj.difficultySetting, entityplayermp1.worldObj.getRandomSeed(), entityplayermp1.worldObj.getWorldInfo().func_46069_q(), entityplayermp1.worldObj.worldHeight, entityplayermp1.itemInWorldManager.getGameType()));
         entityplayermp1.playerNetServerHandler.teleportTo(entityplayermp1.posX, entityplayermp1.posY, entityplayermp1.posZ, entityplayermp1.rotationYaw, entityplayermp1.rotationPitch);
         func_28170_a(entityplayermp1, worldserver);
         getPlayerManager(entityplayermp1.dimension).addPlayer(entityplayermp1);
@@ -229,44 +217,45 @@ public class ServerConfigurationManager
         WorldServer worldserver = mcServer.getWorldManager(entityplayermp.dimension);
         entityplayermp.dimension = i;
         WorldServer worldserver1 = mcServer.getWorldManager(entityplayermp.dimension);
-        entityplayermp.playerNetServerHandler.sendPacket(new Packet9Respawn((byte)entityplayermp.dimension, (byte)entityplayermp.worldObj.difficultySetting, worldserver1.getRandomSeed(), worldserver1.worldHeight, entityplayermp.itemInWorldManager.getGameType()));
+        entityplayermp.playerNetServerHandler.sendPacket(new Packet9Respawn((byte)entityplayermp.dimension, (byte)entityplayermp.worldObj.difficultySetting, worldserver1.getRandomSeed(), worldserver1.getWorldInfo().func_46069_q(), worldserver1.worldHeight, entityplayermp.itemInWorldManager.getGameType()));
         worldserver.removePlayer(entityplayermp);
         entityplayermp.isDead = false;
         double d = entityplayermp.posX;
         double d1 = entityplayermp.posZ;
         double d2 = 8D;
-        if(entityplayermp.dimension == -1)
+        if (entityplayermp.dimension == -1)
         {
             d /= d2;
             d1 /= d2;
             entityplayermp.setLocationAndAngles(d, entityplayermp.posY, d1, entityplayermp.rotationYaw, entityplayermp.rotationPitch);
-            if(entityplayermp.isEntityAlive())
+            if (entityplayermp.isEntityAlive())
             {
                 worldserver.updateEntityWithOptionalForce(entityplayermp, false);
             }
-        } else
-        if(entityplayermp.dimension == 0)
+        }
+        else if (entityplayermp.dimension == 0)
         {
             d *= d2;
             d1 *= d2;
             entityplayermp.setLocationAndAngles(d, entityplayermp.posY, d1, entityplayermp.rotationYaw, entityplayermp.rotationPitch);
-            if(entityplayermp.isEntityAlive())
+            if (entityplayermp.isEntityAlive())
             {
                 worldserver.updateEntityWithOptionalForce(entityplayermp, false);
             }
-        } else
+        }
+        else
         {
             ChunkCoordinates chunkcoordinates = worldserver1.func_40212_d();
             d = chunkcoordinates.posX;
             entityplayermp.posY = chunkcoordinates.posY;
             d1 = chunkcoordinates.posZ;
             entityplayermp.setLocationAndAngles(d, entityplayermp.posY, d1, 90F, 0.0F);
-            if(entityplayermp.isEntityAlive())
+            if (entityplayermp.isEntityAlive())
             {
                 worldserver.updateEntityWithOptionalForce(entityplayermp, false);
             }
         }
-        if(j != 1 && entityplayermp.isEntityAlive())
+        if (j != 1 && entityplayermp.isEntityAlive())
         {
             worldserver1.spawnEntityInWorld(entityplayermp);
             entityplayermp.setLocationAndAngles(d, entityplayermp.posY, d1, entityplayermp.rotationYaw, entityplayermp.rotationPitch);
@@ -285,20 +274,19 @@ public class ServerConfigurationManager
 
     public void onTick()
     {
-        if(++field_35482_p > 200)
+        if (++field_35482_p > 200)
         {
             field_35482_p = 0;
         }
-        if(field_35482_p < playerEntities.size())
+        if (field_35482_p < playerEntities.size())
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)playerEntities.get(field_35482_p);
             sendPacketToAllPlayers(new Packet201PlayerInfo(entityplayermp.username, true, entityplayermp.ping));
         }
-        for(int i = 0; i < playerManagerObj.length; i++)
+        for (int i = 0; i < playerManagerObj.length; i++)
         {
             playerManagerObj[i].updatePlayerInstances();
         }
-
     }
 
     public void markBlockNeedsUpdate(int i, int j, int k, int l)
@@ -308,33 +296,31 @@ public class ServerConfigurationManager
 
     public void sendPacketToAllPlayers(Packet packet)
     {
-        for(int i = 0; i < playerEntities.size(); i++)
+        for (int i = 0; i < playerEntities.size(); i++)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)playerEntities.get(i);
             entityplayermp.playerNetServerHandler.sendPacket(packet);
         }
-
     }
 
     public void sendPacketToAllPlayersInDimension(Packet packet, int i)
     {
-        for(int j = 0; j < playerEntities.size(); j++)
+        for (int j = 0; j < playerEntities.size(); j++)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)playerEntities.get(j);
-            if(entityplayermp.dimension == i)
+            if (entityplayermp.dimension == i)
             {
                 entityplayermp.playerNetServerHandler.sendPacket(packet);
             }
         }
-
     }
 
     public String getPlayerList()
     {
         String s = "";
-        for(int i = 0; i < playerEntities.size(); i++)
+        for (int i = 0; i < playerEntities.size(); i++)
         {
-            if(i > 0)
+            if (i > 0)
             {
                 s = (new StringBuilder()).append(s).append(", ").toString();
             }
@@ -347,7 +333,7 @@ public class ServerConfigurationManager
     public String[] getPlayerNamesAsList()
     {
         String as[] = new String[playerEntities.size()];
-        for(int i = 0; i < playerEntities.size(); i++)
+        for (int i = 0; i < playerEntities.size(); i++)
         {
             as[i] = ((EntityPlayerMP)playerEntities.get(i)).username;
         }
@@ -373,14 +359,14 @@ public class ServerConfigurationManager
         {
             bannedPlayers.clear();
             BufferedReader bufferedreader = new BufferedReader(new FileReader(bannedPlayersFile));
-            for(String s = ""; (s = bufferedreader.readLine()) != null;)
+            for (String s = ""; (s = bufferedreader.readLine()) != null;)
             {
                 bannedPlayers.add(s.trim().toLowerCase());
             }
 
             bufferedreader.close();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to load ban list: ").append(exception).toString());
         }
@@ -392,14 +378,14 @@ public class ServerConfigurationManager
         {
             PrintWriter printwriter = new PrintWriter(new FileWriter(bannedPlayersFile, false));
             String s;
-            for(Iterator iterator = bannedPlayers.iterator(); iterator.hasNext(); printwriter.println(s))
+            for (Iterator iterator = bannedPlayers.iterator(); iterator.hasNext(); printwriter.println(s))
             {
                 s = (String)iterator.next();
             }
 
             printwriter.close();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to save ban list: ").append(exception).toString());
         }
@@ -433,14 +419,14 @@ public class ServerConfigurationManager
         {
             bannedIPs.clear();
             BufferedReader bufferedreader = new BufferedReader(new FileReader(ipBanFile));
-            for(String s = ""; (s = bufferedreader.readLine()) != null;)
+            for (String s = ""; (s = bufferedreader.readLine()) != null;)
             {
                 bannedIPs.add(s.trim().toLowerCase());
             }
 
             bufferedreader.close();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to load ip ban list: ").append(exception).toString());
         }
@@ -452,14 +438,14 @@ public class ServerConfigurationManager
         {
             PrintWriter printwriter = new PrintWriter(new FileWriter(ipBanFile, false));
             String s;
-            for(Iterator iterator = bannedIPs.iterator(); iterator.hasNext(); printwriter.println(s))
+            for (Iterator iterator = bannedIPs.iterator(); iterator.hasNext(); printwriter.println(s))
             {
                 s = (String)iterator.next();
             }
 
             printwriter.close();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to save ip ban list: ").append(exception).toString());
         }
@@ -483,14 +469,14 @@ public class ServerConfigurationManager
         {
             ops.clear();
             BufferedReader bufferedreader = new BufferedReader(new FileReader(opFile));
-            for(String s = ""; (s = bufferedreader.readLine()) != null;)
+            for (String s = ""; (s = bufferedreader.readLine()) != null;)
             {
                 ops.add(s.trim().toLowerCase());
             }
 
             bufferedreader.close();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to load operators list: ").append(exception).toString());
         }
@@ -502,14 +488,14 @@ public class ServerConfigurationManager
         {
             PrintWriter printwriter = new PrintWriter(new FileWriter(opFile, false));
             String s;
-            for(Iterator iterator = ops.iterator(); iterator.hasNext(); printwriter.println(s))
+            for (Iterator iterator = ops.iterator(); iterator.hasNext(); printwriter.println(s))
             {
                 s = (String)iterator.next();
             }
 
             printwriter.close();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to save operators list: ").append(exception).toString());
         }
@@ -521,14 +507,14 @@ public class ServerConfigurationManager
         {
             whiteListedIPs.clear();
             BufferedReader bufferedreader = new BufferedReader(new FileReader(whitelistPlayersFile));
-            for(String s = ""; (s = bufferedreader.readLine()) != null;)
+            for (String s = ""; (s = bufferedreader.readLine()) != null;)
             {
                 whiteListedIPs.add(s.trim().toLowerCase());
             }
 
             bufferedreader.close();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to load white-list: ").append(exception).toString());
         }
@@ -540,14 +526,14 @@ public class ServerConfigurationManager
         {
             PrintWriter printwriter = new PrintWriter(new FileWriter(whitelistPlayersFile, false));
             String s;
-            for(Iterator iterator = whiteListedIPs.iterator(); iterator.hasNext(); printwriter.println(s))
+            for (Iterator iterator = whiteListedIPs.iterator(); iterator.hasNext(); printwriter.println(s))
             {
                 s = (String)iterator.next();
             }
 
             printwriter.close();
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to save white-list: ").append(exception).toString());
         }
@@ -566,10 +552,10 @@ public class ServerConfigurationManager
 
     public EntityPlayerMP getPlayerEntity(String s)
     {
-        for(int i = 0; i < playerEntities.size(); i++)
+        for (int i = 0; i < playerEntities.size(); i++)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)playerEntities.get(i);
-            if(entityplayermp.username.equalsIgnoreCase(s))
+            if (entityplayermp.username.equalsIgnoreCase(s))
             {
                 return entityplayermp;
             }
@@ -581,7 +567,7 @@ public class ServerConfigurationManager
     public void sendChatMessageToPlayer(String s, String s1)
     {
         EntityPlayerMP entityplayermp = getPlayerEntity(s);
-        if(entityplayermp != null)
+        if (entityplayermp != null)
         {
             entityplayermp.playerNetServerHandler.sendPacket(new Packet3Chat(s1));
         }
@@ -592,49 +578,48 @@ public class ServerConfigurationManager
         func_28171_a(null, d, d1, d2, d3, i, packet);
     }
 
-    public void func_28171_a(EntityPlayer entityplayer, double d, double d1, double d2, 
+    public void func_28171_a(EntityPlayer entityplayer, double d, double d1, double d2,
             double d3, int i, Packet packet)
     {
-        for(int j = 0; j < playerEntities.size(); j++)
+        for (int j = 0; j < playerEntities.size(); j++)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)playerEntities.get(j);
-            if(entityplayermp == entityplayer || entityplayermp.dimension != i)
+            if (entityplayermp == entityplayer || entityplayermp.dimension != i)
             {
                 continue;
             }
             double d4 = d - entityplayermp.posX;
             double d5 = d1 - entityplayermp.posY;
             double d6 = d2 - entityplayermp.posZ;
-            if(d4 * d4 + d5 * d5 + d6 * d6 < d3 * d3)
+            if (d4 * d4 + d5 * d5 + d6 * d6 < d3 * d3)
             {
                 entityplayermp.playerNetServerHandler.sendPacket(packet);
             }
         }
-
     }
 
     public void sendChatMessageToAllOps(String s)
     {
         Packet3Chat packet3chat = new Packet3Chat(s);
-        for(int i = 0; i < playerEntities.size(); i++)
+        for (int i = 0; i < playerEntities.size(); i++)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)playerEntities.get(i);
-            if(isOp(entityplayermp.username))
+            if (isOp(entityplayermp.username))
             {
                 entityplayermp.playerNetServerHandler.sendPacket(packet3chat);
             }
         }
-
     }
 
     public boolean sendPacketToPlayer(String s, Packet packet)
     {
         EntityPlayerMP entityplayermp = getPlayerEntity(s);
-        if(entityplayermp != null)
+        if (entityplayermp != null)
         {
             entityplayermp.playerNetServerHandler.sendPacket(packet);
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -642,11 +627,10 @@ public class ServerConfigurationManager
 
     public void savePlayerStates()
     {
-        for(int i = 0; i < playerEntities.size(); i++)
+        for (int i = 0; i < playerEntities.size(); i++)
         {
             playerNBTManagerObj.writePlayerData((EntityPlayer)playerEntities.get(i));
         }
-
     }
 
     public void sentTileEntityToPlayer(int i, int j, int k, TileEntity tileentity)
@@ -678,7 +662,7 @@ public class ServerConfigurationManager
     public void func_28170_a(EntityPlayerMP entityplayermp, WorldServer worldserver)
     {
         entityplayermp.playerNetServerHandler.sendPacket(new Packet4UpdateTime(worldserver.getWorldTime()));
-        if(worldserver.isRaining())
+        if (worldserver.isRaining())
         {
             entityplayermp.playerNetServerHandler.sendPacket(new Packet70Bed(1, 0));
         }
@@ -699,5 +683,4 @@ public class ServerConfigurationManager
     {
         return maxPlayers;
     }
-
 }

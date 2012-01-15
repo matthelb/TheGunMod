@@ -1,24 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.*;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            IntHashMap, ServerConfigurationManager, EntityPlayerMP, EntityTrackerEntry, 
-//            EntityFishHook, EntityArrow, EntitySmallFireball, EntityFireball, 
-//            EntitySnowball, EntityEnderPearl, EntityEnderEye, EntityEgg, 
-//            EntityPotion, EntityItem, EntityMinecart, EntityBoat, 
-//            EntitySquid, IAnimals, EntityDragon, EntityTNTPrimed, 
-//            EntityFallingSand, EntityPainting, EntityXPOrb, EntityEnderCrystal, 
-//            ModLoaderMp, Entity, WorldServer, Packet
-
 public class EntityTracker
 {
-
     private Set trackedEntitySet;
     private IntHashMap trackedEntityHashTable;
     private MinecraftServer mcServer;
@@ -36,101 +22,102 @@ public class EntityTracker
 
     public void trackEntity(Entity entity)
     {
-        if(entity instanceof EntityPlayerMP)
+        if (entity instanceof EntityPlayerMP)
         {
             trackEntity(entity, 512, 2);
             EntityPlayerMP entityplayermp = (EntityPlayerMP)entity;
             Iterator iterator = trackedEntitySet.iterator();
             do
             {
-                if(!iterator.hasNext())
+                if (!iterator.hasNext())
                 {
                     break;
                 }
                 EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry)iterator.next();
-                if(entitytrackerentry.trackedEntity != entityplayermp)
+                if (entitytrackerentry.trackedEntity != entityplayermp)
                 {
                     entitytrackerentry.updatePlayerEntity(entityplayermp);
                 }
-            } while(true);
-        } else
-        if(entity instanceof EntityFishHook)
+            }
+            while (true);
+        }
+        else if (entity instanceof EntityFishHook)
         {
             trackEntity(entity, 64, 5, true);
-        } else
-        if(entity instanceof EntityArrow)
+        }
+        else if (entity instanceof EntityArrow)
         {
             trackEntity(entity, 64, 20, false);
-        } else
-        if(entity instanceof EntitySmallFireball)
+        }
+        else if (entity instanceof EntitySmallFireball)
         {
             trackEntity(entity, 64, 10, false);
-        } else
-        if(entity instanceof EntityFireball)
+        }
+        else if (entity instanceof EntityFireball)
         {
             trackEntity(entity, 64, 10, false);
-        } else
-        if(entity instanceof EntitySnowball)
+        }
+        else if (entity instanceof EntitySnowball)
         {
             trackEntity(entity, 64, 10, true);
-        } else
-        if(entity instanceof EntityEnderPearl)
+        }
+        else if (entity instanceof EntityEnderPearl)
         {
             trackEntity(entity, 64, 10, true);
-        } else
-        if(entity instanceof EntityEnderEye)
+        }
+        else if (entity instanceof EntityEnderEye)
         {
             trackEntity(entity, 64, 10, true);
-        } else
-        if(entity instanceof EntityEgg)
+        }
+        else if (entity instanceof EntityEgg)
         {
             trackEntity(entity, 64, 10, true);
-        } else
-        if(entity instanceof EntityPotion)
+        }
+        else if (entity instanceof EntityPotion)
         {
             trackEntity(entity, 64, 10, true);
-        } else
-        if(entity instanceof EntityItem)
+        }
+        else if (entity instanceof EntityItem)
         {
             trackEntity(entity, 64, 20, true);
-        } else
-        if(entity instanceof EntityMinecart)
+        }
+        else if (entity instanceof EntityMinecart)
         {
             trackEntity(entity, 80, 3, true);
-        } else
-        if(entity instanceof EntityBoat)
+        }
+        else if (entity instanceof EntityBoat)
         {
             trackEntity(entity, 80, 3, true);
-        } else
-        if(entity instanceof EntitySquid)
+        }
+        else if (entity instanceof EntitySquid)
         {
             trackEntity(entity, 64, 3, true);
-        } else
-        if(entity instanceof IAnimals)
+        }
+        else if (entity instanceof IAnimals)
         {
             trackEntity(entity, 80, 3, true);
-        } else
-        if(entity instanceof EntityDragon)
+        }
+        else if (entity instanceof EntityDragon)
         {
             trackEntity(entity, 160, 3, true);
-        } else
-        if(entity instanceof EntityTNTPrimed)
+        }
+        else if (entity instanceof EntityTNTPrimed)
         {
             trackEntity(entity, 160, 10, true);
-        } else
-        if(entity instanceof EntityFallingSand)
+        }
+        else if (entity instanceof EntityFallingSand)
         {
             trackEntity(entity, 160, 20, true);
-        } else
-        if(entity instanceof EntityPainting)
+        }
+        else if (entity instanceof EntityPainting)
         {
             trackEntity(entity, 160, 0x7fffffff, false);
-        } else
-        if(entity instanceof EntityXPOrb)
+        }
+        else if (entity instanceof EntityXPOrb)
         {
             trackEntity(entity, 160, 20, true);
-        } else
-        if(entity instanceof EntityEnderCrystal)
+        }
+        else if (entity instanceof EntityEnderCrystal)
         {
             trackEntity(entity, 256, 0x7fffffff, false);
         }
@@ -144,14 +131,15 @@ public class EntityTracker
 
     public void trackEntity(Entity entity, int i, int j, boolean flag)
     {
-        if(i > maxTrackingDistanceThreshold)
+        if (i > maxTrackingDistanceThreshold)
         {
             i = maxTrackingDistanceThreshold;
         }
-        if(trackedEntityHashTable.containsItem(entity.entityId))
+        if (trackedEntityHashTable.containsItem(entity.entityId))
         {
             throw new IllegalStateException("Entity is already tracked!");
-        } else
+        }
+        else
         {
             EntityTrackerEntry entitytrackerentry = new EntityTrackerEntry(entity, i, j, flag);
             trackedEntitySet.add(entitytrackerentry);
@@ -163,18 +151,17 @@ public class EntityTracker
 
     public void untrackEntity(Entity entity)
     {
-        if(entity instanceof EntityPlayerMP)
+        if (entity instanceof EntityPlayerMP)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)entity;
             EntityTrackerEntry entitytrackerentry1;
-            for(Iterator iterator = trackedEntitySet.iterator(); iterator.hasNext(); entitytrackerentry1.removeFromTrackedPlayers(entityplayermp))
+            for (Iterator iterator = trackedEntitySet.iterator(); iterator.hasNext(); entitytrackerentry1.removeFromTrackedPlayers(entityplayermp))
             {
                 entitytrackerentry1 = (EntityTrackerEntry)iterator.next();
             }
-
         }
         EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry)trackedEntityHashTable.removeObject(entity.entityId);
-        if(entitytrackerentry != null)
+        if (entitytrackerentry != null)
         {
             trackedEntitySet.remove(entitytrackerentry);
             entitytrackerentry.sendDestroyEntityPacketToTrackedPlayers();
@@ -187,42 +174,43 @@ public class EntityTracker
         Iterator iterator = trackedEntitySet.iterator();
         do
         {
-            if(!iterator.hasNext())
+            if (!iterator.hasNext())
             {
                 break;
             }
             EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry)iterator.next();
             entitytrackerentry.updatePlayerList(mcServer.getWorldManager(field_28113_e).playerEntities);
-            if(entitytrackerentry.playerEntitiesUpdated && (entitytrackerentry.trackedEntity instanceof EntityPlayerMP))
+            if (entitytrackerentry.playerEntitiesUpdated && (entitytrackerentry.trackedEntity instanceof EntityPlayerMP))
             {
                 arraylist.add((EntityPlayerMP)entitytrackerentry.trackedEntity);
             }
-        } while(true);
-label0:
-        for(int i = 0; i < arraylist.size(); i++)
+        }
+        while (true);
+        label0:
+        for (int i = 0; i < arraylist.size(); i++)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)arraylist.get(i);
             Iterator iterator1 = trackedEntitySet.iterator();
             do
             {
-                if(!iterator1.hasNext())
+                if (!iterator1.hasNext())
                 {
                     continue label0;
                 }
                 EntityTrackerEntry entitytrackerentry1 = (EntityTrackerEntry)iterator1.next();
-                if(entitytrackerentry1.trackedEntity != entityplayermp)
+                if (entitytrackerentry1.trackedEntity != entityplayermp)
                 {
                     entitytrackerentry1.updatePlayerEntity(entityplayermp);
                 }
-            } while(true);
+            }
+            while (true);
         }
-
     }
 
     public void sendPacketToTrackedPlayers(Entity entity, Packet packet)
     {
         EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry)trackedEntityHashTable.lookup(entity.entityId);
-        if(entitytrackerentry != null)
+        if (entitytrackerentry != null)
         {
             entitytrackerentry.sendPacketToTrackedPlayers(packet);
         }
@@ -231,7 +219,7 @@ label0:
     public void sendPacketToTrackedPlayersAndTrackedEntity(Entity entity, Packet packet)
     {
         EntityTrackerEntry entitytrackerentry = (EntityTrackerEntry)trackedEntityHashTable.lookup(entity.entityId);
-        if(entitytrackerentry != null)
+        if (entitytrackerentry != null)
         {
             entitytrackerentry.sendPacketToTrackedPlayersAndTrackedEntity(packet);
         }
@@ -240,10 +228,9 @@ label0:
     public void removeTrackedPlayerSymmetric(EntityPlayerMP entityplayermp)
     {
         EntityTrackerEntry entitytrackerentry;
-        for(Iterator iterator = trackedEntitySet.iterator(); iterator.hasNext(); entitytrackerentry.removeTrackedPlayerSymmetric(entityplayermp))
+        for (Iterator iterator = trackedEntitySet.iterator(); iterator.hasNext(); entitytrackerentry.removeTrackedPlayerSymmetric(entityplayermp))
         {
             entitytrackerentry = (EntityTrackerEntry)iterator.next();
         }
-
     }
 }

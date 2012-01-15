@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.IOException;
@@ -9,13 +5,9 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.util.*;
 
-// Referenced classes of package net.minecraft.src:
-//            IServer
-
 public abstract class RConThreadBase
     implements Runnable
 {
-
     protected boolean running;
     protected IServer server;
     protected Thread rconThread;
@@ -30,7 +22,7 @@ public abstract class RConThreadBase
         socketList = new ArrayList();
         serverSocketList = new ArrayList();
         server = iserver;
-        if(server.isDebuggingEnabled())
+        if (server.isDebuggingEnabled())
         {
             logWarning("Debugging is enabled, performance maybe reduced!");
         }
@@ -82,17 +74,17 @@ public abstract class RConThreadBase
     protected boolean closeSocket(DatagramSocket datagramsocket, boolean flag)
     {
         logInfo((new StringBuilder()).append("closeSocket: ").append(datagramsocket).toString());
-        if(null == datagramsocket)
+        if (null == datagramsocket)
         {
             return false;
         }
         boolean flag1 = false;
-        if(!datagramsocket.isClosed())
+        if (!datagramsocket.isClosed())
         {
             datagramsocket.close();
             flag1 = true;
         }
-        if(flag)
+        if (flag)
         {
             socketList.remove(datagramsocket);
         }
@@ -107,24 +99,24 @@ public abstract class RConThreadBase
     protected boolean closeServerSocket_do(ServerSocket serversocket, boolean flag)
     {
         logInfo((new StringBuilder()).append("closeSocket: ").append(serversocket).toString());
-        if(null == serversocket)
+        if (null == serversocket)
         {
             return false;
         }
         boolean flag1 = false;
         try
         {
-            if(!serversocket.isClosed())
+            if (!serversocket.isClosed())
             {
                 serversocket.close();
                 flag1 = true;
             }
         }
-        catch(IOException ioexception)
+        catch (IOException ioexception)
         {
             logWarning((new StringBuilder()).append("IO: ").append(ioexception.getMessage()).toString());
         }
-        if(flag)
+        if (flag)
         {
             serverSocketList.remove(serversocket);
         }
@@ -142,32 +134,34 @@ public abstract class RConThreadBase
         Iterator iterator = socketList.iterator();
         do
         {
-            if(!iterator.hasNext())
+            if (!iterator.hasNext())
             {
                 break;
             }
             DatagramSocket datagramsocket = (DatagramSocket)iterator.next();
-            if(closeSocket(datagramsocket, false))
+            if (closeSocket(datagramsocket, false))
             {
                 i++;
             }
-        } while(true);
+        }
+        while (true);
         socketList.clear();
         iterator = serverSocketList.iterator();
         do
         {
-            if(!iterator.hasNext())
+            if (!iterator.hasNext())
             {
                 break;
             }
             ServerSocket serversocket = (ServerSocket)iterator.next();
-            if(closeServerSocket_do(serversocket, false))
+            if (closeServerSocket_do(serversocket, false))
             {
                 i++;
             }
-        } while(true);
+        }
+        while (true);
         serverSocketList.clear();
-        if(flag && 0 < i)
+        if (flag && 0 < i)
         {
             logWarning((new StringBuilder()).append("Force closed ").append(i).append(" sockets").toString());
         }

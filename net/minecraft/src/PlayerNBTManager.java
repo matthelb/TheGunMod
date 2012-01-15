@@ -1,22 +1,12 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 import java.util.List;
 import java.util.logging.Logger;
 
-// Referenced classes of package net.minecraft.src:
-//            IPlayerFileData, ISaveHandler, MinecraftException, WorldProviderHell, 
-//            ChunkLoader, WorldProviderEnd, CompressedStreamTools, NBTTagCompound, 
-//            WorldInfo, EntityPlayer, WorldProvider, IChunkLoader
-
 public class PlayerNBTManager
     implements IPlayerFileData, ISaveHandler
 {
-
     private static final Logger logger = Logger.getLogger("Minecraft");
     private final File worldDir;
     private final File worldFile;
@@ -32,7 +22,7 @@ public class PlayerNBTManager
         mapDataDir = new File(worldDir, "data");
         mapDataDir.mkdirs();
         field_40258_f = s;
-        if(flag)
+        if (flag)
         {
             worldFile.mkdirs();
         }
@@ -54,7 +44,7 @@ public class PlayerNBTManager
                 dataoutputstream.close();
             }
         }
-        catch(IOException ioexception)
+        catch (IOException ioexception)
         {
             ioexception.printStackTrace();
             throw new RuntimeException("Failed to check session lock, aborting");
@@ -74,7 +64,7 @@ public class PlayerNBTManager
             DataInputStream datainputstream = new DataInputStream(new FileInputStream(file));
             try
             {
-                if(datainputstream.readLong() != thisSessionLockID)
+                if (datainputstream.readLong() != thisSessionLockID)
                 {
                     throw new MinecraftException("The save is being accessed from another location, aborting");
                 }
@@ -84,7 +74,7 @@ public class PlayerNBTManager
                 datainputstream.close();
             }
         }
-        catch(IOException ioexception)
+        catch (IOException ioexception)
         {
             throw new MinecraftException("Failed to check session lock, aborting");
         }
@@ -92,18 +82,19 @@ public class PlayerNBTManager
 
     public IChunkLoader getChunkLoader(WorldProvider worldprovider)
     {
-        if(worldprovider instanceof WorldProviderHell)
+        if (worldprovider instanceof WorldProviderHell)
         {
             File file = new File(worldDir, "DIM-1");
             file.mkdirs();
             return new ChunkLoader(file, true);
         }
-        if(worldprovider instanceof WorldProviderEnd)
+        if (worldprovider instanceof WorldProviderEnd)
         {
             File file1 = new File(worldDir, "DIM1");
             file1.mkdirs();
             return new ChunkLoader(file1, true);
-        } else
+        }
+        else
         {
             return new ChunkLoader(worldDir, true);
         }
@@ -112,7 +103,7 @@ public class PlayerNBTManager
     public WorldInfo loadWorldInfo()
     {
         File file = new File(worldDir, "level.dat");
-        if(file.exists())
+        if (file.exists())
         {
             try
             {
@@ -120,13 +111,13 @@ public class PlayerNBTManager
                 NBTTagCompound nbttagcompound2 = nbttagcompound.getCompoundTag("Data");
                 return new WorldInfo(nbttagcompound2);
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 exception.printStackTrace();
             }
         }
         file = new File(worldDir, "level.dat_old");
-        if(file.exists())
+        if (file.exists())
         {
             try
             {
@@ -134,7 +125,7 @@ public class PlayerNBTManager
                 NBTTagCompound nbttagcompound3 = nbttagcompound1.getCompoundTag("Data");
                 return new WorldInfo(nbttagcompound3);
             }
-            catch(Exception exception1)
+            catch (Exception exception1)
             {
                 exception1.printStackTrace();
             }
@@ -153,22 +144,22 @@ public class PlayerNBTManager
             File file1 = new File(worldDir, "level.dat_old");
             File file2 = new File(worldDir, "level.dat");
             CompressedStreamTools.writeGzippedCompoundToOutputStream(nbttagcompound1, new FileOutputStream(file));
-            if(file1.exists())
+            if (file1.exists())
             {
                 file1.delete();
             }
             file2.renameTo(file1);
-            if(file2.exists())
+            if (file2.exists())
             {
                 file2.delete();
             }
             file.renameTo(file2);
-            if(file.exists())
+            if (file.exists())
             {
                 file.delete();
             }
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             exception.printStackTrace();
         }
@@ -185,22 +176,22 @@ public class PlayerNBTManager
             File file1 = new File(worldDir, "level.dat_old");
             File file2 = new File(worldDir, "level.dat");
             CompressedStreamTools.writeGzippedCompoundToOutputStream(nbttagcompound1, new FileOutputStream(file));
-            if(file1.exists())
+            if (file1.exists())
             {
                 file1.delete();
             }
             file2.renameTo(file1);
-            if(file2.exists())
+            if (file2.exists())
             {
                 file2.delete();
             }
             file.renameTo(file2);
-            if(file.exists())
+            if (file.exists())
             {
                 file.delete();
             }
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             exception.printStackTrace();
         }
@@ -215,13 +206,13 @@ public class PlayerNBTManager
             File file = new File(worldFile, "_tmp_.dat");
             File file1 = new File(worldFile, (new StringBuilder()).append(entityplayer.username).append(".dat").toString());
             CompressedStreamTools.writeGzippedCompoundToOutputStream(nbttagcompound, new FileOutputStream(file));
-            if(file1.exists())
+            if (file1.exists())
             {
                 file1.delete();
             }
             file.renameTo(file1);
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to save player data for ").append(entityplayer.username).toString());
         }
@@ -230,7 +221,7 @@ public class PlayerNBTManager
     public void readPlayerData(EntityPlayer entityplayer)
     {
         NBTTagCompound nbttagcompound = getPlayerData(entityplayer.username);
-        if(nbttagcompound != null)
+        if (nbttagcompound != null)
         {
             entityplayer.readFromNBT(nbttagcompound);
         }
@@ -241,12 +232,12 @@ public class PlayerNBTManager
         try
         {
             File file = new File(worldFile, (new StringBuilder()).append(s).append(".dat").toString());
-            if(file.exists())
+            if (file.exists())
             {
                 return CompressedStreamTools.loadGzippedCompoundFromOutputStream(new FileInputStream(file));
             }
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             logger.warning((new StringBuilder()).append("Failed to load player data for ").append(s).toString());
         }
@@ -266,5 +257,4 @@ public class PlayerNBTManager
     {
         return new File(mapDataDir, (new StringBuilder()).append(s).append(".dat").toString());
     }
-
 }

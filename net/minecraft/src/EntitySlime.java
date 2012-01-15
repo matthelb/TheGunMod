@@ -1,20 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            EntityLiving, IMob, DataWatcher, NBTTagCompound, 
-//            World, MathHelper, AxisAlignedBB, DamageSource, 
-//            EntityPlayer, Item, Chunk
-
 public class EntitySlime extends EntityLiving
     implements IMob
 {
-
     public float field_40122_a;
     public float field_401_a;
     public float field_400_b;
@@ -81,7 +71,7 @@ public class EntitySlime extends EntityLiving
 
     public void onUpdate()
     {
-        if(!worldObj.singleplayerWorld && worldObj.difficultySetting == 0 && getSlimeSize() > 0)
+        if (!worldObj.singleplayerWorld && worldObj.difficultySetting == 0 && getSlimeSize() > 0)
         {
             isDead = true;
         }
@@ -89,10 +79,10 @@ public class EntitySlime extends EntityLiving
         field_400_b = field_401_a;
         boolean flag = onGround;
         super.onUpdate();
-        if(onGround && !flag)
+        if (onGround && !flag)
         {
             int i = getSlimeSize();
-            for(int j = 0; j < i * 8; j++)
+            for (int j = 0; j < i * 8; j++)
             {
                 float f = rand.nextFloat() * 3.141593F * 2.0F;
                 float f1 = rand.nextFloat() * 0.5F + 0.5F;
@@ -101,7 +91,7 @@ public class EntitySlime extends EntityLiving
                 worldObj.spawnParticle(func_40120_w(), posX + (double)f2, boundingBox.minY, posZ + (double)f3, 0.0D, 0.0D, 0.0D);
             }
 
-            if(func_40121_G())
+            if (func_40121_G())
             {
                 worldObj.playSoundAtEntity(this, func_40118_E(), getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) / 0.8F);
             }
@@ -114,29 +104,30 @@ public class EntitySlime extends EntityLiving
     {
         despawnEntity();
         EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 16D);
-        if(entityplayer != null)
+        if (entityplayer != null)
         {
             faceEntity(entityplayer, 10F, 20F);
         }
-        if(onGround && ticksTillJump-- <= 0)
+        if (onGround && ticksTillJump-- <= 0)
         {
             ticksTillJump = func_40115_A();
-            if(entityplayer != null)
+            if (entityplayer != null)
             {
                 ticksTillJump /= 3;
             }
             isJumping = true;
-            if(func_40117_I())
+            if (func_40117_I())
             {
                 worldObj.playSoundAtEntity(this, func_40118_E(), getSoundVolume(), ((rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F) * 0.8F);
             }
             field_40122_a = 1.0F;
             moveStrafing = 1.0F - rand.nextFloat() * 2.0F;
             moveForward = 1 * getSlimeSize();
-        } else
+        }
+        else
         {
             isJumping = false;
-            if(onGround)
+            if (onGround)
             {
                 moveStrafing = moveForward = 0.0F;
             }
@@ -161,10 +152,10 @@ public class EntitySlime extends EntityLiving
     public void setEntityDead()
     {
         int i = getSlimeSize();
-        if(!worldObj.singleplayerWorld && i > 1 && getEntityHealth() <= 0)
+        if (!worldObj.singleplayerWorld && i > 1 && getEntityHealth() <= 0)
         {
             int j = 2 + rand.nextInt(3);
-            for(int k = 0; k < j; k++)
+            for (int k = 0; k < j; k++)
             {
                 float f = (((float)(k % 2) - 0.5F) * (float)i) / 4F;
                 float f1 = (((float)(k / 2) - 0.5F) * (float)i) / 4F;
@@ -173,17 +164,16 @@ public class EntitySlime extends EntityLiving
                 entityslime.setLocationAndAngles(posX + (double)f, posY + 0.5D, posZ + (double)f1, rand.nextFloat() * 360F, 0.0F);
                 worldObj.spawnEntityInWorld(entityslime);
             }
-
         }
         super.setEntityDead();
     }
 
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
-        if(func_40119_C())
+        if (func_40119_C())
         {
             int i = getSlimeSize();
-            if(canEntityBeSeen(entityplayer) && (double)getDistanceToEntity(entityplayer) < 0.59999999999999998D * (double)i && entityplayer.attackEntityFrom(DamageSource.causeMobDamage(this), func_40113_D()))
+            if (canEntityBeSeen(entityplayer) && (double)getDistanceToEntity(entityplayer) < 0.59999999999999998D * (double)i && entityplayer.attackEntityFrom(DamageSource.causeMobDamage(this), func_40113_D()))
             {
                 worldObj.playSoundAtEntity(this, "mob.slimeattack", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             }
@@ -212,10 +202,11 @@ public class EntitySlime extends EntityLiving
 
     protected int getDropItemId()
     {
-        if(getSlimeSize() == 1)
+        if (getSlimeSize() == 1)
         {
             return Item.slimeBall.shiftedIndex;
-        } else
+        }
+        else
         {
             return 0;
         }
@@ -224,10 +215,11 @@ public class EntitySlime extends EntityLiving
     public boolean getCanSpawnHere()
     {
         Chunk chunk = worldObj.getChunkFromBlockCoords(MathHelper.floor_double(posX), MathHelper.floor_double(posZ));
-        if((getSlimeSize() == 1 || worldObj.difficultySetting > 0) && rand.nextInt(10) == 0 && chunk.getRandomWithSeed(0x3ad8025fL).nextInt(10) == 0 && posY < 40D)
+        if ((getSlimeSize() == 1 || worldObj.difficultySetting > 0) && rand.nextInt(10) == 0 && chunk.getRandomWithSeed(0x3ad8025fL).nextInt(10) == 0 && posY < 40D)
         {
             return super.getCanSpawnHere();
-        } else
+        }
+        else
         {
             return false;
         }
@@ -238,7 +230,7 @@ public class EntitySlime extends EntityLiving
         return 0.4F * (float)getSlimeSize();
     }
 
-    protected int getVerticalFaceSpeed()
+    public int getVerticalFaceSpeed()
     {
         return 0;
     }

@@ -1,17 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
-
-// Referenced classes of package net.minecraft.src:
-//            Item, EnumArmorMaterial
 
 public class ItemArmor extends Item
 {
-
-    private static final int maxDamageArray[] = {
+    private static final int maxDamageArray[] =
+    {
         11, 16, 15, 13
     };
     public final int armorType;
@@ -39,5 +31,4 @@ public class ItemArmor extends Item
     {
         return maxDamageArray;
     }
-
 }

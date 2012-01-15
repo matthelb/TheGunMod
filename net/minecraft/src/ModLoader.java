@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
@@ -15,19 +11,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            Achievement, StatBase, StatCollector, BaseMod, 
-//            MLProp, CraftingManager, FurnaceRecipes, BiomeGenBase, 
-//            SpawnListEntry, EntityLiving, EntityList, BiomeGenHell, 
-//            TileEntity, Block, StatList, StatCrafting, 
-//            Item, IRecipe, ItemStack, WorldServer, 
-//            ChunkProviderGenerate, World, ChunkProviderHell, ItemBlock, 
-//            EntityPlayerMP, Packet100OpenWindow, IInventory, NetServerHandler, 
-//            Container, EntityPlayer, EnumCreatureType, IChunkProvider
-
 public final class ModLoader
 {
-
     private static File cfgdir;
     private static File cfgfile;
     public static Level cfgLoggingLevel;
@@ -56,7 +41,7 @@ public final class ModLoader
     private static int terrainSpritesLeft = 0;
     private static final boolean usedItemSprites[] = new boolean[256];
     private static final boolean usedTerrainSprites[] = new boolean[256];
-    public static final String VERSION = "ModLoader Server 1.0.0";
+    public static final String VERSION = "ModLoader Server 1.1";
     private static Method method_getNextWindowId;
     private static Field field_currentWindowId;
 
@@ -64,28 +49,29 @@ public final class ModLoader
     {
         try
         {
-            if(achievement.statName.contains("."))
+            if (achievement.toString().contains("."))
             {
-                String s2 = achievement.statName.split("\\.")[1];
+                String s2 = achievement.toString().split("\\.")[1];
                 setPrivateValue(net.minecraft.src.StatBase.class, achievement, 1, StatCollector.translateToLocal((new StringBuilder("achievement.")).append(s2).toString()));
                 setPrivateValue(net.minecraft.src.Achievement.class, achievement, 3, StatCollector.translateToLocal((new StringBuilder("achievement.")).append(s2).append(".desc").toString()));
-            } else
+            }
+            else
             {
                 setPrivateValue(net.minecraft.src.StatBase.class, achievement, 1, s);
                 setPrivateValue(net.minecraft.src.Achievement.class, achievement, 3, s1);
             }
         }
-        catch(IllegalArgumentException illegalargumentexception)
+        catch (IllegalArgumentException illegalargumentexception)
         {
             logger.throwing("ModLoader", "AddAchievementDesc", illegalargumentexception);
             ThrowException(illegalargumentexception);
         }
-        catch(SecurityException securityexception)
+        catch (SecurityException securityexception)
         {
             logger.throwing("ModLoader", "AddAchievementDesc", securityexception);
             ThrowException(securityexception);
         }
-        catch(NoSuchFieldException nosuchfieldexception)
+        catch (NoSuchFieldException nosuchfieldexception)
         {
             logger.throwing("ModLoader", "AddAchievementDesc", nosuchfieldexception);
             ThrowException(nosuchfieldexception);
@@ -96,8 +82,8 @@ public final class ModLoader
     {
         logger.finest((new StringBuilder("Finding fuel for ")).append(i).toString());
         int j = 0;
-        for(Iterator iterator = modList.iterator(); iterator.hasNext() && j == 0; j = ((BaseMod)iterator.next()).AddFuel(i)) { }
-        if(j != 0)
+        for (Iterator iterator = modList.iterator(); iterator.hasNext() && j == 0; j = ((BaseMod)iterator.next()).AddFuel(i)) { }
+        if (j != 0)
         {
             logger.finest((new StringBuilder("Returned ")).append(j).toString());
         }
@@ -114,27 +100,27 @@ public final class ModLoader
         try
         {
             String s1 = s.split("\\.")[0];
-            if(s1.contains("$"))
+            if (s1.contains("$"))
             {
                 return;
             }
-            if(props.containsKey(s1) && (props.getProperty(s1).equalsIgnoreCase("no") || props.getProperty(s1).equalsIgnoreCase("off")))
+            if (props.containsKey(s1) && (props.getProperty(s1).equalsIgnoreCase("no") || props.getProperty(s1).equalsIgnoreCase("off")))
             {
                 return;
             }
             Package package1 = (net.minecraft.src.ModLoader.class).getPackage();
-            if(package1 != null)
+            if (package1 != null)
             {
                 s1 = (new StringBuilder(String.valueOf(package1.getName()))).append(".").append(s1).toString();
             }
             Class class1 = classloader.loadClass(s1);
-            if(!(net.minecraft.src.BaseMod.class).isAssignableFrom(class1))
+            if (!(net.minecraft.src.BaseMod.class).isAssignableFrom(class1))
             {
                 return;
             }
             setupProperties(class1);
             BaseMod basemod = (BaseMod)class1.newInstance();
-            if(basemod != null)
+            if (basemod != null)
             {
                 modList.add(basemod);
                 logger.fine((new StringBuilder("Mod Loaded: \"")).append(basemod.toString()).append("\" from ").append(s).toString());
@@ -142,7 +128,7 @@ public final class ModLoader
                 MinecraftServer.logger.info((new StringBuilder("Mod Loaded: ")).append(basemod.toString()).toString());
             }
         }
-        catch(Throwable throwable)
+        catch (Throwable throwable)
         {
             logger.fine((new StringBuilder("Failed to load mod from \"")).append(s).append("\"").toString());
             System.out.println((new StringBuilder("Failed to load mod from \"")).append(s).append("\"").toString());
@@ -152,21 +138,21 @@ public final class ModLoader
     }
 
     private static void setupProperties(Class class1)
-        throws IllegalArgumentException, IllegalAccessException, IOException, SecurityException, NoSuchFieldException
+    throws IllegalArgumentException, IllegalAccessException, IOException, SecurityException, NoSuchFieldException
     {
         Properties properties = new Properties();
         File file = new File(cfgdir, (new StringBuilder(String.valueOf(class1.getName()))).append(".cfg").toString());
-        if(file.exists() && file.canRead())
+        if (file.exists() && file.canRead())
         {
             properties.load(new FileInputStream(file));
         }
         StringBuilder stringbuilder = new StringBuilder();
         Field afield[];
         int i = (afield = class1.getFields()).length;
-        for(int j = 0; j < i; j++)
+        for (int j = 0; j < i; j++)
         {
             Field field = afield[j];
-            if((field.getModifiers() & 8) == 0 || !field.isAnnotationPresent(net.minecraft.src.MLProp.class))
+            if ((field.getModifiers() & 8) == 0 || !field.isAnnotationPresent(net.minecraft.src.MLProp.class))
             {
                 continue;
             }
@@ -175,84 +161,88 @@ public final class ModLoader
             String s = mlprop.name().length() == 0 ? field.getName() : mlprop.name();
             Object obj = field.get(null);
             StringBuilder stringbuilder1 = new StringBuilder();
-            if(mlprop.min() != (-1.0D / 0.0D))
+            if (mlprop.min() != (-1.0D / 0.0D))
             {
-                stringbuilder1.append(String.format(",>=%.1f", new Object[] {
-                    Double.valueOf(mlprop.min())
-                }));
+                stringbuilder1.append(String.format(",>=%.1f", new Object[]
+                        {
+                            Double.valueOf(mlprop.min())
+                        }));
             }
-            if(mlprop.max() != (1.0D / 0.0D))
+            if (mlprop.max() != (1.0D / 0.0D))
             {
-                stringbuilder1.append(String.format(",<=%.1f", new Object[] {
-                    Double.valueOf(mlprop.max())
-                }));
+                stringbuilder1.append(String.format(",<=%.1f", new Object[]
+                        {
+                            Double.valueOf(mlprop.max())
+                        }));
             }
             StringBuilder stringbuilder2 = new StringBuilder();
-            if(mlprop.info().length() > 0)
+            if (mlprop.info().length() > 0)
             {
                 stringbuilder2.append(" -- ");
                 stringbuilder2.append(mlprop.info());
             }
-            stringbuilder.append(String.format("%s (%s:%s%s)%s\n", new Object[] {
-                s, class2.getName(), obj, stringbuilder1, stringbuilder2
-            }));
-            if(properties.containsKey(s))
+            stringbuilder.append(String.format("%s (%s:%s%s)%s\n", new Object[]
+                    {
+                        s, class2.getName(), obj, stringbuilder1, stringbuilder2
+                    }));
+            if (properties.containsKey(s))
             {
                 String s1 = properties.getProperty(s);
                 Object obj1 = null;
-                if(class2.isAssignableFrom(java.lang.String.class))
+                if (class2.isAssignableFrom(java.lang.String.class))
                 {
                     obj1 = s1;
-                } else
-                if(class2.isAssignableFrom(Integer.TYPE))
+                }
+                else if (class2.isAssignableFrom(Integer.TYPE))
                 {
                     obj1 = Integer.valueOf(Integer.parseInt(s1));
-                } else
-                if(class2.isAssignableFrom(Short.TYPE))
+                }
+                else if (class2.isAssignableFrom(Short.TYPE))
                 {
                     obj1 = Short.valueOf(Short.parseShort(s1));
-                } else
-                if(class2.isAssignableFrom(Byte.TYPE))
+                }
+                else if (class2.isAssignableFrom(Byte.TYPE))
                 {
                     obj1 = Byte.valueOf(Byte.parseByte(s1));
-                } else
-                if(class2.isAssignableFrom(Boolean.TYPE))
+                }
+                else if (class2.isAssignableFrom(Boolean.TYPE))
                 {
                     obj1 = Boolean.valueOf(Boolean.parseBoolean(s1));
-                } else
-                if(class2.isAssignableFrom(Float.TYPE))
+                }
+                else if (class2.isAssignableFrom(Float.TYPE))
                 {
                     obj1 = Float.valueOf(Float.parseFloat(s1));
-                } else
-                if(class2.isAssignableFrom(Double.TYPE))
+                }
+                else if (class2.isAssignableFrom(Double.TYPE))
                 {
                     obj1 = Double.valueOf(Double.parseDouble(s1));
                 }
-                if(obj1 == null)
+                if (obj1 == null)
                 {
                     continue;
                 }
-                if(obj1 instanceof Number)
+                if (obj1 instanceof Number)
                 {
                     double d = ((Number)obj1).doubleValue();
-                    if(mlprop.min() != (-1.0D / 0.0D) && d < mlprop.min() || mlprop.max() != (1.0D / 0.0D) && d > mlprop.max())
+                    if (mlprop.min() != (-1.0D / 0.0D) && d < mlprop.min() || mlprop.max() != (1.0D / 0.0D) && d > mlprop.max())
                     {
                         continue;
                     }
                 }
                 logger.finer((new StringBuilder(String.valueOf(s))).append(" set to ").append(obj1).toString());
-                if(!obj1.equals(obj))
+                if (!obj1.equals(obj))
                 {
                     field.set(null, obj1);
                 }
-            } else
+            }
+            else
             {
                 logger.finer((new StringBuilder(String.valueOf(s))).append(" not in config, using default: ").append(obj).toString());
                 properties.setProperty(s, obj.toString());
             }
         }
 
-        if(!properties.isEmpty() && (file.exists() || file.createNewFile()) && file.canWrite())
+        if (!properties.isEmpty() && (file.exists() || file.createNewFile()) && file.canWrite())
         {
             properties.store(new FileOutputStream(file), stringbuilder.toString());
         }
@@ -267,23 +257,24 @@ public final class ModLoader
     {
         int j = -1;
         int k = 0;
-        if(s.equals("/terrain.png"))
+        if (s.equals("/terrain.png"))
         {
             j = 0;
             k = terrainSpritesLeft;
-        } else
-        if(s.equals("/gui/items.png"))
+        }
+        else if (s.equals("/gui/items.png"))
         {
             j = 1;
             k = itemSpritesLeft;
-        } else
+        }
+        else
         {
             return;
         }
         System.out.println((new StringBuilder("Overriding ")).append(s).append(" with ").append(s1).append(" @ ").append(i).append(". ").append(k).append(" left.").toString());
         logger.finer((new StringBuilder("addOverride(")).append(s).append(",").append(s1).append(",").append(i).append("). ").append(k).append(" left.").toString());
         Object obj = (Map)overrides.get(Integer.valueOf(j));
-        if(obj == null)
+        if (obj == null)
         {
             obj = new HashMap();
             overrides.put(Integer.valueOf(j), obj);
@@ -313,22 +304,22 @@ public final class ModLoader
 
     public static void AddSpawn(Class class1, int i, int j, int k, EnumCreatureType enumcreaturetype, BiomeGenBase abiomegenbase[])
     {
-        if(class1 == null)
+        if (class1 == null)
         {
             throw new IllegalArgumentException("entityClass cannot be null");
         }
-        if(enumcreaturetype == null)
+        if (enumcreaturetype == null)
         {
             throw new IllegalArgumentException("spawnList cannot be null");
         }
-        if(abiomegenbase == null)
+        if (abiomegenbase == null)
         {
             abiomegenbase = standardBiomes;
         }
-        for(int l = 0; l < abiomegenbase.length; l++)
+        for (int l = 0; l < abiomegenbase.length; l++)
         {
             List list = abiomegenbase[l].getSpawnableList(enumcreaturetype);
-            if(list == null)
+            if (list == null)
             {
                 continue;
             }
@@ -336,12 +327,12 @@ public final class ModLoader
             Iterator iterator = list.iterator();
             do
             {
-                if(!iterator.hasNext())
+                if (!iterator.hasNext())
                 {
                     break;
                 }
                 SpawnListEntry spawnlistentry = (SpawnListEntry)iterator.next();
-                if(spawnlistentry.entityClass != class1)
+                if (spawnlistentry.entityClass != class1)
                 {
                     continue;
                 }
@@ -350,13 +341,13 @@ public final class ModLoader
                 spawnlistentry.field_35485_c = k;
                 flag = true;
                 break;
-            } while(true);
-            if(!flag)
+            }
+            while (true);
+            if (!flag)
             {
                 list.add(new SpawnListEntry(class1, i, j, k));
             }
         }
-
     }
 
     public static void AddSpawn(String s, int i, int j, int k, EnumCreatureType enumcreaturetype)
@@ -367,17 +358,17 @@ public final class ModLoader
     public static void AddSpawn(String s, int i, int j, int k, EnumCreatureType enumcreaturetype, BiomeGenBase abiomegenbase[])
     {
         Class class1 = (Class)classMap.get(s);
-        if(class1 != null && (net.minecraft.src.EntityLiving.class).isAssignableFrom(class1))
+        if (class1 != null && (net.minecraft.src.EntityLiving.class).isAssignableFrom(class1))
         {
             AddSpawn(class1, i, j, k, enumcreaturetype, abiomegenbase);
         }
     }
 
-    public static boolean DispenseEntity(World world, double d, double d1, double d2, int i, 
+    public static boolean DispenseEntity(World world, double d, double d1, double d2, int i,
             int j, ItemStack itemstack)
     {
         boolean flag = false;
-        for(Iterator iterator = modList.iterator(); iterator.hasNext() && !flag; flag = ((BaseMod)iterator.next()).DispenseEntity(world, d, d1, d2, i, j, itemstack)) { }
+        for (Iterator iterator = modList.iterator(); iterator.hasNext() && !flag; flag = ((BaseMod)iterator.next()).DispenseEntity(world, d, d1, d2, i, j, itemstack)) { }
         return flag;
     }
 
@@ -397,7 +388,7 @@ public final class ModLoader
     }
 
     public static Object getPrivateValue(Class class1, Object obj, int i)
-        throws IllegalArgumentException, SecurityException, NoSuchFieldException
+    throws IllegalArgumentException, SecurityException, NoSuchFieldException
     {
         try
         {
@@ -405,7 +396,7 @@ public final class ModLoader
             field.setAccessible(true);
             return field.get(obj);
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             logger.throwing("ModLoader", "getPrivateValue", illegalaccessexception);
             ThrowException("An impossible error has occured!", illegalaccessexception);
@@ -414,7 +405,7 @@ public final class ModLoader
     }
 
     public static Object getPrivateValue(Class class1, Object obj, String s)
-        throws IllegalArgumentException, SecurityException, NoSuchFieldException
+    throws IllegalArgumentException, SecurityException, NoSuchFieldException
     {
         try
         {
@@ -422,7 +413,7 @@ public final class ModLoader
             field.setAccessible(true);
             return field.get(obj);
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             logger.throwing("ModLoader", "getPrivateValue", illegalaccessexception);
             ThrowException("An impossible error has occured!", illegalaccessexception);
@@ -442,9 +433,9 @@ public final class ModLoader
 
     private static int getUniqueItemSpriteIndex()
     {
-        for(; itemSpriteIndex < usedItemSprites.length; itemSpriteIndex++)
+        for (; itemSpriteIndex < usedItemSprites.length; itemSpriteIndex++)
         {
-            if(!usedItemSprites[itemSpriteIndex])
+            if (!usedItemSprites[itemSpriteIndex])
             {
                 usedItemSprites[itemSpriteIndex] = true;
                 itemSpritesLeft--;
@@ -460,14 +451,15 @@ public final class ModLoader
 
     public static int getUniqueSpriteIndex(String s)
     {
-        if(s.equals("/gui/items.png"))
+        if (s.equals("/gui/items.png"))
         {
             return getUniqueItemSpriteIndex();
         }
-        if(s.equals("/terrain.png"))
+        if (s.equals("/terrain.png"))
         {
             return getUniqueTerrainSpriteIndex();
-        } else
+        }
+        else
         {
             Exception exception = new Exception((new StringBuilder("No registry for this texture: ")).append(s).toString());
             logger.throwing("ModLoader", "getUniqueItemSpriteIndex", exception);
@@ -478,9 +470,9 @@ public final class ModLoader
 
     private static int getUniqueTerrainSpriteIndex()
     {
-        for(; terrainSpriteIndex < usedTerrainSprites.length; terrainSpriteIndex++)
+        for (; terrainSpriteIndex < usedTerrainSprites.length; terrainSpriteIndex++)
         {
-            if(!usedTerrainSprites[terrainSpriteIndex])
+            if (!usedTerrainSprites[terrainSpriteIndex])
             {
                 usedTerrainSprites[terrainSpriteIndex] = true;
                 terrainSpritesLeft--;
@@ -499,15 +491,15 @@ public final class ModLoader
         hasInit = true;
         String s = "1111111111111111111111111111111111111101111111011111111111111001111111111111111111111011111010111111100110000011111110000000001111111001100000110000000100000011000000010000001100000000000000110000000000000000000000000000000000000000000000001100000000000000";
         String s1 = "1111111111111111111111111111110111111111111111111111110111111111111111111111000111111011111111111111001111000000111111111111100011111111000010001111011110000000111111000000000011111100000000001111000000000111111000000000001101000000000001111111111111000011";
-        for(int i = 0; i < 256; i++)
+        for (int i = 0; i < 256; i++)
         {
             usedItemSprites[i] = s.charAt(i) == '1';
-            if(!usedItemSprites[i])
+            if (!usedItemSprites[i])
             {
                 itemSpritesLeft++;
             }
             usedTerrainSprites[i] = s1.charAt(i) == '1';
-            if(!usedTerrainSprites[i])
+            if (!usedTerrainSprites[i])
             {
                 terrainSpritesLeft++;
             }
@@ -520,15 +512,15 @@ public final class ModLoader
             field_modifiers.setAccessible(true);
             Field afield[] = (net.minecraft.src.BiomeGenBase.class).getDeclaredFields();
             LinkedList linkedlist = new LinkedList();
-            for(int j = 0; j < afield.length; j++)
+            for (int j = 0; j < afield.length; j++)
             {
                 Class class1 = afield[j].getType();
-                if((afield[j].getModifiers() & 8) == 0 || !class1.isAssignableFrom(net.minecraft.src.BiomeGenBase.class))
+                if ((afield[j].getModifiers() & 8) == 0 || !class1.isAssignableFrom(net.minecraft.src.BiomeGenBase.class))
                 {
                     continue;
                 }
                 BiomeGenBase biomegenbase = (BiomeGenBase)afield[j].get(null);
-                if(!(biomegenbase instanceof BiomeGenHell))
+                if (!(biomegenbase instanceof BiomeGenHell))
                 {
                     linkedlist.add(biomegenbase);
                 }
@@ -537,56 +529,60 @@ public final class ModLoader
             standardBiomes = (BiomeGenBase[])linkedlist.toArray(new BiomeGenBase[0]);
             try
             {
-                method_RegisterTileEntity = (net.minecraft.src.TileEntity.class).getDeclaredMethod("a", new Class[] {
-                    java.lang.Class.class, java.lang.String.class
-                });
+                method_RegisterTileEntity = (net.minecraft.src.TileEntity.class).getDeclaredMethod("a", new Class[]
+                        {
+                            java.lang.Class.class, java.lang.String.class
+                        });
             }
-            catch(NoSuchMethodException nosuchmethodexception1)
+            catch (NoSuchMethodException nosuchmethodexception1)
             {
-                method_RegisterTileEntity = (net.minecraft.src.TileEntity.class).getDeclaredMethod("addMapping", new Class[] {
-                    java.lang.Class.class, java.lang.String.class
-                });
+                method_RegisterTileEntity = (net.minecraft.src.TileEntity.class).getDeclaredMethod("addMapping", new Class[]
+                        {
+                            java.lang.Class.class, java.lang.String.class
+                        });
             }
             method_RegisterTileEntity.setAccessible(true);
             try
             {
-                method_RegisterEntityID = (net.minecraft.src.EntityList.class).getDeclaredMethod("a", new Class[] {
-                    java.lang.Class.class, java.lang.String.class, Integer.TYPE
-                });
+                method_RegisterEntityID = (net.minecraft.src.EntityList.class).getDeclaredMethod("a", new Class[]
+                        {
+                            java.lang.Class.class, java.lang.String.class, Integer.TYPE
+                        });
             }
-            catch(NoSuchMethodException nosuchmethodexception2)
+            catch (NoSuchMethodException nosuchmethodexception2)
             {
-                method_RegisterEntityID = (net.minecraft.src.EntityList.class).getDeclaredMethod("addMapping", new Class[] {
-                    java.lang.Class.class, java.lang.String.class, Integer.TYPE
-                });
+                method_RegisterEntityID = (net.minecraft.src.EntityList.class).getDeclaredMethod("addMapping", new Class[]
+                        {
+                            java.lang.Class.class, java.lang.String.class, Integer.TYPE
+                        });
             }
             method_RegisterEntityID.setAccessible(true);
         }
-        catch(SecurityException securityexception)
+        catch (SecurityException securityexception)
         {
             logger.throwing("ModLoader", "init", securityexception);
             ThrowException(securityexception);
             throw new RuntimeException(securityexception);
         }
-        catch(NoSuchFieldException nosuchfieldexception)
+        catch (NoSuchFieldException nosuchfieldexception)
         {
             logger.throwing("ModLoader", "init", nosuchfieldexception);
             ThrowException(nosuchfieldexception);
             throw new RuntimeException(nosuchfieldexception);
         }
-        catch(NoSuchMethodException nosuchmethodexception)
+        catch (NoSuchMethodException nosuchmethodexception)
         {
             logger.throwing("ModLoader", "init", nosuchmethodexception);
             ThrowException(nosuchmethodexception);
             throw new RuntimeException(nosuchmethodexception);
         }
-        catch(IllegalArgumentException illegalargumentexception)
+        catch (IllegalArgumentException illegalargumentexception)
         {
             logger.throwing("ModLoader", "init", illegalargumentexception);
             ThrowException(illegalargumentexception);
             throw new RuntimeException(illegalargumentexception);
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             logger.throwing("ModLoader", "init", illegalaccessexception);
             ThrowException(illegalaccessexception);
@@ -598,31 +594,32 @@ public final class ModLoader
             {
                 loadConfig();
             }
-            catch(IOException ioexception)
+            catch (IOException ioexception)
             {
-                if(ioexception.getMessage().contains("No such file or directory"))
+                if (ioexception.getMessage().contains("No such file or directory"))
                 {
                     String s2 = "Error loading ModLoader config. Check the common problems section in the ModLoaderMP thread.";
                     ThrowException(new RuntimeException(s2, ioexception));
-                } else
+                }
+                else
                 {
                     throw ioexception;
                 }
             }
-            if(props.containsKey("loggingLevel"))
+            if (props.containsKey("loggingLevel"))
             {
                 cfgLoggingLevel = Level.parse(props.getProperty("loggingLevel"));
             }
             logger.setLevel(cfgLoggingLevel);
-            if((logfile.exists() || logfile.createNewFile()) && logfile.canWrite() && logHandler == null)
+            if ((logfile.exists() || logfile.createNewFile()) && logfile.canWrite() && logHandler == null)
             {
                 logHandler = new FileHandler(logfile.getPath());
                 logHandler.setFormatter(new SimpleFormatter());
                 logger.addHandler(logHandler);
             }
-            logger.fine("ModLoader Server 1.0.0 Initializing...");
-            System.out.println("ModLoader Server 1.0.0 Initializing...");
-            MinecraftServer.logger.info("ModLoader Server 1.0.0 Initializing...");
+            logger.fine("ModLoader Server 1.1 Initializing...");
+            System.out.println("ModLoader Server 1.1 Initializing...");
+            MinecraftServer.logger.info("ModLoader Server 1.1 Initializing...");
             File file = new File((net.minecraft.src.ModLoader.class).getProtectionDomain().getCodeSource().getLocation().toURI());
             modDir.mkdirs();
             readFromModFolder(modDir);
@@ -632,25 +629,26 @@ public final class ModLoader
             Iterator iterator = modList.iterator();
             do
             {
-                if(!iterator.hasNext())
+                if (!iterator.hasNext())
                 {
                     break;
                 }
                 BaseMod basemod = (BaseMod)iterator.next();
                 basemod.ModsLoaded();
-                if(!props.containsKey(basemod.getClass().getName()))
+                if (!props.containsKey(basemod.getClass().getName()))
                 {
                     props.setProperty(basemod.getClass().getName(), "on");
                 }
-            } while(true);
+            }
+            while (true);
             initStats();
             saveConfig();
         }
-        catch(Throwable throwable)
+        catch (Throwable throwable)
         {
             logger.throwing("ModLoader", "init", throwable);
             ThrowException("ModLoader has failed to initialize.", throwable);
-            if(logHandler != null)
+            if (logHandler != null)
             {
                 logHandler.close();
             }
@@ -660,49 +658,52 @@ public final class ModLoader
 
     private static void initStats()
     {
-        for(int i = 0; i < Block.blocksList.length; i++)
+        for (int i = 0; i < Block.blocksList.length; i++)
         {
-            if(!StatList.oneShotStats.containsKey(Integer.valueOf(0x1000000 + i)) && Block.blocksList[i] != null && Block.blocksList[i].getEnableStats())
+            if (!StatList.oneShotStats.containsKey(Integer.valueOf(0x1000000 + i)) && Block.blocksList[i] != null && Block.blocksList[i].getEnableStats())
             {
-                String s = StatCollector.translateToLocalFormatted("stat.mineBlock", new Object[] {
-                    Block.blocksList[i].translateBlockName()
-                });
+                String s = StatCollector.translateToLocalFormatted("stat.mineBlock", new Object[]
+                        {
+                            Block.blocksList[i].translateBlockName()
+                        });
                 StatList.mineBlockStatArray[i] = (new StatCrafting(0x1000000 + i, s, i)).registerStat();
                 StatList.objectMineStats.add(StatList.mineBlockStatArray[i]);
             }
         }
 
-        for(int j = 0; j < Item.itemsList.length; j++)
+        for (int j = 0; j < Item.itemsList.length; j++)
         {
-            if(!StatList.oneShotStats.containsKey(Integer.valueOf(0x1020000 + j)) && Item.itemsList[j] != null)
+            if (!StatList.oneShotStats.containsKey(Integer.valueOf(0x1020000 + j)) && Item.itemsList[j] != null)
             {
-                String s1 = StatCollector.translateToLocalFormatted("stat.useItem", new Object[] {
-                    Item.itemsList[j].getStatName()
-                });
+                String s1 = StatCollector.translateToLocalFormatted("stat.useItem", new Object[]
+                        {
+                            Item.itemsList[j].getStatName()
+                        });
                 StatList.objectUseStats[j] = (new StatCrafting(0x1020000 + j, s1, j)).registerStat();
-                if(j >= Block.blocksList.length)
+                if (j >= Block.blocksList.length)
                 {
                     StatList.itemStats.add(StatList.objectUseStats[j]);
                 }
             }
-            if(!StatList.oneShotStats.containsKey(Integer.valueOf(0x1030000 + j)) && Item.itemsList[j] != null && Item.itemsList[j].isDamageable())
+            if (!StatList.oneShotStats.containsKey(Integer.valueOf(0x1030000 + j)) && Item.itemsList[j] != null && Item.itemsList[j].isDamageable())
             {
-                String s2 = StatCollector.translateToLocalFormatted("stat.breakItem", new Object[] {
-                    Item.itemsList[j].getStatName()
-                });
+                String s2 = StatCollector.translateToLocalFormatted("stat.breakItem", new Object[]
+                        {
+                            Item.itemsList[j].getStatName()
+                        });
                 StatList.objectBreakStats[j] = (new StatCrafting(0x1030000 + j, s2, j)).registerStat();
             }
         }
 
         HashSet hashset = new HashSet();
         Object obj;
-        for(Iterator iterator = CraftingManager.getInstance().getRecipeList().iterator(); iterator.hasNext(); hashset.add(Integer.valueOf(((IRecipe)obj).getRecipeOutput().itemID)))
+        for (Iterator iterator = CraftingManager.getInstance().getRecipeList().iterator(); iterator.hasNext(); hashset.add(Integer.valueOf(((IRecipe)obj).getRecipeOutput().itemID)))
         {
             obj = iterator.next();
         }
 
         Object obj1;
-        for(Iterator iterator1 = FurnaceRecipes.smelting().getSmeltingList().values().iterator(); iterator1.hasNext(); hashset.add(Integer.valueOf(((ItemStack)obj1).itemID)))
+        for (Iterator iterator1 = FurnaceRecipes.smelting().getSmeltingList().values().iterator(); iterator1.hasNext(); hashset.add(Integer.valueOf(((ItemStack)obj1).itemID)))
         {
             obj1 = iterator1.next();
         }
@@ -710,35 +711,37 @@ public final class ModLoader
         Iterator iterator2 = hashset.iterator();
         do
         {
-            if(!iterator2.hasNext())
+            if (!iterator2.hasNext())
             {
                 break;
             }
             int k = ((Integer)iterator2.next()).intValue();
-            if(!StatList.oneShotStats.containsKey(Integer.valueOf(0x1010000 + k)) && Item.itemsList[k] != null)
+            if (!StatList.oneShotStats.containsKey(Integer.valueOf(0x1010000 + k)) && Item.itemsList[k] != null)
             {
-                String s3 = StatCollector.translateToLocalFormatted("stat.craftItem", new Object[] {
-                    Item.itemsList[k].getStatName()
-                });
+                String s3 = StatCollector.translateToLocalFormatted("stat.craftItem", new Object[]
+                        {
+                            Item.itemsList[k].getStatName()
+                        });
                 StatList.objectCraftStats[k] = (new StatCrafting(0x1010000 + k, s3, k)).registerStat();
             }
-        } while(true);
+        }
+        while (true);
     }
 
     public static boolean isModLoaded(String s)
     {
-label0:
+        label0:
         {
             Class class1 = null;
             try
             {
                 class1 = Class.forName(s, false, (net.minecraft.server.MinecraftServer.class).getClassLoader());
             }
-            catch(ClassNotFoundException classnotfoundexception)
+            catch (ClassNotFoundException classnotfoundexception)
             {
                 return false;
             }
-            if(class1 == null)
+            if (class1 == null)
             {
                 break label0;
             }
@@ -746,26 +749,27 @@ label0:
             BaseMod basemod;
             do
             {
-                if(!iterator.hasNext())
+                if (!iterator.hasNext())
                 {
                     break label0;
                 }
                 basemod = (BaseMod)iterator.next();
-            } while(!class1.isInstance(basemod));
+            }
+            while (!class1.isInstance(basemod));
             return true;
         }
         return false;
     }
 
     public static void loadConfig()
-        throws IOException
+    throws IOException
     {
         cfgdir.mkdir();
-        if(!cfgfile.exists() && !cfgfile.createNewFile())
+        if (!cfgfile.exists() && !cfgfile.createNewFile())
         {
             return;
         }
-        if(cfgfile.canRead())
+        if (cfgfile.canRead())
         {
             FileInputStream fileinputstream = new FileInputStream(cfgfile);
             props.load(fileinputstream);
@@ -775,35 +779,36 @@ label0:
 
     public static void OnTick(MinecraftServer minecraftserver)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
             logger.fine("Initialized");
         }
         long l = 0L;
-        if(minecraftserver.worldMngr != null && minecraftserver.worldMngr[0] != null)
+        if (minecraftserver.worldMngr != null && minecraftserver.worldMngr[0] != null)
         {
             l = minecraftserver.worldMngr[0].getWorldTime();
             Iterator iterator = inGameHooks.entrySet().iterator();
             do
             {
-                if(!iterator.hasNext())
+                if (!iterator.hasNext())
                 {
                     break;
                 }
                 java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
-                if(clock != l || !((Boolean)entry.getValue()).booleanValue())
+                if (clock != l || !((Boolean)entry.getValue()).booleanValue())
                 {
                     ((BaseMod)entry.getKey()).OnTickInGame(minecraftserver);
                 }
-            } while(true);
+            }
+            while (true);
         }
         clock = l;
     }
 
     public static void PopulateChunk(IChunkProvider ichunkprovider, int i, int j, World world)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
             logger.fine("Initialized");
@@ -811,50 +816,53 @@ label0:
         Iterator iterator = modList.iterator();
         do
         {
-            if(!iterator.hasNext())
+            if (!iterator.hasNext())
             {
                 break;
             }
             BaseMod basemod = (BaseMod)iterator.next();
-            if(ichunkprovider instanceof ChunkProviderGenerate)
+            if (ichunkprovider instanceof ChunkProviderGenerate)
             {
                 basemod.GenerateSurface(world, world.rand, i, j);
-            } else
-            if(ichunkprovider instanceof ChunkProviderHell)
+            }
+            else if (ichunkprovider instanceof ChunkProviderHell)
             {
                 basemod.GenerateNether(world, world.rand, i, j);
             }
-        } while(true);
+        }
+        while (true);
     }
 
     private static void readFromModFolder(File file)
-        throws IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException
+    throws IOException, IllegalArgumentException, IllegalAccessException, InvocationTargetException, SecurityException, NoSuchMethodException
     {
         ClassLoader classloader = (net.minecraft.server.MinecraftServer.class).getClassLoader();
-        Method method = (java.net.URLClassLoader.class).getDeclaredMethod("addURL", new Class[] {
-            java.net.URL.class
-        });
+        Method method = (java.net.URLClassLoader.class).getDeclaredMethod("addURL", new Class[]
+                {
+                    java.net.URL.class
+                });
         method.setAccessible(true);
-        if(!file.isDirectory())
+        if (!file.isDirectory())
         {
             throw new IllegalArgumentException("folder must be a Directory.");
         }
         File afile[] = file.listFiles();
-        for(int i = 0; i < afile.length; i++)
+        for (int i = 0; i < afile.length; i++)
         {
             File file1 = afile[i];
-            if(!file1.isDirectory() && (!file1.isFile() || !file1.getName().endsWith(".jar") && !file1.getName().endsWith(".zip")))
+            if (!file1.isDirectory() && (!file1.isFile() || !file1.getName().endsWith(".jar") && !file1.getName().endsWith(".zip")))
             {
                 continue;
             }
-            if(classloader instanceof URLClassLoader)
+            if (classloader instanceof URLClassLoader)
             {
-                method.invoke(classloader, new Object[] {
-                    file1.toURI().toURL()
-                });
+                method.invoke(classloader, new Object[]
+                        {
+                            file1.toURI().toURL()
+                        });
             }
             logger.finer((new StringBuilder("Adding mods from ")).append(file1.getCanonicalPath()).toString());
-            if(file1.isFile())
+            if (file1.isFile())
             {
                 logger.finer("Zip found.");
                 FileInputStream fileinputstream = new FileInputStream(file1);
@@ -862,55 +870,54 @@ label0:
                 do
                 {
                     ZipEntry zipentry = zipinputstream.getNextEntry();
-                    if(zipentry == null)
+                    if (zipentry == null)
                     {
                         break;
                     }
                     String s1 = zipentry.getName();
-                    if(!zipentry.isDirectory() && s1.startsWith("mod_") && s1.endsWith(".class"))
+                    if (!zipentry.isDirectory() && s1.startsWith("mod_") && s1.endsWith(".class"))
                     {
                         addMod(classloader, s1);
                     }
-                } while(true);
+                }
+                while (true);
                 zipinputstream.close();
                 fileinputstream.close();
                 continue;
             }
-            if(!file1.isDirectory())
+            if (!file1.isDirectory())
             {
                 continue;
             }
             Package package1 = (net.minecraft.src.ModLoader.class).getPackage();
-            if(package1 != null)
+            if (package1 != null)
             {
                 String s = package1.getName().replace('.', File.separatorChar);
                 file1 = new File(file1, s);
             }
             logger.finer("Directory found.");
             File afile1[] = file1.listFiles();
-            if(afile1 == null)
+            if (afile1 == null)
             {
                 continue;
             }
-            for(int j = 0; j < afile1.length; j++)
+            for (int j = 0; j < afile1.length; j++)
             {
                 String s2 = afile1[j].getName();
-                if(afile1[j].isFile() && s2.startsWith("mod_") && s2.endsWith(".class"))
+                if (afile1[j].isFile() && s2.startsWith("mod_") && s2.endsWith(".class"))
                 {
                     addMod(classloader, s2);
                 }
             }
-
         }
-
     }
 
     private static void readFromClassPath(File file)
-        throws FileNotFoundException, IOException
+    throws FileNotFoundException, IOException
     {
         logger.finer((new StringBuilder("Adding mods from ")).append(file.getCanonicalPath()).toString());
         ClassLoader classloader = (net.minecraft.src.ModLoader.class).getClassLoader();
-        if(file.isFile() && (file.getName().endsWith(".jar") || file.getName().endsWith(".zip")))
+        if (file.isFile() && (file.getName().endsWith(".jar") || file.getName().endsWith(".zip")))
         {
             logger.finer("Zip found.");
             FileInputStream fileinputstream = new FileInputStream(file);
@@ -918,39 +925,39 @@ label0:
             do
             {
                 ZipEntry zipentry = zipinputstream.getNextEntry();
-                if(zipentry == null)
+                if (zipentry == null)
                 {
                     break;
                 }
                 String s1 = zipentry.getName();
-                if(!zipentry.isDirectory() && s1.startsWith("mod_") && s1.endsWith(".class"))
+                if (!zipentry.isDirectory() && s1.startsWith("mod_") && s1.endsWith(".class"))
                 {
                     addMod(classloader, s1);
                 }
-            } while(true);
+            }
+            while (true);
             fileinputstream.close();
-        } else
-        if(file.isDirectory())
+        }
+        else if (file.isDirectory())
         {
             Package package1 = (net.minecraft.src.ModLoader.class).getPackage();
-            if(package1 != null)
+            if (package1 != null)
             {
                 String s = package1.getName().replace('.', File.separatorChar);
                 file = new File(file, s);
             }
             logger.finer("Directory found.");
             File afile[] = file.listFiles();
-            if(afile != null)
+            if (afile != null)
             {
-                for(int i = 0; i < afile.length; i++)
+                for (int i = 0; i < afile.length; i++)
                 {
                     String s2 = afile[i].getName();
-                    if(afile[i].isFile() && s2.startsWith("mod_") && s2.endsWith(".class"))
+                    if (afile[i].isFile() && s2.startsWith("mod_") && s2.endsWith(".class"))
                     {
                         addMod(classloader, s2);
                     }
                 }
-
             }
         }
     }
@@ -964,54 +971,57 @@ label0:
     {
         try
         {
-            if(block == null)
+            if (block == null)
             {
                 throw new IllegalArgumentException("block parameter cannot be null.");
             }
             int i = block.blockID;
             ItemBlock itemblock = null;
-            if(class1 != null)
+            if (class1 != null)
             {
-                itemblock = (ItemBlock)class1.getConstructor(new Class[] {
-                    Integer.TYPE
-                }).newInstance(new Object[] {
-                    Integer.valueOf(i - 256)
-                });
-            } else
+                itemblock = (ItemBlock)class1.getConstructor(new Class[]
+                        {
+                            Integer.TYPE
+                        }).newInstance(new Object[]
+                                {
+                                    Integer.valueOf(i - 256)
+                                });
+            }
+            else
             {
                 itemblock = new ItemBlock(i - 256);
             }
-            if(Block.blocksList[i] != null && Item.itemsList[i] == null)
+            if (Block.blocksList[i] != null && Item.itemsList[i] == null)
             {
                 Item.itemsList[i] = itemblock;
             }
         }
-        catch(IllegalArgumentException illegalargumentexception)
+        catch (IllegalArgumentException illegalargumentexception)
         {
             logger.throwing("ModLoader", "RegisterBlock", illegalargumentexception);
             ThrowException(illegalargumentexception);
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             logger.throwing("ModLoader", "RegisterBlock", illegalaccessexception);
             ThrowException(illegalaccessexception);
         }
-        catch(SecurityException securityexception)
+        catch (SecurityException securityexception)
         {
             logger.throwing("ModLoader", "RegisterBlock", securityexception);
             ThrowException(securityexception);
         }
-        catch(InstantiationException instantiationexception)
+        catch (InstantiationException instantiationexception)
         {
             logger.throwing("ModLoader", "RegisterBlock", instantiationexception);
             ThrowException(instantiationexception);
         }
-        catch(InvocationTargetException invocationtargetexception)
+        catch (InvocationTargetException invocationtargetexception)
         {
             logger.throwing("ModLoader", "RegisterBlock", invocationtargetexception);
             ThrowException(invocationtargetexception);
         }
-        catch(NoSuchMethodException nosuchmethodexception)
+        catch (NoSuchMethodException nosuchmethodexception)
         {
             logger.throwing("ModLoader", "RegisterBlock", nosuchmethodexception);
             ThrowException(nosuchmethodexception);
@@ -1022,21 +1032,22 @@ label0:
     {
         try
         {
-            method_RegisterEntityID.invoke(null, new Object[] {
-                class1, s, Integer.valueOf(i)
-            });
+            method_RegisterEntityID.invoke(null, new Object[]
+                    {
+                        class1, s, Integer.valueOf(i)
+                    });
         }
-        catch(IllegalArgumentException illegalargumentexception)
+        catch (IllegalArgumentException illegalargumentexception)
         {
             logger.throwing("ModLoader", "RegisterEntityID", illegalargumentexception);
             ThrowException(illegalargumentexception);
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             logger.throwing("ModLoader", "RegisterEntityID", illegalaccessexception);
             ThrowException(illegalaccessexception);
         }
-        catch(InvocationTargetException invocationtargetexception)
+        catch (InvocationTargetException invocationtargetexception)
         {
             logger.throwing("ModLoader", "RegisterEntityID", invocationtargetexception);
             ThrowException(invocationtargetexception);
@@ -1047,21 +1058,22 @@ label0:
     {
         try
         {
-            method_RegisterTileEntity.invoke(null, new Object[] {
-                class1, s
-            });
+            method_RegisterTileEntity.invoke(null, new Object[]
+                    {
+                        class1, s
+                    });
         }
-        catch(IllegalArgumentException illegalargumentexception)
+        catch (IllegalArgumentException illegalargumentexception)
         {
             logger.throwing("ModLoader", "RegisterTileEntity", illegalargumentexception);
             ThrowException(illegalargumentexception);
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             logger.throwing("ModLoader", "RegisterTileEntity", illegalaccessexception);
             ThrowException(illegalaccessexception);
         }
-        catch(InvocationTargetException invocationtargetexception)
+        catch (InvocationTargetException invocationtargetexception)
         {
             logger.throwing("ModLoader", "RegisterTileEntity", invocationtargetexception);
             ThrowException(invocationtargetexception);
@@ -1075,23 +1087,23 @@ label0:
 
     public static void RemoveSpawn(Class class1, EnumCreatureType enumcreaturetype, BiomeGenBase abiomegenbase[])
     {
-        if(class1 == null)
+        if (class1 == null)
         {
             throw new IllegalArgumentException("entityClass cannot be null");
         }
-        if(enumcreaturetype == null)
+        if (enumcreaturetype == null)
         {
             throw new IllegalArgumentException("spawnList cannot be null");
         }
-        if(abiomegenbase == null)
+        if (abiomegenbase == null)
         {
             abiomegenbase = standardBiomes;
         }
-label0:
-        for(int i = 0; i < abiomegenbase.length; i++)
+        label0:
+        for (int i = 0; i < abiomegenbase.length; i++)
         {
             List list = abiomegenbase[i].getSpawnableList(enumcreaturetype);
-            if(list == null)
+            if (list == null)
             {
                 continue;
             }
@@ -1099,15 +1111,15 @@ label0:
             SpawnListEntry spawnlistentry;
             do
             {
-                if(!iterator.hasNext())
+                if (!iterator.hasNext())
                 {
                     continue label0;
                 }
                 spawnlistentry = (SpawnListEntry)iterator.next();
-            } while(spawnlistentry.entityClass != class1);
+            }
+            while (spawnlistentry.entityClass != class1);
             list.remove(spawnlistentry);
         }
-
     }
 
     public static void RemoveSpawn(String s, EnumCreatureType enumcreaturetype)
@@ -1118,21 +1130,21 @@ label0:
     public static void RemoveSpawn(String s, EnumCreatureType enumcreaturetype, BiomeGenBase abiomegenbase[])
     {
         Class class1 = (Class)classMap.get(s);
-        if(class1 != null && (net.minecraft.src.EntityLiving.class).isAssignableFrom(class1))
+        if (class1 != null && (net.minecraft.src.EntityLiving.class).isAssignableFrom(class1))
         {
             RemoveSpawn(class1, enumcreaturetype, abiomegenbase);
         }
     }
 
     public static void saveConfig()
-        throws IOException
+    throws IOException
     {
         cfgdir.mkdir();
-        if(!cfgfile.exists() && !cfgfile.createNewFile())
+        if (!cfgfile.exists() && !cfgfile.createNewFile())
         {
             return;
         }
-        if(cfgfile.canWrite())
+        if (cfgfile.canWrite())
         {
             FileOutputStream fileoutputstream = new FileOutputStream(cfgfile);
             props.store(fileoutputstream, "ModLoader Config");
@@ -1142,30 +1154,31 @@ label0:
 
     public static void SetInGameHook(BaseMod basemod, boolean flag, boolean flag1)
     {
-        if(flag)
+        if (flag)
         {
             inGameHooks.put(basemod, Boolean.valueOf(flag1));
-        } else
+        }
+        else
         {
             inGameHooks.remove(basemod);
         }
     }
 
     public static void setPrivateValue(Class class1, Object obj, int i, Object obj1)
-        throws IllegalArgumentException, SecurityException, NoSuchFieldException
+    throws IllegalArgumentException, SecurityException, NoSuchFieldException
     {
         try
         {
             Field field = class1.getDeclaredFields()[i];
             field.setAccessible(true);
             int j = field_modifiers.getInt(field);
-            if((j & 0x10) != 0)
+            if ((j & 0x10) != 0)
             {
                 field_modifiers.setInt(field, j & 0xffffffef);
             }
             field.set(obj, obj1);
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             logger.throwing("ModLoader", "setPrivateValue", illegalaccessexception);
             ThrowException("An impossible error has occured!", illegalaccessexception);
@@ -1173,20 +1186,20 @@ label0:
     }
 
     public static void setPrivateValue(Class class1, Object obj, String s, Object obj1)
-        throws IllegalArgumentException, SecurityException, NoSuchFieldException
+    throws IllegalArgumentException, SecurityException, NoSuchFieldException
     {
         try
         {
             Field field = class1.getDeclaredField(s);
             int i = field_modifiers.getInt(field);
-            if((i & 0x10) != 0)
+            if ((i & 0x10) != 0)
             {
                 field_modifiers.setInt(field, i & 0xffffffef);
             }
             field.setAccessible(true);
             field.set(obj, obj1);
         }
-        catch(IllegalAccessException illegalaccessexception)
+        catch (IllegalAccessException illegalaccessexception)
         {
             logger.throwing("ModLoader", "setPrivateValue", illegalaccessexception);
             ThrowException("An impossible error has occured!", illegalaccessexception);
@@ -1196,31 +1209,28 @@ label0:
     public static void TakenFromCrafting(EntityPlayer entityplayer, ItemStack itemstack)
     {
         BaseMod basemod;
-        for(Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.TakenFromCrafting(entityplayer, itemstack))
+        for (Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.TakenFromCrafting(entityplayer, itemstack))
         {
             basemod = (BaseMod)iterator.next();
         }
-
     }
 
     public static void TakenFromFurnace(EntityPlayer entityplayer, ItemStack itemstack)
     {
         BaseMod basemod;
-        for(Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.TakenFromFurnace(entityplayer, itemstack))
+        for (Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.TakenFromFurnace(entityplayer, itemstack))
         {
             basemod = (BaseMod)iterator.next();
         }
-
     }
 
     public static void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
     {
         BaseMod basemod;
-        for(Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.OnItemPickup(entityplayer, itemstack))
+        for (Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.OnItemPickup(entityplayer, itemstack))
         {
             basemod = (BaseMod)iterator.next();
         }
-
     }
 
     public static void ThrowException(String s, Throwable throwable)
@@ -1252,7 +1262,7 @@ label0:
             logfile = new File(s, "ModLoader.txt");
             modDir = new File(s, "/mods/");
         }
-        catch(URISyntaxException urisyntaxexception)
+        catch (URISyntaxException urisyntaxexception)
         {
             getLogger().throwing("ModLoader", "Init", urisyntaxexception);
             ThrowException("ModLoader", urisyntaxexception);
@@ -1262,30 +1272,30 @@ label0:
         {
             try
             {
-                method_getNextWindowId = (net.minecraft.src.EntityPlayerMP.class).getDeclaredMethod("aH", (Class[])null);
+                method_getNextWindowId = (net.minecraft.src.EntityPlayerMP.class).getDeclaredMethod("aS", (Class[])null);
             }
-            catch(NoSuchMethodException nosuchmethodexception)
+            catch (NoSuchMethodException nosuchmethodexception)
             {
                 method_getNextWindowId = (net.minecraft.src.EntityPlayerMP.class).getDeclaredMethod("getNextWidowId", (Class[])null);
             }
             method_getNextWindowId.setAccessible(true);
             try
             {
-                field_currentWindowId = (net.minecraft.src.EntityPlayerMP.class).getDeclaredField("ci");
+                field_currentWindowId = (net.minecraft.src.EntityPlayerMP.class).getDeclaredField("cl");
             }
-            catch(NoSuchFieldException nosuchfieldexception)
+            catch (NoSuchFieldException nosuchfieldexception)
             {
                 field_currentWindowId = (net.minecraft.src.EntityPlayerMP.class).getDeclaredField("currentWindowId");
             }
             field_currentWindowId.setAccessible(true);
         }
-        catch(NoSuchFieldException nosuchfieldexception1)
+        catch (NoSuchFieldException nosuchfieldexception1)
         {
             getLogger().throwing("ModLoader", "Init", nosuchfieldexception1);
             ThrowException("ModLoader", nosuchfieldexception1);
             return;
         }
-        catch(NoSuchMethodException nosuchmethodexception1)
+        catch (NoSuchMethodException nosuchmethodexception1)
         {
             getLogger().throwing("ModLoader", "Init", nosuchmethodexception1);
             ThrowException("ModLoader", nosuchmethodexception1);
@@ -1296,11 +1306,11 @@ label0:
 
     public static void OpenGUI(EntityPlayer entityplayer, int i, IInventory iinventory, Container container)
     {
-        if(!hasInit)
+        if (!hasInit)
         {
             init();
         }
-        if(entityplayer instanceof EntityPlayerMP)
+        if (entityplayer instanceof EntityPlayerMP)
         {
             EntityPlayerMP entityplayermp = (EntityPlayerMP)entityplayer;
             try
@@ -1312,12 +1322,12 @@ label0:
                 entityplayermp.currentCraftingInventory.windowId = j;
                 entityplayermp.currentCraftingInventory.onCraftGuiOpened(entityplayermp);
             }
-            catch(InvocationTargetException invocationtargetexception)
+            catch (InvocationTargetException invocationtargetexception)
             {
                 getLogger().throwing("ModLoaderMultiplayer", "OpenModGUI", invocationtargetexception);
                 ThrowException("ModLoaderMultiplayer", invocationtargetexception);
             }
-            catch(IllegalAccessException illegalaccessexception)
+            catch (IllegalAccessException illegalaccessexception)
             {
                 getLogger().throwing("ModLoaderMultiplayer", "OpenModGUI", illegalaccessexception);
                 ThrowException("ModLoaderMultiplayer", illegalaccessexception);
@@ -1325,7 +1335,7 @@ label0:
         }
     }
 
-    static 
+    static
     {
         cfgLoggingLevel = Level.FINER;
     }

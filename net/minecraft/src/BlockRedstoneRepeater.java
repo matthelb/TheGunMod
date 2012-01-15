@@ -1,22 +1,15 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            Block, Material, World, IBlockAccess, 
-//            EntityLiving, MathHelper, Item, EntityPlayer
-
 public class BlockRedstoneRepeater extends Block
 {
-
-    public static final double repeaterTorchOffset[] = {
+    public static final double repeaterTorchOffset[] =
+    {
         -0.0625D, 0.0625D, 0.1875D, 0.3125D
     };
-    private static final int repeaterState[] = {
+    private static final int repeaterState[] =
+    {
         1, 2, 3, 4
     };
     private final boolean isRepeaterPowered;
@@ -35,10 +28,11 @@ public class BlockRedstoneRepeater extends Block
 
     public boolean canPlaceBlockAt(World world, int i, int j, int k)
     {
-        if(!world.isBlockNormalCube(i, j - 1, k))
+        if (!world.isBlockNormalCube(i, j - 1, k))
         {
             return false;
-        } else
+        }
+        else
         {
             return super.canPlaceBlockAt(world, i, j, k);
         }
@@ -46,10 +40,11 @@ public class BlockRedstoneRepeater extends Block
 
     public boolean canBlockStay(World world, int i, int j, int k)
     {
-        if(!world.isBlockNormalCube(i, j - 1, k))
+        if (!world.isBlockNormalCube(i, j - 1, k))
         {
             return false;
-        } else
+        }
+        else
         {
             return super.canBlockStay(world, i, j, k);
         }
@@ -59,14 +54,14 @@ public class BlockRedstoneRepeater extends Block
     {
         int l = world.getBlockMetadata(i, j, k);
         boolean flag = ignoreTick(world, i, j, k, l);
-        if(isRepeaterPowered && !flag)
+        if (isRepeaterPowered && !flag)
         {
             world.setBlockAndMetadataWithNotify(i, j, k, Block.redstoneRepeaterIdle.blockID, l);
-        } else
-        if(!isRepeaterPowered)
+        }
+        else if (!isRepeaterPowered)
         {
             world.setBlockAndMetadataWithNotify(i, j, k, Block.redstoneRepeaterActive.blockID, l);
-            if(!flag)
+            if (!flag)
             {
                 int i1 = (l & 0xc) >> 2;
                 world.scheduleBlockUpdate(i, j, k, Block.redstoneRepeaterActive.blockID, repeaterState[i1] * 2);
@@ -76,14 +71,15 @@ public class BlockRedstoneRepeater extends Block
 
     public int getBlockTextureFromSideAndMetadata(int i, int j)
     {
-        if(i == 0)
+        if (i == 0)
         {
             return !isRepeaterPowered ? 115 : 99;
         }
-        if(i == 1)
+        if (i == 1)
         {
             return !isRepeaterPowered ? 131 : 147;
-        } else
+        }
+        else
         {
             return 5;
         }
@@ -106,20 +102,20 @@ public class BlockRedstoneRepeater extends Block
 
     public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k, int l)
     {
-        if(!isRepeaterPowered)
+        if (!isRepeaterPowered)
         {
             return false;
         }
         int i1 = iblockaccess.getBlockMetadata(i, j, k) & 3;
-        if(i1 == 0 && l == 3)
+        if (i1 == 0 && l == 3)
         {
             return true;
         }
-        if(i1 == 1 && l == 4)
+        if (i1 == 1 && l == 4)
         {
             return true;
         }
-        if(i1 == 2 && l == 2)
+        if (i1 == 2 && l == 2)
         {
             return true;
         }
@@ -128,7 +124,7 @@ public class BlockRedstoneRepeater extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if(!canBlockStay(world, i, j, k))
+        if (!canBlockStay(world, i, j, k))
         {
             dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
@@ -137,11 +133,11 @@ public class BlockRedstoneRepeater extends Block
         int i1 = world.getBlockMetadata(i, j, k);
         boolean flag = ignoreTick(world, i, j, k, i1);
         int j1 = (i1 & 0xc) >> 2;
-        if(isRepeaterPowered && !flag)
+        if (isRepeaterPowered && !flag)
         {
             world.scheduleBlockUpdate(i, j, k, blockID, repeaterState[j1] * 2);
-        } else
-        if(!isRepeaterPowered && flag)
+        }
+        else if (!isRepeaterPowered && flag)
         {
             world.scheduleBlockUpdate(i, j, k, blockID, repeaterState[j1] * 2);
         }
@@ -150,19 +146,19 @@ public class BlockRedstoneRepeater extends Block
     private boolean ignoreTick(World world, int i, int j, int k, int l)
     {
         int i1 = l & 3;
-        switch(i1)
+        switch (i1)
         {
-        case 0: // '\0'
-            return world.isBlockIndirectlyProvidingPowerTo(i, j, k + 1, 3) || world.getBlockId(i, j, k + 1) == Block.redstoneWire.blockID && world.getBlockMetadata(i, j, k + 1) > 0;
+            case 0:
+                return world.isBlockIndirectlyProvidingPowerTo(i, j, k + 1, 3) || world.getBlockId(i, j, k + 1) == Block.redstoneWire.blockID && world.getBlockMetadata(i, j, k + 1) > 0;
 
-        case 2: // '\002'
-            return world.isBlockIndirectlyProvidingPowerTo(i, j, k - 1, 2) || world.getBlockId(i, j, k - 1) == Block.redstoneWire.blockID && world.getBlockMetadata(i, j, k - 1) > 0;
+            case 2:
+                return world.isBlockIndirectlyProvidingPowerTo(i, j, k - 1, 2) || world.getBlockId(i, j, k - 1) == Block.redstoneWire.blockID && world.getBlockMetadata(i, j, k - 1) > 0;
 
-        case 3: // '\003'
-            return world.isBlockIndirectlyProvidingPowerTo(i + 1, j, k, 5) || world.getBlockId(i + 1, j, k) == Block.redstoneWire.blockID && world.getBlockMetadata(i + 1, j, k) > 0;
+            case 3:
+                return world.isBlockIndirectlyProvidingPowerTo(i + 1, j, k, 5) || world.getBlockId(i + 1, j, k) == Block.redstoneWire.blockID && world.getBlockMetadata(i + 1, j, k) > 0;
 
-        case 1: // '\001'
-            return world.isBlockIndirectlyProvidingPowerTo(i - 1, j, k, 4) || world.getBlockId(i - 1, j, k) == Block.redstoneWire.blockID && world.getBlockMetadata(i - 1, j, k) > 0;
+            case 1:
+                return world.isBlockIndirectlyProvidingPowerTo(i - 1, j, k, 4) || world.getBlockId(i - 1, j, k) == Block.redstoneWire.blockID && world.getBlockMetadata(i - 1, j, k) > 0;
         }
         return false;
     }
@@ -178,7 +174,7 @@ public class BlockRedstoneRepeater extends Block
 
     public boolean canProvidePower()
     {
-        return false;
+        return true;
     }
 
     public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving entityliving)
@@ -186,7 +182,7 @@ public class BlockRedstoneRepeater extends Block
         int l = ((MathHelper.floor_double((double)((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3) + 2) % 4;
         world.setBlockMetadataWithNotify(i, j, k, l);
         boolean flag = ignoreTick(world, i, j, k, l);
-        if(flag)
+        if (flag)
         {
             world.scheduleBlockUpdate(i, j, k, blockID, 1);
         }
@@ -204,7 +200,7 @@ public class BlockRedstoneRepeater extends Block
 
     public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
     {
-        if(isRepeaterPowered)
+        if (isRepeaterPowered)
         {
             world.notifyBlocksOfNeighborChange(i, j + 1, k, blockID);
         }
@@ -220,5 +216,4 @@ public class BlockRedstoneRepeater extends Block
     {
         return Item.redstoneRepeater.shiftedIndex;
     }
-
 }

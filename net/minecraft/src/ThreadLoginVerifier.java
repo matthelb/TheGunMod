@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.BufferedReader;
@@ -9,20 +5,15 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLEncoder;
 
-// Referenced classes of package net.minecraft.src:
-//            NetLoginHandler, Packet1Login
-
 class ThreadLoginVerifier extends Thread
 {
-
-    final Packet1Login loginPacket; /* synthetic field */
-    final NetLoginHandler loginHandler; /* synthetic field */
+    final Packet1Login loginPacket;
+    final NetLoginHandler loginHandler;
 
     ThreadLoginVerifier(NetLoginHandler netloginhandler, Packet1Login packet1login)
     {
         loginHandler = netloginhandler;
         loginPacket = packet1login;
-//        super();
     }
 
     public void run()
@@ -34,15 +25,16 @@ class ThreadLoginVerifier extends Thread
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(url.openStream()));
             String s1 = bufferedreader.readLine();
             bufferedreader.close();
-            if(s1.equals("YES"))
+            if (s1.equals("YES"))
             {
                 NetLoginHandler.setLoginPacket(loginHandler, loginPacket);
-            } else
+            }
+            else
             {
                 loginHandler.kickUser("Failed to verify username!");
             }
         }
-        catch(Exception exception)
+        catch (Exception exception)
         {
             loginHandler.kickUser((new StringBuilder()).append("Failed to verify username! [internal error ").append(exception).append("]").toString());
             exception.printStackTrace();

@@ -1,19 +1,10 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            ComponentVillage, StructureBoundingBox, StructureComponent, Block, 
-//            World
-
 public class ComponentVillageChurch extends ComponentVillage
 {
-
     private int averageGroundLevel;
 
     public ComponentVillageChurch(int i, Random random, StructureBoundingBox structureboundingbox, int j)
@@ -31,10 +22,11 @@ public class ComponentVillageChurch extends ComponentVillage
     public static ComponentVillageChurch func_35380_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 5, 12, 9, l);
-        if(!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
-        } else
+        }
+        else
         {
             return new ComponentVillageChurch(i1, random, structureboundingbox, l);
         }
@@ -42,10 +34,10 @@ public class ComponentVillageChurch extends ComponentVillage
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(averageGroundLevel < 0)
+        if (averageGroundLevel < 0)
         {
             averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
-            if(averageGroundLevel < 0)
+            if (averageGroundLevel < 0)
             {
                 return true;
             }
@@ -98,7 +90,7 @@ public class ComponentVillageChurch extends ComponentVillage
         placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 3, 4, 6, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 2, 4, 5, structureboundingbox);
         int i = getMetadataWithOffset(Block.ladder.blockID, 4);
-        for(int j = 1; j <= 9; j++)
+        for (int j = 1; j <= 9; j++)
         {
             placeBlockAtCurrentPosition(world, Block.ladder.blockID, i, 3, j, 3, structureboundingbox);
         }
@@ -106,18 +98,17 @@ public class ComponentVillageChurch extends ComponentVillage
         placeBlockAtCurrentPosition(world, 0, 0, 2, 1, 0, structureboundingbox);
         placeBlockAtCurrentPosition(world, 0, 0, 2, 2, 0, structureboundingbox);
         placeDoorAtCurrentPosition(world, structureboundingbox, random, 2, 1, 0, getMetadataWithOffset(Block.doorWood.blockID, 1));
-        if(getBlockIdAtCurrentPosition(world, 2, 0, -1, structureboundingbox) == 0 && getBlockIdAtCurrentPosition(world, 2, -1, -1, structureboundingbox) != 0)
+        if (getBlockIdAtCurrentPosition(world, 2, 0, -1, structureboundingbox) == 0 && getBlockIdAtCurrentPosition(world, 2, -1, -1, structureboundingbox) != 0)
         {
             placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), 2, 0, -1, structureboundingbox);
         }
-        for(int k = 0; k < 9; k++)
+        for (int k = 0; k < 9; k++)
         {
-            for(int l = 0; l < 5; l++)
+            for (int l = 0; l < 5; l++)
             {
                 clearCurrentPositionBlocksUpwards(world, l, 12, k, structureboundingbox);
                 fillCurrentPositionBlocksDownwards(world, Block.cobblestone.blockID, 0, l, -1, k, structureboundingbox);
             }
-
         }
 
         spawnVillagers(world, structureboundingbox, 2, 1, 2, 1);

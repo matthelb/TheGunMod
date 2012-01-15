@@ -1,13 +1,7 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
-
 
 public class Pair
 {
-
     private final Object left;
     private final Object right;
 
@@ -34,14 +28,15 @@ public class Pair
 
     public boolean equals(Object obj)
     {
-        if(obj == null)
+        if (obj == null)
         {
             return false;
         }
-        if(!(obj instanceof Pair))
+        if (!(obj instanceof Pair))
         {
             return false;
-        } else
+        }
+        else
         {
             Pair pair = (Pair)obj;
             return left.equals(pair.getLeft()) && right.equals(pair.getRight());

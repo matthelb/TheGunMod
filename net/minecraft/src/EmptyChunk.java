@@ -1,18 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.*;
 
-// Referenced classes of package net.minecraft.src:
-//            Chunk, World, EnumSkyBlock, Entity, 
-//            TileEntity, AxisAlignedBB
-
 public class EmptyChunk extends Chunk
 {
-
     public EmptyChunk(World world, int i, int j)
     {
         super(world, i, j);
@@ -145,7 +136,7 @@ public class EmptyChunk extends Chunk
         return false;
     }
 
-    public int getChunkData(byte abyte0[], int i, int j, int k, int l, int i1, int j1, 
+    public int getChunkData(byte abyte0[], int i, int j, int k, int l, int i1, int j1,
             int k1)
     {
         int l1 = l - i;

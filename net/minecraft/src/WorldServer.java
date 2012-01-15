@@ -1,24 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            World, WorldProvider, IntHashMap, EntityAnimal, 
-//            EntityWaterMob, Entity, EntityPlayer, ISaveHandler, 
-//            ChunkProviderServer, TileEntity, WorldInfo, MathHelper, 
-//            ServerConfigurationManager, Packet71Weather, Packet38EntityStatus, EntityTracker, 
-//            Explosion, Packet60Explosion, Packet54PlayNoteBlock, Packet70Bed, 
-//            WorldSettings, IChunkProvider
-
 public class WorldServer extends World
 {
-
     public ChunkProviderServer chunkProviderServer;
     public boolean disableSpawnProtection;
     public boolean levelSaving;
@@ -30,7 +17,7 @@ public class WorldServer extends World
         super(isavehandler, s, worldsettings, WorldProvider.getProviderForDimension(i));
         disableSpawnProtection = false;
         mcServer = minecraftserver;
-        if(field_34902_Q == null)
+        if (field_34902_Q == null)
         {
             field_34902_Q = new IntHashMap();
         }
@@ -38,11 +25,15 @@ public class WorldServer extends World
 
     public void updateEntityWithOptionalForce(Entity entity, boolean flag)
     {
-        if(!mcServer.spawnPeacefulMobs && ((entity instanceof EntityAnimal) || (entity instanceof EntityWaterMob)))
+        if (!mcServer.spawnPeacefulMobs && ((entity instanceof EntityAnimal) || (entity instanceof EntityWaterMob)))
         {
             entity.setEntityDead();
         }
-        if(entity.riddenByEntity == null || !(entity.riddenByEntity instanceof EntityPlayer))
+        if (!mcServer.field_44002_p && (entity instanceof INpc))
+        {
+            entity.setEntityDead();
+        }
+        if (entity.riddenByEntity == null || !(entity.riddenByEntity instanceof EntityPlayer))
         {
             super.updateEntityWithOptionalForce(entity, flag);
         }
@@ -63,10 +54,10 @@ public class WorldServer extends World
     public List getTileEntityList(int i, int j, int k, int l, int i1, int j1)
     {
         ArrayList arraylist = new ArrayList();
-        for(int k1 = 0; k1 < loadedTileEntityList.size(); k1++)
+        for (int k1 = 0; k1 < loadedTileEntityList.size(); k1++)
         {
             TileEntity tileentity = (TileEntity)loadedTileEntityList.get(k1);
-            if(tileentity.xCoord >= i && tileentity.yCoord >= j && tileentity.zCoord >= k && tileentity.xCoord < l && tileentity.yCoord < i1 && tileentity.zCoord < j1)
+            if (tileentity.xCoord >= i && tileentity.yCoord >= j && tileentity.zCoord >= k && tileentity.xCoord < l && tileentity.yCoord < i1 && tileentity.zCoord < j1)
             {
                 arraylist.add(tileentity);
             }
@@ -79,7 +70,7 @@ public class WorldServer extends World
     {
         int l = MathHelper.abs(i - worldInfo.getSpawnX());
         int i1 = MathHelper.abs(k - worldInfo.getSpawnZ());
-        if(l > i1)
+        if (l > i1)
         {
             i1 = l;
         }
@@ -88,7 +79,7 @@ public class WorldServer extends World
 
     protected void generateSpawnPoint()
     {
-        if(field_34902_Q == null)
+        if (field_34902_Q == null)
         {
             field_34902_Q = new IntHashMap();
         }
@@ -100,13 +91,12 @@ public class WorldServer extends World
         super.obtainEntitySkin(entity);
         field_34902_Q.addKey(entity.entityId, entity);
         Entity aentity[] = entity.getParts();
-        if(aentity != null)
+        if (aentity != null)
         {
-            for(int i = 0; i < aentity.length; i++)
+            for (int i = 0; i < aentity.length; i++)
             {
                 field_34902_Q.addKey(aentity[i].entityId, aentity[i]);
             }
-
         }
     }
 
@@ -115,13 +105,12 @@ public class WorldServer extends World
         super.releaseEntitySkin(entity);
         field_34902_Q.removeObject(entity.entityId);
         Entity aentity[] = entity.getParts();
-        if(aentity != null)
+        if (aentity != null)
         {
-            for(int i = 0; i < aentity.length; i++)
+            for (int i = 0; i < aentity.length; i++)
             {
                 field_34902_Q.removeObject(aentity[i].entityId);
             }
-
         }
     }
 
@@ -132,11 +121,12 @@ public class WorldServer extends World
 
     public boolean addLightningBolt(Entity entity)
     {
-        if(super.addLightningBolt(entity))
+        if (super.addLightningBolt(entity))
         {
             mcServer.configManager.sendPacketToPlayersAroundPoint(entity.posX, entity.posY, entity.posZ, 512D, worldProvider.worldType, new Packet71Weather(entity));
             return true;
-        } else
+        }
+        else
         {
             return false;
         }
@@ -148,7 +138,7 @@ public class WorldServer extends World
         mcServer.getEntityTracker(worldProvider.worldType).sendPacketToTrackedPlayersAndTrackedEntity(entity, packet38entitystatus);
     }
 
-    public Explosion newExplosion(Entity entity, double d, double d1, double d2, 
+    public Explosion newExplosion(Entity entity, double d, double d1, double d2,
             float f, boolean flag)
     {
         Explosion explosion = new Explosion(this, entity, d, d1, d2, f);
@@ -174,12 +164,13 @@ public class WorldServer extends World
     {
         boolean flag = isRaining();
         super.updateWeather();
-        if(flag != isRaining())
+        if (flag != isRaining())
         {
-            if(flag)
+            if (flag)
             {
                 mcServer.configManager.sendPacketToAllPlayers(new Packet70Bed(2, 0));
-            } else
+            }
+            else
             {
                 mcServer.configManager.sendPacketToAllPlayers(new Packet70Bed(1, 0));
             }

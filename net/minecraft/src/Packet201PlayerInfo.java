@@ -1,17 +1,9 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.*;
 
-// Referenced classes of package net.minecraft.src:
-//            Packet, NetHandler
-
 public class Packet201PlayerInfo extends Packet
 {
-
     public String name;
     public boolean isConnected;
     public int ping;
@@ -28,7 +20,7 @@ public class Packet201PlayerInfo extends Packet
     }
 
     public void readPacketData(DataInputStream datainputstream)
-        throws IOException
+    throws IOException
     {
         name = readString(datainputstream, 16);
         isConnected = datainputstream.readByte() != 0;
@@ -36,7 +28,7 @@ public class Packet201PlayerInfo extends Packet
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
-        throws IOException
+    throws IOException
     {
         writeString(name, dataoutputstream);
         dataoutputstream.writeByte(isConnected ? 1 : 0);

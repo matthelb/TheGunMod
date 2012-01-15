@@ -1,20 +1,13 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.List;
 import java.util.Random;
 
-// Referenced classes of package net.minecraft.src:
-//            ComponentVillage, StructureBoundingBox, StructureComponent, Block, 
-//            World
-
 public class ComponentVillageHouse2 extends ComponentVillage
 {
-
+    private static final StructurePieceTreasure field_46006_a[];
     private int averageGroundLevel;
+    private boolean field_46005_c;
 
     public ComponentVillageHouse2(int i, Random random, StructureBoundingBox structureboundingbox, int j)
     {
@@ -31,10 +24,11 @@ public class ComponentVillageHouse2 extends ComponentVillage
     public static ComponentVillageHouse2 func_35376_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 10, 6, 7, l);
-        if(!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
         {
             return null;
-        } else
+        }
+        else
         {
             return new ComponentVillageHouse2(i1, random, structureboundingbox, l);
         }
@@ -42,10 +36,10 @@ public class ComponentVillageHouse2 extends ComponentVillage
 
     public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
     {
-        if(averageGroundLevel < 0)
+        if (averageGroundLevel < 0)
         {
             averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
-            if(averageGroundLevel < 0)
+            if (averageGroundLevel < 0)
             {
                 return true;
             }
@@ -86,22 +80,32 @@ public class ComponentVillageHouse2 extends ComponentVillage
         placeBlockAtCurrentPosition(world, Block.planks.blockID, 0, 1, 1, 5, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.stairCompactPlanks.blockID, getMetadataWithOffset(Block.stairCompactPlanks.blockID, 3), 2, 1, 5, structureboundingbox);
         placeBlockAtCurrentPosition(world, Block.stairCompactPlanks.blockID, getMetadataWithOffset(Block.stairCompactPlanks.blockID, 1), 1, 1, 4, structureboundingbox);
-        for(int i = 6; i <= 8; i++)
+        if (!field_46005_c)
         {
-            if(getBlockIdAtCurrentPosition(world, i, 0, -1, structureboundingbox) == 0 && getBlockIdAtCurrentPosition(world, i, -1, -1, structureboundingbox) != 0)
+            int i = getYWithOffset(1);
+            int l = getXWithOffset(5, 5);
+            int j1 = getZWithOffset(5, 5);
+            if (structureboundingbox.isInBbVolume(l, i, j1))
             {
-                placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), i, 0, -1, structureboundingbox);
+                field_46005_c = true;
+                createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 5, 1, 5, field_46006_a, 3 + random.nextInt(6));
+            }
+        }
+        for (int j = 6; j <= 8; j++)
+        {
+            if (getBlockIdAtCurrentPosition(world, j, 0, -1, structureboundingbox) == 0 && getBlockIdAtCurrentPosition(world, j, -1, -1, structureboundingbox) != 0)
+            {
+                placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 3), j, 0, -1, structureboundingbox);
             }
         }
 
-        for(int j = 0; j < 7; j++)
+        for (int k = 0; k < 7; k++)
         {
-            for(int k = 0; k < 10; k++)
+            for (int i1 = 0; i1 < 10; i1++)
             {
-                clearCurrentPositionBlocksUpwards(world, k, 6, j, structureboundingbox);
-                fillCurrentPositionBlocksDownwards(world, Block.cobblestone.blockID, 0, k, -1, j, structureboundingbox);
+                clearCurrentPositionBlocksUpwards(world, i1, 6, k, structureboundingbox);
+                fillCurrentPositionBlocksDownwards(world, Block.cobblestone.blockID, 0, i1, -1, k, structureboundingbox);
             }
-
         }
 
         spawnVillagers(world, structureboundingbox, 7, 1, 1, 1);
@@ -111,5 +115,14 @@ public class ComponentVillageHouse2 extends ComponentVillage
     protected int getVillagerType(int i)
     {
         return 3;
+    }
+
+    static
+    {
+        field_46006_a = (new StructurePieceTreasure[]
+                {
+                    new StructurePieceTreasure(Item.diamond.shiftedIndex, 0, 1, 3, 3), new StructurePieceTreasure(Item.ingotIron.shiftedIndex, 0, 1, 5, 10), new StructurePieceTreasure(Item.ingotGold.shiftedIndex, 0, 1, 3, 5), new StructurePieceTreasure(Item.bread.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.appleRed.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.pickaxeSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.swordSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.plateSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.helmetSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.legsSteel.shiftedIndex, 0, 1, 1, 5),
+                    new StructurePieceTreasure(Item.bootsSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Block.obsidian.blockID, 0, 3, 7, 5), new StructurePieceTreasure(Block.sapling.blockID, 0, 3, 7, 5)
+                });
     }
 }

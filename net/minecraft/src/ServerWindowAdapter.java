@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.awt.event.WindowAdapter;
@@ -10,25 +6,23 @@ import net.minecraft.server.MinecraftServer;
 
 final class ServerWindowAdapter extends WindowAdapter
 {
-
-    final MinecraftServer mcServer; /* synthetic field */
+    final MinecraftServer mcServer;
 
     ServerWindowAdapter(MinecraftServer minecraftserver)
     {
         mcServer = minecraftserver;
-//        super();
     }
 
     public void windowClosing(WindowEvent windowevent)
     {
         mcServer.initiateShutdown();
-        while(!mcServer.serverStopped) 
+        while (!mcServer.serverStopped)
         {
             try
             {
                 Thread.sleep(100L);
             }
-            catch(InterruptedException interruptedexception)
+            catch (InterruptedException interruptedexception)
             {
                 interruptedexception.printStackTrace();
             }

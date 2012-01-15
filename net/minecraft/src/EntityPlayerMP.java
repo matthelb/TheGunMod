@@ -1,34 +1,11 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.*;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            EntityPlayer, ICrafting, ItemStack, ItemInWorldManager, 
-//            World, ChunkCoordinates, WorldProvider, NBTTagCompound, 
-//            Container, Packet5PlayerInventory, EntityTracker, InventoryPlayer, 
-//            Packet3Chat, DamageSource, ServerConfigurationManager, EntityDamageSource, 
-//            EntityArrow, Item, NetServerHandler, ItemMapBase, 
-//            ChunkCoordIntPair, Packet51MapChunk, WorldServer, TileEntity, 
-//            PropertyManager, AchievementList, FoodStats, Packet8UpdateHealth, 
-//            Packet43Experience, Packet70Bed, Entity, EntityItem, 
-//            Packet22Collect, EntityXPOrb, Packet18Animation, EnumStatus, 
-//            Packet17Sleep, Packet39AttachEntity, Packet100OpenWindow, ContainerWorkbench, 
-//            ContainerEnchantment, IInventory, ContainerChest, TileEntityFurnace, 
-//            ContainerFurnace, TileEntityDispenser, ContainerDispenser, TileEntityBrewingStand, 
-//            ContainerBrewingStand, SlotCrafting, Packet103SetSlot, Packet104WindowItems, 
-//            Packet105UpdateProgressbar, Packet101CloseWindow, StatBase, Packet200Statistic, 
-//            StringTranslate, Packet38EntityStatus, EnumAction, Packet41EntityEffect, 
-//            Packet42RemoveEntityEffect, PotionEffect
-
 public class EntityPlayerMP extends EntityPlayer
     implements ICrafting
 {
-
     public NetServerHandler playerNetServerHandler;
     public MinecraftServer mcServer;
     public ItemInWorldManager itemInWorldManager;
@@ -39,9 +16,10 @@ public class EntityPlayerMP extends EntityPlayer
     private int lastHealth;
     private int field_35221_cc;
     private boolean field_35222_cd;
-    private int field_35220_ce;
+    private int lastExperience;
     private int ticksOfInvuln;
-    private ItemStack playerInventory[] = {
+    private ItemStack playerInventory[] =
+    {
         null, null, null, null, null
     };
     private int currentWindowId;
@@ -57,7 +35,7 @@ public class EntityPlayerMP extends EntityPlayer
         lastHealth = 0xfa0a1f01;
         field_35221_cc = 0xfa0a1f01;
         field_35222_cd = true;
-        field_35220_ce = 0xfa0a1f01;
+        lastExperience = 0xfa0a1f01;
         ticksOfInvuln = 60;
         currentWindowId = 0;
         field_41032_j = false;
@@ -67,7 +45,7 @@ public class EntityPlayerMP extends EntityPlayer
         int i = chunkcoordinates.posX;
         int j = chunkcoordinates.posZ;
         int k = chunkcoordinates.posY;
-        if(!world.worldProvider.hasNoSky)
+        if (!world.worldProvider.hasNoSky)
         {
             i += rand.nextInt(20) - 10;
             k = world.findTopSolidBlock(i, j);
@@ -83,7 +61,7 @@ public class EntityPlayerMP extends EntityPlayer
     public void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
         super.readEntityFromNBT(nbttagcompound);
-        if(nbttagcompound.hasKey("playerGameType"))
+        if (nbttagcompound.hasKey("playerGameType"))
         {
             itemInWorldManager.toggleGameType(nbttagcompound.getInteger("playerGameType"));
         }
@@ -103,7 +81,7 @@ public class EntityPlayerMP extends EntityPlayer
     public void removeExperience(int i)
     {
         super.removeExperience(i);
-        field_35220_ce = -1;
+        lastExperience = -1;
     }
 
     public void func_20057_k()
@@ -131,24 +109,24 @@ public class EntityPlayerMP extends EntityPlayer
         itemInWorldManager.updateBlockRemoving();
         ticksOfInvuln--;
         currentCraftingInventory.updateCraftingResults();
-        for(int i = 0; i < 5; i++)
+        for (int i = 0; i < 5; i++)
         {
             ItemStack itemstack = getEquipmentInSlot(i);
-            if(itemstack != playerInventory[i])
+            if (itemstack != playerInventory[i])
             {
                 mcServer.getEntityTracker(dimension).sendPacketToTrackedPlayers(this, new Packet5PlayerInventory(entityId, i, itemstack));
                 playerInventory[i] = itemstack;
             }
         }
-
     }
 
     public ItemStack getEquipmentInSlot(int i)
     {
-        if(i == 0)
+        if (i == 0)
         {
             return inventory.getCurrentItem();
-        } else
+        }
+        else
         {
             return inventory.armorInventory[i - 1];
         }
@@ -162,21 +140,21 @@ public class EntityPlayerMP extends EntityPlayer
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if(ticksOfInvuln > 0)
+        if (ticksOfInvuln > 0)
         {
             return false;
         }
-        if(!mcServer.pvpOn && (damagesource instanceof EntityDamageSource))
+        if (!mcServer.pvpOn && (damagesource instanceof EntityDamageSource))
         {
             Entity entity = damagesource.getEntity();
-            if(entity instanceof EntityPlayer)
+            if (entity instanceof EntityPlayer)
             {
                 return false;
             }
-            if(entity instanceof EntityArrow)
+            if (entity instanceof EntityArrow)
             {
                 EntityArrow entityarrow = (EntityArrow)entity;
-                if(entityarrow.shootingEntity instanceof EntityPlayer)
+                if (entityarrow.shootingEntity instanceof EntityPlayer)
                 {
                     return false;
                 }
@@ -198,72 +176,73 @@ public class EntityPlayerMP extends EntityPlayer
     public void onUpdateEntity(boolean flag)
     {
         super.onUpdate();
-        for(int i = 0; i < inventory.getSizeInventory(); i++)
+        for (int i = 0; i < inventory.getSizeInventory(); i++)
         {
             ItemStack itemstack = inventory.getStackInSlot(i);
-            if(itemstack == null || !Item.itemsList[itemstack.itemID].func_28019_b() || playerNetServerHandler.getNumChunkDataPackets() > 2)
+            if (itemstack == null || !Item.itemsList[itemstack.itemID].func_28019_b() || playerNetServerHandler.getNumChunkDataPackets() > 2)
             {
                 continue;
             }
             Packet packet = ((ItemMapBase)Item.itemsList[itemstack.itemID]).getUpdatePacket(itemstack, worldObj, this);
-            if(packet != null)
+            if (packet != null)
             {
                 playerNetServerHandler.sendPacket(packet);
             }
         }
 
-        if(flag && !loadedChunks.isEmpty())
+        if (flag && !loadedChunks.isEmpty())
         {
             ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair)loadedChunks.get(0);
-            if(chunkcoordintpair != null)
+            if (chunkcoordintpair != null)
             {
                 boolean flag1 = false;
-                if(playerNetServerHandler.getNumChunkDataPackets() < 4)
+                if (playerNetServerHandler.getNumChunkDataPackets() < 4)
                 {
                     flag1 = true;
                 }
-                if(flag1)
+                if (flag1)
                 {
                     WorldServer worldserver = mcServer.getWorldManager(dimension);
                     loadedChunks.remove(chunkcoordintpair);
                     playerNetServerHandler.sendPacket(new Packet51MapChunk(chunkcoordintpair.chunkXPos * 16, 0, chunkcoordintpair.chunkZPos * 16, 16, worldserver.worldHeight, 16, worldserver));
                     List list = worldserver.getTileEntityList(chunkcoordintpair.chunkXPos * 16, 0, chunkcoordintpair.chunkZPos * 16, chunkcoordintpair.chunkXPos * 16 + 16, worldserver.worldHeight, chunkcoordintpair.chunkZPos * 16 + 16);
-                    for(int j = 0; j < list.size(); j++)
+                    for (int j = 0; j < list.size(); j++)
                     {
                         getTileEntityInfo((TileEntity)list.get(j));
                     }
-
                 }
             }
         }
-        if(inPortal)
+        if (inPortal)
         {
-            if(mcServer.propertyManagerObj.getBooleanProperty("allow-nether", true))
+            if (mcServer.propertyManagerObj.getBooleanProperty("allow-nether", true))
             {
-                if(currentCraftingInventory != personalCraftingInventory)
+                if (currentCraftingInventory != personalCraftingInventory)
                 {
                     usePersonalCraftingInventory();
                 }
-                if(ridingEntity != null)
+                if (ridingEntity != null)
                 {
                     mountEntity(ridingEntity);
-                } else
+                }
+                else
                 {
                     timeInPortal += 0.0125F;
-                    if(timeInPortal >= 1.0F)
+                    if (timeInPortal >= 1.0F)
                     {
                         timeInPortal = 1.0F;
                         timeUntilPortal = 10;
                         byte byte0 = 0;
-                        if(dimension == -1)
+                        if (dimension == -1)
                         {
                             byte0 = 0;
-                        } else
+                        }
+                        else
                         {
                             byte0 = -1;
                         }
                         mcServer.configManager.sendPlayerToOtherDimension(this, byte0);
-                        field_35220_ce = -1;
+                        lastExperience = -1;
                         lastHealth = -1;
                         field_35221_cc = -1;
                         triggerAchievement(AchievementList.portal);
@@ -271,53 +250,55 @@ public class EntityPlayerMP extends EntityPlayer
                 }
                 inPortal = false;
             }
-        } else
+        }
+        else
         {
-            if(timeInPortal > 0.0F)
+            if (timeInPortal > 0.0F)
             {
                 timeInPortal -= 0.05F;
             }
-            if(timeInPortal < 0.0F)
+            if (timeInPortal < 0.0F)
             {
                 timeInPortal = 0.0F;
             }
         }
-        if(timeUntilPortal > 0)
+        if (timeUntilPortal > 0)
         {
             timeUntilPortal--;
         }
-        if(getEntityHealth() != lastHealth || field_35221_cc != foodStats.getFoodLevel() || (foodStats.getSaturationLevel() == 0.0F) != field_35222_cd)
+        if (getEntityHealth() != lastHealth || field_35221_cc != foodStats.getFoodLevel() || (foodStats.getSaturationLevel() == 0.0F) != field_35222_cd)
         {
             playerNetServerHandler.sendPacket(new Packet8UpdateHealth(getEntityHealth(), foodStats.getFoodLevel(), foodStats.getSaturationLevel()));
             lastHealth = getEntityHealth();
             field_35221_cc = foodStats.getFoodLevel();
             field_35222_cd = foodStats.getSaturationLevel() == 0.0F;
         }
-        if(experienceTotal != field_35220_ce)
+        if (experienceTotal != lastExperience)
         {
-            field_35220_ce = experienceTotal;
+            lastExperience = experienceTotal;
             playerNetServerHandler.sendPacket(new Packet43Experience(experience, experienceTotal, experienceLevel));
         }
     }
 
     public void func_40107_e(int i)
     {
-        if(dimension == 1 && i == 1)
+        if (dimension == 1 && i == 1)
         {
             triggerAchievement(AchievementList.theEnd2);
             worldObj.removePlayerForLogoff(this);
             field_41032_j = true;
             playerNetServerHandler.sendPacket(new Packet70Bed(4, 0));
-        } else
+        }
+        else
         {
             triggerAchievement(AchievementList.theEnd);
             ChunkCoordinates chunkcoordinates = mcServer.getWorldManager(i).func_40212_d();
-            if(chunkcoordinates != null)
+            if (chunkcoordinates != null)
             {
                 playerNetServerHandler.teleportTo(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, 0.0F, 0.0F);
             }
             mcServer.configManager.sendPlayerToOtherDimension(this, 1);
-            field_35220_ce = -1;
+            lastExperience = -1;
             lastHealth = -1;
             field_35221_cc = -1;
         }
@@ -325,10 +306,10 @@ public class EntityPlayerMP extends EntityPlayer
 
     private void getTileEntityInfo(TileEntity tileentity)
     {
-        if(tileentity != null)
+        if (tileentity != null)
         {
             Packet packet = tileentity.getDescriptionPacket();
-            if(packet != null)
+            if (packet != null)
             {
                 playerNetServerHandler.sendPacket(packet);
             }
@@ -337,18 +318,18 @@ public class EntityPlayerMP extends EntityPlayer
 
     public void onItemPickup(Entity entity, int i)
     {
-        if(!entity.isDead)
+        if (!entity.isDead)
         {
             EntityTracker entitytracker = mcServer.getEntityTracker(dimension);
-            if(entity instanceof EntityItem)
+            if (entity instanceof EntityItem)
             {
                 entitytracker.sendPacketToTrackedPlayers(entity, new Packet22Collect(entity.entityId, entityId));
             }
-            if(entity instanceof EntityArrow)
+            if (entity instanceof EntityArrow)
             {
                 entitytracker.sendPacketToTrackedPlayers(entity, new Packet22Collect(entity.entityId, entityId));
             }
-            if(entity instanceof EntityXPOrb)
+            if (entity instanceof EntityXPOrb)
             {
                 entitytracker.sendPacketToTrackedPlayers(entity, new Packet22Collect(entity.entityId, entityId));
             }
@@ -359,7 +340,7 @@ public class EntityPlayerMP extends EntityPlayer
 
     public void swingItem()
     {
-        if(!isSwinging)
+        if (!isSwinging)
         {
             swingProgressInt = -1;
             isSwinging = true;
@@ -375,7 +356,7 @@ public class EntityPlayerMP extends EntityPlayer
     public EnumStatus sleepInBedAt(int i, int j, int k)
     {
         EnumStatus enumstatus = super.sleepInBedAt(i, j, k);
-        if(enumstatus == EnumStatus.OK)
+        if (enumstatus == EnumStatus.OK)
         {
             EntityTracker entitytracker = mcServer.getEntityTracker(dimension);
             Packet17Sleep packet17sleep = new Packet17Sleep(this, 0, i, j, k);
@@ -388,13 +369,13 @@ public class EntityPlayerMP extends EntityPlayer
 
     public void wakeUpPlayer(boolean flag, boolean flag1, boolean flag2)
     {
-        if(isPlayerSleeping())
+        if (isPlayerSleeping())
         {
             EntityTracker entitytracker = mcServer.getEntityTracker(dimension);
             entitytracker.sendPacketToTrackedPlayersAndTrackedEntity(this, new Packet18Animation(this, 3));
         }
         super.wakeUpPlayer(flag, flag1, flag2);
-        if(playerNetServerHandler != null)
+        if (playerNetServerHandler != null)
         {
             playerNetServerHandler.teleportTo(posX, posY, posZ, rotationYaw, rotationPitch);
         }
@@ -477,14 +458,15 @@ public class EntityPlayerMP extends EntityPlayer
 
     public void updateCraftingInventorySlot(Container container, int i, ItemStack itemstack)
     {
-        if(container.getSlot(i) instanceof SlotCrafting)
+        if (container.getSlot(i) instanceof SlotCrafting)
         {
             return;
         }
-        if(isChangingQuantityOnly)
+        if (isChangingQuantityOnly)
         {
             return;
-        } else
+        }
+        else
         {
             playerNetServerHandler.sendPacket(new Packet103SetSlot(container.windowId, i, itemstack));
             return;
@@ -519,10 +501,11 @@ public class EntityPlayerMP extends EntityPlayer
 
     public void updateHeldItem()
     {
-        if(isChangingQuantityOnly)
+        if (isChangingQuantityOnly)
         {
             return;
-        } else
+        }
+        else
         {
             playerNetServerHandler.sendPacket(new Packet103SetSlot(-1, -1, inventory.getItemStack()));
             return;
@@ -535,25 +518,15 @@ public class EntityPlayerMP extends EntityPlayer
         currentCraftingInventory = personalCraftingInventory;
     }
 
-    public void setMovementType(float f, float f1, boolean flag, boolean flag1, float f2, float f3)
-    {
-        moveStrafing = f;
-        moveForward = f1;
-        isJumping = flag;
-        setSneaking(flag1);
-        rotationPitch = f2;
-        rotationYaw = f3;
-    }
-
     public void addStat(StatBase statbase, int i)
     {
-        if(statbase == null)
+        if (statbase == null)
         {
             return;
         }
-        if(!statbase.isIndependent)
+        if (!statbase.isIndependent)
         {
-            for(; i > 100; i -= 100)
+            for (; i > 100; i -= 100)
             {
                 playerNetServerHandler.sendPacket(new Packet200Statistic(statbase.statId, 100));
             }
@@ -564,15 +537,15 @@ public class EntityPlayerMP extends EntityPlayer
 
     public void func_30002_A()
     {
-        if(ridingEntity != null)
+        if (ridingEntity != null)
         {
             mountEntity(ridingEntity);
         }
-        if(riddenByEntity != null)
+        if (riddenByEntity != null)
         {
             riddenByEntity.mountEntity(this);
         }
-        if(sleeping)
+        if (sleeping)
         {
             wakeUpPlayer(true, false, false);
         }
@@ -599,7 +572,7 @@ public class EntityPlayerMP extends EntityPlayer
     public void setItemInUse(ItemStack itemstack, int i)
     {
         super.setItemInUse(itemstack, i);
-        if(itemstack != null && itemstack.getItem() != null && itemstack.getItem().getAction(itemstack) == EnumAction.eat)
+        if (itemstack != null && itemstack.getItem() != null && itemstack.getItem().getAction(itemstack) == EnumAction.eat)
         {
             EntityTracker entitytracker = mcServer.getEntityTracker(dimension);
             entitytracker.sendPacketToTrackedPlayersAndTrackedEntity(this, new Packet18Animation(this, 5));

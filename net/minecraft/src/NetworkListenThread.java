@@ -1,7 +1,3 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.io.IOException;
@@ -12,12 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            NetworkAcceptThread, NetLoginHandler, NetworkManager, NetServerHandler
-
 public class NetworkListenThread
 {
-
     public static Logger logger = Logger.getLogger("Minecraft");
     private ServerSocket serverSocket;
     private Thread networkAcceptThread;
@@ -29,7 +21,7 @@ public class NetworkListenThread
     private HashMap field_35506_i;
 
     public NetworkListenThread(MinecraftServer minecraftserver, InetAddress inetaddress, int i)
-        throws IOException
+    throws IOException
     {
         isListening = false;
         field_977_f = 0;
@@ -47,7 +39,7 @@ public class NetworkListenThread
     public void func_35505_a(Socket socket)
     {
         InetAddress inetaddress = socket.getInetAddress();
-        synchronized(field_35506_i)
+        synchronized (field_35506_i)
         {
             field_35506_i.remove(inetaddress);
         }
@@ -60,10 +52,11 @@ public class NetworkListenThread
 
     private void addPendingConnection(NetLoginHandler netloginhandler)
     {
-        if(netloginhandler == null)
+        if (netloginhandler == null)
         {
             throw new IllegalArgumentException("Got null pendingconnection!");
-        } else
+        }
+        else
         {
             pendingConnections.add(netloginhandler);
             return;
@@ -72,44 +65,43 @@ public class NetworkListenThread
 
     public void handleNetworkListenThread()
     {
-        for(int i = 0; i < pendingConnections.size(); i++)
+        for (int i = 0; i < pendingConnections.size(); i++)
         {
             NetLoginHandler netloginhandler = (NetLoginHandler)pendingConnections.get(i);
             try
             {
                 netloginhandler.tryLogin();
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 netloginhandler.kickUser("Internal server error");
                 logger.log(Level.WARNING, (new StringBuilder()).append("Failed to handle packet: ").append(exception).toString(), exception);
             }
-            if(netloginhandler.finishedProcessing)
+            if (netloginhandler.finishedProcessing)
             {
                 pendingConnections.remove(i--);
             }
             netloginhandler.netManager.wakeThreads();
         }
 
-        for(int j = 0; j < playerList.size(); j++)
+        for (int j = 0; j < playerList.size(); j++)
         {
             NetServerHandler netserverhandler = (NetServerHandler)playerList.get(j);
             try
             {
                 netserverhandler.handlePackets();
             }
-            catch(Exception exception1)
+            catch (Exception exception1)
             {
                 logger.log(Level.WARNING, (new StringBuilder()).append("Failed to handle packet: ").append(exception1).toString(), exception1);
                 netserverhandler.kickPlayer("Internal server error");
             }
-            if(netserverhandler.connectionClosed)
+            if (netserverhandler.connectionClosed)
             {
                 playerList.remove(j--);
             }
             netserverhandler.netManager.wakeThreads();
         }
-
     }
 
     static ServerSocket getServerSocket(NetworkListenThread networklistenthread)
@@ -131,5 +123,4 @@ public class NetworkListenThread
     {
         networklistenthread.addPendingConnection(netloginhandler);
     }
-
 }

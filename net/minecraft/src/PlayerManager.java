@@ -1,26 +1,19 @@
-// Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
-// Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
-
 package net.minecraft.src;
 
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.server.MinecraftServer;
 
-// Referenced classes of package net.minecraft.src:
-//            LongHashMap, PlayerInstance, EntityPlayerMP, WorldServer
-
 public class PlayerManager
 {
-
     public List players;
     private LongHashMap playerInstances;
     private List playerInstancesToUpdate;
     private MinecraftServer mcServer;
     private int playerDimension;
     private int playerViewRadius;
-    private final int xzDirectionsConst[][] = {
+    private final int xzDirectionsConst[][] =
+    {
         {
             1, 0
         }, {
@@ -37,14 +30,15 @@ public class PlayerManager
         players = new ArrayList();
         playerInstances = new LongHashMap();
         playerInstancesToUpdate = new ArrayList();
-        if(j > 15)
+        if (j > 15)
         {
             throw new IllegalArgumentException("Too big view radius!");
         }
-        if(j < 3)
+        if (j < 3)
         {
             throw new IllegalArgumentException("Too small view radius!");
-        } else
+        }
+        else
         {
             playerViewRadius = j;
             mcServer = minecraftserver;
@@ -60,19 +54,28 @@ public class PlayerManager
 
     public void updatePlayerInstances()
     {
-        for(int i = 0; i < playerInstancesToUpdate.size(); i++)
+        for (int i = 0; i < playerInstancesToUpdate.size(); i++)
         {
             ((PlayerInstance)playerInstancesToUpdate.get(i)).onUpdate();
         }
 
         playerInstancesToUpdate.clear();
+        if (players.isEmpty())
+        {
+            WorldServer worldserver = mcServer.getWorldManager(playerDimension);
+            WorldProvider worldprovider = worldserver.worldProvider;
+            if (!worldprovider.canRespawnHere())
+            {
+                worldserver.chunkProviderServer.func_46041_c();
+            }
+        }
     }
 
     private PlayerInstance getPlayerInstance(int i, int j, boolean flag)
     {
         long l = (long)i + 0x7fffffffL | (long)j + 0x7fffffffL << 32;
         PlayerInstance playerinstance = (PlayerInstance)playerInstances.getValueByKey(l);
-        if(playerinstance == null && flag)
+        if (playerinstance == null && flag)
         {
             playerinstance = new PlayerInstance(this, i, j);
             playerInstances.add(l, playerinstance);
@@ -85,7 +88,7 @@ public class PlayerManager
         int l = i >> 4;
         int i1 = k >> 4;
         PlayerInstance playerinstance = getPlayerInstance(l, i1, false);
-        if(playerinstance != null)
+        if (playerinstance != null)
         {
             playerinstance.markBlockNeedsUpdate(i & 0xf, j, k & 0xf);
         }
@@ -102,24 +105,22 @@ public class PlayerManager
         int i1 = 0;
         int j1 = 0;
         getPlayerInstance(i, j, true).addPlayer(entityplayermp);
-        for(int k1 = 1; k1 <= l * 2; k1++)
+        for (int k1 = 1; k1 <= l * 2; k1++)
         {
-            for(int i2 = 0; i2 < 2; i2++)
+            for (int i2 = 0; i2 < 2; i2++)
             {
                 int ai[] = xzDirectionsConst[k++ % 4];
-                for(int j2 = 0; j2 < k1; j2++)
+                for (int j2 = 0; j2 < k1; j2++)
                 {
                     i1 += ai[0];
                     j1 += ai[1];
                     getPlayerInstance(i + i1, j + j1, true).addPlayer(entityplayermp);
                 }
-
             }
-
         }
 
         k %= 4;
-        for(int l1 = 0; l1 < l * 2; l1++)
+        for (int l1 = 0; l1 < l * 2; l1++)
         {
             i1 += xzDirectionsConst[k][0];
             j1 += xzDirectionsConst[k][1];
@@ -133,17 +134,16 @@ public class PlayerManager
     {
         int i = (int)entityplayermp.managedPosX >> 4;
         int j = (int)entityplayermp.managedPosZ >> 4;
-        for(int k = i - playerViewRadius; k <= i + playerViewRadius; k++)
+        for (int k = i - playerViewRadius; k <= i + playerViewRadius; k++)
         {
-            for(int l = j - playerViewRadius; l <= j + playerViewRadius; l++)
+            for (int l = j - playerViewRadius; l <= j + playerViewRadius; l++)
             {
                 PlayerInstance playerinstance = getPlayerInstance(k, l, false);
-                if(playerinstance != null)
+                if (playerinstance != null)
                 {
                     playerinstance.removePlayer(entityplayermp);
                 }
             }
-
         }
 
         players.remove(entityplayermp);
@@ -153,7 +153,7 @@ public class PlayerManager
     {
         int i1 = i - k;
         int j1 = j - l;
-        if(i1 < -playerViewRadius || i1 > playerViewRadius)
+        if (i1 < -playerViewRadius || i1 > playerViewRadius)
         {
             return false;
         }
@@ -167,7 +167,7 @@ public class PlayerManager
         double d = entityplayermp.managedPosX - entityplayermp.posX;
         double d1 = entityplayermp.managedPosZ - entityplayermp.posZ;
         double d2 = d * d + d1 * d1;
-        if(d2 < 64D)
+        if (d2 < 64D)
         {
             return;
         }
@@ -175,29 +175,28 @@ public class PlayerManager
         int l = (int)entityplayermp.managedPosZ >> 4;
         int i1 = i - k;
         int j1 = j - l;
-        if(i1 == 0 && j1 == 0)
+        if (i1 == 0 && j1 == 0)
         {
             return;
         }
-        for(int k1 = i - playerViewRadius; k1 <= i + playerViewRadius; k1++)
+        for (int k1 = i - playerViewRadius; k1 <= i + playerViewRadius; k1++)
         {
-            for(int l1 = j - playerViewRadius; l1 <= j + playerViewRadius; l1++)
+            for (int l1 = j - playerViewRadius; l1 <= j + playerViewRadius; l1++)
             {
-                if(!isOutsidePlayerViewRadius(k1, l1, k, l))
+                if (!isOutsidePlayerViewRadius(k1, l1, k, l))
                 {
                     getPlayerInstance(k1, l1, true).addPlayer(entityplayermp);
                 }
-                if(isOutsidePlayerViewRadius(k1 - i1, l1 - j1, i, j))
+                if (isOutsidePlayerViewRadius(k1 - i1, l1 - j1, i, j))
                 {
                     continue;
                 }
                 PlayerInstance playerinstance = getPlayerInstance(k1 - i1, l1 - j1, false);
-                if(playerinstance != null)
+                if (playerinstance != null)
                 {
                     playerinstance.removePlayer(entityplayermp);
                 }
             }
-
         }
 
         entityplayermp.managedPosX = entityplayermp.posX;
