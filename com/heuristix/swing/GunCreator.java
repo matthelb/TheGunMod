@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9.1";
+    public static final String VERSION = "0.9.3";
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));

@@ -44,6 +44,14 @@ public class Method {
         this.code = code;
     }
 
+    public Method(int access, String name, String desc, String signature, String[] exceptions) {
+        this.access = access;
+        this.name = name;
+        this.desc = desc;
+        this.signature = signature;
+        this.exceptions = exceptions;
+    }
+
     public int getAccess() {
         return access;
     }

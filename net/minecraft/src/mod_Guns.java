@@ -5,10 +5,7 @@ import com.heuristix.asm.Opcodes;
 import com.heuristix.net.PacketDamageItem;
 import com.heuristix.net.PacketFireProjectile;
 import com.heuristix.swing.GunCreator;
-import com.heuristix.util.ExtensibleClassAdapter;
-import com.heuristix.util.InvokeMethod;
-import com.heuristix.util.Method;
-import com.heuristix.util.Pair;
+import com.heuristix.util.*;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
@@ -87,23 +84,22 @@ public class mod_Guns extends ModMP {
     }
 
     public void registerGun(Gun gun) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
-        List<Pair<String, byte[]>> gunClasses = gun.getClasses();
+        List<com.heuristix.util.Pair<String, byte[]>> gunClasses = gun.getClasses();
         List<byte[]> resources = gun.getResources();
 
         Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
         if (entityBulletClass == null) {
             byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
-            byte[] moddedBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst() + "CheckSuper", new HashMap<String, Method>(), false);
-            Class projectileType = Util.defineClass(moddedBytes, null, EntityProjectile.class.getClassLoader()).getSuperclass();
+            String projectileType = ClassDescriptor.getClassDescription(entityBulletClassBytes).getSuperName();
             HashMap<String, Method> methods = new HashMap<String, Method>();
             String worldClass = (DEBUG) ? "net/minecraft/src/World" : obfuscatedClasses.get(World.class);
             String entityLivingClass = (DEBUG) ? "net/minecraft/src/EntityLiving" : obfuscatedClasses.get(EntityLiving.class);
             for (int i = 0; i < GunCreator.OBFUSCATED_CLASS_NAMES.size(); i++) {
-                Pair<String, String> obfuscatedNames = GunCreator.OBFUSCATED_CLASS_NAMES.get(i);
+                com.heuristix.util.Pair<String, String> obfuscatedNames = GunCreator.OBFUSCATED_CLASS_NAMES.get(i);
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(L" + worldClass + ";L" + entityLivingClass + ";)V",
-                        new InvokeMethod(GunCreator.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(L" + worldClass + ";L" + entityLivingClass + ";)V", false, true, false)));
+                        new InvokeMethod(GunCreator.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass + ";L" + entityLivingClass + ";)V", false, true, false)));
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(L" + worldClass + ";)V",
-                        new InvokeMethod(GunCreator.SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(L" + worldClass + ";)V", false, true, false)));
+                        new InvokeMethod(GunCreator.SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass + ";)V", false, true, false)));
             }
             entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst(), methods, false);
             entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
