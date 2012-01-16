@@ -18,7 +18,7 @@ public class Packet255KickDisconnect extends Packet
     public void readPacketData(DataInputStream datainputstream)
     throws IOException
     {
-        reason = readString(datainputstream, 256);
+        reason = readString(datainputstream, 1000);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)

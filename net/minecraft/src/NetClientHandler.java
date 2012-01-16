@@ -1,8 +1,11 @@
 package net.minecraft.src;
 
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.net.*;
 import java.util.*;
+import java.util.logging.Logger;
 import net.minecraft.client.Minecraft;
 
 public class NetClientHandler extends NetHandler
@@ -153,6 +156,59 @@ public class NetClientHandler extends NetHandler
         {
             obj = new EntityFallingSand(worldClient, d, d1, d2, Block.dragonEgg.blockID);
         }
+        NetClientHandlerEntity netclienthandlerentity = ModLoaderMp.HandleNetClientHandlerEntities(packet23vehiclespawn.type);
+        if (netclienthandlerentity != null)
+        {
+            try
+            {
+                obj = (Entity)netclienthandlerentity.entityClass.getConstructor(new Class[]
+                        {
+                            net.minecraft.src.World.class, Double.TYPE, Double.TYPE, Double.TYPE
+                        }).newInstance(new Object[]
+                                {
+                                    worldClient, Double.valueOf(d), Double.valueOf(d1), Double.valueOf(d2)
+                                });
+                if (netclienthandlerentity.entityHasOwner)
+                {
+                    Field field = netclienthandlerentity.entityClass.getField("owner");
+                    if ((net.minecraft.src.Entity.class).isAssignableFrom(field.getType()))
+                    {
+                        Entity entity = getEntityByID(packet23vehiclespawn.throwerEntityId);
+                        if (entity == null)
+                        {
+                            ModLoaderMp.Log("Received spawn packet for entity with owner, but owner was not found.");
+                        }
+                        else if (field.getType().isAssignableFrom(entity.getClass()))
+                        {
+                            field.set(obj, entity);
+                        }
+                        else
+                        {
+                            throw new Exception(String.format("Tried to assign an entity of type %s to entity owner, which is of type %s.", new Object[]
+                                    {
+                                        entity.getClass(), field.getType()
+                                    }));
+                        }
+                    }
+                    else
+                    {
+                        throw new Exception(String.format("Entity's owner field must be of type Entity, but it is of type %s.", new Object[]
+                                {
+                                    field.getType()
+                                }));
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                ModLoader.getLogger().throwing("NetClientHandler", "handleVehicleSpawn", exception);
+                ModLoader.ThrowException(String.format("Error initializing entity of type %s.", new Object[]
+                        {
+                            Integer.valueOf(packet23vehiclespawn.type)
+                        }), exception);
+                return;
+            }
+        }
         if (obj != null)
         {
             obj.serverPosX = packet23vehiclespawn.xPosition;
@@ -176,10 +232,10 @@ public class NetClientHandler extends NetHandler
             {
                 if (packet23vehiclespawn.type == 60)
                 {
-                    Entity entity = getEntityByID(packet23vehiclespawn.throwerEntityId);
-                    if (entity instanceof EntityLiving)
+                    Entity entity1 = getEntityByID(packet23vehiclespawn.throwerEntityId);
+                    if (entity1 instanceof EntityLiving)
                     {
-                        ((EntityArrow)obj).shootingEntity = (EntityLiving)entity;
+                        ((EntityArrow)obj).shootingEntity = (EntityLiving)entity1;
                     }
                 }
                 ((Entity) (obj)).setVelocity((double)packet23vehiclespawn.speedX / 8000D, (double)packet23vehiclespawn.speedY / 8000D, (double)packet23vehiclespawn.speedZ / 8000D);
@@ -459,7 +515,7 @@ public class NetClientHandler extends NetHandler
         if (entity != null)
         {
             worldClient.playSoundAtEntity(entity, "random.pop", 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
-            mc.effectRenderer.addEffect(new EntityPickupFX(mc.theWorld, entity, ((Entity) (obj)), -0.5F));
+            mc.effectRenderer.addEffect(new EntityPickupFX(mc.theWorld, entity, (Entity)obj, -0.5F));
             worldClient.removeEntityFromWorld(packet22collect.collectedEntityId);
         }
     }
@@ -506,7 +562,7 @@ public class NetClientHandler extends NetHandler
         }
         else if (packet18animation.animate == 5)
         {
-            if (!(entity instanceof EntityOtherPlayerMP));
+            if (entity instanceof EntityOtherPlayerMP);
         }
     }
 
@@ -647,7 +703,7 @@ public class NetClientHandler extends NetHandler
         }
         else
         {
-            ((Entity) (obj)).mountEntity(entity);
+            ((Entity)obj).mountEntity(entity);
             return;
         }
     }
@@ -744,6 +800,10 @@ public class NetClientHandler extends NetHandler
             EntityPlayerSP entityplayersp1 = mc.thePlayer;
             mc.thePlayer.displayGUIEnchantment(MathHelper.floor_double(((EntityPlayer) (entityplayersp1)).posX), MathHelper.floor_double(((EntityPlayer) (entityplayersp1)).posY), MathHelper.floor_double(((EntityPlayer) (entityplayersp1)).posZ));
             mc.thePlayer.craftingInventory.windowId = packet100openwindow.windowId;
+        }
+        else
+        {
+            ModLoaderMp.HandleGUI(packet100openwindow);
         }
     }
 

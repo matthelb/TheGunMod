@@ -23,6 +23,10 @@ public class EntityGrenade extends EntityProjectile {
         super(world, owner);
     }
 
+    public EntityGrenade(World world, double x, double y, double z) {
+        super(world, x, y, z);
+    }
+
     @Override
     public void onUpdate() {
         super.onUpdate();
@@ -33,8 +37,10 @@ public class EntityGrenade extends EntityProjectile {
 
     @Override
     public boolean onBlockHit(MovingObjectPosition position) {
-        worldObj.createExplosion(this, posX, posY, posZ, getDamage());
-            return true;
+        if(!worldObj.multiplayerWorld) {
+            worldObj.createExplosion(this, posX, posY, posZ, getDamage());
+        }
+        return true;
     }
 
     @Override

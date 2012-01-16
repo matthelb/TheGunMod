@@ -2,6 +2,7 @@ package com.heuristix.guns;
 
 import com.heuristix.EntityProjectile;
 import com.heuristix.Util;
+import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 
 /**
@@ -18,6 +19,10 @@ public class EntityBullet extends EntityProjectile {
 
     public EntityBullet(World world, EntityLiving entityliving) {
         super(world, entityliving);
+    }
+
+    public EntityBullet(World world, double x, double y, double z) {
+        super(world, x, y, z);
     }
 
     @Override
@@ -62,13 +67,23 @@ public class EntityBullet extends EntityProjectile {
 
     public boolean onBlockHit(MovingObjectPosition position) {
         if(getOwner() instanceof EntityPlayerSP) {
-            PlayerController controller = Util.getPlayerController((EntityPlayerSP) getOwner());
-            if(controller != null) {
+            int x = position.blockX, y = position.blockY, z = position.blockZ;
+            Minecraft mc = Util.getMinecraft((EntityPlayerSP) getOwner());
+            if(mc != null) {
                 Block block = Block.blocksList[worldObj.getBlockId(position.blockX, position.blockY, position.blockZ)];
-                if(block.blockMaterial.equals(Material.glass)) {
-                    controller.onPlayerDestroyBlock(position.blockX, position.blockY, position.blockZ, block.blockID);
+                if(block != null && block.blockMaterial.equals(Material.glass)) {
+                    World world = worldObj;
+                    world.playAuxSFX(2001, x, y, z, block.blockID + world.getBlockMetadata(x, y, z) * 256);
+                    if(!world.multiplayerWorld) {
+                        int i1 = world.getBlockMetadata(x, y, z);
+                        boolean notified = world.setBlockWithNotify(x, y, z, 0);
+                        if (block != null && notified) {
+                            block.onBlockDestroyedByPlayer(world, x, y, z, i1);
+                        }
+                        return true;
+                    }
                 }
-                return true;
+
             }
         }
         return false;

@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import com.heuristix.*;
+import com.heuristix.ItemGun;
 import com.heuristix.asm.Opcodes;
 import com.heuristix.guns.EntityBullet;
 import com.heuristix.guns.EntityFlame;
@@ -24,7 +25,7 @@ import java.util.*;
 * Date: 9/1/11
 * Time: 9:47 AM
 */
-public class mod_Guns extends Mod {
+public class mod_Guns extends ModMP {
 
     public static final int MOUSE_LEFT = 0;
     public static final int MOUSE_RIGHT = 1;
@@ -44,21 +45,23 @@ public class mod_Guns extends Mod {
 
     public static int recoilY, recoilX;
 
+    private static int uniqueId = 0;//Gun.MAGIC;
+
     private static final Map<Class, Map<String, String>> obfuscatedFields = new HashMap<Class, Map<String, String>>();
 
     static {
         HashMap<String, String> values = new HashMap<String, String>();
         values.put("itemRenderer", "f");
         obfuscatedFields.put(RenderManager.class, (Map<String, String>) values.clone());
-        values.put("itemRenderer", "c");
         values.put("cameraZoom", "V");
+        values.put("itemRenderer", "c");
         obfuscatedFields.put(EntityRenderer.class, (Map<String, String>) values.clone());
         values.clear();
-        values.put("prevEquippedProgress", "d");
         values.put("equippedProgress", "c");
-        values.put("mc", "a");
         values.put("itemToRender", "b");
         values.put("mapItemRenderer", "f");
+        values.put("mc", "a");
+        values.put("prevEquippedProgress", "d");
         obfuscatedFields.put(ItemRenderer.class, (Map<String, String>) values.clone());
 
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
@@ -73,7 +76,7 @@ public class mod_Guns extends Mod {
 
     @Override
     public String getVersion() {
-        return "0.9.3" + " for " + CURRENT_VERSION;
+        return "0.9.4" + " for " + CURRENT_VERSION;
     }
 
     @Override
@@ -167,6 +170,7 @@ public class mod_Guns extends Mod {
             }
             entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
             classes.put(entityBulletClass.getName(), entityBulletClass);
+            ModLoaderMp.RegisterNetClientHandlerEntity(entityBulletClass, true, getUniqueEntityProjectileId());
         }
         ItemProjectile itemBullet = projectiles.get(gunClasses.get(1).getFirst());
         if (itemBullet == null) {
@@ -208,8 +212,9 @@ public class mod_Guns extends Mod {
 
     private boolean initReflection(Minecraft mc) {
         try {
-            Util.setPrivateValue(RenderManager.class, RenderManager.instance, "itemRenderer", obfuscatedFields.get(RenderManager.class).get("itemRenderer"), new GunItemRenderer(mc, obfuscatedFields.get(ItemRenderer.class)));
-            Util.setPrivateValue(EntityRenderer.class, mc.entityRenderer, "itemRenderer", obfuscatedFields.get(EntityRenderer.class).get("itemRenderer"), new GunItemRenderer(mc, obfuscatedFields.get(ItemRenderer.class)));
+            ItemRenderer renderer = new GunItemRenderer(mc, obfuscatedFields.get(ItemRenderer.class));
+            Util.setPrivateValue(RenderManager.class, RenderManager.instance, "itemRenderer", obfuscatedFields.get(RenderManager.class).get("itemRenderer"), renderer);
+            Util.setPrivateValue(EntityRenderer.class, mc.entityRenderer, "itemRenderer", obfuscatedFields.get(EntityRenderer.class).get("itemRenderer"), renderer);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return false;
@@ -226,8 +231,8 @@ public class mod_Guns extends Mod {
                     ItemStack equippedStack = player.getCurrentEquippedItem();
                     if (equippedStack != null) {
                         Item equipped = equippedStack.getItem();
-                        if (equipped != null && equipped instanceof ItemGun) {
-                            ItemGun equippedGun = (ItemGun) equipped;
+                        if (equipped != null && equipped instanceof com.heuristix.ItemGun) {
+                            com.heuristix.ItemGun equippedGun = (com.heuristix.ItemGun) equipped;
                             if (key.equals(reloadKeybinding)) {
                                 equippedGun.reload(player, mc);
                                 isZoomed = false;
@@ -262,22 +267,23 @@ public class mod_Guns extends Mod {
                                 shooter.fire(minecraft.theWorld, minecraft.thePlayer, minecraft);
                                 justAttemptedFire = true;
                             }
-                        } else
+                        } else {
                             justAttemptedFire = false;
+                        }
                         if (shooter.isBursting()) {
                             shooter.burst(minecraft.theWorld, minecraft.thePlayer, minecraft);
                         }
-                        if (equipped instanceof ItemGun) {
-                            applyRecoil(minecraft.thePlayer, (ItemGun) equipped);
+                        if (equipped instanceof com.heuristix.ItemGun) {
+                            applyRecoil(minecraft.thePlayer, (com.heuristix.ItemGun) equipped);
                         }
                     }
                 }
             }
-            boolean in = (minecraft.gameSettings.thirdPersonView == 0) && (equippedStack != null) && (equippedStack.getItem() != null) && (equippedStack.getItem() instanceof ItemGun) && isZoomed;
+            boolean in = (minecraft.gameSettings.thirdPersonView == 0) && (equippedStack != null) && (equippedStack.getItem() != null) && (equippedStack.getItem() instanceof com.heuristix.ItemGun) && isZoomed;
             if (equippedStack != null) {
                 Item item = equippedStack.getItem();
-                if (item instanceof ItemGun)
-                    zoom(minecraft, (ItemGun) item, minecraft.thePlayer, minecraft.theWorld, in);
+                if (item instanceof com.heuristix.ItemGun)
+                    zoom(minecraft, (com.heuristix.ItemGun) item, minecraft.thePlayer, minecraft.theWorld, in);
                 else {
                     currentZoom = 1.0f;
                     isZoomed = false;
@@ -294,7 +300,7 @@ public class mod_Guns extends Mod {
         map.put(EntityFlame.class, new RenderFlame());
     }
 
-    private static void applyRecoil(EntityPlayer player, ItemGun gun) {
+    private static void applyRecoil(EntityPlayer player, com.heuristix.ItemGun gun) {
         double y = 0.0D;
         double y1 = recoilY;
         if (recoilY > 0.0D) {
@@ -330,6 +336,10 @@ public class mod_Guns extends Mod {
         if (gun != null && gun.getScope() > 0 && (in || currentZoom != 1.0f)) {
             Util.renderTexture(mc, Scope.values()[gun.getScope()].getTexturePath(), 1.0f);
         }
+    }
+
+    private static int getUniqueEntityProjectileId() {
+        return uniqueId++;
     }
 
 }

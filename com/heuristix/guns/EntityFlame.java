@@ -20,6 +20,10 @@ public class EntityFlame extends EntityProjectile {
         super(world, entityliving);
     }
 
+    public EntityFlame(World world, double x, double y, double z) {
+        super(world, x, y, z);
+    }
+
     /*@Override
     public void onUpdate() {
         super.onUpdate();
@@ -29,33 +33,35 @@ public class EntityFlame extends EntityProjectile {
 
     @Override
     public boolean onBlockHit(MovingObjectPosition position) {
-        int x = position.blockX, y = position.blockY, z = position.blockZ;
-        switch (position.sideHit) {
-            case 0:
-                y--;
-                break;
-            case 1:
-                y++;
-                break;
-            case 2:
-                z--;
-                break;
-            case 3:
-                z++;
-                break;
-            case 4:
-                x--;
-                break;
-            case 5:
-                x++;
-                break;
-            default:
-                break;
-        }
-        if (worldObj.getBlockId(x, y, z) == 0) {
-            worldObj.playSoundEffect(posX, posY, posZ, "fire.ignite", 1.0f, Util.nextFloat() * 0.25f + 0.8f);
-            worldObj.setBlockWithNotify(x, y, z, Block.fire.blockID);
-            return true;
+        if(!worldObj.multiplayerWorld) {
+            int x = position.blockX, y = position.blockY, z = position.blockZ;
+            switch (position.sideHit) {
+                case 0:
+                    y--;
+                    break;
+                case 1:
+                    y++;
+                    break;
+                case 2:
+                    z--;
+                    break;
+                case 3:
+                    z++;
+                    break;
+                case 4:
+                    x--;
+                    break;
+                case 5:
+                    x++;
+                    break;
+                default:
+                    break;
+            }
+            if (worldObj.getBlockId(x, y, z) == 0) {
+                worldObj.playSoundEffect(posX, posY, posZ, "fire.ignite", 1.0f, Util.nextFloat() * 0.25f + 0.8f);
+                worldObj.setBlockWithNotify(x, y, z, Block.fire.blockID);
+                return true;
+            }
         }
         return false;
     }

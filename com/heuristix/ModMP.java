@@ -16,7 +16,7 @@ import java.util.Set;
  * Date: 9/1/11
  * Time: 10:12 AM
  */
-public abstract class Mod extends BaseMod {
+public abstract class ModMP extends BaseModMp {
 
     public static final String CURRENT_VERSION = "1.0.0";
 
@@ -29,7 +29,7 @@ public abstract class Mod extends BaseMod {
     private final Map sounds;
     private static final String[] SOUND_KEYS = {"sounds", "music", "streaming"};
 
-    public Mod() {
+    public ModMP() {
         this.textures = new HashSet<ModTextureStatic>();
         this.sounds = new HashMap();
     }

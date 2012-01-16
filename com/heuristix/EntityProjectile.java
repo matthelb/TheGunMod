@@ -14,7 +14,7 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
 
-    private EntityLiving owner;
+    public EntityLiving owner;
     private Vec3D start;
 
     private int xTile;
@@ -40,6 +40,16 @@ public abstract class EntityProjectile extends Entity {
         changeVelocity(getSpeed());
     }
 
+    public EntityProjectile(World world, double x, double y, double z) {
+        super(world);
+        this.posX = x;
+        this.posY = y;
+        this.posZ = z;
+        this.start = Vec3D.createVector(posX, posY, posZ);
+        setVelocity(computeVelocity());
+        changeVelocity(getSpeed());
+    }
+
     public abstract int getDamage();
 
     public abstract float getSpeed();
@@ -58,69 +68,79 @@ public abstract class EntityProjectile extends Entity {
 
     public void onUpdate() {
         super.onUpdate();
-        if (inGround) {
-            ticksInGround++;
-            if (ticksInGround >= getMaxGroundTicks()) {
-                setEntityDead();
+        if(!worldObj.multiplayerWorld) {
+            if(prevRotationPitch == 0 && prevRotationYaw == 0) {
+                float horizontalDist = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
+                prevRotationYaw = rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180) / Util.PI) + Util.randomFloat(-getSpread(), getSpread());
+                prevRotationPitch = rotationPitch = (float)((Math.atan2(motionY, horizontalDist) * 180) / Util.PI) + Util.randomFloat(-getSpread(), getSpread());
+                setVelocity(computeVelocity());
+                changeVelocity(getSpeed());
             }
-            return;
-        }
-        Vec3D currentLocation = getPosition();
-        Vec3D newLocation = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
-        MovingObjectPosition position = worldObj.rayTraceBlocks_do_do(currentLocation, newLocation, false, true);
-        currentLocation = getPosition();
-        newLocation = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
-        if (position != null) {
-            newLocation = Vec3D.createVector(position.hitVec.xCoord, position.hitVec.yCoord, position.hitVec.zCoord);
-        }
-        Entity hit = null;
-        List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1, 1, 1));
-        double d = 0;
-        for (Entity entity : list) {
-            if (!entity.canBeCollidedWith() || entity == owner && ticksInAir < 5) {
-                continue;
+            if (inGround) {
+                ticksInGround++;
+                if (ticksInGround >= getMaxGroundTicks()) {
+                    setEntityDead();
+                }
+                return;
             }
-            float expandAmount = 0.3f;
-            AxisAlignedBB aabb = entity.boundingBox.expand(expandAmount, expandAmount, expandAmount);
-            MovingObjectPosition position1 = aabb.func_1169_a(currentLocation, newLocation);
-            if (position1 == null) {
-                continue;
+            Vec3D currentLocation = getPosition();
+            Vec3D newLocation = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
+            MovingObjectPosition position = worldObj.rayTraceBlocks_do_do(currentLocation, newLocation, false, true);
+            currentLocation = getPosition();
+            newLocation = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
+            if (position != null) {
+                newLocation = Vec3D.createVector(position.hitVec.xCoord, position.hitVec.yCoord, position.hitVec.zCoord);
             }
-            double d1 = currentLocation.distanceTo(position1.hitVec);
-            if (d1 < d || d == 0) {
-                hit = entity;
-                d = d1;
+            Entity hit = null;
+            List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1, 1, 1));
+            double d = 0;
+            for (Entity entity : list) {
+                if (!entity.canBeCollidedWith() || entity == owner && ticksInAir < 5) {
+                    continue;
+                }
+                float expandAmount = 0.3f;
+                AxisAlignedBB aabb = entity.boundingBox.expand(expandAmount, expandAmount, expandAmount);
+                MovingObjectPosition position1 = aabb.calculateIntercept(currentLocation, newLocation);
+                if (position1 == null) {
+                    continue;
+                }
+                double d1 = currentLocation.distanceTo(position1.hitVec);
+                if (d1 < d || d == 0) {
+                    hit = entity;
+                    d = d1;
+                }
             }
-        }
 
-        if (hit != null) {
-            position = new MovingObjectPosition(hit);
-        }
-        if (position != null) {
-            if (position.entityHit != null && !(position.entityHit instanceof EntityProjectile) && onEntityHit(position.entityHit)) {
-                worldObj.playSoundAtEntity(owner, getHitSound(), 1.0f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
-                setEntityDead();
-            } else {
-                onBlockHit(position);
-                xTile = position.blockX;
-                yTile = position.blockY;
-                zTile = position.blockZ;
-                inTile = worldObj.getBlockId(xTile, yTile, zTile);
-                inData = worldObj.getBlockMetadata(xTile, yTile, zTile);
-                motionX = (float) (position.hitVec.xCoord - posX);
-                motionY = (float) (position.hitVec.yCoord - posY);
-                motionZ = (float) (position.hitVec.zCoord - posZ);
-                float f1 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
-                posX -= (motionX / f1) * 0.05000000074505806D;
-                posY -= (motionY / f1) * 0.05000000074505806D;
-                posZ -= (motionZ / f1) * 0.05000000074505806D;
-                //worldObj.playSoundAtEntity(this, getMoveSound(), 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
-                inGround = true;
+            if (hit != null) {
+                position = new MovingObjectPosition(hit);
             }
+            if (position != null) {
+                if (position.entityHit != null && !(position.entityHit instanceof EntityProjectile) && onEntityHit(position.entityHit)) {
+                    worldObj.playSoundAtEntity(owner, getHitSound(), 1.0f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
+                    setEntityDead();
+                } else {
+                    if(onBlockHit(position)) {
+                        xTile = position.blockX;
+                        yTile = position.blockY;
+                        zTile = position.blockZ;
+                        inTile = worldObj.getBlockId(xTile, yTile, zTile);
+                        inData = worldObj.getBlockMetadata(xTile, yTile, zTile);
+                        motionX = (float) (position.hitVec.xCoord - posX);
+                        motionY = (float) (position.hitVec.yCoord - posY);
+                        motionZ = (float) (position.hitVec.zCoord - posZ);
+                        float f1 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
+                        posX -= (motionX / f1) * 0.05000000074505806D;
+                        posY -= (motionY / f1) * 0.05000000074505806D;
+                        posZ -= (motionZ / f1) * 0.05000000074505806D;
+                        //worldObj.playSoundAtEntity(this, getMoveSound(), 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
+                        inGround = true;
+                    }
+                }
+            }
+            motionY -= GRAVITY * getMass();
+            //setVelocity(computeVelocity());
+            setPosition(posX + motionX, posY + motionY, posZ + motionZ);
         }
-        motionY -= GRAVITY * getMass();
-        //setVelocity(computeVelocity());
-        setPosition(posX + motionX, posY + motionY, posZ + motionZ);
     }
 
     public boolean onHit(Entity hit, MovingObjectPosition position) {

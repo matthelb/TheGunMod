@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9.2";
+    public static final String VERSION = "0.9.3";
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
@@ -43,6 +43,7 @@ public class GunCreator extends JFrame {
 
     static {
         //add additional Pairs as obfuscations increase
+        OBFUSCATED_CLASS_NAMES.add(new Pair("vq", "aar"));
         OBFUSCATED_CLASS_NAMES.add(new Pair("ry", "nq"));
         OBFUSCATED_CLASS_NAMES.add(new Pair("rv", "wd"));
     }

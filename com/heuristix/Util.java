@@ -1,5 +1,6 @@
 package com.heuristix;
 
+import com.heuristix.net.PacketDamageItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -9,6 +10,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
@@ -452,14 +454,14 @@ public class Util {
 
     static {
         HashMap<String, String> fields = new HashMap<String, String>();
+        fields.put("options", "f");
+        fields.put("sndSystem", "a");
+        fields.put("soundPoolMusic", "d");
         fields.put("soundPoolSounds", "b");
         fields.put("soundPoolStreaming", "c");
-        fields.put("soundPoolMusic", "d");
-        fields.put("sndSystem", "a");
-        fields.put("options", "f");
         OBFUSCATED_FIELDS.put(SoundManager.class, (Map<String, String>) fields.clone());
         fields.clear();
-        fields.put("mc", "");
+        fields.put("mc", "b");
         OBFUSCATED_FIELDS.put(EntityPlayerSP.class, (Map<String, String>) fields.clone());
     }
 
@@ -520,10 +522,10 @@ public class Util {
         return bytes;
     }
 
-    public static PlayerController getPlayerController(EntityPlayerSP owner) {
-        Minecraft mc = (Minecraft) getPrivateValue(EntityPlayerSP.class, owner, "mc", OBFUSCATED_FIELDS.get(EntityPlayerSP.class).get("mc"));
+    public static Minecraft getMinecraft(EntityPlayerSP player) {
+        Minecraft mc = (Minecraft) getPrivateValue(EntityPlayerSP.class, player, "mc", OBFUSCATED_FIELDS.get(EntityPlayerSP.class).get("mc"));
         if(mc != null) {
-            return mc.playerController;
+            return mc;
         }
         return null;
     }
@@ -547,10 +549,41 @@ public class Util {
         return getModMPId(getLoadedMod(clazz));
     }
 
+    public static void sendPacket(Packet230ModLoader packet, Class<? extends ModMP> modClass) {
+        packet.modId = Util.getModMPId(modClass);
+        sendPacket(packet);
+    }
+
+    public static void sendPacket(Packet packet) {
+        ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet);
+    }
+
+    private static Method addIdClassMapping;
+    public static void setPacketId(Class packetClass, int id, boolean client, boolean server) throws InvocationTargetException, IllegalAccessException {
+        if(addIdClassMapping == null) {
+            try {
+                addIdClassMapping = Packet.class.getDeclaredMethod("addIdClassMapping", int.class, boolean.class, boolean.class, Class.class);
+                addIdClassMapping.setAccessible(true);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                return;
+            }
+        }
+        addIdClassMapping.invoke(null, id, client, server, packetClass);
+    }
+
     public static String getStringFromBytes(int[] bytes) {
         int i = 0;
         while (bytes[i++] != 10) ;
         return new String(bytes, 0, i - 1);
+    }
+
+    public static void damageItem(ItemStack item, EntityPlayer player, int damage, Class modClass, World world) {
+        if(world.multiplayerWorld) {
+            Util.sendPacket(new PacketDamageItem(item.itemID, player.inventory.currentItem, damage), modClass);
+        } else {
+            item.damageItem(damage, player);
+        }
     }
 
 }
