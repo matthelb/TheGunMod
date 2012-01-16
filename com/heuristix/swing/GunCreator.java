@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9.3";
+    public static final String VERSION = "0.9.4";
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
@@ -323,15 +323,19 @@ public class GunCreator extends JFrame {
             List<Pair<String, byte[]>> gunClasses = gun.getClasses();
             List<byte[]> resources = gun.getResources();
 
-
             String projectileType = ClassDescriptor.getClassDescription(gunClasses.get(0).getSecond()).getSuperName();
             HashMap<String, Method> methods = new HashMap<String, Method>();
             for (int i = 0; i < OBFUSCATED_CLASS_NAMES.size(); i++) {
                 Pair<String, String> obfuscatedNames = OBFUSCATED_CLASS_NAMES.get(i);
-                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
-                        new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
-                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
-                        new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V",
+                        new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
+                            new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
+                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V",
+                        new Method("(Lnet/minecraft/src/World;)V",
+                            new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V",
+                         new Method("(Lnet/minecraft/src/World;DDD)V",
+                            new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;DDD)V", false, true, false)));
             }
             byte[] entityProjectileClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
             Class entityProjectileClass = null;
@@ -418,7 +422,7 @@ public class GunCreator extends JFrame {
 
         methods.put("<init>(Lnet/minecraft/src/World;DDD)V",
                 new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";DDD)V",
-                    new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>", "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V", false, true, false)));
+                new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>", "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";DDD)V", false, true, false)));
         String name = "Entity" + projectileNameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "") + nameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "");
         byte[] bytes = ExtensibleClassAdapter.modifyClassBytes(clazz, name, (HashMap<String, Method>) methods.clone(), true);
         byte[] stringBytes = Util.getStringBytes(name);
