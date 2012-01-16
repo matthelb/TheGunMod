@@ -276,6 +276,19 @@ public class Util {
         return null;
     }
 
+    public static Method getMethod(Class clazz, String name, String obfuscatedName, Class<?>... parameters) {
+        try {
+            return clazz.getDeclaredMethod(name);
+        } catch (NoSuchMethodException e) {
+            try {
+                return clazz.getDeclaredMethod(obfuscatedName);
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+        return null;
+    }
+
     public static String normalize(String string) {
         String normalized = string.toLowerCase().replaceAll("_", " ");
         return normalized.substring(0, 1).toUpperCase() + normalized.substring(1, normalized.length());
@@ -430,15 +443,21 @@ public class Util {
     }
 
     private static Method addIdClassMapping;
+    private static final Map<Class, Map<String, String>> OBFUSCATED_NAMES = new HashMap<Class, Map<String, String>>();
+
+    static {
+        HashMap<String, String> names = new HashMap<String, String>();
+        names.put("addIdClassMapping", "a");
+        OBFUSCATED_NAMES.put(Packet.class, (Map<String, String>) names.clone());
+    }
+
     public static void setPacketId(Class packetClass, int id, boolean client, boolean server) throws InvocationTargetException, IllegalAccessException {
         if(addIdClassMapping == null) {
-            try {
-                addIdClassMapping = Packet.class.getDeclaredMethod("addIdClassMapping", int.class, boolean.class, boolean.class, Class.class);
-                addIdClassMapping.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            addIdClassMapping = getMethod(Packet.class, "addIdClassMapping", OBFUSCATED_NAMES.get(Packet.class).get("addIdClassMapping"), int.class, boolean.class, boolean.class, Class.class);
+            if(addIdClassMapping == null) {
                 return;
             }
+            addIdClassMapping.setAccessible(true);
         }
         addIdClassMapping.invoke(null, id, client, server, packetClass);
     }
