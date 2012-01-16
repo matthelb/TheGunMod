@@ -28,7 +28,7 @@ public class StringTranslate
         TreeMap treemap = new TreeMap();
         try
         {
-            BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("C:\\Users\\Matt\\My Files\\Developement\\minecraft-mods\\MCP-MP\\server\\lang")), "UTF-8"));
+            BufferedReader bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.StringTranslate.class).getResourceAsStream("/lang/languages.txt"), "UTF-8"));
             for (String s = bufferedreader.readLine(); s != null; s = bufferedreader.readLine())
             {
                 String as[] = s.split("=");
@@ -49,7 +49,7 @@ public class StringTranslate
     private void func_44011_a(Properties properties, String s)
     throws IOException
     {
-        BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(new FileInputStream(new File("C:\\Users\\Matt\\My Files\\Developement\\minecraft-mods\\MCP-MP\\server\\lang\\" + s + ".lang")), "UTF-8"));
+        BufferedReader bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.StringTranslate.class).getResourceAsStream("/lang/languages.txt"), "UTF-8"));
         for (String s1 = bufferedreader.readLine(); s1 != null; s1 = bufferedreader.readLine())
         {
             s1 = s1.trim();

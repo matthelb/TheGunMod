@@ -46,7 +46,7 @@ public abstract class EntityProjectile extends Entity {
         this.posY = y;
         this.posZ = z;
         this.start = Vec3D.createVector(posX, posY, posZ);
-        setVelocity(computeVelocity());
+         setVelocity(computeVelocity());
         changeVelocity(getSpeed());
     }
 
@@ -197,9 +197,13 @@ public abstract class EntityProjectile extends Entity {
     }
 
     public final void setVelocity(Vec3D velocity) {
-        this.motionX = velocity.xCoord;
-        this.motionY = velocity.yCoord;
-        this.motionZ = velocity.zCoord;
+        setVelocity(velocity.xCoord, velocity.yCoord, velocity.zCoord);
+    }
+
+    public final void setVelocity(double x, double y, double z) {
+        this.motionX = x;
+        this.motionY = y;
+        this.motionZ = z;
     }
 
     public final Vec3D computeVelocity() {

@@ -421,6 +421,14 @@ public class Util {
         return getModMPId(getLoadedMod(clazz));
     }
 
+    public static void sendPacket(Packet230ModLoader packet, Class<? extends BaseModMp> modClass, EntityPlayerMP player) {
+        packet.modId = getModMPId(modClass);
+        sendPacket(packet, player);
+    }
+    public static void sendPacket(Packet packet, EntityPlayerMP player) {
+        player.playerNetServerHandler.sendPacket(packet);
+    }
+
     private static Method addIdClassMapping;
     public static void setPacketId(Class packetClass, int id, boolean client, boolean server) throws InvocationTargetException, IllegalAccessException {
         if(addIdClassMapping == null) {

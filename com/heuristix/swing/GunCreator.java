@@ -42,6 +42,7 @@ public class GunCreator extends JFrame {
 
     static {
         //add additional Pairs as obfuscations increase
+        OBFUSCATED_CLASS_NAMES.add(new Pair("vq", "aar"));
         OBFUSCATED_CLASS_NAMES.add(new com.heuristix.util.Pair("ry", "nq"));
         OBFUSCATED_CLASS_NAMES.add(new com.heuristix.util.Pair("rv", "wd"));
     }
