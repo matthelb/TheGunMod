@@ -327,6 +327,19 @@ public class Util {
         return null;
     }
 
+    public static Method getMethod(Class clazz, String name, String obfuscatedName, Class<?>... parameters) {
+        try {
+            return clazz.getDeclaredMethod(name);
+        } catch (NoSuchMethodException e) {
+            try {
+                return clazz.getDeclaredMethod(obfuscatedName);
+            } catch (NoSuchMethodException e1) {
+                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            }
+        }
+        return null;
+    }
+
     public static String normalize(String string) {
         String normalized = string.toLowerCase().replaceAll("_", " ");
         return normalized.substring(0, 1).toUpperCase() + normalized.substring(1, normalized.length());
@@ -445,29 +458,32 @@ public class Util {
 
     public static SoundSystem getSoundSystem(SoundManager sndManager) {
         if (sndManager != null) {
-            return (SoundSystem) getPrivateValue(SoundManager.class, sndManager, "sndSystem", OBFUSCATED_FIELDS.get(SoundManager.class).get("sndSystem"));
+            return (SoundSystem) getPrivateValue(SoundManager.class, sndManager, "sndSystem", OBFUSCATED_NAMES.get(SoundManager.class).get("sndSystem"));
         }
         return null;
     }
 
-    private static final Map<Class, Map<String, String>> OBFUSCATED_FIELDS = new HashMap<Class, Map<String, String>>();
+    private static final Map<Class, Map<String, String>> OBFUSCATED_NAMES = new HashMap<Class, Map<String, String>>();
 
     static {
-        HashMap<String, String> fields = new HashMap<String, String>();
-        fields.put("options", "f");
-        fields.put("sndSystem", "a");
-        fields.put("soundPoolMusic", "d");
-        fields.put("soundPoolSounds", "b");
-        fields.put("soundPoolStreaming", "c");
-        OBFUSCATED_FIELDS.put(SoundManager.class, (Map<String, String>) fields.clone());
-        fields.clear();
-        fields.put("mc", "b");
-        OBFUSCATED_FIELDS.put(EntityPlayerSP.class, (Map<String, String>) fields.clone());
+        HashMap<String, String> names = new HashMap<String, String>();
+        names.put("options", "f");
+        names.put("sndSystem", "a");
+        names.put("soundPoolMusic", "d");
+        names.put("soundPoolSounds", "b");
+        names.put("soundPoolStreaming", "c");
+        OBFUSCATED_NAMES.put(SoundManager.class, (Map<String, String>) names.clone());
+        names.clear();
+        names.put("mc", "b");
+        OBFUSCATED_NAMES.put(EntityPlayerSP.class, (Map<String, String>) names.clone());
+        names.clear();
+        names.put("addIdClassMapping", "a");
+        OBFUSCATED_NAMES.put(Packet.class, (Map<String, String>) names.clone());
     }
 
     public static SoundPool[] getSoundPools(SoundManager sndManager) {
         SoundPool[] soundPools = new SoundPool[3];
-        Map<String, String> fields = OBFUSCATED_FIELDS.get(SoundManager.class);
+        Map<String, String> fields = OBFUSCATED_NAMES.get(SoundManager.class);
         soundPools[0] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolSounds", fields.get("soundPoolSounds"));
         soundPools[1] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolStreaming", fields.get("soundPoolStreaming"));
         soundPools[2] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolMusic", fields.get("soundPoolMusic"));
@@ -475,7 +491,7 @@ public class Util {
     }
 
     public static GameSettings getGameSettings(SoundManager sndManager) {
-        return (GameSettings) getPrivateValue(SoundManager.class, sndManager, "options", OBFUSCATED_FIELDS.get(SoundManager.class).get("options"));
+        return (GameSettings) getPrivateValue(SoundManager.class, sndManager, "options", OBFUSCATED_NAMES.get(SoundManager.class).get("options"));
     }
 
     public static void setPrivateValue(Class clazz, Object classInstance, String fieldName, String obfuscatedName, Object fieldValue) {
@@ -523,7 +539,7 @@ public class Util {
     }
 
     public static Minecraft getMinecraft(EntityPlayerSP player) {
-        Minecraft mc = (Minecraft) getPrivateValue(EntityPlayerSP.class, player, "mc", OBFUSCATED_FIELDS.get(EntityPlayerSP.class).get("mc"));
+        Minecraft mc = (Minecraft) getPrivateValue(EntityPlayerSP.class, player, "mc", OBFUSCATED_NAMES.get(EntityPlayerSP.class).get("mc"));
         if(mc != null) {
             return mc;
         }
@@ -559,15 +575,14 @@ public class Util {
     }
 
     private static Method addIdClassMapping;
+
     public static void setPacketId(Class packetClass, int id, boolean client, boolean server) throws InvocationTargetException, IllegalAccessException {
         if(addIdClassMapping == null) {
-            try {
-                addIdClassMapping = Packet.class.getDeclaredMethod("addIdClassMapping", int.class, boolean.class, boolean.class, Class.class);
-                addIdClassMapping.setAccessible(true);
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            addIdClassMapping = getMethod(Packet.class, "addIdClassMapping", OBFUSCATED_NAMES.get(Packet.class).get("addIdClassMapping"), int.class, boolean.class, boolean.class, Class.class);
+            if(addIdClassMapping == null) {
                 return;
             }
+            addIdClassMapping.setAccessible(true);
         }
         addIdClassMapping.invoke(null, id, client, server, packetClass);
     }
