@@ -488,6 +488,7 @@ public class GunCreator extends JFrame {
     }*/
     public static final int[] SUPER_WORLD = {Opcodes.ALOAD_0, Opcodes.ALOAD_1};
     public static final int[] SUPER_WORLD_ENTITY = {Opcodes.ALOAD_0, Opcodes.ALOAD_1, Opcodes.ALOAD_2};
+    public static final int[] SUPER_WORLD_COORDS = {Opcodes.ALOAD_0, Opcodes.ALOAD_1, Opcodes.DLOAD_2, Opcodes.DLOAD, 0x4, Opcodes.DLOAD, 0x6};
 
     private void write(OutputStream out) throws IOException {
         ByteVector outBytes = new ByteVector();
@@ -504,11 +505,21 @@ public class GunCreator extends JFrame {
                 new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";L" + OBFUSCATED_CLASS_NAMES.get(0).getSecond() + ";)V",
                         new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>",
                                 "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";L" + OBFUSCATED_CLASS_NAMES.get(0).getSecond() + ";)V", false, true, false)));
-        methods.put("<init>(Lnet/minecraft/src/World;)V", new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V",
-                new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>", "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V", false, true, false)));
+        methods.put("<init>(Lnet/minecraft/src/World;)V",
+                new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V",
+                    new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>", "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V", false, true, false)));
+
+        methods.put("<init>(Lnet/minecraft/src/World;DDD)V",
+                new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";DDD)V",
+                    new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>", "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V", false, true, false)));
         String name = "Entity" + projectileNameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "") + nameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "");
         byte[] bytes = ExtensibleClassAdapter.modifyClassBytes(clazz, name, (HashMap<String, Method>) methods.clone(), true);
         byte[] stringBytes = Util.getStringBytes(name);
+        FileOutputStream stream = new FileOutputStream(new File("file.class"));
+        stream.write(bytes);
+        stream.flush();
+        stream.close();
+
         outBytes.putByteArray(stringBytes, 0, stringBytes.length);
         outBytes.putInt(bytes.length);
         outBytes.putByteArray(bytes, 0, bytes.length);
