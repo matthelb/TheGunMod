@@ -522,10 +522,10 @@ public class Util {
         return bytes;
     }
 
-    public static PlayerController getPlayerController(EntityPlayerSP owner) {
-        Minecraft mc = (Minecraft) getPrivateValue(EntityPlayerSP.class, owner, "mc", OBFUSCATED_FIELDS.get(EntityPlayerSP.class).get("mc"));
+    public static Minecraft getMinecraft(EntityPlayerSP player) {
+        Minecraft mc = (Minecraft) getPrivateValue(EntityPlayerSP.class, player, "mc", OBFUSCATED_FIELDS.get(EntityPlayerSP.class).get("mc"));
         if(mc != null) {
-            return mc.playerController;
+            return mc;
         }
         return null;
     }
@@ -549,8 +549,12 @@ public class Util {
         return getModMPId(getLoadedMod(clazz));
     }
 
-    public static void sendPacket(Packet230ModLoader packet, Class modClass) {
+    public static void sendPacket(Packet230ModLoader packet, Class<? extends ModMP> modClass) {
         packet.modId = Util.getModMPId(modClass);
+        sendPacket(packet);
+    }
+
+    public static void sendPacket(Packet packet) {
         ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet);
     }
 
@@ -577,8 +581,9 @@ public class Util {
     public static void damageItem(ItemStack item, EntityPlayer player, int damage, Class modClass, World world) {
         if(world.multiplayerWorld) {
             Util.sendPacket(new PacketDamageItem(item.itemID, player.inventory.currentItem, damage), modClass);
+        } else {
+            item.damageItem(damage, player);
         }
-        item.damageItem(damage, player);
     }
 
 }

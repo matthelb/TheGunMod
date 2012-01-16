@@ -25,6 +25,7 @@ public class PacketDamageItem extends Packet230ModLoader {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
     }
+
     public PacketDamageItem(int id, int slot, int damage) {
         this.packetType = 1;
         this.dataInt = new int[3];

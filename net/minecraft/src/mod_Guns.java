@@ -212,8 +212,9 @@ public class mod_Guns extends ModMP {
 
     private boolean initReflection(Minecraft mc) {
         try {
-            Util.setPrivateValue(RenderManager.class, RenderManager.instance, "itemRenderer", obfuscatedFields.get(RenderManager.class).get("itemRenderer"), new GunItemRenderer(mc, obfuscatedFields.get(ItemRenderer.class)));
-            Util.setPrivateValue(EntityRenderer.class, mc.entityRenderer, "itemRenderer", obfuscatedFields.get(EntityRenderer.class).get("itemRenderer"), new GunItemRenderer(mc, obfuscatedFields.get(ItemRenderer.class)));
+            ItemRenderer renderer = new GunItemRenderer(mc, obfuscatedFields.get(ItemRenderer.class));
+            Util.setPrivateValue(RenderManager.class, RenderManager.instance, "itemRenderer", obfuscatedFields.get(RenderManager.class).get("itemRenderer"), renderer);
+            Util.setPrivateValue(EntityRenderer.class, mc.entityRenderer, "itemRenderer", obfuscatedFields.get(EntityRenderer.class).get("itemRenderer"), renderer);
         } catch (NullPointerException e) {
             e.printStackTrace();
             return false;
@@ -266,8 +267,9 @@ public class mod_Guns extends ModMP {
                                 shooter.fire(minecraft.theWorld, minecraft.thePlayer, minecraft);
                                 justAttemptedFire = true;
                             }
-                        } else
+                        } else {
                             justAttemptedFire = false;
+                        }
                         if (shooter.isBursting()) {
                             shooter.burst(minecraft.theWorld, minecraft.thePlayer, minecraft);
                         }

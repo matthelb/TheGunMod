@@ -37,8 +37,10 @@ public class EntityGrenade extends EntityProjectile {
 
     @Override
     public boolean onBlockHit(MovingObjectPosition position) {
-        worldObj.createExplosion(this, posX, posY, posZ, getDamage());
-            return true;
+        if(!worldObj.multiplayerWorld) {
+            worldObj.createExplosion(this, posX, posY, posZ, getDamage());
+        }
+        return true;
     }
 
     @Override
