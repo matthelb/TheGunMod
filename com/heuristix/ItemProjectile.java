@@ -4,6 +4,8 @@ import net.minecraft.src.EntityLiving;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.World;
 
+import java.lang.reflect.Constructor;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

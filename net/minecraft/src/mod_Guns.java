@@ -156,15 +156,16 @@ public class mod_Guns extends ModMP {
         if (entityBulletClass == null) {
             byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
             if (DEBUG) {
-                byte[] moddedBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst() + "CheckSuper", new HashMap<String, Method>(), false);
-                Class projectileType = Util.defineClass(moddedBytes, null, EntityProjectile.class.getClassLoader()).getSuperclass();
+                String projectileType = ClassDescriptor.getClassDescription(entityBulletClassBytes).getSuperName();
                 HashMap<String, Method> methods = new HashMap<String, Method>();
                 for (int i = 0; i < GunCreator.OBFUSCATED_CLASS_NAMES.size(); i++) {
                     Pair<String, String> obfuscatedNames = GunCreator.OBFUSCATED_CLASS_NAMES.get(i);
                     methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
-                            new InvokeMethod(GunCreator.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
+                            new InvokeMethod(GunCreator.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
                     methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
-                            new InvokeMethod(GunCreator.SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType.getCanonicalName().replace('.', '/'), "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+                            new InvokeMethod(GunCreator.SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V", new Method("(Lnet/minecraft/src/World;DDD)V",
+                            new InvokeMethod(GunCreator.SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;DDD)V", false, true, false)));
                 }
                 entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst(), methods, false);
             }
