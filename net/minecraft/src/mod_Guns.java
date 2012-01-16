@@ -100,6 +100,8 @@ public class mod_Guns extends ModMP {
                         new InvokeMethod(GunCreator.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass + ";L" + entityLivingClass + ";)V", false, true, false)));
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(L" + worldClass + ";)V",
                         new InvokeMethod(GunCreator.SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass + ";)V", false, true, false)));
+                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V", new Method("(L" + worldClass + ";DDD)V",
+                            new InvokeMethod(GunCreator.SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass +";DDD)V", false, true, false)));
             }
             entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst(), methods, false);
             entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
