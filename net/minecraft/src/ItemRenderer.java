@@ -554,14 +554,15 @@ public class ItemRenderer
     {
         prevEquippedProgress = equippedProgress;
         EntityPlayerSP entityplayersp = mc.thePlayer;
-        ItemStack itemstack = entityplayersp.inventory.getCurrentItem();
+        ItemStack itemstack = ((EntityPlayer) (entityplayersp)).inventory.getCurrentItem();
         ItemStack itemstack1 = itemstack;
-        boolean flag = field_20099_f == entityplayersp.inventory.currentItem && itemstack1 == itemToRender;
-        if (itemToRender == null && itemstack1 == null) {
+        boolean flag = field_20099_f == ((EntityPlayer) (entityplayersp)).inventory.currentItem && itemstack1 == itemToRender;
+        if (itemToRender == null && itemstack1 == null)
+        {
             flag = true;
         }
-        if (itemstack1 != null && itemToRender != null && itemstack1 != itemToRender && itemstack1.itemID == itemToRender.itemID && itemstack1.getItemDamage() == itemToRender.getItemDamage()) {
-
+        if (itemstack1 != null && itemToRender != null && itemstack1 != itemToRender && itemstack1.itemID == itemToRender.itemID && itemstack1.getItemDamage() == itemToRender.getItemDamage())
+        {
             itemToRender = itemstack1;
             flag = true;
         }
@@ -580,7 +581,7 @@ public class ItemRenderer
         if (equippedProgress < 0.1F)
         {
             itemToRender = itemstack1;
-            field_20099_f = entityplayersp.inventory.currentItem;
+            field_20099_f = ((EntityPlayer) (entityplayersp)).inventory.currentItem;
         }
     }
 

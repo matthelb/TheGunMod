@@ -35,7 +35,7 @@ public class mod_Guns extends ModMP {
     private KeyBinding reloadKeybinding = new KeyBinding("key.reload", Keyboard.KEY_R);
     private KeyBinding zoomKeybinding = new KeyBinding("key.zoom", Keyboard.KEY_Z);
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     private boolean justAttemptedFire;
     private boolean reflectionInit;
