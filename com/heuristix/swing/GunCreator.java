@@ -422,11 +422,6 @@ public class GunCreator extends JFrame {
         String name = "Entity" + projectileNameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "") + nameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "");
         byte[] bytes = ExtensibleClassAdapter.modifyClassBytes(clazz, name, (HashMap<String, Method>) methods.clone(), true);
         byte[] stringBytes = Util.getStringBytes(name);
-        FileOutputStream stream = new FileOutputStream(new File("file.class"));
-        stream.write(bytes);
-        stream.flush();
-        stream.close();
-
         outBytes.putByteArray(stringBytes, 0, stringBytes.length);
         outBytes.putInt(bytes.length);
         outBytes.putByteArray(bytes, 0, bytes.length);
