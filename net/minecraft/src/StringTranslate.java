@@ -49,7 +49,7 @@ public class StringTranslate
     private void func_44011_a(Properties properties, String s)
     throws IOException
     {
-        BufferedReader bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.StringTranslate.class).getResourceAsStream("/lang/languages.txt"), "UTF-8"));
+        BufferedReader bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.StringTranslate.class).getResourceAsStream((new StringBuilder()).append("/lang/").append(s).append(".lang").toString()), "UTF-8"));
         for (String s1 = bufferedreader.readLine(); s1 != null; s1 = bufferedreader.readLine())
         {
             s1 = s1.trim();
