@@ -100,10 +100,19 @@ public class Util {
         return count;
     }
 
-    public static void renderTexture(Minecraft minecraft, String texture, float opacity) {
+    public static void renderTexture(String texture, float opacity, Minecraft minecraft) {
         ScaledResolution sr = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
         int width = sr.getScaledWidth();
         int height = sr.getScaledHeight();
+        GL11.glEnable(GL11.GL_BLEND);
+        renderTexture(new Rectangle(width, height), texture, opacity, minecraft);
+    }
+
+    public static void renderTexture(Rectangle rectangle, String texture, float opacity, Minecraft minecraft) {
+        renderTexture(rectangle.x, rectangle.y, rectangle.width, rectangle.height, texture, opacity, minecraft);
+    }
+    
+    public static void renderTexture(int x, int y, int width, int height, String texture, float opacity, Minecraft minecraft) {
         GL11.glEnable(GL11.GL_BLEND);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
         GL11.glDepthMask(false);
@@ -113,38 +122,15 @@ public class Util {
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.renderEngine.getTexture(texture));
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
-        t.addVertexWithUV(0, height, -90, 0, 1);
-        t.addVertexWithUV(width, height, -90, 1, 1);
-        t.addVertexWithUV(width, 0, -90, 1, 0);
-        t.addVertexWithUV(0, 0, -90, 0, 0);
+        t.addVertexWithUV(x, x + height, -90, 0, 1);
+        t.addVertexWithUV(x + width, y + height, -90, 1, 1);
+        t.addVertexWithUV(x + width, y, -90, 1, 0);
+        t.addVertexWithUV(x, y, -90, 0, 0);
         t.draw();
         GL11.glDepthMask(true);
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glDisable(GL11.GL_BLEND);
-    }
-
-    public static void renderRect(Color color, int x, int y, int width, int height, float opacity) {
-        GL11.glPushMatrix();
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthMask(false);
-        GL11.glBlendFunc(770, 771);
-        GL11.glColor4f((float) color.getRed() / 255, (float) color.getGreen() / 255, (float) color.getBlue() / 255, opacity);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        Tessellator t = Tessellator.instance;
-        t.startDrawingQuads();
-        t.setNormal(0.0F, 1.0F, 0.0F);
-        t.addVertexWithUV(x, y, 0, 0, 0);
-        t.addVertexWithUV(x + width, y, 0, 1, 0);
-        t.addVertexWithUV(x + width, y + height, 0, 1, 1);
-        t.addVertexWithUV(x, y + height, 0, 0, 1);
-        t.draw();
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glDisable(GL11.GL_BLEND);
-        GL11.glPopMatrix();
+        GL11.glDisable(GL11.GL_BLEND);   
     }
 
     public static float toRadians(double deg) {
@@ -329,10 +315,10 @@ public class Util {
 
     public static Method getMethod(Class clazz, String name, String obfuscatedName, Class<?>... parameters) {
         try {
-            return clazz.getDeclaredMethod(name);
+            return clazz.getDeclaredMethod(name, parameters);
         } catch (NoSuchMethodException e) {
             try {
-                return clazz.getDeclaredMethod(obfuscatedName);
+                return clazz.getDeclaredMethod(obfuscatedName, parameters);
             } catch (NoSuchMethodException e1) {
                 e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
