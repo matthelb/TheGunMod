@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9.4";
+    public static final String VERSION = "0.9.5";
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
@@ -60,7 +60,7 @@ public class GunCreator extends JFrame {
         public void selectedFile(File file) {
             byte[] bytes = Util.read(file);
             try {
-                load(new Gun(bytes));
+                load(new Gun(bytes), true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -318,33 +318,35 @@ public class GunCreator extends JFrame {
         }
     }*/
 
-    public void load(Gun gun) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, IOException, ClassNotFoundException {
+    public void load(Gun gun, boolean deobfuscate) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, IOException, ClassNotFoundException {
         if (gun != null) {
             List<Pair<String, byte[]>> gunClasses = gun.getClasses();
             List<byte[]> resources = gun.getResources();
 
             String projectileType = ClassDescriptor.getClassDescription(gunClasses.get(0).getSecond()).getSuperName();
             HashMap<String, Method> methods = new HashMap<String, Method>();
-            for (int i = 0; i < OBFUSCATED_CLASS_NAMES.size(); i++) {
-                Pair<String, String> obfuscatedNames = OBFUSCATED_CLASS_NAMES.get(i);
-                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V",
-                        new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
-                            new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
-                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V",
-                        new Method("(Lnet/minecraft/src/World;)V",
-                            new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
-                methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V",
-                         new Method("(Lnet/minecraft/src/World;DDD)V",
-                            new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;DDD)V", false, true, false)));
+            if(deobfuscate) {
+                for (int i = 0; i < OBFUSCATED_CLASS_NAMES.size(); i++) {
+                    Pair<String, String> obfuscatedNames = OBFUSCATED_CLASS_NAMES.get(i);
+                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V",
+                            new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
+                                new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
+                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V",
+                            new Method("(Lnet/minecraft/src/World;)V",
+                                new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
+                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V",
+                             new Method("(Lnet/minecraft/src/World;DDD)V",
+                                new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;DDD)V", false, true, false)));
+                }
             }
             byte[] entityProjectileClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
             Class entityProjectileClass = null;
             for (int i = 0; entityProjectileClass == null; i++) {
-                entityProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(entityProjectileClassBytes, gunClasses.get(0).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(0).getFirst() + i);
+                entityProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(entityProjectileClassBytes, gunClasses.get(0).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(0).getFirst() + i, ProjectileType.class.getClassLoader());
             }
             Class itemProjectileClass = null;
             for (int i = 0; itemProjectileClass == null; i++) {
-                itemProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(1).getFirst() + i);
+                itemProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(1).getFirst() + i, ItemProjectileBase.class.getClassLoader());
             }
             Constructor itemProjectileConstructor = itemProjectileClass.getDeclaredConstructor(int.class);
             itemProjectileConstructor.setAccessible(true);
@@ -354,7 +356,7 @@ public class GunCreator extends JFrame {
             EntityProjectile entityProjectile = (EntityProjectile) entityBulletConstructor.newInstance(new Object[]{null});
             Class itemGunClass = null;
             for (int i = 0; itemGunClass == null; i++) {
-                itemGunClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(2).getFirst() + i);
+                itemGunClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(2).getFirst() + i, ItemGunBase.class.getClassLoader());
             }
             Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
             itemGunConstructor.setAccessible(true);
