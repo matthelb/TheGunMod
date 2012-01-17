@@ -76,7 +76,7 @@ public class mod_Guns extends ModMP {
 
     @Override
     public String getVersion() {
-        return "0.9.4" + " for " + CURRENT_VERSION;
+        return "0.9.5" + " for " + CURRENT_VERSION;
     }
 
     @Override
@@ -134,11 +134,11 @@ public class mod_Guns extends ModMP {
                         if(versionCreated == null || !Util.getStringFromBytes(versionCreated).equals(GunCreator.VERSION)) {
                             if(gc == null)
                                 gc = new GunCreator();
-                            gc.load(gun);
+                            gc.load(gun, false);
                             gc.write(new FileOutputStream(f));
                             gun = new Gun(Util.read(f));
                         }
-                        registerGun(gun);
+                        registerGun(gun, DEBUG);
                     }
                 }
 
@@ -148,14 +148,14 @@ public class mod_Guns extends ModMP {
         }
     }
 
-    public void registerGun(Gun gun) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+    public void registerGun(Gun gun, boolean deobfuscate) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
         List<Pair<String, byte[]>> gunClasses = gun.getClasses();
         List<byte[]> resources = gun.getResources();
 
         Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
         if (entityBulletClass == null) {
             byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
-            if (DEBUG) {
+            if (deobfuscate) {
                 String projectileType = ClassDescriptor.getClassDescription(entityBulletClassBytes).getSuperName();
                 HashMap<String, Method> methods = new HashMap<String, Method>();
                 for (int i = 0; i < GunCreator.OBFUSCATED_CLASS_NAMES.size(); i++) {
@@ -335,7 +335,7 @@ public class mod_Guns extends ModMP {
         currentZoom = (in) ? Math.min(gun.getZoom(), currentZoom) : Math.max(1.0f, currentZoom);
         Util.setPrivateValue(EntityRenderer.class, mc.entityRenderer, "cameraZoom", obfuscatedFields.get(EntityRenderer.class).get("cameraZoom"), (in && gun != null && gun.getZoom() > 1.0f) ? Math.min(currentZoom, gun.getZoom()) : Math.max(currentZoom, 1.0f));
         if (gun != null && gun.getScope() > 0 && (in || currentZoom != 1.0f)) {
-            Util.renderTexture(mc, Scope.values()[gun.getScope()].getTexturePath(), 1.0f);
+            Util.renderTexture(Scope.values()[gun.getScope()].getTexturePath(), 1.0f, mc);
         }
     }
 
