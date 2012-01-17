@@ -278,10 +278,10 @@ public class Util {
 
     public static Method getMethod(Class clazz, String name, String obfuscatedName, Class<?>... parameters) {
         try {
-            return clazz.getDeclaredMethod(name);
+            return clazz.getDeclaredMethod(name, parameters);
         } catch (NoSuchMethodException e) {
             try {
-                return clazz.getDeclaredMethod(obfuscatedName);
+                return clazz.getDeclaredMethod(obfuscatedName, parameters);
             } catch (NoSuchMethodException e1) {
                 e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
             }
