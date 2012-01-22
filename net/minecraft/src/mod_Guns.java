@@ -3,10 +3,7 @@ package net.minecraft.src;
 import com.heuristix.*;
 import com.heuristix.ItemGun;
 import com.heuristix.asm.Opcodes;
-import com.heuristix.guns.EntityBullet;
-import com.heuristix.guns.EntityFlame;
-import com.heuristix.guns.RenderBullet;
-import com.heuristix.guns.RenderFlame;
+import com.heuristix.guns.*;
 import com.heuristix.swing.GunCreator;
 import com.heuristix.util.*;
 import net.minecraft.client.Minecraft;
@@ -35,7 +32,7 @@ public class mod_Guns extends ModMP {
     private KeyBinding reloadKeybinding = new KeyBinding("key.reload", Keyboard.KEY_R);
     private KeyBinding zoomKeybinding = new KeyBinding("key.zoom", Keyboard.KEY_Z);
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     private boolean justAttemptedFire;
     private boolean reflectionInit;
@@ -82,7 +79,7 @@ public class mod_Guns extends ModMP {
     @Override
     public void load() {
         try {
-        loadConfig(getConfig());
+            loadConfig(getConfig());
         } catch (IOException e) {
             System.out.println("Failed to read config file");
         }
@@ -93,6 +90,7 @@ public class mod_Guns extends ModMP {
         }
         registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
         registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
+        registerBlock(new BlockCraftGuns(212));
         ModLoader.RegisterKey(this, reloadKeybinding, false);
         ModLoader.RegisterKey(this, zoomKeybinding, false);
         ModLoader.AddLocalization("key.reload", "Reload");
@@ -134,7 +132,7 @@ public class mod_Guns extends ModMP {
                         if(versionCreated == null || !Util.getStringFromBytes(versionCreated).equals(GunCreator.VERSION)) {
                             if(gc == null)
                                 gc = new GunCreator();
-                            gc.load(gun, false);
+                            gc.load(gun, DEBUG);
                             gc.write(new FileOutputStream(f));
                             gun = new Gun(Util.read(f));
                         }
