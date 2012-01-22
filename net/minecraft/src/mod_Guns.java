@@ -42,7 +42,7 @@ public class mod_Guns extends ModMP {
 
     @Override
     public String getVersion() {
-        return "0.9.4" + " for " + CURRENT_VERSION;
+        return "0.9.5" + " for " + CURRENT_VERSION;
     }
 
     public void load() {
