@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.heuristix.swing.GunCreator;
+
 import java.util.ArrayList;
 import java.util.Random;
 

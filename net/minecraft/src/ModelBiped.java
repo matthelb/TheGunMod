@@ -46,7 +46,7 @@ public class ModelBiped extends ModelBase
         bipedBody.addBox(-4F, 0.0F, -2F, 8, 12, 4, f);
         bipedBody.setRotationPoint(0.0F, 0.0F + f1, 0.0F);
         bipedRightArm = new ModelRenderer(this, 40, 16);
-        bipedRightArm.addBox(-3F, -2F, -2F, 4, 12, 4, f);
+        bipedRightArm.addBox(-3, -2, -2, 4, 12, 4, f);
         bipedRightArm.setRotationPoint(-5F, 2.0F + f1, 0.0F);
         bipedLeftArm = new ModelRenderer(this, 40, 16);
         bipedLeftArm.mirror = true;

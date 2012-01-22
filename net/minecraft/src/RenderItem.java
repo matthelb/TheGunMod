@@ -147,21 +147,21 @@ public class RenderItem extends Render
         }
     }
 
-    public void drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int i, int j, int k, int l, int i1)
+    public void drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int itemId, int damage, int index, int x, int y)
     {
-        if (i < 256 && RenderBlocks.renderItemIn3d(Block.blocksList[i].getRenderType()))
+        if (itemId < 256 && RenderBlocks.renderItemIn3d(Block.blocksList[itemId].getRenderType()))
         {
-            int j1 = i;
+            int j1 = itemId;
             renderengine.bindTexture(renderengine.getTexture("/terrain.png"));
             Block block = Block.blocksList[j1];
             GL11.glPushMatrix();
-            GL11.glTranslatef(l - 2, i1 + 3, -3F + zLevel);
+            GL11.glTranslatef(x - 2, y + 3, -3F + zLevel);
             GL11.glScalef(10F, 10F, 10F);
             GL11.glTranslatef(1.0F, 0.5F, 1.0F);
             GL11.glScalef(1.0F, 1.0F, -1F);
             GL11.glRotatef(210F, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
-            int j2 = Item.itemsList[i].getColorFromDamage(j, 0);
+            int j2 = Item.itemsList[itemId].getColorFromDamage(damage, 0);
             float f2 = (float)(j2 >> 16 & 0xff) / 255F;
             float f5 = (float)(j2 >> 8 & 0xff) / 255F;
             float f7 = (float)(j2 & 0xff) / 255F;
@@ -171,18 +171,18 @@ public class RenderItem extends Render
             }
             GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
             renderBlocks.useInventoryTint = field_27004_a;
-            renderBlocks.renderBlockAsItem(block, j, 1.0F);
+            renderBlocks.renderBlockAsItem(block, damage, 1.0F);
             renderBlocks.useInventoryTint = true;
             GL11.glPopMatrix();
         }
-        else if (Item.itemsList[i].func_46058_c())
+        else if (Item.itemsList[itemId].func_46058_c())
         {
             GL11.glDisable(2896 /*GL_LIGHTING*/);
             renderengine.bindTexture(renderengine.getTexture("/gui/items.png"));
             for (int k1 = 0; k1 <= 1; k1++)
             {
-                int i2 = Item.itemsList[i].func_46057_a(j, k1);
-                int k2 = Item.itemsList[i].getColorFromDamage(j, k1);
+                int i2 = Item.itemsList[itemId].func_46057_a(damage, k1);
+                int k2 = Item.itemsList[itemId].getColorFromDamage(damage, k1);
                 float f3 = (float)(k2 >> 16 & 0xff) / 255F;
                 float f6 = (float)(k2 >> 8 & 0xff) / 255F;
                 float f8 = (float)(k2 & 0xff) / 255F;
@@ -190,15 +190,15 @@ public class RenderItem extends Render
                 {
                     GL11.glColor4f(f3, f6, f8, 1.0F);
                 }
-                renderTexturedQuad(l, i1, (i2 % 16) * 16, (i2 / 16) * 16, 16, 16);
+                renderTexturedQuad(x, y, (i2 % 16) * 16, (i2 / 16) * 16, 16, 16);
             }
 
             GL11.glEnable(2896 /*GL_LIGHTING*/);
         }
-        else if (k >= 0)
+        else if (index >= 0)
         {
             GL11.glDisable(2896 /*GL_LIGHTING*/);
-            if (i < 256)
+            if (itemId < 256)
             {
                 renderengine.bindTexture(renderengine.getTexture("/terrain.png"));
             }
@@ -206,7 +206,7 @@ public class RenderItem extends Render
             {
                 renderengine.bindTexture(renderengine.getTexture("/gui/items.png"));
             }
-            int l1 = Item.itemsList[i].getColorFromDamage(j, 0);
+            int l1 = Item.itemsList[itemId].getColorFromDamage(damage, 0);
             float f = (float)(l1 >> 16 & 0xff) / 255F;
             float f1 = (float)(l1 >> 8 & 0xff) / 255F;
             float f4 = (float)(l1 & 0xff) / 255F;
@@ -214,7 +214,7 @@ public class RenderItem extends Render
             {
                 GL11.glColor4f(f, f1, f4, 1.0F);
             }
-            renderTexturedQuad(l, i1, (k % 16) * 16, (k / 16) * 16, 16, 16);
+            renderTexturedQuad(x, y, (index % 16) * 16, (index / 16) * 16, 16, 16);
             GL11.glEnable(2896 /*GL_LIGHTING*/);
         }
         GL11.glEnable(2884 /*GL_CULL_FACE*/);
@@ -323,15 +323,15 @@ public class RenderItem extends Render
         tessellator.draw();
     }
 
-    public void renderTexturedQuad(int i, int j, int k, int l, int i1, int j1)
+    public void renderTexturedQuad(int i, int j, int k, int l, int width, int height)
     {
         float f = 0.00390625F;
         float f1 = 0.00390625F;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(i + 0, j + j1, zLevel, (float)(k + 0) * f, (float)(l + j1) * f1);
-        tessellator.addVertexWithUV(i + i1, j + j1, zLevel, (float)(k + i1) * f, (float)(l + j1) * f1);
-        tessellator.addVertexWithUV(i + i1, j + 0, zLevel, (float)(k + i1) * f, (float)(l + 0) * f1);
+        tessellator.addVertexWithUV(i + 0, j + height, zLevel, (float)(k + 0) * f, (float)(l + height) * f1);
+        tessellator.addVertexWithUV(i + width, j + height, zLevel, (float)(k + width) * f, (float)(l + height) * f1);
+        tessellator.addVertexWithUV(i + width, j + 0, zLevel, (float)(k + width) * f, (float)(l + 0) * f1);
         tessellator.addVertexWithUV(i + 0, j + 0, zLevel, (float)(k + 0) * f, (float)(l + 0) * f1);
         tessellator.draw();
     }
