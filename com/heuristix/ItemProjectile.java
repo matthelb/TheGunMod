@@ -1,8 +1,6 @@
 package com.heuristix;
 
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 
 import java.lang.reflect.Constructor;
 import java.util.Arrays;
@@ -40,4 +38,13 @@ public abstract class ItemProjectile extends ItemCustom {
             return null;
         }
     }
+
+    public boolean hasWorkbenchRecipe() {
+        return false;
+    }
+
+    public Object[] getCraftingRecipe() {
+        return new Object[]{Item.ingotIron, 1 / 8f, Item.gunpowder, 1 / 16f};
+    }
+
 }

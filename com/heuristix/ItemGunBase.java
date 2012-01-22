@@ -1,5 +1,7 @@
 package com.heuristix;
 
+import net.minecraft.src.Item;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Matt
@@ -80,7 +82,4 @@ public class ItemGunBase extends ItemGun {
         return null;
     }
 
-    public Object[] getCraftingRecipe() {
-        return new Object[0];
-    }
 }

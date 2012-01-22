@@ -20,10 +20,6 @@ public class ItemProjectileBase extends ItemProjectile {
         return null;  //To change body of implemented methods use File | Settings | File Templates.
     }
 
-    public Object[] getCraftingRecipe() {
-        return new Object[0];  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
     public int getCraftingAmount() {
         return 0;  //To change body of implemented methods use File | Settings | File Templates.
     }

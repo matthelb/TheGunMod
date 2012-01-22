@@ -27,7 +27,7 @@ public abstract class EntityProjectile extends Entity {
     private boolean inGround;
     private boolean doesBelongToPlayer;
 
-    protected EntityProjectile(World world) {
+    public EntityProjectile(World world) {
         super(world);
     }
 
@@ -141,12 +141,6 @@ public abstract class EntityProjectile extends Entity {
             //setVelocity(computeVelocity());
             setPosition(posX + motionX, posY + motionY, posZ + motionZ);
         }
-    }
-
-    public boolean onHit(Entity hit, MovingObjectPosition position) {
-        if (hit != null)
-            return hit.attackEntityFrom(new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
-        return false;
     }
 
     public boolean onEntityHit(Entity hit) {

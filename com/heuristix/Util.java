@@ -1,6 +1,7 @@
 package com.heuristix;
 
 import com.heuristix.net.PacketDamageItem;
+import com.heuristix.net.PacketDecreaseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -61,6 +62,18 @@ public class Util {
         return Math.min(min, max) + nextFloat() * Math.abs(max - min);
     }
 
+    public static double limit(double value, double min, double max) {
+        return Math.max(min, Math.min(value, max));
+    }
+
+    public static float toRadians(double deg) {
+        return (float) (deg / 180.0f * PI);
+    }
+
+    public static float toDegrees(double radians) {
+        return (float) (radians * 180 / PI);
+    }
+
     public static boolean remove(InventoryPlayer inventory, int id, int amount) {
         while (amount > 0) {
             int slot = getItemSlot(inventory, id);
@@ -71,12 +84,20 @@ public class Util {
                 int reduce = Math.min(stack.stackSize, amount);
                 if (reduce > amount)
                     reduce = amount;
-                inventory.decrStackSize(slot, amount);
+                decreaseStackSize(inventory, slot, amount, getMinecraft((EntityPlayerSP) inventory.player).theWorld);
                 if ((amount -= reduce) == 0)
                     break;
             }
         }
         return true;
+    }
+
+    public static void decreaseStackSize(InventoryPlayer inventory, int slot, int amount, World world) {
+        if(world.multiplayerWorld) {
+            Util.sendPacket(new PacketDecreaseStack(slot, amount));
+        } else {
+            inventory.decrStackSize(slot, amount);
+        }
     }
 
     public static int getItemSlot(InventoryPlayer inventory, int id) {
@@ -100,45 +121,12 @@ public class Util {
         return count;
     }
 
-    public static void renderTexture(String texture, float opacity, Minecraft minecraft) {
-        ScaledResolution sr = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
-        int width = sr.getScaledWidth();
-        int height = sr.getScaledHeight();
-        GL11.glEnable(GL11.GL_BLEND);
-        renderTexture(new Rectangle(width, height), texture, opacity, minecraft);
-    }
-
-    public static void renderTexture(Rectangle rectangle, String texture, float opacity, Minecraft minecraft) {
-        renderTexture(rectangle.x, rectangle.y, rectangle.width, rectangle.height, texture, opacity, minecraft);
-    }
-    
-    public static void renderTexture(int x, int y, int width, int height, String texture, float opacity, Minecraft minecraft) {
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glDisable(GL11.GL_DEPTH_TEST);
-        GL11.glDepthMask(false);
-        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-        GL11.glColor4f(1, 1, 1, opacity);
-        GL11.glDisable(GL11.GL_ALPHA_TEST);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.renderEngine.getTexture(texture));
-        Tessellator t = Tessellator.instance;
-        t.startDrawingQuads();
-        t.addVertexWithUV(x, x + height, -90, 0, 1);
-        t.addVertexWithUV(x + width, y + height, -90, 1, 1);
-        t.addVertexWithUV(x + width, y, -90, 1, 0);
-        t.addVertexWithUV(x, y, -90, 0, 0);
-        t.draw();
-        GL11.glDepthMask(true);
-        GL11.glEnable(GL11.GL_DEPTH_TEST);
-        GL11.glEnable(GL11.GL_ALPHA_TEST);
-        GL11.glDisable(GL11.GL_BLEND);   
-    }
-
-    public static float toRadians(double deg) {
-        return (float) (deg / 180.0f * PI);
-    }
-
-    public static float toDegrees(double radians) {
-        return (float) (radians * 180 / PI);
+    public static void damageItem(ItemStack item, EntityPlayer player, int damage, Class modClass, World world) {
+        if(world.multiplayerWorld) {
+            Util.sendPacket(new PacketDamageItem(item.itemID, player.inventory.currentItem, damage), modClass);
+        } else {
+            item.damageItem(damage, player);
+        }
     }
 
     private static File HOME_DIRECTORY;
@@ -196,7 +184,7 @@ public class Util {
 
     public static byte[] read(InputStream is) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096 /*GL_TEXTURE_WIDTH*/];
+        byte[] buffer = new byte[4096];
         int n;
         try {
             while ((n = is.read(buffer)) != -1) {
@@ -465,6 +453,12 @@ public class Util {
         names.clear();
         names.put("addIdClassMapping", "a");
         OBFUSCATED_NAMES.put(Packet.class, (Map<String, String>) names.clone());
+        names.clear();
+        names.put("renderBlocks", "");
+        OBFUSCATED_NAMES.put(RenderItem.class, (Map<String, String>) names.clone());
+        names.clear();
+        names.put("modelBiped", "");
+        OBFUSCATED_NAMES.put(RenderPlayer.class, (Map<String, String>) names.clone());
     }
 
     public static SoundPool[] getSoundPools(SoundManager sndManager) {
@@ -532,6 +526,22 @@ public class Util {
         return null;
     }
 
+    public static RenderBlocks getBlockRender(RenderItem renderItem) {
+        RenderBlocks renderBlocks = (RenderBlocks) getPrivateValue(RenderItem.class, renderItem, "renderBlocks", OBFUSCATED_NAMES.get(RenderItem.class).get("renderBlocks"));
+        if(renderBlocks != null) {
+            return renderBlocks;
+        }
+        return null;
+    }
+
+    public static ModelBiped getModelBiped(RenderPlayer render) {
+        ModelBiped modelBiped = (ModelBiped) getPrivateValue(RenderPlayer.class, render, "modelBipedMain", OBFUSCATED_NAMES.get(RenderPlayer.class).get("modelBipedMain"));
+        if(modelBiped != null) {
+            return modelBiped;
+        }
+        return null;
+    }
+
     public static BaseMod getLoadedMod(Class clazz) {
         List<BaseMod> mods = ModLoader.getLoadedMods();
         Iterator itr = mods.iterator();
@@ -579,12 +589,169 @@ public class Util {
         return new String(bytes, 0, i - 1);
     }
 
-    public static void damageItem(ItemStack item, EntityPlayer player, int damage, Class modClass, World world) {
-        if(world.multiplayerWorld) {
-            Util.sendPacket(new PacketDamageItem(item.itemID, player.inventory.currentItem, damage), modClass);
-        } else {
-            item.damageItem(damage, player);
+    public static boolean isCreative(EntityPlayerSP player) {
+        return getMinecraft(player).playerController.isInCreativeMode();
+    }
+
+    public static void renderItemOverlayIntoGUI(FontRenderer fontRenderer, RenderEngine renderEngine, ItemStack stack, int minStack, int x, int y, int color, float scale) {
+        if (stack == null) {
+            return;
+        }
+        if (stack.stackSize >= minStack) {
+            String string = String.valueOf(stack.stackSize);
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            drawString(string, scale, (int) ((x + (19 * scale)) - (2 * scale) - fontRenderer.getStringWidth(string)), (int) (y + (scale * 9)), color, true, fontRenderer);
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+        }
+        if (stack.isItemDamaged()) {
+            int k = (int)Math.round(13 - ((double)stack.getItemDamageForDisplay() * 13) / (double)stack.getMaxDamage());
+            int damagePercent = (int)Math.round(255 - ((double)stack.getItemDamageForDisplay() * 255) / (double)stack.getMaxDamage());
+            GL11.glDisable(GL11.GL_LIGHTING);
+            GL11.glDisable(GL11.GL_DEPTH_TEST);
+            GL11.glDisable(GL11.GL_TEXTURE_2D);
+            Tessellator t = Tessellator.instance;
+            int i1 = 255 - damagePercent << 16 | damagePercent << 8;
+            int j1 = (255 - damagePercent) / 4 << 16 | 0x3f00;
+            renderQuad(t, x + 2, y + 13, 13, 2, 0);
+            renderQuad(t, x + 2, y + 13, 12, 1, j1);
+            renderQuad(t, x + 2, y + 13, k, 1, i1);
+            GL11.glEnable(GL11.GL_TEXTURE_2D);
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_DEPTH_TEST);
+            GL11.glColor4f(1, 1, 1, 1);
         }
     }
 
+    public static void renderQuad(Tessellator t, int x, int y, int x1, int y1, int color) {
+        t.startDrawingQuads();
+        t.setColorOpaque_I(color);
+        t.addVertex(x + 0, y + 0, 0);
+        t.addVertex(x + 0, y + y1, 0);
+        t.addVertex(x + x1, y + y1, 0);
+        t.addVertex(x + x1, y + 0, 0);
+        t.draw();
+    }
+
+    public static void drawItemIntoGui(RenderBlocks renderBlocks, FontRenderer fontRenderer, RenderEngine renderEngine, int itemId, int damage, int iconIndex, double x, double y, double z, boolean useColor, float scale) {
+        if (itemId < 256 && RenderBlocks.renderItemIn3d(Block.blocksList[itemId].getRenderType())) {
+            renderEngine.bindTexture(renderEngine.getTexture("/terrain.png"));
+            Block block = Block.blocksList[itemId];
+            GL11.glPushMatrix();
+            GL11.glTranslatef((float) x - 2, (float)y + 3, -3F + (float)z);
+            GL11.glScalef(10, 10, 10);
+            GL11.glTranslatef(1, 0.5f, 1);
+            GL11.glScalef(1, 1, -1);
+            GL11.glRotatef(210, 1, 0, 0);
+            GL11.glRotatef(45, 0, 1, 0);
+            if (useColor) {
+                int color = Item.itemsList[itemId].getColorFromDamage(damage, 0);
+                float r = (color >> 16 & 0xFF) / 255f;
+                float g = (color >> 8 & 0xFF) / 255f;
+                float b = (color & 0xFF) / 255f;
+                GL11.glColor4f(r, g, b, 1);
+            }
+            GL11.glRotatef(-90, 0, 1, 0);
+            renderBlocks.useInventoryTint = useColor;
+            renderBlocks.renderBlockAsItem(block, damage, 1);
+            renderBlocks.useInventoryTint = true;
+            GL11.glPopMatrix();
+        } else if (Item.itemsList[itemId].func_46058_c()) {
+            GL11.glDisable(GL11.GL_LIGHTING);
+            renderEngine.bindTexture(renderEngine.getTexture("/gui/items.png"));
+            for (int k1 = 0; k1 <= 1; k1++)
+            {
+                int actualIconIndex = Item.itemsList[itemId].func_46057_a(damage, k1);
+                if (useColor) {
+                    int color = Item.itemsList[itemId].getColorFromDamage(damage, k1);
+                    float r = (float)(color >> 16 & 0xff) / 255F;
+                    float g = (float)(color >> 8 & 0xff) / 255F;
+                    float b = (float)(color & 0xff) / 255F;
+                    GL11.glColor4f(r, g, b, 1.0F);
+                }
+                renderTexturedQuad(Tessellator.instance, x, y, z, (actualIconIndex % 16) * 16, (actualIconIndex / 16) * 16, (int) (16 * scale), (int) (16 * scale), 16, 16);
+            }
+
+            GL11.glEnable(GL11.GL_LIGHTING);
+        } else if (iconIndex >= 0) {
+            GL11.glDisable(GL11.GL_LIGHTING);
+            if (itemId < 256) {
+                renderEngine.bindTexture(renderEngine.getTexture("/terrain.png"));
+            }
+            else {
+                renderEngine.bindTexture(renderEngine.getTexture("/gui/items.png"));
+            }
+            if (useColor) {
+                int color = Item.itemsList[itemId].getColorFromDamage(damage, 0);
+                float r = (float)(color >> 16 & 0xff) / 255F;
+                float g = (float)(color >> 8 & 0xff) / 255F;
+                float b = (float)(color & 0xff) / 255F;
+                GL11.glColor4f(r, g, b, 1.0F);
+            }
+            renderTexturedQuad(Tessellator.instance, x, y, z, (iconIndex % 16) * 16, (iconIndex / 16) * 16, (int) (16 * scale), (int) (16 * scale), 16, 16);
+            GL11.glEnable(GL11.GL_LIGHTING);
+        }
+        GL11.glEnable(GL11.GL_CULL_FACE);
+    }
+    
+    public static void renderTexturedQuad(Tessellator t, double x, double y, double z, double iconX, double iconY, double width, double height, double iconWidth, int iconHeight) {
+        float scaleFactor1 = 0.00390625F;
+        float scaleFactor2 = 0.00390625F;
+        t.startDrawingQuads();
+        t.addVertexWithUV(x + 0, y + height, z, (iconX + 0) * scaleFactor1, (iconY + iconHeight) * scaleFactor2);
+        t.addVertexWithUV(x + width, y + height, z, (iconX + iconWidth) * scaleFactor1, (iconY + iconHeight) * scaleFactor2);
+        t.addVertexWithUV(x + width, y + 0, z, (iconX + iconWidth) * scaleFactor1, (iconY + 0) * scaleFactor2);
+        t.addVertexWithUV(x + 0, y + 0, z, (iconX + 0) * scaleFactor1, (iconY + 0) * scaleFactor2);
+        t.draw();
+    }
+
+    public static void drawString(String string, float scale, int x, int y, int color, boolean shadow, FontRenderer renderer) {
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, 0);
+        GL11.glScalef(scale, scale, scale);
+        if(shadow) {
+            renderer.drawStringWithShadow(string, 0, 0, color);
+        } else {
+            renderer.drawString(string, 0, 0, color);
+        }
+        GL11.glScalef(1, 1, 1);
+        GL11.glTranslatef(-x, -y, 0);
+        GL11.glPopMatrix();
+    }
+
+    public static void renderTexture(String texture, float opacity, Minecraft minecraft) {
+        ScaledResolution sr = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
+        int width = sr.getScaledWidth();
+        int height = sr.getScaledHeight();
+        GL11.glEnable(GL11.GL_BLEND);
+        renderTexture(new Rectangle(width, height), texture, opacity, minecraft);
+    }
+
+    public static void renderTexture(Rectangle rectangle, String texture, float opacity, Minecraft minecraft) {
+        renderTexture(rectangle.x, rectangle.y, rectangle.width, rectangle.height, texture, opacity, minecraft);
+    }
+
+    public static void renderTexture(int x, int y, int width, int height, String texture, float opacity, Minecraft minecraft) {
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthMask(false);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glColor4f(1, 1, 1, opacity);
+        GL11.glDisable(GL11.GL_ALPHA_TEST);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, minecraft.renderEngine.getTexture(texture));
+        Tessellator t = Tessellator.instance;
+        t.startDrawingQuads();
+        t.addVertexWithUV(x, x + height, -90, 0, 1);
+        t.addVertexWithUV(x + width, y + height, -90, 1, 1);
+        t.addVertexWithUV(x + width, y, -90, 1, 0);
+        t.addVertexWithUV(x, y, -90, 0, 0);
+        t.draw();
+        GL11.glDepthMask(true);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_ALPHA_TEST);
+        GL11.glDisable(GL11.GL_BLEND);
+    }
+
 }
+
