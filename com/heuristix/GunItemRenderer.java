@@ -2,10 +2,7 @@ package com.heuristix;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
-import org.lwjgl.opengl.ARBMultitexture;
-import org.lwjgl.opengl.EXTRescaleNormal;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.*;
 
 import java.lang.reflect.Field;
 import java.util.Map;
@@ -22,7 +19,7 @@ public class GunItemRenderer extends ItemRenderer {
 
     private float reloadProgress, prevReloadProgress;
     private final Map<String, String> obfuscatedFields;
-    private Field prevEquippedProgressField, equippedProgressField, mcField, itemToRenderField, mapItemRendererField;
+    private Field prevEquippedProgressField, equippedProgressField, mcField, itemToRenderField, mapItemRendererField, renderBlocksInstanceField;
 
     private float getPrevEquippedProgress() {
         if (prevEquippedProgressField == null) {
@@ -55,6 +52,23 @@ public class GunItemRenderer extends ItemRenderer {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             return -1;
+        }
+    }
+
+    private RenderBlocks getRenderBlocksInstance() {
+        if(renderBlocksInstanceField == null) {
+            renderBlocksInstanceField = Util.getField(ItemRenderer.class, "renderBlocksInstance", obfuscatedFields.get("renderBlocksInstance"));
+            if(renderBlocksInstanceField == null)
+                return null;
+            else {
+                renderBlocksInstanceField.setAccessible(true);
+            }
+        }
+        try {
+            return (RenderBlocks) renderBlocksInstanceField.get(this);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
@@ -112,6 +126,140 @@ public class GunItemRenderer extends ItemRenderer {
     public GunItemRenderer(Minecraft minecraft, Map<String, String> obfuscatedFields) {
         super(minecraft);
         this.obfuscatedFields = obfuscatedFields;
+    }
+
+    public void renderItem(EntityLiving entity, ItemStack stack, int i) {
+        ItemGun gun = getGun();
+        if(gun == null) {
+            super.renderItem(entity, stack, i);
+            return;
+        }
+        Minecraft mc = getMC();
+        GL11.glPushMatrix();
+        if (stack.itemID < 256 && RenderBlocks.renderItemIn3d(Block.blocksList[stack.itemID].getRenderType())) {
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/terrain.png"));
+            getRenderBlocksInstance().renderBlockAsItem(Block.blocksList[stack.itemID], stack.getItemDamage(), 1);
+        } else {
+            if (stack.itemID < 256) {
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/terrain.png"));
+            }
+            else {
+                GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/gui/items.png"));
+            }
+            Tessellator t = Tessellator.instance;
+            int iconIndex = entity.getItemIcon(stack, i);
+            float x1 = (((iconIndex % 16) * 16) + 0) / 256f;
+            float x2 = (((iconIndex % 16) * 16) + 15.99f) / 256;
+            float y1 = (((iconIndex / 16) * 16) + 0) / 256f;
+            float y2 = (((iconIndex / 16) * 16) + 15.99f) / 256;
+            GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
+            GL11.glRotatef(0, 1, 0, 0);
+            GL11.glRotatef(45, 0, 1, 0);
+            GL11.glRotatef(-25, 0, 0, 1);
+            GL11.glTranslatef(-1.3f, -0.35f, 0);
+
+            float scale = 1.5f;
+            GL11.glScalef(scale, scale, scale);
+            addItemTextureVertices(t, x2, y1, x1, y2);
+            if (stack != null && stack.func_40713_r() && i == 0) {
+                GL11.glDepthFunc(GL11.GL_EQUAL);
+                GL11.glDisable(GL11.GL_LIGHTING);
+                mc.renderEngine.bindTexture(mc.renderEngine.getTexture("%blur%/misc/glint.png"));
+                GL11.glEnable(GL11.GL_BLEND);
+                GL11.glBlendFunc(768, 1);
+                float f7 = 0.76F;
+                GL11.glColor4f(0.5F * f7, 0.25F * f7, 0.8F * f7, 1.0F);
+                GL11.glMatrixMode(GL11.GL_TEXTURE);
+                GL11.glPushMatrix();
+                float glintScale = 0.125F;
+                GL11.glScalef(glintScale, glintScale, glintScale);
+                float f9 = ((float)(System.currentTimeMillis() % 3000L) / 3000F) * 8F;
+                GL11.glTranslatef(f9, 0.0F, 0.0F);
+                GL11.glRotatef(-50F, 0.0F, 0.0F, 1.0F);
+                addItemTextureVertices(t, 0.0F, 0.0F, 1.0F, 1.0F);
+                GL11.glPopMatrix();
+                GL11.glPushMatrix();
+                GL11.glScalef(glintScale, glintScale, glintScale);
+                f9 = ((float)(System.currentTimeMillis() % 4873L) / 4873F) * 8F;
+                GL11.glTranslatef(-f9, 0.0F, 0.0F);
+                GL11.glRotatef(10F, 0.0F, 0.0F, 1.0F);
+                addItemTextureVertices(t, 0.0F, 0.0F, 1.0F, 1.0F);
+                GL11.glPopMatrix();
+                GL11.glMatrixMode(ARBVertexBlend.GL_MODELVIEW10_ARB);
+                GL11.glDisable(GL11.GL_BLEND);
+                GL11.glEnable(GL11.GL_LIGHTING);
+                GL11.glDepthFunc(GL11.GL_LEQUAL);
+            }
+            GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
+        }
+        GL11.glPopMatrix();
+    }
+
+    private void addItemTextureVertices(Tessellator tessellator, float f, float f1, float f2, float f3) {
+        float f4 = 1.0F;
+        float f5 = 0.0625F;
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, 0.0F, 1.0F);
+        tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, f, f3);
+        tessellator.addVertexWithUV(f4, 0.0D, 0.0D, f2, f3);
+        tessellator.addVertexWithUV(f4, 1.0D, 0.0D, f2, f1);
+        tessellator.addVertexWithUV(0.0D, 1.0D, 0.0D, f, f1);
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, 0.0F, -1F);
+        tessellator.addVertexWithUV(0.0D, 1.0D, 0.0F - f5, f, f1);
+        tessellator.addVertexWithUV(f4, 1.0D, 0.0F - f5, f2, f1);
+        tessellator.addVertexWithUV(f4, 0.0D, 0.0F - f5, f2, f3);
+        tessellator.addVertexWithUV(0.0D, 0.0D, 0.0F - f5, f, f3);
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(-1F, 0.0F, 0.0F);
+        for (int i = 0; i < 16; i++) {
+            float f6 = (float)i / 16F;
+            float f10 = (f + (f2 - f) * f6) - 0.001953125F;
+            float f14 = f4 * f6;
+            tessellator.addVertexWithUV(f14, 0.0D, 0.0F - f5, f10, f3);
+            tessellator.addVertexWithUV(f14, 0.0D, 0.0D, f10, f3);
+            tessellator.addVertexWithUV(f14, 1.0D, 0.0D, f10, f1);
+            tessellator.addVertexWithUV(f14, 1.0D, 0.0F - f5, f10, f1);
+        }
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(1.0F, 0.0F, 0.0F);
+        for (int j = 0; j < 16; j++) {
+            float f7 = (float)j / 16F;
+            float f11 = (f + (f2 - f) * f7) - 0.001953125F;
+            float f15 = f4 * f7 + 0.0625F;
+            tessellator.addVertexWithUV(f15, 1.0D, 0.0F - f5, f11, f1);
+            tessellator.addVertexWithUV(f15, 1.0D, 0.0D, f11, f1);
+            tessellator.addVertexWithUV(f15, 0.0D, 0.0D, f11, f3);
+            tessellator.addVertexWithUV(f15, 0.0D, 0.0F - f5, f11, f3);
+        }
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, 1.0F, 0.0F);
+        for (int k = 0; k < 16; k++) {
+            float f8 = (float)k / 16F;
+            float f12 = (f3 + (f1 - f3) * f8) - 0.001953125F;
+            float f16 = f4 * f8 + 0.0625F;
+            tessellator.addVertexWithUV(0.0D, f16, 0.0D, f, f12);
+            tessellator.addVertexWithUV(f4, f16, 0.0D, f2, f12);
+            tessellator.addVertexWithUV(f4, f16, 0.0F - f5, f2, f12);
+            tessellator.addVertexWithUV(0.0D, f16, 0.0F - f5, f, f12);
+        }
+        tessellator.draw();
+        tessellator.startDrawingQuads();
+        tessellator.setNormal(0.0F, -1F, 0.0F);
+        for (int l = 0; l < 16; l++) {
+            float f9 = (float)l / 16F;
+            float f13 = (f3 + (f1 - f3) * f9) - 0.001953125F;
+            float f17 = f4 * f9;
+            tessellator.addVertexWithUV(f4, f17, 0.0D, f2, f13);
+            tessellator.addVertexWithUV(0.0D, f17, 0.0D, f, f13);
+            tessellator.addVertexWithUV(0.0D, f17, 0.0F - f5, f, f13);
+            tessellator.addVertexWithUV(f4, f17, 0.0F - f5, f2, f13);
+        }
+        tessellator.draw();
     }
 
     @Override
@@ -297,16 +445,16 @@ public class GunItemRenderer extends ItemRenderer {
                 GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
             }
             if (itemstack.getItem().func_46058_c()) {
-                renderItem(entityplayersp, itemstack, 0);
+                super.renderItem(entityplayersp, itemstack, 0);
                 int i1 = Item.itemsList[itemstack.itemID].getColorFromDamage(itemstack.getItemDamage(), 1);
                 float f26 = (float)(i1 >> 16 & 0xff) / 255F;
                 float f31 = (float)(i1 >> 8 & 0xff) / 255F;
                 float f34 = (float)(i1 & 0xff) / 255F;
                 GL11.glColor4f(f4 * f26, f4 * f31, f4 * f34, 1.0F);
-                renderItem(entityplayersp, itemstack, 1);
+                super.renderItem(entityplayersp, itemstack, 1);
             }
             else {
-                renderItem(entityplayersp, itemstack, 0);
+                super.renderItem(entityplayersp, itemstack, 0);
             }
             GL11.glPopMatrix();
         }
@@ -351,6 +499,9 @@ public class GunItemRenderer extends ItemRenderer {
         if(gun != null) {
             if(gun.equals(prevGun)) {
                 try {
+                    if(itemToRenderField == null) {
+                        getItemToRender();
+                    }
                     itemToRenderField.set(this, mc.thePlayer.getCurrentEquippedItem());
                 } catch (IllegalAccessException e) {
                     e.printStackTrace();            }
