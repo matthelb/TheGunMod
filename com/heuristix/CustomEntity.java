@@ -6,11 +6,13 @@ package com.heuristix;
  * Date: 9/1/11
  * Time: 10:08 AM
  */
-public interface CustomItem {
+public interface CustomEntity {
 
     String getName();
 
     String getIconPath();
+
+    boolean hasWorkbenchRecipe();
 
     Object[] getCraftingRecipe();
 

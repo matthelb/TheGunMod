@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 import com.heuristix.*;
 import com.heuristix.asm.Opcodes;
+import com.heuristix.guns.BlockCraftGuns;
 import com.heuristix.net.PacketDamageItem;
 import com.heuristix.net.PacketFireProjectile;
 import com.heuristix.swing.GunCreator;
@@ -57,6 +58,7 @@ public class mod_Guns extends ModMP {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        registerBlock(new BlockCraftGuns(212));
         ModLoader.SetInGameHook(this, true, false);
     }
 
@@ -85,7 +87,6 @@ public class mod_Guns extends ModMP {
 
     public void registerGun(Gun gun) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
         List<com.heuristix.util.Pair<String, byte[]>> gunClasses = gun.getClasses();
-        List<byte[]> resources = gun.getResources();
 
         Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
         if (entityBulletClass == null) {

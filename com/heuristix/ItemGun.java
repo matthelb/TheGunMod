@@ -1,9 +1,7 @@
 package com.heuristix;
 
 
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.ItemStack;
-import net.minecraft.src.World;
+import net.minecraft.src.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -95,5 +93,30 @@ public abstract class ItemGun extends ItemProjectileShooter {
         return reloadFinishTime;
     }
 
+    private Object[] craftingRecipe;
+
+    public boolean hasWorkbenchRecipe() {
+        return false;
+    }
+
+    public Object[] getCraftingRecipe() {
+        if(craftingRecipe == null) {
+            EntityProjectile entityProjectile = null;
+            try {
+                entityProjectile = getProjectile().getProjectileClass(this).getDeclaredConstructor(World.class).newInstance(new Object[]{null});
+            } catch (Exception e) {
+                return new Object[0];
+            }
+            int diamond = 1;
+            int gunPowder = (entityProjectile == null) ? 1 : (int) MathHelper.sqrt_float(entityProjectile.getEffectiveRange());
+            int iron = (entityProjectile == null) ? 1 : entityProjectile.getDamage() / 2;
+            craftingRecipe =  new Object[]{
+                Item.ingotIron, iron,
+                Item.gunpowder, gunPowder,
+                Item.diamond, diamond
+            };
+        }
+        return craftingRecipe;
+    }
 
 }

@@ -1,6 +1,5 @@
 package com.heuristix;
 
-import com.heuristix.net.PacketFireProjectile;
 import net.minecraft.src.*;
 
 import java.awt.image.BufferedImage;
@@ -56,6 +55,18 @@ public class Util {
         return Math.min(min, max) + nextFloat() * Math.abs(max - min);
     }
 
+    public static double limit(double value, double min, double max) {
+        return Math.max(min, Math.min(value, max));
+    }
+
+    public static float toRadians(double deg) {
+        return (float) (deg / 180.0f * PI);
+    }
+
+    public static float toDegrees(double radians) {
+        return (float) (radians * 180 / PI);
+    }
+
     public static boolean remove(InventoryPlayer inventory, int id, int amount) {
         while (amount > 0) {
             int slot = getItemSlot(inventory, id);
@@ -93,15 +104,6 @@ public class Util {
             }
         }
         return count;
-    }
-
-
-    public static float toRadians(double deg) {
-        return (float) (deg / 180.0f * PI);
-    }
-
-    public static float toDegrees(double radians) {
-        return (float) (radians * 180 / PI);
     }
 
     private static File HOME_DIRECTORY;
@@ -159,7 +161,7 @@ public class Util {
 
     public static byte[] read(InputStream is) {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        byte[] buffer = new byte[4096 /*GL_TEXTURE_WIDTH*/];
+        byte[] buffer = new byte[4096];
         int n;
         try {
             while ((n = is.read(buffer)) != -1) {
@@ -461,4 +463,11 @@ public class Util {
         }
         addIdClassMapping.invoke(null, id, client, server, packetClass);
     }
+
+    public static String getStringFromBytes(int[] bytes) {
+        int i = 0;
+        while (bytes[i++] != 10) ;
+        return new String(bytes, 0, i - 1);
+    }
 }
+
