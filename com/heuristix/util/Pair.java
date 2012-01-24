@@ -40,4 +40,8 @@ public class Pair<A, B> {
     public int hashCode() {
         return a.hashCode() + b.hashCode();
     }
+
+    public boolean equals(Pair<A, B> pair) {
+        return pair.getFirst().equals(getFirst()) && pair.getSecond().equals(getSecond());
+    }
 }

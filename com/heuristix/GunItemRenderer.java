@@ -1,5 +1,6 @@
 package com.heuristix;
 
+import com.heuristix.util.ObfuscatedNames;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.*;
@@ -18,114 +19,33 @@ public class GunItemRenderer extends ItemRenderer {
     private ItemGun prevGun;
 
     private float reloadProgress, prevReloadProgress;
-    private final Map<String, String> obfuscatedFields;
-    private Field prevEquippedProgressField, equippedProgressField, mcField, itemToRenderField, mapItemRendererField, renderBlocksInstanceField;
 
     private float getPrevEquippedProgress() {
-        if (prevEquippedProgressField == null) {
-            prevEquippedProgressField = Util.getField(ItemRenderer.class, "prevEquippedProgress", obfuscatedFields.get("prevEquippedProgress"));
-            if (prevEquippedProgressField == null) {
-                return -1;
-            } else {
-                prevEquippedProgressField.setAccessible(true);
-            }
-        }
-        try {
-            return (Float) prevEquippedProgressField.get(this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return -1;
-        }
+        return (Float) ObfuscatedNames.getInstance().getFieldValue(this, "prevEquippedProgress");
     }
 
     private float getEquippedProgress() {
-        if (equippedProgressField == null) {
-            equippedProgressField = Util.getField(ItemRenderer.class, "equippedProgress", obfuscatedFields.get("equippedProgress"));
-            if (equippedProgressField == null) {
-                return -1;
-            } else {
-                equippedProgressField.setAccessible(true);
-            }
-        }
-        try {
-            return (Float) equippedProgressField.get(this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return -1;
-        }
+        return (Float) ObfuscatedNames.getInstance().getFieldValue(this, "equippedProgress");
     }
 
     private RenderBlocks getRenderBlocksInstance() {
-        if(renderBlocksInstanceField == null) {
-            renderBlocksInstanceField = Util.getField(ItemRenderer.class, "renderBlocksInstance", obfuscatedFields.get("renderBlocksInstance"));
-            if(renderBlocksInstanceField == null)
-                return null;
-            else {
-                renderBlocksInstanceField.setAccessible(true);
-            }
-        }
-        try {
-            return (RenderBlocks) renderBlocksInstanceField.get(this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return (RenderBlocks) ObfuscatedNames.getInstance().getFieldValue(this, "renderBlocksInstance");
     }
 
     private Minecraft getMC() {
-        if (mcField == null) {
-            mcField = Util.getField(ItemRenderer.class, "mc", obfuscatedFields.get("mc"));
-            if (mcField == null) {
-                return null;
-            } else {
-                mcField.setAccessible(true);
-            }
-        }
-        try {
-            return (Minecraft) mcField.get(this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return (Minecraft) ObfuscatedNames.getInstance().getFieldValue(this, "mc");
     }
 
     private ItemStack getItemToRender() {
-        if (itemToRenderField == null) {
-            itemToRenderField = Util.getField(ItemRenderer.class, "itemToRender", obfuscatedFields.get("itemToRender"));
-            if (itemToRenderField == null) {
-                return null;
-            } else {
-                itemToRenderField.setAccessible(true);
-            }
-        }
-        try {
-            return (ItemStack) itemToRenderField.get(this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return (ItemStack) ObfuscatedNames.getInstance().getFieldValue(this, "itemToRender");
     }
 
     private MapItemRenderer getMapItemRenderer() {
-        if (mapItemRendererField == null) {
-            mapItemRendererField = Util.getField(ItemRenderer.class, "mapItemRenderer", obfuscatedFields.get("mapItemRenderer"));
-            if (mapItemRendererField == null) {
-                return null;
-            } else {
-                mapItemRendererField.setAccessible(true);
-            }
-        }
-        try {
-            return (MapItemRenderer) mapItemRendererField.get(this);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return (MapItemRenderer) ObfuscatedNames.getInstance().getFieldValue(this, "mapItemRenderer");
     }
 
-    public GunItemRenderer(Minecraft minecraft, Map<String, String> obfuscatedFields) {
+    public GunItemRenderer(Minecraft minecraft) {
         super(minecraft);
-        this.obfuscatedFields = obfuscatedFields;
     }
 
     public void renderItem(EntityLiving entity, ItemStack stack, int i) {
@@ -498,13 +418,7 @@ public class GunItemRenderer extends ItemRenderer {
         Minecraft mc = getMC();
         if(gun != null) {
             if(gun.equals(prevGun)) {
-                try {
-                    if(itemToRenderField == null) {
-                        getItemToRender();
-                    }
-                    itemToRenderField.set(this, mc.thePlayer.getCurrentEquippedItem());
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();            }
+                ObfuscatedNames.getInstance().setFieldValue(this, "itemToRender", mc.thePlayer.getCurrentEquippedItem());
             }
         }
         super.updateEquippedItem();

@@ -1,7 +1,7 @@
 package com.heuristix;
 
 import com.heuristix.net.PacketDamageItem;
-import com.heuristix.net.PacketDecreaseStack;
+import com.heuristix.util.ObfuscatedNames;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
@@ -84,20 +84,12 @@ public class Util {
                 int reduce = Math.min(stack.stackSize, amount);
                 if (reduce > amount)
                     reduce = amount;
-                decreaseStackSize(inventory, slot, amount, getMinecraft((EntityPlayerSP) inventory.player).theWorld);
+                inventory.decrStackSize(slot, amount);
                 if ((amount -= reduce) == 0)
                     break;
             }
         }
         return true;
-    }
-
-    public static void decreaseStackSize(InventoryPlayer inventory, int slot, int amount, World world) {
-        if(world.multiplayerWorld) {
-            Util.sendPacket(new PacketDecreaseStack(slot, amount));
-        } else {
-            inventory.decrStackSize(slot, amount);
-        }
     }
 
     public static int getItemSlot(InventoryPlayer inventory, int id) {
@@ -432,7 +424,7 @@ public class Util {
 
     public static SoundSystem getSoundSystem(SoundManager sndManager) {
         if (sndManager != null) {
-            return (SoundSystem) getPrivateValue(SoundManager.class, sndManager, "sndSystem", OBFUSCATED_NAMES.get(SoundManager.class).get("sndSystem"));
+            return (SoundSystem) ObfuscatedNames.getInstance().getFieldValue(sndManager, "sndSystem");
         }
         return null;
     }
@@ -440,66 +432,29 @@ public class Util {
     private static final Map<Class, Map<String, String>> OBFUSCATED_NAMES = new HashMap<Class, Map<String, String>>();
 
     static {
-        HashMap<String, String> names = new HashMap<String, String>();
-        names.put("options", "f");
-        names.put("sndSystem", "a");
-        names.put("soundPoolMusic", "d");
-        names.put("soundPoolSounds", "b");
-        names.put("soundPoolStreaming", "c");
-        OBFUSCATED_NAMES.put(SoundManager.class, (Map<String, String>) names.clone());
-        names.clear();
-        names.put("mc", "b");
-        OBFUSCATED_NAMES.put(EntityPlayerSP.class, (Map<String, String>) names.clone());
-        names.clear();
-        names.put("addIdClassMapping", "a");
-        OBFUSCATED_NAMES.put(Packet.class, (Map<String, String>) names.clone());
-        names.clear();
-        names.put("renderBlocks", "");
-        OBFUSCATED_NAMES.put(RenderItem.class, (Map<String, String>) names.clone());
-        names.clear();
-        names.put("modelBiped", "");
-        OBFUSCATED_NAMES.put(RenderPlayer.class, (Map<String, String>) names.clone());
+        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        names.putField(SoundManager.class, "options", "f");
+        names.putField(SoundManager.class, "sndSystem", "a");
+        names.putField(SoundManager.class, "soundPoolMusic", "d");
+        names.putField(SoundManager.class, "soundPoolSounds", "b");
+        names.putField(SoundManager.class, "soundPoolStreaming", "c");
+        names.putField(EntityPlayerSP.class, "mc", "b");
+        names.putField(Packet.class, "addIdClassMapping", "a");
+        names.putField(RenderItem.class, "renderBlocks", "");
+        names.putField(RenderPlayer.class, "modelBiped", "");
     }
 
     public static SoundPool[] getSoundPools(SoundManager sndManager) {
         SoundPool[] soundPools = new SoundPool[3];
-        Map<String, String> fields = OBFUSCATED_NAMES.get(SoundManager.class);
-        soundPools[0] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolSounds", fields.get("soundPoolSounds"));
-        soundPools[1] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolStreaming", fields.get("soundPoolStreaming"));
-        soundPools[2] = (SoundPool) getPrivateValue(SoundManager.class, sndManager, "soundPoolMusic", fields.get("soundPoolMusic"));
+        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        soundPools[0] = (SoundPool) names.getFieldValue(sndManager, "soundPoolSounds");
+        soundPools[1] = (SoundPool) names.getFieldValue(sndManager, "soundPoolStreaming");
+        soundPools[2] = (SoundPool) names.getFieldValue(sndManager, "soundPoolMusic");
         return soundPools;
     }
 
     public static GameSettings getGameSettings(SoundManager sndManager) {
-        return (GameSettings) getPrivateValue(SoundManager.class, sndManager, "options", OBFUSCATED_NAMES.get(SoundManager.class).get("options"));
-    }
-
-    public static void setPrivateValue(Class clazz, Object classInstance, String fieldName, String obfuscatedName, Object fieldValue) {
-        try {
-            ModLoader.setPrivateValue(clazz, classInstance, fieldName, fieldValue);
-        } catch (NoSuchFieldException e) {
-            try {
-                if (obfuscatedName != null)
-                    ModLoader.setPrivateValue(clazz, classInstance, obfuscatedName, fieldValue);
-            } catch (NoSuchFieldException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-
-    public static Object getPrivateValue(Class clazz, Object classInstance, String fieldName, String obfuscatedName) {
-        try {
-            return ModLoader.getPrivateValue(clazz, classInstance, fieldName);
-        } catch (NoSuchFieldException e) {
-            try {
-                if (obfuscatedName != null) {
-                    return ModLoader.getPrivateValue(clazz, classInstance, obfuscatedName);
-                }
-            } catch (NoSuchFieldException e1) {
-                e1.printStackTrace();
-            }
-        }
-        return null;
+        return (GameSettings) ObfuscatedNames.getInstance().getFieldValue(sndManager, "options");
     }
 
     public static int[] getIntArray(byte[] bytes) {
@@ -519,7 +474,7 @@ public class Util {
     }
 
     public static Minecraft getMinecraft(EntityPlayerSP player) {
-        Minecraft mc = (Minecraft) getPrivateValue(EntityPlayerSP.class, player, "mc", OBFUSCATED_NAMES.get(EntityPlayerSP.class).get("mc"));
+        Minecraft mc = (Minecraft) ObfuscatedNames.getInstance().getFieldValue(player, "mc");
         if(mc != null) {
             return mc;
         }
@@ -527,19 +482,11 @@ public class Util {
     }
 
     public static RenderBlocks getBlockRender(RenderItem renderItem) {
-        RenderBlocks renderBlocks = (RenderBlocks) getPrivateValue(RenderItem.class, renderItem, "renderBlocks", OBFUSCATED_NAMES.get(RenderItem.class).get("renderBlocks"));
-        if(renderBlocks != null) {
-            return renderBlocks;
-        }
-        return null;
+        return (RenderBlocks) ObfuscatedNames.getInstance().getFieldValue(renderItem, "renderBlocks");
     }
 
     public static ModelBiped getModelBiped(RenderPlayer render) {
-        ModelBiped modelBiped = (ModelBiped) getPrivateValue(RenderPlayer.class, render, "modelBipedMain", OBFUSCATED_NAMES.get(RenderPlayer.class).get("modelBipedMain"));
-        if(modelBiped != null) {
-            return modelBiped;
-        }
-        return null;
+        return (ModelBiped) ObfuscatedNames.getInstance().getFieldValue(render, "modelBipedMain");
     }
 
     public static BaseMod getLoadedMod(Class clazz) {
