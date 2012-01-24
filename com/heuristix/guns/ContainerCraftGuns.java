@@ -3,6 +3,7 @@ package com.heuristix.guns;
 import com.heuristix.ItemCustom;
 import com.heuristix.ItemGun;
 import com.heuristix.Util;
+import com.heuristix.util.Pair;
 import net.minecraft.src.*;
 import net.minecraft.src.Container;
 
@@ -100,15 +101,17 @@ public class ContainerCraftGuns extends Container {
                     if(stack == null) {
                         stack = slot.getStack();
                         Object[] transferCost = ((ItemCustom) slot.getStack().getItem()).getCraftingRecipe();
+                        List<Pair<Item,Integer>> validItems = new LinkedList<Pair<Item,Integer>>();
                         for(int i = 0; i < transferCost.length; i += 2) {
                             Item item = (Item) transferCost[i];
                             int amount = (int) Math.round(((Number) transferCost[i + 1]).doubleValue() * stack.stackSize);
                             if(Util.getCount(inventoryPlayer, item.shiftedIndex) < amount) {
                                 return null;
                             }
+                            validItems.add(new Pair<Item,Integer>(item, amount));
                             if(i == transferCost.length - 2) {
-                                for(int j = 0; j < transferCost.length; j++) {
-                                    if(!Util.remove(inventoryPlayer, item.shiftedIndex, amount)) {
+                                for(int j = 0; j < validItems.size(); j++) {
+                                    if(!Util.remove(inventoryPlayer, validItems.get(j).getFirst().shiftedIndex, validItems.get(j).getSecond())) {
                                         return null;
                                     }
                                 }

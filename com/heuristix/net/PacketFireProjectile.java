@@ -16,13 +16,7 @@ public class PacketFireProjectile extends Packet230ModLoader {
 
     public static final int PACKET_ID = 231;
     static {
-        try {
-            Util.setPacketId(PacketFireProjectile.class, PACKET_ID, true, true);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        Util.setPacketId(PacketFireProjectile.class, PACKET_ID, true, true);
     }
 
     public PacketFireProjectile() {

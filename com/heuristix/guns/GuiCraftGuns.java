@@ -4,6 +4,7 @@ import com.heuristix.CustomEntity;
 import com.heuristix.ItemCustom;
 import com.heuristix.ItemGun;
 import com.heuristix.Util;
+import com.heuristix.net.PacketCraftGunsArrowClick;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.GL11;
 
@@ -101,6 +102,9 @@ public class GuiCraftGuns extends GuiContainer {
             if(ARROW[i].contains(x - getX(),y - getY())) {
                 mouseOverArrow[i] = false;
                 container.onArrowClick(i);
+                if(mc.theWorld.multiplayerWorld) {
+                    Util.sendPacket(new PacketCraftGunsArrowClick(i), mod_Guns.class);
+                }
             }
         }
     }
@@ -112,54 +116,6 @@ public class GuiCraftGuns extends GuiContainer {
             mouseOverArrow[i] = ARROW[i].contains(x - getX(),y - getY());
         }
     }
-
-    /*public void handleMouseClick(Slot slot, int slotNumber, int mouseButton, boolean shiftHeld) {
-        InventoryPlayer inventoryPlayer = mc.thePlayer.inventory;
-        if(slot != null && slotNumber != -999) {
-            if(slot.inventory == container.getInventory()) {
-                ItemStack stack = inventoryPlayer.getItemStack();
-                if(stack == null) {
-                    stack = slot.getStack();
-                    Object[] transferCost = ((ItemCustom) slot.getStack().getItem()).getCraftingRecipe();
-                    for(int i = 0; i < transferCost.length; i += 2) {
-                        Item item = (Item) transferCost[i];
-                        int amount = (int) Math.round(((Number) transferCost[i + 1]).doubleValue() * stack.stackSize);
-                        if(Util.getCount(inventoryPlayer, item.shiftedIndex) < amount) {
-                            return;
-                        }
-                        if(i == transferCost.length - 2) {
-                            for(int j = 0; j < transferCost.length; j++) {
-                                if(!Util.remove(inventoryPlayer, item.shiftedIndex, amount)) {
-                                    return;
-                                }
-                            }
-                        }
-                    }
-                    inventoryPlayer.setItemStack(ItemStack.copyItemStack(stack));
-                }
-            } else {
-                inventorySlots.slotClick(slot.slotNumber, mouseButton, shiftHeld, mc.thePlayer);
-                ItemStack stack = inventorySlots.getSlot(slot.slotNumber).getStack();
-                mc.playerController.func_35637_a(stack, (slot.slotNumber - inventorySlots.inventorySlots.size()) + ContainerCraftGuns.COLUMNS + 36);
-            }
-        } else {
-            if (inventoryPlayer.getItemStack() != null) {
-                if (mouseButton == 0) {
-                    mc.thePlayer.dropPlayerItem(inventoryPlayer.getItemStack());
-                    mc.playerController.func_35639_a(inventoryPlayer.getItemStack());
-                    inventoryPlayer.setItemStack(null);
-                }
-                if (mouseButton == 1) {
-                    ItemStack tempStack = inventoryPlayer.getItemStack().splitStack(1);
-                    mc.thePlayer.dropPlayerItem(tempStack);
-                    mc.playerController.func_35639_a(tempStack);
-                    if (inventoryPlayer.getItemStack().stackSize == 0) {
-                        inventoryPlayer.setItemStack(null);
-                    }
-                }
-            }
-        }
-    }*/
 
     public int getX() {
         return (width - xSize) / 2;

@@ -91,6 +91,8 @@ public class mod_Guns extends ModMP {
         ModLoader.AddLocalization("key.reload", "Reload");
         ModLoader.AddLocalization("key.zoom", "Zoom");
         ModLoader.SetInGameHook(this, true, false);
+        Util.setPacketId(PacketOpenCraftGuns.class, PacketOpenCraftGuns.PACKET_ID, true, true);
+        ModLoaderMp.RegisterGUI(this, PacketOpenCraftGuns.INVENTORY_TYPE);
     }
 
     private Properties getConfig() throws IOException {

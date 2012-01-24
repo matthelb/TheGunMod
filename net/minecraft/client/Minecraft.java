@@ -1991,7 +1991,7 @@ public abstract class Minecraft
         }
         else
         {
-            minecraftimpl.session = new Session((new StringBuilder()).append("Player").append(System.currentTimeMillis() % 1000L).toString(), "");
+            minecraftimpl.session = new Session((new StringBuilder()).append("Player").append("0").toString(), "");
         }
         if (s2 != null)
         {
@@ -2019,7 +2019,7 @@ public abstract class Minecraft
     {
         String s = null;
         String s1 = null;
-        s = (new StringBuilder()).append("Player").append(System.currentTimeMillis() % 1000L).toString();
+        s = (new StringBuilder()).append("Player").append("0").toString();
         if (args.length > 0)
         {
             s = args[0];

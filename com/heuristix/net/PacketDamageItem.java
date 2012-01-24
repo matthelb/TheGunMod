@@ -17,13 +17,8 @@ public class PacketDamageItem extends Packet230ModLoader {
 
     public static final int PACKET_ID = 232;
     static {
-        try {
-            Util.setPacketId(PacketDamageItem.class, PACKET_ID, true, true);
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+
+        Util.setPacketId(PacketDamageItem.class, PACKET_ID, true, true);
     }
 
     public PacketDamageItem(int id, int slot, int damage) {

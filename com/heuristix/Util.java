@@ -280,32 +280,6 @@ public class Util {
         return null;
     }
 
-    public static Field getField(Class clazz, String name, String obfuscatedName) {
-        try {
-            return clazz.getDeclaredField(name);
-        } catch (NoSuchFieldException e) {
-            try {
-                return clazz.getDeclaredField(obfuscatedName);
-            } catch (NoSuchFieldException e1) {
-                e1.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static Method getMethod(Class clazz, String name, String obfuscatedName, Class<?>... parameters) {
-        try {
-            return clazz.getDeclaredMethod(name, parameters);
-        } catch (NoSuchMethodException e) {
-            try {
-                return clazz.getDeclaredMethod(obfuscatedName, parameters);
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-        return null;
-    }
-
     public static String normalize(String string) {
         String normalized = string.toLowerCase().replaceAll("_", " ");
         return normalized.substring(0, 1).toUpperCase() + normalized.substring(1, normalized.length());
@@ -442,6 +416,7 @@ public class Util {
         names.putField(Packet.class, "addIdClassMapping", "a");
         names.putField(RenderItem.class, "renderBlocks", "");
         names.putField(RenderPlayer.class, "modelBiped", "");
+        names.putMethod(Packet.class, "addIdClassMapping", "a", int.class, boolean.class, boolean.class, Class.class);
     }
 
     public static SoundPool[] getSoundPools(SoundManager sndManager) {
@@ -517,17 +492,9 @@ public class Util {
         ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet);
     }
 
-    private static Method addIdClassMapping;
 
-    public static void setPacketId(Class packetClass, int id, boolean client, boolean server) throws InvocationTargetException, IllegalAccessException {
-        if(addIdClassMapping == null) {
-            addIdClassMapping = getMethod(Packet.class, "addIdClassMapping", OBFUSCATED_NAMES.get(Packet.class).get("addIdClassMapping"), int.class, boolean.class, boolean.class, Class.class);
-            if(addIdClassMapping == null) {
-                return;
-            }
-            addIdClassMapping.setAccessible(true);
-        }
-        addIdClassMapping.invoke(null, id, client, server, packetClass);
+    public static void setPacketId(Class packetClass, int id, boolean client, boolean server) {
+         ObfuscatedNames.getInstance().invokeMethod(Packet.class, null, "addIdClassMapping", id, client, server, packetClass);
     }
 
     public static String getStringFromBytes(int[] bytes) {
