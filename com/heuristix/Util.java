@@ -1,6 +1,7 @@
 package com.heuristix;
 
 
+import com.heuristix.net.PacketOpenCraftGuns;
 import com.heuristix.util.ObfuscatedNames;
 import net.minecraft.src.*;
 
@@ -267,32 +268,6 @@ public class Util {
         return null;
     }
 
-    public static Field getField(Class clazz, String name, String obfuscatedName) {
-        try {
-            return clazz.getDeclaredField(name);
-        } catch (NoSuchFieldException e) {
-            try {
-                return clazz.getDeclaredField(obfuscatedName);
-            } catch (NoSuchFieldException e1) {
-                e1.printStackTrace();
-            }
-        }
-        return null;
-    }
-
-    public static Method getMethod(Class clazz, String name, String obfuscatedName, Class<?>... parameters) {
-        try {
-            return clazz.getDeclaredMethod(name, parameters);
-        } catch (NoSuchMethodException e) {
-            try {
-                return clazz.getDeclaredMethod(obfuscatedName, parameters);
-            } catch (NoSuchMethodException e1) {
-                e1.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-        }
-        return null;
-    }
-
     public static String normalize(String string) {
         String normalized = string.toLowerCase().replaceAll("_", " ");
         return normalized.substring(0, 1).toUpperCase() + normalized.substring(1, normalized.length());
@@ -423,20 +398,13 @@ public class Util {
     private static final Map<Class, Map<String, String>> OBFUSCATED_NAMES = new HashMap<Class, Map<String, String>>();
 
     static {
-        HashMap<String, String> names = new HashMap<String, String>();
-        names.put("addIdClassMapping", "a");
-        OBFUSCATED_NAMES.put(Packet.class, (Map<String, String>) names.clone());
+        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        names.putField(Packet.class, "addIdClassMapping", "a");
+        names.putField(EntityPlayerMP.class, "currentWindowId", "");
     }
 
     public static void setPacketId(Class packetClass, int id, boolean client, boolean server) throws InvocationTargetException, IllegalAccessException {
-        if(addIdClassMapping == null) {
-            addIdClassMapping = getMethod(Packet.class, "addIdClassMapping", OBFUSCATED_NAMES.get(Packet.class).get("addIdClassMapping"), int.class, boolean.class, boolean.class, Class.class);
-            if(addIdClassMapping == null) {
-                return;
-            }
-            addIdClassMapping.setAccessible(true);
-        }
-        addIdClassMapping.invoke(null, id, client, server, packetClass);
+         ObfuscatedNames.getInstance().invokeMethod(null, "addIdClassMapping", id, client, server, packetClass);
     }
 
     public static String getStringFromBytes(int[] bytes) {
@@ -446,10 +414,13 @@ public class Util {
     }
 
     public static void displayGUI(EntityPlayerMP player, IInventory inventory, Container container) {
-        player.getNextWidowId();
-        player.playerNetServerHandler.sendPacket(new Packet100OpenWindow(player.currentWindowId, 0, inventory.getInvName(), inventory.getSizeInventory()));
+        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        int currentWindowId = (Integer) names.getFieldValue(player, "currentWindowId");
+        currentWindowId = currentWindowId % 100 + 1;
+        player.playerNetServerHandler.sendPacket(new PacketOpenCraftGuns(currentWindowId, inventory.getInvName(), inventory.getSizeInventory()));
         player.currentCraftingInventory = container;
-        player.currentCraftingInventory.windowId = player.currentWindowId;
+        player.currentCraftingInventory.windowId = currentWindowId;
+        names.setFieldValue(player, "currentWindowId", currentWindowId);
     }
 }
 
