@@ -1,5 +1,7 @@
 package com.heuristix;
 
+
+import com.heuristix.util.ObfuscatedNames;
 import net.minecraft.src.*;
 
 import java.awt.image.BufferedImage;
@@ -373,33 +375,6 @@ public class Util {
         return pos.addVector(look.xCoord * distance, look.yCoord * distance, look.zCoord * distance);
     }
 
-    public static void setPrivateValue(Class clazz, Object classInstance, String fieldName, String obfuscatedName, Object fieldValue) {
-        try {
-            ModLoader.setPrivateValue(clazz, classInstance, fieldName, fieldValue);
-        } catch (NoSuchFieldException e) {
-            try {
-                if (obfuscatedName != null)
-                    ModLoader.setPrivateValue(clazz, classInstance, obfuscatedName, fieldValue);
-            } catch (NoSuchFieldException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-
-    public static Object getPrivateValue(Class clazz, Object classInstance, String fieldName, String obfuscatedName) {
-        try {
-            return ModLoader.getPrivateValue(clazz, classInstance, fieldName);
-        } catch (NoSuchFieldException e) {
-            try {
-                if (obfuscatedName != null) {
-                    return ModLoader.getPrivateValue(clazz, classInstance, obfuscatedName);
-                }
-            } catch (NoSuchFieldException e1) {
-                e1.printStackTrace();
-            }
-        }
-        return null;
-    }
 
     public static int[] getIntArray(byte[] bytes) {
         int[] ints = new int[bytes.length];
