@@ -33,8 +33,8 @@ public final class ObfuscatedNames {
         return instance;
     }
 
-    public Object getFieldValue(Object o, String name) {
-        java.lang.reflect.Field field = getField(o.getClass(), name);
+    public Object getFieldValue(Class clazz, Object o, String name) {
+        java.lang.reflect.Field field = getField(clazz, name);
         if(field != null) {
             try {
                 return field.get(o);
@@ -45,8 +45,8 @@ public final class ObfuscatedNames {
         return null;
     }
 
-    public void setFieldValue(Object o, String name, Object value) {
-        java.lang.reflect.Field field = getField(o.getClass(), name);
+    public void setFieldValue(Class clazz, Object o, String name, Object value) {
+        java.lang.reflect.Field field = getField(clazz, name);
         if(field != null) {
             try {
                 field.set(o, value);
@@ -56,8 +56,8 @@ public final class ObfuscatedNames {
         }
     }
 
-    public Object invokeMethod(Object o, String name, Object... params) {
-        java.lang.reflect.Method method = getMethod(o.getClass(), name);
+    public Object invokeMethod(Class clazz, Object o, String name, Object... params) {
+        java.lang.reflect.Method method = getMethod(clazz, name);
         if(method != null) {
             try {
                 return method.invoke(o, params);
@@ -100,6 +100,9 @@ public final class ObfuscatedNames {
 
     public java.lang.reflect.Method putMethod(Class clazz, String name, String obfuscatedName, Class... params) {
         Map<String, java.lang.reflect.Method> classMethods = methods.get(clazz);
+        if(classMethods == null) {
+            classMethods = new HashMap<String, java.lang.reflect.Method>();
+        }
         java.lang.reflect.Method method;
         try {
             method = clazz.getDeclaredMethod(obfuscatedName, params);
@@ -119,6 +122,9 @@ public final class ObfuscatedNames {
 
      public java.lang.reflect.Field putField(Class clazz, String name, String obfuscatedName) {
         Map<String, java.lang.reflect.Field> classFields = fields.get(clazz);
+        if(classFields == null) {
+            classFields = new HashMap<String, java.lang.reflect.Field>();
+        }
         java.lang.reflect.Field field;
         try {
             field = clazz.getDeclaredField(obfuscatedName);
