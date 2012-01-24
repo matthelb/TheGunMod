@@ -85,6 +85,7 @@ public class Util {
                     break;
             }
         }
+        System.out.println("Removed: " + amount + "x " + Item.itemsList[id].getItemName());
         return true;
     }
 
@@ -394,17 +395,14 @@ public class Util {
         player.playerNetServerHandler.sendPacket(packet);
     }
 
-    private static Method addIdClassMapping;
-    private static final Map<Class, Map<String, String>> OBFUSCATED_NAMES = new HashMap<Class, Map<String, String>>();
-
     static {
         ObfuscatedNames names = ObfuscatedNames.getInstance();
-        names.putField(Packet.class, "addIdClassMapping", "a");
+        names.putMethod(Packet.class, "addIdClassMapping", "a", int.class, boolean.class, boolean.class, Class.class);
         names.putField(EntityPlayerMP.class, "currentWindowId", "");
     }
 
-    public static void setPacketId(Class packetClass, int id, boolean client, boolean server) throws InvocationTargetException, IllegalAccessException {
-         ObfuscatedNames.getInstance().invokeMethod(null, "addIdClassMapping", id, client, server, packetClass);
+    public static void setPacketId(Class packetClass, int id, boolean client, boolean server) {
+         ObfuscatedNames.getInstance().invokeMethod(Packet.class, null, "addIdClassMapping", id, client, server, packetClass);
     }
 
     public static String getStringFromBytes(int[] bytes) {
@@ -415,12 +413,12 @@ public class Util {
 
     public static void displayGUI(EntityPlayerMP player, IInventory inventory, Container container) {
         ObfuscatedNames names = ObfuscatedNames.getInstance();
-        int currentWindowId = (Integer) names.getFieldValue(player, "currentWindowId");
+        int currentWindowId = (Integer) names.getFieldValue(EntityPlayerMP.class, player, "currentWindowId");
         currentWindowId = currentWindowId % 100 + 1;
         player.playerNetServerHandler.sendPacket(new PacketOpenCraftGuns(currentWindowId, inventory.getInvName(), inventory.getSizeInventory()));
         player.currentCraftingInventory = container;
         player.currentCraftingInventory.windowId = currentWindowId;
-        names.setFieldValue(player, "currentWindowId", currentWindowId);
+        names.setFieldValue(EntityPlayerMP.class, player, "currentWindowId", currentWindowId);
     }
 }
 

@@ -3,8 +3,10 @@ package com.heuristix.guns;
 import com.heuristix.ItemCustom;
 import com.heuristix.ItemGun;
 import com.heuristix.Util;
+import com.heuristix.util.*;
 import net.minecraft.src.*;
 import net.minecraft.src.Container;
+import net.minecraft.src.Pair;
 
 import java.awt.*;
 import java.util.LinkedList;
@@ -91,44 +93,48 @@ public class ContainerCraftGuns extends Container {
 
     @Override
     public ItemStack slotClick(int slotNumber, int mouseButton, boolean shiftHeld, EntityPlayer player) {
-        InventoryPlayer inventoryPlayer = player.inventory;
-        Slot slot = getSlot(slotNumber);
-        if(slot != null && slotNumber != -999) {
-            if(slot.inventory == getInventory()) {
-                ItemStack stack = inventoryPlayer.getItemStack();
-                if(stack == null) {
-                    stack = slot.getStack();
-                    Object[] transferCost = ((ItemCustom) slot.getStack().getItem()).getCraftingRecipe();
-                    for(int i = 0; i < transferCost.length; i += 2) {
-                        Item item = (Item) transferCost[i];
-                        int amount = (int) Math.round(((Number) transferCost[i + 1]).doubleValue() * stack.stackSize);
-                        if(Util.getCount(inventoryPlayer, item.shiftedIndex) < amount) {
-                            return null;
-                        }
-                        if(i == transferCost.length - 2) {
-                            for(int j = 0; j < transferCost.length; j++) {
-                                if(!Util.remove(inventoryPlayer, item.shiftedIndex, amount)) {
-                                    return null;
+        if(slotNumber != -999) {
+            InventoryPlayer inventoryPlayer = player.inventory;
+            Slot slot = getSlot(slotNumber);
+            if(slot != null) {
+                if(slot.inventory == getInventory()) {
+                    ItemStack stack = inventoryPlayer.getItemStack();
+                    if(stack == null) {
+                        stack = slot.getStack();
+                        Object[] transferCost = ((ItemCustom) slot.getStack().getItem()).getCraftingRecipe();
+                        List<com.heuristix.util.Pair<Item,Integer>> validItems = new LinkedList<com.heuristix.util.Pair<Item,Integer>>();
+                        for(int i = 0; i < transferCost.length; i += 2) {
+                            Item item = (Item) transferCost[i];
+                            int amount = (int) Math.round(((Number) transferCost[i + 1]).doubleValue() * stack.stackSize);
+                            if(Util.getCount(inventoryPlayer, item.shiftedIndex) < amount) {
+                                return null;
+                            }
+                            validItems.add(new com.heuristix.util.Pair<Item,Integer>(item, amount));
+                            if(i == transferCost.length - 2) {
+                                for(int j = 0; j < validItems.size(); j++) {
+                                    if(!Util.remove(inventoryPlayer, validItems.get(j).getFirst().shiftedIndex, validItems.get(j).getSecond())) {
+                                        return null;
+                                    }
                                 }
                             }
                         }
+                        inventoryPlayer.setItemStack(ItemStack.copyItemStack(stack));
                     }
-                    inventoryPlayer.setItemStack(ItemStack.copyItemStack(stack));
+                } else {
+                    return super.slotClick(slot.id, mouseButton, shiftHeld, player);
                 }
             } else {
-                return super.slotClick(slot.id, mouseButton, shiftHeld, player);
-            }
-        } else {
-            if (inventoryPlayer.getItemStack() != null) {
-                if (mouseButton == 0) {
-                    player.dropPlayerItem(inventoryPlayer.getItemStack());
-                    inventoryPlayer.setItemStack(null);
-                }
-                if (mouseButton == 1) {
-                    ItemStack tempStack = inventoryPlayer.getItemStack().splitStack(1);
-                    player.dropPlayerItem(tempStack);
-                    if (inventoryPlayer.getItemStack().stackSize == 0) {
+                if (inventoryPlayer.getItemStack() != null) {
+                    if (mouseButton == 0) {
+                        player.dropPlayerItem(inventoryPlayer.getItemStack());
                         inventoryPlayer.setItemStack(null);
+                    }
+                    if (mouseButton == 1) {
+                        ItemStack tempStack = inventoryPlayer.getItemStack().splitStack(1);
+                        player.dropPlayerItem(tempStack);
+                        if (inventoryPlayer.getItemStack().stackSize == 0) {
+                            inventoryPlayer.setItemStack(null);
+                        }
                     }
                 }
             }

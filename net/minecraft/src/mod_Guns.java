@@ -5,6 +5,7 @@ import com.heuristix.asm.Opcodes;
 import com.heuristix.guns.BlockCraftGuns;
 import com.heuristix.net.PacketDamageItem;
 import com.heuristix.net.PacketFireProjectile;
+import com.heuristix.net.PacketOpenCraftGuns;
 import com.heuristix.swing.GunCreator;
 import com.heuristix.util.*;
 
@@ -23,18 +24,18 @@ import java.util.Map;
 */
 public class mod_Guns extends ModMP {
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     private static final Map<String, Class> classes = new HashMap<String, Class>();
 
     private static int uniqueId;
 
     private static final Map<String, ItemProjectile> projectiles = new HashMap<String, ItemProjectile>();
-    private static final Map<Class,String> obfuscatedClasses = new HashMap<Class, String>();
 
     static {
-        obfuscatedClasses.put(World.class, "fq");
-        obfuscatedClasses.put(EntityLiving.class, "lx");
+        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        names.putName(World.class, "fq");
+        names.putName(EntityLiving.class, "lx");
     }
 
     public mod_Guns() {
@@ -52,12 +53,9 @@ public class mod_Guns extends ModMP {
         } catch (Exception e) {
             System.out.println("Failed to initialize items");
         }
-        try {
-            Util.setPacketId(PacketFireProjectile.class, PacketFireProjectile.PACKET_ID, true, true);
-            Util.setPacketId(PacketDamageItem.class, PacketDamageItem.PACKET_ID, true, true);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        Util.setPacketId(PacketFireProjectile.class, PacketFireProjectile.PACKET_ID, true, true);
+        Util.setPacketId(PacketDamageItem.class, PacketDamageItem.PACKET_ID, true, true);
+        Util.setPacketId(PacketOpenCraftGuns.class, PacketOpenCraftGuns.PACKET_ID, true, true);
         registerBlock(new BlockCraftGuns(212));
         ModLoader.SetInGameHook(this, true, false);
     }
@@ -90,11 +88,12 @@ public class mod_Guns extends ModMP {
 
         Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
         if (entityBulletClass == null) {
+            ObfuscatedNames names = ObfuscatedNames.getInstance();
             byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
             String projectileType = ClassDescriptor.getClassDescription(entityBulletClassBytes).getSuperName();
             HashMap<String, Method> methods = new HashMap<String, Method>();
-            String worldClass = (DEBUG) ? "net/minecraft/src/World" : obfuscatedClasses.get(World.class);
-            String entityLivingClass = (DEBUG) ? "net/minecraft/src/EntityLiving" : obfuscatedClasses.get(EntityLiving.class);
+            String worldClass = (DEBUG) ? "net/minecraft/src/World" : names.getName(World.class);
+            String entityLivingClass = (DEBUG) ? "net/minecraft/src/EntityLiving" : names.getName(EntityLiving.class);
             for (int i = 0; i < GunCreator.OBFUSCATED_CLASS_NAMES.size(); i++) {
                 com.heuristix.util.Pair<String, String> obfuscatedNames = GunCreator.OBFUSCATED_CLASS_NAMES.get(i);
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(L" + worldClass + ";L" + entityLivingClass + ";)V",

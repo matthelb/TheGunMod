@@ -15,13 +15,13 @@ public final class ObfuscatedNames {
 
     private static ObfuscatedNames instance;
 
-    private final Map<Class, Pair<String, String>> names;
+    private final Map<Class, String> names;
 
     private final Map<Class, Map<String, java.lang.reflect.Field>> fields;
     private final Map<Class, Map<String, java.lang.reflect.Method>> methods;
 
     private ObfuscatedNames() {
-        this.names = new HashMap<Class, Pair<String, String>>();
+        this.names = new HashMap<Class, String>();
         this.fields = new HashMap<Class, Map<String, java.lang.reflect.Field>>();
         this.methods = new HashMap<Class, Map<String, java.lang.reflect.Method>>();
     }
@@ -39,7 +39,7 @@ public final class ObfuscatedNames {
             try {
                 return field.get(o);
             } catch (IllegalAccessException e) {
-                System.out.println("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
+                System.out.println("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field);
             }
         }
         return null;
@@ -51,7 +51,7 @@ public final class ObfuscatedNames {
             try {
                 field.set(o, value);
             } catch (IllegalAccessException e) {
-                System.out.println("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
+                System.out.println("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field);
             }
         }
     }
@@ -62,9 +62,9 @@ public final class ObfuscatedNames {
             try {
                 return method.invoke(o, params);
             } catch (IllegalAccessException e) {
-                System.out.println("Not allowed to invoke " + Modifier.toString(method.getModifiers()) + " method " + method.getDeclaringClass().getName() + "+" + method.getName());
+                System.out.println("Not allowed to invoke " + Modifier.toString(method.getModifiers()) + " method " + method);
             } catch (InvocationTargetException e) {
-               System.out.println("Could not invoke " + method.getDeclaringClass().getName() + "+" + method.getName());
+               System.out.println("Could not invoke " + method);
             }
         }
         return null;
@@ -86,16 +86,8 @@ public final class ObfuscatedNames {
         return null;
     }
 
-    public String getName(Class clazz) {
-        return getName(clazz, true);
-    }
-
-    public String getName(Class clazz, boolean obfuscated) {
-        Pair<String, String> name = names.get(clazz);
-        if(name != null) {
-            return obfuscated ? name.getSecond() : name.getFirst();
-        }
-        return null;
+     public String getName(Class clazz) {
+        return names.get(clazz);
     }
 
     public java.lang.reflect.Method putMethod(Class clazz, String name, String obfuscatedName, Class... params) {
@@ -142,8 +134,8 @@ public final class ObfuscatedNames {
         return field;
     }
 
-    public void putName(Class clazz, String name, String obfuscatedName) {
-        names.put(clazz, new Pair<String, String>(name, obfuscatedName));
+    public void putName(Class clazz, String obfuscatedName) {
+        names.put(clazz, obfuscatedName);
     }
 
 }
