@@ -13,13 +13,7 @@ import net.minecraft.src.Packet230ModLoader;
 public class PacketCraftGunsArrowClick extends Packet230ModLoader {
 
     public static final int PACKET_ID = 234;
-    static {
-        Util.setPacketId(PacketCraftGunsArrowClick.class, PACKET_ID, true, true);
-    }
 
-    public PacketCraftGunsArrowClick(int arrow) {
-        this.packetType = 2;
-        this.dataInt = new int[1];
-        this.dataInt[0] = arrow;
+    public PacketCraftGunsArrowClick() {
     }
 }

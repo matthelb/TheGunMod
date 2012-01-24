@@ -3,6 +3,8 @@ package net.minecraft.src;
 import com.heuristix.*;
 import com.heuristix.asm.Opcodes;
 import com.heuristix.guns.BlockCraftGuns;
+import com.heuristix.guns.ContainerCraftGuns;
+import com.heuristix.net.PacketCraftGunsArrowClick;
 import com.heuristix.net.PacketDamageItem;
 import com.heuristix.net.PacketFireProjectile;
 import com.heuristix.net.PacketOpenCraftGuns;
@@ -56,6 +58,7 @@ public class mod_Guns extends ModMP {
         Util.setPacketId(PacketFireProjectile.class, PacketFireProjectile.PACKET_ID, true, true);
         Util.setPacketId(PacketDamageItem.class, PacketDamageItem.PACKET_ID, true, true);
         Util.setPacketId(PacketOpenCraftGuns.class, PacketOpenCraftGuns.PACKET_ID, true, true);
+        Util.setPacketId(PacketCraftGunsArrowClick.class, PacketCraftGunsArrowClick.PACKET_ID, true, true);
         registerBlock(new BlockCraftGuns(212));
         ModLoader.SetInGameHook(this, true, false);
     }
@@ -148,6 +151,12 @@ public class mod_Guns extends ModMP {
                 ItemStack stack = player.getCurrentEquippedItem();
                 if(stack != null && stack.itemID == packet.dataInt[0] && player.inventory.currentItem == packet.dataInt[1]) {
                     stack.damageItem(packet.dataInt[2], player);
+                }
+                break;
+            case 2:
+                if(player.currentCraftingInventory instanceof ContainerCraftGuns) {
+                    ContainerCraftGuns container = (ContainerCraftGuns) player.currentCraftingInventory;
+                    container.onArrowClick(packet.dataInt[0]);
                 }
                 break;
             default:
