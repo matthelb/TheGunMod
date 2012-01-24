@@ -33,7 +33,7 @@ public class mod_Guns extends ModMP {
     private KeyBinding reloadKeybinding = new KeyBinding("key.reload", Keyboard.KEY_R);
     private KeyBinding zoomKeybinding = new KeyBinding("key.zoom", Keyboard.KEY_Z);
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     private boolean justAttemptedFire;
     private boolean reflectionInit;
@@ -68,7 +68,7 @@ public class mod_Guns extends ModMP {
 
     @Override
     public String getVersion() {
-        return "0.9.5" + " for " + CURRENT_VERSION;
+        return "0.9.6" + " for " + CURRENT_VERSION;
     }
 
     @Override
