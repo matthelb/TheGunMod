@@ -1,5 +1,6 @@
 package com.heuristix;
 
+import com.heuristix.util.ObfuscatedNames;
 import net.minecraft.src.*;
 
 import java.util.List;
@@ -13,7 +14,9 @@ import java.util.List;
 public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
-
+    static {
+        ObfuscatedNames.getInstance().putMethod(EntityLiving.class, "damageEntity", "c", DamageSource.class, int.class);
+    }
     public EntityLiving owner;
     private Vec3D start;
 
@@ -144,8 +147,10 @@ public abstract class EntityProjectile extends Entity {
     }
 
     public boolean onEntityHit(Entity hit) {
-        if (hit != null)
-            return hit.attackEntityFrom(new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
+        if (hit != null) {
+            ObfuscatedNames.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
+            return true;
+        }
         return false;
     }
 
