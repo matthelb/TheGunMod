@@ -12,7 +12,4 @@ public class PacketOpenCraftGuns extends Packet100OpenWindow {
 
     public static final int INVENTORY_TYPE = 6;
 
-    public PacketOpenCraftGuns(int currentWindowId, String invName, int sizeInventory) {
-        super(currentWindowId, INVENTORY_TYPE, invName, sizeInventory);
-    }
 }

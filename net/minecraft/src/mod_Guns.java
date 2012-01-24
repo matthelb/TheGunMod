@@ -4,6 +4,7 @@ import com.heuristix.*;
 import com.heuristix.ItemGun;
 import com.heuristix.asm.Opcodes;
 import com.heuristix.guns.*;
+import com.heuristix.net.PacketOpenCraftGuns;
 import com.heuristix.swing.GunCreator;
 import com.heuristix.util.*;
 import net.minecraft.client.Minecraft;
@@ -296,7 +297,7 @@ public class mod_Guns extends ModMP {
     @Override
     public GuiScreen HandleGUI(int type) {
         switch(type) {
-            case 6:
+            case PacketOpenCraftGuns.INVENTORY_TYPE:
                 Minecraft mc = ModLoader.getMinecraftInstance();
                 return new GuiCraftGuns(new ContainerCraftGuns(mc.thePlayer, Util.isCreative(mc.thePlayer)));
             default:
