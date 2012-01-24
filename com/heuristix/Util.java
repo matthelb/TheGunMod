@@ -424,7 +424,7 @@ public class Util {
 
     public static SoundSystem getSoundSystem(SoundManager sndManager) {
         if (sndManager != null) {
-            return (SoundSystem) ObfuscatedNames.getInstance().getFieldValue(sndManager, "sndSystem");
+            return (SoundSystem) ObfuscatedNames.getInstance().getFieldValue(SoundManager.class, sndManager, "sndSystem");
         }
         return null;
     }
@@ -447,14 +447,14 @@ public class Util {
     public static SoundPool[] getSoundPools(SoundManager sndManager) {
         SoundPool[] soundPools = new SoundPool[3];
         ObfuscatedNames names = ObfuscatedNames.getInstance();
-        soundPools[0] = (SoundPool) names.getFieldValue(sndManager, "soundPoolSounds");
-        soundPools[1] = (SoundPool) names.getFieldValue(sndManager, "soundPoolStreaming");
-        soundPools[2] = (SoundPool) names.getFieldValue(sndManager, "soundPoolMusic");
+        soundPools[0] = (SoundPool) names.getFieldValue(SoundManager.class, sndManager, "soundPoolSounds");
+        soundPools[1] = (SoundPool) names.getFieldValue(SoundManager.class, sndManager, "soundPoolStreaming");
+        soundPools[2] = (SoundPool) names.getFieldValue(SoundManager.class, sndManager, "soundPoolMusic");
         return soundPools;
     }
 
     public static GameSettings getGameSettings(SoundManager sndManager) {
-        return (GameSettings) ObfuscatedNames.getInstance().getFieldValue(sndManager, "options");
+        return (GameSettings) ObfuscatedNames.getInstance().getFieldValue(SoundManager.class, sndManager, "options");
     }
 
     public static int[] getIntArray(byte[] bytes) {
@@ -474,7 +474,7 @@ public class Util {
     }
 
     public static Minecraft getMinecraft(EntityPlayerSP player) {
-        Minecraft mc = (Minecraft) ObfuscatedNames.getInstance().getFieldValue(player, "mc");
+        Minecraft mc = (Minecraft) ObfuscatedNames.getInstance().getFieldValue(EntityPlayerSP.class, player, "mc");
         if(mc != null) {
             return mc;
         }
@@ -482,11 +482,11 @@ public class Util {
     }
 
     public static RenderBlocks getBlockRender(RenderItem renderItem) {
-        return (RenderBlocks) ObfuscatedNames.getInstance().getFieldValue(renderItem, "renderBlocks");
+        return (RenderBlocks) ObfuscatedNames.getInstance().getFieldValue(RenderItem.class, renderItem, "renderBlocks");
     }
 
     public static ModelBiped getModelBiped(RenderPlayer render) {
-        return (ModelBiped) ObfuscatedNames.getInstance().getFieldValue(render, "modelBipedMain");
+        return (ModelBiped) ObfuscatedNames.getInstance().getFieldValue(RenderPlayer.class, render, "modelBipedMain");
     }
 
     public static BaseMod getLoadedMod(Class clazz) {

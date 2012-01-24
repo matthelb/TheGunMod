@@ -113,7 +113,7 @@ public class GuiCraftGuns extends GuiContainer {
         }
     }
 
-    public void handleMouseClick(Slot slot, int slotNumber, int mouseButton, boolean shiftHeld) {
+    /*public void handleMouseClick(Slot slot, int slotNumber, int mouseButton, boolean shiftHeld) {
         InventoryPlayer inventoryPlayer = mc.thePlayer.inventory;
         if(slot != null && slotNumber != -999) {
             if(slot.inventory == container.getInventory()) {
@@ -159,7 +159,7 @@ public class GuiCraftGuns extends GuiContainer {
                 }
             }
         }
-    }
+    }*/
 
     public int getX() {
         return (width - xSize) / 2;

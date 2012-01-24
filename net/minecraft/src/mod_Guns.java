@@ -44,22 +44,16 @@ public class mod_Guns extends ModMP {
 
     private static int uniqueId = 0;//Gun.MAGIC;
 
-    private static final Map<Class, Map<String, String>> obfuscatedFields = new HashMap<Class, Map<String, String>>();
-
     static {
-        HashMap<String, String> values = new HashMap<String, String>();
-        values.put("itemRenderer", "f");
-        obfuscatedFields.put(RenderManager.class, (Map<String, String>) values.clone());
-        values.put("cameraZoom", "V");
-        values.put("itemRenderer", "c");
-        obfuscatedFields.put(EntityRenderer.class, (Map<String, String>) values.clone());
-        values.clear();
-        values.put("equippedProgress", "c");
-        values.put("itemToRender", "b");
-        values.put("mapItemRenderer", "f");
-        values.put("mc", "a");
-        values.put("prevEquippedProgress", "d");
-        obfuscatedFields.put(ItemRenderer.class, (Map<String, String>) values.clone());
+        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        names.putField(RenderManager.class, "itemRenderer", "f");
+        names.putField(EntityRenderer.class, "cameraZoom", "V");
+        names.putField(EntityRenderer.class, "itemRenderer", "c");
+        names.putField(ItemRenderer.class, "equippedProgress", "c");
+        names.putField(ItemRenderer.class, "itemToRender", "b");
+        names.putField(ItemRenderer.class, "mapItemRenderer", "f");
+        names.putField(ItemRenderer.class, "mc", "a");
+        names.putField(ItemRenderer.class, "prevEquippedProgress", "d");
 
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
         DEFAULT_CONFIG.setProperty("key.zoom", Keyboard.getKeyName(Keyboard.KEY_Z));
@@ -211,9 +205,11 @@ public class mod_Guns extends ModMP {
 
     private boolean initReflection(Minecraft mc) {
         try {
-            ItemRenderer renderer = new GunItemRenderer(mc, obfuscatedFields.get(ItemRenderer.class));
-            Util.setPrivateValue(RenderManager.class, RenderManager.instance, "itemRenderer", obfuscatedFields.get(RenderManager.class).get("itemRenderer"), renderer);
-            Util.setPrivateValue(EntityRenderer.class, mc.entityRenderer, "itemRenderer", obfuscatedFields.get(EntityRenderer.class).get("itemRenderer"), renderer);
+            ObfuscatedNames names = ObfuscatedNames.getInstance();
+            ItemRenderer renderer = new GunItemRenderer(mc);
+            names.setFieldValue(RenderManager.class, RenderManager.instance, "itemRenderer", renderer);
+            names.setFieldValue(EntityRenderer.class, mc.entityRenderer, "itemRenderer", renderer);
+            names.getField(EntityRenderer.class, "cameraZoom");
         } catch (NullPointerException e) {
             e.printStackTrace();
             return false;
@@ -223,24 +219,22 @@ public class mod_Guns extends ModMP {
 
     public void KeyboardEvent(KeyBinding key) {
         Minecraft mc = ModLoader.getMinecraftInstance();
-        if (mc != null) {
-            if (mc.inGameHasFocus) {
-                EntityPlayer player = mc.thePlayer;
-                if (player != null) {
-                    ItemStack equippedStack = player.getCurrentEquippedItem();
-                    if (equippedStack != null) {
-                        Item equipped = equippedStack.getItem();
-                        if (equipped != null && equipped instanceof com.heuristix.ItemGun) {
-                            com.heuristix.ItemGun equippedGun = (com.heuristix.ItemGun) equipped;
-                            if (key.equals(reloadKeybinding)) {
-                                equippedGun.reload(player, mc);
-                                isZoomed = false;
-                            } else if (key.equals(zoomKeybinding)) {
-                                if (equippedGun.getZoom() > 1.0f || equippedGun.getScope() > 0) {
-                                    isZoomed = !isZoomed;
-                                    if (equippedGun.isReloading())
-                                        equippedGun.stopReloading(mc);
-                                }
+        if (mc != null && mc.inGameHasFocus) {
+            EntityPlayer player = mc.thePlayer;
+            if (player != null) {
+                ItemStack equippedStack = player.getCurrentEquippedItem();
+                if (equippedStack != null) {
+                    Item equipped = equippedStack.getItem();
+                    if (equipped != null && equipped instanceof com.heuristix.ItemGun) {
+                        com.heuristix.ItemGun equippedGun = (com.heuristix.ItemGun) equipped;
+                        if (key.equals(reloadKeybinding)) {
+                            equippedGun.reload(player, mc);
+                            isZoomed = false;
+                        } else if (key.equals(zoomKeybinding)) {
+                            if (equippedGun.getZoom() > 1.0f || equippedGun.getScope() > 0) {
+                                isZoomed = !isZoomed;
+                                if (equippedGun.isReloading())
+                                    equippedGun.stopReloading(mc);
                             }
                         }
                     }
@@ -299,6 +293,18 @@ public class mod_Guns extends ModMP {
         map.put(EntityFlame.class, new RenderFlame());
     }
 
+    @Override
+    public GuiScreen HandleGUI(int type) {
+        switch(type) {
+            case 6:
+                Minecraft mc = ModLoader.getMinecraftInstance();
+                return new GuiCraftGuns(new ContainerCraftGuns(mc.thePlayer, Util.isCreative(mc.thePlayer)));
+            default:
+                break;
+        }
+        return null;
+    }
+
     private static void applyRecoil(EntityPlayer player, com.heuristix.ItemGun gun) {
         double y = 0.0D;
         double y1 = recoilY;
@@ -331,7 +337,7 @@ public class mod_Guns extends ModMP {
         float increment = 0.1f + (((gun != null) ? gun.getZoom(): 0) / 30f);
         currentZoom = (currentZoom + ((in) ? increment : -increment));
         currentZoom = (in) ? Math.min(gun.getZoom(), currentZoom) : Math.max(1.0f, currentZoom);
-        Util.setPrivateValue(EntityRenderer.class, mc.entityRenderer, "cameraZoom", obfuscatedFields.get(EntityRenderer.class).get("cameraZoom"), (in && gun != null && gun.getZoom() > 1.0f) ? Math.min(currentZoom, gun.getZoom()) : Math.max(currentZoom, 1.0f));
+        ObfuscatedNames.getInstance().setFieldValue(EntityRenderer.class, mc.entityRenderer, "cameraZoom", (in && gun != null && gun.getZoom() > 1.0f) ? Math.min(currentZoom, gun.getZoom()) : Math.max(currentZoom, 1.0f));
         if (gun != null && gun.getScope() > 0 && (in || currentZoom != 1.0f)) {
             Util.renderTexture(Scope.values()[gun.getScope()].getTexturePath(), 1.0f, mc);
         }

@@ -21,27 +21,27 @@ public class GunItemRenderer extends ItemRenderer {
     private float reloadProgress, prevReloadProgress;
 
     private float getPrevEquippedProgress() {
-        return (Float) ObfuscatedNames.getInstance().getFieldValue(this, "prevEquippedProgress");
+        return (Float) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "prevEquippedProgress");
     }
 
     private float getEquippedProgress() {
-        return (Float) ObfuscatedNames.getInstance().getFieldValue(this, "equippedProgress");
+        return (Float) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "equippedProgress");
     }
 
     private RenderBlocks getRenderBlocksInstance() {
-        return (RenderBlocks) ObfuscatedNames.getInstance().getFieldValue(this, "renderBlocksInstance");
+        return (RenderBlocks) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "renderBlocksInstance");
     }
 
     private Minecraft getMC() {
-        return (Minecraft) ObfuscatedNames.getInstance().getFieldValue(this, "mc");
+        return (Minecraft) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "mc");
     }
 
     private ItemStack getItemToRender() {
-        return (ItemStack) ObfuscatedNames.getInstance().getFieldValue(this, "itemToRender");
+        return (ItemStack) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "itemToRender");
     }
 
     private MapItemRenderer getMapItemRenderer() {
-        return (MapItemRenderer) ObfuscatedNames.getInstance().getFieldValue(this, "mapItemRenderer");
+        return (MapItemRenderer) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "mapItemRenderer");
     }
 
     public GunItemRenderer(Minecraft minecraft) {
@@ -418,7 +418,7 @@ public class GunItemRenderer extends ItemRenderer {
         Minecraft mc = getMC();
         if(gun != null) {
             if(gun.equals(prevGun)) {
-                ObfuscatedNames.getInstance().setFieldValue(this, "itemToRender", mc.thePlayer.getCurrentEquippedItem());
+                ObfuscatedNames.getInstance().setFieldValue(ItemRenderer.class, this, "itemToRender", mc.thePlayer.getCurrentEquippedItem());
             }
         }
         super.updateEquippedItem();
