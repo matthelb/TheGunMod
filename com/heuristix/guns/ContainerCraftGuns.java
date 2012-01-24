@@ -91,48 +91,50 @@ public class ContainerCraftGuns extends Container {
 
     @Override
     public ItemStack slotClick(int slotNumber, int mouseButton, boolean shiftHeld, EntityPlayer player) {
-        InventoryPlayer inventoryPlayer = player.inventory;
-        Slot slot = getSlot(slotNumber);
-        if(slot != null && slotNumber != -999) {
-            if(slot.inventory == getInventory()) {
-                ItemStack stack = inventoryPlayer.getItemStack();
-                if(stack == null) {
-                    stack = slot.getStack();
-                    Object[] transferCost = ((ItemCustom) slot.getStack().getItem()).getCraftingRecipe();
-                    for(int i = 0; i < transferCost.length; i += 2) {
-                        Item item = (Item) transferCost[i];
-                        int amount = (int) Math.round(((Number) transferCost[i + 1]).doubleValue() * stack.stackSize);
-                        if(Util.getCount(inventoryPlayer, item.shiftedIndex) < amount) {
-                            return null;
-                        }
-                        if(i == transferCost.length - 2) {
-                            for(int j = 0; j < transferCost.length; j++) {
-                                if(!Util.remove(inventoryPlayer, item.shiftedIndex, amount)) {
-                                    return null;
+        if(slotNumber != -999) {
+            InventoryPlayer inventoryPlayer = player.inventory;
+            Slot slot = getSlot(slotNumber);
+            if(slot != null) {
+                if(slot.inventory == getInventory()) {
+                    ItemStack stack = inventoryPlayer.getItemStack();
+                    if(stack == null) {
+                        stack = slot.getStack();
+                        Object[] transferCost = ((ItemCustom) slot.getStack().getItem()).getCraftingRecipe();
+                        for(int i = 0; i < transferCost.length; i += 2) {
+                            Item item = (Item) transferCost[i];
+                            int amount = (int) Math.round(((Number) transferCost[i + 1]).doubleValue() * stack.stackSize);
+                            if(Util.getCount(inventoryPlayer, item.shiftedIndex) < amount) {
+                                return null;
+                            }
+                            if(i == transferCost.length - 2) {
+                                for(int j = 0; j < transferCost.length; j++) {
+                                    if(!Util.remove(inventoryPlayer, item.shiftedIndex, amount)) {
+                                        return null;
+                                    }
                                 }
                             }
                         }
+                        inventoryPlayer.setItemStack(ItemStack.copyItemStack(stack));
                     }
-                    inventoryPlayer.setItemStack(ItemStack.copyItemStack(stack));
+                } else {
+                    ItemStack stack = getSlot(slot.slotNumber).getStack();
+                    Util.getMinecraft((EntityPlayerSP) player).playerController.func_35637_a(stack, (slot.slotNumber - inventorySlots.size()) + ContainerCraftGuns.COLUMNS + 36);
+                    return super.slotClick(slot.slotNumber, mouseButton, shiftHeld, player);
                 }
             } else {
-                ItemStack stack = getSlot(slot.slotNumber).getStack();
-                Util.getMinecraft((EntityPlayerSP) player).playerController.func_35637_a(stack, (slot.slotNumber - inventorySlots.size()) + ContainerCraftGuns.COLUMNS + 36);
-                return super.slotClick(slot.slotNumber, mouseButton, shiftHeld, player);
-            }
-        } else {
-            if (inventoryPlayer.getItemStack() != null) {
-                if (mouseButton == 0) {
-                    player.dropPlayerItem(inventoryPlayer.getItemStack());
-                    Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(inventoryPlayer.getItemStack());
-                    inventoryPlayer.setItemStack(null);
-                }
-                if (mouseButton == 1) {
-                    ItemStack tempStack = inventoryPlayer.getItemStack().splitStack(1);
-                    player.dropPlayerItem(tempStack);
-                    Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(tempStack);
-                    if (inventoryPlayer.getItemStack().stackSize == 0) {
+                if (inventoryPlayer.getItemStack() != null) {
+                    if (mouseButton == 0) {
+                        player.dropPlayerItem(inventoryPlayer.getItemStack());
+                        Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(inventoryPlayer.getItemStack());
                         inventoryPlayer.setItemStack(null);
+                    }
+                    if (mouseButton == 1) {
+                        ItemStack tempStack = inventoryPlayer.getItemStack().splitStack(1);
+                        player.dropPlayerItem(tempStack);
+                        Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(tempStack);
+                        if (inventoryPlayer.getItemStack().stackSize == 0) {
+                            inventoryPlayer.setItemStack(null);
+                        }
                     }
                 }
             }
