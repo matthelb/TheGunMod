@@ -30,7 +30,7 @@ public class ContainerCraftGuns extends Container {
     public static final int SLOT_SIZE = 18;
     public static final int GUN_SLOTS = 2;
 
-    private static InventoryBasic inventory = new InventoryBasic("guns.crafting", 2);
+    private final InventoryBasic inventory;
 
     static {
         for(Item i : Item.itemsList) {
@@ -43,6 +43,7 @@ public class ContainerCraftGuns extends Container {
     private int index;
 
     public ContainerCraftGuns(EntityPlayer player, boolean creative) {
+        this.inventory = new InventoryBasic("guns.crafting", 2);
         addSlot(new Slot(inventory, 0, PIXEL_CURRENT_GUN_SLOT.x, PIXEL_CURRENT_GUN_SLOT.y));
         addSlot(new Slot(inventory, 1, PIXEL_CURRENT_PROJECTILE_SLOT.x, PIXEL_CURRENT_PROJECTILE_SLOT.y));
         for (int i = 0; i < COLUMNS; i++) {
@@ -84,7 +85,7 @@ public class ContainerCraftGuns extends Container {
         return (ItemGun) GUN_ITEM_STACKS.get(index).getItem();
     }
 
-    public static InventoryBasic getInventory() {
+    public InventoryBasic getInventory() {
         return inventory;
     }
 
@@ -115,21 +116,17 @@ public class ContainerCraftGuns extends Container {
                     inventoryPlayer.setItemStack(ItemStack.copyItemStack(stack));
                 }
             } else {
-                ItemStack stack = getSlot(slot.slotNumber).getStack();
-                Util.getMinecraft((EntityPlayerSP) player).playerController.func_35637_a(stack, (slot.slotNumber - inventorySlots.size()) + ContainerCraftGuns.COLUMNS + 36);
-                return super.slotClick(slot.slotNumber, mouseButton, shiftHeld, player);
+                return super.slotClick(slot.id, mouseButton, shiftHeld, player);
             }
         } else {
             if (inventoryPlayer.getItemStack() != null) {
                 if (mouseButton == 0) {
                     player.dropPlayerItem(inventoryPlayer.getItemStack());
-                    Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(inventoryPlayer.getItemStack());
                     inventoryPlayer.setItemStack(null);
                 }
                 if (mouseButton == 1) {
                     ItemStack tempStack = inventoryPlayer.getItemStack().splitStack(1);
                     player.dropPlayerItem(tempStack);
-                    Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(tempStack);
                     if (inventoryPlayer.getItemStack().stackSize == 0) {
                         inventoryPlayer.setItemStack(null);
                     }

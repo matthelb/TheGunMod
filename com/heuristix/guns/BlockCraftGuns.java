@@ -18,11 +18,12 @@ public class BlockCraftGuns extends Block implements CustomEntity {
 
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
-        if(player instanceof EntityPlayerSP) {
-            if(!world.multiplayerWorld) {
-                ModLoader.OpenGUI(player, new GuiCraftGuns(new ContainerCraftGuns(player, Util.isCreative((EntityPlayerSP)player))));
+        if(player instanceof EntityPlayerMP) {
+            if(!world.singleplayerWorld) {
+                ContainerCraftGuns container = new ContainerCraftGuns(player, ((EntityPlayerMP) player).itemInWorldManager.getGameType() == 1);
+                ModLoader.OpenGUI(player, container.windowId, container.getInventory(), container);
+                return true;
             }
-            return true;
         }
         return false;
     }

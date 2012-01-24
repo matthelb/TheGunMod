@@ -469,5 +469,12 @@ public class Util {
         while (bytes[i++] != 10) ;
         return new String(bytes, 0, i - 1);
     }
+
+    public static void displayGUI(EntityPlayerMP player, IInventory inventory, Container container) {
+        player.getNextWidowId();
+        player.playerNetServerHandler.sendPacket(new Packet100OpenWindow(player.currentWindowId, 0, inventory.getInvName(), inventory.getSizeInventory()));
+        player.currentCraftingInventory = container;
+        player.currentCraftingInventory.windowId = player.currentWindowId;
+    }
 }
 
