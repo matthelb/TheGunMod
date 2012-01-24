@@ -398,7 +398,7 @@ public class Util {
     static {
         ObfuscatedNames names = ObfuscatedNames.getInstance();
         names.putMethod(Packet.class, "addIdClassMapping", "a", int.class, boolean.class, boolean.class, Class.class);
-        names.putField(EntityPlayerMP.class, "currentWindowId", "");
+        names.putField(EntityPlayerMP.class, "currentWindowId", "cl");
     }
 
     public static void setPacketId(Class packetClass, int id, boolean client, boolean server) {
