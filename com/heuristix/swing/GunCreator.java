@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9.52";
+    public static final String VERSION = "0.9.6";
     public static final boolean MC_SRC_MOD = false;
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);

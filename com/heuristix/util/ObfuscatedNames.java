@@ -39,7 +39,7 @@ public final class ObfuscatedNames {
             try {
                 return field.get(o);
             } catch (IllegalAccessException e) {
-                System.out.println("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
+                Log.getLogger().fine("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
             }
         }
         return null;
@@ -51,7 +51,7 @@ public final class ObfuscatedNames {
             try {
                 field.set(o, value);
             } catch (IllegalAccessException e) {
-                System.out.println("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
+                Log.getLogger().fine("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
             }
         }
     }
@@ -62,9 +62,9 @@ public final class ObfuscatedNames {
             try {
                 return method.invoke(o, params);
             } catch (IllegalAccessException e) {
-                System.out.println("Not allowed to invoke " + Modifier.toString(method.getModifiers()) + " method " + method.getDeclaringClass().getName() + "+" + method.getName());
+               Log.getLogger().fine("Not allowed to invoke " + Modifier.toString(method.getModifiers()) + " method " + method.getDeclaringClass().getName() + "+" + method.getName());
             } catch (InvocationTargetException e) {
-               System.out.println("Could not invoke " + method.getDeclaringClass().getName() + "+" + method.getName());
+               Log.getLogger().fine("Could not invoke " + method.getDeclaringClass().getName() + "+" + method.getName());
             }
         }
         return null;
@@ -103,20 +103,24 @@ public final class ObfuscatedNames {
         if(classMethods == null) {
             classMethods = new HashMap<String, java.lang.reflect.Method>();
         }
-        java.lang.reflect.Method method;
+        java.lang.reflect.Method method = null;
         try {
-            method = clazz.getDeclaredMethod(obfuscatedName, params);
-        } catch (NoSuchMethodException e) {
             try {
-                method = clazz.getDeclaredMethod(name, params);
-            } catch (NoSuchMethodException e1) {
-                System.out.println("Method (" + name + "|" + obfuscatedName + ") not found in Class " + clazz.getName());
-                return null;
+                method = clazz.getDeclaredMethod(obfuscatedName, params);
+            } catch (NoSuchMethodException e) {
+                try {
+                    method = clazz.getDeclaredMethod(name, params);
+                } catch (NoSuchMethodException e1) {
+                    Log.getLogger().fine("Method (" + name + "|" + obfuscatedName + ") not found in Class " + clazz.getName());
+                    return null;
+                }
             }
-        }
         method.setAccessible(true);
         classMethods.put(name, method);
         methods.put(clazz, classMethods);
+        } catch (NoClassDefFoundError e) {
+            Log.getLogger().fine("Class not found " + clazz);
+        }
         return method;
     }
 
@@ -125,20 +129,24 @@ public final class ObfuscatedNames {
         if(classFields == null) {
             classFields = new HashMap<String, java.lang.reflect.Field>();
         }
-        java.lang.reflect.Field field;
+        java.lang.reflect.Field field = null;
         try {
-            field = clazz.getDeclaredField(obfuscatedName);
-        } catch (NoSuchFieldException e) {
             try {
-                field = clazz.getDeclaredField(name);
-            } catch (NoSuchFieldException e1) {
-                System.out.println("Field (" + name + "|" + obfuscatedName + ") not found in Class " + clazz.getName());
-                return null;
+                field = clazz.getDeclaredField(obfuscatedName);
+            } catch (NoSuchFieldException e) {
+                try {
+                    field = clazz.getDeclaredField(name);
+                } catch (NoSuchFieldException e1) {
+                    Log.getLogger().fine("Field (" + name + "|" + obfuscatedName + ") not found in Class " + clazz.getName());
+                    return null;
+                }
             }
+            field.setAccessible(true);
+            classFields.put(name, field);
+            fields.put(clazz, classFields);
+        } catch (NoClassDefFoundError e) {
+            Log.getLogger().fine("Class not found " + clazz);
         }
-        field.setAccessible(true);
-        classFields.put(name, field);
-        fields.put(clazz, classFields);
         return field;
     }
 

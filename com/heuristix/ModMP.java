@@ -16,7 +16,7 @@ import java.util.Set;
  * Date: 9/1/11
  * Time: 10:12 AM
  */
-public abstract class ModMP extends BaseModMp {
+public abstract class ModMP extends BaseModMp implements Mod {
 
     public static final String CURRENT_VERSION = "1.1.0";
 
@@ -32,6 +32,11 @@ public abstract class ModMP extends BaseModMp {
     public ModMP() {
         this.textures = new HashSet<ModTextureStatic>();
         this.sounds = new HashMap();
+    }
+
+    @Override
+    public String getVersion() {
+        return getModVersion() + " for " + CURRENT_VERSION;
     }
 
     protected void registerItem(ItemCustom item) {
@@ -57,8 +62,6 @@ public abstract class ModMP extends BaseModMp {
         }
         Item.itemsList[block.blockID] = new ItemBlock(block.blockID - 256);
     }
-
-    public abstract String getVersion();
 
     public final boolean OnTickInGame(float tick, Minecraft minecraft) {
         if (!texturesRegistered && minecraft.renderEngine != null) {
