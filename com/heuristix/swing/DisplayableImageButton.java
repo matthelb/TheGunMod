@@ -1,6 +1,7 @@
 package com.heuristix.swing;
 
 import com.heuristix.Util;
+import com.heuristix.util.Log;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -17,7 +18,7 @@ public class DisplayableImageButton extends DisplayableFileButton {
                 updateImage(ImageIO.read(file));
                 return true;
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.getLogger().throwing(getClass().getName(), "updateFile(File file)", e);
             }
         }
         return false;

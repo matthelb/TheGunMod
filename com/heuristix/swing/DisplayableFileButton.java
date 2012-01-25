@@ -1,5 +1,7 @@
 package com.heuristix.swing;
 
+import com.heuristix.util.Log;
+
 import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -35,13 +37,13 @@ public class DisplayableFileButton extends JButton implements FileChooserCallbac
                         List files = (List) t.getTransferData(DataFlavor.javaFileListFlavor);
                         dtde.dropComplete(DisplayableFileButton.this.updateFile((File) files.get(0)));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.getLogger().throwing(getClass().getName(), "updateFile(File file)", e);
                         dtde.dropComplete(false);
                     }
                 }
             });
         } catch (TooManyListenersException e) {
-            e.printStackTrace();
+            Log.getLogger().throwing(getClass().getName(), "updateFile(File file)", e);
         }
         setDropTarget(target);
         this.fileChooserListener = new FileChooserActionListener(this, this, true);

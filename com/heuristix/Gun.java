@@ -2,8 +2,10 @@ package com.heuristix;
 
 import com.heuristix.asm.ByteVector;
 import com.heuristix.util.Buffer;
+import com.heuristix.util.Log;
 import com.heuristix.util.Pair;
 import com.heuristix.util.ReverseBuffer;
+import net.minecraft.src.mod_Guns;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -50,7 +52,7 @@ public class Gun {
             int magic = buffer.readInt();
             return (magic == MAGIC) ? readPriv(buffer) : (magic == OLD_MAGIC) ? readOld(buffer) : false;
         } catch (ArrayIndexOutOfBoundsException e) {
-            e.printStackTrace();
+            Log.throwing(getClass(), "read(Buffer buffer)", e, mod_Guns.class);
         }
         return false;
     }

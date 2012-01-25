@@ -98,7 +98,7 @@ public class ExtensibleClassAdapter extends ClassAdapter {
                 }
                 code.set(writer, bytes);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.getLogger().throwing(getClass().getName(), "updateFile(File file)", e);
             }
         }
     }

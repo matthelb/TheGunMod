@@ -1,5 +1,6 @@
 package com.heuristix;
 
+import com.heuristix.util.Log;
 import net.minecraft.src.*;
 
 import java.lang.reflect.Constructor;
@@ -34,7 +35,7 @@ public abstract class ItemProjectile extends ItemCustom {
         try {
             return getProjectileClass(shooter).getDeclaredConstructor(World.class, EntityLiving.class).newInstance(world, player);
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.throwing(getClass(), "newProjectile(World world, EntityPlayer player, ItemProjectileShooter shooter)", e, mod_Guns.class);
             return null;
         }
     }

@@ -1,6 +1,7 @@
 package com.heuristix.util;
 
 import com.heuristix.*;
+import net.minecraft.src.mod_Guns;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -156,7 +157,7 @@ public final class GunDumper {
                 try {
                     bulletClassByte = ExtensibleClassAdapter.modifyClassBytes(EntityProjectile.class, "Entity" + name.replaceAll(" ", "") + "Bullet", methods, true);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.throwing(GunDumper.class, "updateFile(File file)", e, mod_Guns.class);
                     return null;
                 }
                 byte[] itemBulletClassByte = null;
@@ -165,7 +166,7 @@ public final class GunDumper {
                 try {
                     itemBulletClassByte = ExtensibleClassAdapter.modifyClassBytes(ItemProjectileBase.class, "Item" + name.replaceAll(" ", "") + "Bullet", methods, true);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.throwing(GunDumper.class, "updateFile(File file)", e, mod_Guns.class);
                     return null;
                 }
                 methods.put("getName()Ljava/lang/String;", new Method(new BytecodeValue(name)));
@@ -188,13 +189,13 @@ public final class GunDumper {
                 try {
                     itemGunClassByte = ExtensibleClassAdapter.modifyClassBytes(ItemGunBase.class, "Item" + name.replaceAll(" ", ""), methods, true);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.throwing(GunDumper.class, "updateFile(File file)", e, mod_Guns.class);
                     return null;
                 }
                 return new Object[]{"Entity" + name.replaceAll(" ", "") + "Bullet", bulletClassByte, "Item" + name.replaceAll(" ", "") + "Bullet", itemBulletClassByte, "Item" + name.replaceAll(" ", ""), itemGunClassByte, bulletTextyreByte, gunTextureByte, itemGunShootSoundBytes};
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.throwing(GunDumper.class, "updateFile(File file)", e, mod_Guns.class);
         }
         return null;
     }
