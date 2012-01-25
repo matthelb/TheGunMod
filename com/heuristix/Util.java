@@ -1,9 +1,11 @@
 package com.heuristix;
 
 import com.heuristix.net.PacketDamageItem;
+import com.heuristix.util.Log;
 import com.heuristix.util.ObfuscatedNames;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import paulscode.sound.SoundSystem;
 
@@ -12,6 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.*;
 import java.util.List;
 import java.util.jar.JarFile;
@@ -140,14 +143,14 @@ public class Util {
             in = url.openStream();
             return read(in);
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.getLogger().throwing(Util.class.getName(), "read(URL url)", e);
             return null;
         } finally {
             if (in != null) {
                 try {
                     in.close();
                 } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    Log.getLogger().throwing(Util.class.getName(), "read(URL url)", e);
                 }
             }
         }
@@ -159,14 +162,14 @@ public class Util {
             fis = new FileInputStream(file);
             return read(fis);
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Log.getLogger().throwing(Util.class.getName(), "read(File file)", e);
             return null;
         } finally {
             if (fis != null) {
                 try {
                     fis.close();
                 } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                    Log.getLogger().throwing(Util.class.getName(), "read(File file)", e);
                 }
             }
         }
@@ -181,7 +184,7 @@ public class Util {
                 os.write(buffer, 0, n);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.getLogger().throwing(Util.class.getName(), "read(InputStream is)", e);
             return null;
         }
         return os.toByteArray();
@@ -251,7 +254,7 @@ public class Util {
                 try {
                     minecraftJar = new JarFile(file);
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.getLogger().throwing(Util.class.getName(), "getMinecraftJar()", e);
                 }
             }
         }
@@ -274,13 +277,13 @@ public class Util {
             out.write(value);
             return file;
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            Log.getLogger().throwing(Util.class.getName(), "getTempFile(String name, String format, byte[] value)", e);
         } finally {
             if (out != null) {
                 try {
                     out.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Log.getLogger().throwing(Util.class.getName(), "getTempFile(String name, String format, byte[] value)", e);
                 }
             }
         }
@@ -343,16 +346,7 @@ public class Util {
     private static Method methodDefineClass;
 
     public static Class defineClass(byte[] code, String name, ClassLoader cl) {
-        try {
-            if (methodDefineClass == null) {
-                methodDefineClass = ClassLoader.class.getDeclaredMethod("defineClass", String.class, byte[].class, int.class, int.class);
-                methodDefineClass.setAccessible(true);
-            }
-            return (Class) methodDefineClass.invoke(cl, name, code, 0, code.length);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
+        return (Class) ObfuscatedNames.getInstance().invokeMethod(ClassLoader.class, cl, "defineClass", name, code, 0, code.length);
     }
 
     public static double distance(double x1, double x2, double y1, double y2, double z1, double z2) {
@@ -424,6 +418,7 @@ public class Util {
         names.putField(RenderItem.class, "renderBlocks", "c");
         names.putField(RenderPlayer.class, "modelBiped", "c");
         names.putMethod(Packet.class, "addIdClassMapping", "a", int.class, boolean.class, boolean.class, Class.class);
+        names.putMethod(ClassLoader.class, "defineClass", "", String.class, byte[].class, int.class, int.class);
     }
 
     public static SoundPool[] getSoundPools(SoundManager sndManager) {
@@ -672,6 +667,28 @@ public class Util {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glDisable(GL11.GL_BLEND);
+    }
+
+    public static final int BITS_PER_PIXEL = 4;
+
+    public static ByteBuffer getScreenBytes(int width, int height) {
+        GL11.glReadBuffer(GL11.GL_FRONT);
+        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * BITS_PER_PIXEL);
+        GL11.glReadPixels(0, 0, width, height,  GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+        return buffer;
+    }
+
+    public static BufferedImage getScreenImage(int width, int height) {
+        ByteBuffer buffer = getScreenBytes(width, height);
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for(int x = 0; x < width; x++) {
+            for(int y = 0; y < height; y++) {
+                int i = (x + (width * y)) * BITS_PER_PIXEL;
+                int color = (buffer.get(i + 3) & 0xFF) << 24 + (buffer.get(i) & 0xFF) << 16 + (buffer.get(i + 1) & 0xFF) << 8 + (buffer.get(i + 2) & 0xFF);
+                image.setRGB(x, height - (y + 1), color);
+            }
+        }
+        return image;
     }
 
 }

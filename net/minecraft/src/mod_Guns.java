@@ -69,7 +69,7 @@ public class mod_Guns extends ModMP {
     }
 
     public String getModVersion() {
-        return "0.9.61";
+        return "0.9.62";
     }
 
     @Override
@@ -83,12 +83,12 @@ public class mod_Guns extends ModMP {
         try {
             loadConfig(getConfig());
         } catch (IOException e) {
-            Log.fine("Failed to read config file", this);
+            Log.fine("Failed to read config file", getClass());
         }
         try {
             initItems();
         } catch (Exception e) {
-            Log.fine("Failed to initialize items");
+            Log.fine("Failed to initialize items", getClass());
         }
         registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
         registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
@@ -143,13 +143,13 @@ public class mod_Guns extends ModMP {
                         }
                         registerGun(gun, DEBUG);
                     } else {
-                        Log.fine("Could not load gun " + f.getName(), this);
+                        Log.fine("Could not load gun " + f.getName(), getClass());
                     }
                 }
 
             }
         } else {
-            Log.fine("Could not find minecraft directory. Are you using an obscure operating system?", this);
+            Log.fine("Could not find minecraft directory. Are you using an obscure operating system?", getClass());
         }
     }
 
@@ -214,7 +214,7 @@ public class mod_Guns extends ModMP {
         }
         itemBullet.putProjectileClass(itemGun, entityBulletClass);
         projectiles.put(gunClasses.get(1).getFirst(), itemBullet);
-        Log.fine("Gun loaded " + itemGun.getName(), this);
+        Log.fine("Gun loaded " + itemGun.getName(), getClass());
     }
 
     private boolean initReflection(Minecraft mc) {
