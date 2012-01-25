@@ -28,8 +28,8 @@ public class ModHandler extends FileHandler {
     @Override
     public boolean isLoggable(LogRecord record) {
         if(super.isLoggable(record) && record instanceof ModLogRecord) {
-            for(Mod m : ((ModLogRecord) record).getMods()) {
-                if(getMod().equals(m)) {
+            for( Class<? extends Mod> m : ((ModLogRecord) record).getMods()) {
+                if(getMod().getClass().equals(m)) {
                     return true;
                 }
             }

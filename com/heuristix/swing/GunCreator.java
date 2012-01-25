@@ -5,6 +5,7 @@ import com.heuristix.asm.ByteVector;
 import com.heuristix.asm.Opcodes;
 import com.heuristix.util.*;
 import net.minecraft.src.World;
+import net.minecraft.src.mod_Guns;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -30,7 +31,8 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9.6";
+    public static final String VERSION = "0.9.61";
+
     public static final boolean MC_SRC_MOD = false;
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
@@ -63,7 +65,7 @@ public class GunCreator extends JFrame {
             try {
                 load(new Gun(bytes), true);
             } catch (Exception e) {
-                e.printStackTrace();
+                Log.throwing(getClass(), "selectedFile(File file)", e, mod_Guns.class);
             }
         }
     };
@@ -86,13 +88,13 @@ public class GunCreator extends JFrame {
                 if (out != null)
                     write(out);
             } catch (IOException e) {
-                e.printStackTrace();
+                Log.throwing(getClass(), "selectedFile(File file)", e, mod_Guns.class);
             } finally {
                 if (out != null) {
                     try {
                         out.close();
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.throwing(getClass(), "selectedFile(File file)", e, mod_Guns.class);
                     }
                 }
             }
@@ -509,11 +511,11 @@ public class GunCreator extends JFrame {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Log.throwing(getClass(), "updateFile(File file)", e, mod_Guns.class);
                     try {
                         UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                     } catch (Exception e1) {
-                        e1.printStackTrace();
+                        Log.throwing(getClass(), "updateFile(File file)", e1, mod_Guns.class);
                     }
                 }
                 GunCreator gunCreator = new GunCreator();

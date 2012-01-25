@@ -13,14 +13,14 @@ import java.util.logging.LogRecord;
  */
 public class ModLogRecord extends LogRecord {
 
-    private final Mod[] mods;
+    private final  Class<? extends Mod>[] mods;
 
-    public ModLogRecord(Level level, String msg, Mod... mod) {
+    public ModLogRecord(Level level, String msg,  Class<? extends Mod>... mod) {
         super(level, msg);
         this.mods = mod;
     }
 
-    public Mod[] getMods() {
+    public  Class<? extends Mod>[] getMods() {
         return mods;
     }
 }
