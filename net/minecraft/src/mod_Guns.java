@@ -16,6 +16,8 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.SimpleFormatter;
 
 /**
 * Created by IntelliJ IDEA.
@@ -66,22 +68,27 @@ public class mod_Guns extends ModMP {
     public mod_Guns() {
     }
 
-    @Override
-    public String getVersion() {
-        return "0.9.6" + " for " + CURRENT_VERSION;
+    public String getModVersion() {
+        return "0.9.61";
     }
 
     @Override
     public void load() {
         try {
+            Log.addHandler(this);
+            Log.getLogger().setLevel(Level.ALL);
+        } catch (IOException e) {
+            Log.getLogger().log(Level.SEVERE, "Could not initiate LogHandler for " + this.getClass());
+        }
+        try {
             loadConfig(getConfig());
         } catch (IOException e) {
-            System.out.println("Failed to read config file");
+            Log.fine("Failed to read config file", this);
         }
         try {
             initItems();
         } catch (Exception e) {
-            System.out.println("Failed to initialize items");
+            Log.fine("Failed to initialize items");
         }
         registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
         registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
@@ -93,10 +100,11 @@ public class mod_Guns extends ModMP {
         ModLoader.SetInGameHook(this, true, false);
         Util.setPacketId(PacketOpenCraftGuns.class, PacketOpenCraftGuns.PACKET_ID, true, true);
         ModLoaderMp.RegisterGUI(this, PacketOpenCraftGuns.INVENTORY_TYPE);
+
     }
 
     private Properties getConfig() throws IOException {
-        File configFile = Util.getMinecraftDir("heuristix/config.ini");
+        File configFile = Util.getHeuristixFile("", "config.ini");
         Properties config = DEFAULT_CONFIG;
         if(configFile.exists()) {
             config.load(new FileInputStream(configFile));
@@ -134,12 +142,14 @@ public class mod_Guns extends ModMP {
                             gun = new Gun(Util.read(f));
                         }
                         registerGun(gun, DEBUG);
+                    } else {
+                        Log.fine("Could not load gun " + f.getName(), this);
                     }
                 }
 
             }
         } else {
-            System.out.println("Could not find minecraft directory. Are you using an obscure operating system?");
+            Log.fine("Could not find minecraft directory. Are you using an obscure operating system?", this);
         }
     }
 
@@ -204,6 +214,7 @@ public class mod_Guns extends ModMP {
         }
         itemBullet.putProjectileClass(itemGun, entityBulletClass);
         projectiles.put(gunClasses.get(1).getFirst(), itemBullet);
+        Log.fine("Gun loaded " + itemGun.getName(), this);
     }
 
     private boolean initReflection(Minecraft mc) {
@@ -350,4 +361,7 @@ public class mod_Guns extends ModMP {
         return uniqueId++;
     }
 
+    public File getLogFile() {
+        return Util.getHeuristixFile("guns", "log.txt");
+    }
 }
