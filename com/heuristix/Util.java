@@ -7,8 +7,6 @@ import net.minecraft.src.*;
 
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.*;
@@ -85,7 +83,6 @@ public class Util {
                     break;
             }
         }
-        System.out.println("Removed: " + amount + "x " + Item.itemsList[id].getItemName());
         return true;
     }
 
@@ -213,13 +210,22 @@ public class Util {
         return null;
     }
 
-    public static File getHeuristixDir(String dir) {
-        File heuristixDir = getMinecraftDir("heuristix");
-        if (heuristixDir != null) {
-            heuristixDir = new File(heuristixDir.getAbsoluteFile() + File.separator + dir);
-            if (!heuristixDir.exists())
-                heuristixDir.mkdirs();
-            return heuristixDir;
+    public static File getHeuristixFile(String path, String name) {
+        File folder = getHeuristixDir(path);
+        if(folder != null) {
+            return new File(folder.getAbsolutePath() + File.separator + name);
+        }
+        return null;
+    }
+
+
+    public static File getHeuristixDir(String name) {
+        File folder = getMinecraftDir("heuristix");
+        if (folder != null) {
+            folder = new File(folder.getAbsolutePath() + File.separator + name);
+            if (!folder.exists())
+                folder.mkdirs();
+            return folder;
         }
         return null;
     }

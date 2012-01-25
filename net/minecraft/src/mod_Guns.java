@@ -44,16 +44,16 @@ public class mod_Guns extends ModMP {
         load();
     }
 
-    @Override
-    public String getVersion() {
-        return "0.9.6" + " for " + CURRENT_VERSION;
+
+    public String getModVersion() {
+        return "0.9.61";
     }
 
     public void load() {
         try {
             initItems();
         } catch (Exception e) {
-            System.out.println("Failed to initialize items");
+            Log.fine("Failed to initialize items", this);
         }
         Util.setPacketId(PacketFireProjectile.class, PacketFireProjectile.PACKET_ID, true, true);
         Util.setPacketId(PacketDamageItem.class, PacketDamageItem.PACKET_ID, true, true);
@@ -82,7 +82,7 @@ public class mod_Guns extends ModMP {
 
             }
         } else {
-            System.out.println("Could not find minecraft directory. Are you using an obscure operating system?");
+            Log.fine("Could not find minecraft directory. Are you using an obscure operating system?", this);
         }
     }
 
@@ -136,6 +136,7 @@ public class mod_Guns extends ModMP {
         projectiles.put(gunClasses.get(1).getFirst(), itemBullet);
         ModLoaderMp.RegisterEntityTrackerEntry(entityBulletClass, true ,getUniqueEntityProjectileId());
         ModLoaderMp.RegisterEntityTracker(entityBulletClass, 256, 1);
+        Log.fine("Gun loaded " + itemGun.getName());
     }
 
     @Override
@@ -160,7 +161,7 @@ public class mod_Guns extends ModMP {
                 }
                 break;
             default:
-                System.out.println("Unknown packet type.");
+                Log.fine("Unknown packet type.", this);
                 break;
         }
     }
@@ -178,6 +179,10 @@ public class mod_Guns extends ModMP {
             }
         }
         return null;
+    }
+
+    public File getLogFile() {
+        return Util.getHeuristixFile("", "server-log.txt");
     }
 
 }
