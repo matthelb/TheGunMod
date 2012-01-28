@@ -46,14 +46,14 @@ public class mod_Guns extends ModMP {
 
 
     public String getModVersion() {
-        return "0.9.61";
+        return "0.9.62";
     }
 
     public void load() {
         try {
             initItems();
         } catch (Exception e) {
-            Log.fine("Failed to initialize items", this);
+            Log.fine("Failed to initialize items", getClass());
         }
         Util.setPacketId(PacketFireProjectile.class, PacketFireProjectile.PACKET_ID, true, true);
         Util.setPacketId(PacketDamageItem.class, PacketDamageItem.PACKET_ID, true, true);
@@ -82,7 +82,7 @@ public class mod_Guns extends ModMP {
 
             }
         } else {
-            Log.fine("Could not find minecraft directory. Are you using an obscure operating system?", this);
+            Log.fine("Could not find minecraft directory. Are you using an obscure operating system?", getClass());
         }
     }
 
@@ -161,7 +161,7 @@ public class mod_Guns extends ModMP {
                 }
                 break;
             default:
-                Log.fine("Unknown packet type.", this);
+                Log.fine("Unknown packet type.", getClass());
                 break;
         }
     }
