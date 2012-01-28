@@ -1,6 +1,8 @@
 package com.heuristix;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,5 +15,9 @@ public interface Mod {
     File getLogFile();
 
     String getModVersion();
+
+    Properties getConfig() throws IOException;
+
+    void loadConfig(Properties config);
 
 }

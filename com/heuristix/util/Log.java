@@ -73,8 +73,6 @@ public class Log {
         log(record);
     }
 
-
-
     public static void log(Level level, Object o,  Class<? extends Mod>... mods) {
         log(level, o, new Object[0], mods);
     }

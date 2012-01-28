@@ -31,7 +31,7 @@ import java.util.List;
  */
 public class GunCreator extends JFrame {
 
-    public static final String VERSION = "0.9.61";
+    public static final String VERSION = "0.9.62";
 
     public static final boolean MC_SRC_MOD = false;
 
@@ -40,7 +40,7 @@ public class GunCreator extends JFrame {
     private static final NumberFormatter DECIMAL_FORMATTER = new NumberFormatter(new DecimalFormat("#.#"));
     private static final String NON_ALPHA_NUMERICAL_REGEX = "[^a-z^A-Z^0-9]";
 
-    private static final int PROPERTIES = 3;
+    private static final int RESOURCES = 4, PROPERTIES = 3;
 
     public static final List<Pair<String, String>> OBFUSCATED_CLASS_NAMES = new LinkedList<Pair<String, String>>();
 
@@ -466,7 +466,7 @@ public class GunCreator extends JFrame {
         outBytes.putInt(bytes.length);
         outBytes.putByteArray(bytes, 0, bytes.length);
 
-        outBytes.putInt(4);
+        outBytes.putInt(RESOURCES);
         ByteArrayOutputStream imageOut = new ByteArrayOutputStream();
         ImageIO.write(bulletImageButton.getImage(), "png", imageOut);
         bytes = imageOut.toByteArray();

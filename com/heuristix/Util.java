@@ -9,6 +9,7 @@ import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import paulscode.sound.SoundSystem;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -637,11 +638,14 @@ public class Util {
     }
 
     public static void renderTexture(String texture, float opacity, Minecraft minecraft) {
-        ScaledResolution sr = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
-        int width = sr.getScaledWidth();
-        int height = sr.getScaledHeight();
+        Dimension screenDimensions = getScaledDimensions(minecraft);
         GL11.glEnable(GL11.GL_BLEND);
-        renderTexture(new Rectangle(width, height), texture, opacity, minecraft);
+        renderTexture(new Rectangle(screenDimensions.width, screenDimensions.height), texture, opacity, minecraft);
+    }
+
+    public static Dimension getScaledDimensions(Minecraft minecraft) {
+        ScaledResolution sr = new ScaledResolution(minecraft.gameSettings, minecraft.displayWidth, minecraft.displayHeight);
+        return new Dimension(sr.getScaledWidth(), sr.getScaledHeight());
     }
 
     public static void renderTexture(Rectangle rectangle, String texture, float opacity, Minecraft minecraft) {
@@ -679,16 +683,72 @@ public class Util {
     }
 
     public static BufferedImage getScreenImage(int width, int height) {
-        ByteBuffer buffer = getScreenBytes(width, height);
+        return getScreenImage(width, height, getScreenBytes(width, height));
+    }
+
+    public static BufferedImage getScreenImage(int width, int height, ByteBuffer buffer) {
         BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for(int x = 0; x < width; x++) {
             for(int y = 0; y < height; y++) {
                 int i = (x + (width * y)) * BITS_PER_PIXEL;
-                int color = (buffer.get(i + 3) & 0xFF) << 24 + (buffer.get(i) & 0xFF) << 16 + (buffer.get(i + 1) & 0xFF) << 8 + (buffer.get(i + 2) & 0xFF);
+                int color = ((buffer.get(i + 3) & 0xFF) << 24) | ((buffer.get(i) & 0xFF) << 16) | ((buffer.get(i + 1) & 0xFF) << 8) | (buffer.get(i + 2) & 0xFF);
                 image.setRGB(x, height - (y + 1), color);
             }
         }
         return image;
+    }
+
+    public static boolean writeImage(BufferedImage image, String format, OutputStream out) {
+        try {
+            ImageIO.write(image, format, out);
+            return true;
+        } catch (IOException e) {
+            Log.getLogger().throwing(Util.class.getName(), "writeImage(BufferedImage image, String format, OutputStream out)", e);
+        }
+        return false;
+    }
+
+    public static void renderCuboid(Tessellator t, double x, double y, double z, float yaw, float pitch, float scaleX, float scaleY, float scaleZ, float r, float g, float b, float a) {
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glColor4f(r, g, b, a);
+        GL11.glTranslated(x, y, z);
+        GL11.glRotatef(pitch, -1, 0, 0);
+        GL11.glRotatef(yaw, 0, -1, 0);
+        t.startDrawingQuads();
+        t.setNormal(0, 0, -1);
+        t.addVertexWithUV(-scaleX, scaleY, -scaleZ, 0, 1);
+        t.addVertexWithUV(scaleX, scaleY, -scaleZ, 1, 1);
+        t.addVertexWithUV(scaleX, -scaleY, -scaleZ, 1, 0);
+        t.addVertexWithUV(-scaleX, -scaleY, -scaleZ, 0, 0);
+        t.setNormal(0, 0, 1);
+        t.addVertexWithUV(-scaleX, -scaleY, scaleZ, 0, 1);
+        t.addVertexWithUV(scaleX, -scaleY, scaleZ, 1, 1);
+        t.addVertexWithUV(scaleX, scaleY, scaleZ, 1, 0);
+        t.addVertexWithUV(-scaleX, scaleY, scaleZ, 0, 0);
+        t.setNormal(0, -1, 0);
+        t.addVertexWithUV(-scaleX, -scaleY, -scaleZ, 0, 1);
+        t.addVertexWithUV(scaleX, -scaleY, -scaleZ, 1, 1);
+        t.addVertexWithUV(scaleX, -scaleY, scaleZ, 1, 0);
+        t.addVertexWithUV(-scaleX, -scaleY, scaleZ, 0, 0);
+        t.setNormal(0, 1, 0);
+        t.addVertexWithUV(-scaleX, scaleY, scaleZ, 0, 1);
+        t.addVertexWithUV(scaleX, scaleY, scaleZ, 1, 1);
+        t.addVertexWithUV(scaleX, scaleY, -scaleZ, 1, 0);
+        t.addVertexWithUV(-scaleX, scaleY, -scaleZ, 0, 0);
+        t.setNormal(-1, 0, 0);
+        t.addVertexWithUV(-scaleX, -scaleY, scaleZ, 0, 1);
+        t.addVertexWithUV(-scaleX, scaleY, scaleZ, 1, 1);
+        t.addVertexWithUV(-scaleX, scaleY, -scaleZ, 1, 0);
+        t.addVertexWithUV(-scaleX, -scaleY, -scaleZ, 0, 0);
+        t.setNormal(1, 0, 0);
+        t.addVertexWithUV(scaleX, -scaleY, -scaleZ, 0, 1);
+        t.addVertexWithUV(scaleX, scaleY, -scaleZ, 1, 1);
+        t.addVertexWithUV(scaleX, scaleY, scaleZ, 1, 0);
+        t.addVertexWithUV(scaleX, -scaleY, scaleZ, 0, 0);
+        t.draw();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glPopMatrix();
     }
 
 }

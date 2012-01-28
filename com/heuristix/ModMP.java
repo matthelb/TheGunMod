@@ -1,14 +1,17 @@
 package com.heuristix;
 
+import com.heuristix.guns.BlockCraftGuns;
+import com.heuristix.util.Log;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -26,7 +29,7 @@ public abstract class ModMP extends BaseModMp implements Mod {
     private final Set<ModTextureStatic> textures;
 
     private boolean soundsRegistered;
-    private final Map sounds;
+    private final Map<String, HashMap<String, byte[]>> sounds;
     private static final String[] SOUND_KEYS = {"sounds", "music", "streaming"};
 
     public ModMP() {
@@ -53,9 +56,16 @@ public abstract class ModMP extends BaseModMp implements Mod {
     }
 
     protected <B extends Block & CustomEntity> void registerBlock(B block) {
+        registerBlock(block, -1);
+    }
+    protected <B extends Block & CustomEntity> void registerBlock(B block, int textureIndex) {
         if(block.getBlockName() == null) {
             block.setBlockName(block.getName());
         }
+        if(block.getIconPath() != null) {
+             textureIndex = ModLoader.addOverride("/terrain.png", block.getIconPath());
+        }
+        block.blockIndexInTexture = textureIndex;
         ModLoader.AddName(block, block.getName());
         if(block.getCraftingRecipe() != null && block.getCraftingRecipe().length > 0) {
             ModLoader.AddRecipe(new ItemStack(block, block.getCraftingAmount()), block.getCraftingRecipe());
@@ -80,6 +90,19 @@ public abstract class ModMP extends BaseModMp implements Mod {
         return true;
     }
 
+    public Integer[] registerTextures(BufferedImage base16IconSheet, int textureSize, boolean items) {
+        List<Integer> textureIndices = new ArrayList<Integer>();
+        for(int y = 0; y < base16IconSheet.getHeight(); y += textureSize) {
+            for(int x = 0; x < base16IconSheet.getWidth(); x += textureSize) {
+                BufferedImage texture = base16IconSheet.getSubimage(x, y, textureSize, textureSize);
+                if(texture != null) {
+                    textureIndices.add(registerTexture(texture, items));
+                }
+            }
+        }
+        return textureIndices.toArray(new Integer[textureIndices.size()]);
+    }
+
     public int registerTexture(BufferedImage texture, boolean item) {
         int iconIndex = ModLoader.getUniqueSpriteIndex((item) ? "/gui/items.png" : "/terrain.png");
         textures.add(new ModTextureStatic(iconIndex, (item) ? 1 : 0, texture));
@@ -87,25 +110,28 @@ public abstract class ModMP extends BaseModMp implements Mod {
     }
 
     public void registerSound(String name, byte[] bytes) {
-        HashMap sounds = (HashMap) this.sounds.get(SOUND_KEYS[0]);
-        if (sounds == null)
+        HashMap sounds = this.sounds.get(SOUND_KEYS[0]);
+        if (sounds == null) {
             sounds = new HashMap();
+        }
         sounds.put(name, bytes);
         this.sounds.put(SOUND_KEYS[0], sounds);
     }
 
     public void registerMusic(String name, byte[] bytes) {
-        HashMap music = (HashMap) this.sounds.get(SOUND_KEYS[1]);
-        if (music == null)
+        HashMap music = this.sounds.get(SOUND_KEYS[1]);
+        if (music == null) {
             music = new HashMap();
+        }
         music.put(name, bytes);
         this.sounds.put(SOUND_KEYS[1], music);
     }
 
     public void registerStreaming(String name, byte[] bytes) {
-        HashMap streaming = (HashMap) this.sounds.get(SOUND_KEYS[2]);
-        if (streaming == null)
+        HashMap streaming = this.sounds.get(SOUND_KEYS[2]);
+        if (streaming == null) {
             streaming = new HashMap();
+        }
         streaming.put(name, bytes);
         this.sounds.put(SOUND_KEYS[2], streaming);
     }
@@ -119,7 +145,7 @@ public abstract class ModMP extends BaseModMp implements Mod {
                 }
             }
             for (int i = 0; i < SOUND_KEYS.length; i++) {
-                HashMap<String, byte[]> sounds = (HashMap<String, byte[]>) this.sounds.get(SOUND_KEYS[i]);
+                HashMap<String, byte[]> sounds = this.sounds.get(SOUND_KEYS[i]);
                 if (sounds != null) {
                     for (Map.Entry<String, byte[]> entry : sounds.entrySet()) {
                         String name = entry.getKey();
@@ -149,6 +175,15 @@ public abstract class ModMP extends BaseModMp implements Mod {
             }
             soundsRegistered = true;
         }
+    }
+
+    public BufferedImage getImageResource(String path) {
+        try {
+            return ImageIO.read(getClass().getResourceAsStream(path));
+        } catch (IOException e) {
+            Log.fine("Could not load image resource " + path, getClass());
+        }
+        return null;
     }
 
 
