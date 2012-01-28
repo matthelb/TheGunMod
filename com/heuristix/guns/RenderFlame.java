@@ -18,7 +18,8 @@ public class RenderFlame extends Render {
     private static final float SCALE = 0.25f;
     private static final int TEXTURE_INDEX = 48;
 
-    public void renderFlame(EntityFlame flame, double x, double y, double z, float yaw, float pitch) {
+    @Override
+    public void doRender(Entity entity, double x, double y, double z, float f, float f1) {
         loadTexture("/particles.png");
         GL11.glPushMatrix();
         GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
@@ -41,10 +42,5 @@ public class RenderFlame extends Render {
         t.draw();
         GL11.glDisable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
         GL11.glPopMatrix();
-    }
-
-    @Override
-    public void doRender(Entity entity, double x, double y, double z, float f, float f1) {
-        renderFlame((EntityFlame) entity, x, y, z, f, f1);
     }
 }

@@ -12,6 +12,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -69,7 +70,7 @@ public class mod_Guns extends ModMP {
     }
 
     public String getModVersion() {
-        return "0.9.62";
+        return "0.9.7";
     }
 
     @Override
@@ -89,10 +90,20 @@ public class mod_Guns extends ModMP {
             initItems();
         } catch (Exception e) {
             Log.fine("Failed to initialize items", getClass());
+            Log.throwing(getClass(), "load()", e, getClass());
         }
         registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
         registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
-        registerBlock(new BlockCraftGuns(212));
+        BufferedImage blockTextures = getImageResource("/heuristix/blocks.png");
+        if(blockTextures != null) {
+            Integer[] textureIndices = registerTextures(blockTextures, 16, false);
+            BlockCraftGuns block = new BlockCraftGuns(212);
+            registerBlock(block, textureIndices[0]);
+            block.setSideTextureIndex(textureIndices[1]);
+            block.setBottomTextureIndex(textureIndices[2]);
+        } else {
+            Log.fine("Could not register block textures", getClass());
+        }
         ModLoader.RegisterKey(this, reloadKeybinding, false);
         ModLoader.RegisterKey(this, zoomKeybinding, false);
         ModLoader.AddLocalization("key.reload", "Reload");
@@ -103,8 +114,8 @@ public class mod_Guns extends ModMP {
 
     }
 
-    private Properties getConfig() throws IOException {
-        File configFile = Util.getHeuristixFile("", "config.ini");
+    public Properties getConfig() throws IOException {
+        File configFile = Util.getHeuristixFile("guns", "config.ini");
         Properties config = DEFAULT_CONFIG;
         if(configFile.exists()) {
             config.load(new FileInputStream(configFile));
@@ -114,7 +125,7 @@ public class mod_Guns extends ModMP {
         return config;
     }
 
-    private void loadConfig(Properties config) {
+    public void loadConfig(Properties config) {
         reloadKeybinding = new KeyBinding("key.reload", Keyboard.getKeyIndex(config.getProperty("key.reload")));
         zoomKeybinding = new KeyBinding("key.zoom", Keyboard.getKeyIndex(config.getProperty("key.zoom")));
     }
@@ -259,8 +270,9 @@ public class mod_Guns extends ModMP {
 
     @Override
     public boolean OnTick(float tick, Minecraft minecraft) {
-        if (!reflectionInit)
+        if (!reflectionInit) {
             reflectionInit = initReflection(minecraft);
+        }
 
         if (minecraft.inGameHasFocus) {
             ItemStack equippedStack = minecraft.thePlayer.getCurrentEquippedItem();
@@ -305,6 +317,8 @@ public class mod_Guns extends ModMP {
     public void AddRenderer(Map map) {
         map.put(EntityBullet.class, new RenderBullet());
         map.put(EntityFlame.class, new RenderFlame());
+        map.put(EntityGrenade.class, new RenderGrenade());
+        map.put(EntityRocketGrenade.class, new RenderRocketGrenade());
     }
 
     @Override
@@ -364,4 +378,6 @@ public class mod_Guns extends ModMP {
     public File getLogFile() {
         return Util.getHeuristixFile("guns", "log.txt");
     }
+
+
 }

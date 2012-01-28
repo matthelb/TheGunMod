@@ -1,9 +1,9 @@
 package com.heuristix.guns;
 
+import com.heuristix.Util;
 import net.minecraft.src.Entity;
 import net.minecraft.src.Render;
 import net.minecraft.src.Tessellator;
-import org.lwjgl.opengl.GL11;
 
 /**
  * Created by IntelliJ IDEA.
@@ -13,54 +13,12 @@ import org.lwjgl.opengl.GL11;
  */
 public class RenderBullet extends Render {
 
-    private static final double SCALE = 0.025;
+    private static final float SCALE = 0.02f;
     private static final float GRAY_LIGHTNESS = 0.4f;
 
-    public void doRenderBullet(EntityBullet bullet, double x, double y, double z, float f, float f1) {
-        GL11.glPushMatrix();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        Tessellator tessellator = Tessellator.instance;
-        GL11.glColor4f(GRAY_LIGHTNESS, GRAY_LIGHTNESS, GRAY_LIGHTNESS, 1);
-        tessellator.startDrawingQuads();
-        tessellator.setTranslationD(x, y, z);
-        tessellator.setNormal(0, 0, -1);
-        tessellator.addVertexWithUV(x - SCALE, y + SCALE, z - SCALE, 0, 1);
-        tessellator.addVertexWithUV(x + SCALE, y + SCALE, z - SCALE, 1, 1);
-        tessellator.addVertexWithUV(x + SCALE, y - SCALE, z - SCALE, 1, 0);
-        tessellator.addVertexWithUV(x - SCALE, y - SCALE, z - SCALE, 0, 0);
-        tessellator.setNormal(0, 0, 1);
-        tessellator.addVertexWithUV(x - SCALE, y - SCALE, z + SCALE, 0, 1);
-        tessellator.addVertexWithUV(x + SCALE, y - SCALE, z + SCALE, 1, 1);
-        tessellator.addVertexWithUV(x + SCALE, y + SCALE, z + SCALE, 1, 0);
-        tessellator.addVertexWithUV(x - SCALE, y + SCALE, z + SCALE, 0, 0);
-        tessellator.setNormal(0, -1, 0);
-        tessellator.addVertexWithUV(x - SCALE, y - SCALE, z - SCALE, 0, 1);
-        tessellator.addVertexWithUV(x + SCALE, y - SCALE, z - SCALE, 1, 1);
-        tessellator.addVertexWithUV(x + SCALE, y - SCALE, z + SCALE, 1, 0);
-        tessellator.addVertexWithUV(x - SCALE, y - SCALE, z + SCALE, 0, 0);
-        tessellator.setNormal(0, 1, 0);
-        tessellator.addVertexWithUV(x - SCALE, y + SCALE, z + SCALE, 0, 1);
-        tessellator.addVertexWithUV(x + SCALE, y + SCALE, z + SCALE, 1, 1);
-        tessellator.addVertexWithUV(x + SCALE, y + SCALE, z - SCALE, 1, 0);
-        tessellator.addVertexWithUV(x - SCALE, y + SCALE, z - SCALE, 0, 0);
-        tessellator.setNormal(-1, 0, 0);
-        tessellator.addVertexWithUV(x - SCALE, y - SCALE, z + SCALE, 0, 1);
-        tessellator.addVertexWithUV(x - SCALE, y + SCALE, z + SCALE, 1, 1);
-        tessellator.addVertexWithUV(x - SCALE, y + SCALE, z - SCALE, 1, 0);
-        tessellator.addVertexWithUV(x - SCALE, y - SCALE, z - SCALE, 0, 0);
-        tessellator.setNormal(1, 0, 0);
-        tessellator.addVertexWithUV(x + SCALE, y - SCALE, z - SCALE, 0, 1);
-        tessellator.addVertexWithUV(x + SCALE, y + SCALE, z - SCALE, 1, 1);
-        tessellator.addVertexWithUV(x + SCALE, y + SCALE, z + SCALE, 1, 0);
-        tessellator.addVertexWithUV(x + SCALE, y - SCALE, z + SCALE, 0, 0);
-        tessellator.setTranslationD(0, 0, 0);
-        tessellator.draw();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glPopMatrix();
+    @Override
+    public void doRender(Entity entity, double x, double y, double z, float yaw, float pitch) {
+        Util.renderCuboid(Tessellator.instance, x, y, z, yaw, pitch, SCALE, SCALE, 2 * SCALE, GRAY_LIGHTNESS, GRAY_LIGHTNESS, GRAY_LIGHTNESS, 1);
     }
 
-    @Override
-    public void doRender(Entity entity, double d, double d1, double d2, float f, float f1) {
-        doRenderBullet((EntityBullet) entity, d, d1, d2, f, f1);
-    }
 }

@@ -12,6 +12,8 @@ import net.minecraft.src.*;
  */
 public class BlockCraftGuns extends Block implements CustomEntity {
 
+    private int sideTexture, bottomTexture;
+
     public BlockCraftGuns(int id) {
         super(id, Material.iron);
     }
@@ -25,6 +27,17 @@ public class BlockCraftGuns extends Block implements CustomEntity {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int getBlockTextureFromSide(int side) {
+        if(side == 0) {
+            return bottomTexture;
+        } else if(side == 1) {
+            return blockIndexInTexture;
+        } else {
+            return sideTexture;
+        }
     }
 
     public String getName() {
@@ -53,5 +66,13 @@ public class BlockCraftGuns extends Block implements CustomEntity {
 
     public int getCraftingAmount() {
         return 1;
+    }
+
+    public void setBottomTextureIndex(int index) {
+        this.bottomTexture = index;
+    }
+
+    public void setSideTextureIndex(int index) {
+        this.sideTexture = index;
     }
 }
