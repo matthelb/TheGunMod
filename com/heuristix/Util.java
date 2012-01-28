@@ -426,5 +426,6 @@ public class Util {
         player.currentCraftingInventory.windowId = currentWindowId;
         names.setFieldValue(EntityPlayerMP.class, player, "currentWindowId", currentWindowId);
     }
+
 }
 

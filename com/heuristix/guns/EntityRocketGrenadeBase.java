@@ -19,6 +19,10 @@ public class EntityRocketGrenadeBase extends EntityRocketGrenade {
         super(world, living);
     }
 
+    public EntityRocketGrenadeBase(World world, double x, double y, double z) {
+        super(world, x, y, z);
+    }
+
     @Override
     public float getSpread() {
         return 0;    //To change body of overridden methods use File | Settings | File Templates.

@@ -72,9 +72,11 @@ public class ContainerCraftGuns extends Container {
     }
 
     public void updateCurrentGun(int index) {
-        ItemStack gun = GUN_ITEM_STACKS.get(index);
-        getSlot(0).putStack(gun);
-        updateProjectile((ItemGun) gun.getItem());
+        if(index < GUN_ITEM_STACKS.size()) {
+            ItemStack gun = GUN_ITEM_STACKS.get(index);
+            getSlot(0).putStack(gun);
+            updateProjectile((ItemGun) gun.getItem());
+        }
     }
 
     public void updateProjectile(ItemGun gun) {

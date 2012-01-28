@@ -47,7 +47,7 @@ public class Gun {
         }
     }
 
-    public final boolean read(Buffer buffer) {
+    public final boolean read(Buffer buffer) throws ArrayIndexOutOfBoundsException{
         try {
             int magic = buffer.readInt();
             return (magic == MAGIC) ? readPriv(buffer) : (magic == OLD_MAGIC) ? readOld(buffer) : false;
@@ -103,20 +103,21 @@ public class Gun {
     public void write(OutputStream out) throws IOException {
         ByteVector outBytes = new ByteVector();
         outBytes.putInt(MAGIC);
-        outBytes.putInt(CLASSES);
-        for (int i = 0; i < CLASSES; i++) {
+        outBytes.putInt(clazzes.size());
+        for (int i = 0; i < clazzes.size(); i++) {
             byte[] stringBytes = Util.getStringBytes(clazzes.get(i).getFirst());
             outBytes.putByteArray(stringBytes, 0, stringBytes.length);
             byte[] bytes = clazzes.get(i).getSecond();
             outBytes.putInt(bytes.length);
             outBytes.putByteArray(bytes, 0, bytes.length);
         }
-        outBytes.putInt(RESOURCES);
-        for (int i = 0; i < RESOURCES; i++) {
+        outBytes.putInt(resources.size());
+        for (int i = 0; i < resources.size(); i++) {
             byte[] bytes = resources.get(i);
             outBytes.putInt(bytes.length);
             outBytes.putByteArray(bytes, 0, bytes.length);
         }
+        outBytes.putInt(properties.size());
         for (Map.Entry<String, int[]> property : properties.entrySet()) {
             byte[] stringBytes = Util.getStringBytes(property.getKey());
             outBytes.putByteArray(stringBytes, 0, stringBytes.length);

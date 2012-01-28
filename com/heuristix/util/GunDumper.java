@@ -17,6 +17,8 @@ import java.util.HashMap;
  */
 public final class GunDumper {
 
+    private static int id;
+
     private GunDumper() { }
 
     public static void main(String[] args) throws IOException {
@@ -24,6 +26,7 @@ public final class GunDumper {
             System.out.println("Incorrect args length");
             System.exit(1);
         }
+        Log.addHandler(new mod_Guns());
         File inDir = new File(args[0]);
         File outDir = new File(args[1]);
         outDir.mkdirs();
@@ -67,6 +70,17 @@ public final class GunDumper {
                         out.write(gun.getResources().get(i));
                         out.flush();
                         out.close();
+                        /*if(id == 0) {
+                            id = gun.getItemGunId();
+                        }
+                        System.out.println(gun.getItemGunId());
+                        System.out.println(gun.getItemBulletId());
+                        gun.getProperties().put("itemGunId", ReverseBuffer.getInt(id++));
+                        gun.getProperties().put("itemBulletId", ReverseBuffer.getInt(id++));
+                        FileOutputStream out1 = new FileOutputStream(new File(outDir.getAbsolutePath() + File.separator + f.getName() + ".gun2"));
+                        gun.write(out1);
+                        out.flush();
+                        out.close();*/
                     }
                 } catch (IllegalArgumentException e) {
                     System.out.println("Could not load gun file: " + f.toString());
