@@ -17,6 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
 * Created by IntelliJ IDEA.
@@ -46,7 +47,14 @@ public class mod_Guns extends ModMP {
 
 
     public String getModVersion() {
-        return "0.9.62";
+        return "0.9.7";
+    }
+
+    public Properties getConfig() throws IOException {
+        return null;
+    }
+
+    public void loadConfig(Properties config) {
     }
 
     public void load() {
