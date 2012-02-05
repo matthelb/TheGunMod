@@ -25,8 +25,8 @@ public class DisplayableImageButton extends DisplayableFileButton {
     }
 
     public void updateImage(BufferedImage image) {
-        this.icon = Util.resize(image, getWidth(), getHeight());
-        setIcon(new ImageIcon(this.icon));
+        this.icon = image;
+        setIcon(new ImageIcon(Util.resize(getImage(), getWidth(), getHeight())));
     }
 
     public BufferedImage getImage() {

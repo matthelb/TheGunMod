@@ -74,7 +74,7 @@ public final class GunDumper {
                             id = gun.getItemGunId();
                         }
                         System.out.println(gun.getItemGunId());
-                        System.out.println(gun.getItemBulletId());
+                        System.out.println(gun.getItemProjectileId());
                         gun.getProperties().put("itemGunId", ReverseBuffer.getInt(id++));
                         gun.getProperties().put("itemBulletId", ReverseBuffer.getInt(id++));
                         FileOutputStream out1 = new FileOutputStream(new File(outDir.getAbsolutePath() + File.separator + f.getName() + ".gun2"));

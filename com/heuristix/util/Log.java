@@ -18,12 +18,22 @@ public class Log {
     private static File defaultLog = Util.getHeuristixFile("", "log.txt");
 
     private static Logger logger;
+    private static boolean init;
 
     private Log() { }
 
     public static Logger getLogger() {
         if(logger == null) {
             logger = Logger.getLogger(Log.class.toString());
+        } else if(defaultLog != null && !init) {
+            try {
+                Handler defaultHandler = new FileHandler(defaultLog.getAbsolutePath());
+                defaultHandler.setFormatter(new SimpleFormatter());
+                logger.addHandler(defaultHandler);
+            } catch (IOException e) {
+            }
+            logger.setLevel(Level.ALL);
+            init = true;
         }
         return logger;
     }
@@ -32,9 +42,9 @@ public class Log {
         addHandler(mod, new SimpleFormatter());
     }
 
-    public static void addHandler(Mod mod, Formatter simpleFormatter) throws IOException {
+    public static void addHandler(Mod mod, Formatter formatter) throws IOException {
         ModHandler handler = new ModHandler(mod);
-        handler.setFormatter(simpleFormatter);
+        handler.setFormatter(formatter);
         getLogger().addHandler(handler);
     }
 

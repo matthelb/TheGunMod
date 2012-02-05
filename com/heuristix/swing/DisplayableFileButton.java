@@ -46,9 +46,9 @@ public class DisplayableFileButton extends JButton implements FileChooserCallbac
             Log.getLogger().throwing(getClass().getName(), "updateFile(File file)", e);
         }
         setDropTarget(target);
-        this.fileChooserListener = new FileChooserActionListener(this, this, true);
-        addActionListener(this.fileChooserListener);
-        updateFile(this.file);
+        fileChooserListener = new FileChooserActionListener(this, this, true);
+        addActionListener(fileChooserListener);
+        updateFile(file);
     }
 
     public boolean updateFile(File file) {
@@ -65,6 +65,6 @@ public class DisplayableFileButton extends JButton implements FileChooserCallbac
     }
 
     public File getFile() {
-        return this.file;
+        return file;
     }
 }

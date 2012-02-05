@@ -1,10 +1,7 @@
 package com.heuristix.swing;
 
 import com.heuristix.*;
-import com.heuristix.asm.ByteVector;
-import com.heuristix.asm.Opcodes;
 import com.heuristix.util.*;
-import net.minecraft.src.World;
 import net.minecraft.src.mod_Guns;
 
 import javax.imageio.ImageIO;
@@ -13,15 +10,16 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.NumberFormatter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.text.DecimalFormat;
 import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -29,41 +27,30 @@ import java.util.List;
  * Date: 9/20/11
  * Time: 5:56 PM
  */
-public class GunCreator extends JFrame {
-
-    public static final String VERSION = "0.9.62";
+public class GunCreator extends AbstractGunBridge {
 
     public static final boolean MC_SRC_MOD = false;
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));
     private static final NumberFormatter DECIMAL_FORMATTER = new NumberFormatter(new DecimalFormat("#.#"));
-    private static final String NON_ALPHA_NUMERICAL_REGEX = "[^a-z^A-Z^0-9]";
 
-    private static final int RESOURCES = 4, PROPERTIES = 3;
+    private final JFrame frame;
 
-    public static final List<Pair<String, String>> OBFUSCATED_CLASS_NAMES = new LinkedList<Pair<String, String>>();
-
-    static {
-        //add additional Pairs as obfuscations increase
-        OBFUSCATED_CLASS_NAMES.add(new Pair("vq", "aar"));
-        OBFUSCATED_CLASS_NAMES.add(new Pair("ry", "nq"));
-        OBFUSCATED_CLASS_NAMES.add(new Pair("rv", "wd"));
-    }
-
-    private DisplayableImageButton gunImageButton, bulletImageButton;
     private DisplayableBytesButton shootSoundButton, reloadSoundButton;
 
     private JTextField nameField, projectileNameField;
     private JComboBox projectileType, fireMode, scope;
-    private JFormattedTextField damageField, rangeField, zoomField, shotsPerMinuteField, reloadField, clipSizeField, recoilXField, recoilYField, projectileIdField, gunIdField, roundsPerMinuteField, bulletSpreadField, roundsPerShotField;
+    private JFormattedTextField damageField, rangeField, zoomField, shotsPerMinuteField, reloadField, clipSizeField, recoilXField, recoilYField, projectileIdField, gunIdField, roundsPerMinuteField, projectileSpreadField, roundsPerShotField;
     private JPanel[] fireModePanels;
+    private JDialog textureDialog;
+    private TexturePanel texturePanel;
 
     private final FileChooserCallback openCallback = new FileChooserCallback() {
         public void selectedFile(File file) {
             byte[] bytes = Util.read(file);
             try {
-                load(new Gun(bytes), true);
+                read(new Gun(bytes), true);
             } catch (Exception e) {
                 Log.throwing(getClass(), "selectedFile(File file)", e, mod_Guns.class);
             }
@@ -102,12 +89,12 @@ public class GunCreator extends JFrame {
     };
 
     public GunCreator() {
-        super("GunCreator v" + VERSION);
+        this.frame = new JFrame("GunCreator v" + VERSION);
         init();
     }
 
     private void init() {
-        setLayout(new BorderLayout());
+        frame.setLayout(new BorderLayout());
 
         JPanel northPanel = new JPanel();
         JPanel westPanel = new JPanel();
@@ -167,9 +154,9 @@ public class GunCreator extends JFrame {
         zoomField.setPreferredSize(COMPONENT_SIZE);
         zoomField.setFormatterFactory(decimalFormatter);
 
-        bulletSpreadField = new JFormattedTextField(0.0f);
-        bulletSpreadField.setPreferredSize(COMPONENT_SIZE);
-        bulletSpreadField.setFormatterFactory(decimalFormatter);
+        projectileSpreadField = new JFormattedTextField(0.0f);
+        projectileSpreadField.setPreferredSize(COMPONENT_SIZE);
+        projectileSpreadField.setFormatterFactory(decimalFormatter);
 
         roundsPerMinuteField = new JFormattedTextField(0);
         roundsPerMinuteField.setPreferredSize(COMPONENT_SIZE);
@@ -192,6 +179,22 @@ public class GunCreator extends JFrame {
         projectileType = new JComboBox(ProjectileType.values());
         projectileType.setPreferredSize(COMPONENT_SIZE);
 
+        texturePanel = new TexturePanel();
+        textureDialog = new JDialog(frame, "Advanced Textures", true);
+        textureDialog.setLayout(new BorderLayout());
+        textureDialog.add(texturePanel, BorderLayout.CENTER);
+        JPanel dialogButtonPanel = new JPanel();
+        dialogButtonPanel.setLayout(new FlowLayout());
+        JButton dialogOkButton = new JButton("Ok");
+        dialogOkButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textureDialog.setVisible(false);
+            }
+        });
+        dialogButtonPanel.add(dialogOkButton);
+        textureDialog.add(dialogButtonPanel, BorderLayout.SOUTH);
+        textureDialog.pack();
+
         westPanel.add(new JLabel("Gun item ID: "));
         westPanel.add(gunIdField);
         westPanel.add(new JLabel("Projectile item ID: "));
@@ -205,7 +208,7 @@ public class GunCreator extends JFrame {
         westPanel.add(new JLabel("Projectile range: "));
         westPanel.add(rangeField);
         westPanel.add(new JLabel("Projectile spread: "));
-        westPanel.add(bulletSpreadField);
+        westPanel.add(projectileSpreadField);
         westPanel.add(new JLabel("Shots per minute: "));
         westPanel.add(shotsPerMinuteField);
         westPanel.add(new JLabel("Reload time (ms): "));
@@ -235,23 +238,14 @@ public class GunCreator extends JFrame {
                 for (int i = 0; i < fireModePanels.length; i++)
                     southPanel1.remove(fireModePanels[i]);
                 southPanel1.add(fireModePanels[((FireMode) e.getItem()).ordinal()]);
-                pack();
+                frame.pack();
             }
         });
         eastPanel.add(new JLabel("Fire mode: "));
         eastPanel.add(fireMode);
 
-        gunImageButton = new DisplayableImageButton();
-        gunImageButton.setPreferredSize(new Dimension(128, 128));
-        gunImageButton.setToolTipText("Drag custom gun icon here.");
-        centerPanel.add(gunImageButton);
-
-        bulletImageButton = new DisplayableImageButton();
-        bulletImageButton.setPreferredSize(new Dimension(32, 32));
-        bulletImageButton.setToolTipText("Drag custom bullet icon here.");
         southPanel.setLayout(new GridLayout(0, 1, 10, 10));
-        southPanel1.add(new JLabel("Bullet icon: "));
-        southPanel1.add(bulletImageButton);
+
         southPanel1.add(fireModePanels[((FireMode) fireMode.getSelectedItem()).ordinal()]);
 
         southPanel.add(southPanel1);
@@ -267,11 +261,20 @@ public class GunCreator extends JFrame {
         southPanel2.add(reloadSoundButton);
         southPanel.add(southPanel2);
 
-        add(northPanel, BorderLayout.NORTH);
-        add(westPanel, BorderLayout.WEST);
-        add(centerPanel, BorderLayout.CENTER);
-        add(eastPanel, BorderLayout.EAST);
-        add(southPanel, BorderLayout.SOUTH);
+        JButton textureButton = new JButton("Textures");
+        ActionListener textureActionListener = new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                textureDialog.setVisible(!textureDialog.isVisible());
+            }
+        };
+        textureButton.addActionListener(textureActionListener);
+        centerPanel.add(textureButton);
+
+        frame.add(northPanel, BorderLayout.NORTH);
+        frame.add(westPanel, BorderLayout.WEST);
+        frame.add(centerPanel, BorderLayout.CENTER);
+        frame.add(eastPanel, BorderLayout.EAST);
+        frame.add(southPanel, BorderLayout.SOUTH);
 
         JMenuBar menuBar = new JMenuBar();
 
@@ -279,230 +282,25 @@ public class GunCreator extends JFrame {
         JMenuItem openMenuItem = new JMenuItem("Open"), saveMenuItem = new JMenuItem("Save");
         JFileChooser gunFileChooser = new JFileChooser(Util.getHomeDirectory());
         gunFileChooser.setFileFilter(new FileNameExtensionFilter("GUN2 file", "gun2"));
-        openMenuItem.addActionListener(new FileChooserActionListener(this, openCallback, true, gunFileChooser));
-        saveMenuItem.addActionListener(new FileChooserActionListener(this, saveCallback, false, gunFileChooser));
+        openMenuItem.addActionListener(new FileChooserActionListener(frame, openCallback, true, gunFileChooser));
+        saveMenuItem.addActionListener(new FileChooserActionListener(frame, saveCallback, false, gunFileChooser));
         fileMenu.add(openMenuItem);
         fileMenu.add(saveMenuItem);
         menuBar.add(fileMenu);
 
-        setJMenuBar(menuBar);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
+        JMenu advancedMenu = new JMenu("Advanced");
+        JMenuItem hdTextureItem = new JMenuItem("HD Textures");
+        hdTextureItem.addActionListener(textureActionListener);
+        advancedMenu.add(hdTextureItem);
+        menuBar.add(advancedMenu);
+
+        frame.setJMenuBar(menuBar);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
     }
 
-    /*private void read(CustomGun gun) {
-        if (gun != null) {
-            nameField.setText(gun.name);
-            try {
-                fireMode.setSelectedItem(FireMode.values()[(gun.itemGunFireMode)]);
-            } catch (ArrayIndexOutOfBoundsException ignored) {
-            }
-            try {
-                scope.setSelectedItem(Scope.values()[gun.itemGunScope]);
-            } catch (ArrayIndexOutOfBoundsException ignored) {
-            }
-            damageField.setText(String.valueOf(gun.bulletDamage));
-            rangeField.setText(String.valueOf(gun.bulletRange));
-            shotsPerMinuteField.setText(String.valueOf(gun.itemGunShotsPerMinute));
-            roundsPerMinuteField.setText(String.valueOf(gun.itemGunRoundsPerMinute));
-            reloadField.setText(String.valueOf(gun.itemGunReloadTime));
-            clipSizeField.setText(String.valueOf(gun.itemGunClipSize));
-            recoilXField.setText(String.valueOf(gun.itemGunRecoilX));
-            recoilYField.setText(String.valueOf(gun.itemGunRecoilY));
-            projectileIdField.setText(String.valueOf(gun.itemBulletId));
-            gunIdField.setText(String.valueOf(gun.itemGunId));
-            zoomField.setText(String.valueOf(gun.itemGunZoom));
-            bulletSpreadField.setText(String.valueOf(gun.bulletSpread));
-            roundsPerShotField.setText(String.valueOf(gun.itemGunRoundsPerShot));
-            shootSoundButton.updateButton(gun.itemGunShootSound, gun.itemGunShootSoundBytes);
-
-            gunImageButton.updateImage(gun.getGunTexture());
-            bulletImageButton.updateImage(gun.getBulletTexture());
-        }
-    }*/
-
-    public void load(Gun gun, boolean deobfuscate) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException, IOException, ClassNotFoundException {
-        if (gun != null) {
-            List<Pair<String, byte[]>> gunClasses = gun.getClasses();
-            List<byte[]> resources = gun.getResources();
-
-            String projectileType = ClassDescriptor.getClassDescription(gunClasses.get(0).getSecond()).getSuperName();
-            HashMap<String, Method> methods = new HashMap<String, Method>();
-            if(deobfuscate) {
-                for (int i = 0; i < OBFUSCATED_CLASS_NAMES.size(); i++) {
-                    Pair<String, String> obfuscatedNames = OBFUSCATED_CLASS_NAMES.get(i);
-                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V",
-                            new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
-                                new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
-                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V",
-                            new Method("(Lnet/minecraft/src/World;)V",
-                                new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
-                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V",
-                             new Method("(Lnet/minecraft/src/World;DDD)V",
-                                new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;DDD)V", false, true, false)));
-                }
-            }
-            byte[] entityProjectileClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
-            Class entityProjectileClass = null;
-            for (int i = 0; entityProjectileClass == null; i++) {
-                entityProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(entityProjectileClassBytes, gunClasses.get(0).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(0).getFirst() + i, ProjectileType.class.getClassLoader());
-            }
-            Class itemProjectileClass = null;
-            for (int i = 0; itemProjectileClass == null; i++) {
-                itemProjectileClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(1).getSecond(), gunClasses.get(1).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(1).getFirst() + i, ItemProjectileBase.class.getClassLoader());
-            }
-            Constructor itemProjectileConstructor = itemProjectileClass.getDeclaredConstructor(int.class);
-            itemProjectileConstructor.setAccessible(true);
-            ItemProjectile itemBullet = (ItemProjectile) itemProjectileConstructor.newInstance(gun.getItemBulletId());
-            Constructor entityBulletConstructor = entityProjectileClass.getDeclaredConstructor(World.class);
-            entityBulletConstructor.setAccessible(true);
-            EntityProjectile entityProjectile = (EntityProjectile) entityBulletConstructor.newInstance(new Object[]{null});
-            Class itemGunClass = null;
-            for (int i = 0; itemGunClass == null; i++) {
-                itemGunClass = Util.defineClass(ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(2).getSecond(), gunClasses.get(2).getFirst() + i, new HashMap<String, Method>(), false), gunClasses.get(2).getFirst() + i, ItemGunBase.class.getClassLoader());
-            }
-            Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
-            itemGunConstructor.setAccessible(true);
-            ItemGun itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
-
-            this.projectileType.setSelectedItem(ProjectileType.forClass(Class.forName(projectileType.replace('/','.'))));
-
-            nameField.setText(itemGun.getName());
-            try {
-                fireMode.setSelectedItem(FireMode.values()[(itemGun.getFireMode())]);
-            } catch (ArrayIndexOutOfBoundsException ignored) {
-            }
-            try {
-                scope.setSelectedItem(Scope.values()[itemGun.getScope()]);
-            } catch (ArrayIndexOutOfBoundsException ignored) {
-            }
-            projectileNameField.setText(itemBullet.getName());
-            damageField.setText(String.valueOf(entityProjectile.getDamage()));
-            rangeField.setText(String.valueOf(entityProjectile.getEffectiveRange()));
-            shotsPerMinuteField.setText(String.valueOf(itemGun.getShotsPerMinute()));
-            roundsPerMinuteField.setText(String.valueOf(itemGun.getRoundsPerMinute()));
-            reloadField.setText(String.valueOf(itemGun.getReloadTime()));
-            clipSizeField.setText(String.valueOf(itemGun.getClipSize()));
-            recoilXField.setText(String.valueOf(itemGun.getRecoilX()));
-            recoilYField.setText(String.valueOf(itemGun.getRecoilY()));
-            projectileIdField.setText(String.valueOf(gun.getItemBulletId()));
-            gunIdField.setText(String.valueOf(gun.getItemGunId()));
-            zoomField.setText(String.valueOf(itemGun.getZoom()));
-            bulletSpreadField.setText(String.valueOf(entityProjectile.getSpread()));
-            roundsPerShotField.setText(String.valueOf(itemGun.getRoundsPerShot()));
-
-            bulletImageButton.updateImage(ImageIO.read(new ByteArrayInputStream(resources.get(0))));
-            gunImageButton.updateImage(ImageIO.read(new ByteArrayInputStream(resources.get(1))));
-            shootSoundButton.updateButton(itemGun.getShootSound().substring(itemGun.getShootSound().lastIndexOf('.') + 1) + ".ogg", resources.get(2));
-            if (resources.size() > 3) {
-                reloadSoundButton.updateButton(itemGun.getReloadSound().substring(itemGun.getReloadSound().lastIndexOf('.') + 1) + ".ogg", resources.get(3));
-            } else {
-                reloadSoundButton.updateButton("", null);
-            }
-        }
-    }
-
-    public static final int[] SUPER_WORLD = {Opcodes.ALOAD_0, Opcodes.ALOAD_1};
-    public static final int[] SUPER_WORLD_ENTITY = {Opcodes.ALOAD_0, Opcodes.ALOAD_1, Opcodes.ALOAD_2};
-    public static final int[] SUPER_WORLD_COORDS = {Opcodes.ALOAD_0, Opcodes.ALOAD_1, Opcodes.DLOAD_2, Opcodes.DLOAD, 0x4, Opcodes.DLOAD, 0x6};
-
-    public void write(OutputStream out) throws IOException {
-        ByteVector outBytes = new ByteVector();
-        outBytes.putInt(Gun.MAGIC);
-
-        outBytes.putInt(3);
-        HashMap<String, Method> methods = new HashMap<String, Method>();
-        methods.put("getDamage()I", new Method(new BytecodeValue(Integer.parseInt(damageField.getText()))));
-        methods.put("getEffectiveRange()F", new Method(new BytecodeValue(Float.parseFloat(rangeField.getText()))));
-        methods.put("getSpread()F", new Method(new BytecodeValue(Float.parseFloat(bulletSpreadField.getText()))));
-
-        Class clazz = ((ProjectileType) projectileType.getSelectedItem()).getProjectileType();
-        methods.put("<init>(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
-                new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";L" + OBFUSCATED_CLASS_NAMES.get(0).getSecond() + ";)V",
-                        new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>",
-                                "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";L" + OBFUSCATED_CLASS_NAMES.get(0).getSecond() + ";)V", false, true, false)));
-        methods.put("<init>(Lnet/minecraft/src/World;)V",
-                new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V",
-                    new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>", "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V", false, true, false)));
-
-        methods.put("<init>(Lnet/minecraft/src/World;DDD)V",
-                new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";DDD)V",
-                new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>", "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";DDD)V", false, true, false)));
-        String name = "Entity" + projectileNameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "") + nameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "");
-        byte[] bytes = ExtensibleClassAdapter.modifyClassBytes(clazz, name, (HashMap<String, Method>) methods.clone(), true);
-        byte[] stringBytes = Util.getStringBytes(name);
-        outBytes.putByteArray(stringBytes, 0, stringBytes.length);
-        outBytes.putInt(bytes.length);
-        outBytes.putByteArray(bytes, 0, bytes.length);
-
-        methods.clear();
-        methods.put("getName()Ljava/lang/String;", new Method(new BytecodeValue(projectileNameField.getText())));
-        methods.put("getCraftAmount()I", new Method(new BytecodeValue(16)));
-        name = "Item" + projectileNameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "");
-        bytes = ExtensibleClassAdapter.modifyClassBytes(ItemProjectileBase.class, name, (HashMap<String, Method>) methods.clone(), true);
-        stringBytes = Util.getStringBytes(name);
-        outBytes.putByteArray(stringBytes, 0, stringBytes.length);
-        outBytes.putInt(bytes.length);
-        outBytes.putByteArray(bytes, 0, bytes.length);
-
-        methods.clear();
-        methods.put("getName()Ljava/lang/String;", new Method(new BytecodeValue(nameField.getText())));
-        methods.put("getShootSound()Ljava/lang/String;", new Method(new BytecodeValue("guns." + shootSoundButton.getText().substring(0, shootSoundButton.getText().indexOf(".")))));
-        methods.put("getReloadSound()Ljava/lang/String;", new Method(new BytecodeValue("guns." + reloadSoundButton.getText().substring(0, reloadSoundButton.getText().indexOf(".")))));
-        methods.put("getShotsPerMinute()I", new Method(new BytecodeValue(Integer.parseInt(shotsPerMinuteField.getText()))));
-        methods.put("getFireMode()I", new Method(new BytecodeValue(((FireMode) fireMode.getSelectedItem()).ordinal())));
-        methods.put("getReloadTime()I", new Method(new BytecodeValue(Integer.parseInt(reloadField.getText()))));
-        methods.put("getClipSize()I", new Method(new BytecodeValue(Integer.parseInt(clipSizeField.getText()))));
-        methods.put("getRecoilX()I", new Method(new BytecodeValue(Integer.parseInt(recoilXField.getText()))));
-        methods.put("getRecoilY()I", new Method(new BytecodeValue(Integer.parseInt(recoilYField.getText()))));
-        methods.put("getZoom()F", new Method(new BytecodeValue(Float.parseFloat(zoomField.getText()))));
-        methods.put("getScope()I", new Method(new BytecodeValue(((Scope) scope.getSelectedItem()).ordinal())));
-        methods.put("getRoundsPerMinute()I", new Method(new BytecodeValue(Integer.parseInt(roundsPerMinuteField.getText()))));
-        methods.put("getRoundsPerShot()I", new Method(new BytecodeValue(Integer.parseInt(roundsPerShotField.getText()))));
-        name = "Item" + nameField.getText().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "");
-        bytes = ExtensibleClassAdapter.modifyClassBytes(ItemGunBase.class, name, (HashMap<String, Method>) methods.clone(), true);
-        stringBytes = Util.getStringBytes(name);
-        outBytes.putByteArray(stringBytes, 0, stringBytes.length);
-        outBytes.putInt(bytes.length);
-        outBytes.putByteArray(bytes, 0, bytes.length);
-
-        outBytes.putInt(RESOURCES);
-        ByteArrayOutputStream imageOut = new ByteArrayOutputStream();
-        ImageIO.write(bulletImageButton.getImage(), "png", imageOut);
-        bytes = imageOut.toByteArray();
-        outBytes.putInt(bytes.length);
-        outBytes.putByteArray(bytes, 0, bytes.length);
-
-        imageOut = new ByteArrayOutputStream();
-        ImageIO.write(gunImageButton.getImage(), "png", imageOut);
-        bytes = imageOut.toByteArray();
-        outBytes.putInt(bytes.length);
-        outBytes.putByteArray(bytes, 0, bytes.length);
-
-        bytes = shootSoundButton.getBytes();
-        outBytes.putInt(bytes.length);
-        outBytes.putByteArray(bytes, 0, bytes.length);
-
-        bytes = reloadSoundButton.getBytes();
-        outBytes.putInt(bytes.length);
-        outBytes.putByteArray(bytes, 0, bytes.length);
-
-        /*outBytes.putInt(Integer.parseInt(projectileIdField.getText()));
-        outBytes.putInt(Integer.parseInt(gunIdField.getText()));*/
-        outBytes.putInt(PROPERTIES);
-
-        String[] strings = new String[]{"itemGunId", "itemBulletId", "versionCreated"};
-        int[][] ints = new int[][]{ReverseBuffer.getInt(Integer.parseInt(gunIdField.getText())), ReverseBuffer.getInt(Integer.parseInt(projectileIdField.getText())), Util.getIntArray(Util.getStringBytes(VERSION))};
-
-        for (int i = 0; i < PROPERTIES; i++) {
-            stringBytes = Util.getStringBytes(strings[i]);
-            outBytes.putByteArray(stringBytes, 0, stringBytes.length);
-            bytes = Util.getByteArray(ints[i]);
-            outBytes.putInt(bytes.length);
-            outBytes.putByteArray(bytes, 0, bytes.length);
-        }
-
-        out.write(outBytes.toByteArray());
+    public void setFrameVisible(boolean visible) {
+        frame.setVisible(visible);
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
@@ -511,18 +309,271 @@ public class GunCreator extends JFrame {
                 try {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
                 } catch (Exception e) {
-                    Log.throwing(getClass(), "updateFile(File file)", e, mod_Guns.class);
+                    Log.throwing(getClass(), "main(String[] args)", e, mod_Guns.class);
                     try {
                         UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
                     } catch (Exception e1) {
-                        Log.throwing(getClass(), "updateFile(File file)", e1, mod_Guns.class);
+                        Log.throwing(getClass(), "main(String[] args)", e1, mod_Guns.class);
                     }
                 }
                 GunCreator gunCreator = new GunCreator();
-                gunCreator.setVisible(true);
+                gunCreator.setFrameVisible(true);
             }
         });
     }
 
+    @Override
+    protected int getGunId() {
+        return Integer.parseInt(gunIdField.getText());
+    }
 
+    @Override
+    protected int getProjectileId() {
+        return Integer.parseInt(projectileIdField.getText());
+    }
+
+    @Override
+    protected String getShootSound() {
+        return shootSoundButton.getText();
+    }
+
+    @Override
+    protected String getReloadSound() {
+        return reloadSoundButton.getText();
+    }
+
+    @Override
+    protected int getRoundsPerShot() {
+        return Integer.parseInt(roundsPerShotField.getText());
+    }
+
+    @Override
+    protected int getRoundsPerMinute() {
+        return Integer.parseInt(roundsPerShotField.getText());
+    }
+
+    @Override
+    protected Scope getScope() {
+        return (Scope) scope.getSelectedItem();
+    }
+
+    @Override
+    protected float getZoom() {
+        return Float.parseFloat(zoomField.getText());
+    }
+
+    @Override
+    protected int getRecoilY() {
+        return Integer.parseInt(recoilYField.getText());
+    }
+
+    @Override
+    protected int getRecoilX() {
+        return Integer.parseInt(recoilXField.getText());
+    }
+
+    @Override
+    protected int getClipSize() {
+        return Integer.parseInt(clipSizeField.getText());
+    }
+
+    @Override
+    protected int getReloadTime() {
+        return Integer.parseInt(reloadField.getText());
+    }
+
+    @Override
+    protected FireMode getFireMode() {
+        return (FireMode) fireMode.getSelectedItem();
+    }
+
+    @Override
+    protected int getShotsPerMinute() {
+        return Integer.parseInt(shotsPerMinuteField.getText());
+    }
+
+    @Override
+    protected String getGunName() {
+        return nameField.getText();
+    }
+
+    @Override
+    protected String getProjectileName() {
+        return projectileNameField.getText();
+    }
+
+    @Override
+    protected ProjectileType getProjectileType() {
+        return (ProjectileType) projectileType.getSelectedItem();
+    }
+
+    @Override
+    protected float getSpread() {
+        return Float.parseFloat(projectileSpreadField.getText());
+    }
+
+    @Override
+    protected float getRange() {
+        return Float.parseFloat(rangeField.getText());
+    }
+
+    @Override
+    protected int getDamage() {
+        return Integer.parseInt(damageField.getText());
+    }
+
+    @Override
+    protected Map<String, byte[]> getResources() {
+        Map<String, byte[]> resources = new HashMap<String, byte[]>();
+        for(int i = 0; i < 2; i++) {
+            Map<Integer, BufferedImage> textures = texturePanel.getTextures(i == 0);
+            for(Map.Entry<Integer, BufferedImage> entry : textures.entrySet()) {
+                String key = entry.getKey() + "x" + entry.getKey() + ((i == 0) ? "gun" : "projectile");
+                ByteArrayOutputStream out = new ByteArrayOutputStream();
+                try {
+                    ImageIO.write(entry.getValue(), "PNG", out);
+                    resources.put(key, out.toByteArray());
+                } catch (IOException e) {
+                    Log.throwing(getClass(), "getResources()", e, mod_Guns.class);
+                }
+            }
+        }
+        resources.put("shootSound", shootSoundButton.getBytes());
+        resources.put("reloadSound", reloadSoundButton.getBytes());
+        return resources;
+    }
+
+    @Override
+    protected Map<String, int[]> getProperties() {
+        HashMap<String, int[]> properties = new HashMap<String, int[]>();
+        properties.put("itemGunId", ReverseBuffer.getInt(getGunId()));
+        properties.put("itemProjectileId", ReverseBuffer.getInt(getProjectileId()));
+        properties.put("versionCreated", ReverseBuffer.getString(VERSION));
+        return properties;
+    }
+
+    @Override
+    protected void setProjectileSpread(float spread) {
+        projectileSpreadField.setText(String.valueOf(spread));
+    }
+
+    @Override
+    protected void setZoom(float zoom) {
+        zoomField.setText(String.valueOf(zoom));
+    }
+
+    @Override
+    protected void setRange(float effectiveRange) {
+        rangeField.setText(String.valueOf(effectiveRange));
+    }
+
+    @Override
+    protected void setRoundsPerShot(int roundsPerShot) {
+        roundsPerShotField.setText(String.valueOf(roundsPerShot));
+    }
+
+    @Override
+    protected void setRoundsPerMinute(int roundsPerMinute) {
+        roundsPerMinuteField.setText(String.valueOf(roundsPerMinute));
+    }
+
+    @Override
+    protected void setGunId(int itemGunId) {
+        gunIdField.setText(String.valueOf(itemGunId));
+    }
+
+    @Override
+    protected void setProjectileId(int itemProjectileId) {
+        projectileIdField.setText(String.valueOf(itemProjectileId));
+    }
+
+    @Override
+    protected void setRecoilY(int recoilY) {
+        recoilYField.setText(String.valueOf(recoilY));
+    }
+
+    @Override
+    protected void setRecoilX(int recoilX) {
+        recoilXField.setText(String.valueOf(recoilX));
+    }
+
+    @Override
+    protected void setClipSize(int clipSize) {
+        clipSizeField.setText(String.valueOf(clipSize));
+    }
+
+    @Override
+    protected void setReloadTime(int reloadTime) {
+        reloadField.setText(String.valueOf(reloadTime));
+    }
+
+    @Override
+    protected void setShotsPerMinute(int shotsPerMinute) {
+        shotsPerMinuteField.setText(String.valueOf(shotsPerMinute));
+    }
+
+    @Override
+    protected void setDamage(int damage) {
+        damageField.setText(String.valueOf(damage));
+    }
+
+    @Override
+    protected void setScope(Scope scope) {
+        this.scope.setSelectedItem(scope);
+    }
+
+    @Override
+    protected void setFireMode(FireMode fireMode) {
+        this.fireMode.setSelectedItem(fireMode);
+    }
+
+    @Override
+    protected void setProjectileType(ProjectileType projectileType) {
+        this.projectileType.setSelectedItem(projectileType);
+    }
+
+    @Override
+    protected void setProjectileName(String name) {
+        projectileNameField.setText(name);
+    }
+
+    @Override
+    protected void setGunName(String name) {
+        nameField.setText(name);
+    }
+
+    @Override
+    protected void setShootSound(String shootSound) {
+        shootSoundButton.setText(shootSound);
+    }
+
+    @Override
+    protected void setReloadSound(String reloadSound) {
+        reloadSoundButton.setText(reloadSound);
+    }
+
+    @Override
+    protected void addProperty(String property, int[] value) {
+        if(property.equals("itemGunId")) {
+            setGunId(((value[0] & 0xFF) << 24) + ((value[1] & 0xFF) << 16) + ((value[2] & 0xFF) << 8) + (value[3] & 0xFF));
+        } else if(property.equals("itemProjectileId") || property.equals("itemBulletId")) {
+            setProjectileId(((value[0] & 0xFF) << 24) + ((value[1] & 0xFF) << 16) + ((value[2] & 0xFF) << 8) + (value[3] & 0xFF));
+        }
+    }
+
+    @Override
+    protected void addResource(String resource, byte[] value) {
+        if(resource.contains("gun") || resource.contains("projectile")) {
+            try {
+                BufferedImage image = ImageIO.read(new ByteArrayInputStream(value));
+                texturePanel.setTexture(image, resource.contains("gun"));
+            } catch (IOException e) {
+                Log.throwing(getClass(), "addResource(String resource, byte[] value)", e, mod_Guns.class);
+            }
+        } else if(resource.contains("shootSound")) {
+            shootSoundButton.updateButton(getShootSound(), value);
+        } else if(resource.contains("reloadSound")) {
+            reloadSoundButton.updateButton(getReloadSound(), value);
+        }
+    }
 }

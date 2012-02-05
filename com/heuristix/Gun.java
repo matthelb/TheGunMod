@@ -22,14 +22,15 @@ import java.util.Map;
  */
 public class Gun {
 
-    public static final int MAGIC = 0x47554E53;
-    public static final int OLD_MAGIC = 0x47554E4D;
+    public static final int MAGIC = 0x47554E54;
+    public static final int OLD_MAGIC = 0x47554E53;
+    public static final int OLDER_MAGIC = 0x47554E4D;
 
     public static final int CLASSES = 3;
     public static final int RESOURCES = 4;
 
     private List<Pair<String, byte[]>> clazzes;
-    private List<byte[]> resources;
+    private Map<String, byte[]> resources;
     private Map<String, int[]> properties;
 
     private int itemBulletId, itemGunId;
@@ -40,7 +41,7 @@ public class Gun {
 
     public Gun(Buffer buffer) {
         this.clazzes = new LinkedList<Pair<String, byte[]>>();
-        this.resources = new LinkedList<byte[]>();
+        this.resources = new HashMap<String, byte[]>();
         this.properties = new HashMap<String, int[]>();
         if (!read(buffer)) {
             throw new IllegalArgumentException("Incorrectly formatted GUN2 file.");
@@ -50,7 +51,7 @@ public class Gun {
     public final boolean read(Buffer buffer) throws ArrayIndexOutOfBoundsException{
         try {
             int magic = buffer.readInt();
-            return (magic == MAGIC) ? readPriv(buffer) : (magic == OLD_MAGIC) ? readOld(buffer) : false;
+            return (magic == MAGIC) ? readPriv(buffer) : (magic == OLD_MAGIC) ? readOld(buffer) : (magic == OLDER_MAGIC) ? readOlder(buffer) : false;
         } catch (ArrayIndexOutOfBoundsException e) {
             Log.throwing(getClass(), "read(Buffer buffer)", e, mod_Guns.class);
         }
@@ -67,8 +68,10 @@ public class Gun {
         }
         int resources = buffer.readInt();
         while (resources-- > 0) {
+            String key = buffer.readString();
             int length = buffer.readInt();
-            this.resources.add(buffer.readBytes(length));
+            byte[] bytes = buffer.readBytes(length);
+            this.resources.put(key, bytes);
         }
         int properties = buffer.readInt();
         while (properties-- > 0) {
@@ -89,9 +92,34 @@ public class Gun {
             clazzes.add(new Pair(name, bytes));
         }
         int resources = buffer.readInt();
+        int begin = resources;
         while (resources-- > 0) {
             int length = buffer.readInt();
-            this.resources.add(buffer.readBytes(length));
+            putOldResource(buffer.readBytes(length), begin - resources - 1);
+        }
+        int properties = buffer.readInt();
+        while (properties-- > 0) {
+            String key = buffer.readString();
+            int length = buffer.readInt();
+            int[] bytes = Util.getIntArray(buffer.readBytes(length));
+            this.properties.put(key, bytes);
+        }
+        return true;
+    }
+
+    private boolean readOlder(Buffer buffer) {
+        int classes = buffer.readInt();
+        while (classes-- > 0) {
+            String name = buffer.readString();
+            int length = buffer.readInt();
+            byte[] bytes = buffer.readBytes(length);
+            clazzes.add(new Pair(name, bytes));
+        }
+        int resources = buffer.readInt();
+        int begin = resources;
+        while (resources-- > 0) {
+            int length = buffer.readInt();
+            putOldResource(buffer.readBytes(length), begin - resources - 1);
         }
         itemBulletId = buffer.readInt();
         itemGunId = buffer.readInt();
@@ -112,8 +140,10 @@ public class Gun {
             outBytes.putByteArray(bytes, 0, bytes.length);
         }
         outBytes.putInt(resources.size());
-        for (int i = 0; i < resources.size(); i++) {
-            byte[] bytes = resources.get(i);
+        for (Map.Entry<String, byte[]> entry : resources.entrySet()) {
+            byte[] stringBytes = Util.getStringBytes(entry.getKey());
+            outBytes.putByteArray(stringBytes, 0, stringBytes.length);
+            byte[] bytes = entry.getValue();
             outBytes.putInt(bytes.length);
             outBytes.putByteArray(bytes, 0, bytes.length);
         }
@@ -128,11 +158,30 @@ public class Gun {
         out.write(outBytes.toByteArray());
     }
 
+    private void putOldResource(byte[] bytes, int index) {
+        switch(index) {
+            case 0:
+                resources.put("16x16projectile", bytes);
+                break;
+            case 1:
+                resources.put("16x16gun", bytes);
+                break;
+            case 2:
+                resources.put("shootSound", bytes);
+                break;
+            case 3:
+                resources.put("reloadSound", bytes);
+                break;
+            default:
+                break;
+        }
+    }
+
     public List<Pair<String, byte[]>> getClasses() {
         return clazzes;
     }
 
-    public List<byte[]> getResources() {
+    public Map<String, byte[]> getResources() {
         return resources;
     }
 
@@ -141,8 +190,11 @@ public class Gun {
         return ((bytes[0] & 0xFF) << 24) + ((bytes[1] & 0xFF) << 16) + ((bytes[2] & 0xFF) << 8) + (bytes[3] & 0xFF);
     }
 
-    public int getItemBulletId() {
-        int[] bytes = properties.get("itemBulletId");
+    public int getItemProjectileId() {
+        int[] bytes = properties.get("itemProjectileId");
+        if(bytes == null) {
+            bytes = properties.get("itemBulletId");
+        }
         return ((bytes[0] & 0xFF) << 24) + ((bytes[1] & 0xFF) << 16) + ((bytes[2] & 0xFF) << 8) + (bytes[3] & 0xFF);
     }
 
