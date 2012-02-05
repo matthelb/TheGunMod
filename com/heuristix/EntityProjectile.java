@@ -1,6 +1,6 @@
 package com.heuristix;
 
-import com.heuristix.util.ObfuscatedNames;
+import com.heuristix.util.ReflectionFacade;
 import net.minecraft.src.*;
 
 import java.util.List;
@@ -15,7 +15,7 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
     static {
-        ObfuscatedNames.getInstance().putMethod(EntityLiving.class, "damageEntity", "c", DamageSource.class, int.class);
+        ReflectionFacade.getInstance().putMethod(EntityLiving.class, "damageEntity", "c", DamageSource.class, int.class);
     }
     public EntityLiving owner;
     private Vec3D start;
@@ -141,14 +141,15 @@ public abstract class EntityProjectile extends Entity {
                 }
             }
             motionY -= GRAVITY * getMass();
-            //setVelocity(computeVelocity());
             setPosition(posX + motionX, posY + motionY, posZ + motionZ);
         }
     }
 
     public boolean onEntityHit(Entity hit) {
         if (hit != null) {
-            ObfuscatedNames.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
+            if(hit instanceof EntityLiving) {
+                ReflectionFacade.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
+            }
             return true;
         }
         return false;
