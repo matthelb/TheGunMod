@@ -1,12 +1,9 @@
 package com.heuristix;
 
-import com.heuristix.util.ObfuscatedNames;
+import com.heuristix.util.ReflectionFacade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.lwjgl.opengl.*;
-
-import java.lang.reflect.Field;
-import java.util.Map;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,27 +18,27 @@ public class GunItemRenderer extends ItemRenderer {
     private float reloadProgress, prevReloadProgress;
 
     private float getPrevEquippedProgress() {
-        return (Float) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "prevEquippedProgress");
+        return (Float) ReflectionFacade.getInstance().getFieldValue(ItemRenderer.class, this, "prevEquippedProgress");
     }
 
     private float getEquippedProgress() {
-        return (Float) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "equippedProgress");
+        return (Float) ReflectionFacade.getInstance().getFieldValue(ItemRenderer.class, this, "equippedProgress");
     }
 
     private RenderBlocks getRenderBlocksInstance() {
-        return (RenderBlocks) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "renderBlocksInstance");
+        return (RenderBlocks) ReflectionFacade.getInstance().getFieldValue(ItemRenderer.class, this, "renderBlocksInstance");
     }
 
     private Minecraft getMC() {
-        return (Minecraft) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "mc");
+        return (Minecraft) ReflectionFacade.getInstance().getFieldValue(ItemRenderer.class, this, "mc");
     }
 
     private ItemStack getItemToRender() {
-        return (ItemStack) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "itemToRender");
+        return (ItemStack) ReflectionFacade.getInstance().getFieldValue(ItemRenderer.class, this, "itemToRender");
     }
 
     private MapItemRenderer getMapItemRenderer() {
-        return (MapItemRenderer) ObfuscatedNames.getInstance().getFieldValue(ItemRenderer.class, this, "mapItemRenderer");
+        return (MapItemRenderer) ReflectionFacade.getInstance().getFieldValue(ItemRenderer.class, this, "mapItemRenderer");
     }
 
     public GunItemRenderer(Minecraft minecraft) {
@@ -418,7 +415,7 @@ public class GunItemRenderer extends ItemRenderer {
         Minecraft mc = getMC();
         if(gun != null) {
             if(gun.equals(prevGun)) {
-                ObfuscatedNames.getInstance().setFieldValue(ItemRenderer.class, this, "itemToRender", mc.thePlayer.getCurrentEquippedItem());
+                ReflectionFacade.getInstance().setFieldValue(ItemRenderer.class, this, "itemToRender", mc.thePlayer.getCurrentEquippedItem());
             }
         }
         super.updateEquippedItem();

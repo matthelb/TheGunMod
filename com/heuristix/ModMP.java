@@ -2,6 +2,7 @@ package com.heuristix;
 
 import com.heuristix.guns.BlockCraftGuns;
 import com.heuristix.util.Log;
+import com.heuristix.util.ReflectionFacade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 
@@ -26,14 +27,15 @@ public abstract class ModMP extends BaseModMp implements Mod {
     public static final float PIXELS_PER_ICON = 16;
 
     private boolean texturesRegistered;
-    private final Set<ModTextureStatic> textures;
+    private final Set<TextureFX> textures;
 
     private boolean soundsRegistered;
     private final Map<String, HashMap<String, byte[]>> sounds;
     private static final String[] SOUND_KEYS = {"sounds", "music", "streaming"};
+    private Class<? extends TextureMultipleFX> currentHDTextureClass;
 
     public ModMP() {
-        this.textures = new HashSet<ModTextureStatic>();
+        this.textures = new HashSet<TextureFX>();
         this.sounds = new HashMap();
     }
 
@@ -75,7 +77,7 @@ public abstract class ModMP extends BaseModMp implements Mod {
 
     public final boolean OnTickInGame(float tick, Minecraft minecraft) {
         if (!texturesRegistered && minecraft.renderEngine != null) {
-            for (ModTextureStatic texture : textures) {
+            for (TextureFX texture : textures) {
                  minecraft.renderEngine.registerTextureFX(texture);
             }
             texturesRegistered = true;
@@ -90,22 +92,39 @@ public abstract class ModMP extends BaseModMp implements Mod {
         return true;
     }
 
-    public Integer[] registerTextures(BufferedImage base16IconSheet, int textureSize, boolean items) {
+    public Integer[] registerTextures(boolean items, BufferedImage base16IconSheet, int textureSize) {
+        return registerTextures(items, base16IconSheet, textureSize, ModLoader.getMinecraftInstance().renderEngine);
+    }
+
+    public Integer[] registerTextures(boolean items, BufferedImage base16IconSheet, int textureSize, RenderEngine engine) {
         List<Integer> textureIndices = new ArrayList<Integer>();
         for(int y = 0; y < base16IconSheet.getHeight(); y += textureSize) {
             for(int x = 0; x < base16IconSheet.getWidth(); x += textureSize) {
                 BufferedImage texture = base16IconSheet.getSubimage(x, y, textureSize, textureSize);
                 if(texture != null) {
-                    textureIndices.add(registerTexture(texture, items));
+                    textureIndices.add(registerTexture(items, texture));
                 }
             }
         }
         return textureIndices.toArray(new Integer[textureIndices.size()]);
     }
 
-    public int registerTexture(BufferedImage texture, boolean item) {
-        int iconIndex = ModLoader.getUniqueSpriteIndex((item) ? "/gui/items.png" : "/terrain.png");
-        textures.add(new ModTextureStatic(iconIndex, (item) ? 1 : 0, texture));
+    public int registerTexture(boolean item, BufferedImage... textures) {
+        Class[] paramTypes = new Class[]{int.class, boolean.class, boolean.class, BufferedImage[].class};
+        Object[] params = new Object[]{0, item, true, textures};
+        Class textureFXClass = getCurrentHDTextureClass();
+        if(TextureDefaultMultipleFX.class.isAssignableFrom(textureFXClass)) {
+            paramTypes = new Class[]{int.class, boolean.class, boolean.class, RenderEngine.class, BufferedImage[].class};
+            params = new Object[]{0, item, true, ModLoader.getMinecraftInstance().renderEngine, textures};
+        }
+        TextureMultipleFX textureFX = (TextureMultipleFX) ReflectionFacade.getInstance().invokeConstructor(textureFXClass, paramTypes, params);
+        return registerTexture(textureFX);
+    }
+
+    public int registerTexture(TextureFX texture) {
+        int iconIndex = ModLoader.getUniqueSpriteIndex((texture.tileImage == 1) ? "/gui/items.png" : "/terrain.png");
+        texture.iconIndex = iconIndex;
+        textures.add(texture);
         return iconIndex;
     }
 
@@ -184,6 +203,31 @@ public abstract class ModMP extends BaseModMp implements Mod {
             Log.fine("Could not load image resource " + path, getClass());
         }
         return null;
+    }
+
+    public Class<? extends TextureMultipleFX> getCurrentHDTextureClass() {
+        if(currentHDTextureClass == null) {
+            currentHDTextureClass = getHDTextureCompatibleClass();
+            Class[] params = new Class[]{int.class, boolean.class, boolean.class, BufferedImage[].class};
+            if(TextureDefaultMultipleFX.class.isAssignableFrom(currentHDTextureClass)) {
+                params = new Class[]{int.class, boolean.class, boolean.class, RenderEngine.class, BufferedImage[].class};
+            }
+            ReflectionFacade.getInstance().putConstructor(currentHDTextureClass, params);
+        }
+        return currentHDTextureClass;
+    }
+
+    public Class<? extends TextureMultipleFX> getHDTextureCompatibleClass() {
+        try {
+            if(Class.forName("TextureHDFX") != null) {
+                return TextureOptifineMultipleFX.class;
+            } else if(Class.forName("MCPatcherUtils") != null) {
+                return TexturePatchedMultipleFX.class;
+            }
+        } catch (ClassNotFoundException e) {
+            Log.throwing(getClass(), "getCurrentHDTextureClass", e, getClass());
+        }
+        return TextureDefaultMultipleFX.class;
     }
 
 

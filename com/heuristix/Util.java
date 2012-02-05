@@ -1,8 +1,9 @@
 package com.heuristix;
 
 import com.heuristix.net.PacketDamageItem;
+import com.heuristix.util.Field;
 import com.heuristix.util.Log;
-import com.heuristix.util.ObfuscatedNames;
+import com.heuristix.util.ReflectionFacade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
 import org.lwjgl.BufferUtils;
@@ -14,6 +15,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.util.*;
@@ -133,7 +135,11 @@ public class Util {
     }
 
     public static BufferedImage resize(BufferedImage image, int width, int height) {
-        BufferedImage scaled = new BufferedImage(width, height, image.getType());
+        int type = image.getType();
+        if(type == BufferedImage.TYPE_CUSTOM) {
+            type = BufferedImage.TYPE_INT_ARGB;
+        }
+        BufferedImage scaled = new BufferedImage(width, height, type);
         scaled.createGraphics().drawImage(image, 0, 0, width, height, null);
         return scaled;
     }
@@ -344,11 +350,25 @@ public class Util {
         return defineClass(code, name, Thread.currentThread().getContextClassLoader());
     }
 
-    private static Method methodDefineClass;
-
     public static Class defineClass(byte[] code, String name, ClassLoader cl) {
-        return (Class) ObfuscatedNames.getInstance().invokeMethod(ClassLoader.class, cl, "defineClass", name, code, 0, code.length);
+        return (Class) ReflectionFacade.getInstance().invokeMethod(ClassLoader.class, cl, "defineClass", name, code, 0, code.length);
     }
+
+    public static Class<?> getPrimitiveClass(final Class<?> clazz) {
+        try{
+            final java.lang.reflect.Field field = clazz.getDeclaredField("TYPE");
+            final int modifiers = field.getModifiers();
+            if(Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers)
+                && Modifier.isFinal(modifiers)
+                && Class.class.equals(field.getType())){
+                return (Class<?>) field.get(null);
+            }
+        } catch (Exception e) {
+            Log.getLogger().fine("Supplied class " + clazz + " is not a primitive class");
+        }
+        return null;
+    }
+
 
     public static double distance(double x1, double x2, double y1, double y2, double z1, double z2) {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2) + Math.pow(z1 - z2, 2));
@@ -400,7 +420,7 @@ public class Util {
 
     public static SoundSystem getSoundSystem(SoundManager sndManager) {
         if (sndManager != null) {
-            return (SoundSystem) ObfuscatedNames.getInstance().getFieldValue(SoundManager.class, sndManager, "sndSystem");
+            return (SoundSystem) ReflectionFacade.getInstance().getFieldValue(SoundManager.class, sndManager, "sndSystem");
         }
         return null;
     }
@@ -408,7 +428,7 @@ public class Util {
     private static final Map<Class, Map<String, String>> OBFUSCATED_NAMES = new HashMap<Class, Map<String, String>>();
 
     static {
-        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        ReflectionFacade names = ReflectionFacade.getInstance();
         names.putField(SoundManager.class, "options", "f");
         names.putField(SoundManager.class, "sndSystem", "a");
         names.putField(SoundManager.class, "soundPoolMusic", "d");
@@ -424,7 +444,7 @@ public class Util {
 
     public static SoundPool[] getSoundPools(SoundManager sndManager) {
         SoundPool[] soundPools = new SoundPool[3];
-        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        ReflectionFacade names = ReflectionFacade.getInstance();
         soundPools[0] = (SoundPool) names.getFieldValue(SoundManager.class, sndManager, "soundPoolSounds");
         soundPools[1] = (SoundPool) names.getFieldValue(SoundManager.class, sndManager, "soundPoolStreaming");
         soundPools[2] = (SoundPool) names.getFieldValue(SoundManager.class, sndManager, "soundPoolMusic");
@@ -432,7 +452,7 @@ public class Util {
     }
 
     public static GameSettings getGameSettings(SoundManager sndManager) {
-        return (GameSettings) ObfuscatedNames.getInstance().getFieldValue(SoundManager.class, sndManager, "options");
+        return (GameSettings) ReflectionFacade.getInstance().getFieldValue(SoundManager.class, sndManager, "options");
     }
 
     public static int[] getIntArray(byte[] bytes) {
@@ -452,7 +472,7 @@ public class Util {
     }
 
     public static Minecraft getMinecraft(EntityPlayerSP player) {
-        Minecraft mc = (Minecraft) ObfuscatedNames.getInstance().getFieldValue(EntityPlayerSP.class, player, "mc");
+        Minecraft mc = (Minecraft) ReflectionFacade.getInstance().getFieldValue(EntityPlayerSP.class, player, "mc");
         if(mc != null) {
             return mc;
         }
@@ -460,11 +480,11 @@ public class Util {
     }
 
     public static RenderBlocks getBlockRender(RenderItem renderItem) {
-        return (RenderBlocks) ObfuscatedNames.getInstance().getFieldValue(RenderItem.class, renderItem, "renderBlocks");
+        return (RenderBlocks) ReflectionFacade.getInstance().getFieldValue(RenderItem.class, renderItem, "renderBlocks");
     }
 
     public static ModelBiped getModelBiped(RenderPlayer render) {
-        return (ModelBiped) ObfuscatedNames.getInstance().getFieldValue(RenderPlayer.class, render, "modelBipedMain");
+        return (ModelBiped) ReflectionFacade.getInstance().getFieldValue(RenderPlayer.class, render, "modelBipedMain");
     }
 
     public static BaseMod getLoadedMod(Class clazz) {
@@ -497,7 +517,7 @@ public class Util {
 
 
     public static void setPacketId(Class packetClass, int id, boolean client, boolean server) {
-         ObfuscatedNames.getInstance().invokeMethod(Packet.class, null, "addIdClassMapping", id, client, server, packetClass);
+         ReflectionFacade.getInstance().invokeMethod(Packet.class, null, "addIdClassMapping", id, client, server, packetClass);
     }
 
     public static String getStringFromBytes(int[] bytes) {
@@ -673,41 +693,6 @@ public class Util {
         GL11.glDisable(GL11.GL_BLEND);
     }
 
-    public static final int BITS_PER_PIXEL = 4;
-
-    public static ByteBuffer getScreenBytes(int width, int height) {
-        GL11.glReadBuffer(GL11.GL_FRONT);
-        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * BITS_PER_PIXEL);
-        GL11.glReadPixels(0, 0, width, height,  GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
-        return buffer;
-    }
-
-    public static BufferedImage getScreenImage(int width, int height) {
-        return getScreenImage(width, height, getScreenBytes(width, height));
-    }
-
-    public static BufferedImage getScreenImage(int width, int height, ByteBuffer buffer) {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        for(int x = 0; x < width; x++) {
-            for(int y = 0; y < height; y++) {
-                int i = (x + (width * y)) * BITS_PER_PIXEL;
-                int color = ((buffer.get(i + 3) & 0xFF) << 24) | ((buffer.get(i) & 0xFF) << 16) | ((buffer.get(i + 1) & 0xFF) << 8) | (buffer.get(i + 2) & 0xFF);
-                image.setRGB(x, height - (y + 1), color);
-            }
-        }
-        return image;
-    }
-
-    public static boolean writeImage(BufferedImage image, String format, OutputStream out) {
-        try {
-            ImageIO.write(image, format, out);
-            return true;
-        } catch (IOException e) {
-            Log.getLogger().throwing(Util.class.getName(), "writeImage(BufferedImage image, String format, OutputStream out)", e);
-        }
-        return false;
-    }
-
     public static void renderCuboid(Tessellator t, double x, double y, double z, float yaw, float pitch, float scaleX, float scaleY, float scaleZ, float r, float g, float b, float a) {
         GL11.glPushMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -749,6 +734,52 @@ public class Util {
         t.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glPopMatrix();
+    }
+
+    public static final int BITS_PER_PIXEL = 4;
+
+    public static ByteBuffer getScreenBytes(int width, int height) {
+        GL11.glReadBuffer(GL11.GL_FRONT);
+        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * BITS_PER_PIXEL);
+        GL11.glReadPixels(0, 0, width, height,  GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
+        return buffer;
+    }
+
+    public static BufferedImage getScreenImage(int width, int height) {
+        return getScreenImage(width, height, getScreenBytes(width, height));
+    }
+
+    public static BufferedImage getScreenImage(int width, int height, ByteBuffer buffer) {
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for(int x = 0; x < width; x++) {
+            for(int y = 0; y < height; y++) {
+                int i = (x + (width * y)) * BITS_PER_PIXEL;
+                int color = ((buffer.get(i + 3) & 0xFF) << 24) | ((buffer.get(i) & 0xFF) << 16) | ((buffer.get(i + 1) & 0xFF) << 8) | (buffer.get(i + 2) & 0xFF);
+                image.setRGB(x, height - (y + 1), color);
+            }
+        }
+        return image;
+    }
+
+    public static boolean writeImage(BufferedImage image, String format, OutputStream out) {
+        try {
+            ImageIO.write(image, format, out);
+            return true;
+        } catch (IOException e) {
+            Log.getLogger().throwing(Util.class.getName(), "writeImage(BufferedImage image, String format, OutputStream out)", e);
+        }
+        return false;
+    }
+
+    public static Dimension getTextureDimensions(boolean items, RenderEngine engine) {
+        if(!isDefaultTextureBound(items, engine)) {
+            engine.bindTexture(items ? engine.getTexture("/gui/items.png") : engine.getTexture("/terrain.png"));
+        }
+        return new Dimension(GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) / 16, GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) / 16);
+    }
+
+    private static boolean isDefaultTextureBound(boolean items, RenderEngine engine) {
+        return GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D) == engine.getTexture(items ? "/gui/items.png" : "/terrain.png");
     }
 
 }
