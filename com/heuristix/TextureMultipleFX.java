@@ -68,11 +68,6 @@ public abstract class TextureMultipleFX extends TextureFX {
         BufferedImage image = getTexture(textureDimensions.width, textureDimensions.height);
         imagePixelColors = new int[textureDimensions.width * textureDimensions.height];
         imageData = new byte[textureDimensions.width * textureDimensions.height * 4];
-        if (textureDimensions.width != image.getWidth() || textureDimensions.height != image.getHeight()) {
-            BufferedImage scaledImage = new BufferedImage(textureDimensions.width, textureDimensions.height, BufferedImage.TYPE_4BYTE_ABGR);
-            scaledImage.getGraphics().drawImage(image, 0, 0, textureDimensions.width, textureDimensions.height, 0, 0, image.getWidth(), image.getHeight(), null);
-            image = scaledImage;
-        }
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), imagePixelColors, 0, image.getWidth());
         setup = true;
         updateImageData();

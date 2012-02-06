@@ -32,7 +32,7 @@ public abstract class ModMP extends BaseModMp implements Mod {
     private boolean soundsRegistered;
     private final Map<String, HashMap<String, byte[]>> sounds;
     private static final String[] SOUND_KEYS = {"sounds", "music", "streaming"};
-    private Class<? extends TextureMultipleFX> currentHDTextureClass;
+    private static Class<? extends TextureMultipleFX> currentHDTextureClass;
 
     public ModMP() {
         this.textures = new HashSet<TextureFX>();
@@ -205,7 +205,7 @@ public abstract class ModMP extends BaseModMp implements Mod {
         return null;
     }
 
-    public Class<? extends TextureMultipleFX> getCurrentHDTextureClass() {
+    public static Class<? extends TextureMultipleFX> getCurrentHDTextureClass() {
         if(currentHDTextureClass == null) {
             currentHDTextureClass = getHDTextureCompatibleClass();
             Class[] params = new Class[]{int.class, boolean.class, boolean.class, BufferedImage[].class};
@@ -217,15 +217,20 @@ public abstract class ModMP extends BaseModMp implements Mod {
         return currentHDTextureClass;
     }
 
-    public Class<? extends TextureMultipleFX> getHDTextureCompatibleClass() {
+    public static Class<? extends TextureMultipleFX> getHDTextureCompatibleClass() {
         try {
             if(Class.forName("TextureHDFX") != null) {
                 return TextureOptifineMultipleFX.class;
-            } else if(Class.forName("MCPatcherUtils") != null) {
+            }
+        } catch(ClassNotFoundException e) {
+            Log.getLogger().throwing(ModMP.class.getName(), "getHDTextureCompatibleClass()", e);
+        }
+        try {
+            if(Class.forName("com.pclewis.mcpatcher.mod.TileSize") != null) {
                 return TexturePatchedMultipleFX.class;
             }
-        } catch (ClassNotFoundException e) {
-            Log.throwing(getClass(), "getCurrentHDTextureClass", e, getClass());
+        } catch(ClassNotFoundException e) {
+            Log.getLogger().throwing(ModMP.class.getName(), "getHDTextureCompatibleClass()", e);
         }
         return TextureDefaultMultipleFX.class;
     }
