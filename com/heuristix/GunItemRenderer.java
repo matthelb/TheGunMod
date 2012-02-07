@@ -80,7 +80,7 @@ public class GunItemRenderer extends ItemRenderer {
             float scale = 1.5f;
             GL11.glScalef(scale, scale, scale);
             addItemTextureVertices(t, x2, y1, x1, y2);
-            if (stack != null && stack.func_40713_r() && i == 0) {
+            if (stack != null && stack.hasEffect() && i == 0) {
                 GL11.glDepthFunc(GL11.GL_EQUAL);
                 GL11.glDisable(GL11.GL_LIGHTING);
                 mc.renderEngine.bindTexture(mc.renderEngine.getTexture("%blur%/misc/glint.png"));
