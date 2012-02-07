@@ -44,6 +44,8 @@ public final class ReflectionFacade {
                 return field.get(o);
             } catch (IllegalAccessException e) {
                 Log.getLogger().fine("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
+            } catch (IllegalArgumentException e) {
+                Log.getLogger().fine("Instace [" + o + "] of class " + o.getClass() + " does not match class " + field.getDeclaringClass() + " of field " + field);
             }
         }
         return null;
@@ -56,6 +58,8 @@ public final class ReflectionFacade {
                 field.set(o, value);
             } catch (IllegalAccessException e) {
                 Log.getLogger().fine("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
+            } catch (IllegalArgumentException e) {
+                Log.getLogger().fine("Instace [" + o + "] of class " + o.getClass() + " does not match class " + field.getDeclaringClass() + " of field " + field);
             }
         }
     }

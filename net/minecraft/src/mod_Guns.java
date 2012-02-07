@@ -91,7 +91,7 @@ public class mod_Guns extends ModMP {
         }
         registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
         registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
-        BufferedImage blockTextures = getImageResource("/heuristix/blocks.png");
+        BufferedImage blockTextures = getImageResource("/heuristix/gun-blocks.png");
         if(blockTextures != null) {
             Integer[] textureIndices = registerTextures(false, blockTextures, 16);
             BlockCraftGuns block = new BlockCraftGuns(212);
@@ -280,9 +280,6 @@ public class mod_Guns extends ModMP {
         }
 
         if (minecraft.inGameHasFocus) {
-            if(minecraft.thePlayer.dimension != 1) {
-                minecraft.usePortal(1);
-            }
             ItemStack equippedStack = minecraft.thePlayer.getCurrentEquippedItem();
             if (equippedStack != null) {
                 Item equipped = equippedStack.getItem();

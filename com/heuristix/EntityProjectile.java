@@ -15,8 +15,11 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
     static {
-        ReflectionFacade.getInstance().putMethod(EntityLiving.class, "damageEntity", "c", DamageSource.class, int.class);
+        ReflectionFacade.getInstance().putField(Entity.class, "heartsLife", "Y" /*"bW"*/);
+        ReflectionFacade.getInstance().putField(EntityLiving.class, "heartsHalvesLife", "ba" /*"S"*/);
+        ReflectionFacade.getInstance().putField(EntityLiving.class, "naturalArmorRating", "cc"/*"aU"*/);
     }
+
     public EntityLiving owner;
     private Vec3D start;
 
@@ -146,11 +149,9 @@ public abstract class EntityProjectile extends Entity {
     }
 
     public boolean onEntityHit(Entity hit) {
-        if (hit != null) {
-            if(hit instanceof EntityLiving) {
-                ReflectionFacade.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
-            }
-            return true;
+        if (hit != null && (hit instanceof EntityLiving || hit instanceof DragonPart)) {
+            return damageEntityWithoutDelay(hit, Math.round(getDamage() * getDamageModifier()));
+                //ReflectionFacade.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
         }
         return false;
     }
@@ -216,5 +217,18 @@ public abstract class EntityProjectile extends Entity {
 
     public EntityLiving getOwner() {
         return owner;
+    }
+
+    public boolean damageEntityWithoutDelay(Entity entity, int damage) {
+        DamageSource source = new EntityDamageSource("living", owner);
+        int health = (Integer) ReflectionFacade.getInstance().getFieldValue(Entity.class, entity, "heartsLife");
+        int healthHalves = 0;
+        int armorRating = 0;
+        if(entity instanceof EntityLiving) {
+            healthHalves = (Integer) ReflectionFacade.getInstance().getFieldValue(EntityLiving.class, entity, "heartsHalvesLife");
+            armorRating = (Integer) ReflectionFacade.getInstance().getFieldValue(EntityLiving.class, entity, "naturalArmorRating");
+        }
+        final int finalDamage = damage + ((health > healthHalves / 2) ? armorRating : 0);
+        return entity.attackEntityFrom(source, finalDamage);
     }
 }
