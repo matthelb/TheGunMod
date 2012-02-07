@@ -93,6 +93,10 @@ public abstract class ItemGun extends ItemProjectileShooter {
         return 1;
     }
 
+    public boolean isShapelessRecipe() {
+        return false;
+    }
+
     @Override
     public void onCreated(ItemStack stack, World world, EntityPlayer player) {
         stack.damageItem(stack.getMaxDamage(), player);

@@ -1,7 +1,6 @@
 package com.heuristix;
 
 import com.heuristix.net.PacketDamageItem;
-import com.heuristix.util.Field;
 import com.heuristix.util.Log;
 import com.heuristix.util.ReflectionFacade;
 import net.minecraft.client.Minecraft;
@@ -14,7 +13,6 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -118,7 +116,7 @@ public class Util {
     }
 
     public static void damageItem(ItemStack item, EntityPlayer player, int damage, Class modClass, World world) {
-        if(world.multiplayerWorld) {
+        if(world.isRemote) {
             Util.sendPacket(new PacketDamageItem(item.itemID, player.inventory.currentItem, damage), modClass);
         } else {
             item.damageItem(damage, player);

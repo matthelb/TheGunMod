@@ -74,7 +74,7 @@ public class EntityBullet extends EntityProjectile {
                 if(block != null && block.blockMaterial.equals(Material.glass)) {
                     World world = worldObj;
                     world.playAuxSFX(2001, x, y, z, block.blockID + world.getBlockMetadata(x, y, z) * 256);
-                    if(!world.multiplayerWorld) {
+                    if(!world.isRemote) {
                         int i1 = world.getBlockMetadata(x, y, z);
                         boolean notified = world.setBlockWithNotify(x, y, z, 0);
                         if (block != null && notified) {

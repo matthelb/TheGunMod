@@ -71,7 +71,7 @@ public abstract class EntityProjectile extends Entity {
 
     public void onUpdate() {
         super.onUpdate();
-        if(!worldObj.multiplayerWorld) {
+        if(!worldObj.isRemote) {
             if(prevRotationPitch == 0 && prevRotationYaw == 0) {
                 float horizontalDist = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
                 prevRotationYaw = rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180) / Util.PI) + Util.randomFloat(-getSpread(), getSpread());

@@ -3,8 +3,6 @@ package com.heuristix;
 import com.heuristix.util.Log;
 import net.minecraft.src.*;
 
-import java.lang.reflect.Constructor;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,6 +44,10 @@ public abstract class ItemProjectile extends ItemCustom {
 
     public Object[] getCraftingRecipe() {
         return new Object[]{Item.ingotIron, 1 / 8f, Item.gunpowder, 1 / 16f};
+    }
+
+    public boolean isShapelessRecipe() {
+        return false;
     }
 
 }

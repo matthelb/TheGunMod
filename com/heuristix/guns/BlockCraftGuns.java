@@ -21,8 +21,8 @@ public class BlockCraftGuns extends Block implements CustomEntity {
     @Override
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if(player instanceof EntityPlayerSP) {
-            if(!world.multiplayerWorld) {
-                ModLoader.OpenGUI(player, new GuiCraftGuns(new ContainerCraftGuns(player, Util.isCreative((EntityPlayerSP)player))));
+            if(!world.isRemote) {
+                ModLoader.OpenGUI(player, new GuiCraftGuns(new ContainerCraftGuns(player, Util.isCreative((EntityPlayerSP) player))));
             }
             return true;
         }
@@ -66,6 +66,10 @@ public class BlockCraftGuns extends Block implements CustomEntity {
 
     public int getCraftingAmount() {
         return 1;
+    }
+
+    public boolean isShapelessRecipe() {
+        return false;
     }
 
     public void setBottomTextureIndex(int index) {

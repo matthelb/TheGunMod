@@ -1,8 +1,6 @@
 package com.heuristix;
 
-import com.heuristix.util.ReflectionFacade;
 import com.pclewis.mcpatcher.mod.TileSize;
-import net.minecraft.src.RenderEngine;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -21,7 +19,6 @@ public class TexturePatchedMultipleFX extends TextureMultipleFX {
 
     public TexturePatchedMultipleFX(int iconIndex, int tileSize, boolean item, boolean setupOnTick, BufferedImage... textures) {
         super(iconIndex, tileSize, item, setupOnTick, textures);
-        ReflectionFacade.getInstance().putField(TileSize.class, "int_size", "");
     }
 
     @Override

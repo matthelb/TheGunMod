@@ -2,7 +2,10 @@ package com.heuristix.guns;
 
 import com.heuristix.EntityProjectile;
 import com.heuristix.Util;
-import net.minecraft.src.*;
+import net.minecraft.src.Block;
+import net.minecraft.src.EntityLiving;
+import net.minecraft.src.MovingObjectPosition;
+import net.minecraft.src.World;
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,7 +36,7 @@ public class EntityFlame extends EntityProjectile {
 
     @Override
     public boolean onBlockHit(MovingObjectPosition position) {
-        if(!worldObj.multiplayerWorld) {
+        if(!worldObj.isRemote) {
             int x = position.blockX, y = position.blockY, z = position.blockZ;
             switch (position.sideHit) {
                 case 0:

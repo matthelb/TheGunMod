@@ -1,11 +1,10 @@
 package net.minecraft.src;
 
-import com.heuristix.*;
 import com.heuristix.ItemGun;
 import com.heuristix.asm.Opcodes;
 import com.heuristix.guns.*;
 import com.heuristix.net.PacketOpenCraftGuns;
-import com.heuristix.swing.GunCreator;
+import com.heuristix.*;
 import com.heuristix.util.*;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Keyboard;
@@ -256,8 +255,8 @@ public class mod_Guns extends ModMP {
                 ItemStack equippedStack = player.getCurrentEquippedItem();
                 if (equippedStack != null) {
                     Item equipped = equippedStack.getItem();
-                    if (equipped != null && equipped instanceof com.heuristix.ItemGun) {
-                        com.heuristix.ItemGun equippedGun = (com.heuristix.ItemGun) equipped;
+                    if (equipped != null && equipped instanceof ItemGun) {
+                        ItemGun equippedGun = (ItemGun) equipped;
                         if (key.equals(reloadKeybinding)) {
                             equippedGun.reload(player, mc);
                             isZoomed = false;
@@ -301,17 +300,17 @@ public class mod_Guns extends ModMP {
                         if (shooter.isBursting()) {
                             shooter.burst(minecraft.theWorld, minecraft.thePlayer, minecraft);
                         }
-                        if (equipped instanceof com.heuristix.ItemGun) {
-                            applyRecoil(minecraft.thePlayer, (com.heuristix.ItemGun) equipped);
+                        if (equipped instanceof ItemGun) {
+                            applyRecoil(minecraft.thePlayer, (ItemGun) equipped);
                         }
                     }
                 }
             }
-            boolean in = (minecraft.gameSettings.thirdPersonView == 0) && (equippedStack != null) && (equippedStack.getItem() != null) && (equippedStack.getItem() instanceof com.heuristix.ItemGun) && isZoomed;
+            boolean in = (minecraft.gameSettings.thirdPersonView == 0) && (equippedStack != null) && (equippedStack.getItem() != null) && (equippedStack.getItem() instanceof ItemGun) && isZoomed;
             if (equippedStack != null) {
                 Item item = equippedStack.getItem();
-                if (item instanceof com.heuristix.ItemGun)
-                    zoom(minecraft, (com.heuristix.ItemGun) item, minecraft.thePlayer, minecraft.theWorld, in);
+                if (item instanceof ItemGun)
+                    zoom(minecraft, (ItemGun) item, minecraft.thePlayer, minecraft.theWorld, in);
                 else {
                     currentZoom = 1.0f;
                     isZoomed = false;
@@ -342,7 +341,7 @@ public class mod_Guns extends ModMP {
         return null;
     }
 
-    private static void applyRecoil(EntityPlayer player, com.heuristix.ItemGun gun) {
+    private static void applyRecoil(EntityPlayer player, ItemGun gun) {
         double y = 0.0D;
         double y1 = recoilY;
         if (recoilY > 0.0D) {

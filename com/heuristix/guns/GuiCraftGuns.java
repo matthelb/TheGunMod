@@ -1,11 +1,13 @@
 package com.heuristix.guns;
 
 import com.heuristix.CustomEntity;
-import com.heuristix.ItemCustom;
 import com.heuristix.ItemGun;
 import com.heuristix.Util;
 import com.heuristix.net.PacketCraftGunsArrowClick;
-import net.minecraft.src.*;
+import net.minecraft.src.GuiContainer;
+import net.minecraft.src.Item;
+import net.minecraft.src.ItemStack;
+import net.minecraft.src.mod_Guns;
 import org.lwjgl.opengl.GL11;
 
 import java.awt.*;
@@ -102,7 +104,7 @@ public class GuiCraftGuns extends GuiContainer {
             if(ARROW[i].contains(x - getX(),y - getY())) {
                 mouseOverArrow[i] = false;
                 container.onArrowClick(i);
-                if(mc.theWorld.multiplayerWorld) {
+                if(mc.theWorld.isRemote) {
                     Util.sendPacket(new PacketCraftGunsArrowClick(i), mod_Guns.class);
                 }
             }
