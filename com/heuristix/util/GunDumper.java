@@ -3,10 +3,10 @@ package com.heuristix.util;
 import com.heuristix.*;
 import net.minecraft.src.mod_Guns;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.lang.reflect.Constructor;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
 import java.util.HashMap;
 
 /**

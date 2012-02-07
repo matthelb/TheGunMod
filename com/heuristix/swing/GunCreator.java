@@ -1,7 +1,8 @@
 package com.heuristix.swing;
 
 import com.heuristix.*;
-import com.heuristix.util.*;
+import com.heuristix.util.Log;
+import com.heuristix.util.ReverseBuffer;
 import net.minecraft.src.mod_Guns;
 
 import javax.imageio.ImageIO;

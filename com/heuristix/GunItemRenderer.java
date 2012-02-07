@@ -3,7 +3,9 @@ package com.heuristix;
 import com.heuristix.util.ReflectionFacade;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
-import org.lwjgl.opengl.*;
+import org.lwjgl.opengl.ARBVertexBlend;
+import org.lwjgl.opengl.EXTRescaleNormal;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Created by IntelliJ IDEA.
@@ -225,9 +227,9 @@ public class GunItemRenderer extends ItemRenderer {
             GL11.glPushMatrix();
             float f6 = 0.8F;
             float f10 = entityplayersp.getSwingProgress(f);
-            float f15 = MathHelper.sin(f10 * Util.PI);
-            float f21 = MathHelper.sin(MathHelper.sqrt_float(f10) * Util.PI);
-            GL11.glTranslatef(-f21 * 0.4F, MathHelper.sin(MathHelper.sqrt_float(f10) * Util.PI * 2.0F) * 0.2F, -f15 * 0.2F);
+            float f15 = MathHelper.sin(f10 * com.heuristix.Util.PI);
+            float f21 = MathHelper.sin(MathHelper.sqrt_float(f10) * com.heuristix.Util.PI);
+            GL11.glTranslatef(-f21 * 0.4F, MathHelper.sin(MathHelper.sqrt_float(f10) * com.heuristix.Util.PI * 2.0F) * 0.2F, -f15 * 0.2F);
             f10 = (1.0F - f2 / 45F) + 0.1F;
             if (f10 < 0.0F)
             {
@@ -237,7 +239,7 @@ public class GunItemRenderer extends ItemRenderer {
             {
                 f10 = 1.0F;
             }
-            f10 = -MathHelper.cos(f10 * Util.PI) * 0.5F + 0.5F;
+            f10 = -MathHelper.cos(f10 * com.heuristix.Util.PI) * 0.5F + 0.5F;
             GL11.glTranslatef(0.0F, (0.0F * f6 - (1.0F - f1) * 1.2F - f10 * 0.5F) + 0.04F, -0.9F * f6);
             GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(f10 * -85F, 0.0F, 0.0F, 1.0F);
@@ -261,8 +263,8 @@ public class GunItemRenderer extends ItemRenderer {
             }
 
             f15 = entityplayersp.getSwingProgress(f);
-            f21 = MathHelper.sin(f15 * f15 * Util.PI);
-            float f28 = MathHelper.sin(MathHelper.sqrt_float(f15) * Util.PI);
+            f21 = MathHelper.sin(f15 * f15 * com.heuristix.Util.PI);
+            float f28 = MathHelper.sin(MathHelper.sqrt_float(f15) * com.heuristix.Util.PI);
             GL11.glRotatef(-f21 * 20F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(-f28 * 20F, 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(-f28 * 80F, 1.0F, 0.0F, 0.0F);
@@ -301,7 +303,7 @@ public class GunItemRenderer extends ItemRenderer {
                     f32 = f32 * f32 * f32;
                     f32 = f32 * f32 * f32;
                     float f36 = 1.0F - f32;
-                    GL11.glTranslatef(0.0F, MathHelper.abs(MathHelper.cos((f16 / 4F) * Util.PI) * 0.1F) * (float)((double)f29 <= 0.20000000000000001D ? 0 : 1), 0.0F);
+                    GL11.glTranslatef(0.0F, MathHelper.abs(MathHelper.cos((f16 / 4F) * com.heuristix.Util.PI) * 0.1F) * (float)((double)f29 <= 0.20000000000000001D ? 0 : 1), 0.0F);
                     GL11.glTranslatef(f36 * 0.6F, -f36 * 0.5F, 0.0F);
                     GL11.glRotatef(f36 * 90F, 0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(f36 * 10F, 1.0F, 0.0F, 0.0F);
@@ -310,16 +312,16 @@ public class GunItemRenderer extends ItemRenderer {
             }
             else {
                 float f11 = entityplayersp.getSwingProgress(f);
-                float f17 = MathHelper.sin(f11 * Util.PI);
-                float f23 = MathHelper.sin(MathHelper.sqrt_float(f11) * Util.PI);
-                GL11.glTranslatef(-f23 * 0.4F, MathHelper.sin(MathHelper.sqrt_float(f11) * Util.PI * 2.0F) * 0.2F, -f17 * 0.2F);
+                float f17 = MathHelper.sin(f11 * com.heuristix.Util.PI);
+                float f23 = MathHelper.sin(MathHelper.sqrt_float(f11) * com.heuristix.Util.PI);
+                GL11.glTranslatef(-f23 * 0.4F, MathHelper.sin(MathHelper.sqrt_float(f11) * com.heuristix.Util.PI * 2.0F) * 0.2F, -f17 * 0.2F);
             }
             GL11.glTranslatef(0.7F * f7, -0.65F * f7 - (1.0F - f1) * 0.6F, -0.9F * f7);
             GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
             GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
             float swingProgress = entityplayersp.getSwingProgress(f);
-            float f18 = MathHelper.sin(swingProgress * swingProgress * Util.PI);
-            float f24 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * Util.PI);
+            float f18 = MathHelper.sin(swingProgress * swingProgress * com.heuristix.Util.PI);
+            float f24 = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * com.heuristix.Util.PI);
             GL11.glRotatef(-f18 * 20F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(-f24 * 20F, 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(-f24 * 80F, 1.0F, 0.0F, 0.0F);
@@ -379,15 +381,15 @@ public class GunItemRenderer extends ItemRenderer {
             GL11.glPushMatrix();
             float f8 = 0.8F;
             float f13 = entityplayersp.getSwingProgress(f);
-            float f19 = MathHelper.sin(f13 * Util.PI);
-            float scale = MathHelper.sin(MathHelper.sqrt_float(f13) * Util.PI);
-            GL11.glTranslatef(-scale * 0.3F, MathHelper.sin(MathHelper.sqrt_float(f13) * Util.PI * 2.0F) * 0.4F, -f19 * 0.4F);
+            float f19 = MathHelper.sin(f13 * com.heuristix.Util.PI);
+            float scale = MathHelper.sin(MathHelper.sqrt_float(f13) * com.heuristix.Util.PI);
+            GL11.glTranslatef(-scale * 0.3F, MathHelper.sin(MathHelper.sqrt_float(f13) * com.heuristix.Util.PI * 2.0F) * 0.4F, -f19 * 0.4F);
             GL11.glTranslatef(0.8F * f8, -0.75F * f8 - (1.0F - f1) * 0.6F, -0.9F * f8);
             GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
             GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
             f13 = entityplayersp.getSwingProgress(f);
-            f19 = MathHelper.sin(f13 * f13 * Util.PI);
-            scale = MathHelper.sin(MathHelper.sqrt_float(f13) * Util.PI);
+            f19 = MathHelper.sin(f13 * f13 * com.heuristix.Util.PI);
+            scale = MathHelper.sin(MathHelper.sqrt_float(f13) * com.heuristix.Util.PI);
             GL11.glRotatef(scale * 70F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(-f19 * 20F, 0.0F, 0.0F, 1.0F);
             GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getEntityTexture()));

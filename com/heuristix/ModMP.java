@@ -1,6 +1,5 @@
 package com.heuristix;
 
-import com.heuristix.guns.BlockCraftGuns;
 import com.heuristix.util.Log;
 import com.heuristix.util.ReflectionFacade;
 import net.minecraft.client.Minecraft;
@@ -9,9 +8,7 @@ import net.minecraft.src.*;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -53,13 +50,19 @@ public abstract class ModMP extends BaseModMp implements Mod {
         }
         ModLoader.AddName(item, item.getName());
         if (item.hasWorkbenchRecipe() && item.getCraftingRecipe() != null && item.getCraftingRecipe().length > 0) {
-            ModLoader.AddRecipe(new ItemStack(item, item.getCraftingAmount()), item.getCraftingRecipe());
+            ItemStack stack = new ItemStack(item, item.getCraftingAmount());
+            if(item.isShapelessRecipe()) {
+                ModLoader.AddShapelessRecipe(stack, item.getCraftingRecipe());
+            } else {
+                ModLoader.AddRecipe(stack, item.getCraftingRecipe());
+            }
         }
     }
 
     protected <B extends Block & CustomEntity> void registerBlock(B block) {
         registerBlock(block, -1);
     }
+
     protected <B extends Block & CustomEntity> void registerBlock(B block, int textureIndex) {
         if(block.getBlockName() == null) {
             block.setBlockName(block.getName());
@@ -70,7 +73,12 @@ public abstract class ModMP extends BaseModMp implements Mod {
         block.blockIndexInTexture = textureIndex;
         ModLoader.AddName(block, block.getName());
         if(block.getCraftingRecipe() != null && block.getCraftingRecipe().length > 0) {
-            ModLoader.AddRecipe(new ItemStack(block, block.getCraftingAmount()), block.getCraftingRecipe());
+            ItemStack stack = new ItemStack(block, block.getCraftingAmount());
+            if(block.isShapelessRecipe()) {
+                ModLoader.AddShapelessRecipe(stack, block.getCraftingRecipe());
+            } else {
+                ModLoader.AddRecipe(stack, block.getCraftingRecipe());
+            }
         }
         Item.itemsList[block.blockID] = new ItemBlock(block.blockID - 256);
     }
@@ -93,10 +101,6 @@ public abstract class ModMP extends BaseModMp implements Mod {
     }
 
     public Integer[] registerTextures(boolean items, BufferedImage base16IconSheet, int textureSize) {
-        return registerTextures(items, base16IconSheet, textureSize, ModLoader.getMinecraftInstance().renderEngine);
-    }
-
-    public Integer[] registerTextures(boolean items, BufferedImage base16IconSheet, int textureSize, RenderEngine engine) {
         List<Integer> textureIndices = new ArrayList<Integer>();
         for(int y = 0; y < base16IconSheet.getHeight(); y += textureSize) {
             for(int x = 0; x < base16IconSheet.getWidth(); x += textureSize) {

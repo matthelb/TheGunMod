@@ -1,9 +1,6 @@
 package com.heuristix.net;
 
-import com.heuristix.Util;
 import net.minecraft.src.Packet100OpenWindow;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by IntelliJ IDEA.

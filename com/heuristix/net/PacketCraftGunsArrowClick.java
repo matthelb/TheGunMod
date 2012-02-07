@@ -1,7 +1,6 @@
 package com.heuristix.net;
 
 import com.heuristix.Util;
-import net.minecraft.src.Packet;
 import net.minecraft.src.Packet230ModLoader;
 
 /**

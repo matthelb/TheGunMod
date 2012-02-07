@@ -5,7 +5,6 @@ import com.heuristix.asm.*;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -22,7 +21,7 @@ public class ExtensibleClassAdapter extends ClassAdapter {
 
     private final ClassWriter writer;
 
-    public ExtensibleClassAdapter(ClassWriter writer, String className, Map<String, com.heuristix.util.Method> methods, boolean extend) {
+    public ExtensibleClassAdapter(ClassWriter writer, String className, Map<String, Method> methods, boolean extend) {
         super(writer);
         this.writer = writer;
         this.className = className;
@@ -45,7 +44,7 @@ public class ExtensibleClassAdapter extends ClassAdapter {
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-        com.heuristix.util.Method method = methods.get(name + desc);
+        Method method = methods.get(name + desc);
         MethodVisitor mv = null;
         if (method != null) {
             mv = cv.visitMethod((method.getAccess() == -1) ? access : method.getAccess(), (method.getName() == null) ? name : method.getName(),
@@ -103,15 +102,15 @@ public class ExtensibleClassAdapter extends ClassAdapter {
         }
     }
 
-    public static byte[] modifyClassBytes(Class clazz, String className, Map<String, com.heuristix.util.Method> methods, boolean extend) throws IOException {
+    public static byte[] modifyClassBytes(Class clazz, String className, Map<String, Method> methods, boolean extend) throws IOException {
         return modifyClassBytes(new ClassReader(clazz), className, methods, extend);
     }
 
-    public static byte[] modifyClassBytes(byte[] classBytes, String className, Map<String, com.heuristix.util.Method> methods, boolean extend) throws IOException {
+    public static byte[] modifyClassBytes(byte[] classBytes, String className, Map<String, Method> methods, boolean extend) throws IOException {
         return modifyClassBytes(new ClassReader(classBytes), className, methods, extend);
     }
 
-    private static byte[] modifyClassBytes(ClassReader cr, String className, Map<String, com.heuristix.util.Method> methods, boolean extend) throws IOException {
+    private static byte[] modifyClassBytes(ClassReader cr, String className, Map<String, Method> methods, boolean extend) throws IOException {
         ClassWriter cw = new ClassWriter(0);
         cr.accept(new ExtensibleClassAdapter(cw, className, methods, extend), ClassReader.SKIP_DEBUG);
         cr = new ClassReader(cw.toByteArray());
@@ -124,11 +123,11 @@ public class ExtensibleClassAdapter extends ClassAdapter {
     }
 
 
-    public static Class modifyClass(Class clazz, String className, Map<String, com.heuristix.util.Method> methods, boolean extend) throws IOException {
+    public static Class modifyClass(Class clazz, String className, Map<String, Method> methods, boolean extend) throws IOException {
         return Util.defineClass(modifyClassBytes(clazz, className, methods, extend), className, clazz.getClassLoader());
     }
 
-    public static Class modifyClass(byte[] classBytes, String className, Map<String, com.heuristix.util.Method> methods, boolean extend) throws IOException {
+    public static Class modifyClass(byte[] classBytes, String className, Map<String, Method> methods, boolean extend) throws IOException {
         return Util.defineClass(modifyClassBytes(classBytes, className, methods, extend), className);
     }
 

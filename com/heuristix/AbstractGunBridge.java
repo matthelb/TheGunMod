@@ -5,11 +5,6 @@ import com.heuristix.asm.Opcodes;
 import com.heuristix.util.*;
 import net.minecraft.src.World;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.awt.image.RenderedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;

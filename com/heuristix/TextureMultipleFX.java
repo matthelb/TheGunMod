@@ -1,6 +1,5 @@
 package com.heuristix;
 
-import net.minecraft.src.RenderEngine;
 import net.minecraft.src.TextureFX;
 
 import java.awt.*;

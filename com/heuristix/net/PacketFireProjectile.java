@@ -1,10 +1,7 @@
 package com.heuristix.net;
 
-import com.heuristix.ItemProjectileShooter;
 import com.heuristix.Util;
 import net.minecraft.src.Packet230ModLoader;
-
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * Created by IntelliJ IDEA.

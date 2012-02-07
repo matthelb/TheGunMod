@@ -1,7 +1,5 @@
 package com.heuristix;
 
-import net.minecraft.src.Item;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Matt

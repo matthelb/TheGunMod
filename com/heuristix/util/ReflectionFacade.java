@@ -1,7 +1,5 @@
 package com.heuristix.util;
 
-import com.heuristix.Util;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;

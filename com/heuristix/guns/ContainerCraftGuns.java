@@ -4,8 +4,8 @@ import com.heuristix.ItemCustom;
 import com.heuristix.ItemGun;
 import com.heuristix.Util;
 import com.heuristix.util.Pair;
-import net.minecraft.src.*;
 import net.minecraft.src.Container;
+import net.minecraft.src.*;
 
 import java.awt.*;
 import java.util.LinkedList;

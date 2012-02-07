@@ -1,6 +1,7 @@
 package com.heuristix;
 
 
+import com.heuristix.guns.EntityBulletBase;
 import com.heuristix.guns.EntityFlameBase;
 import com.heuristix.guns.EntityGrenadeBase;
 import com.heuristix.guns.EntityRocketGrenadeBase;
@@ -12,7 +13,7 @@ import com.heuristix.guns.EntityRocketGrenadeBase;
  * Time: 5:34 PM
  */
 public enum ProjectileType {
-    BULLET("Bullet", com.heuristix.guns.EntityBulletBase.class),
+    BULLET("Bullet", EntityBulletBase.class),
     GRENADE("Grenade", EntityGrenadeBase.class),
     ROCKET_GRENADE("Rocket Grenade", EntityRocketGrenadeBase.class),
     FLAME("Flame", EntityFlameBase.class);

@@ -2,7 +2,9 @@ package com.heuristix;
 
 import com.heuristix.net.PacketFireProjectile;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
+import net.minecraft.src.EntityPlayer;
+import net.minecraft.src.World;
+import net.minecraft.src.mod_Guns;
 
 /**
  * Created by IntelliJ IDEA.
@@ -81,7 +83,7 @@ public abstract class ItemProjectileShooter extends ItemCustom {
             float rand = itemRand.nextFloat();
             world.playSoundAtEntity(player, getShootSound(), rand + 0.5f, 1.0f / (rand * 0.4f + 0.8f));
         }
-        if (!world.multiplayerWorld) {
+        if (!world.isRemote) {
             spawnProjectile(world, player);
         } else {
             PacketFireProjectile packet = new PacketFireProjectile();
