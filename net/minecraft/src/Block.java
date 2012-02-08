@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.heuristix.swing.GunCreator;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -970,6 +972,8 @@ public class Block
         }
 
         canBlockGrass[0] = true;
-        StatList.initBreakableStats();
+        if(!GunCreator.MC_SRC_MOD) {
+            StatList.initBreakableStats();
+        }
     }
 }

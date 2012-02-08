@@ -9,6 +9,7 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -202,9 +203,12 @@ public abstract class ModMP extends BaseModMp implements Mod {
 
     public BufferedImage getImageResource(String path) {
         try {
-            return ImageIO.read(getClass().getResourceAsStream(path));
+            InputStream stream = getClass().getResourceAsStream(path);
+            if(stream != null) {
+                return ImageIO.read(stream);
+            }
         } catch (IOException e) {
-            Log.fine("Could not load image resource " + path, getClass());
+            Log.throwing(getClass(), "getImageResource(String path)", e, getClass());
         }
         return null;
     }

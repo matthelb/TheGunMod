@@ -34,7 +34,7 @@ public class mod_Guns extends ModMP {
     private KeyBinding reloadKeybinding = new KeyBinding("key.reload", Keyboard.KEY_R);
     private KeyBinding zoomKeybinding = new KeyBinding("key.zoom", Keyboard.KEY_Z);
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     private boolean justAttemptedFire;
     private boolean reflectionInit;
@@ -142,11 +142,14 @@ public class mod_Guns extends ModMP {
                     Gun gun = new Gun(Util.read(f));
                     if(gun != null) {
                         int[] versionCreated = gun.getProperties().get("versionCreated");
-                        if(versionCreated == null || !Util.getStringFromBytes(versionCreated).equals(AbstractGunBridge.VERSION)) {
-                            if(gb == null)
+                        String version = "";
+                        if(versionCreated == null || !(version = Util.getStringFromBytes(versionCreated)).equals(AbstractGunBridge.VERSION)) {
+                            if(gb == null) {
                                 gb = new DefaultGunBridge();
+                            }
                             gb.read(gun, DEBUG);
                             gb.write(new FileOutputStream(f));
+                            Log.fine("Updated gun file " + f.getName() + " from version " + version + " to " + AbstractGunBridge.VERSION, getClass());
                             gun = new Gun(Util.read(f));
                         }
                         registerGun(gun, DEBUG);
