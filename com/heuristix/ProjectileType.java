@@ -31,8 +31,9 @@ public enum ProjectileType {
 
     public static ProjectileType forClass(Class clazz) {
         for (ProjectileType t : values()) {
-            if (t.getProjectileType().equals(clazz))
+            if (t.getProjectileType().equals(clazz)) {
                 return t;
+            }
         }
         return null;
     }

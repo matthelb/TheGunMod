@@ -145,7 +145,9 @@ public abstract class EntityProjectile extends Entity {
 
     public boolean onEntityHit(Entity hit) {
         if (hit != null) {
-            ReflectionFacade.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
+            if(hit instanceof EntityLiving) {
+                ReflectionFacade.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
+            }
             return true;
         }
         return false;
