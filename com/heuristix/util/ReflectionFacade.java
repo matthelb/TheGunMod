@@ -1,7 +1,9 @@
 package com.heuristix.util;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,24 +13,26 @@ import java.util.Map;
  * Date: 1/23/12
  * Time: 4:32 PM
  */
-public final class ObfuscatedNames {
+public final class ReflectionFacade {
 
-    private static ObfuscatedNames instance;
+    private static ReflectionFacade instance;
 
-    private final Map<Class, String> names;
+    private final Map<Class, Pair<String, String>> names;
 
     private final Map<Class, Map<String, java.lang.reflect.Field>> fields;
     private final Map<Class, Map<String, java.lang.reflect.Method>> methods;
-
-    private ObfuscatedNames() {
-        this.names = new HashMap<Class, String>();
+    private final Map<Class, Map<String, java.lang.reflect.Constructor>> constructors;
+    
+    private ReflectionFacade() {
+        this.names = new HashMap<Class, Pair<String, String>>();
         this.fields = new HashMap<Class, Map<String, java.lang.reflect.Field>>();
         this.methods = new HashMap<Class, Map<String, java.lang.reflect.Method>>();
+        this.constructors = new HashMap<Class, Map<String, java.lang.reflect.Constructor>>();
     }
 
-    public static ObfuscatedNames getInstance() {
+    public static ReflectionFacade getInstance() {
         if(instance == null) {
-            instance = new ObfuscatedNames();
+            instance = new ReflectionFacade();
         }
         return instance;
     }
@@ -40,6 +44,8 @@ public final class ObfuscatedNames {
                 return field.get(o);
             } catch (IllegalAccessException e) {
                 Log.getLogger().fine("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
+            } catch (IllegalArgumentException e) {
+                Log.getLogger().fine("Instace [" + o + "] of class " + o.getClass() + " does not match class " + field.getDeclaringClass() + " of field " + field);
             }
         }
         return null;
@@ -52,6 +58,8 @@ public final class ObfuscatedNames {
                 field.set(o, value);
             } catch (IllegalAccessException e) {
                 Log.getLogger().fine("Not allowed to access " + Modifier.toString(field.getModifiers()) + " field value " + field.getDeclaringClass().getName() + "+" + field.getName());
+            } catch (IllegalArgumentException e) {
+                Log.getLogger().fine("Instace [" + o + "] of class " + o.getClass() + " does not match class " + field.getDeclaringClass() + " of field " + field);
             }
         }
     }
@@ -65,6 +73,22 @@ public final class ObfuscatedNames {
                Log.getLogger().fine("Not allowed to invoke " + Modifier.toString(method.getModifiers()) + " method " + method.getDeclaringClass().getName() + "+" + method.getName());
             } catch (InvocationTargetException e) {
                Log.getLogger().fine("Could not invoke " + method.getDeclaringClass().getName() + "+" + method.getName());
+            }
+        }
+        return null;
+    }
+
+    public Object invokeConstructor(Class clazz, Class[] paramTypes, Object... params) {
+        java.lang.reflect.Constructor constructor = getConstructor(clazz, paramTypes);
+        if(constructor != null) {
+            try {
+                return constructor.newInstance(params);
+            } catch (IllegalAccessException e) {
+               Log.getLogger().fine("Not allowed to invoke " + Modifier.toString(constructor.getModifiers()) + " method " + constructor.getDeclaringClass().getName() + "+" + Arrays.toString(constructor.getParameterTypes()));
+            } catch (InstantiationException e) {
+               Log.getLogger().fine("Could not instantiate " + constructor.getDeclaringClass().getName() + "+" + Arrays.toString(constructor.getParameterTypes()));
+            } catch (InvocationTargetException e) {
+               Log.getLogger().fine("Could not invoke " + constructor.getDeclaringClass().getName() + "+" + Arrays.toString(constructor.getParameterTypes()));
             }
         }
         return null;
@@ -85,9 +109,25 @@ public final class ObfuscatedNames {
         }
         return null;
     }
+    
+    public java.lang.reflect.Constructor getConstructor(Class clazz, Class... paramTypes) {
+        Map<String, Constructor> classConstructors = constructors.get(clazz);
+        if(classConstructors != null) {
+            return classConstructors.get(Arrays.toString(paramTypes));
+        }
+        return null;
+    }
 
-     public String getName(Class clazz) {
-        return names.get(clazz);
+    public String getName(Class clazz) {
+        return getName(clazz, true);
+    }
+
+    public String getName(Class clazz, boolean obfuscated) {
+        Pair<String, String> name = names.get(clazz);
+        if(name != null) {
+            return obfuscated ? name.getSecond() : name.getFirst();
+        }
+        return null;
     }
 
     public java.lang.reflect.Method putMethod(Class clazz, String name, String obfuscatedName, Class... params) {
@@ -141,9 +181,29 @@ public final class ObfuscatedNames {
         }
         return field;
     }
+    
+    public java.lang.reflect.Constructor putConstructor(Class clazz, Class... paramTypes) {
+        Map<String, java.lang.reflect.Constructor> classConstructors = constructors.get(clazz);
+        if(classConstructors == null) {
+            classConstructors = new HashMap<String, java.lang.reflect.Constructor>();
+        }
+        java.lang.reflect.Constructor constructor = null;
+        try {
+            constructor = clazz.getDeclaredConstructor(paramTypes);
+            constructor.setAccessible(true);
+            classConstructors.put(Arrays.toString(paramTypes), constructor);
+            constructors.put(clazz, classConstructors);
+        } catch (NoSuchMethodException e) {
+            Log.getLogger().fine("Constructor (" + Arrays.toString(paramTypes) +") not found in Class " + clazz.getName());
+            return null;
+        } catch (NoClassDefFoundError e) {
+            Log.getLogger().fine("Class not found " + clazz);
+        }
+        return constructor;
+    }
 
-    public void putName(Class clazz, String obfuscatedName) {
-        names.put(clazz, obfuscatedName);
+    public void putName(Class clazz, String name, String obfuscatedName) {
+        names.put(clazz, new Pair<String, String>(name, obfuscatedName));
     }
 
 }

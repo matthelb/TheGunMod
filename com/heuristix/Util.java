@@ -2,7 +2,7 @@ package com.heuristix;
 
 
 import com.heuristix.net.PacketOpenCraftGuns;
-import com.heuristix.util.ObfuscatedNames;
+import com.heuristix.util.ReflectionFacade;
 import net.minecraft.src.*;
 
 import java.awt.image.BufferedImage;
@@ -402,13 +402,13 @@ public class Util {
     }
 
     static {
-        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        ReflectionFacade names = ReflectionFacade.getInstance();
         names.putMethod(Packet.class, "addIdClassMapping", "a", int.class, boolean.class, boolean.class, Class.class);
         names.putField(EntityPlayerMP.class, "currentWindowId", "cl");
     }
 
     public static void setPacketId(Class packetClass, int id, boolean client, boolean server) {
-         ObfuscatedNames.getInstance().invokeMethod(Packet.class, null, "addIdClassMapping", id, client, server, packetClass);
+         ReflectionFacade.getInstance().invokeMethod(Packet.class, null, "addIdClassMapping", id, client, server, packetClass);
     }
 
     public static String getStringFromBytes(int[] bytes) {
@@ -418,7 +418,7 @@ public class Util {
     }
 
     public static void displayGUI(EntityPlayerMP player, IInventory inventory, Container container) {
-        ObfuscatedNames names = ObfuscatedNames.getInstance();
+        ReflectionFacade names = ReflectionFacade.getInstance();
         int currentWindowId = (Integer) names.getFieldValue(EntityPlayerMP.class, player, "currentWindowId");
         currentWindowId = currentWindowId % 100 + 1;
         player.playerNetServerHandler.sendPacket(new PacketOpenCraftGuns(currentWindowId, inventory.getInvName(), inventory.getSizeInventory()));

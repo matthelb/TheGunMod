@@ -36,9 +36,9 @@ public class mod_Guns extends ModMP {
     private static final Map<String, ItemProjectile> projectiles = new HashMap<String, ItemProjectile>();
 
     static {
-        ObfuscatedNames names = ObfuscatedNames.getInstance();
-        names.putName(World.class, "fq");
-        names.putName(EntityLiving.class, "lx");
+        ReflectionFacade names = ReflectionFacade.getInstance();
+        names.putName(World.class, "World", "fq");
+        names.putName(EntityLiving.class, "EntityLiving", "lx");
     }
 
     public mod_Guns() {
@@ -99,7 +99,7 @@ public class mod_Guns extends ModMP {
 
         Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
         if (entityBulletClass == null) {
-            ObfuscatedNames names = ObfuscatedNames.getInstance();
+            ReflectionFacade names = ReflectionFacade.getInstance();
             byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
             String projectileType = ClassDescriptor.getClassDescription(entityBulletClassBytes).getSuperName();
             HashMap<String, Method> methods = new HashMap<String, Method>();

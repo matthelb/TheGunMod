@@ -27,8 +27,9 @@ public final class ReverseBuffer {
     }
 
     public static int[] getString(String value) {
-        if (value == null)
+        if (value == null) {
             return new int[]{10};
+        }
         byte[] bytes = value.getBytes();
         int[] ints = new int[bytes.length + 1];
         for (int i = 0; i < bytes.length; i++) {
