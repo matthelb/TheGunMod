@@ -28,11 +28,15 @@ public class DefaultGunBridge extends AbstractGunBridge {
     private int damage, shotsPerMinute, reloadTime, clipSize, recoilX, recoilY, projectileId, gunId, roundsPerMinute, roundsPerShot;
     private float range, zoom, projectileSpread;
 
-    private HashMap<Integer, BufferedImage> gunTextures;
-    private HashMap<Integer, BufferedImage> projectileTextures;
+    private Map<Integer, BufferedImage> gunTextures;
+    private Map<Integer, BufferedImage> projectileTextures;
 
     private byte[] shootSoundBytes, reloadSoundBytes;
 
+    public DefaultGunBridge() {
+        this.gunTextures = new HashMap<Integer, BufferedImage>();
+        this.projectileTextures = new HashMap<Integer, BufferedImage>();
+    }
     public String getGunName() {
         return gunName;
     }
@@ -63,7 +67,7 @@ public class DefaultGunBridge extends AbstractGunBridge {
     @Override
     protected void addResource(String resource, byte[] value) {
         if(resource.contains("gun") || resource.contains("projectile")) {
-            HashMap<Integer, BufferedImage> textures = (resource.contains("gun")) ? gunTextures : projectileTextures;
+            Map<Integer, BufferedImage> textures = (resource.contains("gun")) ? gunTextures : projectileTextures;
             try {
                 BufferedImage image = ImageIO.read(new ByteArrayInputStream(value));
                 if(resource.contains("16")) {
@@ -129,7 +133,7 @@ public class DefaultGunBridge extends AbstractGunBridge {
     protected Map<String, byte[]> getResources() {
         HashMap<String, byte[]> resources = new HashMap<String, byte[]>();
         for(int i = 0; i < 2; i++) {
-            HashMap<Integer, BufferedImage> textures = (i == 0) ? gunTextures : projectileTextures;
+            Map<Integer, BufferedImage> textures = (i == 0) ? gunTextures : projectileTextures;
             for(Map.Entry<Integer, BufferedImage> entry : textures.entrySet()) {
                 String key = entry.getKey() + "x" + entry.getKey() + ((i == 0) ? "gun" : "projectile");
                 ByteArrayOutputStream out = new ByteArrayOutputStream();

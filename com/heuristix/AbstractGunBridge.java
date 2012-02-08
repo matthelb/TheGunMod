@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public abstract class AbstractGunBridge implements GunBridge {
 
-    public static final String VERSION = "0.9.62";
+    public static final String VERSION = "0.9.7";
 
     public static final List<Pair<String, String>> OBFUSCATED_CLASS_NAMES = new LinkedList<Pair<String, String>>();
 
@@ -100,8 +100,8 @@ public abstract class AbstractGunBridge implements GunBridge {
                 setRange(entityProjectile.getEffectiveRange());
                 setZoom(itemGun.getZoom());
                 setProjectileSpread(entityProjectile.getSpread());
-                setReloadSound(itemGun.getReloadSound());
-                setShootSound(itemGun.getShootSound());
+                setReloadSound(itemGun.getReloadSound().substring(itemGun.getReloadSound().lastIndexOf('.') + 1) + ".ogg");
+                setShootSound(itemGun.getShootSound().substring(itemGun.getShootSound().lastIndexOf('.') + 1) + ".ogg");
 
                 for(Map.Entry<String, byte[]> entry : gun.getResources().entrySet()) {
                     addResource(entry.getKey(), entry.getValue());
