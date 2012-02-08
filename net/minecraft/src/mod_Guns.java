@@ -30,7 +30,7 @@ import java.util.logging.Level;
 */
 public class mod_Guns extends ModMP {
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     private static final Map<String, Class> classes = new HashMap<String, Class>();
 
