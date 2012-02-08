@@ -132,14 +132,17 @@ public class Util {
         return HOME_DIRECTORY;
     }
 
-    public static BufferedImage resize(BufferedImage image, int width, int height) {
-        int type = image.getType();
-        if(type == BufferedImage.TYPE_CUSTOM) {
-            type = BufferedImage.TYPE_INT_ARGB;
+    public static BufferedImage resizeImage(BufferedImage image, int width, int height) {
+        if(width != 0 && height != 0) {
+            int type = image.getType();
+            if(type == BufferedImage.TYPE_CUSTOM) {
+                type = BufferedImage.TYPE_INT_ARGB;
+            }
+            BufferedImage scaled = new BufferedImage(width, height, type);
+            scaled.createGraphics().drawImage(image, 0, 0, width, height, null);
+            return scaled;
         }
-        BufferedImage scaled = new BufferedImage(width, height, type);
-        scaled.createGraphics().drawImage(image, 0, 0, width, height, null);
-        return scaled;
+        return image;
     }
 
     public static byte[] read(URL url) {
@@ -759,10 +762,30 @@ public class Util {
         return image;
     }
 
+    public static BufferedImage readImage(byte[] bytes) {
+        return readImage(new ByteArrayInputStream(bytes));
+    }
+
+    public static BufferedImage readImage(InputStream in) {
+        try {
+            return ImageIO.read(in);
+        } catch (IOException e) {
+            Log.getLogger().throwing(Util.class.getName(), "writeImage(BufferedImage image, String format, OutputStream out)", e);
+        }
+        return null;
+    }
+
+    public static byte[] writeImage(BufferedImage image, String format) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        if(writeImage(image, format, out)) {
+            return out.toByteArray();
+        }
+        return null;
+    }
+
     public static boolean writeImage(BufferedImage image, String format, OutputStream out) {
         try {
-            ImageIO.write(image, format, out);
-            return true;
+            return ImageIO.write(image, format, out);
         } catch (IOException e) {
             Log.getLogger().throwing(Util.class.getName(), "writeImage(BufferedImage image, String format, OutputStream out)", e);
         }
@@ -780,5 +803,17 @@ public class Util {
         return GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D) == engine.getTexture(items ? "/gui/items.png" : "/terrain.png");
     }
 
+    public static byte[] resizeImageBytes(byte[] bytes, int width, int height) {
+        return resizeImageBytes(bytes, width, height, "PNG");
+    }
+
+    public static byte[] resizeImageBytes(byte[] bytes, int width, int height, String format) {
+        BufferedImage image = readImage(bytes);
+        if(image != null) {
+            resizeImage(image, width, height);
+            return writeImage(image, format);
+        }
+        return null;
+    }
 }
 

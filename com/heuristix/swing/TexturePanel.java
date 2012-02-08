@@ -58,7 +58,7 @@ public class TexturePanel extends JPanel {
     public void setTexture(BufferedImage image, boolean gun) {
         int index = getTextureIndex(image.getWidth());
         int size = getTextureSize(index);
-        textures[(gun) ? 0 : 1][index].updateImage(Util.resize(image, size, size));
+        textures[(gun) ? 0 : 1][index].updateImage(Util.resizeImage(image, size, size));
     }
 
     public Map<Integer, BufferedImage> getTextures(boolean gun) {

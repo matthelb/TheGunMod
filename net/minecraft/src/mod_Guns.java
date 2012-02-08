@@ -172,12 +172,12 @@ public class mod_Guns extends ModMP {
                 String projectileType = ClassDescriptor.getClassDescription(entityBulletClassBytes).getSuperName();
                 HashMap<String, Method> methods = new HashMap<String, Method>();
                 for (int i = 0; i < AbstractGunBridge.OBFUSCATED_CLASS_NAMES.size(); i++) {
-                    Pair<String, String> obfuscatedNames = AbstractGunBridge.OBFUSCATED_CLASS_NAMES.get(i);
-                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
+                    Pair<String, String> ReflectionFacade = AbstractGunBridge.OBFUSCATED_CLASS_NAMES.get(i);
+                    methods.put("<init>(L" + ReflectionFacade.getFirst() + ";L" + ReflectionFacade.getSecond() + ";)V", new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
                             new InvokeMethod(AbstractGunBridge.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
-                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
+                    methods.put("<init>(L" + ReflectionFacade.getFirst() + ";)V", new Method("(Lnet/minecraft/src/World;)V",
                             new InvokeMethod(AbstractGunBridge.SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
-                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V", new Method("(Lnet/minecraft/src/World;DDD)V",
+                    methods.put("<init>(L" + ReflectionFacade.getFirst() + ";DDD)V", new Method("(Lnet/minecraft/src/World;DDD)V",
                             new InvokeMethod(AbstractGunBridge.SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;DDD)V", false, true, false)));
                 }
                 entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst(), methods, false);

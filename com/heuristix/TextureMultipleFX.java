@@ -64,6 +64,12 @@ public abstract class TextureMultipleFX extends TextureFX {
 
     private void setup() {
         Dimension textureDimensions = getMaxTextureDimension();
+        if(textureDimensions.width == 0) {
+            textureDimensions.width = textureDimensions.height;
+        }
+        if(textureDimensions.height == 0) {
+            textureDimensions.width = textureDimensions.height = 16;
+        }
         BufferedImage image = getTexture(textureDimensions.width, textureDimensions.height);
         imagePixelColors = new int[textureDimensions.width * textureDimensions.height];
         imageData = new byte[textureDimensions.width * textureDimensions.height * 4];
@@ -88,7 +94,7 @@ public abstract class TextureMultipleFX extends TextureFX {
             }
 
         }
-        return Util.resize(closest, width, height);
+        return Util.resizeImage(closest, width, height);
     }
 
 
