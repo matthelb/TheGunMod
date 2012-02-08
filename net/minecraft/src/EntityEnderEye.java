@@ -70,7 +70,7 @@ public class EntityEnderEye extends Entity
         for (; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
         rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2F;
         rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2F;
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             double d = field_40060_b - posX;
             double d1 = field_40058_d - posZ;
@@ -105,11 +105,11 @@ public class EntityEnderEye extends Entity
         {
             worldObj.spawnParticle("portal", ((posX - motionX * (double)f1) + rand.nextDouble() * 0.59999999999999998D) - 0.29999999999999999D, posY - motionY * (double)f1 - 0.5D, ((posZ - motionZ * (double)f1) + rand.nextDouble() * 0.59999999999999998D) - 0.29999999999999999D, motionX, motionY, motionZ);
         }
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             setPosition(posX, posY, posZ);
             despawnTimer++;
-            if (despawnTimer > 80 && !worldObj.singleplayerWorld)
+            if (despawnTimer > 80 && !worldObj.isRemote)
             {
                 setEntityDead();
                 if (shatterOrDrop)

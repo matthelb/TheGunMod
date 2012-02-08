@@ -72,7 +72,7 @@ abstract class ComponentNetherBridgePiece extends StructureComponent
     private StructureComponent func_40283_a(ComponentNetherBridgeStartPiece componentnetherbridgestartpiece, List list, Random random, int i, int j, int k, int l,
             int i1, boolean flag)
     {
-        if (Math.abs(i - componentnetherbridgestartpiece.getStructureBoundingBox().minX) > 112 || Math.abs(k - componentnetherbridgestartpiece.getStructureBoundingBox().minZ) > 112)
+        if (Math.abs(i - componentnetherbridgestartpiece.getBoundingBox().minX) > 112 || Math.abs(k - componentnetherbridgestartpiece.getBoundingBox().minZ) > 112)
         {
             StructureNetherBridgeEnd structurenetherbridgeend = StructureNetherBridgeEnd.func_40301_a(list, random, i, j, k, l, i1);
             return structurenetherbridgeend;

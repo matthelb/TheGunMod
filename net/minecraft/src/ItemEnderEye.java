@@ -15,7 +15,7 @@ public class ItemEnderEye extends Item
         int j1 = world.getBlockMetadata(i, j, k);
         if (entityplayer.canPlayerEdit(i, j, k) && i1 == Block.endPortalFrame.blockID && !BlockEndPortalFrame.isEnderEyeInserted(j1))
         {
-            if (world.singleplayerWorld)
+            if (world.isRemote)
             {
                 return true;
             }
@@ -139,7 +139,7 @@ public class ItemEnderEye extends Item
 
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        MovingObjectPosition movingobjectposition = func_40225_a(world, entityplayer, false);
+        MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, entityplayer, false);
         if (movingobjectposition != null && movingobjectposition.typeOfHit == EnumMovingObjectType.TILE)
         {
             int i = world.getBlockId(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
@@ -148,7 +148,7 @@ public class ItemEnderEye extends Item
                 return itemstack;
             }
         }
-        if (!world.singleplayerWorld)
+        if (!world.isRemote)
         {
             ChunkPosition chunkposition = world.func_40214_b("Stronghold", (int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ);
             if (chunkposition != null)

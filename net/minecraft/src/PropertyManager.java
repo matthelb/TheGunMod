@@ -53,7 +53,7 @@ public class PropertyManager
         }
     }
 
-    public File func_40656_c()
+    public File getPropertiesFile()
     {
         return serverPropertiesFile;
     }

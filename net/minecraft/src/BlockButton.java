@@ -296,7 +296,7 @@ public class BlockButton extends Block
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }

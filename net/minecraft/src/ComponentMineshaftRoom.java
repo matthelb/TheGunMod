@@ -16,67 +16,67 @@ public class ComponentMineshaftRoom extends StructureComponent
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
         int i = getComponentType();
-        int j1 = boundingBox.bbHeight() - 3 - 1;
+        int j1 = boundingBox.getYSize() - 3 - 1;
         if (j1 <= 0)
         {
             j1 = 1;
         }
-        for (int j = 0; j < boundingBox.bbWidth(); j += 4)
+        for (int j = 0; j < boundingBox.getXSize(); j += 4)
         {
-            j += random.nextInt(boundingBox.bbWidth());
-            if (j + 3 > boundingBox.bbWidth())
+            j += random.nextInt(boundingBox.getXSize());
+            if (j + 3 > boundingBox.getXSize())
             {
                 break;
             }
             StructureComponent structurecomponent1 = StructureMineshaftPieces.getNextComponent(structurecomponent, list, random, boundingBox.minX + j, boundingBox.minY + random.nextInt(j1) + 1, boundingBox.minZ - 1, 2, i);
             if (structurecomponent1 != null)
             {
-                StructureBoundingBox structureboundingbox = structurecomponent1.getStructureBoundingBox();
+                StructureBoundingBox structureboundingbox = structurecomponent1.getBoundingBox();
                 field_35356_a.add(new StructureBoundingBox(structureboundingbox.minX, structureboundingbox.minY, boundingBox.minZ, structureboundingbox.maxX, structureboundingbox.maxY, boundingBox.minZ + 1));
             }
         }
 
-        for (int k = 0; k < boundingBox.bbWidth(); k += 4)
+        for (int k = 0; k < boundingBox.getXSize(); k += 4)
         {
-            k += random.nextInt(boundingBox.bbWidth());
-            if (k + 3 > boundingBox.bbWidth())
+            k += random.nextInt(boundingBox.getXSize());
+            if (k + 3 > boundingBox.getXSize())
             {
                 break;
             }
             StructureComponent structurecomponent2 = StructureMineshaftPieces.getNextComponent(structurecomponent, list, random, boundingBox.minX + k, boundingBox.minY + random.nextInt(j1) + 1, boundingBox.maxZ + 1, 0, i);
             if (structurecomponent2 != null)
             {
-                StructureBoundingBox structureboundingbox1 = structurecomponent2.getStructureBoundingBox();
+                StructureBoundingBox structureboundingbox1 = structurecomponent2.getBoundingBox();
                 field_35356_a.add(new StructureBoundingBox(structureboundingbox1.minX, structureboundingbox1.minY, boundingBox.maxZ - 1, structureboundingbox1.maxX, structureboundingbox1.maxY, boundingBox.maxZ));
             }
         }
 
-        for (int l = 0; l < boundingBox.bbDepth(); l += 4)
+        for (int l = 0; l < boundingBox.getZSize(); l += 4)
         {
-            l += random.nextInt(boundingBox.bbDepth());
-            if (l + 3 > boundingBox.bbDepth())
+            l += random.nextInt(boundingBox.getZSize());
+            if (l + 3 > boundingBox.getZSize())
             {
                 break;
             }
             StructureComponent structurecomponent3 = StructureMineshaftPieces.getNextComponent(structurecomponent, list, random, boundingBox.minX - 1, boundingBox.minY + random.nextInt(j1) + 1, boundingBox.minZ + l, 1, i);
             if (structurecomponent3 != null)
             {
-                StructureBoundingBox structureboundingbox2 = structurecomponent3.getStructureBoundingBox();
+                StructureBoundingBox structureboundingbox2 = structurecomponent3.getBoundingBox();
                 field_35356_a.add(new StructureBoundingBox(boundingBox.minX, structureboundingbox2.minY, structureboundingbox2.minZ, boundingBox.minX + 1, structureboundingbox2.maxY, structureboundingbox2.maxZ));
             }
         }
 
-        for (int i1 = 0; i1 < boundingBox.bbDepth(); i1 += 4)
+        for (int i1 = 0; i1 < boundingBox.getZSize(); i1 += 4)
         {
-            i1 += random.nextInt(boundingBox.bbDepth());
-            if (i1 + 3 > boundingBox.bbDepth())
+            i1 += random.nextInt(boundingBox.getZSize());
+            if (i1 + 3 > boundingBox.getZSize())
             {
                 break;
             }
             StructureComponent structurecomponent4 = StructureMineshaftPieces.getNextComponent(structurecomponent, list, random, boundingBox.maxX + 1, boundingBox.minY + random.nextInt(j1) + 1, boundingBox.minZ + i1, 3, i);
             if (structurecomponent4 != null)
             {
-                StructureBoundingBox structureboundingbox3 = structurecomponent4.getStructureBoundingBox();
+                StructureBoundingBox structureboundingbox3 = structurecomponent4.getBoundingBox();
                 field_35356_a.add(new StructureBoundingBox(boundingBox.maxX - 1, structureboundingbox3.minY, structureboundingbox3.minZ, boundingBox.maxX, structureboundingbox3.maxY, structureboundingbox3.maxZ));
             }
         }

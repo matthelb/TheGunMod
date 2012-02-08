@@ -194,7 +194,7 @@ public class Block
         return this;
     }
 
-    protected void setFireBurnRates()
+    protected void initializeBlock()
     {
     }
 
@@ -377,7 +377,7 @@ public class Block
 
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -398,7 +398,7 @@ public class Block
 
     protected void dropBlockAsItem_do(World world, int i, int j, int k, ItemStack itemstack)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -695,7 +695,7 @@ public class Block
         return blockMaterial.getMaterialMobility();
     }
 
-    public void func_43001_a(World world, int i, int j, int k, Entity entity, float f)
+    public void onFallenUpon(World world, int i, int j, int k, Entity entity, float f)
     {
     }
 
@@ -870,7 +870,7 @@ public class Block
             if (Item.itemsList[i] == null)
             {
                 Item.itemsList[i] = new ItemBlock(i - 256);
-                blocksList[i].setFireBurnRates();
+                blocksList[i].initializeBlock();
             }
             boolean flag = false;
             if (i > 0 && blocksList[i].getRenderType() == 10)
@@ -889,7 +889,6 @@ public class Block
         }
 
         canBlockGrass[0] = true;
-        if(!GunCreator.MC_SRC_MOD)
-            StatList.initBreakableStats();
+        StatList.initBreakableStats();
     }
 }

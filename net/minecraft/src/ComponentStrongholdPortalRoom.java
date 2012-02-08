@@ -25,7 +25,7 @@ public class ComponentStrongholdPortalRoom extends ComponentStronghold
     public static ComponentStrongholdPortalRoom func_40315_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -4, -1, 0, 11, 8, 16, l);
-        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
         {
             return null;
         }
@@ -114,7 +114,7 @@ public class ComponentStrongholdPortalRoom extends ComponentStronghold
             int i = getYWithOffset(3);
             int j1 = getXWithOffset(5, 6);
             int k1 = getZWithOffset(5, 6);
-            if (structureboundingbox.isInBbVolume(j1, i, k1))
+            if (structureboundingbox.isVecInside(j1, i, k1))
             {
                 field_40316_a = true;
                 world.setBlockWithNotify(j1, i, k1, Block.mobSpawner.blockID);

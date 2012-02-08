@@ -20,7 +20,7 @@ public class EntityAIWatchClosest extends EntityAIBase
 
     public boolean func_46090_a()
     {
-        if (field_46110_a.func_46019_ai().nextFloat() >= 0.02F)
+        if (field_46110_a.getRNG().nextFloat() >= 0.02F)
         {
             return false;
         }
@@ -46,7 +46,7 @@ public class EntityAIWatchClosest extends EntityAIBase
 
     public void func_46088_e()
     {
-        field_46107_e = 40 + field_46110_a.func_46019_ai().nextInt(40);
+        field_46107_e = 40 + field_46110_a.getRNG().nextInt(40);
     }
 
     public void func_46085_d()
@@ -56,7 +56,7 @@ public class EntityAIWatchClosest extends EntityAIBase
 
     public void func_46089_b()
     {
-        field_46110_a.func_46021_ae().func_46060_a(field_46108_b.posX, field_46108_b.posY + (double)field_46108_b.getEyeHeight(), field_46108_b.posZ, 10F, field_46110_a.getVerticalFaceSpeed());
+        field_46110_a.getLookHelper().func_46060_a(field_46108_b.posX, field_46108_b.posY + (double)field_46108_b.getEyeHeight(), field_46108_b.posZ, 10F, field_46110_a.getVerticalFaceSpeed());
         field_46107_e--;
     }
 

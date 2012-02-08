@@ -4,7 +4,7 @@ import java.io.*;
 
 public class Packet201PlayerInfo extends Packet
 {
-    public String name;
+    public String playerName;
     public boolean isConnected;
     public int ping;
 
@@ -14,7 +14,7 @@ public class Packet201PlayerInfo extends Packet
 
     public Packet201PlayerInfo(String s, boolean flag, int i)
     {
-        name = s;
+        playerName = s;
         isConnected = flag;
         ping = i;
     }
@@ -22,7 +22,7 @@ public class Packet201PlayerInfo extends Packet
     public void readPacketData(DataInputStream datainputstream)
     throws IOException
     {
-        name = readString(datainputstream, 16);
+        playerName = readString(datainputstream, 16);
         isConnected = datainputstream.readByte() != 0;
         ping = datainputstream.readShort();
     }
@@ -30,7 +30,7 @@ public class Packet201PlayerInfo extends Packet
     public void writePacketData(DataOutputStream dataoutputstream)
     throws IOException
     {
-        writeString(name, dataoutputstream);
+        writeString(playerName, dataoutputstream);
         dataoutputstream.writeByte(isConnected ? 1 : 0);
         dataoutputstream.writeShort(ping);
     }
@@ -42,6 +42,6 @@ public class Packet201PlayerInfo extends Packet
 
     public int getPacketSize()
     {
-        return name.length() + 2 + 1 + 2;
+        return playerName.length() + 2 + 1 + 2;
     }
 }

@@ -6,7 +6,7 @@ import java.util.Random;
 public class ComponentVillageStartPiece extends ComponentVillageWell
 {
     public WorldChunkManager worldChunkMngr;
-    public int field_35390_b;
+    public int terrainType;
     public StructureVillagePieceWeight structVillagePieceWeight;
     public ArrayList structureVillageWeightedPieceList;
     public ArrayList field_35389_e;
@@ -19,7 +19,7 @@ public class ComponentVillageStartPiece extends ComponentVillageWell
         field_35387_f = new ArrayList();
         worldChunkMngr = worldchunkmanager;
         structureVillageWeightedPieceList = arraylist;
-        field_35390_b = l;
+        terrainType = l;
     }
 
     public WorldChunkManager getWorldChunkMngr()

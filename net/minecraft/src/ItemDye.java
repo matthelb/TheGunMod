@@ -24,7 +24,7 @@ public class ItemDye extends Item
 
     public String getItemNameIS(ItemStack itemstack)
     {
-        int i = MathHelper.func_41051_a(itemstack.getItemDamage(), 0, 15);
+        int i = MathHelper.clamp_int(itemstack.getItemDamage(), 0, 15);
         return (new StringBuilder()).append(super.getItemName()).append(".").append(dyeColorNames[i]).toString();
     }
 
@@ -39,7 +39,7 @@ public class ItemDye extends Item
             int i1 = world.getBlockId(i, j, k);
             if (i1 == Block.sapling.blockID)
             {
-                if (!world.singleplayerWorld)
+                if (!world.isRemote)
                 {
                     ((BlockSapling)Block.sapling).growTree(world, i, j, k, world.rand);
                     itemstack.stackSize--;
@@ -48,7 +48,7 @@ public class ItemDye extends Item
             }
             if (i1 == Block.mushroomBrown.blockID || i1 == Block.mushroomRed.blockID)
             {
-                if (!world.singleplayerWorld && ((BlockMushroom)Block.blocksList[i1]).fertilizeMushroom(world, i, j, k, world.rand))
+                if (!world.isRemote && ((BlockMushroom)Block.blocksList[i1]).fertilizeMushroom(world, i, j, k, world.rand))
                 {
                     itemstack.stackSize--;
                 }
@@ -56,7 +56,7 @@ public class ItemDye extends Item
             }
             if (i1 == Block.melonStem.blockID || i1 == Block.pumpkinStem.blockID)
             {
-                if (!world.singleplayerWorld)
+                if (!world.isRemote)
                 {
                     ((BlockStem)Block.blocksList[i1]).fertilizeStem(world, i, j, k);
                     itemstack.stackSize--;
@@ -65,7 +65,7 @@ public class ItemDye extends Item
             }
             if (i1 == Block.crops.blockID)
             {
-                if (!world.singleplayerWorld)
+                if (!world.isRemote)
                 {
                     ((BlockCrops)Block.crops).fertilize(world, i, j, k);
                     itemstack.stackSize--;
@@ -74,7 +74,7 @@ public class ItemDye extends Item
             }
             if (i1 == Block.grass.blockID)
             {
-                if (!world.singleplayerWorld)
+                if (!world.isRemote)
                 {
                     itemstack.stackSize--;
                     label0:
@@ -119,7 +119,7 @@ public class ItemDye extends Item
         return false;
     }
 
-    public void saddleEntity(ItemStack itemstack, EntityLiving entityliving)
+    public void useItemOnEntity(ItemStack itemstack, EntityLiving entityliving)
     {
         if (entityliving instanceof EntitySheep)
         {

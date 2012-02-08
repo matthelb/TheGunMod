@@ -30,7 +30,7 @@ public class EntityEnderPearl extends EntityThrowable
             worldObj.spawnParticle("portal", posX, posY + rand.nextDouble() * 2D, posZ, rand.nextGaussian(), 0.0D, rand.nextGaussian());
         }
 
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             if (thrower != null)
             {

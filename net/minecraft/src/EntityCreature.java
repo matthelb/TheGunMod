@@ -216,9 +216,9 @@ public abstract class EntityCreature extends EntityLiving
         entityToAttack = entity;
     }
 
-    protected float getPotionSpeedMultiplier()
+    protected float getSpeedModifier()
     {
-        float f = super.getPotionSpeedMultiplier();
+        float f = super.getSpeedModifier();
         if (fleeingTick > 0)
         {
             f *= 2.0F;

@@ -5,11 +5,11 @@ import java.util.*;
 public abstract class EntityPlayer extends EntityLiving
 {
     public InventoryPlayer inventory;
-    public Container personalCraftingInventory;
-    public Container currentCraftingInventory;
+    public Container inventorySlots;
+    public Container craftingInventory;
     protected FoodStats foodStats;
     protected int flyToggleTimer;
-    public byte field_9152_am;
+    public byte unusedByte;
     public int score;
     public float prevCameraYaw;
     public float cameraYaw;
@@ -50,7 +50,7 @@ public abstract class EntityPlayer extends EntityLiving
         inventory = new InventoryPlayer(this);
         foodStats = new FoodStats();
         flyToggleTimer = 0;
-        field_9152_am = 0;
+        unusedByte = 0;
         score = 0;
         isSwinging = false;
         swingProgressInt = 0;
@@ -61,8 +61,8 @@ public abstract class EntityPlayer extends EntityLiving
         speedOnGround = 0.1F;
         speedInAir = 0.02F;
         fishEntity = null;
-        personalCraftingInventory = new ContainerPlayer(inventory, !world.singleplayerWorld);
-        currentCraftingInventory = personalCraftingInventory;
+        inventorySlots = new ContainerPlayer(inventory, !world.isRemote);
+        craftingInventory = inventorySlots;
         yOffset = 1.62F;
         ChunkCoordinates chunkcoordinates = world.getSpawnPoint();
         setLocationAndAngles((double)chunkcoordinates.posX + 0.5D, chunkcoordinates.posY + 1, (double)chunkcoordinates.posZ + 0.5D, 0.0F, 0.0F);
@@ -102,7 +102,7 @@ public abstract class EntityPlayer extends EntityLiving
     {
         itemInUse = null;
         itemInUseCount = 0;
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             setEating(false);
         }
@@ -110,7 +110,7 @@ public abstract class EntityPlayer extends EntityLiving
 
     public boolean isBlocking()
     {
-        return isUsingItem() && Item.itemsList[itemInUse.itemID].getAction(itemInUse) == EnumAction.block;
+        return isUsingItem() && Item.itemsList[itemInUse.itemID].getItemUseAction(itemInUse) == EnumAction.block;
     }
 
     public void onUpdate()
@@ -128,7 +128,7 @@ public abstract class EntityPlayer extends EntityLiving
                 {
                     func_35208_b(itemstack, 5);
                 }
-                if (--itemInUseCount == 0 && !worldObj.singleplayerWorld)
+                if (--itemInUseCount == 0 && !worldObj.isRemote)
                 {
                     func_35199_C();
                 }
@@ -145,7 +145,7 @@ public abstract class EntityPlayer extends EntityLiving
             {
                 sleepTimer = 100;
             }
-            if (!worldObj.singleplayerWorld)
+            if (!worldObj.isRemote)
             {
                 if (!isInBed())
                 {
@@ -166,10 +166,10 @@ public abstract class EntityPlayer extends EntityLiving
             }
         }
         super.onUpdate();
-        if (!worldObj.singleplayerWorld && currentCraftingInventory != null && !currentCraftingInventory.canInteractWith(this))
+        if (!worldObj.isRemote && craftingInventory != null && !craftingInventory.canInteractWith(this))
         {
-            usePersonalCraftingInventory();
-            currentCraftingInventory = personalCraftingInventory;
+            closeScreen();
+            craftingInventory = inventorySlots;
         }
         if (capabilities.isFlying)
         {
@@ -218,9 +218,9 @@ public abstract class EntityPlayer extends EntityLiving
         {
             startMinecartRidingCoordinate = null;
         }
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
-            foodStats.update(this);
+            foodStats.onUpdate(this);
         }
     }
 
@@ -272,9 +272,9 @@ public abstract class EntityPlayer extends EntityLiving
         return getEntityHealth() <= 0 || isPlayerSleeping();
     }
 
-    protected void usePersonalCraftingInventory()
+    protected void closeScreen()
     {
-        currentCraftingInventory = personalCraftingInventory;
+        craftingInventory = inventorySlots;
     }
 
     public void updateRidden()
@@ -594,7 +594,7 @@ public abstract class EntityPlayer extends EntityLiving
         {
             return false;
         }
-        if (isPlayerSleeping() && !worldObj.singleplayerWorld)
+        if (isPlayerSleeping() && !worldObj.isRemote)
         {
             wakeUpPlayer(true, true, false);
         }
@@ -870,10 +870,10 @@ public abstract class EntityPlayer extends EntityLiving
     public void setEntityDead()
     {
         super.setEntityDead();
-        personalCraftingInventory.onCraftGuiClosed(this);
-        if (currentCraftingInventory != null)
+        inventorySlots.onCraftGuiClosed(this);
+        if (craftingInventory != null)
         {
-            currentCraftingInventory.onCraftGuiClosed(this);
+            craftingInventory.onCraftGuiClosed(this);
         }
     }
 
@@ -884,13 +884,13 @@ public abstract class EntityPlayer extends EntityLiving
 
     public EnumStatus sleepInBedAt(int i, int j, int k)
     {
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             if (isPlayerSleeping() || !isEntityAlive())
             {
                 return EnumStatus.OTHER_PROBLEM;
             }
-            if (worldObj.worldProvider.canSleepInWorld)
+            if (worldObj.worldProvider.isAlternateDimension)
             {
                 return EnumStatus.NOT_POSSIBLE_HERE;
             }
@@ -947,7 +947,7 @@ public abstract class EntityPlayer extends EntityLiving
         sleepTimer = 0;
         playerLocation = new ChunkCoordinates(i, j, k);
         motionX = motionZ = motionY = 0.0D;
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             worldObj.updateAllPlayersSleepingFlag();
         }
@@ -995,7 +995,7 @@ public abstract class EntityPlayer extends EntityLiving
             setPosition((float)chunkcoordinates2.posX + 0.5F, (float)chunkcoordinates2.posY + yOffset + 0.1F, (float)chunkcoordinates2.posZ + 0.5F);
         }
         sleeping = false;
-        if (!worldObj.singleplayerWorld && flag1)
+        if (!worldObj.isRemote && flag1)
         {
             worldObj.updateAllPlayersSleepingFlag();
         }
@@ -1018,7 +1018,7 @@ public abstract class EntityPlayer extends EntityLiving
         return worldObj.getBlockId(playerLocation.posX, playerLocation.posY, playerLocation.posZ) == Block.bed.blockID;
     }
 
-    public static ChunkCoordinates verifyBedCoordinates(World world, ChunkCoordinates chunkcoordinates)
+    public static ChunkCoordinates verifyRespawnCoordinates(World world, ChunkCoordinates chunkcoordinates)
     {
         IChunkProvider ichunkprovider = world.getChunkProvider();
         ichunkprovider.loadChunk(chunkcoordinates.posX - 3 >> 4, chunkcoordinates.posZ - 3 >> 4);
@@ -1276,7 +1276,7 @@ public abstract class EntityPlayer extends EntityLiving
         {
             return;
         }
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             foodStats.addExhaustion(f);
         }
@@ -1289,10 +1289,10 @@ public abstract class EntityPlayer extends EntityLiving
 
     public boolean canEat(boolean flag)
     {
-        return (flag || foodStats.mustEat()) && !capabilities.disableDamage;
+        return (flag || foodStats.needFood()) && !capabilities.disableDamage;
     }
 
-    public boolean mustHeal()
+    public boolean shouldHeal()
     {
         return getEntityHealth() > 0 && getEntityHealth() < getMaxHealth();
     }
@@ -1305,7 +1305,7 @@ public abstract class EntityPlayer extends EntityLiving
         }
         itemInUse = itemstack;
         itemInUseCount = i;
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             setEating(true);
         }

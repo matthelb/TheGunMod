@@ -106,7 +106,7 @@ public class InventoryPlayer
             mainInventory[l] = new ItemStack(i, 0, itemstack.getItemDamage());
             if (itemstack.hasTagCompound())
             {
-                mainInventory[l].setNBTData((NBTTagCompound)itemstack.getTagCompound().cloneTag());
+                mainInventory[l].setTagCompound((NBTTagCompound)itemstack.getTagCompound().cloneTag());
             }
         }
         int i1 = j;
@@ -156,7 +156,7 @@ public class InventoryPlayer
         return true;
     }
 
-    public boolean hasItemInInventory(int i)
+    public boolean hasItem(int i)
     {
         int j = getInventorySlotContainItem(i);
         return j >= 0;

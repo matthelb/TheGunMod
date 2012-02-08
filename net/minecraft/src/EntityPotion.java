@@ -47,9 +47,9 @@ public class EntityPotion extends EntityThrowable
 
     protected void onImpact(MovingObjectPosition movingobjectposition)
     {
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
-            List list = Item.potion.getPotionEffectsForDamage(potionDamage);
+            List list = Item.potion.getEffects(potionDamage);
             if (list != null && !list.isEmpty())
             {
                 AxisAlignedBB axisalignedbb = boundingBox.expand(4D, 2D, 4D);

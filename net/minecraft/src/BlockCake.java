@@ -96,7 +96,7 @@ public class BlockCake extends Block
     {
         if (entityplayer.canEat(false))
         {
-            entityplayer.getFoodStats().addFoodAndSaturationLevel(2, 0.1F);
+            entityplayer.getFoodStats().addStats(2, 0.1F);
             int l = world.getBlockMetadata(i, j, k) + 1;
             if (l >= 6)
             {

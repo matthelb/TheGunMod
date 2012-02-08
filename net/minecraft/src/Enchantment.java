@@ -20,10 +20,10 @@ public abstract class Enchantment
     public static final Enchantment silkTouch = new EnchantmentUntouching(33, 1);
     public static final Enchantment unbreaking = new EnchantmentDurability(34, 5);
     public static final Enchantment fortune;
-    public static final Enchantment field_46057_t = new EnchantmentArrowDamage(48, 10);
-    public static final Enchantment field_46056_u = new EnchantmentArrowKnockback(49, 2);
-    public static final Enchantment field_46055_v = new EnchantmentArrowFire(50, 2);
-    public static final Enchantment field_46054_w = new EnchantmentArrowInfinite(51, 1);
+    public static final Enchantment power = new EnchantmentArrowDamage(48, 10);
+    public static final Enchantment punch = new EnchantmentArrowKnockback(49, 2);
+    public static final Enchantment flame = new EnchantmentArrowFire(50, 2);
+    public static final Enchantment infinity = new EnchantmentArrowInfinite(51, 1);
     public final int effectId;
     private final int weight;
     public EnumEnchantmentType type;

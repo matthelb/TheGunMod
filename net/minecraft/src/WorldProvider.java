@@ -3,9 +3,9 @@ package net.minecraft.src;
 public abstract class WorldProvider
 {
     public World worldObj;
-    public EnumWorldType field_46120_b;
+    public EnumWorldType terrainType;
     public WorldChunkManager worldChunkMgr;
-    public boolean canSleepInWorld;
+    public boolean isAlternateDimension;
     public boolean isHellWorld;
     public boolean hasNoSky;
     public float lightBrightnessTable[];
@@ -14,7 +14,7 @@ public abstract class WorldProvider
 
     public WorldProvider()
     {
-        canSleepInWorld = false;
+        isAlternateDimension = false;
         isHellWorld = false;
         hasNoSky = false;
         lightBrightnessTable = new float[16];
@@ -25,7 +25,7 @@ public abstract class WorldProvider
     public final void registerWorld(World world)
     {
         worldObj = world;
-        field_46120_b = world.getWorldInfo().func_46069_q();
+        terrainType = world.getWorldInfo().getTerrainType();
         registerWorldChunkManager();
         generateLightBrightnessTable();
     }
@@ -42,7 +42,7 @@ public abstract class WorldProvider
 
     protected void registerWorldChunkManager()
     {
-        if (worldObj.getWorldInfo().func_46069_q() == EnumWorldType.FLAT)
+        if (worldObj.getWorldInfo().getTerrainType() == EnumWorldType.FLAT)
         {
             worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.plains, 0.5F, 0.5F);
         }
@@ -54,13 +54,13 @@ public abstract class WorldProvider
 
     public IChunkProvider getChunkProvider()
     {
-        if (field_46120_b == EnumWorldType.FLAT)
+        if (terrainType == EnumWorldType.FLAT)
         {
-            return new ChunkProviderFlat(worldObj, worldObj.getRandomSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
+            return new ChunkProviderFlat(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
         }
         else
         {
-            return new ChunkProviderGenerate(worldObj, worldObj.getRandomSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
+            return new ChunkProviderGenerate(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
         }
     }
 
@@ -118,9 +118,9 @@ public abstract class WorldProvider
         return null;
     }
 
-    public int func_46119_e()
+    public int getAverageGroundLevel()
     {
-        if (field_46120_b == EnumWorldType.FLAT)
+        if (terrainType == EnumWorldType.FLAT)
         {
             return 4;
         }

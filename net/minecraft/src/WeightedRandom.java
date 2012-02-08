@@ -8,7 +8,7 @@ public class WeightedRandom
     {
     }
 
-    public static int func_35692_a(Collection collection)
+    public static int getTotalWeight(Collection collection)
     {
         int i = 0;
         for (Iterator iterator = collection.iterator(); iterator.hasNext();)
@@ -20,7 +20,7 @@ public class WeightedRandom
         return i;
     }
 
-    public static WeightedRandomChoice func_35693_a(Random random, Collection collection, int i)
+    public static WeightedRandomChoice getRandomItem(Random random, Collection collection, int i)
     {
         if (i <= 0)
         {
@@ -40,12 +40,12 @@ public class WeightedRandom
         return null;
     }
 
-    public static WeightedRandomChoice func_35689_a(Random random, Collection collection)
+    public static WeightedRandomChoice getRandomItem(Random random, Collection collection)
     {
-        return func_35693_a(random, collection, func_35692_a(collection));
+        return getRandomItem(random, collection, getTotalWeight(collection));
     }
 
-    public static int sumWeights(WeightedRandomChoice aweightedrandomchoice[])
+    public static int getTotalWeight(WeightedRandomChoice aweightedrandomchoice[])
     {
         int i = 0;
         WeightedRandomChoice aweightedrandomchoice1[] = aweightedrandomchoice;
@@ -59,7 +59,7 @@ public class WeightedRandom
         return i;
     }
 
-    public static WeightedRandomChoice func_35688_a(Random random, WeightedRandomChoice aweightedrandomchoice[], int i)
+    public static WeightedRandomChoice getRandomItem(Random random, WeightedRandomChoice aweightedrandomchoice[], int i)
     {
         if (i <= 0)
         {
@@ -81,8 +81,8 @@ public class WeightedRandom
         return null;
     }
 
-    public static WeightedRandomChoice chooseOne(Random random, WeightedRandomChoice aweightedrandomchoice[])
+    public static WeightedRandomChoice getRandomItem(Random random, WeightedRandomChoice aweightedrandomchoice[])
     {
-        return func_35688_a(random, aweightedrandomchoice, sumWeights(aweightedrandomchoice));
+        return getRandomItem(random, aweightedrandomchoice, getTotalWeight(aweightedrandomchoice));
     }
 }

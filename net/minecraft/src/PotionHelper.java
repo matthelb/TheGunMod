@@ -15,10 +15,10 @@ public class PotionHelper
     public static final String redstoneEffect = "-5+6-7";
     public static final String glowstoneEffect = "+5-6-7";
     public static final String gunpowderEffect = "+14&13-13";
-    private static final HashMap field_40565_l;
+    private static final HashMap potionRequirements;
     private static final HashMap field_40566_m;
     private static final HashMap field_40563_n = new HashMap();
-    private static final String potionPrefixList[] =
+    private static final String potionPrefixes[] =
     {
         "potion.prefix.mundane", "potion.prefix.uninteresting", "potion.prefix.bland", "potion.prefix.clear", "potion.prefix.milky", "potion.prefix.diffuse", "potion.prefix.artless", "potion.prefix.thin", "potion.prefix.awkward", "potion.prefix.flat",
         "potion.prefix.bulky", "potion.prefix.bungling", "potion.prefix.buttered", "potion.prefix.smooth", "potion.prefix.suave", "potion.prefix.debonair", "potion.prefix.thick", "potion.prefix.elegant", "potion.prefix.fancy", "potion.prefix.charming",
@@ -280,7 +280,7 @@ public class PotionHelper
             {
                 continue;
             }
-            String s = (String)field_40565_l.get(Integer.valueOf(potion.getId()));
+            String s = (String)potionRequirements.get(Integer.valueOf(potion.getId()));
             if (s == null)
             {
                 continue;
@@ -324,7 +324,7 @@ public class PotionHelper
         return arraylist;
     }
 
-    private static int handleBitFromIngredient(int i, int j, boolean flag, boolean flag1, boolean flag2)
+    private static int brewBitOperations(int i, int j, boolean flag, boolean flag1, boolean flag2)
     {
         if (flag2)
         {
@@ -378,7 +378,7 @@ public class PotionHelper
             {
                 if (flag1)
                 {
-                    i = handleBitFromIngredient(i, k, flag3, flag2, flag4);
+                    i = brewBitOperations(i, k, flag3, flag2, flag4);
                     flag1 = flag3 = flag2 = flag4 = false;
                     k = 0;
                 }
@@ -389,7 +389,7 @@ public class PotionHelper
             {
                 if (flag1)
                 {
-                    i = handleBitFromIngredient(i, k, flag3, flag2, flag4);
+                    i = brewBitOperations(i, k, flag3, flag2, flag4);
                     flag1 = flag3 = flag2 = flag4 = false;
                     k = 0;
                 }
@@ -400,7 +400,7 @@ public class PotionHelper
             {
                 if (flag1)
                 {
-                    i = handleBitFromIngredient(i, k, flag3, flag2, flag4);
+                    i = brewBitOperations(i, k, flag3, flag2, flag4);
                     flag1 = flag3 = flag2 = flag4 = false;
                     k = 0;
                 }
@@ -412,7 +412,7 @@ public class PotionHelper
             }
             if (flag1)
             {
-                i = handleBitFromIngredient(i, k, flag3, flag2, flag4);
+                i = brewBitOperations(i, k, flag3, flag2, flag4);
                 flag1 = flag3 = flag2 = flag4 = false;
                 k = 0;
             }
@@ -421,24 +421,24 @@ public class PotionHelper
 
         if (flag1)
         {
-            i = handleBitFromIngredient(i, k, flag3, flag2, flag4);
+            i = brewBitOperations(i, k, flag3, flag2, flag4);
         }
         return i & 0x7fff;
     }
 
     static
     {
-        field_40565_l = new HashMap();
+        potionRequirements = new HashMap();
         field_40566_m = new HashMap();
-        field_40565_l.put(Integer.valueOf(Potion.regeneration.getId()), "0 & !1 & !2 & !3 & 0+6");
-        field_40565_l.put(Integer.valueOf(Potion.moveSpeed.getId()), "!0 & 1 & !2 & !3 & 1+6");
-        field_40565_l.put(Integer.valueOf(Potion.fireResistance.getId()), "0 & 1 & !2 & !3 & 0+6");
-        field_40565_l.put(Integer.valueOf(Potion.heal.getId()), "0 & !1 & 2 & !3");
-        field_40565_l.put(Integer.valueOf(Potion.poison.getId()), "!0 & !1 & 2 & !3 & 2+6");
-        field_40565_l.put(Integer.valueOf(Potion.weakness.getId()), "!0 & !1 & !2 & 3 & 3+6");
-        field_40565_l.put(Integer.valueOf(Potion.harm.getId()), "!0 & !1 & 2 & 3");
-        field_40565_l.put(Integer.valueOf(Potion.moveSlowdown.getId()), "!0 & 1 & !2 & 3 & 3+6");
-        field_40565_l.put(Integer.valueOf(Potion.damageBoost.getId()), "0 & !1 & !2 & 3 & 3+6");
+        potionRequirements.put(Integer.valueOf(Potion.regeneration.getId()), "0 & !1 & !2 & !3 & 0+6");
+        potionRequirements.put(Integer.valueOf(Potion.moveSpeed.getId()), "!0 & 1 & !2 & !3 & 1+6");
+        potionRequirements.put(Integer.valueOf(Potion.fireResistance.getId()), "0 & 1 & !2 & !3 & 0+6");
+        potionRequirements.put(Integer.valueOf(Potion.heal.getId()), "0 & !1 & 2 & !3");
+        potionRequirements.put(Integer.valueOf(Potion.poison.getId()), "!0 & !1 & 2 & !3 & 2+6");
+        potionRequirements.put(Integer.valueOf(Potion.weakness.getId()), "!0 & !1 & !2 & 3 & 3+6");
+        potionRequirements.put(Integer.valueOf(Potion.harm.getId()), "!0 & !1 & 2 & 3");
+        potionRequirements.put(Integer.valueOf(Potion.moveSlowdown.getId()), "!0 & 1 & !2 & 3 & 3+6");
+        potionRequirements.put(Integer.valueOf(Potion.damageBoost.getId()), "0 & !1 & !2 & 3 & 3+6");
         field_40566_m.put(Integer.valueOf(Potion.moveSpeed.getId()), "5");
         field_40566_m.put(Integer.valueOf(Potion.digSpeed.getId()), "5");
         field_40566_m.put(Integer.valueOf(Potion.damageBoost.getId()), "5");

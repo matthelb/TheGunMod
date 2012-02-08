@@ -2,12 +2,12 @@ package net.minecraft.src;
 
 class SlotBrewingStandIngredient extends Slot
 {
-    final ContainerBrewingStand field_40267_a;
+    final ContainerBrewingStand container;
 
     public SlotBrewingStandIngredient(ContainerBrewingStand containerbrewingstand, IInventory iinventory, int i, int j, int k)
     {
         super(iinventory, i, j, k);
-        field_40267_a = containerbrewingstand;
+        container = containerbrewingstand;
     }
 
     public boolean isItemValid(ItemStack itemstack)

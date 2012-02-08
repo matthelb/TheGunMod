@@ -18,7 +18,7 @@ public interface IChunkProvider
 
     public abstract boolean canSave();
 
-    public abstract List func_40181_a(EnumCreatureType enumcreaturetype, int i, int j, int k);
+    public abstract List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k);
 
-    public abstract ChunkPosition func_40182_a(World world, String s, int i, int j, int k);
+    public abstract ChunkPosition findClosestStructure(World world, String s, int i, int j, int k);
 }

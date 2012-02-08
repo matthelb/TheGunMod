@@ -38,9 +38,9 @@ public class MapInfo
             for (int j = 0; j < mapDataObj.playersVisibleOnMap.size(); j++)
             {
                 MapCoord mapcoord = (MapCoord)mapDataObj.playersVisibleOnMap.get(j);
-                abyte0[j * 3 + 1] = (byte)(mapcoord.field_28202_a + (mapcoord.field_28204_d & 0xf) * 16);
-                abyte0[j * 3 + 2] = mapcoord.field_28201_b;
-                abyte0[j * 3 + 3] = mapcoord.field_28205_c;
+                abyte0[j * 3 + 1] = (byte)(mapcoord.field_28202_a + (mapcoord.iconRotation & 0xf) * 16);
+                abyte0[j * 3 + 2] = mapcoord.centerX;
+                abyte0[j * 3 + 3] = mapcoord.centerZ;
             }
 
             boolean flag = true;

@@ -4,14 +4,14 @@ import java.util.Random;
 
 public class EntityBlaze extends EntityMob
 {
-    private float field_40130_a;
-    private int field_40129_b;
+    private float heightOffset;
+    private int heightOffsetUpdateTime;
     private int field_40128_g;
 
     public EntityBlaze(World world)
     {
         super(world);
-        field_40130_a = 0.5F;
+        heightOffset = 0.5F;
         texture = "/mob/fire.png";
         isImmuneToFire = true;
         attackStrength = 6;
@@ -61,19 +61,19 @@ public class EntityBlaze extends EntityMob
 
     public void onLivingUpdate()
     {
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             if (isWet())
             {
                 attackEntityFrom(DamageSource.drown, 1);
             }
-            field_40129_b--;
-            if (field_40129_b <= 0)
+            heightOffsetUpdateTime--;
+            if (heightOffsetUpdateTime <= 0)
             {
-                field_40129_b = 100;
-                field_40130_a = 0.5F + (float)rand.nextGaussian() * 3F;
+                heightOffsetUpdateTime = 100;
+                heightOffset = 0.5F + (float)rand.nextGaussian() * 3F;
             }
-            if (getEntityToAttack() != null && getEntityToAttack().posY + (double)getEntityToAttack().getEyeHeight() > posY + (double)getEyeHeight() + (double)field_40130_a)
+            if (getEntityToAttack() != null && getEntityToAttack().posY + (double)getEntityToAttack().getEyeHeight() > posY + (double)getEyeHeight() + (double)heightOffset)
             {
                 motionY = motionY + (0.30000001192092896D - motionY) * 0.30000001192092896D;
             }
@@ -196,7 +196,7 @@ public class EntityBlaze extends EntityMob
         dataWatcher.updateObject(16, Byte.valueOf(byte0));
     }
 
-    protected boolean func_40123_y()
+    protected boolean isValidLightLevel()
     {
         return true;
     }

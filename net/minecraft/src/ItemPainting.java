@@ -37,7 +37,7 @@ public class ItemPainting extends Item
         EntityPainting entitypainting = new EntityPainting(world, i, j, k, byte0);
         if (entitypainting.onValidSurface())
         {
-            if (!world.singleplayerWorld)
+            if (!world.isRemote)
             {
                 world.spawnEntityInWorld(entitypainting);
             }

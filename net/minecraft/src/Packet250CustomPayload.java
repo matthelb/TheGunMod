@@ -4,9 +4,9 @@ import java.io.*;
 
 public class Packet250CustomPayload extends Packet
 {
-    public String field_44005_a;
-    public int field_44003_b;
-    public byte field_44004_c[];
+    public String channel;
+    public int length;
+    public byte data[];
 
     public Packet250CustomPayload()
     {
@@ -15,33 +15,33 @@ public class Packet250CustomPayload extends Packet
     public void readPacketData(DataInputStream datainputstream)
     throws IOException
     {
-        field_44005_a = readString(datainputstream, 16);
-        field_44003_b = datainputstream.readShort();
-        if (field_44003_b > 0 && field_44003_b < 32767)
+        channel = readString(datainputstream, 16);
+        length = datainputstream.readShort();
+        if (length > 0 && length < 32767)
         {
-            field_44004_c = new byte[field_44003_b];
-            datainputstream.read(field_44004_c);
+            data = new byte[length];
+            datainputstream.read(data);
         }
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
     throws IOException
     {
-        writeString(field_44005_a, dataoutputstream);
-        dataoutputstream.writeShort((short)field_44003_b);
-        if (field_44004_c != null)
+        writeString(channel, dataoutputstream);
+        dataoutputstream.writeShort((short)length);
+        if (data != null)
         {
-            dataoutputstream.write(field_44004_c);
+            dataoutputstream.write(data);
         }
     }
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.func_44001_a(this);
+        nethandler.handleCustomPayload(this);
     }
 
     public int getPacketSize()
     {
-        return 2 + field_44005_a.length() * 2 + 2 + field_44003_b;
+        return 2 + channel.length() * 2 + 2 + length;
     }
 }

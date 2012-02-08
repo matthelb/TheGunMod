@@ -23,7 +23,7 @@ public class StepSound
         return stepSoundPitch;
     }
 
-    public String stepSoundDir()
+    public String getStepSound()
     {
         return (new StringBuilder()).append("step.").append(stepSoundName).toString();
     }

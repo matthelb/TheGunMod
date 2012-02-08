@@ -58,7 +58,7 @@ public class MathHelper
         return i < 0 ? -i : i;
     }
 
-    public static int func_41051_a(int i, int j, int k)
+    public static int clamp_int(int i, int j, int k)
     {
         if (i < j)
         {

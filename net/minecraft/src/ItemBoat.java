@@ -61,7 +61,7 @@ public class ItemBoat extends Item
             int i = movingobjectposition.blockX;
             int j = movingobjectposition.blockY;
             int k = movingobjectposition.blockZ;
-            if (!world.singleplayerWorld)
+            if (!world.isRemote)
             {
                 if (world.getBlockId(i, j, k) == Block.snow.blockID)
                 {

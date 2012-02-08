@@ -121,7 +121,7 @@ public class TileEntityFurnace extends TileEntity
         {
             furnaceBurnTime--;
         }
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             if (furnaceBurnTime == 0 && canSmelt())
             {

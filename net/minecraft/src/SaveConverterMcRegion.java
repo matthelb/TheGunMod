@@ -16,7 +16,7 @@ public class SaveConverterMcRegion extends SaveFormatOld
         return new SaveOldDir(savesDirectory, s, flag);
     }
 
-    public boolean isOldSaveType(String s)
+    public boolean isOldMapFormat(String s)
     {
         WorldInfo worldinfo = getWorldInfo(s);
         return worldinfo != null && worldinfo.getSaveVersion() == 0;

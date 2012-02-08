@@ -113,7 +113,7 @@ public class BlockChest extends BlockContainer
 
     public void unifyAdjacentChests(World world, int i, int j, int k)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -318,7 +318,7 @@ public class BlockChest extends BlockContainer
                     entityitem.motionZ = (float)random.nextGaussian() * f3;
                     if (itemstack.hasTagCompound())
                     {
-                        entityitem.item.setNBTData((NBTTagCompound)itemstack.getTagCompound().cloneTag());
+                        entityitem.item.setTagCompound((NBTTagCompound)itemstack.getTagCompound().cloneTag());
                     }
                     world.spawnEntityInWorld(entityitem);
                 }
@@ -370,7 +370,7 @@ public class BlockChest extends BlockContainer
         {
             obj = new InventoryLargeChest("Large chest", ((IInventory) (obj)), (TileEntityChest)world.getBlockTileEntity(i, j, k + 1));
         }
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return true;
         }

@@ -82,14 +82,14 @@ public class TileEntityBrewingStand extends TileEntity
                 continue;
             }
             int j = brewingItemStacks[i].getItemDamage();
-            int k = applyPotionIngredient(j, itemstack);
+            int k = getPotionResult(j, itemstack);
             if (!ItemPotion.isSplash(j) && ItemPotion.isSplash(k))
             {
                 flag = true;
                 break;
             }
-            java.util.List list = Item.potion.getPotionEffectsForDamage(j);
-            java.util.List list1 = Item.potion.getPotionEffectsForDamage(k);
+            java.util.List list = Item.potion.getEffects(j);
+            java.util.List list1 = Item.potion.getEffects(k);
             if (j > 0 && list == list1 || list != null && (list.equals(list1) || list1 == null) || j == k)
             {
                 continue;
@@ -115,9 +115,9 @@ public class TileEntityBrewingStand extends TileEntity
                 continue;
             }
             int j = brewingItemStacks[i].getItemDamage();
-            int k = applyPotionIngredient(j, itemstack);
-            java.util.List list = Item.potion.getPotionEffectsForDamage(j);
-            java.util.List list1 = Item.potion.getPotionEffectsForDamage(k);
+            int k = getPotionResult(j, itemstack);
+            java.util.List list = Item.potion.getEffects(j);
+            java.util.List list1 = Item.potion.getEffects(k);
             if (j > 0 && list == list1 || list != null && (list.equals(list1) || list1 == null))
             {
                 if (!ItemPotion.isSplash(j) && ItemPotion.isSplash(k))
@@ -146,7 +146,7 @@ public class TileEntityBrewingStand extends TileEntity
         }
     }
 
-    private int applyPotionIngredient(int i, ItemStack itemstack)
+    private int getPotionResult(int i, ItemStack itemstack)
     {
         if (itemstack == null)
         {
@@ -154,7 +154,7 @@ public class TileEntityBrewingStand extends TileEntity
         }
         if (Item.itemsList[itemstack.itemID].isPotionIngredient())
         {
-            return PotionHelper.applyIngredient(i, Item.itemsList[itemstack.itemID].getPotionInfo());
+            return PotionHelper.applyIngredient(i, Item.itemsList[itemstack.itemID].getPotionEffect());
         }
         else
         {

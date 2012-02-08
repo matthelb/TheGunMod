@@ -56,7 +56,7 @@ public class ServerConfigurationManager
 
     public void setPlayerManager(WorldServer aworldserver[])
     {
-        playerNBTManagerObj = aworldserver[0].getWorldFile().getPlayerNBTManager();
+        playerNBTManagerObj = aworldserver[0].getSaveHandler().getPlayerNBTManager();
     }
 
     public void joinNewPlayerManager(EntityPlayerMP entityplayermp)
@@ -123,7 +123,7 @@ public class ServerConfigurationManager
     public void playerLoggedOut(EntityPlayerMP entityplayermp)
     {
         playerNBTManagerObj.writePlayerData(entityplayermp);
-        mcServer.getWorldManager(entityplayermp.dimension).removePlayerForLogoff(entityplayermp);
+        mcServer.getWorldManager(entityplayermp.dimension).setEntityDead(entityplayermp);
         playerEntities.remove(entityplayermp);
         getPlayerManager(entityplayermp.dimension).removePlayer(entityplayermp);
         sendPacketToAllPlayers(new Packet201PlayerInfo(entityplayermp.username, false, 9999));
@@ -187,7 +187,7 @@ public class ServerConfigurationManager
         entityplayermp1.itemInWorldManager.func_35695_b(worldserver.getWorldInfo().getGameType());
         if (chunkcoordinates != null)
         {
-            ChunkCoordinates chunkcoordinates1 = EntityPlayer.verifyBedCoordinates(mcServer.getWorldManager(entityplayermp.dimension), chunkcoordinates);
+            ChunkCoordinates chunkcoordinates1 = EntityPlayer.verifyRespawnCoordinates(mcServer.getWorldManager(entityplayermp.dimension), chunkcoordinates);
             if (chunkcoordinates1 != null)
             {
                 entityplayermp1.setLocationAndAngles((float)chunkcoordinates1.posX + 0.5F, (float)chunkcoordinates1.posY + 0.1F, (float)chunkcoordinates1.posZ + 0.5F, 0.0F, 0.0F);
@@ -200,7 +200,7 @@ public class ServerConfigurationManager
         }
         worldserver.chunkProviderServer.loadChunk((int)entityplayermp1.posX >> 4, (int)entityplayermp1.posZ >> 4);
         for (; worldserver.getCollidingBoundingBoxes(entityplayermp1, entityplayermp1.boundingBox).size() != 0; entityplayermp1.setPosition(entityplayermp1.posX, entityplayermp1.posY + 1.0D, entityplayermp1.posZ)) { }
-        entityplayermp1.playerNetServerHandler.sendPacket(new Packet9Respawn((byte)entityplayermp1.dimension, (byte)entityplayermp1.worldObj.difficultySetting, entityplayermp1.worldObj.getRandomSeed(), entityplayermp1.worldObj.getWorldInfo().func_46069_q(), entityplayermp1.worldObj.worldHeight, entityplayermp1.itemInWorldManager.getGameType()));
+        entityplayermp1.playerNetServerHandler.sendPacket(new Packet9Respawn((byte)entityplayermp1.dimension, (byte)entityplayermp1.worldObj.difficultySetting, entityplayermp1.worldObj.getSeed(), entityplayermp1.worldObj.getWorldInfo().getTerrainType(), entityplayermp1.worldObj.worldHeight, entityplayermp1.itemInWorldManager.getGameType()));
         entityplayermp1.playerNetServerHandler.teleportTo(entityplayermp1.posX, entityplayermp1.posY, entityplayermp1.posZ, entityplayermp1.rotationYaw, entityplayermp1.rotationPitch);
         func_28170_a(entityplayermp1, worldserver);
         getPlayerManager(entityplayermp1.dimension).addPlayer(entityplayermp1);
@@ -217,7 +217,7 @@ public class ServerConfigurationManager
         WorldServer worldserver = mcServer.getWorldManager(entityplayermp.dimension);
         entityplayermp.dimension = i;
         WorldServer worldserver1 = mcServer.getWorldManager(entityplayermp.dimension);
-        entityplayermp.playerNetServerHandler.sendPacket(new Packet9Respawn((byte)entityplayermp.dimension, (byte)entityplayermp.worldObj.difficultySetting, worldserver1.getRandomSeed(), worldserver1.getWorldInfo().func_46069_q(), worldserver1.worldHeight, entityplayermp.itemInWorldManager.getGameType()));
+        entityplayermp.playerNetServerHandler.sendPacket(new Packet9Respawn((byte)entityplayermp.dimension, (byte)entityplayermp.worldObj.difficultySetting, worldserver1.getSeed(), worldserver1.getWorldInfo().getTerrainType(), worldserver1.worldHeight, entityplayermp.itemInWorldManager.getGameType()));
         worldserver.removePlayer(entityplayermp);
         entityplayermp.isDead = false;
         double d = entityplayermp.posX;
@@ -245,7 +245,7 @@ public class ServerConfigurationManager
         }
         else
         {
-            ChunkCoordinates chunkcoordinates = worldserver1.func_40212_d();
+            ChunkCoordinates chunkcoordinates = worldserver1.getEntrancePortalLocation();
             d = chunkcoordinates.posX;
             entityplayermp.posY = chunkcoordinates.posY;
             d1 = chunkcoordinates.posZ;
@@ -261,7 +261,7 @@ public class ServerConfigurationManager
             entityplayermp.setLocationAndAngles(d, entityplayermp.posY, d1, entityplayermp.rotationYaw, entityplayermp.rotationPitch);
             worldserver1.updateEntityWithOptionalForce(entityplayermp, false);
             worldserver1.chunkProviderServer.chunkLoadOverride = true;
-            (new Teleporter()).setExitLocation(worldserver1, entityplayermp);
+            (new Teleporter()).placeInPortal(worldserver1, entityplayermp);
             worldserver1.chunkProviderServer.chunkLoadOverride = false;
         }
         joinNewPlayerManager(entityplayermp);
@@ -670,7 +670,7 @@ public class ServerConfigurationManager
 
     public void func_30008_g(EntityPlayerMP entityplayermp)
     {
-        entityplayermp.func_28017_a(entityplayermp.personalCraftingInventory);
+        entityplayermp.func_28017_a(entityplayermp.inventorySlots);
         entityplayermp.func_30001_B();
     }
 

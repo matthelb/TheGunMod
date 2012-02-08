@@ -110,7 +110,7 @@ public class BlockTrapDoor extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -133,7 +133,7 @@ public class BlockTrapDoor extends Block
         {
             j1--;
         }
-        if (!func_41006_g(world.getBlockId(j1, j, k1)))
+        if (!isValidSupportBlock(world.getBlockId(j1, j, k1)))
         {
             world.setBlockWithNotify(i, j, k, 0);
             dropBlockAsItem(world, i, j, k, i1, 0);
@@ -199,7 +199,7 @@ public class BlockTrapDoor extends Block
         {
             i--;
         }
-        return func_41006_g(world.getBlockId(i, j, k));
+        return isValidSupportBlock(world.getBlockId(i, j, k));
     }
 
     public static boolean isTrapdoorOpen(int i)
@@ -207,7 +207,7 @@ public class BlockTrapDoor extends Block
         return (i & 4) != 0;
     }
 
-    private static boolean func_41006_g(int i)
+    private static boolean isValidSupportBlock(int i)
     {
         if (i <= 0)
         {

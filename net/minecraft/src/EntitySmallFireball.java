@@ -16,7 +16,7 @@ public class EntitySmallFireball extends EntityFireball
 
     protected void func_40063_a(MovingObjectPosition movingobjectposition)
     {
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             if (movingobjectposition.entityHit != null)
             {

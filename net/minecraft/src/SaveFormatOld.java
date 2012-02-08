@@ -72,7 +72,7 @@ public class SaveFormatOld
         return new PlayerNBTManager(savesDirectory, s, flag);
     }
 
-    public boolean isOldSaveType(String s)
+    public boolean isOldMapFormat(String s)
     {
         return false;
     }

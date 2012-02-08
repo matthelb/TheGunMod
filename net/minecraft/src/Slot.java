@@ -4,7 +4,7 @@ public class Slot
 {
     private final int slotIndex;
     public final IInventory inventory;
-    public int id;
+    public int slotNumber;
     public int xDisplayPosition;
     public int yDisplayPosition;
 

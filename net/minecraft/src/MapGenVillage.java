@@ -5,11 +5,11 @@ import java.util.*;
 public class MapGenVillage extends MapGenStructure
 {
     public static List villageSpawnBiomes;
-    private final int field_46047_f;
+    private final int terrainType;
 
     public MapGenVillage(int i)
     {
-        field_46047_f = i;
+        terrainType = i;
     }
 
     protected boolean canSpawnStructureAtCoords(int i, int j)
@@ -48,7 +48,7 @@ public class MapGenVillage extends MapGenStructure
 
     protected StructureStart getStructureStart(int i, int j)
     {
-        return new StructureVillageStart(worldObj, rand, i, j, field_46047_f);
+        return new StructureVillageStart(worldObj, rand, i, j, terrainType);
     }
 
     static

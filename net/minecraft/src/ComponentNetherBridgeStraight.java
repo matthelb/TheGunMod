@@ -20,7 +20,7 @@ public class ComponentNetherBridgeStraight extends ComponentNetherBridgePiece
     public static ComponentNetherBridgeStraight func_40289_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -3, 0, 5, 10, 19, l);
-        if (!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!func_40286_a(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
         {
             return null;
         }

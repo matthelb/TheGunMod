@@ -11,12 +11,12 @@ public class WorldProviderEnd extends WorldProvider
         worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.sky, 0.5F, 0.0F);
         worldType = 1;
         hasNoSky = true;
-        canSleepInWorld = true;
+        isAlternateDimension = true;
     }
 
     public IChunkProvider getChunkProvider()
     {
-        return new ChunkProviderEnd(worldObj, worldObj.getRandomSeed());
+        return new ChunkProviderEnd(worldObj, worldObj.getSeed());
     }
 
     public float calculateCelestialAngle(long l, float f)
@@ -47,7 +47,7 @@ public class WorldProviderEnd extends WorldProvider
         return new ChunkCoordinates(100, 50, 0);
     }
 
-    public int func_46119_e()
+    public int getAverageGroundLevel()
     {
         return 50;
     }

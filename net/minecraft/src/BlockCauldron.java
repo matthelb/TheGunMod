@@ -58,7 +58,7 @@ public class BlockCauldron extends Block
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return true;
         }

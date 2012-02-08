@@ -59,7 +59,7 @@ public class BlockPistonMoving extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if (!world.singleplayerWorld && world.getBlockTileEntity(i, j, k) == null)
+        if (!world.isRemote && world.getBlockTileEntity(i, j, k) == null)
         {
             world.setBlockWithNotify(i, j, k, 0);
             return true;
@@ -77,7 +77,7 @@ public class BlockPistonMoving extends BlockContainer
 
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -95,7 +95,7 @@ public class BlockPistonMoving extends BlockContainer
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if (!world.singleplayerWorld)
+        if (!world.isRemote)
         {
             if (world.getBlockTileEntity(i, j, k) != null);
         }

@@ -19,11 +19,11 @@ public class ComponentMineshaftCorridor extends StructureComponent
         field_35359_b = !field_35361_a && random.nextInt(23) == 0;
         if (coordBaseMode == 2 || coordBaseMode == 0)
         {
-            field_35358_d = structureboundingbox.bbDepth() / 5;
+            field_35358_d = structureboundingbox.getZSize() / 5;
         }
         else
         {
-            field_35358_d = structureboundingbox.bbWidth() / 5;
+            field_35358_d = structureboundingbox.getXSize() / 5;
         }
     }
 
@@ -60,7 +60,7 @@ public class ComponentMineshaftCorridor extends StructureComponent
                     structureboundingbox.maxZ = k + 2;
                     break;
             }
-            if (StructureComponent.canFitInside(list, structureboundingbox) == null)
+            if (StructureComponent.findIntersecting(list, structureboundingbox) == null)
             {
                 break;
             }
@@ -232,7 +232,7 @@ public class ComponentMineshaftCorridor extends StructureComponent
             int k1 = (l - 1) + random.nextInt(3);
             int l1 = getXWithOffset(1, k1);
             k1 = getZWithOffset(1, k1);
-            if (!structureboundingbox.isInBbVolume(l1, j1, k1))
+            if (!structureboundingbox.isVecInside(l1, j1, k1))
             {
                 continue;
             }

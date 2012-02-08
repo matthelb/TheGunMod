@@ -23,7 +23,7 @@ public abstract class Container
 
     protected void addSlot(Slot slot)
     {
-        slot.id = inventorySlots.size();
+        slot.slotNumber = inventorySlots.size();
         inventorySlots.add(slot);
         inventoryItemStacks.add(null);
     }

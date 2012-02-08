@@ -14,12 +14,12 @@ public class EntityAISwimming extends EntityAIBase
 
     public boolean func_46090_a()
     {
-        return field_46105_a.func_46019_ai().nextFloat() < 0.8F && (field_46105_a.isInWater() || field_46105_a.handleLavaMovement());
+        return field_46105_a.getRNG().nextFloat() < 0.8F && (field_46105_a.isInWater() || field_46105_a.handleLavaMovement());
     }
 
     public void func_46088_e()
     {
-        field_46105_a.func_46013_ag().func_46115_a();
+        field_46105_a.getJumpHelper().setJumping();
     }
 
     public int func_46091_c()

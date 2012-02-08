@@ -13,8 +13,8 @@ public class ItemBow extends Item
 
     public void onPlayerStoppedUsing(ItemStack itemstack, World world, EntityPlayer entityplayer, int i)
     {
-        boolean flag = entityplayer.capabilities.depleteBuckets || EnchantmentHelper.getEnchantmentLevel(Enchantment.field_46054_w.effectId, itemstack) > 0;
-        if (flag || entityplayer.inventory.hasItemInInventory(Item.arrow.shiftedIndex))
+        boolean flag = entityplayer.capabilities.depleteBuckets || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, itemstack) > 0;
+        if (flag || entityplayer.inventory.hasItem(Item.arrow.shiftedIndex))
         {
             int j = getMaxItemUseDuration(itemstack) - i;
             float f = (float)j / 20F;
@@ -32,17 +32,17 @@ public class ItemBow extends Item
             {
                 entityarrow.arrowCritical = true;
             }
-            int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.field_46057_t.effectId, itemstack);
+            int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, itemstack);
             if (k > 0)
             {
-                entityarrow.func_46008_a(entityarrow.func_46009_j() + (double)k * 0.5D + 0.5D);
+                entityarrow.setDamage(entityarrow.getDamage() + (double)k * 0.5D + 0.5D);
             }
-            int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.field_46056_u.effectId, itemstack);
+            int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, itemstack);
             if (l > 0)
             {
                 entityarrow.func_46007_b(l);
             }
-            if (EnchantmentHelper.getEnchantmentLevel(Enchantment.field_46055_v.effectId, itemstack) > 0)
+            if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, itemstack) > 0)
             {
                 entityarrow.setFire(100);
             }
@@ -56,7 +56,7 @@ public class ItemBow extends Item
             {
                 entityarrow.doesArrowBelongToPlayer = false;
             }
-            if (!world.singleplayerWorld)
+            if (!world.isRemote)
             {
                 world.spawnEntityInWorld(entityarrow);
             }
@@ -73,14 +73,14 @@ public class ItemBow extends Item
         return 0x11940;
     }
 
-    public EnumAction getAction(ItemStack itemstack)
+    public EnumAction getItemUseAction(ItemStack itemstack)
     {
         return EnumAction.bow;
     }
 
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        if (entityplayer.capabilities.depleteBuckets || entityplayer.inventory.hasItemInInventory(Item.arrow.shiftedIndex))
+        if (entityplayer.capabilities.depleteBuckets || entityplayer.inventory.hasItem(Item.arrow.shiftedIndex))
         {
             entityplayer.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
         }

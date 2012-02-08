@@ -16,18 +16,18 @@ public class FoodStats
         foodSaturationLevel = 5F;
     }
 
-    public void addFoodAndSaturationLevel(int i, float f)
+    public void addStats(int i, float f)
     {
         foodLevel = Math.min(i + foodLevel, 20);
         foodSaturationLevel = Math.min(foodSaturationLevel + (float)i * f * 2.0F, foodLevel);
     }
 
-    public void eatFood(ItemFood itemfood)
+    public void addStats(ItemFood itemfood)
     {
-        addFoodAndSaturationLevel(itemfood.getHealAmount(), itemfood.getSaturationFactor());
+        addStats(itemfood.getHealAmount(), itemfood.getSaturationModifier());
     }
 
-    public void update(EntityPlayer entityplayer)
+    public void onUpdate(EntityPlayer entityplayer)
     {
         int i = entityplayer.worldObj.difficultySetting;
         prevFoodLevel = foodLevel;
@@ -43,7 +43,7 @@ public class FoodStats
                 foodLevel = Math.max(foodLevel - 1, 0);
             }
         }
-        if (foodLevel >= 18 && entityplayer.mustHeal())
+        if (foodLevel >= 18 && entityplayer.shouldHeal())
         {
             foodTimer++;
             if (foodTimer >= 80)
@@ -94,7 +94,7 @@ public class FoodStats
         return foodLevel;
     }
 
-    public boolean mustEat()
+    public boolean needFood()
     {
         return foodLevel < 20;
     }

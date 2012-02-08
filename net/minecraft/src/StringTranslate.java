@@ -7,15 +7,15 @@ public class StringTranslate
 {
     private static StringTranslate instance = new StringTranslate();
     private Properties translateTable;
-    private TreeMap field_44013_c;
-    private String field_44012_d;
+    private TreeMap languageList;
+    private String currentLanguage;
     private boolean field_46121_e;
 
     private StringTranslate()
     {
         translateTable = new Properties();
-        func_44009_b();
-        func_44010_a("en_US");
+        loadLanguageList();
+        setLanguage("en_US");
     }
 
     public static StringTranslate getInstance()
@@ -23,7 +23,7 @@ public class StringTranslate
         return instance;
     }
 
-    private void func_44009_b()
+    private void loadLanguageList()
     {
         TreeMap treemap = new TreeMap();
         try
@@ -43,10 +43,10 @@ public class StringTranslate
             ioexception.printStackTrace();
             return;
         }
-        field_44013_c = treemap;
+        languageList = treemap;
     }
 
-    private void func_44011_a(Properties properties, String s)
+    private void loadLanguage(Properties properties, String s)
     throws IOException
     {
         BufferedReader bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.StringTranslate.class).getResourceAsStream((new StringBuilder()).append("/lang/").append(s).append(".lang").toString()), "UTF-8"));
@@ -65,15 +65,15 @@ public class StringTranslate
         }
     }
 
-    public void func_44010_a(String var1)
+    public void setLanguage(String var1)
     {
-        if (!var1.equals(this.field_44012_d))
+        if (!var1.equals(this.currentLanguage))
         {
             Properties var2 = new Properties();
 
             try
             {
-                this.func_44011_a(var2, "en_US");
+                this.loadLanguage(var2, "en_US");
             }
             catch (IOException var8)
             {
@@ -85,7 +85,7 @@ public class StringTranslate
             {
                 try
                 {
-                    this.func_44011_a(var2, var1);
+                    this.loadLanguage(var2, var1);
                     Enumeration var3 = var2.propertyNames();
 
                     while (var3.hasMoreElements() && !this.field_46121_e)
@@ -114,7 +114,7 @@ public class StringTranslate
                 }
             }
 
-            this.field_44012_d = var1;
+            this.currentLanguage = var1;
             this.translateTable = var2;
         }
     }

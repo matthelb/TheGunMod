@@ -5,7 +5,7 @@ import java.util.*;
 public class WorldChunkManager
 {
     private GenLayer field_34907_a;
-    private GenLayer field_34906_b;
+    private GenLayer biomeIndexLayer;
     private GenLayer temperatureLayer;
     private GenLayer rainfallLayer;
     private BiomeCache biomeCache;
@@ -19,16 +19,16 @@ public class WorldChunkManager
         biomesToSpawnIn.add(BiomeGenBase.forest);
         biomesToSpawnIn.add(BiomeGenBase.plains);
         biomesToSpawnIn.add(BiomeGenBase.taiga);
-        biomesToSpawnIn.add(BiomeGenBase.field_46081_u);
-        biomesToSpawnIn.add(BiomeGenBase.field_46082_t);
+        biomesToSpawnIn.add(BiomeGenBase.taigaHills);
+        biomesToSpawnIn.add(BiomeGenBase.forestHills);
     }
 
     public WorldChunkManager(World world)
     {
         this();
-        GenLayer agenlayer[] = GenLayer.func_35019_a(world.getRandomSeed());
+        GenLayer agenlayer[] = GenLayer.func_35019_a(world.getSeed());
         field_34907_a = agenlayer[0];
-        field_34906_b = agenlayer[1];
+        biomeIndexLayer = agenlayer[1];
         temperatureLayer = agenlayer[2];
         rainfallLayer = agenlayer[3];
     }
@@ -106,7 +106,7 @@ public class WorldChunkManager
         return af;
     }
 
-    public BiomeGenBase[] func_35142_b(BiomeGenBase abiomegenbase[], int i, int j, int k, int l)
+    public BiomeGenBase[] getBiomes(BiomeGenBase abiomegenbase[], int i, int j, int k, int l)
     {
         IntCache.resetIntCache();
         if (abiomegenbase == null || abiomegenbase.length < k * l)
@@ -140,7 +140,7 @@ public class WorldChunkManager
             System.arraycopy(abiomegenbase1, 0, abiomegenbase, 0, k * l);
             return abiomegenbase;
         }
-        int ai[] = field_34906_b.getInts(i, j, k, l);
+        int ai[] = biomeIndexLayer.getInts(i, j, k, l);
         for (int i1 = 0; i1 < k * l; i1++)
         {
             abiomegenbase[i1] = BiomeGenBase.biomeList[ai[i1]];
@@ -170,7 +170,7 @@ public class WorldChunkManager
         return true;
     }
 
-    public ChunkPosition func_35139_a(int i, int j, int k, List list, Random random)
+    public ChunkPosition findBiomePosition(int i, int j, int k, List list, Random random)
     {
         int l = i - k >> 2;
         int i1 = j - k >> 2;

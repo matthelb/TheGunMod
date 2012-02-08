@@ -20,10 +20,10 @@ public class PathPoint
         xCoord = i;
         yCoord = j;
         zCoord = k;
-        hash = func_22203_a(i, j, k);
+        hash = makeHash(i, j, k);
     }
 
-    public static int func_22203_a(int i, int j, int k)
+    public static int makeHash(int i, int j, int k)
     {
         return j & 0xff | (i & 0x7fff) << 8 | (k & 0x7fff) << 24 | (i >= 0 ? 0 : 0x80000000) | (k >= 0 ? 0 : 0x8000);
     }

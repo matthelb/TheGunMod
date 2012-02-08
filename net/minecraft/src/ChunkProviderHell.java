@@ -77,8 +77,8 @@ public class ChunkProviderHell
                         double d13 = (d4 - d2) * d9;
                         for (int j2 = 0; j2 < 4; j2++)
                         {
-                            int k2 = j2 + j1 * 4 << worldObj.xShift | 0 + k1 * 4 << worldObj.worldYBits | l1 * 8 + i2;
-                            int l2 = 1 << worldObj.worldYBits;
+                            int k2 = j2 + j1 * 4 << worldObj.xShift | 0 + k1 * 4 << worldObj.heightShift | l1 * 8 + i2;
+                            int l2 = 1 << worldObj.heightShift;
                             double d14 = 0.25D;
                             double d15 = d10;
                             double d16 = (d11 - d10) * d14;
@@ -129,10 +129,10 @@ public class ChunkProviderHell
                 int k1 = -1;
                 byte byte0 = (byte)Block.netherrack.blockID;
                 byte byte1 = (byte)Block.netherrack.blockID;
-                for (int l1 = worldObj.worldYMask; l1 >= 0; l1--)
+                for (int l1 = worldObj.worldMaxY; l1 >= 0; l1--)
                 {
                     int i2 = (i1 * 16 + l) * worldObj.worldHeight + l1;
-                    if (l1 >= worldObj.worldYMask - hellRNG.nextInt(5))
+                    if (l1 >= worldObj.worldMaxY - hellRNG.nextInt(5))
                     {
                         abyte0[i2] = (byte)Block.bedrock.blockID;
                         continue;
@@ -415,11 +415,11 @@ public class ChunkProviderHell
         return true;
     }
 
-    public List func_40181_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
         if (enumcreaturetype == EnumCreatureType.monster && genNetherBridge.func_40204_a(i, j, k))
         {
-            return genNetherBridge.func_40205_b();
+            return genNetherBridge.getSpawnList();
         }
         WorldChunkManager worldchunkmanager = worldObj.getWorldChunkManager();
         if (worldchunkmanager == null)
@@ -437,7 +437,7 @@ public class ChunkProviderHell
         }
     }
 
-    public ChunkPosition func_40182_a(World world, String s, int i, int j, int k)
+    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
     {
         return null;
     }

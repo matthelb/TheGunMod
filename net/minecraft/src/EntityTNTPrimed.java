@@ -59,7 +59,7 @@ public class EntityTNTPrimed extends Entity
         }
         if (fuse-- <= 0)
         {
-            if (!worldObj.singleplayerWorld)
+            if (!worldObj.isRemote)
             {
                 setEntityDead();
                 explode();

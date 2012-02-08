@@ -2,14 +2,14 @@ package net.minecraft.src;
 
 class SlotBrewingStandPotion extends Slot
 {
-    private EntityPlayer field_40269_f;
-    final ContainerBrewingStand field_40270_a;
+    private EntityPlayer player;
+    final ContainerBrewingStand container;
 
     public SlotBrewingStandPotion(ContainerBrewingStand containerbrewingstand, EntityPlayer entityplayer, IInventory iinventory, int i, int j, int k)
     {
         super(iinventory, i, j, k);
-        field_40270_a = containerbrewingstand;
-        field_40269_f = entityplayer;
+        container = containerbrewingstand;
+        player = entityplayer;
     }
 
     public boolean isItemValid(ItemStack itemstack)
@@ -26,7 +26,7 @@ class SlotBrewingStandPotion extends Slot
     {
         if (itemstack.itemID == Item.potion.shiftedIndex && itemstack.getItemDamage() > 0)
         {
-            field_40269_f.addStat(AchievementList.potion, 1);
+            player.addStat(AchievementList.potion, 1);
         }
         super.onPickupFromSlot(itemstack);
     }

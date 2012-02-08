@@ -122,7 +122,7 @@ public class EntityPainting extends Entity
 
     public void onUpdate()
     {
-        if (tickCounter1++ == 100 && !worldObj.singleplayerWorld)
+        if (tickCounter1++ == 100 && !worldObj.isRemote)
         {
             tickCounter1 = 0;
             if (!onValidSurface())
@@ -200,7 +200,7 @@ public class EntityPainting extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if (!isDead && !worldObj.singleplayerWorld)
+        if (!isDead && !worldObj.isRemote)
         {
             setEntityDead();
             setBeenAttacked();
@@ -245,7 +245,7 @@ public class EntityPainting extends Entity
 
     public void moveEntity(double d, double d1, double d2)
     {
-        if (!worldObj.singleplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if (!worldObj.isRemote && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
@@ -254,7 +254,7 @@ public class EntityPainting extends Entity
 
     public void addVelocity(double d, double d1, double d2)
     {
-        if (!worldObj.singleplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if (!worldObj.isRemote && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));

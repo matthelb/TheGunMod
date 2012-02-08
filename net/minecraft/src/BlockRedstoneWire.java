@@ -206,7 +206,7 @@ public class BlockRedstoneWire extends Block
     public void onBlockAdded(World world, int i, int j, int k)
     {
         super.onBlockAdded(world, i, j, k);
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -254,7 +254,7 @@ public class BlockRedstoneWire extends Block
     public void onBlockRemoval(World world, int i, int j, int k)
     {
         super.onBlockRemoval(world, i, j, k);
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -322,7 +322,7 @@ public class BlockRedstoneWire extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -371,25 +371,25 @@ public class BlockRedstoneWire extends Block
         {
             return true;
         }
-        boolean flag = isPowerProviderOrWire(iblockaccess, i - 1, j, k, 1) || !iblockaccess.isBlockNormalCube(i - 1, j, k) && isPowerProviderOrWire(iblockaccess, i - 1, j - 1, k, -1);
-        boolean flag1 = isPowerProviderOrWire(iblockaccess, i + 1, j, k, 3) || !iblockaccess.isBlockNormalCube(i + 1, j, k) && isPowerProviderOrWire(iblockaccess, i + 1, j - 1, k, -1);
-        boolean flag2 = isPowerProviderOrWire(iblockaccess, i, j, k - 1, 2) || !iblockaccess.isBlockNormalCube(i, j, k - 1) && isPowerProviderOrWire(iblockaccess, i, j - 1, k - 1, -1);
-        boolean flag3 = isPowerProviderOrWire(iblockaccess, i, j, k + 1, 0) || !iblockaccess.isBlockNormalCube(i, j, k + 1) && isPowerProviderOrWire(iblockaccess, i, j - 1, k + 1, -1);
+        boolean flag = isPoweredOrRepeater(iblockaccess, i - 1, j, k, 1) || !iblockaccess.isBlockNormalCube(i - 1, j, k) && isPoweredOrRepeater(iblockaccess, i - 1, j - 1, k, -1);
+        boolean flag1 = isPoweredOrRepeater(iblockaccess, i + 1, j, k, 3) || !iblockaccess.isBlockNormalCube(i + 1, j, k) && isPoweredOrRepeater(iblockaccess, i + 1, j - 1, k, -1);
+        boolean flag2 = isPoweredOrRepeater(iblockaccess, i, j, k - 1, 2) || !iblockaccess.isBlockNormalCube(i, j, k - 1) && isPoweredOrRepeater(iblockaccess, i, j - 1, k - 1, -1);
+        boolean flag3 = isPoweredOrRepeater(iblockaccess, i, j, k + 1, 0) || !iblockaccess.isBlockNormalCube(i, j, k + 1) && isPoweredOrRepeater(iblockaccess, i, j - 1, k + 1, -1);
         if (!iblockaccess.isBlockNormalCube(i, j + 1, k))
         {
-            if (iblockaccess.isBlockNormalCube(i - 1, j, k) && isPowerProviderOrWire(iblockaccess, i - 1, j + 1, k, -1))
+            if (iblockaccess.isBlockNormalCube(i - 1, j, k) && isPoweredOrRepeater(iblockaccess, i - 1, j + 1, k, -1))
             {
                 flag = true;
             }
-            if (iblockaccess.isBlockNormalCube(i + 1, j, k) && isPowerProviderOrWire(iblockaccess, i + 1, j + 1, k, -1))
+            if (iblockaccess.isBlockNormalCube(i + 1, j, k) && isPoweredOrRepeater(iblockaccess, i + 1, j + 1, k, -1))
             {
                 flag1 = true;
             }
-            if (iblockaccess.isBlockNormalCube(i, j, k - 1) && isPowerProviderOrWire(iblockaccess, i, j + 1, k - 1, -1))
+            if (iblockaccess.isBlockNormalCube(i, j, k - 1) && isPoweredOrRepeater(iblockaccess, i, j + 1, k - 1, -1))
             {
                 flag2 = true;
             }
-            if (iblockaccess.isBlockNormalCube(i, j, k + 1) && isPowerProviderOrWire(iblockaccess, i, j + 1, k + 1, -1))
+            if (iblockaccess.isBlockNormalCube(i, j, k + 1) && isPoweredOrRepeater(iblockaccess, i, j + 1, k + 1, -1))
             {
                 flag3 = true;
             }
@@ -418,7 +418,7 @@ public class BlockRedstoneWire extends Block
         return wiresProvidePower;
     }
 
-    public static boolean func_41007_c(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    public static boolean isPowerProviderOrWire(IBlockAccess iblockaccess, int i, int j, int k, int l)
     {
         int i1 = iblockaccess.getBlockId(i, j, k);
         if (i1 == Block.redstoneWire.blockID)
@@ -437,9 +437,9 @@ public class BlockRedstoneWire extends Block
         return Block.blocksList[i1].canProvidePower() && l != -1;
     }
 
-    public static boolean isPowerProviderOrWire(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    public static boolean isPoweredOrRepeater(IBlockAccess iblockaccess, int i, int j, int k, int l)
     {
-        if (func_41007_c(iblockaccess, i, j, k, l))
+        if (isPowerProviderOrWire(iblockaccess, i, j, k, l))
         {
             return true;
         }

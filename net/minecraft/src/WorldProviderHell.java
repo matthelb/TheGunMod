@@ -9,7 +9,7 @@ public class WorldProviderHell extends WorldProvider
     public void registerWorldChunkManager()
     {
         worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.hell, 1.0F, 0.0F);
-        canSleepInWorld = true;
+        isAlternateDimension = true;
         isHellWorld = true;
         hasNoSky = true;
         worldType = -1;
@@ -27,7 +27,7 @@ public class WorldProviderHell extends WorldProvider
 
     public IChunkProvider getChunkProvider()
     {
-        return new ChunkProviderHell(worldObj, worldObj.getRandomSeed());
+        return new ChunkProviderHell(worldObj, worldObj.getSeed());
     }
 
     public boolean canCoordinateBeSpawn(int i, int j)

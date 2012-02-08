@@ -159,7 +159,7 @@ public class BlockVine extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if (!world.singleplayerWorld && !canVineStay(world, i, j, k))
+        if (!world.isRemote && !canVineStay(world, i, j, k))
         {
             dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockWithNotify(i, j, k, 0);
@@ -168,7 +168,7 @@ public class BlockVine extends Block
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if (!world.singleplayerWorld && world.rand.nextInt(4) == 0)
+        if (!world.isRemote && world.rand.nextInt(4) == 0)
         {
             byte byte0 = 4;
             int l = 5;
@@ -330,7 +330,7 @@ public class BlockVine extends Block
 
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
-        if (!world.singleplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
+        if (!world.isRemote && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
         {
             entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
             dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.vine, 1, 0));

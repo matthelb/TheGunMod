@@ -2,12 +2,12 @@ package net.minecraft.src;
 
 class SlotEnchantment extends Slot
 {
-    final ContainerEnchantment field_40268_a;
+    final ContainerEnchantment container;
 
     SlotEnchantment(ContainerEnchantment containerenchantment, IInventory iinventory, int i, int j, int k)
     {
         super(iinventory, i, j, k);
-        field_40268_a = containerenchantment;
+        container = containerenchantment;
     }
 
     public boolean isItemValid(ItemStack itemstack)

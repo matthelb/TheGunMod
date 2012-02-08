@@ -66,7 +66,7 @@ public class EntityBoat extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if (worldObj.singleplayerWorld || isDead)
+        if (worldObj.isRemote || isDead)
         {
             return true;
         }
@@ -150,7 +150,7 @@ public class EntityBoat extends Entity
                 }
             }
         }
-        if (worldObj.singleplayerWorld)
+        if (worldObj.isRemote)
         {
             if (boatPosRotationIncrements > 0)
             {
@@ -228,7 +228,7 @@ public class EntityBoat extends Entity
         moveEntity(motionX, motionY, motionZ);
         if (isCollidedHorizontally && d1 > 0.20000000000000001D)
         {
-            if (!worldObj.singleplayerWorld)
+            if (!worldObj.isRemote)
             {
                 setEntityDead();
                 for (int k = 0; k < 3; k++)
@@ -327,7 +327,7 @@ public class EntityBoat extends Entity
         {
             return true;
         }
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             entityplayer.mountEntity(this);
         }

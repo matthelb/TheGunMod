@@ -2,12 +2,12 @@ package net.minecraft.src;
 
 public class EntityDamageSourceIndirect extends EntityDamageSource
 {
-    private Entity damageSourceEntity2;
+    private Entity indirectEntity;
 
     public EntityDamageSourceIndirect(String s, Entity entity, Entity entity1)
     {
         super(s, entity);
-        damageSourceEntity2 = entity1;
+        indirectEntity = entity1;
     }
 
     public Entity getSourceOfDamage()
@@ -17,14 +17,14 @@ public class EntityDamageSourceIndirect extends EntityDamageSource
 
     public Entity getEntity()
     {
-        return damageSourceEntity2;
+        return indirectEntity;
     }
 
     public String func_35075_a(EntityPlayer entityplayer)
     {
         return StatCollector.translateToLocalFormatted((new StringBuilder()).append("death.").append(damageType).toString(), new Object[]
                 {
-                    entityplayer.username, damageSourceEntity2.func_35150_Y()
+                    entityplayer.username, indirectEntity.func_35150_Y()
                 });
     }
 }

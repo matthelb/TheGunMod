@@ -218,7 +218,7 @@ public abstract class Entity
         {
             inWater = false;
         }
-        if (worldObj.singleplayerWorld)
+        if (worldObj.isRemote)
         {
             fire = 0;
         }
@@ -250,7 +250,7 @@ public abstract class Entity
         {
             kill();
         }
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             setFlag(0, fire > 0);
             setFlag(2, ridingEntity != null);
@@ -563,11 +563,11 @@ public abstract class Entity
         if (worldObj.getBlockId(i, j + 1, k) == Block.snow.blockID)
         {
             stepsound = Block.snow.stepSound;
-            worldObj.playSoundAtEntity(this, stepsound.stepSoundDir(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
+            worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
         }
         else if (!Block.blocksList[l].blockMaterial.getIsLiquid())
         {
-            worldObj.playSoundAtEntity(this, stepsound.stepSoundDir(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
+            worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
         }
     }
 
@@ -594,7 +594,7 @@ public abstract class Entity
                     }
                     if (l > 0)
                     {
-                        Block.blocksList[l].func_43001_a(worldObj, i, j, k, this, fallDistance);
+                        Block.blocksList[l].onFallenUpon(worldObj, i, j, k, this, fallDistance);
                     }
                 }
                 fall(fallDistance);

@@ -2,12 +2,12 @@ package net.minecraft.src;
 
 public class ItemMetadata extends ItemBlock
 {
-    private Block field_35420_a;
+    private Block blockObj;
 
     public ItemMetadata(int i, Block block)
     {
         super(i);
-        field_35420_a = block;
+        blockObj = block;
         setMaxDamage(0);
         setHasSubtypes(true);
     }

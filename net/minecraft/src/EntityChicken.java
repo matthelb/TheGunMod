@@ -53,7 +53,7 @@ public class EntityChicken extends EntityAnimal
             motionY *= 0.59999999999999998D;
         }
         field_391_b += field_390_ai * 2.0F;
-        if (!isChild() && !worldObj.singleplayerWorld && --timeUntilNextEgg <= 0)
+        if (!isChild() && !worldObj.isRemote && --timeUntilNextEgg <= 0)
         {
             worldObj.playSoundAtEntity(this, "mob.chickenplop", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             dropItem(Item.egg.shiftedIndex, 1);

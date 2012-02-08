@@ -7,12 +7,12 @@ public class ChunkProviderGenerate
     implements IChunkProvider
 {
     private Random rand;
-    private NoiseGeneratorOctaves field_705_k;
-    private NoiseGeneratorOctaves field_704_l;
-    private NoiseGeneratorOctaves field_703_m;
-    private NoiseGeneratorOctaves field_702_n;
-    public NoiseGeneratorOctaves field_715_a;
-    public NoiseGeneratorOctaves field_714_b;
+    private NoiseGeneratorOctaves noiseGen1;
+    private NoiseGeneratorOctaves noiseGen2;
+    private NoiseGeneratorOctaves noiseGen3;
+    private NoiseGeneratorOctaves noiseGen4;
+    public NoiseGeneratorOctaves noiseGen5;
+    public NoiseGeneratorOctaves noiseGen6;
     public NoiseGeneratorOctaves mobSpawnerNoise;
     private World worldObj;
     private final boolean mapFeaturesEnabled;
@@ -24,11 +24,11 @@ public class ChunkProviderGenerate
     private MapGenMineshaft mineshaftGenerator;
     private MapGenBase ravineGenerator;
     private BiomeGenBase biomesForGeneration[];
-    double field_4229_d[];
-    double field_4228_e[];
-    double field_4227_f[];
-    double field_4226_g[];
-    double field_4225_h[];
+    double noise3[];
+    double noise1[];
+    double noise2[];
+    double noise5[];
+    double noise6[];
     float field_35561_l[];
     int unusedIntArray32x32[][];
 
@@ -44,12 +44,12 @@ public class ChunkProviderGenerate
         worldObj = world;
         mapFeaturesEnabled = flag;
         rand = new Random(l);
-        field_705_k = new NoiseGeneratorOctaves(rand, 16);
-        field_704_l = new NoiseGeneratorOctaves(rand, 16);
-        field_703_m = new NoiseGeneratorOctaves(rand, 8);
-        field_702_n = new NoiseGeneratorOctaves(rand, 4);
-        field_715_a = new NoiseGeneratorOctaves(rand, 10);
-        field_714_b = new NoiseGeneratorOctaves(rand, 16);
+        noiseGen1 = new NoiseGeneratorOctaves(rand, 16);
+        noiseGen2 = new NoiseGeneratorOctaves(rand, 16);
+        noiseGen3 = new NoiseGeneratorOctaves(rand, 8);
+        noiseGen4 = new NoiseGeneratorOctaves(rand, 4);
+        noiseGen5 = new NoiseGeneratorOctaves(rand, 10);
+        noiseGen6 = new NoiseGeneratorOctaves(rand, 16);
         mobSpawnerNoise = new NoiseGeneratorOctaves(rand, 8);
     }
 
@@ -57,12 +57,12 @@ public class ChunkProviderGenerate
     {
         byte byte0 = 4;
         int k = worldObj.worldHeight / 8;
-        int l = worldObj.worldOceanHeight;
+        int l = worldObj.seaLevel;
         int i1 = byte0 + 1;
         int j1 = worldObj.worldHeight / 8 + 1;
         int k1 = byte0 + 1;
-        biomesForGeneration = worldObj.getWorldChunkManager().func_35142_b(biomesForGeneration, i * 4 - 2, j * 4 - 2, i1 + 5, k1 + 5);
-        field_4224_q = func_4058_a(field_4224_q, i * byte0, 0, j * byte0, i1, j1, k1);
+        biomesForGeneration = worldObj.getWorldChunkManager().getBiomes(biomesForGeneration, i * 4 - 2, j * 4 - 2, i1 + 5, k1 + 5);
+        field_4224_q = initializeNoiseField(field_4224_q, i * byte0, 0, j * byte0, i1, j1, k1);
         for (int l1 = 0; l1 < byte0; l1++)
         {
             for (int i2 = 0; i2 < byte0; i2++)
@@ -87,8 +87,8 @@ public class ChunkProviderGenerate
                         double d13 = (d4 - d2) * d9;
                         for (int l2 = 0; l2 < 4; l2++)
                         {
-                            int i3 = l2 + l1 * 4 << worldObj.xShift | 0 + i2 * 4 << worldObj.worldYBits | j2 * 8 + k2;
-                            int j3 = 1 << worldObj.worldYBits;
+                            int i3 = l2 + l1 * 4 << worldObj.xShift | 0 + i2 * 4 << worldObj.heightShift | j2 * 8 + k2;
+                            int j3 = 1 << worldObj.heightShift;
                             i3 -= j3;
                             double d14 = 0.25D;
                             double d15 = d10;
@@ -127,9 +127,9 @@ public class ChunkProviderGenerate
 
     public void replaceBlocksForBiome(int i, int j, byte abyte0[], BiomeGenBase abiomegenbase[])
     {
-        int k = worldObj.worldOceanHeight;
+        int k = worldObj.seaLevel;
         double d = 0.03125D;
-        stoneNoise = field_702_n.generateNoiseOctaves(stoneNoise, i * 16, j * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
+        stoneNoise = noiseGen4.generateNoiseOctaves(stoneNoise, i * 16, j * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
         float af[] = worldObj.getWorldChunkManager().initTemperatureCache(i * 16, j * 16, 16, 16);
         for (int l = 0; l < 16; l++)
         {
@@ -141,7 +141,7 @@ public class ChunkProviderGenerate
                 int k1 = -1;
                 byte byte0 = biomegenbase.topBlock;
                 byte byte1 = biomegenbase.fillerBlock;
-                for (int l1 = worldObj.worldYMask; l1 >= 0; l1--)
+                for (int l1 = worldObj.worldMaxY; l1 >= 0; l1--)
                 {
                     int i2 = (i1 * 16 + l) * worldObj.worldHeight + l1;
                     if (l1 <= 0 + rand.nextInt(5))
@@ -234,7 +234,7 @@ public class ChunkProviderGenerate
         return chunk;
     }
 
-    private double[] func_4058_a(double ad[], int i, int j, int k, int l, int i1, int j1)
+    private double[] initializeNoiseField(double ad[], int i, int j, int k, int l, int i1, int j1)
     {
         if (ad == null)
         {
@@ -254,11 +254,11 @@ public class ChunkProviderGenerate
         }
         double d = 684.41200000000003D;
         double d1 = 684.41200000000003D;
-        field_4226_g = field_715_a.func_4103_a(field_4226_g, i, k, l, j1, 1.121D, 1.121D, 0.5D);
-        field_4225_h = field_714_b.func_4103_a(field_4225_h, i, k, l, j1, 200D, 200D, 0.5D);
-        field_4229_d = field_703_m.generateNoiseOctaves(field_4229_d, i, j, k, l, i1, j1, d / 80D, d1 / 160D, d / 80D);
-        field_4228_e = field_705_k.generateNoiseOctaves(field_4228_e, i, j, k, l, i1, j1, d, d1, d);
-        field_4227_f = field_704_l.generateNoiseOctaves(field_4227_f, i, j, k, l, i1, j1, d, d1, d);
+        noise5 = noiseGen5.generateNoiseOctaves(noise5, i, k, l, j1, 1.121D, 1.121D, 0.5D);
+        noise6 = noiseGen6.generateNoiseOctaves(noise6, i, k, l, j1, 200D, 200D, 0.5D);
+        noise3 = noiseGen3.generateNoiseOctaves(noise3, i, j, k, l, i1, j1, d / 80D, d1 / 160D, d / 80D);
+        noise1 = noiseGen1.generateNoiseOctaves(noise1, i, j, k, l, i1, j1, d, d1, d);
+        noise2 = noiseGen2.generateNoiseOctaves(noise2, i, j, k, l, i1, j1, d, d1, d);
         i = k = 0;
         int i2 = 0;
         int j2 = 0;
@@ -291,7 +291,7 @@ public class ChunkProviderGenerate
                 f2 /= f3;
                 f1 = f1 * 0.9F + 0.1F;
                 f2 = (f2 * 4F - 1.0F) / 8F;
-                double d2 = field_4225_h[j2] / 8000D;
+                double d2 = noise6[j2] / 8000D;
                 if (d2 < 0.0D)
                 {
                     d2 = -d2 * 0.29999999999999999D;
@@ -329,9 +329,9 @@ public class ChunkProviderGenerate
                     {
                         d7 *= 4D;
                     }
-                    double d8 = field_4228_e[i2] / 512D;
-                    double d9 = field_4227_f[i2] / 512D;
-                    double d10 = (field_4229_d[i2] / 10D + 1.0D) / 2D;
+                    double d8 = noise1[i2] / 512D;
+                    double d9 = noise2[i2] / 512D;
+                    double d10 = (noise3[i2] / 10D + 1.0D) / 2D;
                     if (d10 < 0.0D)
                     {
                         d6 = d8;
@@ -370,10 +370,10 @@ public class ChunkProviderGenerate
         int k = i * 16;
         int l = j * 16;
         BiomeGenBase biomegenbase = worldObj.getWorldChunkManager().getBiomeGenAt(k + 16, l + 16);
-        rand.setSeed(worldObj.getRandomSeed());
+        rand.setSeed(worldObj.getSeed());
         long l1 = (rand.nextLong() / 2L) * 2L + 1L;
         long l2 = (rand.nextLong() / 2L) * 2L + 1L;
-        rand.setSeed((long)i * l1 + (long)j * l2 ^ worldObj.getRandomSeed());
+        rand.setSeed((long)i * l1 + (long)j * l2 ^ worldObj.getSeed());
         boolean flag = false;
         if (mapFeaturesEnabled)
         {
@@ -393,7 +393,7 @@ public class ChunkProviderGenerate
             int j1 = k + rand.nextInt(16) + 8;
             int k2 = rand.nextInt(rand.nextInt(worldObj.worldHeight - 8) + 8);
             int l3 = l + rand.nextInt(16) + 8;
-            if (k2 < worldObj.worldOceanHeight || rand.nextInt(10) == 0)
+            if (k2 < worldObj.seaLevel || rand.nextInt(10) == 0)
             {
                 (new WorldGenLakes(Block.lavaStill.blockID)).generate(worldObj, rand, j1, k2, l3);
             }
@@ -406,15 +406,15 @@ public class ChunkProviderGenerate
             if (!(new WorldGenDungeons()).generate(worldObj, rand, i3, i4, k4));
         }
 
-        biomegenbase.func_35513_a(worldObj, rand, k, l);
-        SpawnerAnimals.func_35573_a(worldObj, biomegenbase, k + 8, l + 8, 16, 16, rand);
+        biomegenbase.decorate(worldObj, rand, k, l);
+        SpawnerAnimals.performWorldGenSpawning(worldObj, biomegenbase, k + 8, l + 8, 16, 16, rand);
         k += 8;
         l += 8;
         for (int i2 = 0; i2 < 16; i2++)
         {
             for (int j3 = 0; j3 < 16; j3++)
             {
-                int j4 = worldObj.getTopSolidOrLiquidBlock(k + i2, l + j3);
+                int j4 = worldObj.getPrecipitationHeight(k + i2, l + j3);
                 if (worldObj.func_40210_p(i2 + k, j4 - 1, j3 + l))
                 {
                     worldObj.setBlockWithNotify(i2 + k, j4 - 1, j3 + l, Block.ice.blockID);
@@ -444,7 +444,7 @@ public class ChunkProviderGenerate
         return true;
     }
 
-    public List func_40181_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
         WorldChunkManager worldchunkmanager = worldObj.getWorldChunkManager();
         if (worldchunkmanager == null)
@@ -462,11 +462,11 @@ public class ChunkProviderGenerate
         }
     }
 
-    public ChunkPosition func_40182_a(World world, String s, int i, int j, int k)
+    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
     {
         if ("Stronghold".equals(s) && strongholdGenerator != null)
         {
-            return strongholdGenerator.func_40202_a(world, i, j, k);
+            return strongholdGenerator.getNearestInstance(world, i, j, k);
         }
         else
         {

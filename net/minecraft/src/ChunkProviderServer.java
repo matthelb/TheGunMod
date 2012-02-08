@@ -6,10 +6,10 @@ import java.util.*;
 public class ChunkProviderServer
     implements IChunkProvider
 {
-    private Set field_725_a;
+    private Set droppedChunksSet;
     private Chunk dummyChunk;
     private IChunkProvider serverChunkGenerator;
-    private IChunkLoader field_729_d;
+    private IChunkLoader chunkLoader;
     public boolean chunkLoadOverride;
     private LongHashMap id2ChunkMap;
     private List field_727_f;
@@ -17,22 +17,22 @@ public class ChunkProviderServer
 
     public ChunkProviderServer(WorldServer worldserver, IChunkLoader ichunkloader, IChunkProvider ichunkprovider)
     {
-        field_725_a = new HashSet();
+        droppedChunksSet = new HashSet();
         chunkLoadOverride = false;
         id2ChunkMap = new LongHashMap();
         field_727_f = new ArrayList();
         dummyChunk = new EmptyChunk(worldserver, new byte[256 * worldserver.worldHeight], 0, 0);
         world = worldserver;
-        field_729_d = ichunkloader;
+        chunkLoader = ichunkloader;
         serverChunkGenerator = ichunkprovider;
     }
 
     public boolean chunkExists(int i, int j)
     {
-        return id2ChunkMap.containsKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
+        return id2ChunkMap.containsItem(ChunkCoordIntPair.chunkXZ2Int(i, j));
     }
 
-    public void func_374_c(int i, int j)
+    public void dropChunk(int i, int j)
     {
         if (world.worldProvider.canRespawnHere())
         {
@@ -42,19 +42,19 @@ public class ChunkProviderServer
             char c = '\200';
             if (k < -c || k > c || l < -c || l > c)
             {
-                field_725_a.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j)));
+                droppedChunksSet.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j)));
             }
         }
         else
         {
-            field_725_a.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j)));
+            droppedChunksSet.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j)));
         }
     }
 
-    public void func_46041_c()
+    public void unloadAllChunks()
     {
         Chunk chunk;
-        for (Iterator iterator = field_727_f.iterator(); iterator.hasNext(); func_374_c(chunk.xPosition, chunk.zPosition))
+        for (Iterator iterator = field_727_f.iterator(); iterator.hasNext(); dropChunk(chunk.xPosition, chunk.zPosition))
         {
             chunk = (Chunk)iterator.next();
         }
@@ -63,11 +63,11 @@ public class ChunkProviderServer
     public Chunk loadChunk(int i, int j)
     {
         long l = ChunkCoordIntPair.chunkXZ2Int(i, j);
-        field_725_a.remove(Long.valueOf(l));
+        droppedChunksSet.remove(Long.valueOf(l));
         Chunk chunk = (Chunk)id2ChunkMap.getValueByKey(l);
         if (chunk == null)
         {
-            chunk = func_4063_e(i, j);
+            chunk = loadChunkFromFile(i, j);
             if (chunk == null)
             {
                 if (serverChunkGenerator == null)
@@ -96,7 +96,7 @@ public class ChunkProviderServer
         Chunk chunk = (Chunk)id2ChunkMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
         if (chunk == null)
         {
-            if (world.worldChunkLoadOverride || chunkLoadOverride)
+            if (world.findingSpawnPoint || chunkLoadOverride)
             {
                 return loadChunk(i, j);
             }
@@ -111,15 +111,15 @@ public class ChunkProviderServer
         }
     }
 
-    private Chunk func_4063_e(int i, int j)
+    private Chunk loadChunkFromFile(int i, int j)
     {
-        if (field_729_d == null)
+        if (chunkLoader == null)
         {
             return null;
         }
         try
         {
-            Chunk chunk = field_729_d.loadChunk(world, i, j);
+            Chunk chunk = chunkLoader.loadChunk(world, i, j);
             if (chunk != null)
             {
                 chunk.lastSaveTime = world.getWorldTime();
@@ -133,15 +133,15 @@ public class ChunkProviderServer
         return null;
     }
 
-    private void func_375_a(Chunk chunk)
+    private void saveChunkExtraData(Chunk chunk)
     {
-        if (field_729_d == null)
+        if (chunkLoader == null)
         {
             return;
         }
         try
         {
-            field_729_d.saveExtraChunkData(world, chunk);
+            chunkLoader.saveExtraChunkData(world, chunk);
         }
         catch (Exception exception)
         {
@@ -149,16 +149,16 @@ public class ChunkProviderServer
         }
     }
 
-    private void func_373_b(Chunk chunk)
+    private void saveChunkData(Chunk chunk)
     {
-        if (field_729_d == null)
+        if (chunkLoader == null)
         {
             return;
         }
         try
         {
             chunk.lastSaveTime = world.getWorldTime();
-            field_729_d.saveChunk(world, chunk);
+            chunkLoader.saveChunk(world, chunk);
         }
         catch (IOException ioexception)
         {
@@ -189,13 +189,13 @@ public class ChunkProviderServer
             Chunk chunk = (Chunk)field_727_f.get(j);
             if (flag && !chunk.neverSave)
             {
-                func_375_a(chunk);
+                saveChunkExtraData(chunk);
             }
             if (!chunk.needsSaving(flag))
             {
                 continue;
             }
-            func_373_b(chunk);
+            saveChunkData(chunk);
             chunk.isModified = false;
             if (++i == 24 && !flag)
             {
@@ -205,11 +205,11 @@ public class ChunkProviderServer
 
         if (flag)
         {
-            if (field_729_d == null)
+            if (chunkLoader == null)
             {
                 return true;
             }
-            field_729_d.saveExtraData();
+            chunkLoader.saveExtraData();
         }
         return true;
     }
@@ -220,22 +220,22 @@ public class ChunkProviderServer
         {
             for (int i = 0; i < 100; i++)
             {
-                if (!field_725_a.isEmpty())
+                if (!droppedChunksSet.isEmpty())
                 {
-                    Long long1 = (Long)field_725_a.iterator().next();
+                    Long long1 = (Long)droppedChunksSet.iterator().next();
                     Chunk chunk = (Chunk)id2ChunkMap.getValueByKey(long1.longValue());
                     chunk.onChunkUnload();
-                    func_373_b(chunk);
-                    func_375_a(chunk);
-                    field_725_a.remove(long1);
+                    saveChunkData(chunk);
+                    saveChunkExtraData(chunk);
+                    droppedChunksSet.remove(long1);
                     id2ChunkMap.remove(long1.longValue());
                     field_727_f.remove(chunk);
                 }
             }
 
-            if (field_729_d != null)
+            if (chunkLoader != null)
             {
-                field_729_d.func_661_a();
+                chunkLoader.chunkTick();
             }
         }
         return serverChunkGenerator.unload100OldestChunks();
@@ -248,16 +248,16 @@ public class ChunkProviderServer
 
     public String func_46040_d()
     {
-        return (new StringBuilder()).append("ServerChunkCache: ").append(id2ChunkMap.func_46048_a()).append(" Drop: ").append(field_725_a.size()).toString();
+        return (new StringBuilder()).append("ServerChunkCache: ").append(id2ChunkMap.getNumHashElements()).append(" Drop: ").append(droppedChunksSet.size()).toString();
     }
 
-    public List func_40181_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
-        return serverChunkGenerator.func_40181_a(enumcreaturetype, i, j, k);
+        return serverChunkGenerator.getPossibleCreatures(enumcreaturetype, i, j, k);
     }
 
-    public ChunkPosition func_40182_a(World world, String s, int i, int j, int k)
+    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
     {
-        return serverChunkGenerator.func_40182_a(world, s, i, j, k);
+        return serverChunkGenerator.findClosestStructure(world, s, i, j, k);
     }
 }

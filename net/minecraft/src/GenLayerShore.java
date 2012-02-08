@@ -42,7 +42,7 @@ public class GenLayerShore extends GenLayer
                     int j4 = ai[j1 + 1 + (i1 + 1 + 1) * (k + 2)];
                     if (i2 == BiomeGenBase.ocean.biomeID || l2 == BiomeGenBase.ocean.biomeID || k3 == BiomeGenBase.ocean.biomeID || j4 == BiomeGenBase.ocean.biomeID)
                     {
-                        ai1[j1 + i1 * k] = BiomeGenBase.field_46084_r.biomeID;
+                        ai1[j1 + i1 * k] = BiomeGenBase.beach.biomeID;
                     }
                     else
                     {
@@ -58,7 +58,7 @@ public class GenLayerShore extends GenLayer
                     int k4 = ai[j1 + 1 + (i1 + 1 + 1) * (k + 2)];
                     if (j2 != BiomeGenBase.extremeHills.biomeID || i3 != BiomeGenBase.extremeHills.biomeID || l3 != BiomeGenBase.extremeHills.biomeID || k4 != BiomeGenBase.extremeHills.biomeID)
                     {
-                        ai1[j1 + i1 * k] = BiomeGenBase.field_46080_v.biomeID;
+                        ai1[j1 + i1 * k] = BiomeGenBase.extremeHillsEdge.biomeID;
                     }
                     else
                     {

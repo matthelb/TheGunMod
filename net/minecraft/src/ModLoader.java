@@ -337,8 +337,8 @@ public final class ModLoader
                     continue;
                 }
                 spawnlistentry.itemWeight = i;
-                spawnlistentry.field_35484_b = j;
-                spawnlistentry.field_35485_c = k;
+                spawnlistentry.minGroupCount = j;
+                spawnlistentry.maxGroupCount = k;
                 flag = true;
                 break;
             }
@@ -1318,9 +1318,9 @@ public final class ModLoader
                 method_getNextWindowId.invoke(entityplayermp, new Object[0]);
                 int j = field_currentWindowId.getInt(entityplayermp);
                 entityplayermp.playerNetServerHandler.sendPacket(new Packet100OpenWindow(j, i, iinventory.getInvName(), iinventory.getSizeInventory()));
-                entityplayermp.currentCraftingInventory = container;
-                entityplayermp.currentCraftingInventory.windowId = j;
-                entityplayermp.currentCraftingInventory.onCraftGuiOpened(entityplayermp);
+                entityplayermp.craftingInventory = container;
+                entityplayermp.craftingInventory.windowId = j;
+                entityplayermp.craftingInventory.onCraftGuiOpened(entityplayermp);
             }
             catch (InvocationTargetException invocationtargetexception)
             {

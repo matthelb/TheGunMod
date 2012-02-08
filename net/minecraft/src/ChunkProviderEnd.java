@@ -13,8 +13,8 @@ public class ChunkProviderEnd
     public NoiseGeneratorOctaves field_40193_a;
     public NoiseGeneratorOctaves field_40191_b;
     private World endWorld;
-    private double field_40194_n[];
-    private BiomeGenBase field_40195_o[];
+    private double densities[];
+    private BiomeGenBase biomesForGeneration[];
     double field_40192_c[];
     double field_40189_d[];
     double field_40190_e[];
@@ -40,7 +40,7 @@ public class ChunkProviderEnd
         int k = byte0 + 1;
         int l = endWorld.worldHeight / 4 + 1;
         int i1 = byte0 + 1;
-        field_40194_n = func_40186_a(field_40194_n, i * byte0, 0, j * byte0, k, l, i1);
+        densities = func_40186_a(densities, i * byte0, 0, j * byte0, k, l, i1);
         for (int j1 = 0; j1 < byte0; j1++)
         {
             for (int k1 = 0; k1 < byte0; k1++)
@@ -48,14 +48,14 @@ public class ChunkProviderEnd
                 for (int l1 = 0; l1 < endWorld.worldHeight / 4; l1++)
                 {
                     double d = 0.25D;
-                    double d1 = field_40194_n[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 0)];
-                    double d2 = field_40194_n[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 0)];
-                    double d3 = field_40194_n[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 0)];
-                    double d4 = field_40194_n[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 0)];
-                    double d5 = (field_40194_n[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 1)] - d1) * d;
-                    double d6 = (field_40194_n[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 1)] - d2) * d;
-                    double d7 = (field_40194_n[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 1)] - d3) * d;
-                    double d8 = (field_40194_n[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 1)] - d4) * d;
+                    double d1 = densities[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 0)];
+                    double d2 = densities[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 0)];
+                    double d3 = densities[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 0)];
+                    double d4 = densities[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 0)];
+                    double d5 = (densities[((j1 + 0) * i1 + (k1 + 0)) * l + (l1 + 1)] - d1) * d;
+                    double d6 = (densities[((j1 + 0) * i1 + (k1 + 1)) * l + (l1 + 1)] - d2) * d;
+                    double d7 = (densities[((j1 + 1) * i1 + (k1 + 0)) * l + (l1 + 1)] - d3) * d;
+                    double d8 = (densities[((j1 + 1) * i1 + (k1 + 1)) * l + (l1 + 1)] - d4) * d;
                     for (int i2 = 0; i2 < 4; i2++)
                     {
                         double d9 = 0.125D;
@@ -65,8 +65,8 @@ public class ChunkProviderEnd
                         double d13 = (d4 - d2) * d9;
                         for (int j2 = 0; j2 < 8; j2++)
                         {
-                            int k2 = j2 + j1 * 8 << endWorld.xShift | 0 + k1 * 8 << endWorld.worldYBits | l1 * 4 + i2;
-                            int l2 = 1 << endWorld.worldYBits;
+                            int k2 = j2 + j1 * 8 << endWorld.xShift | 0 + k1 * 8 << endWorld.heightShift | l1 * 4 + i2;
+                            int l2 = 1 << endWorld.heightShift;
                             double d14 = 0.125D;
                             double d15 = d10;
                             double d16 = (d11 - d10) * d14;
@@ -106,7 +106,7 @@ public class ChunkProviderEnd
                 int j1 = -1;
                 byte byte0 = (byte)Block.whiteStone.blockID;
                 byte byte1 = (byte)Block.whiteStone.blockID;
-                for (int k1 = endWorld.worldYMask; k1 >= 0; k1--)
+                for (int k1 = endWorld.worldMaxY; k1 >= 0; k1--)
                 {
                     int l1 = (l * 16 + k) * endWorld.worldHeight + k1;
                     byte byte2 = abyte0[l1];
@@ -157,9 +157,9 @@ public class ChunkProviderEnd
         endRNG.setSeed((long)i * 0x4f9939f508L + (long)j * 0x1ef1565bd5L);
         byte abyte0[] = new byte[16 * endWorld.worldHeight * 16];
         Chunk chunk = new Chunk(endWorld, abyte0, i, j);
-        field_40195_o = endWorld.getWorldChunkManager().loadBlockGeneratorData(field_40195_o, i * 16, j * 16, 16, 16);
-        func_40184_a(i, j, abyte0, field_40195_o);
-        func_40185_b(i, j, abyte0, field_40195_o);
+        biomesForGeneration = endWorld.getWorldChunkManager().loadBlockGeneratorData(biomesForGeneration, i * 16, j * 16, 16, 16);
+        func_40184_a(i, j, abyte0, biomesForGeneration);
+        func_40185_b(i, j, abyte0, biomesForGeneration);
         chunk.generateSkylightMap();
         return chunk;
     }
@@ -172,8 +172,8 @@ public class ChunkProviderEnd
         }
         double d = 684.41200000000003D;
         double d1 = 684.41200000000003D;
-        field_40187_f = field_40193_a.func_4103_a(field_40187_f, i, k, l, j1, 1.121D, 1.121D, 0.5D);
-        field_40188_g = field_40191_b.func_4103_a(field_40188_g, i, k, l, j1, 200D, 200D, 0.5D);
+        field_40187_f = field_40193_a.generateNoiseOctaves(field_40187_f, i, k, l, j1, 1.121D, 1.121D, 0.5D);
+        field_40188_g = field_40191_b.generateNoiseOctaves(field_40188_g, i, k, l, j1, 200D, 200D, 0.5D);
         d *= 2D;
         field_40192_c = field_40196_l.generateNoiseOctaves(field_40192_c, i, j, k, l, i1, j1, d / 80D, d1 / 160D, d / 80D);
         field_40189_d = field_40198_j.generateNoiseOctaves(field_40189_d, i, j, k, l, i1, j1, d, d1, d);
@@ -285,7 +285,7 @@ public class ChunkProviderEnd
         int k = i * 16;
         int l = j * 16;
         BiomeGenBase biomegenbase = endWorld.getWorldChunkManager().getBiomeGenAt(k + 16, l + 16);
-        biomegenbase.func_35513_a(endWorld, endWorld.rand, k, l);
+        biomegenbase.decorate(endWorld, endWorld.rand, k, l);
         BlockSand.fallInstantly = false;
     }
 
@@ -304,7 +304,7 @@ public class ChunkProviderEnd
         return true;
     }
 
-    public List func_40181_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
         WorldChunkManager worldchunkmanager = endWorld.getWorldChunkManager();
         if (worldchunkmanager == null)
@@ -322,7 +322,7 @@ public class ChunkProviderEnd
         }
     }
 
-    public ChunkPosition func_40182_a(World world, String s, int i, int j, int k)
+    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
     {
         return null;
     }

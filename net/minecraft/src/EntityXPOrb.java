@@ -143,7 +143,7 @@ public class EntityXPOrb extends Entity
 
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
-        if (worldObj.singleplayerWorld)
+        if (worldObj.isRemote)
         {
             return;
         }
@@ -162,7 +162,7 @@ public class EntityXPOrb extends Entity
         return xpValue;
     }
 
-    public static int getMore(int i)
+    public static int getXPSplit(int i)
     {
         if (i >= 2477)
         {

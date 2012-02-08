@@ -8,7 +8,7 @@ public class ItemSaddle extends Item
         maxStackSize = 1;
     }
 
-    public void saddleEntity(ItemStack itemstack, EntityLiving entityliving)
+    public void useItemOnEntity(ItemStack itemstack, EntityLiving entityliving)
     {
         if (entityliving instanceof EntityPig)
         {
@@ -23,7 +23,7 @@ public class ItemSaddle extends Item
 
     public boolean hitEntity(ItemStack itemstack, EntityLiving entityliving, EntityLiving entityliving1)
     {
-        saddleEntity(itemstack, entityliving);
+        useItemOnEntity(itemstack, entityliving);
         return true;
     }
 }

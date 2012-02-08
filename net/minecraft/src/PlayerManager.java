@@ -66,7 +66,7 @@ public class PlayerManager
             WorldProvider worldprovider = worldserver.worldProvider;
             if (!worldprovider.canRespawnHere())
             {
-                worldserver.chunkProviderServer.func_46041_c();
+                worldserver.chunkProviderServer.unloadAllChunks();
             }
         }
     }

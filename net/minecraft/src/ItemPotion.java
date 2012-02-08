@@ -15,12 +15,12 @@ public class ItemPotion extends Item
         setMaxDamage(0);
     }
 
-    public List getPotionEffectsForItemStack(ItemStack itemstack)
+    public List getEffects(ItemStack itemstack)
     {
-        return getPotionEffectsForDamage(itemstack.getItemDamage());
+        return getEffects(itemstack.getItemDamage());
     }
 
-    public List getPotionEffectsForDamage(int i)
+    public List getEffects(int i)
     {
         List list = (List)effectCache.get(Integer.valueOf(i));
         if (list == null)
@@ -34,9 +34,9 @@ public class ItemPotion extends Item
     public ItemStack onFoodEaten(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
         itemstack.stackSize--;
-        if (!world.singleplayerWorld)
+        if (!world.isRemote)
         {
-            List list = getPotionEffectsForItemStack(itemstack);
+            List list = getEffects(itemstack);
             if (list != null)
             {
                 PotionEffect potioneffect;
@@ -62,7 +62,7 @@ public class ItemPotion extends Item
         return 32;
     }
 
-    public EnumAction getAction(ItemStack itemstack)
+    public EnumAction getItemUseAction(ItemStack itemstack)
     {
         return EnumAction.drink;
     }
@@ -73,7 +73,7 @@ public class ItemPotion extends Item
         {
             itemstack.stackSize--;
             world.playSoundAtEntity(entityplayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-            if (!world.singleplayerWorld)
+            if (!world.isRemote)
             {
                 world.spawnEntityInWorld(new EntityPotion(world, entityplayer, itemstack.getItemDamage()));
             }

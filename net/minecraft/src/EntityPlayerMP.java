@@ -48,7 +48,7 @@ public class EntityPlayerMP extends EntityPlayer
         if (!world.worldProvider.hasNoSky)
         {
             i += rand.nextInt(20) - 10;
-            k = world.findTopSolidBlock(i, j);
+            k = world.getTopSolidOrLiquidBlock(i, j);
             j += rand.nextInt(20) - 10;
         }
         setLocationAndAngles((double)i + 0.5D, k, (double)j + 0.5D, 0.0F, 0.0F);
@@ -86,7 +86,7 @@ public class EntityPlayerMP extends EntityPlayer
 
     public void func_20057_k()
     {
-        currentCraftingInventory.onCraftGuiOpened(this);
+        craftingInventory.onCraftGuiOpened(this);
     }
 
     public ItemStack[] getInventory()
@@ -108,7 +108,7 @@ public class EntityPlayerMP extends EntityPlayer
     {
         itemInWorldManager.updateBlockRemoving();
         ticksOfInvuln--;
-        currentCraftingInventory.updateCraftingResults();
+        craftingInventory.updateCraftingResults();
         for (int i = 0; i < 5; i++)
         {
             ItemStack itemstack = getEquipmentInSlot(i);
@@ -217,9 +217,9 @@ public class EntityPlayerMP extends EntityPlayer
         {
             if (mcServer.propertyManagerObj.getBooleanProperty("allow-nether", true))
             {
-                if (currentCraftingInventory != personalCraftingInventory)
+                if (craftingInventory != inventorySlots)
                 {
-                    usePersonalCraftingInventory();
+                    closeScreen();
                 }
                 if (ridingEntity != null)
                 {
@@ -285,14 +285,14 @@ public class EntityPlayerMP extends EntityPlayer
         if (dimension == 1 && i == 1)
         {
             triggerAchievement(AchievementList.theEnd2);
-            worldObj.removePlayerForLogoff(this);
+            worldObj.setEntityDead(this);
             field_41032_j = true;
             playerNetServerHandler.sendPacket(new Packet70Bed(4, 0));
         }
         else
         {
             triggerAchievement(AchievementList.theEnd);
-            ChunkCoordinates chunkcoordinates = mcServer.getWorldManager(i).func_40212_d();
+            ChunkCoordinates chunkcoordinates = mcServer.getWorldManager(i).getEntrancePortalLocation();
             if (chunkcoordinates != null)
             {
                 playerNetServerHandler.teleportTo(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, 0.0F, 0.0F);
@@ -335,7 +335,7 @@ public class EntityPlayerMP extends EntityPlayer
             }
         }
         super.onItemPickup(entity, i);
-        currentCraftingInventory.updateCraftingResults();
+        craftingInventory.updateCraftingResults();
     }
 
     public void swingItem()
@@ -406,54 +406,54 @@ public class EntityPlayerMP extends EntityPlayer
     {
         getNextWidowId();
         playerNetServerHandler.sendPacket(new Packet100OpenWindow(currentWindowId, 1, "Crafting", 9));
-        currentCraftingInventory = new ContainerWorkbench(inventory, worldObj, i, j, k);
-        currentCraftingInventory.windowId = currentWindowId;
-        currentCraftingInventory.onCraftGuiOpened(this);
+        craftingInventory = new ContainerWorkbench(inventory, worldObj, i, j, k);
+        craftingInventory.windowId = currentWindowId;
+        craftingInventory.onCraftGuiOpened(this);
     }
 
     public void displayGUIEnchantment(int i, int j, int k)
     {
         getNextWidowId();
         playerNetServerHandler.sendPacket(new Packet100OpenWindow(currentWindowId, 4, "Enchanting", 9));
-        currentCraftingInventory = new ContainerEnchantment(inventory, worldObj, i, j, k);
-        currentCraftingInventory.windowId = currentWindowId;
-        currentCraftingInventory.onCraftGuiOpened(this);
+        craftingInventory = new ContainerEnchantment(inventory, worldObj, i, j, k);
+        craftingInventory.windowId = currentWindowId;
+        craftingInventory.onCraftGuiOpened(this);
     }
 
     public void displayGUIChest(IInventory iinventory)
     {
         getNextWidowId();
         playerNetServerHandler.sendPacket(new Packet100OpenWindow(currentWindowId, 0, iinventory.getInvName(), iinventory.getSizeInventory()));
-        currentCraftingInventory = new ContainerChest(inventory, iinventory);
-        currentCraftingInventory.windowId = currentWindowId;
-        currentCraftingInventory.onCraftGuiOpened(this);
+        craftingInventory = new ContainerChest(inventory, iinventory);
+        craftingInventory.windowId = currentWindowId;
+        craftingInventory.onCraftGuiOpened(this);
     }
 
     public void displayGUIFurnace(TileEntityFurnace tileentityfurnace)
     {
         getNextWidowId();
         playerNetServerHandler.sendPacket(new Packet100OpenWindow(currentWindowId, 2, tileentityfurnace.getInvName(), tileentityfurnace.getSizeInventory()));
-        currentCraftingInventory = new ContainerFurnace(inventory, tileentityfurnace);
-        currentCraftingInventory.windowId = currentWindowId;
-        currentCraftingInventory.onCraftGuiOpened(this);
+        craftingInventory = new ContainerFurnace(inventory, tileentityfurnace);
+        craftingInventory.windowId = currentWindowId;
+        craftingInventory.onCraftGuiOpened(this);
     }
 
     public void displayGUIDispenser(TileEntityDispenser tileentitydispenser)
     {
         getNextWidowId();
         playerNetServerHandler.sendPacket(new Packet100OpenWindow(currentWindowId, 3, tileentitydispenser.getInvName(), tileentitydispenser.getSizeInventory()));
-        currentCraftingInventory = new ContainerDispenser(inventory, tileentitydispenser);
-        currentCraftingInventory.windowId = currentWindowId;
-        currentCraftingInventory.onCraftGuiOpened(this);
+        craftingInventory = new ContainerDispenser(inventory, tileentitydispenser);
+        craftingInventory.windowId = currentWindowId;
+        craftingInventory.onCraftGuiOpened(this);
     }
 
     public void displayGUIBrewingStand(TileEntityBrewingStand tileentitybrewingstand)
     {
         getNextWidowId();
         playerNetServerHandler.sendPacket(new Packet100OpenWindow(currentWindowId, 5, tileentitybrewingstand.getInvName(), tileentitybrewingstand.getSizeInventory()));
-        currentCraftingInventory = new ContainerBrewingStand(inventory, tileentitybrewingstand);
-        currentCraftingInventory.windowId = currentWindowId;
-        currentCraftingInventory.onCraftGuiOpened(this);
+        craftingInventory = new ContainerBrewingStand(inventory, tileentitybrewingstand);
+        craftingInventory.windowId = currentWindowId;
+        craftingInventory.onCraftGuiOpened(this);
     }
 
     public void updateCraftingInventorySlot(Container container, int i, ItemStack itemstack)
@@ -493,9 +493,9 @@ public class EntityPlayerMP extends EntityPlayer
     {
     }
 
-    public void usePersonalCraftingInventory()
+    public void closeScreen()
     {
-        playerNetServerHandler.sendPacket(new Packet101CloseWindow(currentCraftingInventory.windowId));
+        playerNetServerHandler.sendPacket(new Packet101CloseWindow(craftingInventory.windowId));
         closeCraftingGui();
     }
 
@@ -514,8 +514,8 @@ public class EntityPlayerMP extends EntityPlayer
 
     public void closeCraftingGui()
     {
-        currentCraftingInventory.onCraftGuiClosed(this);
-        currentCraftingInventory = personalCraftingInventory;
+        craftingInventory.onCraftGuiClosed(this);
+        craftingInventory = inventorySlots;
     }
 
     public void addStat(StatBase statbase, int i)
@@ -572,7 +572,7 @@ public class EntityPlayerMP extends EntityPlayer
     public void setItemInUse(ItemStack itemstack, int i)
     {
         super.setItemInUse(itemstack, i);
-        if (itemstack != null && itemstack.getItem() != null && itemstack.getItem().getAction(itemstack) == EnumAction.eat)
+        if (itemstack != null && itemstack.getItem() != null && itemstack.getItem().getItemUseAction(itemstack) == EnumAction.eat)
         {
             EntityTracker entitytracker = mcServer.getEntityTracker(dimension);
             entitytracker.sendPacketToTrackedPlayersAndTrackedEntity(this, new Packet18Animation(this, 5));

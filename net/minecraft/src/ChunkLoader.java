@@ -201,24 +201,24 @@ public class ChunkLoader
         int j = nbttagcompound.getInteger("zPos");
         Chunk chunk = new Chunk(world, i, j);
         chunk.blocks = nbttagcompound.getByteArray("Blocks");
-        chunk.data = new NibbleArray(nbttagcompound.getByteArray("Data"), world.worldYBits);
-        chunk.skylightMap = new NibbleArray(nbttagcompound.getByteArray("SkyLight"), world.worldYBits);
-        chunk.blocklightMap = new NibbleArray(nbttagcompound.getByteArray("BlockLight"), world.worldYBits);
+        chunk.data = new NibbleArray(nbttagcompound.getByteArray("Data"), world.heightShift);
+        chunk.skylightMap = new NibbleArray(nbttagcompound.getByteArray("SkyLight"), world.heightShift);
+        chunk.blocklightMap = new NibbleArray(nbttagcompound.getByteArray("BlockLight"), world.heightShift);
         chunk.heightMap = nbttagcompound.getByteArray("HeightMap");
         chunk.isTerrainPopulated = nbttagcompound.getBoolean("TerrainPopulated");
         if (!chunk.data.isValid())
         {
-            chunk.data = new NibbleArray(chunk.blocks.length, world.worldYBits);
+            chunk.data = new NibbleArray(chunk.blocks.length, world.heightShift);
         }
         if (chunk.heightMap == null || !chunk.skylightMap.isValid())
         {
             chunk.heightMap = new byte[256];
-            chunk.skylightMap = new NibbleArray(chunk.blocks.length, world.worldYBits);
+            chunk.skylightMap = new NibbleArray(chunk.blocks.length, world.heightShift);
             chunk.generateSkylightMap();
         }
         if (!chunk.blocklightMap.isValid())
         {
-            chunk.blocklightMap = new NibbleArray(chunk.blocks.length, world.worldYBits);
+            chunk.blocklightMap = new NibbleArray(chunk.blocks.length, world.heightShift);
             chunk.func_348_a();
         }
         NBTTagList nbttaglist = nbttagcompound.getTagList("Entities");
@@ -263,7 +263,7 @@ public class ChunkLoader
         return chunk;
     }
 
-    public void func_661_a()
+    public void chunkTick()
     {
     }
 

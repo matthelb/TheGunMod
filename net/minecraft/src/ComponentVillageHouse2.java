@@ -24,7 +24,7 @@ public class ComponentVillageHouse2 extends ComponentVillage
     public static ComponentVillageHouse2 func_35376_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 10, 6, 7, l);
-        if (!canVillageGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!canVillageGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
         {
             return null;
         }
@@ -85,7 +85,7 @@ public class ComponentVillageHouse2 extends ComponentVillage
             int i = getYWithOffset(1);
             int l = getXWithOffset(5, 5);
             int j1 = getZWithOffset(5, 5);
-            if (structureboundingbox.isInBbVolume(l, i, j1))
+            if (structureboundingbox.isVecInside(l, i, j1))
             {
                 field_46005_c = true;
                 createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 5, 1, 5, field_46006_a, 3 + random.nextInt(6));

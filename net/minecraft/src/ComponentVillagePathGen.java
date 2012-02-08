@@ -12,7 +12,7 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
         super(i);
         coordBaseMode = j;
         boundingBox = structureboundingbox;
-        averageGroundLevel = Math.max(structureboundingbox.bbWidth(), structureboundingbox.bbDepth());
+        averageGroundLevel = Math.max(structureboundingbox.getXSize(), structureboundingbox.getZSize());
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
@@ -20,20 +20,20 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
         boolean flag = false;
         for (int i = random.nextInt(5); i < averageGroundLevel - 8; i += 2 + random.nextInt(5))
         {
-            StructureComponent structurecomponent1 = func_35368_a((ComponentVillageStartPiece)structurecomponent, list, random, 0, i);
+            StructureComponent structurecomponent1 = getNextComponenetNN((ComponentVillageStartPiece)structurecomponent, list, random, 0, i);
             if (structurecomponent1 != null)
             {
-                i += Math.max(structurecomponent1.boundingBox.bbWidth(), structurecomponent1.boundingBox.bbDepth());
+                i += Math.max(structurecomponent1.boundingBox.getXSize(), structurecomponent1.boundingBox.getZSize());
                 flag = true;
             }
         }
 
         for (int j = random.nextInt(5); j < averageGroundLevel - 8; j += 2 + random.nextInt(5))
         {
-            StructureComponent structurecomponent2 = func_35369_b((ComponentVillageStartPiece)structurecomponent, list, random, 0, j);
+            StructureComponent structurecomponent2 = getNextComponenetPP((ComponentVillageStartPiece)structurecomponent, list, random, 0, j);
             if (structurecomponent2 != null)
             {
-                j += Math.max(structurecomponent2.boundingBox.bbWidth(), structurecomponent2.boundingBox.bbDepth());
+                j += Math.max(structurecomponent2.boundingBox.getXSize(), structurecomponent2.boundingBox.getZSize());
                 flag = true;
             }
         }
@@ -87,7 +87,7 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
         for (int i1 = 7 * MathHelper.getRandomIntegerInRange(random, 3, 5); i1 >= 7; i1 -= 7)
         {
             StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, 0, 0, 0, 3, 3, i1, l);
-            if (StructureComponent.canFitInside(list, structureboundingbox) == null)
+            if (StructureComponent.findIntersecting(list, structureboundingbox) == null)
             {
                 return structureboundingbox;
             }
@@ -102,9 +102,9 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
         {
             for (int j = boundingBox.minZ; j <= boundingBox.maxZ; j++)
             {
-                if (structureboundingbox.isInBbVolume(i, 64, j))
+                if (structureboundingbox.isVecInside(i, 64, j))
                 {
-                    int k = world.findTopSolidBlock(i, j) - 1;
+                    int k = world.getTopSolidOrLiquidBlock(i, j) - 1;
                     world.setBlock(i, k, j, Block.gravel.blockID);
                 }
             }

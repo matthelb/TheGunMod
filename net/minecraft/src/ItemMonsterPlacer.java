@@ -11,14 +11,14 @@ public class ItemMonsterPlacer extends Item
 
     public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return true;
         }
         i += Facing.offsetsXForSide[l];
         j += Facing.offsetsYForSide[l];
         k += Facing.offsetsZForSide[l];
-        Entity entity = EntityList.func_44014_a(itemstack.getItemDamage(), world);
+        Entity entity = EntityList.createEntity(itemstack.getItemDamage(), world);
         if (entity != null)
         {
             if (!entityplayer.capabilities.depleteBuckets)

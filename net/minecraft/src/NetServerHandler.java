@@ -407,12 +407,12 @@ public class NetServerHandler extends NetHandler
         {
             playerEntity.isChangingQuantityOnly = true;
             playerEntity.inventory.mainInventory[playerEntity.inventory.currentItem] = ItemStack.copyItemStack(playerEntity.inventory.mainInventory[playerEntity.inventory.currentItem]);
-            Slot slot = playerEntity.currentCraftingInventory.func_20127_a(playerEntity.inventory, playerEntity.inventory.currentItem);
-            playerEntity.currentCraftingInventory.updateCraftingResults();
+            Slot slot = playerEntity.craftingInventory.func_20127_a(playerEntity.inventory, playerEntity.inventory.currentItem);
+            playerEntity.craftingInventory.updateCraftingResults();
             playerEntity.isChangingQuantityOnly = false;
             if (!ItemStack.areItemStacksEqual(playerEntity.inventory.getCurrentItem(), packet15place.itemStack))
             {
-                sendPacket(new Packet103SetSlot(playerEntity.currentCraftingInventory.windowId, slot.id, playerEntity.inventory.getCurrentItem()));
+                sendPacket(new Packet103SetSlot(playerEntity.craftingInventory.windowId, slot.slotNumber, playerEntity.inventory.getCurrentItem()));
             }
         }
         worldserver.disableSpawnProtection = false;
@@ -530,7 +530,7 @@ public class NetServerHandler extends NetHandler
         }
     }
 
-    public void handleArmAnimation(Packet18Animation packet18animation)
+    public void handleAnimation(Packet18Animation packet18animation)
     {
         if (packet18animation.animate == 1)
         {
@@ -623,39 +623,39 @@ public class NetServerHandler extends NetHandler
 
     public void handleWindowClick(Packet102WindowClick packet102windowclick)
     {
-        if (playerEntity.currentCraftingInventory.windowId == packet102windowclick.window_Id && playerEntity.currentCraftingInventory.getCanCraft(playerEntity))
+        if (playerEntity.craftingInventory.windowId == packet102windowclick.window_Id && playerEntity.craftingInventory.getCanCraft(playerEntity))
         {
-            ItemStack itemstack = playerEntity.currentCraftingInventory.slotClick(packet102windowclick.inventorySlot, packet102windowclick.mouseClick, packet102windowclick.holdingShift, playerEntity);
+            ItemStack itemstack = playerEntity.craftingInventory.slotClick(packet102windowclick.inventorySlot, packet102windowclick.mouseClick, packet102windowclick.holdingShift, playerEntity);
             if (ItemStack.areItemStacksEqual(packet102windowclick.itemStack, itemstack))
             {
                 playerEntity.playerNetServerHandler.sendPacket(new Packet106Transaction(packet102windowclick.window_Id, packet102windowclick.action, true));
                 playerEntity.isChangingQuantityOnly = true;
-                playerEntity.currentCraftingInventory.updateCraftingResults();
+                playerEntity.craftingInventory.updateCraftingResults();
                 playerEntity.updateHeldItem();
                 playerEntity.isChangingQuantityOnly = false;
             }
             else
             {
-                field_10_k.addKey(playerEntity.currentCraftingInventory.windowId, Short.valueOf(packet102windowclick.action));
+                field_10_k.addKey(playerEntity.craftingInventory.windowId, Short.valueOf(packet102windowclick.action));
                 playerEntity.playerNetServerHandler.sendPacket(new Packet106Transaction(packet102windowclick.window_Id, packet102windowclick.action, false));
-                playerEntity.currentCraftingInventory.setCanCraft(playerEntity, false);
+                playerEntity.craftingInventory.setCanCraft(playerEntity, false);
                 ArrayList arraylist = new ArrayList();
-                for (int i = 0; i < playerEntity.currentCraftingInventory.inventorySlots.size(); i++)
+                for (int i = 0; i < playerEntity.craftingInventory.inventorySlots.size(); i++)
                 {
-                    arraylist.add(((Slot)playerEntity.currentCraftingInventory.inventorySlots.get(i)).getStack());
+                    arraylist.add(((Slot)playerEntity.craftingInventory.inventorySlots.get(i)).getStack());
                 }
 
-                playerEntity.updateCraftingInventory(playerEntity.currentCraftingInventory, arraylist);
+                playerEntity.updateCraftingInventory(playerEntity.craftingInventory, arraylist);
             }
         }
     }
 
     public void handleEnchantItem(Packet108EnchantItem packet108enchantitem)
     {
-        if (playerEntity.currentCraftingInventory.windowId == packet108enchantitem.windowId && playerEntity.currentCraftingInventory.getCanCraft(playerEntity))
+        if (playerEntity.craftingInventory.windowId == packet108enchantitem.windowId && playerEntity.craftingInventory.getCanCraft(playerEntity))
         {
-            playerEntity.currentCraftingInventory.enchantItem(playerEntity, packet108enchantitem.enchantment);
-            playerEntity.currentCraftingInventory.updateCraftingResults();
+            playerEntity.craftingInventory.enchantItem(playerEntity, packet108enchantitem.enchantment);
+            playerEntity.craftingInventory.updateCraftingResults();
         }
     }
 
@@ -672,13 +672,13 @@ public class NetServerHandler extends NetHandler
             {
                 if (itemstack == null)
                 {
-                    playerEntity.personalCraftingInventory.putStackInSlot(packet107creativesetslot.slot, null);
+                    playerEntity.inventorySlots.putStackInSlot(packet107creativesetslot.slot, null);
                 }
                 else
                 {
-                    playerEntity.personalCraftingInventory.putStackInSlot(packet107creativesetslot.slot, itemstack);
+                    playerEntity.inventorySlots.putStackInSlot(packet107creativesetslot.slot, itemstack);
                 }
-                playerEntity.personalCraftingInventory.setCanCraft(playerEntity, true);
+                playerEntity.inventorySlots.setCanCraft(playerEntity, true);
             }
             else if (flag && flag2 && flag3)
             {
@@ -689,10 +689,10 @@ public class NetServerHandler extends NetHandler
 
     public void handleTransaction(Packet106Transaction packet106transaction)
     {
-        Short short1 = (Short)field_10_k.lookup(playerEntity.currentCraftingInventory.windowId);
-        if (short1 != null && packet106transaction.shortWindowId == short1.shortValue() && playerEntity.currentCraftingInventory.windowId == packet106transaction.windowId && !playerEntity.currentCraftingInventory.getCanCraft(playerEntity))
+        Short short1 = (Short)field_10_k.lookup(playerEntity.craftingInventory.windowId);
+        if (short1 != null && packet106transaction.shortWindowId == short1.shortValue() && playerEntity.craftingInventory.windowId == packet106transaction.windowId && !playerEntity.craftingInventory.getCanCraft(playerEntity))
         {
-            playerEntity.currentCraftingInventory.setCanCraft(playerEntity, true);
+            playerEntity.craftingInventory.setCanCraft(playerEntity, true);
         }
     }
 

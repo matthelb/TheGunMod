@@ -11,7 +11,7 @@ public class Teleporter
         random = new Random();
     }
 
-    public void setExitLocation(World world, Entity entity)
+    public void placeInPortal(World world, Entity entity)
     {
         if (world.worldProvider.worldType == 1)
         {
@@ -39,19 +39,19 @@ public class Teleporter
             entity.motionX = entity.motionY = entity.motionZ = 0.0D;
             return;
         }
-        if (findExitLocation(world, entity))
+        if (placeInExistingPortal(world, entity))
         {
             return;
         }
         else
         {
-            createExitLocation(world, entity);
-            findExitLocation(world, entity);
+            createPortal(world, entity);
+            placeInExistingPortal(world, entity);
             return;
         }
     }
 
-    public boolean findExitLocation(World world, Entity entity)
+    public boolean placeInExistingPortal(World world, Entity entity)
     {
         char c = '\200';
         double d = -1D;
@@ -120,7 +120,7 @@ public class Teleporter
         }
     }
 
-    public boolean createExitLocation(World world, Entity entity)
+    public boolean createPortal(World world, Entity entity)
     {
         byte byte0 = 16;
         double d = -1D;

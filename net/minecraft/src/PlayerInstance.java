@@ -62,7 +62,7 @@ class PlayerInstance
             {
                 PlayerManager.getPlayerInstancesToUpdate(playerManager).remove(this);
             }
-            playerManager.getMinecraftServer().chunkProviderServer.func_374_c(chunkX, chunkZ);
+            playerManager.getMinecraftServer().chunkProviderServer.dropChunk(chunkX, chunkZ);
         }
         entityplayermp.loadedChunks.remove(currentChunk);
         if (entityplayermp.listeningChunks.contains(currentChunk))

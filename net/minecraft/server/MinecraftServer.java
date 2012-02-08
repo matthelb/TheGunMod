@@ -166,7 +166,7 @@ public class MinecraftServer
                 l1 = s1.hashCode();
             }
         }
-        EnumWorldType enumworldtype = EnumWorldType.func_46049_a(s2);
+        EnumWorldType enumworldtype = EnumWorldType.parseWorldType(s2);
         if (enumworldtype == null)
         {
             enumworldtype = EnumWorldType.DEFAULT;
@@ -191,7 +191,7 @@ public class MinecraftServer
 
     private void initWorld(ISaveFormat isaveformat, String s, long l, EnumWorldType enumworldtype)
     {
-        if (isaveformat.isOldSaveType(s))
+        if (isaveformat.isOldMapFormat(s))
         {
             logger.info("Converting map!");
             isaveformat.convertMapFormat(s, new ConvertProgressUpdater(this));
@@ -397,6 +397,7 @@ public class MinecraftServer
             {
                 System.exit(0);
             }
+            break MISSING_BLOCK_LABEL_350;
         }
         try
         {
@@ -411,6 +412,9 @@ public class MinecraftServer
         {
             System.exit(0);
         }
+        break MISSING_BLOCK_LABEL_350;
+        Exception exception2;
+        exception2;
         try
         {
             stopServer();
@@ -424,6 +428,7 @@ public class MinecraftServer
         {
             System.exit(0);
         }
+        throw exception2;
     }
 
     private void doTick()
@@ -603,7 +608,7 @@ public class MinecraftServer
 
     public String getSettingsFilename()
     {
-        File file = propertyManagerObj.func_40656_c();
+        File file = propertyManagerObj.getPropertiesFile();
         if (file != null)
         {
             return file.getAbsolutePath();

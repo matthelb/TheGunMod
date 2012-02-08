@@ -40,7 +40,7 @@ public class BlockLeaves extends BlockLeavesBase
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -154,7 +154,7 @@ public class BlockLeaves extends BlockLeavesBase
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
         super.dropBlockAsItemWithChance(world, i, j, k, l, f, i1);
-        if (!world.singleplayerWorld && (l & 3) == 0 && world.rand.nextInt(200) == 0)
+        if (!world.isRemote && (l & 3) == 0 && world.rand.nextInt(200) == 0)
         {
             dropBlockAsItem_do(world, i, j, k, new ItemStack(Item.appleRed, 1, 0));
         }
@@ -162,7 +162,7 @@ public class BlockLeaves extends BlockLeavesBase
 
     public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
     {
-        if (!world.singleplayerWorld && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
+        if (!world.isRemote && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
         {
             entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
             dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.leaves.blockID, 1, l & 3));

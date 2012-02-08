@@ -167,7 +167,7 @@ public class StructureStrongholdPieces
         {
             return null;
         }
-        if (Math.abs(i - componentstrongholdstairs2.getStructureBoundingBox().minX) > 112 || Math.abs(k - componentstrongholdstairs2.getStructureBoundingBox().minZ) > 112)
+        if (Math.abs(i - componentstrongholdstairs2.getBoundingBox().minX) > 112 || Math.abs(k - componentstrongholdstairs2.getBoundingBox().minZ) > 112)
         {
             return null;
         }

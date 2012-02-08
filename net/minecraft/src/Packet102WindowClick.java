@@ -28,7 +28,7 @@ public class Packet102WindowClick extends Packet
         mouseClick = datainputstream.readByte();
         action = datainputstream.readShort();
         holdingShift = datainputstream.readBoolean();
-        itemStack = func_40262_b(datainputstream);
+        itemStack = readItemStack(datainputstream);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)

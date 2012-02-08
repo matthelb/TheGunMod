@@ -46,7 +46,7 @@ public class WorldServer extends World
 
     protected IChunkProvider createChunkProvider()
     {
-        IChunkLoader ichunkloader = worldFile.getChunkLoader(worldProvider);
+        IChunkLoader ichunkloader = saveHandler.getChunkLoader(worldProvider);
         chunkProviderServer = new ChunkProviderServer(this, ichunkloader, worldProvider.getChunkProvider());
         return chunkProviderServer;
     }
@@ -119,9 +119,9 @@ public class WorldServer extends World
         return (Entity)field_34902_Q.lookup(i);
     }
 
-    public boolean addLightningBolt(Entity entity)
+    public boolean addWeatherEffect(Entity entity)
     {
-        if (super.addLightningBolt(entity))
+        if (super.addWeatherEffect(entity))
         {
             mcServer.configManager.sendPacketToPlayersAroundPoint(entity.posX, entity.posY, entity.posZ, 512D, worldProvider.worldType, new Packet71Weather(entity));
             return true;
@@ -132,7 +132,7 @@ public class WorldServer extends World
         }
     }
 
-    public void sendTrackedEntityStatusUpdatePacket(Entity entity, byte byte0)
+    public void setEntityState(Entity entity, byte byte0)
     {
         Packet38EntityStatus packet38entitystatus = new Packet38EntityStatus(entity.entityId, byte0);
         mcServer.getEntityTracker(worldProvider.worldType).sendPacketToTrackedPlayersAndTrackedEntity(entity, packet38entitystatus);
@@ -157,7 +157,7 @@ public class WorldServer extends World
 
     public void func_30006_w()
     {
-        worldFile.func_22093_e();
+        saveHandler.func_22093_e();
     }
 
     protected void updateWeather()

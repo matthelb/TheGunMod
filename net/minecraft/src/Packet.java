@@ -151,7 +151,7 @@ public abstract class Packet
 
     public abstract int getPacketSize();
 
-    protected ItemStack func_40262_b(DataInputStream datainputstream)
+    protected ItemStack readItemStack(DataInputStream datainputstream)
     throws IOException
     {
         ItemStack itemstack = null;
@@ -163,7 +163,7 @@ public abstract class Packet
             itemstack = new ItemStack(word0, byte0, word1);
             if (Item.itemsList[word0].isDamageable() || Item.itemsList[word0].func_46003_i())
             {
-                itemstack.itemNBT = func_40259_c(datainputstream);
+                itemstack.stackTagCompound = readNBTTagCompound(datainputstream);
             }
         }
         return itemstack;
@@ -183,12 +183,12 @@ public abstract class Packet
             dataoutputstream.writeShort(itemstack.getItemDamage());
             if (itemstack.getItem().isDamageable() || itemstack.getItem().func_46003_i())
             {
-                func_40260_a(itemstack.itemNBT, dataoutputstream);
+                writeNBTTagCompound(itemstack.stackTagCompound, dataoutputstream);
             }
         }
     }
 
-    protected NBTTagCompound func_40259_c(DataInputStream datainputstream)
+    protected NBTTagCompound readNBTTagCompound(DataInputStream datainputstream)
     throws IOException
     {
         short word0 = datainputstream.readShort();
@@ -204,7 +204,7 @@ public abstract class Packet
         }
     }
 
-    protected void func_40260_a(NBTTagCompound nbttagcompound, DataOutputStream dataoutputstream)
+    protected void writeNBTTagCompound(NBTTagCompound nbttagcompound, DataOutputStream dataoutputstream)
     throws IOException
     {
         if (nbttagcompound == null)

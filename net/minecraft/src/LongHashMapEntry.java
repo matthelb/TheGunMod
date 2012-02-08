@@ -5,22 +5,22 @@ class LongHashMapEntry
     final long key;
     Object value;
     LongHashMapEntry nextEntry;
-    final int field_1026_d;
+    final int hash;
 
     LongHashMapEntry(int i, long l, Object obj, LongHashMapEntry longhashmapentry)
     {
         value = obj;
         nextEntry = longhashmapentry;
         key = l;
-        field_1026_d = i;
+        hash = i;
     }
 
-    public final long func_736_a()
+    public final long getKey()
     {
         return key;
     }
 
-    public final Object func_735_b()
+    public final Object getValue()
     {
         return value;
     }
@@ -32,12 +32,12 @@ class LongHashMapEntry
             return false;
         }
         LongHashMapEntry longhashmapentry = (LongHashMapEntry)obj;
-        Long long1 = Long.valueOf(func_736_a());
-        Long long2 = Long.valueOf(longhashmapentry.func_736_a());
+        Long long1 = Long.valueOf(getKey());
+        Long long2 = Long.valueOf(longhashmapentry.getKey());
         if (long1 == long2 || long1 != null && long1.equals(long2))
         {
-            Object obj1 = func_735_b();
-            Object obj2 = longhashmapentry.func_735_b();
+            Object obj1 = getValue();
+            Object obj2 = longhashmapentry.getValue();
             if (obj1 == obj2 || obj1 != null && obj1.equals(obj2))
             {
                 return true;
@@ -53,6 +53,6 @@ class LongHashMapEntry
 
     public final String toString()
     {
-        return (new StringBuilder()).append(func_736_a()).append("=").append(func_735_b()).toString();
+        return (new StringBuilder()).append(getKey()).append("=").append(getValue()).toString();
     }
 }

@@ -13,7 +13,7 @@ public class ComponentMineshaftCross extends StructureComponent
         super(i);
         field_35364_a = j;
         boundingBox = structureboundingbox;
-        field_35363_b = structureboundingbox.bbHeight() > 3;
+        field_35363_b = structureboundingbox.getYSize() > 3;
     }
 
     public static StructureBoundingBox func_35362_a(List list, Random random, int i, int j, int k, int l)
@@ -49,7 +49,7 @@ public class ComponentMineshaftCross extends StructureComponent
                 structureboundingbox.maxZ = k + 3;
                 break;
         }
-        if (StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (StructureComponent.findIntersecting(list, structureboundingbox) != null)
         {
             return null;
         }

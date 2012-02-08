@@ -39,7 +39,7 @@ public class ComponentNetherBridgeCrossing3 extends ComponentNetherBridgePiece
     public static ComponentNetherBridgeCrossing3 func_40292_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -8, -3, 0, 19, 10, 19, l);
-        if (!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!func_40286_a(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
         {
             return null;
         }

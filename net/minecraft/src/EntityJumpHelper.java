@@ -2,30 +2,30 @@ package net.minecraft.src;
 
 public class EntityJumpHelper
 {
-    private EntityLiving field_46118_a;
-    private boolean field_46117_b;
+    private EntityLiving entity;
+    private boolean isJumping;
 
     public EntityJumpHelper(EntityLiving entityliving)
     {
-        field_46117_b = false;
-        field_46118_a = entityliving;
+        isJumping = false;
+        entity = entityliving;
     }
 
-    public void func_46115_a()
+    public void setJumping()
     {
-        field_46117_b = true;
+        isJumping = true;
     }
 
-    public void func_46116_b()
+    public void doJump()
     {
-        if (!field_46117_b)
+        if (!isJumping)
         {
             return;
         }
         else
         {
-            field_46118_a.func_46014_e(true);
-            field_46117_b = false;
+            entity.setIsJumping(true);
+            isJumping = false;
             return;
         }
     }

@@ -4,11 +4,11 @@ import java.util.Random;
 
 public class BiomeDecorator
 {
-    protected World curWorldObj;
+    protected World currentWorld;
     protected Random randomGenerator;
     protected int chunk_X;
     protected int chunk_Z;
-    protected BiomeGenBase biomeGen;
+    protected BiomeGenBase biome;
     protected WorldGenerator clayGen;
     protected WorldGenerator sandGen;
     protected WorldGenerator gravelAsSandGen;
@@ -40,7 +40,7 @@ public class BiomeDecorator
     protected int sandPerChunk2;
     protected int clayPerChunk;
     protected int bigMushroomsPerChunk;
-    public boolean generateFluid;
+    public boolean generateLakes;
 
     public BiomeDecorator(BiomeGenBase biomegenbase)
     {
@@ -75,24 +75,24 @@ public class BiomeDecorator
         sandPerChunk2 = 3;
         clayPerChunk = 1;
         bigMushroomsPerChunk = 0;
-        generateFluid = true;
-        biomeGen = biomegenbase;
+        generateLakes = true;
+        biome = biomegenbase;
     }
 
     public void decorate(World world, Random random, int i, int j)
     {
-        if (curWorldObj != null)
+        if (currentWorld != null)
         {
             throw new RuntimeException("Already decorating!!");
         }
         else
         {
-            curWorldObj = world;
+            currentWorld = world;
             randomGenerator = random;
             chunk_X = i;
             chunk_Z = j;
             decorate();
-            curWorldObj = null;
+            currentWorld = null;
             randomGenerator = null;
             return;
         }
@@ -105,21 +105,21 @@ public class BiomeDecorator
         {
             int i1 = chunk_X + randomGenerator.nextInt(16) + 8;
             int k5 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            sandGen.generate(curWorldObj, randomGenerator, i1, curWorldObj.findTopSolidBlock(i1, k5), k5);
+            sandGen.generate(currentWorld, randomGenerator, i1, currentWorld.getTopSolidOrLiquidBlock(i1, k5), k5);
         }
 
         for (int j = 0; j < clayPerChunk; j++)
         {
             int j1 = chunk_X + randomGenerator.nextInt(16) + 8;
             int l5 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            clayGen.generate(curWorldObj, randomGenerator, j1, curWorldObj.findTopSolidBlock(j1, l5), l5);
+            clayGen.generate(currentWorld, randomGenerator, j1, currentWorld.getTopSolidOrLiquidBlock(j1, l5), l5);
         }
 
         for (int k = 0; k < sandPerChunk; k++)
         {
             int k1 = chunk_X + randomGenerator.nextInt(16) + 8;
             int i6 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            sandGen.generate(curWorldObj, randomGenerator, k1, curWorldObj.findTopSolidBlock(k1, i6), i6);
+            sandGen.generate(currentWorld, randomGenerator, k1, currentWorld.getTopSolidOrLiquidBlock(k1, i6), i6);
         }
 
         int l = treesPerChunk;
@@ -131,30 +131,30 @@ public class BiomeDecorator
         {
             int j6 = chunk_X + randomGenerator.nextInt(16) + 8;
             int k10 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            WorldGenerator worldgenerator = biomeGen.getRandomWorldGenForTrees(randomGenerator);
-            worldgenerator.func_420_a(1.0D, 1.0D, 1.0D);
-            worldgenerator.generate(curWorldObj, randomGenerator, j6, curWorldObj.getHeightValue(j6, k10), k10);
+            WorldGenerator worldgenerator = biome.getRandomWorldGenForTrees(randomGenerator);
+            worldgenerator.setScale(1.0D, 1.0D, 1.0D);
+            worldgenerator.generate(currentWorld, randomGenerator, j6, currentWorld.getHeightValue(j6, k10), k10);
         }
 
         for (int i2 = 0; i2 < bigMushroomsPerChunk; i2++)
         {
             int k6 = chunk_X + randomGenerator.nextInt(16) + 8;
             int l10 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            bigMushroomGen.generate(curWorldObj, randomGenerator, k6, curWorldObj.getHeightValue(k6, l10), l10);
+            bigMushroomGen.generate(currentWorld, randomGenerator, k6, currentWorld.getHeightValue(k6, l10), l10);
         }
 
         for (int j2 = 0; j2 < flowersPerChunk; j2++)
         {
             int l6 = chunk_X + randomGenerator.nextInt(16) + 8;
-            int i11 = randomGenerator.nextInt(curWorldObj.worldHeight);
+            int i11 = randomGenerator.nextInt(currentWorld.worldHeight);
             int l14 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            plantYellowGen.generate(curWorldObj, randomGenerator, l6, i11, l14);
+            plantYellowGen.generate(currentWorld, randomGenerator, l6, i11, l14);
             if (randomGenerator.nextInt(4) == 0)
             {
                 int i7 = chunk_X + randomGenerator.nextInt(16) + 8;
-                int j11 = randomGenerator.nextInt(curWorldObj.worldHeight);
+                int j11 = randomGenerator.nextInt(currentWorld.worldHeight);
                 int i15 = chunk_Z + randomGenerator.nextInt(16) + 8;
-                plantRedGen.generate(curWorldObj, randomGenerator, i7, j11, i15);
+                plantRedGen.generate(currentWorld, randomGenerator, i7, j11, i15);
             }
         }
 
@@ -162,17 +162,17 @@ public class BiomeDecorator
         {
             int j7 = 1;
             int k11 = chunk_X + randomGenerator.nextInt(16) + 8;
-            int j15 = randomGenerator.nextInt(curWorldObj.worldHeight);
+            int j15 = randomGenerator.nextInt(currentWorld.worldHeight);
             int l17 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            (new WorldGenTallGrass(Block.tallGrass.blockID, j7)).generate(curWorldObj, randomGenerator, k11, j15, l17);
+            (new WorldGenTallGrass(Block.tallGrass.blockID, j7)).generate(currentWorld, randomGenerator, k11, j15, l17);
         }
 
         for (int l2 = 0; l2 < deadBushPerChunk; l2++)
         {
             int k7 = chunk_X + randomGenerator.nextInt(16) + 8;
-            int l11 = randomGenerator.nextInt(curWorldObj.worldHeight);
+            int l11 = randomGenerator.nextInt(currentWorld.worldHeight);
             int k15 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            (new WorldGenDeadBush(Block.deadBush.blockID)).generate(curWorldObj, randomGenerator, k7, l11, k15);
+            (new WorldGenDeadBush(Block.deadBush.blockID)).generate(currentWorld, randomGenerator, k7, l11, k15);
         }
 
         for (int i3 = 0; i3 < waterlilyPerChunk; i3++)
@@ -180,8 +180,8 @@ public class BiomeDecorator
             int l7 = chunk_X + randomGenerator.nextInt(16) + 8;
             int i12 = chunk_Z + randomGenerator.nextInt(16) + 8;
             int l15;
-            for (l15 = randomGenerator.nextInt(curWorldObj.worldHeight); l15 > 0 && curWorldObj.getBlockId(l7, l15 - 1, i12) == 0; l15--) { }
-            waterlilyGen.generate(curWorldObj, randomGenerator, l7, l15, i12);
+            for (l15 = randomGenerator.nextInt(currentWorld.worldHeight); l15 > 0 && currentWorld.getBlockId(l7, l15 - 1, i12) == 0; l15--) { }
+            waterlilyGen.generate(currentWorld, randomGenerator, l7, l15, i12);
         }
 
         for (int j3 = 0; j3 < mushroomsPerChunk; j3++)
@@ -190,79 +190,79 @@ public class BiomeDecorator
             {
                 int i8 = chunk_X + randomGenerator.nextInt(16) + 8;
                 int j12 = chunk_Z + randomGenerator.nextInt(16) + 8;
-                int i16 = curWorldObj.getHeightValue(i8, j12);
-                mushroomBrownGen.generate(curWorldObj, randomGenerator, i8, i16, j12);
+                int i16 = currentWorld.getHeightValue(i8, j12);
+                mushroomBrownGen.generate(currentWorld, randomGenerator, i8, i16, j12);
             }
             if (randomGenerator.nextInt(8) == 0)
             {
                 int j8 = chunk_X + randomGenerator.nextInt(16) + 8;
                 int k12 = chunk_Z + randomGenerator.nextInt(16) + 8;
-                int j16 = randomGenerator.nextInt(curWorldObj.worldHeight);
-                mushroomRedGen.generate(curWorldObj, randomGenerator, j8, j16, k12);
+                int j16 = randomGenerator.nextInt(currentWorld.worldHeight);
+                mushroomRedGen.generate(currentWorld, randomGenerator, j8, j16, k12);
             }
         }
 
         if (randomGenerator.nextInt(4) == 0)
         {
             int k3 = chunk_X + randomGenerator.nextInt(16) + 8;
-            int k8 = randomGenerator.nextInt(curWorldObj.worldHeight);
+            int k8 = randomGenerator.nextInt(currentWorld.worldHeight);
             int l12 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            mushroomBrownGen.generate(curWorldObj, randomGenerator, k3, k8, l12);
+            mushroomBrownGen.generate(currentWorld, randomGenerator, k3, k8, l12);
         }
         if (randomGenerator.nextInt(8) == 0)
         {
             int l3 = chunk_X + randomGenerator.nextInt(16) + 8;
-            int l8 = randomGenerator.nextInt(curWorldObj.worldHeight);
+            int l8 = randomGenerator.nextInt(currentWorld.worldHeight);
             int i13 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            mushroomRedGen.generate(curWorldObj, randomGenerator, l3, l8, i13);
+            mushroomRedGen.generate(currentWorld, randomGenerator, l3, l8, i13);
         }
         for (int i4 = 0; i4 < reedsPerChunk; i4++)
         {
             int i9 = chunk_X + randomGenerator.nextInt(16) + 8;
             int j13 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            int k16 = randomGenerator.nextInt(curWorldObj.worldHeight);
-            reedGen.generate(curWorldObj, randomGenerator, i9, k16, j13);
+            int k16 = randomGenerator.nextInt(currentWorld.worldHeight);
+            reedGen.generate(currentWorld, randomGenerator, i9, k16, j13);
         }
 
         for (int j4 = 0; j4 < 10; j4++)
         {
             int j9 = chunk_X + randomGenerator.nextInt(16) + 8;
-            int k13 = randomGenerator.nextInt(curWorldObj.worldHeight);
+            int k13 = randomGenerator.nextInt(currentWorld.worldHeight);
             int l16 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            reedGen.generate(curWorldObj, randomGenerator, j9, k13, l16);
+            reedGen.generate(currentWorld, randomGenerator, j9, k13, l16);
         }
 
         if (randomGenerator.nextInt(32) == 0)
         {
             int k4 = chunk_X + randomGenerator.nextInt(16) + 8;
-            int k9 = randomGenerator.nextInt(curWorldObj.worldHeight);
+            int k9 = randomGenerator.nextInt(currentWorld.worldHeight);
             int l13 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            (new WorldGenPumpkin()).generate(curWorldObj, randomGenerator, k4, k9, l13);
+            (new WorldGenPumpkin()).generate(currentWorld, randomGenerator, k4, k9, l13);
         }
         for (int l4 = 0; l4 < cactiPerChunk; l4++)
         {
             int l9 = chunk_X + randomGenerator.nextInt(16) + 8;
-            int i14 = randomGenerator.nextInt(curWorldObj.worldHeight);
+            int i14 = randomGenerator.nextInt(currentWorld.worldHeight);
             int i17 = chunk_Z + randomGenerator.nextInt(16) + 8;
-            cactusGen.generate(curWorldObj, randomGenerator, l9, i14, i17);
+            cactusGen.generate(currentWorld, randomGenerator, l9, i14, i17);
         }
 
-        if (generateFluid)
+        if (generateLakes)
         {
             for (int i5 = 0; i5 < 50; i5++)
             {
                 int i10 = chunk_X + randomGenerator.nextInt(16) + 8;
-                int j14 = randomGenerator.nextInt(randomGenerator.nextInt(curWorldObj.worldHeight - 8) + 8);
+                int j14 = randomGenerator.nextInt(randomGenerator.nextInt(currentWorld.worldHeight - 8) + 8);
                 int j17 = chunk_Z + randomGenerator.nextInt(16) + 8;
-                (new WorldGenLiquids(Block.waterMoving.blockID)).generate(curWorldObj, randomGenerator, i10, j14, j17);
+                (new WorldGenLiquids(Block.waterMoving.blockID)).generate(currentWorld, randomGenerator, i10, j14, j17);
             }
 
             for (int j5 = 0; j5 < 20; j5++)
             {
                 int j10 = chunk_X + randomGenerator.nextInt(16) + 8;
-                int k14 = randomGenerator.nextInt(randomGenerator.nextInt(randomGenerator.nextInt(curWorldObj.worldHeight - 16) + 8) + 8);
+                int k14 = randomGenerator.nextInt(randomGenerator.nextInt(randomGenerator.nextInt(currentWorld.worldHeight - 16) + 8) + 8);
                 int k17 = chunk_Z + randomGenerator.nextInt(16) + 8;
-                (new WorldGenLiquids(Block.lavaMoving.blockID)).generate(curWorldObj, randomGenerator, j10, k14, k17);
+                (new WorldGenLiquids(Block.lavaMoving.blockID)).generate(currentWorld, randomGenerator, j10, k14, k17);
             }
         }
     }
@@ -274,7 +274,7 @@ public class BiomeDecorator
             int i1 = chunk_X + randomGenerator.nextInt(16);
             int j1 = randomGenerator.nextInt(k - j) + j;
             int k1 = chunk_Z + randomGenerator.nextInt(16);
-            worldgenerator.generate(curWorldObj, randomGenerator, i1, j1, k1);
+            worldgenerator.generate(currentWorld, randomGenerator, i1, j1, k1);
         }
     }
 
@@ -285,19 +285,19 @@ public class BiomeDecorator
             int i1 = chunk_X + randomGenerator.nextInt(16);
             int j1 = randomGenerator.nextInt(k) + randomGenerator.nextInt(k) + (j - k);
             int k1 = chunk_Z + randomGenerator.nextInt(16);
-            worldgenerator.generate(curWorldObj, randomGenerator, i1, j1, k1);
+            worldgenerator.generate(currentWorld, randomGenerator, i1, j1, k1);
         }
     }
 
     protected void generateOres()
     {
-        genStandardOre1(20, dirtGen, 0, curWorldObj.worldHeight);
-        genStandardOre1(10, gravelGen, 0, curWorldObj.worldHeight);
-        genStandardOre1(20, coalGen, 0, curWorldObj.worldHeight);
-        genStandardOre1(20, ironGen, 0, curWorldObj.worldHeight / 2);
-        genStandardOre1(2, goldGen, 0, curWorldObj.worldHeight / 4);
-        genStandardOre1(8, redstoneGen, 0, curWorldObj.worldHeight / 8);
-        genStandardOre1(1, diamondGen, 0, curWorldObj.worldHeight / 8);
-        genStandardOre2(1, lapisGen, curWorldObj.worldHeight / 8, curWorldObj.worldHeight / 8);
+        genStandardOre1(20, dirtGen, 0, currentWorld.worldHeight);
+        genStandardOre1(10, gravelGen, 0, currentWorld.worldHeight);
+        genStandardOre1(20, coalGen, 0, currentWorld.worldHeight);
+        genStandardOre1(20, ironGen, 0, currentWorld.worldHeight / 2);
+        genStandardOre1(2, goldGen, 0, currentWorld.worldHeight / 4);
+        genStandardOre1(8, redstoneGen, 0, currentWorld.worldHeight / 8);
+        genStandardOre1(1, diamondGen, 0, currentWorld.worldHeight / 8);
+        genStandardOre2(1, lapisGen, currentWorld.worldHeight / 8, currentWorld.worldHeight / 8);
     }
 }

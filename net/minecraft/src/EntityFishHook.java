@@ -112,7 +112,7 @@ public class EntityFishHook extends Entity
             setRotation(rotationYaw, rotationPitch);
             return;
         }
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             ItemStack itemstack = angler.getCurrentEquippedItem();
             if (angler.isDead || !angler.isEntityAlive() || itemstack == null || itemstack.getItem() != Item.fishingRod || getDistanceSqToEntity(angler) > 1024D)

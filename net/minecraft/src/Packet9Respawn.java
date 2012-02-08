@@ -6,10 +6,10 @@ public class Packet9Respawn extends Packet
 {
     public long mapSeed;
     public int respawnDimension;
-    public int difficultySetting;
+    public int difficulty;
     public int worldHeight;
     public int creativeMode;
-    public EnumWorldType field_46002_f;
+    public EnumWorldType terrainType;
 
     public Packet9Respawn()
     {
@@ -18,11 +18,11 @@ public class Packet9Respawn extends Packet
     public Packet9Respawn(byte byte0, byte byte1, long l, EnumWorldType enumworldtype, int i, int j)
     {
         respawnDimension = byte0;
-        difficultySetting = byte1;
+        difficulty = byte1;
         mapSeed = l;
         worldHeight = i;
         creativeMode = j;
-        field_46002_f = enumworldtype;
+        terrainType = enumworldtype;
     }
 
     public void processPacket(NetHandler nethandler)
@@ -34,15 +34,15 @@ public class Packet9Respawn extends Packet
     throws IOException
     {
         respawnDimension = datainputstream.readByte();
-        difficultySetting = datainputstream.readByte();
+        difficulty = datainputstream.readByte();
         creativeMode = datainputstream.readByte();
         worldHeight = datainputstream.readShort();
         mapSeed = datainputstream.readLong();
         String s = readString(datainputstream, 16);
-        field_46002_f = EnumWorldType.func_46049_a(s);
-        if (field_46002_f == null)
+        terrainType = EnumWorldType.parseWorldType(s);
+        if (terrainType == null)
         {
-            field_46002_f = EnumWorldType.DEFAULT;
+            terrainType = EnumWorldType.DEFAULT;
         }
     }
 
@@ -50,15 +50,15 @@ public class Packet9Respawn extends Packet
     throws IOException
     {
         dataoutputstream.writeByte(respawnDimension);
-        dataoutputstream.writeByte(difficultySetting);
+        dataoutputstream.writeByte(difficulty);
         dataoutputstream.writeByte(creativeMode);
         dataoutputstream.writeShort(worldHeight);
         dataoutputstream.writeLong(mapSeed);
-        writeString(field_46002_f.name(), dataoutputstream);
+        writeString(terrainType.name(), dataoutputstream);
     }
 
     public int getPacketSize()
     {
-        return 13 + field_46002_f.name().length();
+        return 13 + terrainType.name().length();
     }
 }

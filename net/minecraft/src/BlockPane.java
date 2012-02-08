@@ -5,19 +5,19 @@ import java.util.Random;
 
 public class BlockPane extends Block
 {
-    private int field_35064_a;
-    private final boolean field_40178_b;
+    private int sideTextureIndex;
+    private final boolean canDropItself;
 
     protected BlockPane(int i, int j, int k, Material material, boolean flag)
     {
         super(i, j, material);
-        field_35064_a = k;
-        field_40178_b = flag;
+        sideTextureIndex = k;
+        canDropItself = flag;
     }
 
     public int idDropped(int i, Random random, int j)
     {
-        if (!field_40178_b)
+        if (!canDropItself)
         {
             return 0;
         }

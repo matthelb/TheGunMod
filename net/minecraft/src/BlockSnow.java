@@ -56,10 +56,10 @@ public class BlockSnow extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        redundantOnNeighborBlockChange(world, i, j, k);
+        canSnowStay(world, i, j, k);
     }
 
-    private boolean redundantOnNeighborBlockChange(World world, int i, int j, int k)
+    private boolean canSnowStay(World world, int i, int j, int k)
     {
         if (!canPlaceBlockAt(world, i, j, k))
         {

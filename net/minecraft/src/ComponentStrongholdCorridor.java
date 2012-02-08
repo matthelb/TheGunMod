@@ -12,7 +12,7 @@ public class ComponentStrongholdCorridor extends ComponentStronghold
         super(i);
         coordBaseMode = j;
         boundingBox = structureboundingbox;
-        field_35343_a = j != 2 && j != 0 ? structureboundingbox.bbWidth() : structureboundingbox.bbDepth();
+        field_35343_a = j != 2 && j != 0 ? structureboundingbox.getXSize() : structureboundingbox.getZSize();
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
@@ -22,17 +22,17 @@ public class ComponentStrongholdCorridor extends ComponentStronghold
     public static StructureBoundingBox func_35342_a(List list, Random random, int i, int j, int k, int l)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -1, 0, 5, 5, 4, l);
-        StructureComponent structurecomponent = StructureComponent.canFitInside(list, structureboundingbox);
+        StructureComponent structurecomponent = StructureComponent.findIntersecting(list, structureboundingbox);
         if (structurecomponent == null)
         {
             return null;
         }
-        if (structurecomponent.getStructureBoundingBox().minY == structureboundingbox.minY)
+        if (structurecomponent.getBoundingBox().minY == structureboundingbox.minY)
         {
             for (int i1 = 3; i1 >= 1; i1--)
             {
                 StructureBoundingBox structureboundingbox1 = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -1, 0, 5, 5, i1 - 1, l);
-                if (!structurecomponent.getStructureBoundingBox().canFitInside(structureboundingbox1))
+                if (!structurecomponent.getBoundingBox().intersectsWith(structureboundingbox1))
                 {
                     return StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -1, 0, 5, 5, i1, l);
                 }

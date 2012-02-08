@@ -40,7 +40,7 @@ public class EntitySheep extends EntityAnimal
             0.1F, 0.1F, 0.1F
         }
     };
-    private int field_44007_b;
+    private int sheepTimer;
 
     public EntitySheep(World world)
     {
@@ -76,15 +76,15 @@ public class EntitySheep extends EntityAnimal
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (field_44007_b > 0)
+        if (sheepTimer > 0)
         {
-            field_44007_b--;
+            sheepTimer--;
         }
     }
 
     protected void jump()
     {
-        if (field_44007_b <= 0)
+        if (sheepTimer <= 0)
         {
             super.jump();
         }
@@ -93,18 +93,18 @@ public class EntitySheep extends EntityAnimal
     protected void updateEntityActionState()
     {
         super.updateEntityActionState();
-        if (!hasPath() && field_44007_b <= 0 && (isChild() && rand.nextInt(50) == 0 || rand.nextInt(1000) == 0))
+        if (!hasPath() && sheepTimer <= 0 && (isChild() && rand.nextInt(50) == 0 || rand.nextInt(1000) == 0))
         {
             int i = MathHelper.floor_double(posX);
             int k = MathHelper.floor_double(posY);
             int i1 = MathHelper.floor_double(posZ);
             if (worldObj.getBlockId(i, k, i1) == Block.tallGrass.blockID && worldObj.getBlockMetadata(i, k, i1) == 1 || worldObj.getBlockId(i, k - 1, i1) == Block.grass.blockID)
             {
-                field_44007_b = 40;
-                worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)10);
+                sheepTimer = 40;
+                worldObj.setEntityState(this, (byte)10);
             }
         }
-        else if (field_44007_b == 4)
+        else if (sheepTimer == 4)
         {
             int j = MathHelper.floor_double(posX);
             int l = MathHelper.floor_double(posY);
@@ -140,7 +140,7 @@ public class EntitySheep extends EntityAnimal
 
     protected boolean isMovementCeased()
     {
-        return field_44007_b > 0;
+        return sheepTimer > 0;
     }
 
     public boolean interact(EntityPlayer entityplayer)
@@ -148,7 +148,7 @@ public class EntitySheep extends EntityAnimal
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if (itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && !getSheared() && !isChild())
         {
-            if (!worldObj.singleplayerWorld)
+            if (!worldObj.isRemote)
             {
                 setSheared(true);
                 int i = 1 + rand.nextInt(3);

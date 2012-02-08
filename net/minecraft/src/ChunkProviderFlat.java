@@ -6,20 +6,20 @@ import java.util.Random;
 public class ChunkProviderFlat
     implements IChunkProvider
 {
-    private World field_46046_a;
-    private Random field_46044_b;
-    private final boolean field_46045_c;
-    private MapGenVillage field_46043_d;
+    private World worldObj;
+    private Random random;
+    private final boolean useStructures;
+    private MapGenVillage villageGen;
 
     public ChunkProviderFlat(World world, long l, boolean flag)
     {
-        field_46043_d = new MapGenVillage(1);
-        field_46046_a = world;
-        field_46045_c = flag;
-        field_46044_b = new Random(l);
+        villageGen = new MapGenVillage(1);
+        worldObj = world;
+        useStructures = flag;
+        random = new Random(l);
     }
 
-    private void func_46042_a(byte abyte0[])
+    private void generate(byte abyte0[])
     {
         int i = abyte0.length / 256;
         for (int j = 0; j < 16; j++)
@@ -54,12 +54,12 @@ public class ChunkProviderFlat
 
     public Chunk provideChunk(int i, int j)
     {
-        byte abyte0[] = new byte[16 * field_46046_a.worldHeight * 16];
-        Chunk chunk = new Chunk(field_46046_a, abyte0, i, j);
-        func_46042_a(abyte0);
-        if (field_46045_c)
+        byte abyte0[] = new byte[16 * worldObj.worldHeight * 16];
+        Chunk chunk = new Chunk(worldObj, abyte0, i, j);
+        generate(abyte0);
+        if (useStructures)
         {
-            field_46043_d.generate(this, field_46046_a, i, j, abyte0);
+            villageGen.generate(this, worldObj, i, j, abyte0);
         }
         chunk.generateSkylightMap();
         return chunk;
@@ -72,13 +72,13 @@ public class ChunkProviderFlat
 
     public void populate(IChunkProvider ichunkprovider, int i, int j)
     {
-        field_46044_b.setSeed(field_46046_a.getRandomSeed());
-        long l = (field_46044_b.nextLong() / 2L) * 2L + 1L;
-        long l1 = (field_46044_b.nextLong() / 2L) * 2L + 1L;
-        field_46044_b.setSeed((long)i * l + (long)j * l1 ^ field_46046_a.getRandomSeed());
-        if (field_46045_c)
+        random.setSeed(worldObj.getSeed());
+        long l = (random.nextLong() / 2L) * 2L + 1L;
+        long l1 = (random.nextLong() / 2L) * 2L + 1L;
+        random.setSeed((long)i * l + (long)j * l1 ^ worldObj.getSeed());
+        if (useStructures)
         {
-            field_46043_d.generateStructuresInChunk(field_46046_a, field_46044_b, i, j);
+            villageGen.generateStructuresInChunk(worldObj, random, i, j);
         }
     }
 
@@ -97,9 +97,9 @@ public class ChunkProviderFlat
         return true;
     }
 
-    public List func_40181_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
-        WorldChunkManager worldchunkmanager = field_46046_a.getWorldChunkManager();
+        WorldChunkManager worldchunkmanager = worldObj.getWorldChunkManager();
         if (worldchunkmanager == null)
         {
             return null;
@@ -115,7 +115,7 @@ public class ChunkProviderFlat
         }
     }
 
-    public ChunkPosition func_40182_a(World world, String s, int i, int j, int k)
+    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
     {
         return null;
     }

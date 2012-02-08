@@ -25,7 +25,7 @@ public class EntityEgg extends EntityThrowable
         {
             if (!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, thrower), 0));
         }
-        if (!worldObj.singleplayerWorld && rand.nextInt(8) == 0)
+        if (!worldObj.isRemote && rand.nextInt(8) == 0)
         {
             byte byte0 = 1;
             if (rand.nextInt(32) == 0)
@@ -45,7 +45,7 @@ public class EntityEgg extends EntityThrowable
             worldObj.spawnParticle("snowballpoof", posX, posY, posZ, 0.0D, 0.0D, 0.0D);
         }
 
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             setEntityDead();
         }

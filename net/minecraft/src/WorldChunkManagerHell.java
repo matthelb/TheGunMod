@@ -6,13 +6,13 @@ public class WorldChunkManagerHell extends WorldChunkManager
 {
     private BiomeGenBase biomeGenerator;
     private float hellTemperature;
-    private float field_4260_g;
+    private float rainfall;
 
     public WorldChunkManagerHell(BiomeGenBase biomegenbase, float f, float f1)
     {
         biomeGenerator = biomegenbase;
         hellTemperature = f;
-        field_4260_g = f1;
+        rainfall = f1;
     }
 
     public BiomeGenBase getBiomeGenAtChunkCoord(ChunkCoordIntPair chunkcoordintpair)
@@ -25,7 +25,7 @@ public class WorldChunkManagerHell extends WorldChunkManager
         return biomeGenerator;
     }
 
-    public BiomeGenBase[] func_35142_b(BiomeGenBase abiomegenbase[], int i, int j, int k, int l)
+    public BiomeGenBase[] getBiomes(BiomeGenBase abiomegenbase[], int i, int j, int k, int l)
     {
         if (abiomegenbase == null || abiomegenbase.length < k * l)
         {
@@ -56,7 +56,7 @@ public class WorldChunkManagerHell extends WorldChunkManager
         {
             af = new float[k * l];
         }
-        Arrays.fill(af, 0, k * l, field_4260_g);
+        Arrays.fill(af, 0, k * l, rainfall);
         return af;
     }
 
@@ -75,7 +75,7 @@ public class WorldChunkManagerHell extends WorldChunkManager
         return loadBlockGeneratorData(abiomegenbase, i, j, k, l);
     }
 
-    public ChunkPosition func_35139_a(int i, int j, int k, List list, Random random)
+    public ChunkPosition findBiomePosition(int i, int j, int k, List list, Random random)
     {
         if (list.contains(biomeGenerator))
         {

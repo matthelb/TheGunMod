@@ -138,7 +138,7 @@ public class EntitySquid extends EntityWaterMob
                 randomMotionSpeed = randomMotionSpeed * 0.9F;
                 field_21053_aq = field_21053_aq * 0.99F;
             }
-            if (!worldObj.singleplayerWorld)
+            if (!worldObj.isRemote)
             {
                 motionX = randomMotionVecX * randomMotionSpeed;
                 motionY = randomMotionVecY * randomMotionSpeed;
@@ -153,7 +153,7 @@ public class EntitySquid extends EntityWaterMob
         else
         {
             tentacleAngle = MathHelper.abs(MathHelper.sin(field_21060_ak)) * 3.141593F * 0.25F;
-            if (!worldObj.singleplayerWorld)
+            if (!worldObj.isRemote)
             {
                 motionX = 0.0D;
                 motionY -= 0.080000000000000002D;
@@ -188,6 +188,6 @@ public class EntitySquid extends EntityWaterMob
 
     public boolean getCanSpawnHere()
     {
-        return posY > 45D && posY < (double)worldObj.worldOceanHeight && super.getCanSpawnHere();
+        return posY > 45D && posY < (double)worldObj.seaLevel && super.getCanSpawnHere();
     }
 }

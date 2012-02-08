@@ -174,7 +174,7 @@ public class BlockDoor extends Block
             }
             if (flag)
             {
-                if (!world.singleplayerWorld)
+                if (!world.isRemote)
                 {
                     dropBlockAsItem(world, i, j, k, i1, 0);
                 }

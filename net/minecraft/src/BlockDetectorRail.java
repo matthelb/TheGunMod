@@ -23,7 +23,7 @@ public class BlockDetectorRail extends BlockRail
 
     public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -41,7 +41,7 @@ public class BlockDetectorRail extends BlockRail
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if (world.singleplayerWorld)
+        if (world.isRemote)
         {
             return;
         }

@@ -105,7 +105,7 @@ public abstract class NetHandler
         registerPacket(packet23vehiclespawn);
     }
 
-    public void handleArmAnimation(Packet18Animation packet18animation)
+    public void handleAnimation(Packet18Animation packet18animation)
     {
         registerPacket(packet18animation);
     }
@@ -160,7 +160,7 @@ public abstract class NetHandler
         registerPacket(packet38entitystatus);
     }
 
-    public void handleHealth(Packet8UpdateHealth packet8updatehealth)
+    public void handleUpdateHealth(Packet8UpdateHealth packet8updatehealth)
     {
         registerPacket(packet8updatehealth);
     }
@@ -304,7 +304,7 @@ public abstract class NetHandler
     {
     }
 
-    public void func_44001_a(Packet250CustomPayload packet250custompayload)
+    public void handleCustomPayload(Packet250CustomPayload packet250custompayload)
     {
     }
 }

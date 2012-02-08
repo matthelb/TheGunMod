@@ -21,7 +21,7 @@ public class ComponentNetherBridgeThrone extends ComponentNetherBridgePiece
     public static ComponentNetherBridgeThrone func_40304_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -2, 0, 0, 7, 8, 9, l);
-        if (!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!func_40286_a(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
         {
             return null;
         }
@@ -56,7 +56,7 @@ public class ComponentNetherBridgeThrone extends ComponentNetherBridgePiece
             int i = getYWithOffset(5);
             int k = getXWithOffset(3, 5);
             int i1 = getZWithOffset(3, 5);
-            if (structureboundingbox.isInBbVolume(k, i, i1))
+            if (structureboundingbox.isVecInside(k, i, i1))
             {
                 field_40305_a = true;
                 world.setBlockWithNotify(k, i, i1, Block.mobSpawner.blockID);

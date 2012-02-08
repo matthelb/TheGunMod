@@ -7,7 +7,7 @@ public class ChunkProvider
     implements IChunkProvider
 {
     private Set droppedChunksSet;
-    private Chunk dummyChunk;
+    private Chunk emptyChunk;
     private IChunkProvider chunkProvider;
     private IChunkLoader chunkLoader;
     private LongHashMap chunkMap;
@@ -20,7 +20,7 @@ public class ChunkProvider
         droppedChunksSet = new HashSet();
         chunkMap = new LongHashMap();
         chunkList = new ArrayList();
-        dummyChunk = new EmptyChunk(world, new byte[256 * world.worldHeight], 0, 0);
+        emptyChunk = new EmptyChunk(world, new byte[256 * world.worldHeight], 0, 0);
         worldObj = world;
         chunkLoader = ichunkloader;
         chunkProvider = ichunkprovider;
@@ -28,7 +28,7 @@ public class ChunkProvider
 
     public boolean chunkExists(int i, int j)
     {
-        return chunkMap.containsKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
+        return chunkMap.containsItem(ChunkCoordIntPair.chunkXZ2Int(i, j));
     }
 
     public void dropChunk(int i, int j)
@@ -53,14 +53,14 @@ public class ChunkProvider
             int k = 0x1c9c3c;
             if (i < -k || j < -k || i >= k || j >= k)
             {
-                return dummyChunk;
+                return emptyChunk;
             }
             chunk = loadChunkFromFile(i, j);
             if (chunk == null)
             {
                 if (chunkProvider == null)
                 {
-                    chunk = dummyChunk;
+                    chunk = emptyChunk;
                 }
                 else
                 {
@@ -114,7 +114,7 @@ public class ChunkProvider
         return null;
     }
 
-    private void unloadAndSaveChunkData(Chunk chunk)
+    private void saveChunkExtraData(Chunk chunk)
     {
         if (chunkLoader == null)
         {
@@ -130,7 +130,7 @@ public class ChunkProvider
         }
     }
 
-    private void unloadAndSaveChunk(Chunk chunk)
+    private void saveChunkData(Chunk chunk)
     {
         if (chunkLoader == null)
         {
@@ -169,13 +169,13 @@ public class ChunkProvider
             Chunk chunk = (Chunk)chunkList.get(j);
             if (flag && !chunk.neverSave)
             {
-                unloadAndSaveChunkData(chunk);
+                saveChunkExtraData(chunk);
             }
             if (!chunk.needsSaving(flag))
             {
                 continue;
             }
-            unloadAndSaveChunk(chunk);
+            saveChunkData(chunk);
             chunk.isModified = false;
             if (++i == 24 && !flag)
             {
@@ -203,8 +203,8 @@ public class ChunkProvider
                 Long long1 = (Long)droppedChunksSet.iterator().next();
                 Chunk chunk1 = (Chunk)chunkMap.getValueByKey(long1.longValue());
                 chunk1.onChunkUnload();
-                unloadAndSaveChunk(chunk1);
-                unloadAndSaveChunkData(chunk1);
+                saveChunkData(chunk1);
+                saveChunkExtraData(chunk1);
                 droppedChunksSet.remove(long1);
                 chunkMap.remove(long1.longValue());
                 chunkList.remove(chunk1);
@@ -228,7 +228,7 @@ public class ChunkProvider
 
         if (chunkLoader != null)
         {
-            chunkLoader.func_661_a();
+            chunkLoader.chunkTick();
         }
         return chunkProvider.unload100OldestChunks();
     }
@@ -238,13 +238,13 @@ public class ChunkProvider
         return true;
     }
 
-    public List func_40181_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
-        return chunkProvider.func_40181_a(enumcreaturetype, i, j, k);
+        return chunkProvider.getPossibleCreatures(enumcreaturetype, i, j, k);
     }
 
-    public ChunkPosition func_40182_a(World world, String s, int i, int j, int k)
+    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
     {
-        return chunkProvider.func_40182_a(world, s, i, j, k);
+        return chunkProvider.findClosestStructure(world, s, i, j, k);
     }
 }

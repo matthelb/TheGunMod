@@ -114,7 +114,7 @@ public class NetLoginHandler extends NetHandler
             ChunkCoordinates chunkcoordinates = worldserver.getSpawnPoint();
             entityplayermp.itemInWorldManager.func_35695_b(worldserver.getWorldInfo().getGameType());
             NetServerHandler netserverhandler = new NetServerHandler(mcServer, netManager, entityplayermp);
-            netserverhandler.sendPacket(new Packet1Login("", entityplayermp.entityId, worldserver.getRandomSeed(), worldserver.getWorldInfo().func_46069_q(), entityplayermp.itemInWorldManager.getGameType(), (byte)worldserver.worldProvider.worldType, (byte)worldserver.difficultySetting, (byte)worldserver.worldHeight, (byte)mcServer.configManager.getMaxPlayers()));
+            netserverhandler.sendPacket(new Packet1Login("", entityplayermp.entityId, worldserver.getSeed(), worldserver.getWorldInfo().getTerrainType(), entityplayermp.itemInWorldManager.getGameType(), (byte)worldserver.worldProvider.worldType, (byte)worldserver.difficultySetting, (byte)worldserver.worldHeight, (byte)mcServer.configManager.getMaxPlayers()));
             netserverhandler.sendPacket(new Packet6SpawnPosition(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
             mcServer.configManager.func_28170_a(entityplayermp, worldserver);
             mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat((new StringBuilder()).append("\247e").append(entityplayermp.username).append(" joined the game.").toString()));
@@ -123,7 +123,7 @@ public class NetLoginHandler extends NetHandler
             mcServer.networkServer.addPlayer(netserverhandler);
             netserverhandler.sendPacket(new Packet4UpdateTime(worldserver.getWorldTime()));
             PotionEffect potioneffect;
-            for (Iterator iterator = entityplayermp.func_35183_ak().iterator(); iterator.hasNext(); netserverhandler.sendPacket(new Packet41EntityEffect(entityplayermp.entityId, potioneffect)))
+            for (Iterator iterator = entityplayermp.getActivePotionEffects().iterator(); iterator.hasNext(); netserverhandler.sendPacket(new Packet41EntityEffect(entityplayermp.entityId, potioneffect)))
             {
                 potioneffect = (PotionEffect)iterator.next();
             }

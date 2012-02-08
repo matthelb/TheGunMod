@@ -150,7 +150,7 @@ public abstract class EntityThrowable extends Entity
         {
             vec3d1 = Vec3D.createVector(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             Entity entity = null;
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));

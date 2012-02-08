@@ -198,7 +198,7 @@ public final class SpawnerAnimals
         }
     }
 
-    public static void func_35573_a(World world, BiomeGenBase biomegenbase, int i, int j, int k, int l, Random random)
+    public static void performWorldGenSpawning(World world, BiomeGenBase biomegenbase, int i, int j, int k, int l, Random random)
     {
         List list = biomegenbase.getSpawnableList(EnumCreatureType.creature);
         if (list.isEmpty())
@@ -207,8 +207,8 @@ public final class SpawnerAnimals
         }
         while (random.nextFloat() < biomegenbase.getSpawningChance())
         {
-            SpawnListEntry spawnlistentry = (SpawnListEntry)WeightedRandom.func_35689_a(world.rand, list);
-            int i1 = spawnlistentry.field_35484_b + random.nextInt((1 + spawnlistentry.field_35485_c) - spawnlistentry.field_35484_b);
+            SpawnListEntry spawnlistentry = (SpawnListEntry)WeightedRandom.getRandomItem(world.rand, list);
+            int i1 = spawnlistentry.minGroupCount + random.nextInt((1 + spawnlistentry.maxGroupCount) - spawnlistentry.minGroupCount);
             int j1 = i + random.nextInt(k);
             int k1 = j + random.nextInt(l);
             int l1 = j1;
@@ -219,7 +219,7 @@ public final class SpawnerAnimals
                 boolean flag = false;
                 for (int k2 = 0; !flag && k2 < 4; k2++)
                 {
-                    int l2 = world.findTopSolidBlock(j1, k1);
+                    int l2 = world.getTopSolidOrLiquidBlock(j1, k1);
                     if (canCreatureTypeSpawnAtLocation(EnumCreatureType.creature, world, j1, l2, k1))
                     {
                         float f = (float)j1 + 0.5F;

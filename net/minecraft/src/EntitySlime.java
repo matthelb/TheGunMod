@@ -8,16 +8,16 @@ public class EntitySlime extends EntityLiving
     public float field_40122_a;
     public float field_401_a;
     public float field_400_b;
-    private int ticksTillJump;
+    private int slimeJumpDelay;
 
     public EntitySlime(World world)
     {
         super(world);
-        ticksTillJump = 0;
+        slimeJumpDelay = 0;
         texture = "/mob/slime.png";
         int i = 1 << rand.nextInt(3);
         yOffset = 0.0F;
-        ticksTillJump = rand.nextInt(20) + 10;
+        slimeJumpDelay = rand.nextInt(20) + 10;
         setSlimeSize(i);
         experienceValue = i;
     }
@@ -59,7 +59,7 @@ public class EntitySlime extends EntityLiving
         setSlimeSize(nbttagcompound.getInteger("Size") + 1);
     }
 
-    protected String func_40120_w()
+    protected String getSlimeParticle()
     {
         return "slime";
     }
@@ -71,7 +71,7 @@ public class EntitySlime extends EntityLiving
 
     public void onUpdate()
     {
-        if (!worldObj.singleplayerWorld && worldObj.difficultySetting == 0 && getSlimeSize() > 0)
+        if (!worldObj.isRemote && worldObj.difficultySetting == 0 && getSlimeSize() > 0)
         {
             isDead = true;
         }
@@ -88,7 +88,7 @@ public class EntitySlime extends EntityLiving
                 float f1 = rand.nextFloat() * 0.5F + 0.5F;
                 float f2 = MathHelper.sin(f) * (float)i * 0.5F * f1;
                 float f3 = MathHelper.cos(f) * (float)i * 0.5F * f1;
-                worldObj.spawnParticle(func_40120_w(), posX + (double)f2, boundingBox.minY, posZ + (double)f3, 0.0D, 0.0D, 0.0D);
+                worldObj.spawnParticle(getSlimeParticle(), posX + (double)f2, boundingBox.minY, posZ + (double)f3, 0.0D, 0.0D, 0.0D);
             }
 
             if (func_40121_G())
@@ -108,12 +108,12 @@ public class EntitySlime extends EntityLiving
         {
             faceEntity(entityplayer, 10F, 20F);
         }
-        if (onGround && ticksTillJump-- <= 0)
+        if (onGround && slimeJumpDelay-- <= 0)
         {
-            ticksTillJump = func_40115_A();
+            slimeJumpDelay = func_40115_A();
             if (entityplayer != null)
             {
-                ticksTillJump /= 3;
+                slimeJumpDelay /= 3;
             }
             isJumping = true;
             if (func_40117_I())
@@ -144,7 +144,7 @@ public class EntitySlime extends EntityLiving
         return rand.nextInt(20) + 10;
     }
 
-    protected EntitySlime func_40114_y()
+    protected EntitySlime createInstance()
     {
         return new EntitySlime(worldObj);
     }
@@ -152,14 +152,14 @@ public class EntitySlime extends EntityLiving
     public void setEntityDead()
     {
         int i = getSlimeSize();
-        if (!worldObj.singleplayerWorld && i > 1 && getEntityHealth() <= 0)
+        if (!worldObj.isRemote && i > 1 && getEntityHealth() <= 0)
         {
             int j = 2 + rand.nextInt(3);
             for (int k = 0; k < j; k++)
             {
                 float f = (((float)(k % 2) - 0.5F) * (float)i) / 4F;
                 float f1 = (((float)(k / 2) - 0.5F) * (float)i) / 4F;
-                EntitySlime entityslime = func_40114_y();
+                EntitySlime entityslime = createInstance();
                 entityslime.setSlimeSize(i / 2);
                 entityslime.setLocationAndAngles(posX + (double)f, posY + 0.5D, posZ + (double)f1, rand.nextFloat() * 360F, 0.0F);
                 worldObj.spawnEntityInWorld(entityslime);

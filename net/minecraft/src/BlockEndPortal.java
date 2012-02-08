@@ -45,7 +45,7 @@ public class BlockEndPortal extends BlockContainer
 
     public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
     {
-        if (entity.ridingEntity == null && entity.riddenByEntity == null && (entity instanceof EntityPlayer) && !world.singleplayerWorld)
+        if (entity.ridingEntity == null && entity.riddenByEntity == null && (entity instanceof EntityPlayer) && !world.isRemote)
         {
             ((EntityPlayer)entity).func_40107_e(1);
         }

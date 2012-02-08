@@ -105,7 +105,7 @@ public class EntityEnderman extends EntityMob
         }
         isAttacking = entityToAttack != null;
         moveSpeed = entityToAttack == null ? 0.3F : 6.5F;
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             if (getCarried() == 0)
             {
@@ -142,7 +142,7 @@ public class EntityEnderman extends EntityMob
             worldObj.spawnParticle("portal", posX + (rand.nextDouble() - 0.5D) * (double)width, (posY + rand.nextDouble() * (double)height) - 0.25D, posZ + (rand.nextDouble() - 0.5D) * (double)width, (rand.nextDouble() - 0.5D) * 2D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2D);
         }
 
-        if (worldObj.isDaytime() && !worldObj.singleplayerWorld)
+        if (worldObj.isDaytime() && !worldObj.isRemote)
         {
             float f = getEntityBrightness(1.0F);
             if (f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
@@ -161,7 +161,7 @@ public class EntityEnderman extends EntityMob
         {
             faceEntity(entityToAttack, 100F, 100F);
         }
-        if (!worldObj.singleplayerWorld && isEntityAlive())
+        if (!worldObj.isRemote && isEntityAlive())
         {
             if (entityToAttack != null)
             {

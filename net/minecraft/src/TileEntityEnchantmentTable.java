@@ -14,7 +14,7 @@ public class TileEntityEnchantmentTable extends TileEntity
     public float field_40073_h;
     public float field_40074_i;
     public float field_40072_j;
-    private static Random field_40069_r = new Random();
+    private static Random rand = new Random();
 
     public TileEntityEnchantmentTable()
     {
@@ -32,12 +32,12 @@ public class TileEntityEnchantmentTable extends TileEntity
             double d1 = entityplayer.posZ - (double)((float)zCoord + 0.5F);
             field_40072_j = (float)Math.atan2(d1, d);
             field_40064_f += 0.1F;
-            if (field_40064_f < 0.5F || field_40069_r.nextInt(40) == 0)
+            if (field_40064_f < 0.5F || rand.nextInt(40) == 0)
             {
                 float f3 = field_40066_d;
                 do
                 {
-                    field_40066_d += field_40069_r.nextInt(4) - field_40069_r.nextInt(4);
+                    field_40066_d += rand.nextInt(4) - rand.nextInt(4);
                 }
                 while (f3 == field_40066_d);
             }

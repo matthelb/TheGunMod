@@ -222,7 +222,7 @@ public class EntityTrackerEntry
                 {
                     EntityLiving entityliving = (EntityLiving)trackedEntity;
                     PotionEffect potioneffect;
-                    for (Iterator iterator = entityliving.func_35183_ak().iterator(); iterator.hasNext(); entityplayermp.playerNetServerHandler.sendPacket(new Packet41EntityEffect(trackedEntity.entityId, potioneffect)))
+                    for (Iterator iterator = entityliving.getActivePotionEffects().iterator(); iterator.hasNext(); entityplayermp.playerNetServerHandler.sendPacket(new Packet41EntityEffect(trackedEntity.entityId, potioneffect)))
                     {
                         potioneffect = (PotionEffect)iterator.next();
                     }

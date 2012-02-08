@@ -52,7 +52,7 @@ public class ContainerWorkbench extends Container
     public void onCraftGuiClosed(EntityPlayer entityplayer)
     {
         super.onCraftGuiClosed(entityplayer);
-        if (worldObj.singleplayerWorld)
+        if (worldObj.isRemote)
         {
             return;
         }

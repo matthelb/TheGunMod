@@ -15,7 +15,7 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
         coordBaseMode = j;
         field_35337_a = getRandomDoor(random);
         boundingBox = structureboundingbox;
-        field_35336_c = structureboundingbox.bbHeight() > 6;
+        field_35336_c = structureboundingbox.getYSize() > 6;
     }
 
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
@@ -25,10 +25,10 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
     public static ComponentStrongholdLibrary func_35334_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -4, -1, 0, 14, 11, 15, l);
-        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
         {
             structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -4, -1, 0, 14, 6, 15, l);
-            if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+            if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
             {
                 return null;
             }

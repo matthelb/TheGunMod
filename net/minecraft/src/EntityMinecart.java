@@ -80,7 +80,7 @@ public class EntityMinecart extends Entity
     private double minecartX;
     private double minecartY;
     private double minecartZ;
-    private double field_9159_ar;
+    private double minecartYaw;
     private double minecartPitch;
 
     public EntityMinecart(World world)
@@ -143,7 +143,7 @@ public class EntityMinecart extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if (worldObj.singleplayerWorld || isDead)
+        if (worldObj.isRemote || isDead)
         {
             return true;
         }
@@ -262,7 +262,7 @@ public class EntityMinecart extends Entity
         {
             worldObj.spawnParticle("largesmoke", posX, posY + 0.80000000000000004D, posZ, 0.0D, 0.0D, 0.0D);
         }
-        if (worldObj.singleplayerWorld)
+        if (worldObj.isRemote)
         {
             if (turnProgress > 0)
             {
@@ -270,7 +270,7 @@ public class EntityMinecart extends Entity
                 double d1 = posY + (minecartY - posY) / (double)turnProgress;
                 double d3 = posZ + (minecartZ - posZ) / (double)turnProgress;
                 double d5;
-                for (d5 = field_9159_ar - (double)rotationYaw; d5 < -180D; d5 += 360D) { }
+                for (d5 = minecartYaw - (double)rotationYaw; d5 < -180D; d5 += 360D) { }
                 for (; d5 >= 180D; d5 -= 360D) { }
                 rotationYaw += d5 / (double)turnProgress;
                 rotationPitch += (minecartPitch - (double)rotationPitch) / (double)turnProgress;
@@ -734,7 +734,7 @@ public class EntityMinecart extends Entity
 
     public void applyEntityCollision(Entity entity)
     {
-        if (worldObj.singleplayerWorld)
+        if (worldObj.isRemote)
         {
             return;
         }
@@ -880,14 +880,14 @@ public class EntityMinecart extends Entity
             {
                 return true;
             }
-            if (!worldObj.singleplayerWorld)
+            if (!worldObj.isRemote)
             {
                 entityplayer.mountEntity(this);
             }
         }
         else if (minecartType == 1)
         {
-            if (!worldObj.singleplayerWorld)
+            if (!worldObj.isRemote)
             {
                 entityplayer.displayGUIChest(this);
             }

@@ -7,7 +7,7 @@ public class EntityWolf extends EntityAnimal
     private boolean looksWithInterest;
     private float field_25038_b;
     private float field_25044_c;
-    private boolean isWet;
+    private boolean isShaking;
     private boolean field_25042_g;
     private float timeWolfIsShaking;
     private float prevTimeWolfIsShaking;
@@ -146,7 +146,7 @@ public class EntityWolf extends EntityAnimal
         {
             setIsSitting(false);
         }
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             dataWatcher.updateObject(18, Integer.valueOf(getEntityHealth()));
         }
@@ -176,12 +176,12 @@ public class EntityWolf extends EntityAnimal
                 }
             }
         }
-        if (!worldObj.singleplayerWorld && isWet && !field_25042_g && !hasPath() && onGround)
+        if (!worldObj.isRemote && isShaking && !field_25042_g && !hasPath() && onGround)
         {
             field_25042_g = true;
             timeWolfIsShaking = 0.0F;
             prevTimeWolfIsShaking = 0.0F;
-            worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)8);
+            worldObj.setEntityState(this, (byte)8);
         }
     }
 
@@ -203,12 +203,12 @@ public class EntityWolf extends EntityAnimal
         }
         if (isWet())
         {
-            isWet = true;
+            isShaking = true;
             field_25042_g = false;
             timeWolfIsShaking = 0.0F;
             prevTimeWolfIsShaking = 0.0F;
         }
-        else if ((isWet || field_25042_g) && field_25042_g)
+        else if ((isShaking || field_25042_g) && field_25042_g)
         {
             if (timeWolfIsShaking == 0.0F)
             {
@@ -218,7 +218,7 @@ public class EntityWolf extends EntityAnimal
             timeWolfIsShaking += 0.05F;
             if (prevTimeWolfIsShaking >= 2.0F)
             {
-                isWet = false;
+                isShaking = false;
                 field_25042_g = false;
                 prevTimeWolfIsShaking = 0.0F;
                 timeWolfIsShaking = 0.0F;
@@ -396,7 +396,7 @@ public class EntityWolf extends EntityAnimal
                 {
                     entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
                 }
-                if (!worldObj.singleplayerWorld)
+                if (!worldObj.isRemote)
                 {
                     if (rand.nextInt(3) == 0)
                     {
@@ -405,13 +405,13 @@ public class EntityWolf extends EntityAnimal
                         setIsSitting(true);
                         setEntityHealth(20);
                         setOwner(entityplayer.username);
-                        isNowTamed(true);
-                        worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)7);
+                        showHeartsOrSmokeFX(true);
+                        worldObj.setEntityState(this, (byte)7);
                     }
                     else
                     {
-                        isNowTamed(false);
-                        worldObj.sendTrackedEntityStatusUpdatePacket(this, (byte)6);
+                        showHeartsOrSmokeFX(false);
+                        worldObj.setEntityState(this, (byte)6);
                     }
                 }
                 return true;
@@ -435,7 +435,7 @@ public class EntityWolf extends EntityAnimal
             }
             if (entityplayer.username.equalsIgnoreCase(getOwner()))
             {
-                if (!worldObj.singleplayerWorld)
+                if (!worldObj.isRemote)
                 {
                     setIsSitting(!isSitting());
                     isJumping = false;
@@ -447,7 +447,7 @@ public class EntityWolf extends EntityAnimal
         return super.interact(entityplayer);
     }
 
-    void isNowTamed(boolean flag)
+    void showHeartsOrSmokeFX(boolean flag)
     {
         String s = "heart";
         if (!flag)

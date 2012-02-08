@@ -2,13 +2,13 @@ package net.minecraft.src;
 
 public class ItemColored extends ItemBlock
 {
-    private final Block field_35421_a;
-    private String field_41041_b[];
+    private final Block blockRef;
+    private String blockNames[];
 
     public ItemColored(int i, boolean flag)
     {
         super(i);
-        field_35421_a = Block.blocksList[getBlockID()];
+        blockRef = Block.blocksList[getBlockID()];
         if (flag)
         {
             setMaxDamage(0);
@@ -23,20 +23,20 @@ public class ItemColored extends ItemBlock
 
     public ItemColored setBlockNames(String as[])
     {
-        field_41041_b = as;
+        blockNames = as;
         return this;
     }
 
     public String getItemNameIS(ItemStack itemstack)
     {
-        if (field_41041_b == null)
+        if (blockNames == null)
         {
             return super.getItemNameIS(itemstack);
         }
         int i = itemstack.getItemDamage();
-        if (i >= 0 && i < field_41041_b.length)
+        if (i >= 0 && i < blockNames.length)
         {
-            return (new StringBuilder()).append(super.getItemNameIS(itemstack)).append(".").append(field_41041_b[i]).toString();
+            return (new StringBuilder()).append(super.getItemNameIS(itemstack)).append(".").append(blockNames[i]).toString();
         }
         else
         {

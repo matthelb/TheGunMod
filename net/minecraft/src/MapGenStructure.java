@@ -43,7 +43,7 @@ public abstract class MapGenStructure extends MapGenBase
                 break;
             }
             StructureStart structurestart = (StructureStart)iterator.next();
-            if (structurestart.isSizeableStructure() && structurestart.getBoundingBox().isInBbArea(k, l, k + 15, l + 15))
+            if (structurestart.isSizeableStructure() && structurestart.getBoundingBox().intersectsWith(k, l, k + 15, l + 15))
             {
                 structurestart.generateStructure(world, random, new StructureBoundingBox(k, l, k + 15, l + 15));
                 flag = true;
@@ -62,11 +62,11 @@ public abstract class MapGenStructure extends MapGenBase
             if (iterator.hasNext())
             {
                 StructureStart structurestart = (StructureStart)iterator.next();
-                if (!structurestart.isSizeableStructure() || !structurestart.getBoundingBox().isInBbArea(i, k, i, k))
+                if (!structurestart.isSizeableStructure() || !structurestart.getBoundingBox().intersectsWith(i, k, i, k))
                 {
                     continue;
                 }
-                Iterator iterator1 = structurestart.func_40208_c().iterator();
+                Iterator iterator1 = structurestart.getComponents().iterator();
                 StructureComponent structurecomponent;
                 do
                 {
@@ -76,7 +76,7 @@ public abstract class MapGenStructure extends MapGenBase
                     }
                     structurecomponent = (StructureComponent)iterator1.next();
                 }
-                while (!structurecomponent.getStructureBoundingBox().isInBbVolume(i, j, k));
+                while (!structurecomponent.getBoundingBox().isVecInside(i, j, k));
                 break;
             }
             else
@@ -88,15 +88,15 @@ public abstract class MapGenStructure extends MapGenBase
         return true;
     }
 
-    public ChunkPosition func_40202_a(World world, int i, int j, int k)
+    public ChunkPosition getNearestInstance(World world, int i, int j, int k)
     {
         worldObj = world;
-        rand.setSeed(world.getRandomSeed());
+        rand.setSeed(world.getSeed());
         long l = rand.nextLong();
         long l1 = rand.nextLong();
         long l2 = (long)(i >> 4) * l;
         long l3 = (long)(k >> 4) * l1;
-        rand.setSeed(l2 ^ l3 ^ world.getRandomSeed());
+        rand.setSeed(l2 ^ l3 ^ world.getSeed());
         recursiveGenerate(world, i >> 4, k >> 4, 0, 0, null);
         double d = 1.7976931348623157E+308D;
         ChunkPosition chunkposition = null;
@@ -110,8 +110,8 @@ public abstract class MapGenStructure extends MapGenBase
             StructureStart structurestart = (StructureStart)((Iterator) (obj)).next();
             if (structurestart.isSizeableStructure())
             {
-                StructureComponent structurecomponent = (StructureComponent)structurestart.func_40208_c().get(0);
-                ChunkPosition chunkposition2 = structurecomponent.func_40281_b_();
+                StructureComponent structurecomponent = (StructureComponent)structurestart.getComponents().get(0);
+                ChunkPosition chunkposition2 = structurecomponent.getCenter();
                 int i1 = chunkposition2.x - i;
                 int k1 = chunkposition2.y - j;
                 int j2 = chunkposition2.z - k;

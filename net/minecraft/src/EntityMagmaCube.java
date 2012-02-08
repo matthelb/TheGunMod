@@ -28,12 +28,12 @@ public class EntityMagmaCube extends EntitySlime
         return 1.0F;
     }
 
-    protected String func_40120_w()
+    protected String getSlimeParticle()
     {
         return "flame";
     }
 
-    protected EntitySlime func_40114_y()
+    protected EntitySlime createInstance()
     {
         return new EntityMagmaCube(worldObj);
     }

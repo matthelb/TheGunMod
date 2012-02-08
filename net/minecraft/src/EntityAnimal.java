@@ -107,7 +107,7 @@ public abstract class EntityAnimal extends EntityCreature
                     }
                     if (breeding == 60)
                     {
-                        proceate((EntityAnimal)entity);
+                        procreate((EntityAnimal)entity);
                     }
                 }
                 else
@@ -123,7 +123,7 @@ public abstract class EntityAnimal extends EntityCreature
         }
     }
 
-    private void proceate(EntityAnimal entityanimal)
+    private void procreate(EntityAnimal entityanimal)
     {
         EntityAnimal entityanimal1 = spawnBabyAnimal(entityanimal);
         if (entityanimal1 != null)

@@ -6,10 +6,10 @@ import java.util.List;
 public class IntCache
 {
     private static int intCacheSize = 256;
-    private static List field_35553_b = new ArrayList();
-    private static List field_35554_c = new ArrayList();
-    private static List field_35551_d = new ArrayList();
-    private static List field_35552_e = new ArrayList();
+    private static List freeSmallArrays = new ArrayList();
+    private static List inUseSmallArrays = new ArrayList();
+    private static List freeLargeArrays = new ArrayList();
+    private static List inUseLargeArrays = new ArrayList();
 
     public IntCache()
     {
@@ -19,55 +19,55 @@ public class IntCache
     {
         if (i <= 256)
         {
-            if (field_35553_b.size() == 0)
+            if (freeSmallArrays.size() == 0)
             {
                 int ai[] = new int[256];
-                field_35554_c.add(ai);
+                inUseSmallArrays.add(ai);
                 return ai;
             }
             else
             {
-                int ai1[] = (int[])field_35553_b.remove(field_35553_b.size() - 1);
-                field_35554_c.add(ai1);
+                int ai1[] = (int[])freeSmallArrays.remove(freeSmallArrays.size() - 1);
+                inUseSmallArrays.add(ai1);
                 return ai1;
             }
         }
         if (i > intCacheSize)
         {
             intCacheSize = i;
-            field_35551_d.clear();
-            field_35552_e.clear();
+            freeLargeArrays.clear();
+            inUseLargeArrays.clear();
             int ai2[] = new int[intCacheSize];
-            field_35552_e.add(ai2);
+            inUseLargeArrays.add(ai2);
             return ai2;
         }
-        if (field_35551_d.size() == 0)
+        if (freeLargeArrays.size() == 0)
         {
             int ai3[] = new int[intCacheSize];
-            field_35552_e.add(ai3);
+            inUseLargeArrays.add(ai3);
             return ai3;
         }
         else
         {
-            int ai4[] = (int[])field_35551_d.remove(field_35551_d.size() - 1);
-            field_35552_e.add(ai4);
+            int ai4[] = (int[])freeLargeArrays.remove(freeLargeArrays.size() - 1);
+            inUseLargeArrays.add(ai4);
             return ai4;
         }
     }
 
     public static void resetIntCache()
     {
-        if (field_35551_d.size() > 0)
+        if (freeLargeArrays.size() > 0)
         {
-            field_35551_d.remove(field_35551_d.size() - 1);
+            freeLargeArrays.remove(freeLargeArrays.size() - 1);
         }
-        if (field_35553_b.size() > 0)
+        if (freeSmallArrays.size() > 0)
         {
-            field_35553_b.remove(field_35553_b.size() - 1);
+            freeSmallArrays.remove(freeSmallArrays.size() - 1);
         }
-        field_35551_d.addAll(field_35552_e);
-        field_35553_b.addAll(field_35554_c);
-        field_35552_e.clear();
-        field_35554_c.clear();
+        freeLargeArrays.addAll(inUseLargeArrays);
+        freeSmallArrays.addAll(inUseSmallArrays);
+        inUseLargeArrays.clear();
+        inUseSmallArrays.clear();
     }
 }

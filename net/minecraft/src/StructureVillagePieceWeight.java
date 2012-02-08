@@ -2,14 +2,14 @@ package net.minecraft.src;
 
 public class StructureVillagePieceWeight
 {
-    public Class villageComponentClass;
+    public Class villagePieceClass;
     public final int villagePieceWeight;
     public int villagePiecesSpawned;
     public int villagePiecesLimit;
 
     public StructureVillagePieceWeight(Class class1, int i, int j)
     {
-        villageComponentClass = class1;
+        villagePieceClass = class1;
         villagePieceWeight = i;
         villagePiecesLimit = j;
     }

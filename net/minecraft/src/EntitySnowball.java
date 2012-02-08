@@ -33,7 +33,7 @@ public class EntitySnowball extends EntityThrowable
             worldObj.spawnParticle("snowballpoof", posX, posY, posZ, 0.0D, 0.0D, 0.0D);
         }
 
-        if (!worldObj.singleplayerWorld)
+        if (!worldObj.isRemote)
         {
             setEntityDead();
         }

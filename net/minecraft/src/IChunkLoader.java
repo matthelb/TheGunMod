@@ -13,7 +13,7 @@ public interface IChunkLoader
     public abstract void saveExtraChunkData(World world, Chunk chunk)
     throws IOException;
 
-    public abstract void func_661_a();
+    public abstract void chunkTick();
 
     public abstract void saveExtraData();
 }

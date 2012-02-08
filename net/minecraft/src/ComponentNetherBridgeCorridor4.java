@@ -26,7 +26,7 @@ public class ComponentNetherBridgeCorridor4 extends ComponentNetherBridgePiece
     public static ComponentNetherBridgeCorridor4 func_40298_a(List list, Random random, int i, int j, int k, int l, int i1)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -3, 0, 0, 9, 7, 9, l);
-        if (!func_40286_a(structureboundingbox) || StructureComponent.canFitInside(list, structureboundingbox) != null)
+        if (!func_40286_a(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
         {
             return null;
         }

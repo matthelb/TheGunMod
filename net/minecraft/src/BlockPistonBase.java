@@ -34,7 +34,7 @@ public class BlockPistonBase extends Block
                 return blockIndexInTexture;
             }
         }
-        return i != Facing.field_31052_a[k] ? 108 : 109;
+        return i != Facing.faceToSide[k] ? 108 : 109;
     }
 
     public int getRenderType()
@@ -56,7 +56,7 @@ public class BlockPistonBase extends Block
     {
         int l = determineOrientation(world, i, j, k, (EntityPlayer)entityliving);
         world.setBlockMetadataWithNotify(i, j, k, l);
-        if (!world.singleplayerWorld && !ignoreUpdates)
+        if (!world.isRemote && !ignoreUpdates)
         {
             updatePistonState(world, i, j, k);
         }
@@ -64,7 +64,7 @@ public class BlockPistonBase extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if (!world.singleplayerWorld && !ignoreUpdates)
+        if (!world.isRemote && !ignoreUpdates)
         {
             updatePistonState(world, i, j, k);
         }
@@ -72,7 +72,7 @@ public class BlockPistonBase extends Block
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if (!world.singleplayerWorld && world.getBlockTileEntity(i, j, k) == null && !ignoreUpdates)
+        if (!world.isRemote && world.getBlockTileEntity(i, j, k) == null && !ignoreUpdates)
         {
             updatePistonState(world, i, j, k);
         }

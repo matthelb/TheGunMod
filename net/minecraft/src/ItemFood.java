@@ -6,7 +6,7 @@ public class ItemFood extends Item
 {
     public final int field_35427_a = 32;
     private final int healAmount;
-    private final float saturationFactor;
+    private final float saturationModifier;
     private final boolean isWolfsFavoriteMeat;
     private boolean alwaysEdible;
     private int potionId;
@@ -19,7 +19,7 @@ public class ItemFood extends Item
         super(i);
         healAmount = j;
         isWolfsFavoriteMeat = flag;
-        saturationFactor = f;
+        saturationModifier = f;
     }
 
     public ItemFood(int i, int j, boolean flag)
@@ -30,9 +30,9 @@ public class ItemFood extends Item
     public ItemStack onFoodEaten(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
         itemstack.stackSize--;
-        entityplayer.getFoodStats().eatFood(this);
+        entityplayer.getFoodStats().addStats(this);
         world.playSoundAtEntity(entityplayer, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
-        if (!world.singleplayerWorld && potionId > 0 && world.rand.nextFloat() < potionEffectProbability)
+        if (!world.isRemote && potionId > 0 && world.rand.nextFloat() < potionEffectProbability)
         {
             entityplayer.addPotionEffect(new PotionEffect(potionId, potionDuration * 20, potionAmplifier));
         }
@@ -44,7 +44,7 @@ public class ItemFood extends Item
         return 32;
     }
 
-    public EnumAction getAction(ItemStack itemstack)
+    public EnumAction getItemUseAction(ItemStack itemstack)
     {
         return EnumAction.eat;
     }
@@ -63,9 +63,9 @@ public class ItemFood extends Item
         return healAmount;
     }
 
-    public float getSaturationFactor()
+    public float getSaturationModifier()
     {
-        return saturationFactor;
+        return saturationModifier;
     }
 
     public boolean getIsWolfsFavoriteMeat()

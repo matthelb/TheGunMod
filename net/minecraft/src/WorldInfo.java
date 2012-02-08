@@ -5,7 +5,7 @@ import java.util.List;
 public class WorldInfo
 {
     private long randomSeed;
-    private EnumWorldType field_46070_b;
+    private EnumWorldType terrainType;
     private int spawnX;
     private int spawnY;
     private int spawnZ;
@@ -26,16 +26,16 @@ public class WorldInfo
 
     public WorldInfo(NBTTagCompound nbttagcompound)
     {
-        field_46070_b = EnumWorldType.DEFAULT;
+        terrainType = EnumWorldType.DEFAULT;
         hardcore = false;
         randomSeed = nbttagcompound.getLong("RandomSeed");
         if (nbttagcompound.hasKey("generatorName"))
         {
             String s = nbttagcompound.getString("generatorName");
-            field_46070_b = EnumWorldType.func_46049_a(s);
-            if (field_46070_b == null)
+            terrainType = EnumWorldType.parseWorldType(s);
+            if (terrainType == null)
             {
-                field_46070_b = EnumWorldType.DEFAULT;
+                terrainType = EnumWorldType.DEFAULT;
             }
         }
         gameType = nbttagcompound.getInteger("GameType");
@@ -69,22 +69,22 @@ public class WorldInfo
 
     public WorldInfo(WorldSettings worldsettings, String s)
     {
-        field_46070_b = EnumWorldType.DEFAULT;
+        terrainType = EnumWorldType.DEFAULT;
         hardcore = false;
         randomSeed = worldsettings.getSeed();
         gameType = worldsettings.getGameType();
         mapFeaturesEnabled = worldsettings.isMapFeaturesEnabled();
         levelName = s;
         hardcore = worldsettings.getHardcoreEnabled();
-        field_46070_b = worldsettings.func_46128_e();
+        terrainType = worldsettings.getTerrainType();
     }
 
     public WorldInfo(WorldInfo worldinfo)
     {
-        field_46070_b = EnumWorldType.DEFAULT;
+        terrainType = EnumWorldType.DEFAULT;
         hardcore = false;
         randomSeed = worldinfo.randomSeed;
-        field_46070_b = worldinfo.field_46070_b;
+        terrainType = worldinfo.terrainType;
         gameType = worldinfo.gameType;
         mapFeaturesEnabled = worldinfo.mapFeaturesEnabled;
         spawnX = worldinfo.spawnX;
@@ -107,11 +107,11 @@ public class WorldInfo
     public NBTTagCompound getNBTTagCompound()
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
-        saveNBTTag(nbttagcompound, playerTag);
+        updateTagCompound(nbttagcompound, playerTag);
         return nbttagcompound;
     }
 
-    public NBTTagCompound storeLevelDataToNBT(List list)
+    public NBTTagCompound getNBTTagCompoundWithPlayers(List list)
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         EntityPlayer entityplayer = null;
@@ -125,14 +125,14 @@ public class WorldInfo
             nbttagcompound1 = new NBTTagCompound();
             entityplayer.writeToNBT(nbttagcompound1);
         }
-        saveNBTTag(nbttagcompound, nbttagcompound1);
+        updateTagCompound(nbttagcompound, nbttagcompound1);
         return nbttagcompound;
     }
 
-    private void saveNBTTag(NBTTagCompound nbttagcompound, NBTTagCompound nbttagcompound1)
+    private void updateTagCompound(NBTTagCompound nbttagcompound, NBTTagCompound nbttagcompound1)
     {
         nbttagcompound.setLong("RandomSeed", randomSeed);
-        nbttagcompound.setString("generatorName", field_46070_b.name());
+        nbttagcompound.setString("generatorName", terrainType.name());
         nbttagcompound.setInteger("GameType", gameType);
         nbttagcompound.setBoolean("MapFeatures", mapFeaturesEnabled);
         nbttagcompound.setInteger("SpawnX", spawnX);
@@ -154,7 +154,7 @@ public class WorldInfo
         }
     }
 
-    public long getRandomSeed()
+    public long getSeed()
     {
         return randomSeed;
     }
@@ -281,8 +281,8 @@ public class WorldInfo
         return hardcore;
     }
 
-    public EnumWorldType func_46069_q()
+    public EnumWorldType getTerrainType()
     {
-        return field_46070_b;
+        return terrainType;
     }
 }

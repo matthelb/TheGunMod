@@ -8,7 +8,7 @@ public class WorldGenBigTree extends WorldGenerator
     {
         2, 0, 0, 1, 2, 1
     };
-    Random random0;
+    Random rand;
     World worldObj;
     int basePos[] =
     {
@@ -29,7 +29,7 @@ public class WorldGenBigTree extends WorldGenerator
     public WorldGenBigTree(boolean flag)
     {
         super(flag);
-        random0 = new Random();
+        rand = new Random();
         heightLimit = 0;
         heightAttenuation = 0.61799999999999999D;
         field_753_h = 1.0D;
@@ -77,8 +77,8 @@ public class WorldGenBigTree extends WorldGenerator
                 double d = 0.5D;
                 for (; j1 < i; j1++)
                 {
-                    double d1 = field_751_j * ((double)f * ((double)random0.nextFloat() + 0.32800000000000001D));
-                    double d2 = (double)random0.nextFloat() * 2D * 3.1415899999999999D;
+                    double d1 = field_751_j * ((double)f * ((double)rand.nextFloat() + 0.32800000000000001D));
+                    double d2 = (double)rand.nextFloat() * 2D * 3.1415899999999999D;
                     int k1 = MathHelper.floor_double(d1 * Math.sin(d2) + (double)basePos[0] + d);
                     int l1 = MathHelper.floor_double(d1 * Math.cos(d2) + (double)basePos[2] + d);
                     int ai1[] =
@@ -161,7 +161,7 @@ public class WorldGenBigTree extends WorldGenerator
                     }
                     else
                     {
-                        func_41043_a(worldObj, ai1[0], ai1[1], ai1[2], l, 0);
+                        setBlockAndMetadata(worldObj, ai1[0], ai1[1], ai1[2], l, 0);
                         l1++;
                     }
                 }
@@ -257,7 +257,7 @@ public class WorldGenBigTree extends WorldGenerator
             ai3[j] = MathHelper.floor_double((double)(ai[j] + k) + 0.5D);
             ai3[byte1] = MathHelper.floor_double((double)ai[byte1] + (double)k * d + 0.5D);
             ai3[byte2] = MathHelper.floor_double((double)ai[byte2] + (double)k * d1 + 0.5D);
-            func_41043_a(worldObj, ai3[0], ai3[1], ai3[2], i, 0);
+            setBlockAndMetadata(worldObj, ai3[0], ai3[1], ai3[2], i, 0);
         }
     }
 
@@ -429,7 +429,7 @@ public class WorldGenBigTree extends WorldGenerator
         }
     }
 
-    public void func_420_a(double d, double d1, double d2)
+    public void setScale(double d, double d1, double d2)
     {
         heightLimitLimit = (int)(d * 12D);
         if (d > 0.5D)
@@ -444,13 +444,13 @@ public class WorldGenBigTree extends WorldGenerator
     {
         worldObj = world;
         long l = random.nextLong();
-        random0.setSeed(l);
+        rand.setSeed(l);
         basePos[0] = i;
         basePos[1] = j;
         basePos[2] = k;
         if (heightLimit == 0)
         {
-            heightLimit = 5 + random0.nextInt(heightLimitLimit);
+            heightLimit = 5 + rand.nextInt(heightLimitLimit);
         }
         if (!validTreeLocation())
         {

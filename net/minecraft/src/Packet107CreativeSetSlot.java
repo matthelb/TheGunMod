@@ -20,7 +20,7 @@ public class Packet107CreativeSetSlot extends Packet
     throws IOException
     {
         slot = datainputstream.readShort();
-        itemStack = func_40262_b(datainputstream);
+        itemStack = readItemStack(datainputstream);
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
