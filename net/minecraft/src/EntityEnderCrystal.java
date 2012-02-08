@@ -70,12 +70,12 @@ public class EntityEnderCrystal extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if (!isDead && !worldObj.multiplayerWorld)
+        if (!isDead && !worldObj.isRemote)
         {
             field_41031_b = 0;
             if (field_41031_b <= 0)
             {
-                if (!worldObj.multiplayerWorld)
+                if (!worldObj.isRemote)
                 {
                     setEntityDead();
                     worldObj.createExplosion(null, posX, posY, posZ, 6F);

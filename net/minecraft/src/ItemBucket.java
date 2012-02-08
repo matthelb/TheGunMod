@@ -20,7 +20,7 @@ public class ItemBucket extends Item
         double d1 = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double)f + 1.6200000000000001D) - (double)entityplayer.yOffset;
         double d2 = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double)f;
         boolean flag = isFull == 0;
-        MovingObjectPosition movingobjectposition = func_40402_a(world, entityplayer, flag);
+        MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, entityplayer, flag);
         if (movingobjectposition == null)
         {
             return itemstack;

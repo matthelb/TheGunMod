@@ -322,7 +322,7 @@ public class ModLoaderMp
 
     private static void sendPacket(Packet230ModLoader packet230modloader)
     {
-        if (packet230Received && ModLoader.getMinecraftInstance().theWorld != null && ModLoader.getMinecraftInstance().theWorld.multiplayerWorld)
+        if (packet230Received && ModLoader.getMinecraftInstance().theWorld != null && ModLoader.getMinecraftInstance().theWorld.isRemote)
         {
             ModLoader.getMinecraftInstance().getSendQueue().addToSendQueue(packet230modloader);
         }

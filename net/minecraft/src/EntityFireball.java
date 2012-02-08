@@ -87,7 +87,7 @@ public class EntityFireball extends Entity
     {
         super.onUpdate();
         setFire(1);
-        if (!worldObj.multiplayerWorld && (shootingEntity == null || shootingEntity.isDead))
+        if (!worldObj.isRemote && (shootingEntity == null || shootingEntity.isDead))
         {
             setEntityDead();
         }
@@ -193,7 +193,7 @@ public class EntityFireball extends Entity
 
     protected void func_40071_a(MovingObjectPosition movingobjectposition)
     {
-        if (!worldObj.multiplayerWorld)
+        if (!worldObj.isRemote)
         {
             if (movingobjectposition.entityHit != null)
             {

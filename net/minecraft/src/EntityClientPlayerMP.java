@@ -175,7 +175,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
     public void respawnPlayer()
     {
         sendInventoryChanged();
-        sendQueue.addToSendQueue(new Packet9Respawn((byte)dimension, (byte)worldObj.difficultySetting, worldObj.getWorldSeed(), worldObj.getWorldInfo().func_46133_t(), worldObj.worldHeight, 0));
+        sendQueue.addToSendQueue(new Packet9Respawn((byte)dimension, (byte)worldObj.difficultySetting, worldObj.getSeed(), worldObj.getWorldInfo().getTerrainType(), worldObj.worldHeight, 0));
     }
 
     protected void damageEntity(DamageSource damagesource, int i)

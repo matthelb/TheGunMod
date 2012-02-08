@@ -319,7 +319,7 @@ public class RenderGlobal
         for (int j = 0; j < list.size(); j++)
         {
             Entity entity1 = (Entity)list.get(j);
-            if (!entity1.isInRangeToRenderVec3D(vec3d) || !entity1.ignoreFrustumCheck && !icamera.isBoundingBoxInFrustum(entity1.boundingBox) || entity1 == mc.renderViewEntity && mc.gameSettings.thirdPersonView == 0 && !mc.renderViewEntity.isPlayerSleeping())
+            if (!entity1.isInRangeToRenderVec3D(vec3d) || !entity1.ignoreFrustrumCheck && !icamera.isBoundingBoxInFrustum(entity1.boundingBox) || entity1 == mc.renderViewEntity && mc.gameSettings.thirdPersonView == 0 && !mc.renderViewEntity.isPlayerSleeping())
             {
                 continue;
             }
@@ -1448,7 +1448,7 @@ public class RenderGlobal
         }
     }
 
-    public void markBlockAndNeighborsNeedsUpdate(int i, int j, int k)
+    public void markBlockNeedsUpdate(int i, int j, int k)
     {
         markBlocksForUpdate(i - 1, j - 1, k - 1, i + 1, j + 1, k + 1);
     }
@@ -1801,7 +1801,7 @@ public class RenderGlobal
                 if (k1 > 0)
                 {
                     Block block = Block.blocksList[k1];
-                    mc.sndManager.playSound(block.stepSound.stepSoundDir(), (float)j + 0.5F, (float)k + 0.5F, (float)l + 0.5F, (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+                    mc.sndManager.playSound(block.stepSound.getBreakSound(), (float)j + 0.5F, (float)k + 0.5F, (float)l + 0.5F, (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
                 }
                 mc.effectRenderer.addBlockDestroyEffects(j, k, l, i1 & 0xff, i1 >> 8 & 0xff);
                 break;

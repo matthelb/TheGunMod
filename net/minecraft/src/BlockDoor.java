@@ -180,7 +180,7 @@ public class BlockDoor extends Block
             }
             if (flag)
             {
-                if (!world.multiplayerWorld)
+                if (!world.isRemote)
                 {
                     dropBlockAsItem(world, i, j, k, i1, 0);
                 }

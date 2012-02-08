@@ -420,11 +420,11 @@ public class ChunkProviderHell
         return "HellRandomLevelSource";
     }
 
-    public List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
         if (enumcreaturetype == EnumCreatureType.monster && genNetherBridge.func_40483_a(i, j, k))
         {
-            return genNetherBridge.func_40485_b();
+            return genNetherBridge.getSpawnList();
         }
         WorldChunkManager worldchunkmanager = worldObj.getWorldChunkManager();
         if (worldchunkmanager == null)
@@ -442,7 +442,7 @@ public class ChunkProviderHell
         }
     }
 
-    public ChunkPosition func_40376_a(World world, String s, int i, int j, int k)
+    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
     {
         return null;
     }

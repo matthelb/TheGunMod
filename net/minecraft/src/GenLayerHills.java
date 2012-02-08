@@ -23,15 +23,15 @@ public class GenLayerHills extends GenLayer
                     int l1 = k1;
                     if (k1 == BiomeGenBase.desert.biomeID)
                     {
-                        l1 = BiomeGenBase.field_46049_s.biomeID;
+                        l1 = BiomeGenBase.desertHills.biomeID;
                     }
                     else if (k1 == BiomeGenBase.forest.biomeID)
                     {
-                        l1 = BiomeGenBase.field_46048_t.biomeID;
+                        l1 = BiomeGenBase.forestHills.biomeID;
                     }
                     else if (k1 == BiomeGenBase.taiga.biomeID)
                     {
-                        l1 = BiomeGenBase.field_46047_u.biomeID;
+                        l1 = BiomeGenBase.taigaHills.biomeID;
                     }
                     else if (k1 == BiomeGenBase.plains.biomeID)
                     {

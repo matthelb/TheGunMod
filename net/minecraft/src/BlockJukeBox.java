@@ -22,14 +22,14 @@ public class BlockJukeBox extends BlockContainer
         }
         else
         {
-            insertDisc(world, i, j, k);
+            ejectRecord(world, i, j, k);
             return true;
         }
     }
 
-    public void ejectRecord(World world, int i, int j, int k, int l)
+    public void insertRecord(World world, int i, int j, int k, int l)
     {
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -47,9 +47,9 @@ public class BlockJukeBox extends BlockContainer
         }
     }
 
-    public void insertDisc(World world, int i, int j, int k)
+    public void ejectRecord(World world, int i, int j, int k)
     {
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -84,13 +84,13 @@ public class BlockJukeBox extends BlockContainer
 
     public void onBlockRemoval(World world, int i, int j, int k)
     {
-        insertDisc(world, i, j, k);
+        ejectRecord(world, i, j, k);
         super.onBlockRemoval(world, i, j, k);
     }
 
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return;
         }

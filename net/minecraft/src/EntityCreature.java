@@ -211,7 +211,7 @@ public abstract class EntityCreature extends EntityLiving
         return entityToAttack;
     }
 
-    public void setEntityToAttack(Entity entity)
+    public void setTarget(Entity entity)
     {
         entityToAttack = entity;
     }

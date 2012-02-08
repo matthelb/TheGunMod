@@ -8,7 +8,7 @@ public class Packet26EntityExpOrb extends Packet
     public int posX;
     public int posY;
     public int posZ;
-    public int count;
+    public int xpValue;
 
     public Packet26EntityExpOrb()
     {
@@ -20,7 +20,7 @@ public class Packet26EntityExpOrb extends Packet
         posX = MathHelper.floor_double(entityxporb.posX * 32D);
         posY = MathHelper.floor_double(entityxporb.posY * 32D);
         posZ = MathHelper.floor_double(entityxporb.posZ * 32D);
-        count = entityxporb.getXpValue();
+        xpValue = entityxporb.getXpValue();
     }
 
     public void readPacketData(DataInputStream datainputstream)
@@ -30,7 +30,7 @@ public class Packet26EntityExpOrb extends Packet
         posX = datainputstream.readInt();
         posY = datainputstream.readInt();
         posZ = datainputstream.readInt();
-        count = datainputstream.readShort();
+        xpValue = datainputstream.readShort();
     }
 
     public void writePacketData(DataOutputStream dataoutputstream)
@@ -40,7 +40,7 @@ public class Packet26EntityExpOrb extends Packet
         dataoutputstream.writeInt(posX);
         dataoutputstream.writeInt(posY);
         dataoutputstream.writeInt(posZ);
-        dataoutputstream.writeShort(count);
+        dataoutputstream.writeShort(xpValue);
     }
 
     public void processPacket(NetHandler nethandler)

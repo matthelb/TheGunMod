@@ -33,7 +33,7 @@ public class BlockSilverfish extends Block
 
     public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
     {
-        if (!world.multiplayerWorld)
+        if (!world.isRemote)
         {
             EntitySilverfish entitysilverfish = new EntitySilverfish(world);
             entitysilverfish.setLocationAndAngles((double)i + 0.5D, j, (double)k + 0.5D, 0.0F, 0.0F);
@@ -53,7 +53,7 @@ public class BlockSilverfish extends Block
         return i == Block.stone.blockID || i == Block.cobblestone.blockID || i == Block.stoneBrick.blockID;
     }
 
-    public static int func_35304_f(int i)
+    public static int getMetadataForBlockType(int i)
     {
         if (i == Block.cobblestone.blockID)
         {

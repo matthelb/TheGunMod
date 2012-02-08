@@ -2,12 +2,12 @@ package net.minecraft.src;
 
 class SlotEnchantmentTable extends InventoryBasic
 {
-    final ContainerEnchantment field_40070_a;
+    final ContainerEnchantment container;
 
     SlotEnchantmentTable(ContainerEnchantment containerenchantment, String s, int i)
     {
         super(s, i);
-        field_40070_a = containerenchantment;
+        container = containerenchantment;
     }
 
     public int getInventoryStackLimit()
@@ -18,6 +18,6 @@ class SlotEnchantmentTable extends InventoryBasic
     public void onInventoryChanged()
     {
         super.onInventoryChanged();
-        field_40070_a.onCraftMatrixChanged(this);
+        container.onCraftMatrixChanged(this);
     }
 }

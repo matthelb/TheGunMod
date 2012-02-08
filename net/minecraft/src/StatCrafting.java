@@ -2,16 +2,16 @@ package net.minecraft.src;
 
 public class StatCrafting extends StatBase
 {
-    private final int field_25073_a;
+    private final int itemID;
 
     public StatCrafting(int i, String s, int j)
     {
         super(i, s);
-        field_25073_a = j;
+        itemID = j;
     }
 
     public int func_25072_b()
     {
-        return field_25073_a;
+        return itemID;
     }
 }

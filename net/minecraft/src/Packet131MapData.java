@@ -33,7 +33,7 @@ public class Packet131MapData extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.handleItemData(this);
+        nethandler.handleMapData(this);
     }
 
     public int getPacketSize()

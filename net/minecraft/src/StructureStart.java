@@ -17,7 +17,7 @@ public abstract class StructureStart
         return boundingBox;
     }
 
-    public LinkedList func_40560_b()
+    public LinkedList getComponents()
     {
         return components;
     }
@@ -44,7 +44,7 @@ public abstract class StructureStart
     {
         boundingBox = StructureBoundingBox.getNewBoundingBox();
         StructureComponent structurecomponent;
-        for (Iterator iterator = components.iterator(); iterator.hasNext(); boundingBox.resizeBoundingBoxTo(structurecomponent.getBoundingBox()))
+        for (Iterator iterator = components.iterator(); iterator.hasNext(); boundingBox.expandTo(structurecomponent.getBoundingBox()))
         {
             structurecomponent = (StructureComponent)iterator.next();
         }

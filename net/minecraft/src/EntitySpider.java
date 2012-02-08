@@ -26,7 +26,7 @@ public class EntitySpider extends EntityMob
     public void onUpdate()
     {
         super.onUpdate();
-        if (!worldObj.multiplayerWorld)
+        if (!worldObj.isRemote)
         {
             func_40148_a(isCollidedHorizontally);
         }

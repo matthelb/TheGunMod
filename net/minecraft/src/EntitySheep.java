@@ -40,7 +40,7 @@ public class EntitySheep extends EntityAnimal
             0.1F, 0.1F, 0.1F
         }
     };
-    private int field_44004_b;
+    private int sheepTimer;
 
     public EntitySheep(World world)
     {
@@ -76,15 +76,15 @@ public class EntitySheep extends EntityAnimal
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        if (field_44004_b > 0)
+        if (sheepTimer > 0)
         {
-            field_44004_b--;
+            sheepTimer--;
         }
     }
 
     protected void jump()
     {
-        if (field_44004_b <= 0)
+        if (sheepTimer <= 0)
         {
             super.jump();
         }
@@ -93,18 +93,18 @@ public class EntitySheep extends EntityAnimal
     protected void updateEntityActionState()
     {
         super.updateEntityActionState();
-        if (!hasPath() && field_44004_b <= 0 && (isChild() && rand.nextInt(50) == 0 || rand.nextInt(1000) == 0))
+        if (!hasPath() && sheepTimer <= 0 && (isChild() && rand.nextInt(50) == 0 || rand.nextInt(1000) == 0))
         {
             int i = MathHelper.floor_double(posX);
             int k = MathHelper.floor_double(posY);
             int i1 = MathHelper.floor_double(posZ);
             if (worldObj.getBlockId(i, k, i1) == Block.tallGrass.blockID && worldObj.getBlockMetadata(i, k, i1) == 1 || worldObj.getBlockId(i, k - 1, i1) == Block.grass.blockID)
             {
-                field_44004_b = 40;
+                sheepTimer = 40;
                 worldObj.setEntityState(this, (byte)10);
             }
         }
-        else if (field_44004_b == 4)
+        else if (sheepTimer == 4)
         {
             int j = MathHelper.floor_double(posX);
             int l = MathHelper.floor_double(posY);
@@ -142,7 +142,7 @@ public class EntitySheep extends EntityAnimal
     {
         if (byte0 == 10)
         {
-            field_44004_b = 40;
+            sheepTimer = 40;
         }
         else
         {
@@ -152,37 +152,37 @@ public class EntitySheep extends EntityAnimal
 
     protected boolean isMovementCeased()
     {
-        return field_44004_b > 0;
+        return sheepTimer > 0;
     }
 
     public float func_44003_c(float f)
     {
-        if (field_44004_b <= 0)
+        if (sheepTimer <= 0)
         {
             return 0.0F;
         }
-        if (field_44004_b >= 4 && field_44004_b <= 36)
+        if (sheepTimer >= 4 && sheepTimer <= 36)
         {
             return 1.0F;
         }
-        if (field_44004_b < 4)
+        if (sheepTimer < 4)
         {
-            return ((float)field_44004_b - f) / 4F;
+            return ((float)sheepTimer - f) / 4F;
         }
         else
         {
-            return -((float)(field_44004_b - 40) - f) / 4F;
+            return -((float)(sheepTimer - 40) - f) / 4F;
         }
     }
 
     public float func_44002_d(float f)
     {
-        if (field_44004_b > 4 && field_44004_b <= 36)
+        if (sheepTimer > 4 && sheepTimer <= 36)
         {
-            float f1 = ((float)(field_44004_b - 4) - f) / 32F;
+            float f1 = ((float)(sheepTimer - 4) - f) / 32F;
             return 0.6283185F + 0.2199115F * MathHelper.sin(f1 * 28.7F);
         }
-        if (field_44004_b > 0)
+        if (sheepTimer > 0)
         {
             return 0.6283185F;
         }
@@ -197,7 +197,7 @@ public class EntitySheep extends EntityAnimal
         ItemStack itemstack = entityplayer.inventory.getCurrentItem();
         if (itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && !getSheared() && !isChild())
         {
-            if (!worldObj.multiplayerWorld)
+            if (!worldObj.isRemote)
             {
                 setSheared(true);
                 int i = 1 + rand.nextInt(3);

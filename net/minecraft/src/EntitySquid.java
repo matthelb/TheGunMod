@@ -138,7 +138,7 @@ public class EntitySquid extends EntityWaterMob
                 randomMotionSpeed = randomMotionSpeed * 0.9F;
                 field_21079_m = field_21079_m * 0.99F;
             }
-            if (!worldObj.multiplayerWorld)
+            if (!worldObj.isRemote)
             {
                 motionX = randomMotionVecX * randomMotionSpeed;
                 motionY = randomMotionVecY * randomMotionSpeed;
@@ -153,7 +153,7 @@ public class EntitySquid extends EntityWaterMob
         else
         {
             tentacleAngle = MathHelper.abs(MathHelper.sin(field_21085_g)) * 3.141593F * 0.25F;
-            if (!worldObj.multiplayerWorld)
+            if (!worldObj.isRemote)
             {
                 motionX = 0.0D;
                 motionY -= 0.080000000000000002D;

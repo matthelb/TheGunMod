@@ -107,7 +107,7 @@ public class BlockRedstoneTorch extends BlockTorch
         return i1 != 2 || l != 4;
     }
 
-    private boolean func_30002_h(World world, int i, int j, int k)
+    private boolean isIndirectlyPowered(World world, int i, int j, int k)
     {
         int l = world.getBlockMetadata(i, j, k);
         if (l == 5 && world.isBlockIndirectlyProvidingPowerTo(i, j - 1, k, 0))
@@ -131,7 +131,7 @@ public class BlockRedstoneTorch extends BlockTorch
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        boolean flag = func_30002_h(world, i, j, k);
+        boolean flag = isIndirectlyPowered(world, i, j, k);
         for (; torchUpdates.size() > 0 && world.getWorldTime() - ((RedstoneUpdateInfo)torchUpdates.get(0)).updateTime > 100L; torchUpdates.remove(0)) { }
         if (torchActive)
         {

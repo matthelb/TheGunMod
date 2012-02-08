@@ -31,7 +31,7 @@ public class BlockDispenser extends BlockContainer
 
     private void setDispenserDefaultDirection(World world, int i, int j, int k)
     {
-        if (!world.multiplayerWorld)
+        if (!world.isRemote)
         {
             int l = world.getBlockId(i, j, k - 1);
             int i1 = world.getBlockId(i, j, k + 1);
@@ -82,7 +82,7 @@ public class BlockDispenser extends BlockContainer
 
     public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return true;
         }
@@ -193,7 +193,7 @@ public class BlockDispenser extends BlockContainer
 
     public void updateTick(World world, int i, int j, int k, Random random)
     {
-        if (!world.multiplayerWorld && (world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k)))
+        if (!world.isRemote && (world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k)))
         {
             dispenseItem(world, i, j, k, random);
         }

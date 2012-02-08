@@ -32,7 +32,7 @@ public enum EnumArmorMaterial
         enchantability = k;
     }
 
-    public int func_40576_a(int i)
+    public int getDurability(int i)
     {
         return ItemArmor.getMaxDamageArray()[i] * maxDamageFactor;
     }

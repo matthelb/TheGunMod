@@ -3,12 +3,12 @@ package net.minecraft.src;
 public class ItemSword extends Item
 {
     private int weaponDamage;
-    private final EnumToolMaterial field_40439_b;
+    private final EnumToolMaterial toolMaterial;
 
     public ItemSword(int i, EnumToolMaterial enumtoolmaterial)
     {
         super(i);
-        field_40439_b = enumtoolmaterial;
+        toolMaterial = enumtoolmaterial;
         maxStackSize = 1;
         setMaxDamage(enumtoolmaterial.getMaxUses());
         weaponDamage = 4 + enumtoolmaterial.getDamageVsEntity();
@@ -64,6 +64,6 @@ public class ItemSword extends Item
 
     public int getItemEnchantability()
     {
-        return field_40439_b.getEnchantability();
+        return toolMaterial.getEnchantability();
     }
 }

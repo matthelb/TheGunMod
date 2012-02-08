@@ -28,7 +28,7 @@ public class ChunkProvider
 
     public boolean chunkExists(int i, int j)
     {
-        return chunkMap.containsKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
+        return chunkMap.containsItem(ChunkCoordIntPair.chunkXZ2Int(i, j));
     }
 
     public void dropChunk(int i, int j)
@@ -107,7 +107,7 @@ public class ChunkProvider
         return null;
     }
 
-    private void unloadAndSaveChunkData(Chunk chunk)
+    private void saveChunkExtraData(Chunk chunk)
     {
         if (chunkLoader != null)
         {
@@ -122,7 +122,7 @@ public class ChunkProvider
         }
     }
 
-    private void unloadAndSaveChunk(Chunk chunk)
+    private void saveChunkData(Chunk chunk)
     {
         if (chunkLoader != null)
         {
@@ -161,11 +161,11 @@ public class ChunkProvider
             Chunk chunk = (Chunk)chunkList.get(j);
             if (flag && !chunk.neverSave)
             {
-                unloadAndSaveChunkData(chunk);
+                saveChunkExtraData(chunk);
             }
             if (chunk.needsSaving(flag))
             {
-                unloadAndSaveChunk(chunk);
+                saveChunkData(chunk);
                 chunk.isModified = false;
                 if (++i == 24 && !flag)
                 {
@@ -194,8 +194,8 @@ public class ChunkProvider
                 Long long1 = (Long)droppedChunksSet.iterator().next();
                 Chunk chunk1 = (Chunk)chunkMap.getValueByKey(long1.longValue());
                 chunk1.onChunkUnload();
-                unloadAndSaveChunk(chunk1);
-                unloadAndSaveChunkData(chunk1);
+                saveChunkData(chunk1);
+                saveChunkExtraData(chunk1);
                 droppedChunksSet.remove(long1);
                 chunkMap.remove(long1.longValue());
                 chunkList.remove(chunk1);
@@ -219,7 +219,7 @@ public class ChunkProvider
 
         if (chunkLoader != null)
         {
-            chunkLoader.func_814_a();
+            chunkLoader.chunkTick();
         }
         return chunkProvider.unload100OldestChunks();
     }
@@ -234,13 +234,13 @@ public class ChunkProvider
         return (new StringBuilder("ServerChunkCache: ")).append(chunkMap.getNumHashElements()).append(" Drop: ").append(droppedChunksSet.size()).toString();
     }
 
-    public List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
-        return chunkProvider.func_40377_a(enumcreaturetype, i, j, k);
+        return chunkProvider.getPossibleCreatures(enumcreaturetype, i, j, k);
     }
 
-    public ChunkPosition func_40376_a(World world, String s, int i, int j, int k)
+    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
     {
-        return chunkProvider.func_40376_a(world, s, i, j, k);
+        return chunkProvider.findClosestStructure(world, s, i, j, k);
     }
 }

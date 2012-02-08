@@ -7,7 +7,7 @@ final class StepSoundStone extends StepSound
         super(s, f, f1);
     }
 
-    public String stepSoundDir()
+    public String getBreakSound()
     {
         return "random.glass";
     }

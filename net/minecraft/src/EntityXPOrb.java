@@ -165,7 +165,7 @@ public class EntityXPOrb extends Entity
 
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
-        if (worldObj.multiplayerWorld)
+        if (worldObj.isRemote)
         {
             return;
         }
@@ -174,7 +174,7 @@ public class EntityXPOrb extends Entity
             entityplayer.xpCooldown = 2;
             worldObj.playSoundAtEntity(this, "random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
             entityplayer.onItemPickup(this, 1);
-            entityplayer.increaseXP(xpValue);
+            entityplayer.addExperience(xpValue);
             setEntityDead();
         }
     }

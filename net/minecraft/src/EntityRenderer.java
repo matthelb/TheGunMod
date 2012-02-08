@@ -824,7 +824,7 @@ public class EntityRenderer
         double d1 = entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * (double)f;
         double d2 = entityliving.lastTickPosZ + (entityliving.posZ - entityliving.lastTickPosZ) * (double)f;
         Profiler.endStartSection("center");
-        IChunkProvider ichunkprovider = mc.theWorld.getIChunkProvider();
+        IChunkProvider ichunkprovider = mc.theWorld.getChunkProvider();
         if (ichunkprovider instanceof ChunkProviderLoadOrGenerate)
         {
             ChunkProviderLoadOrGenerate chunkproviderloadorgenerate = (ChunkProviderLoadOrGenerate)ichunkprovider;
@@ -1470,7 +1470,7 @@ public class EntityRenderer
         else
         {
             float f5 = farPlaneDistance;
-            if (mc.theWorld.worldProvider.func_46064_i() && !flag)
+            if (mc.theWorld.worldProvider.getWorldHasNoSky() && !flag)
             {
                 double d = (double)((entityliving.getEntityBrightnessForRender(f) & 0xf00000) >> 20) / 16D + (entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * (double)f + 4D) / 32D;
                 if (d < 1.0D)

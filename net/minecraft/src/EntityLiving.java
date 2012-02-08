@@ -47,17 +47,17 @@ public abstract class EntityLiving extends Entity
     public float field_703_S;
     protected EntityPlayer attackingPlayer;
     protected int recentlyHit;
-    protected EntityLiving field_46020_bQ;
+    protected EntityLiving entityLivingToAttack;
     public int arrowHitTempCounter;
     public int arrowHitTimer;
     protected HashMap activePotionsMap;
     private boolean field_39001_b;
     private int field_39002_c;
-    private EntityLookHelper field_46017_d;
-    private EntityMoveHelper field_46018_e;
-    private EntityJumpHelper field_46021_am;
-    private INavigate field_46022_an;
-    protected EntityAITasks field_46019_bU;
+    private EntityLookHelper lookHelper;
+    private EntityMoveHelper moveHelper;
+    private EntityJumpHelper jumpHelper;
+    private INavigate navigation;
+    protected EntityAITasks tasks;
     protected int newPosRotationIncrements;
     protected double newPosX;
     protected double newPosY;
@@ -103,12 +103,12 @@ public abstract class EntityLiving extends Entity
         field_9325_U = (float)(Math.random() * 0.89999997615814209D + 0.10000000149011612D);
         attackingPlayer = null;
         recentlyHit = 0;
-        field_46020_bQ = null;
+        entityLivingToAttack = null;
         arrowHitTempCounter = 0;
         arrowHitTimer = 0;
         activePotionsMap = new HashMap();
         field_39001_b = true;
-        field_46019_bU = new EntityAITasks();
+        tasks = new EntityAITasks();
         field_9348_ae = 0.0F;
         naturalArmorRating = 0;
         entityAge = 0;
@@ -119,10 +119,10 @@ public abstract class EntityLiving extends Entity
         numTicksToChaseTarget = 0;
         health = getMaxHealth();
         preventEntitySpawning = true;
-        field_46017_d = new EntityLookHelper(this);
-        field_46018_e = new EntityMoveHelper(this, moveSpeed);
-        field_46021_am = new EntityJumpHelper(this);
-        field_46022_an = new PathNavigate(this, world);
+        lookHelper = new EntityLookHelper(this);
+        moveHelper = new EntityMoveHelper(this, moveSpeed);
+        jumpHelper = new EntityJumpHelper(this);
+        navigation = new PathNavigate(this, world);
         field_9363_r = (float)(Math.random() + 1.0D) * 0.01F;
         setPosition(posX, posY, posZ);
         field_9365_p = (float)Math.random() * 12398F;
@@ -131,37 +131,37 @@ public abstract class EntityLiving extends Entity
         stepHeight = 0.5F;
     }
 
-    public EntityLookHelper func_46008_aG()
+    public EntityLookHelper getLookHelper()
     {
-        return field_46017_d;
+        return lookHelper;
     }
 
-    public EntityMoveHelper func_46009_aH()
+    public EntityMoveHelper getMoveHelper()
     {
-        return field_46018_e;
+        return moveHelper;
     }
 
-    public EntityJumpHelper func_46005_aI()
+    public EntityJumpHelper getJumpHelper()
     {
-        return field_46021_am;
+        return jumpHelper;
     }
 
     public INavigate func_46012_aJ()
     {
-        return field_46022_an;
+        return navigation;
     }
 
-    public Random func_46004_aK()
+    public Random getRNG()
     {
         return rand;
     }
 
     public EntityLiving func_46007_aL()
     {
-        return field_46020_bQ;
+        return entityLivingToAttack;
     }
 
-    public int func_46011_aM()
+    public int getAge()
     {
         return entityAge;
     }
@@ -224,7 +224,7 @@ public abstract class EntityLiving extends Entity
         {
             if (!attackEntityFrom(DamageSource.inWall, 1));
         }
-        if (isImmuneToFire() || worldObj.multiplayerWorld)
+        if (isImmuneToFire() || worldObj.isRemote)
         {
             extinguish();
         }
@@ -289,7 +289,7 @@ public abstract class EntityLiving extends Entity
         deathTime++;
         if (deathTime == 20)
         {
-            if (!worldObj.multiplayerWorld && (recentlyHit > 0 || isPlayer()) && !isChild())
+            if (!worldObj.isRemote && (recentlyHit > 0 || isPlayer()) && !isChild())
             {
                 for (int i = getExperiencePoints(attackingPlayer); i > 0;)
                 {
@@ -466,7 +466,7 @@ public abstract class EntityLiving extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if (worldObj.multiplayerWorld)
+        if (worldObj.isRemote)
         {
             return false;
         }
@@ -663,7 +663,7 @@ public abstract class EntityLiving extends Entity
             entity.onKillEntity(this);
         }
         unused_flag = true;
-        if (!worldObj.multiplayerWorld)
+        if (!worldObj.isRemote)
         {
             int i = 0;
             if (entity instanceof EntityPlayer)
@@ -719,7 +719,7 @@ public abstract class EntityLiving extends Entity
             if (j > 0)
             {
                 StepSound stepsound = Block.blocksList[j].stepSound;
-                worldObj.playSoundAtEntity(this, stepsound.stepSoundDir2(), stepsound.getVolume() * 0.5F, stepsound.getPitch() * 0.75F);
+                worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.5F, stepsound.getPitch() * 0.75F);
             }
         }
     }
@@ -895,17 +895,17 @@ public abstract class EntityLiving extends Entity
         return false;
     }
 
-    public void func_46010_f(float f)
+    public void setMoveForward(float f)
     {
         moveForward = f;
     }
 
-    public void func_46003_g(boolean flag)
+    public void setIsJumping(boolean flag)
     {
         isJumping = flag;
     }
 
-    public float func_46013_aQ()
+    public float getMoveSpeed()
     {
         return moveSpeed;
     }
@@ -956,9 +956,9 @@ public abstract class EntityLiving extends Entity
         }
         else if (func_44001_ad())
         {
-            if (func_46006_aR())
+            if (isAIEnabled())
             {
-                func_46014_aS();
+                updateAITasks();
             }
             else
             {
@@ -1012,14 +1012,14 @@ public abstract class EntityLiving extends Entity
         Profiler.endSection();
     }
 
-    protected boolean func_46006_aR()
+    protected boolean isAIEnabled()
     {
         return false;
     }
 
     protected boolean func_44001_ad()
     {
-        return !worldObj.multiplayerWorld;
+        return !worldObj.isRemote;
     }
 
     protected boolean isMovementBlocked()
@@ -1077,19 +1077,19 @@ public abstract class EntityLiving extends Entity
         }
     }
 
-    protected void func_46014_aS()
+    protected void updateAITasks()
     {
         entityAge++;
         despawnEntity();
-        if (field_46020_bQ != null && !field_46020_bQ.isEntityAlive())
+        if (entityLivingToAttack != null && !entityLivingToAttack.isEntityAlive())
         {
-            field_46020_bQ = null;
+            entityLivingToAttack = null;
         }
-        field_46019_bU.func_46115_a();
-        field_46022_an.func_46069_a();
-        field_46018_e.func_46034_a();
-        field_46017_d.func_46142_a();
-        field_46021_am.func_46130_b();
+        tasks.onUpdateTasks();
+        navigation.onUpdateNavigation();
+        moveHelper.onUpdateMoveHelper();
+        lookHelper.func_46142_a();
+        jumpHelper.doJump();
     }
 
     protected void updateEntityActionState()
@@ -1323,7 +1323,7 @@ public abstract class EntityLiving extends Entity
             }
             Integer integer = (Integer)iterator.next();
             PotionEffect potioneffect = (PotionEffect)activePotionsMap.get(integer);
-            if (!potioneffect.onUpdate(this) && !worldObj.multiplayerWorld)
+            if (!potioneffect.onUpdate(this) && !worldObj.isRemote)
             {
                 iterator.remove();
                 onFinishedPotionEffect(potioneffect);
@@ -1332,7 +1332,7 @@ public abstract class EntityLiving extends Entity
         while (true);
         if (field_39001_b)
         {
-            if (!worldObj.multiplayerWorld)
+            if (!worldObj.isRemote)
             {
                 if (!activePotionsMap.isEmpty())
                 {
@@ -1359,7 +1359,7 @@ public abstract class EntityLiving extends Entity
         }
     }
 
-    public void func_40112_aN()
+    public void clearActivePotions()
     {
         Iterator iterator = activePotionsMap.keySet().iterator();
         do
@@ -1370,7 +1370,7 @@ public abstract class EntityLiving extends Entity
             }
             Integer integer = (Integer)iterator.next();
             PotionEffect potioneffect = (PotionEffect)activePotionsMap.get(integer);
-            if (!worldObj.multiplayerWorld)
+            if (!worldObj.isRemote)
             {
                 iterator.remove();
                 onFinishedPotionEffect(potioneffect);
@@ -1379,7 +1379,7 @@ public abstract class EntityLiving extends Entity
         while (true);
     }
 
-    public Collection func_40118_aO()
+    public Collection getActivePotionEffects()
     {
         return activePotionsMap.values();
     }
@@ -1464,7 +1464,7 @@ public abstract class EntityLiving extends Entity
         return f;
     }
 
-    public void teleportToLocation(double d, double d1, double d2)
+    public void setPositionAndUpdate(double d, double d1, double d2)
     {
         setLocationAndAngles(d, d1, d2, rotationYaw, rotationPitch);
     }

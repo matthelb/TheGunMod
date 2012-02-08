@@ -19,24 +19,24 @@ public class EntityEnderPearl extends EntityThrowable
         super(world, d, d1, d2);
     }
 
-    protected void onThrowableCollision(MovingObjectPosition movingobjectposition)
+    protected void onImpact(MovingObjectPosition movingobjectposition)
     {
         if (movingobjectposition.entityHit != null)
         {
-            if (!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, throwingEntity), 0));
+            if (!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, thrower), 0));
         }
         for (int i = 0; i < 32; i++)
         {
             worldObj.spawnParticle("portal", posX, posY + rand.nextDouble() * 2D, posZ, rand.nextGaussian(), 0.0D, rand.nextGaussian());
         }
 
-        if (!worldObj.multiplayerWorld)
+        if (!worldObj.isRemote)
         {
-            if (throwingEntity != null)
+            if (thrower != null)
             {
-                throwingEntity.teleportToLocation(posX, posY, posZ);
-                throwingEntity.fallDistance = 0.0F;
-                throwingEntity.attackEntityFrom(DamageSource.fall, 5);
+                thrower.setPositionAndUpdate(posX, posY, posZ);
+                thrower.fallDistance = 0.0F;
+                thrower.attackEntityFrom(DamageSource.fall, 5);
             }
             setEntityDead();
         }

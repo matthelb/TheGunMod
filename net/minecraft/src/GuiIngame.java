@@ -96,7 +96,7 @@ public class GuiIngame extends Gui
                 if (l7 > 0)
                 {
                     char c = '\266';
-                    int i9 = (int)(mc.thePlayer.currentXP * (float)(c + 1));
+                    int i9 = (int)(mc.thePlayer.experience * (float)(c + 1));
                     int l9 = (l - 32) + 3;
                     drawTexturedModalRect(k6, l9, 0, 64, c, 5);
                     if (i9 > 0)
@@ -187,7 +187,7 @@ public class GuiIngame extends Gui
                         l12 += 36;
                         byte4 = 13;
                     }
-                    if (mc.thePlayer.getFoodStats().getFoodSaturationLevel() <= 0.0F && updateCounter % (i5 * 3 + 1) == 0)
+                    if (mc.thePlayer.getFoodStats().getSaturationLevel() <= 0.0F && updateCounter % (i5 * 3 + 1) == 0)
                     {
                         i12 += rand.nextInt(3) - 1;
                     }
@@ -263,11 +263,11 @@ public class GuiIngame extends Gui
             GL11.glEnable(3008 /*GL_ALPHA_TEST*/);
             GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
         }
-        if (mc.playerController.func_35642_f() && mc.thePlayer.playerLevel > 0)
+        if (mc.playerController.func_35642_f() && mc.thePlayer.experienceLevel > 0)
         {
             boolean flag1 = false;
             int j1 = flag1 ? 0xffffff : 0x80ff20;
-            String s = (new StringBuilder()).append("").append(mc.thePlayer.playerLevel).toString();
+            String s = (new StringBuilder()).append("").append(mc.thePlayer.experienceLevel).toString();
             int k3 = (k - fontrenderer.getStringWidth(s)) / 2;
             int l3 = l - 31 - 4;
             fontrenderer.drawString(s, k3 + 1, l3, 0);
@@ -300,7 +300,7 @@ public class GuiIngame extends Gui
             drawString(fontrenderer, (new StringBuilder()).append("y: ").append(mc.thePlayer.posY).toString(), 2, 72, 0xe0e0e0);
             drawString(fontrenderer, (new StringBuilder()).append("z: ").append(mc.thePlayer.posZ).toString(), 2, 80, 0xe0e0e0);
             drawString(fontrenderer, (new StringBuilder()).append("f: ").append(MathHelper.floor_double((double)((mc.thePlayer.rotationYaw * 4F) / 360F) + 0.5D) & 3).toString(), 2, 88, 0xe0e0e0);
-            drawString(fontrenderer, (new StringBuilder()).append("Seed: ").append(mc.theWorld.getWorldSeed()).toString(), 2, 104, 0xe0e0e0);
+            drawString(fontrenderer, (new StringBuilder()).append("Seed: ").append(mc.theWorld.getSeed()).toString(), 2, 104, 0xe0e0e0);
             GL11.glPopMatrix();
         }
         if (recordPlayingUpFor > 0)

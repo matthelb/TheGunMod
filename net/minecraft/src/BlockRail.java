@@ -96,7 +96,7 @@ public class BlockRail extends Block
 
     public void onBlockAdded(World world, int i, int j, int k)
     {
-        if (!world.multiplayerWorld)
+        if (!world.isRemote)
         {
             refreshTrackShape(world, i, j, k, true);
             if (blockID == Block.railPowered.blockID)
@@ -108,7 +108,7 @@ public class BlockRail extends Block
 
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -176,7 +176,7 @@ public class BlockRail extends Block
 
     private void refreshTrackShape(World world, int i, int j, int k, boolean flag)
     {
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return;
         }

@@ -19,7 +19,7 @@ public abstract class Packet
 
     static void addIdClassMapping(int i, boolean flag, boolean flag1, Class class1)
     {
-        if (packetIdToClassMap.containsKey(i))
+        if (packetIdToClassMap.containsItem(i))
         {
             throw new IllegalArgumentException((new StringBuilder()).append("Duplicate packet id:").append(i).toString());
         }
@@ -151,7 +151,7 @@ public abstract class Packet
 
     public abstract int getPacketSize();
 
-    protected ItemStack func_40187_b(DataInputStream datainputstream)
+    protected ItemStack readItemStack(DataInputStream datainputstream)
     throws IOException
     {
         ItemStack itemstack = null;
@@ -163,7 +163,7 @@ public abstract class Packet
             itemstack = new ItemStack(word0, byte0, word1);
             if (Item.itemsList[word0].isDamageable() || Item.itemsList[word0].func_46056_k())
             {
-                itemstack.stackTagCompound = func_40186_c(datainputstream);
+                itemstack.stackTagCompound = readNBTTagCompound(datainputstream);
             }
         }
         return itemstack;
@@ -183,12 +183,12 @@ public abstract class Packet
             dataoutputstream.writeShort(itemstack.getItemDamage());
             if (itemstack.getItem().isDamageable() || itemstack.getItem().func_46056_k())
             {
-                func_40189_a(itemstack.stackTagCompound, dataoutputstream);
+                writeNBTTagCompound(itemstack.stackTagCompound, dataoutputstream);
             }
         }
     }
 
-    protected NBTTagCompound func_40186_c(DataInputStream datainputstream)
+    protected NBTTagCompound readNBTTagCompound(DataInputStream datainputstream)
     throws IOException
     {
         short word0 = datainputstream.readShort();
@@ -204,7 +204,7 @@ public abstract class Packet
         }
     }
 
-    protected void func_40189_a(NBTTagCompound nbttagcompound, DataOutputStream dataoutputstream)
+    protected void writeNBTTagCompound(NBTTagCompound nbttagcompound, DataOutputStream dataoutputstream)
     throws IOException
     {
         if (nbttagcompound == null)

@@ -311,7 +311,7 @@ public class GuiAchievements extends GuiScreen
             {
                 float f4 = 0.1F;
                 GL11.glColor4f(f4, f4, f4, 1.0F);
-                renderitem. field_27004_a = false;
+                renderitem.field_27004_a = false;
             }
             GL11.glEnable(2896 /*GL_LIGHTING*/);
             GL11.glEnable(2884 /*GL_CULL_FACE*/);

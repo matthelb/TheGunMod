@@ -33,7 +33,7 @@ public class Packet18Animation extends Packet
 
     public void processPacket(NetHandler nethandler)
     {
-        nethandler.handleArmAnimation(this);
+        nethandler.handleAnimation(this);
     }
 
     public int getPacketSize()

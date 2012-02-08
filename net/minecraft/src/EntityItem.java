@@ -134,7 +134,7 @@ public class EntityItem extends Entity
 
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
-        if (worldObj.multiplayerWorld)
+        if (worldObj.isRemote)
         {
             return;
         }

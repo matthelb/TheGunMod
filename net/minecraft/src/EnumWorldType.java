@@ -5,22 +5,22 @@ public enum EnumWorldType
     DEFAULT("DEFAULT", 0, "default"),
     FLAT("FLAT", 1, "flat");
 
-    private String field_46139_c;
-    private static final EnumWorldType field_46137_d[] = (new EnumWorldType[] {
+    private String worldType;
+    private static final EnumWorldType allWorldTypes[] = (new EnumWorldType[] {
         DEFAULT, FLAT
     });
 
     private EnumWorldType(String s, int i, String s1)
     {
-        field_46139_c = s1;
+        worldType = s1;
     }
 
     public String func_46136_a()
     {
-        return (new StringBuilder()).append("generator.").append(field_46139_c).toString();
+        return (new StringBuilder()).append("generator.").append(worldType).toString();
     }
 
-    public static EnumWorldType func_46135_a(String s)
+    public static EnumWorldType parseWorldType(String s)
     {
         EnumWorldType aenumworldtype[] = values();
         int i = aenumworldtype.length;

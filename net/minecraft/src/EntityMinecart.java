@@ -76,7 +76,7 @@ public class EntityMinecart extends Entity
             }
         }
     };
-    private int minecartPosRotationIncrements;
+    private int turnProgress;
     private double minecartX;
     private double minecartY;
     private double minecartZ;
@@ -146,7 +146,7 @@ public class EntityMinecart extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if (worldObj.multiplayerWorld || isDead)
+        if (worldObj.isRemote || isDead)
         {
             return true;
         }
@@ -272,19 +272,19 @@ public class EntityMinecart extends Entity
         {
             worldObj.spawnParticle("largesmoke", posX, posY + 0.80000000000000004D, posZ, 0.0D, 0.0D, 0.0D);
         }
-        if (worldObj.multiplayerWorld)
+        if (worldObj.isRemote)
         {
-            if (minecartPosRotationIncrements > 0)
+            if (turnProgress > 0)
             {
-                double d = posX + (minecartX - posX) / (double)minecartPosRotationIncrements;
-                double d1 = posY + (minecartY - posY) / (double)minecartPosRotationIncrements;
-                double d3 = posZ + (minecartZ - posZ) / (double)minecartPosRotationIncrements;
+                double d = posX + (minecartX - posX) / (double)turnProgress;
+                double d1 = posY + (minecartY - posY) / (double)turnProgress;
+                double d3 = posZ + (minecartZ - posZ) / (double)turnProgress;
                 double d5;
                 for (d5 = minecartYaw - (double)rotationYaw; d5 < -180D; d5 += 360D) { }
                 for (; d5 >= 180D; d5 -= 360D) { }
-                rotationYaw += d5 / (double)minecartPosRotationIncrements;
-                rotationPitch += (minecartPitch - (double)rotationPitch) / (double)minecartPosRotationIncrements;
-                minecartPosRotationIncrements--;
+                rotationYaw += d5 / (double)turnProgress;
+                rotationPitch += (minecartPitch - (double)rotationPitch) / (double)turnProgress;
+                turnProgress--;
                 setPosition(d, d1, d3);
                 setRotation(rotationYaw, rotationPitch);
             }
@@ -795,7 +795,7 @@ public class EntityMinecart extends Entity
 
     public void applyEntityCollision(Entity entity)
     {
-        if (worldObj.multiplayerWorld)
+        if (worldObj.isRemote)
         {
             return;
         }
@@ -941,14 +941,14 @@ public class EntityMinecart extends Entity
             {
                 return true;
             }
-            if (!worldObj.multiplayerWorld)
+            if (!worldObj.isRemote)
             {
                 entityplayer.mountEntity(this);
             }
         }
         else if (minecartType == 1)
         {
-            if (!worldObj.multiplayerWorld)
+            if (!worldObj.isRemote)
             {
                 entityplayer.displayGUIChest(this);
             }
@@ -978,7 +978,7 @@ public class EntityMinecart extends Entity
         minecartZ = d2;
         minecartYaw = f;
         minecartPitch = f1;
-        minecartPosRotationIncrements = i + 2;
+        turnProgress = i + 2;
         motionX = velocityX;
         motionY = velocityY;
         motionZ = velocityZ;

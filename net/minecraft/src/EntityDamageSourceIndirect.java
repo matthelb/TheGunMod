@@ -2,12 +2,12 @@ package net.minecraft.src;
 
 public class EntityDamageSourceIndirect extends EntityDamageSource
 {
-    private Entity damageSourceProjectile;
+    private Entity indirectEntity;
 
     public EntityDamageSourceIndirect(String s, Entity entity, Entity entity1)
     {
         super(s, entity);
-        damageSourceProjectile = entity1;
+        indirectEntity = entity1;
     }
 
     public Entity getSourceOfDamage()
@@ -17,6 +17,6 @@ public class EntityDamageSourceIndirect extends EntityDamageSource
 
     public Entity getEntity()
     {
-        return damageSourceProjectile;
+        return indirectEntity;
     }
 }

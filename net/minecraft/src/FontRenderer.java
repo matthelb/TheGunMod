@@ -13,33 +13,33 @@ public class FontRenderer
     private int charWidth[];
     public int fontTextureName;
     public int FONT_HEIGHT;
-    public Random field_41064_c;
-    private byte field_44036_e[];
-    private final int field_44034_f[] = new int[256];
-    private int field_44035_g[];
-    private int field_44038_h;
-    private final RenderEngine field_44039_i;
-    private float field_46126_j;
-    private float field_46127_k;
-    private boolean field_44037_j;
-    private boolean field_46125_m;
+    public Random fontRandom;
+    private byte glyphWidth[];
+    private final int glyphTextureName[] = new int[256];
+    private int colorCode[];
+    private int boundTextureName;
+    private final RenderEngine renderEngine;
+    private float posX;
+    private float posY;
+    private boolean unicodeFlag;
+    private boolean bidiFlag;
 
     public FontRenderer(GameSettings gamesettings, String s, RenderEngine renderengine, boolean flag)
     {
         charWidth = new int[256];
         fontTextureName = 0;
         FONT_HEIGHT = 8;
-        field_41064_c = new Random();
-        field_44036_e = new byte[0x10000];
-        field_44035_g = new int[32];
-        field_44039_i = renderengine;
-        field_44037_j = flag;
+        fontRandom = new Random();
+        glyphWidth = new byte[0x10000];
+        colorCode = new int[32];
+        renderEngine = renderengine;
+        unicodeFlag = flag;
         BufferedImage bufferedimage;
         try
         {
             bufferedimage = ImageIO.read((net.minecraft.src.RenderEngine.class).getResourceAsStream(s));
             InputStream inputstream = (net.minecraft.src.RenderEngine.class).getResourceAsStream("/font/glyph_sizes.bin");
-            inputstream.read(field_44036_e);
+            inputstream.read(glyphWidth);
         }
         catch (IOException ioexception)
         {
@@ -112,34 +112,34 @@ public class FontRenderer
                 j2 /= 4;
                 l2 /= 4;
             }
-            field_44035_g[l] = (l1 & 0xff) << 16 | (j2 & 0xff) << 8 | l2 & 0xff;
+            colorCode[l] = (l1 & 0xff) << 16 | (j2 & 0xff) << 8 | l2 & 0xff;
         }
     }
 
-    private void func_44031_a(int i)
+    private void renderDefaultChar(int i)
     {
         float f = (i % 16) * 8;
         float f1 = (i / 16) * 8;
-        if (field_44038_h != fontTextureName)
+        if (boundTextureName != fontTextureName)
         {
             GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, fontTextureName);
-            field_44038_h = fontTextureName;
+            boundTextureName = fontTextureName;
         }
         float f2 = (float)charWidth[i] - 0.01F;
         GL11.glBegin(5);
         GL11.glTexCoord2f(f / 128F, f1 / 128F);
-        GL11.glVertex3f(field_46126_j, field_46127_k, 0.0F);
+        GL11.glVertex3f(posX, posY, 0.0F);
         GL11.glTexCoord2f(f / 128F, (f1 + 7.99F) / 128F);
-        GL11.glVertex3f(field_46126_j, field_46127_k + 7.99F, 0.0F);
+        GL11.glVertex3f(posX, posY + 7.99F, 0.0F);
         GL11.glTexCoord2f((f + f2) / 128F, f1 / 128F);
-        GL11.glVertex3f(field_46126_j + f2, field_46127_k, 0.0F);
+        GL11.glVertex3f(posX + f2, posY, 0.0F);
         GL11.glTexCoord2f((f + f2) / 128F, (f1 + 7.99F) / 128F);
-        GL11.glVertex3f(field_46126_j + f2, field_46127_k + 7.99F, 0.0F);
+        GL11.glVertex3f(posX + f2, posY + 7.99F, 0.0F);
         GL11.glEnd();
-        field_46126_j += charWidth[i];
+        posX += charWidth[i];
     }
 
-    private void func_44030_b(int i)
+    private void loadGlyphTexture(int i)
     {
         String s = String.format("/font/glyph_%02X.png", new Object[]
                 {
@@ -154,28 +154,28 @@ public class FontRenderer
         {
             throw new RuntimeException(ioexception);
         }
-        field_44034_f[i] = field_44039_i.allocateAndSetupTexture(bufferedimage);
-        field_44038_h = field_44034_f[i];
+        glyphTextureName[i] = renderEngine.allocateAndSetupTexture(bufferedimage);
+        boundTextureName = glyphTextureName[i];
     }
 
-    private void func_44033_a(char c)
+    private void renderUnicodeChar(char c)
     {
-        if (field_44036_e[c] == 0)
+        if (glyphWidth[c] == 0)
         {
             return;
         }
         int i = c / 256;
-        if (field_44034_f[i] == 0)
+        if (glyphTextureName[i] == 0)
         {
-            func_44030_b(i);
+            loadGlyphTexture(i);
         }
-        if (field_44038_h != field_44034_f[i])
+        if (boundTextureName != glyphTextureName[i])
         {
-            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, field_44034_f[i]);
-            field_44038_h = field_44034_f[i];
+            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, glyphTextureName[i]);
+            boundTextureName = glyphTextureName[i];
         }
-        int j = field_44036_e[c] >>> 4;
-        int k = field_44036_e[c] & 0xf;
+        int j = glyphWidth[c] >>> 4;
+        int k = glyphWidth[c] & 0xf;
         float f = j;
         float f1 = k + 1;
         float f2 = (float)((c % 16) * 16) + f;
@@ -183,22 +183,22 @@ public class FontRenderer
         float f4 = f1 - f - 0.02F;
         GL11.glBegin(5);
         GL11.glTexCoord2f(f2 / 256F, f3 / 256F);
-        GL11.glVertex3f(field_46126_j, field_46127_k, 0.0F);
+        GL11.glVertex3f(posX, posY, 0.0F);
         GL11.glTexCoord2f(f2 / 256F, (f3 + 15.98F) / 256F);
-        GL11.glVertex3f(field_46126_j, field_46127_k + 7.99F, 0.0F);
+        GL11.glVertex3f(posX, posY + 7.99F, 0.0F);
         GL11.glTexCoord2f((f2 + f4) / 256F, f3 / 256F);
-        GL11.glVertex3f(field_46126_j + f4 / 2.0F, field_46127_k, 0.0F);
+        GL11.glVertex3f(posX + f4 / 2.0F, posY, 0.0F);
         GL11.glTexCoord2f((f2 + f4) / 256F, (f3 + 15.98F) / 256F);
-        GL11.glVertex3f(field_46126_j + f4 / 2.0F, field_46127_k + 7.99F, 0.0F);
+        GL11.glVertex3f(posX + f4 / 2.0F, posY + 7.99F, 0.0F);
         GL11.glEnd();
-        field_46126_j += (f1 - f) / 2.0F + 1.0F;
+        posX += (f1 - f) / 2.0F + 1.0F;
     }
 
     public void drawStringWithShadow(String s, int i, int j, int k)
     {
-        if (field_46125_m)
+        if (bidiFlag)
         {
-            s = func_46121_b(s);
+            s = bidiReorder(s);
         }
         renderString(s, i + 1, j + 1, k, true);
         renderString(s, i, j, k, false);
@@ -206,14 +206,14 @@ public class FontRenderer
 
     public void drawString(String s, int i, int j, int k)
     {
-        if (field_46125_m)
+        if (bidiFlag)
         {
-            s = func_46121_b(s);
+            s = bidiReorder(s);
         }
         renderString(s, i, j, k, false);
     }
 
-    private String func_46121_b(String s)
+    private String bidiReorder(String s)
     {
         if (s == null || !Bidi.requiresBidi(s.toCharArray(), 0, s.length()))
         {
@@ -284,7 +284,7 @@ public class FontRenderer
         return stringbuilder.toString();
     }
 
-    private void func_44029_a(String s, boolean flag)
+    private void renderStringAtPos(String s, boolean flag)
     {
         boolean flag1 = false;
         for (int i = 0; i < s.length(); i++)
@@ -308,7 +308,7 @@ public class FontRenderer
                     {
                         j += 16;
                     }
-                    int l = field_44035_g[j];
+                    int l = colorCode[j];
                     GL11.glColor3f((float)(l >> 16) / 255F, (float)(l >> 8 & 0xff) / 255F, (float)(l & 0xff) / 255F);
                 }
                 i++;
@@ -320,23 +320,23 @@ public class FontRenderer
                 int i1;
                 do
                 {
-                    i1 = field_41064_c.nextInt(ChatAllowedCharacters.allowedCharacters.length());
+                    i1 = fontRandom.nextInt(ChatAllowedCharacters.allowedCharacters.length());
                 }
                 while (charWidth[k + 32] != charWidth[i1 + 32]);
                 k = i1;
             }
             if (c == ' ')
             {
-                field_46126_j += 4F;
+                posX += 4F;
                 continue;
             }
-            if (k > 0 && !field_44037_j)
+            if (k > 0 && !unicodeFlag)
             {
-                func_44031_a(k + 32);
+                renderDefaultChar(k + 32);
             }
             else
             {
-                func_44033_a(c);
+                renderUnicodeChar(c);
             }
         }
     }
@@ -345,7 +345,7 @@ public class FontRenderer
     {
         if (s != null)
         {
-            field_44038_h = 0;
+            boundTextureName = 0;
             if ((k & 0xfc000000) == 0)
             {
                 k |= 0xff000000;
@@ -355,9 +355,9 @@ public class FontRenderer
                 k = (k & 0xfcfcfc) >> 2 | k & 0xff000000;
             }
             GL11.glColor4f((float)(k >> 16 & 0xff) / 255F, (float)(k >> 8 & 0xff) / 255F, (float)(k & 0xff) / 255F, (float)(k >> 24 & 0xff) / 255F);
-            field_46126_j = i;
-            field_46127_k = j;
-            func_44029_a(s, flag);
+            posX = i;
+            posY = j;
+            renderStringAtPos(s, flag);
         }
     }
 
@@ -377,17 +377,17 @@ public class FontRenderer
                 continue;
             }
             int k = ChatAllowedCharacters.allowedCharacters.indexOf(c);
-            if (k >= 0 && !field_44037_j)
+            if (k >= 0 && !unicodeFlag)
             {
                 i += charWidth[k + 32];
                 continue;
             }
-            if (field_44036_e[c] == 0)
+            if (glyphWidth[c] == 0)
             {
                 continue;
             }
-            int l = field_44036_e[c] >> 4;
-            int i1 = field_44036_e[c] & 0xf;
+            int l = glyphWidth[c] >> 4;
+            int i1 = glyphWidth[c] & 0xf;
             if (i1 > 7)
             {
                 i1 = 15;
@@ -402,28 +402,28 @@ public class FontRenderer
 
     public void drawSplitString(String s, int i, int j, int k, int l)
     {
-        if (field_46125_m)
+        if (bidiFlag)
         {
-            s = func_46121_b(s);
+            s = bidiReorder(s);
         }
         func_46124_b(s, i, j, k, l);
     }
 
     private void func_46124_b(String s, int i, int j, int k, int l)
     {
-        func_46122_b(s, i, j, k, l, false);
+        renderSplitString(s, i, j, k, l, false);
     }
 
-    public void func_40609_a(String s, int i, int j, int k, int l, boolean flag)
+    public void drawSplitString(String s, int i, int j, int k, int l, boolean flag)
     {
-        if (field_46125_m)
+        if (bidiFlag)
         {
-            s = func_46121_b(s);
+            s = bidiReorder(s);
         }
-        func_46122_b(s, i, j, k, l, flag);
+        renderSplitString(s, i, j, k, l, flag);
     }
 
-    private void func_46122_b(String s, int i, int j, int k, int l, boolean flag)
+    private void renderSplitString(String s, int i, int j, int k, int l, boolean flag)
     {
         String as[] = s.split("\n");
         if (as.length > 1)
@@ -524,13 +524,13 @@ public class FontRenderer
         return i1;
     }
 
-    public void func_44032_a(boolean flag)
+    public void setUnicodeFlag(boolean flag)
     {
-        field_44037_j = flag;
+        unicodeFlag = flag;
     }
 
-    public void func_46123_b(boolean flag)
+    public void setBidiFlag(boolean flag)
     {
-        field_46125_m = flag;
+        bidiFlag = flag;
     }
 }

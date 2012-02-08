@@ -27,7 +27,7 @@ public abstract class EntityMob extends EntityCreature
     public void onUpdate()
     {
         super.onUpdate();
-        if (!worldObj.multiplayerWorld && worldObj.difficultySetting == 0)
+        if (!worldObj.isRemote && worldObj.difficultySetting == 0)
         {
             setEntityDead();
         }
@@ -58,7 +58,7 @@ public abstract class EntityMob extends EntityCreature
             if (entity != this)
             {
                 entityToAttack = entity;
-                field_46020_bQ = (entity instanceof EntityLiving) ? (EntityLiving)entity : null;
+                entityLivingToAttack = (entity instanceof EntityLiving) ? (EntityLiving)entity : null;
             }
             return true;
         }
@@ -106,7 +106,7 @@ public abstract class EntityMob extends EntityCreature
         super.readEntityFromNBT(nbttagcompound);
     }
 
-    protected boolean func_40147_Y()
+    protected boolean isValidLightLevel()
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
@@ -128,6 +128,6 @@ public abstract class EntityMob extends EntityCreature
 
     public boolean getCanSpawnHere()
     {
-        return func_40147_Y() && super.getCanSpawnHere();
+        return isValidLightLevel() && super.getCanSpawnHere();
     }
 }

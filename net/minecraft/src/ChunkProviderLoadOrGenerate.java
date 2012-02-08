@@ -226,7 +226,7 @@ public class ChunkProviderLoadOrGenerate
     {
         if (chunkLoader != null)
         {
-            chunkLoader.func_814_a();
+            chunkLoader.chunkTick();
         }
         return chunkProvider.unload100OldestChunks();
     }
@@ -241,13 +241,13 @@ public class ChunkProviderLoadOrGenerate
         return (new StringBuilder()).append("ChunkCache: ").append(chunks.length).toString();
     }
 
-    public List func_40377_a(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
     {
-        return chunkProvider.func_40377_a(enumcreaturetype, i, j, k);
+        return chunkProvider.getPossibleCreatures(enumcreaturetype, i, j, k);
     }
 
-    public ChunkPosition func_40376_a(World world, String s, int i, int j, int k)
+    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
     {
-        return chunkProvider.func_40376_a(world, s, i, j, k);
+        return chunkProvider.findClosestStructure(world, s, i, j, k);
     }
 }

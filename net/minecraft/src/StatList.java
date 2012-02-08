@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import com.heuristix.swing.GunCreator;
-
 import java.util.*;
 
 public class StatList
@@ -52,7 +50,7 @@ public class StatList
     public static void initBreakableStats()
     {
         objectUseStats = initUsableStats(objectUseStats, "stat.useItem", 0x1020000, 0, Block.blocksList.length);
-        objectBreakStats = func_25149_b(objectBreakStats, "stat.breakItem", 0x1030000, 0, Block.blocksList.length);
+        objectBreakStats = initBreakStats(objectBreakStats, "stat.breakItem", 0x1030000, 0, Block.blocksList.length);
         blockStatsInitialized = true;
         initCraftableStats();
     }
@@ -60,7 +58,7 @@ public class StatList
     public static void initStats()
     {
         objectUseStats = initUsableStats(objectUseStats, "stat.useItem", 0x1020000, Block.blocksList.length, 32000);
-        objectBreakStats = func_25149_b(objectBreakStats, "stat.breakItem", 0x1030000, Block.blocksList.length, 32000);
+        objectBreakStats = initBreakStats(objectBreakStats, "stat.breakItem", 0x1030000, Block.blocksList.length, 32000);
         itemStatsInitialized = true;
         initCraftableStats();
     }
@@ -111,7 +109,7 @@ public class StatList
         StatBase astatbase[] = new StatBase[256];
         for (int j = 0; j < 256; j++)
         {
-            if (Block.blocksList[j] != null && Block.blocksList[j].getEnableStats() && !GunCreator.MC_SRC_MOD)
+            if (Block.blocksList[j] != null && Block.blocksList[j].getEnableStats())
             {
                 String s1 = StatCollector.translateToLocalFormatted(s, new Object[]
                         {
@@ -134,7 +132,7 @@ public class StatList
         }
         for (int l = j; l < k; l++)
         {
-            if (Item.itemsList[l] == null || GunCreator.MC_SRC_MOD)
+            if (Item.itemsList[l] == null)
             {
                 continue;
             }
@@ -153,7 +151,7 @@ public class StatList
         return astatbase;
     }
 
-    private static StatBase[] func_25149_b(StatBase astatbase[], String s, int i, int j, int k)
+    private static StatBase[] initBreakStats(StatBase astatbase[], String s, int i, int j, int k)
     {
         if (astatbase == null)
         {
@@ -161,7 +159,7 @@ public class StatList
         }
         for (int l = j; l < k; l++)
         {
-            if (Item.itemsList[l] != null && Item.itemsList[l].isDamageable() && !GunCreator.MC_SRC_MOD)
+            if (Item.itemsList[l] != null && Item.itemsList[l].isDamageable())
             {
                 String s1 = StatCollector.translateToLocalFormatted(s, new Object[]
                         {
@@ -224,8 +222,6 @@ public class StatList
         distanceByMinecartStat = (new StatBasic(2006, "stat.minecartOneCm", StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByBoatStat = (new StatBasic(2007, "stat.boatOneCm", StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByPigStat = (new StatBasic(2008, "stat.pigOneCm", StatBase.distanceStatType)).initIndependentStat().registerStat();
-        if(!GunCreator.MC_SRC_MOD) {
-            AchievementList.func_27374_a();
-        }
+        AchievementList.init();
     }
 }

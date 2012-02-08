@@ -87,7 +87,7 @@ public class EntityPlayerSP extends EntityPlayer
         prevTimeInPortal = timeInPortal;
         if (inPortal)
         {
-            if (!worldObj.multiplayerWorld && ridingEntity != null)
+            if (!worldObj.isRemote && ridingEntity != null)
             {
                 mountEntity(null);
             }
@@ -103,7 +103,7 @@ public class EntityPlayerSP extends EntityPlayer
             if (timeInPortal >= 1.0F)
             {
                 timeInPortal = 1.0F;
-                if (!worldObj.multiplayerWorld)
+                if (!worldObj.isRemote)
                 {
                     timeUntilPortal = 10;
                     mc.sndManager.playSoundFX("portal.travel", 1.0F, rand.nextFloat() * 0.4F + 0.8F);
@@ -216,7 +216,7 @@ public class EntityPlayerSP extends EntityPlayer
 
     public void func_40182_b(int i)
     {
-        if (!worldObj.multiplayerWorld)
+        if (!worldObj.isRemote)
         {
             if (dimension == 1 && i == 1)
             {
@@ -470,8 +470,8 @@ public class EntityPlayerSP extends EntityPlayer
 
     public void setXPStats(float f, int i, int j)
     {
-        currentXP = f;
-        totalXP = i;
-        playerLevel = j;
+        experience = f;
+        experienceTotal = i;
+        experienceLevel = j;
     }
 }

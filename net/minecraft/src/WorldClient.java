@@ -62,7 +62,7 @@ public class WorldClient extends World
         }
     }
 
-    protected IChunkProvider getChunkProvider()
+    protected IChunkProvider createChunkProvider()
     {
         field_20915_C = new ChunkProviderClient(this);
         return field_20915_C;
@@ -73,7 +73,7 @@ public class WorldClient extends World
         setSpawnPoint(new ChunkCoordinates(8, 64, 8));
     }
 
-    protected void updateBlocksAndPlayCaveSounds()
+    protected void tickBlocksAndAmbiance()
     {
     }
 

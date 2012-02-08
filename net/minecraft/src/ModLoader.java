@@ -385,8 +385,8 @@ public final class ModLoader
                     if (spawnlistentry.entityClass == class1)
                     {
                         spawnlistentry.itemWeight = i;
-                        spawnlistentry.field_35591_b = j;
-                        spawnlistentry.field_35592_c = k;
+                        spawnlistentry.minGroupCount = j;
+                        spawnlistentry.maxGroupCount = k;
                         flag = true;
                         break;
                     }
@@ -1152,10 +1152,10 @@ public final class ModLoader
             init();
             logger.fine("Initialized");
         }
-        Random random = new Random(world.getWorldSeed());
+        Random random = new Random(world.getSeed());
         long l = (random.nextLong() / 2L) * 2L + 1L;
         long l1 = (random.nextLong() / 2L) * 2L + 1L;
-        random.setSeed((long)i * l + (long)j * l1 ^ world.getWorldSeed());
+        random.setSeed((long)i * l + (long)j * l1 ^ world.getSeed());
         for (Iterator iterator = modList.iterator(); iterator.hasNext();)
         {
             BaseMod basemod = (BaseMod)iterator.next();
@@ -1454,7 +1454,7 @@ public final class ModLoader
     public static void RegisterEntityID(Class class1, String s, int i, int j, int k)
     {
         RegisterEntityID(class1, s, i);
-        EntityList.field_44041_a.put(Integer.valueOf(i), new EntityEggInfo(i, j, k));
+        EntityList.entityEggs.put(Integer.valueOf(i), new EntityEggInfo(i, j, k));
     }
 
     public static void RegisterKey(BaseMod basemod, KeyBinding keybinding, boolean flag)

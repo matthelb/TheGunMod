@@ -34,7 +34,7 @@ public class EntityPainting extends Entity
             EnumArt enumart = aenumart[j1];
             art = enumart;
             func_412_b(l);
-            if (canStay())
+            if (onValidSurface())
             {
                 arraylist.add(enumart);
             }
@@ -149,10 +149,10 @@ public class EntityPainting extends Entity
 
     public void onUpdate()
     {
-        if (tickCounter1++ == 100 && !worldObj.multiplayerWorld)
+        if (tickCounter1++ == 100 && !worldObj.isRemote)
         {
             tickCounter1 = 0;
-            if (!canStay())
+            if (!onValidSurface())
             {
                 setEntityDead();
                 worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
@@ -160,7 +160,7 @@ public class EntityPainting extends Entity
         }
     }
 
-    public boolean canStay()
+    public boolean onValidSurface()
     {
         if (worldObj.getCollidingBoundingBoxes(this, boundingBox).size() > 0)
         {
@@ -227,7 +227,7 @@ public class EntityPainting extends Entity
 
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
-        if (!isDead && !worldObj.multiplayerWorld)
+        if (!isDead && !worldObj.isRemote)
         {
             setEntityDead();
             setBeenAttacked();
@@ -272,7 +272,7 @@ public class EntityPainting extends Entity
 
     public void moveEntity(double d, double d1, double d2)
     {
-        if (!worldObj.multiplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if (!worldObj.isRemote && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
@@ -281,7 +281,7 @@ public class EntityPainting extends Entity
 
     public void addVelocity(double d, double d1, double d2)
     {
-        if (!worldObj.multiplayerWorld && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if (!worldObj.isRemote && d * d + d1 * d1 + d2 * d2 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));

@@ -4,12 +4,12 @@ import java.util.*;
 
 public class ItemPotion extends Item
 {
-    private HashMap idEffectNameMap;
+    private HashMap effectCache;
 
     public ItemPotion(int i)
     {
         super(i);
-        idEffectNameMap = new HashMap();
+        effectCache = new HashMap();
         setMaxStackSize(1);
         setHasSubtypes(true);
         setMaxDamage(0);
@@ -17,16 +17,16 @@ public class ItemPotion extends Item
 
     public List getEffectNames(ItemStack itemstack)
     {
-        return getEffectNamesFromDamage(itemstack.getItemDamage());
+        return getEffects(itemstack.getItemDamage());
     }
 
-    public List getEffectNamesFromDamage(int i)
+    public List getEffects(int i)
     {
-        List list = (List)idEffectNameMap.get(Integer.valueOf(i));
+        List list = (List)effectCache.get(Integer.valueOf(i));
         if (list == null)
         {
             list = PotionHelper.getPotionEffects(i, false);
-            idEffectNameMap.put(Integer.valueOf(i), list);
+            effectCache.put(Integer.valueOf(i), list);
         }
         return list;
     }
@@ -34,7 +34,7 @@ public class ItemPotion extends Item
     public ItemStack onFoodEaten(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
         itemstack.stackSize--;
-        if (!world.multiplayerWorld)
+        if (!world.isRemote)
         {
             List list = getEffectNames(itemstack);
             if (list != null)
@@ -73,7 +73,7 @@ public class ItemPotion extends Item
         {
             itemstack.stackSize--;
             world.playSoundAtEntity(entityplayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-            if (!world.multiplayerWorld)
+            if (!world.isRemote)
             {
                 world.spawnEntityInWorld(new EntityPotion(world, entityplayer, itemstack.getItemDamage()));
             }
@@ -132,7 +132,7 @@ public class ItemPotion extends Item
 
     public boolean isEffectInstant(int i)
     {
-        List list = getEffectNamesFromDamage(i);
+        List list = getEffects(i);
         if (list == null || list.isEmpty())
         {
             return false;

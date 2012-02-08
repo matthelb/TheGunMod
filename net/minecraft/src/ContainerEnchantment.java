@@ -6,22 +6,22 @@ public class ContainerEnchantment extends Container
 {
     public IInventory tableInventory;
     private World worldPointer;
-    private int field_40241_i;
-    private int field_40238_j;
-    private int field_40239_k;
-    private Random field_40237_l;
+    private int posX;
+    private int posY;
+    private int posZ;
+    private Random rand;
     public long nameSeed;
     public int enchantLevels[];
 
     public ContainerEnchantment(InventoryPlayer inventoryplayer, World world, int i, int j, int k)
     {
         tableInventory = new SlotEnchantmentTable(this, "Enchant", 1);
-        field_40237_l = new Random();
+        rand = new Random();
         enchantLevels = new int[3];
         worldPointer = world;
-        field_40241_i = i;
-        field_40238_j = j;
-        field_40239_k = k;
+        posX = i;
+        posY = j;
+        posZ = k;
         addSlot(new SlotEnchantment(this, tableInventory, 0, 25, 47));
         for (int l = 0; l < 3; l++)
         {
@@ -75,23 +75,23 @@ public class ContainerEnchantment extends Container
             }
             else
             {
-                nameSeed = field_40237_l.nextLong();
-                if (!worldPointer.multiplayerWorld)
+                nameSeed = rand.nextLong();
+                if (!worldPointer.isRemote)
                 {
                     int j = 0;
                     for (int k = -1; k <= 1; k++)
                     {
                         for (int i1 = -1; i1 <= 1; i1++)
                         {
-                            if (k == 0 && i1 == 0 || !worldPointer.isAirBlock(field_40241_i + i1, field_40238_j, field_40239_k + k) || !worldPointer.isAirBlock(field_40241_i + i1, field_40238_j + 1, field_40239_k + k))
+                            if (k == 0 && i1 == 0 || !worldPointer.isAirBlock(posX + i1, posY, posZ + k) || !worldPointer.isAirBlock(posX + i1, posY + 1, posZ + k))
                             {
                                 continue;
                             }
-                            if (worldPointer.getBlockId(field_40241_i + i1 * 2, field_40238_j, field_40239_k + k * 2) == Block.bookShelf.blockID)
+                            if (worldPointer.getBlockId(posX + i1 * 2, posY, posZ + k * 2) == Block.bookShelf.blockID)
                             {
                                 j++;
                             }
-                            if (worldPointer.getBlockId(field_40241_i + i1 * 2, field_40238_j + 1, field_40239_k + k * 2) == Block.bookShelf.blockID)
+                            if (worldPointer.getBlockId(posX + i1 * 2, posY + 1, posZ + k * 2) == Block.bookShelf.blockID)
                             {
                                 j++;
                             }
@@ -99,19 +99,19 @@ public class ContainerEnchantment extends Container
                             {
                                 continue;
                             }
-                            if (worldPointer.getBlockId(field_40241_i + i1 * 2, field_40238_j, field_40239_k + k) == Block.bookShelf.blockID)
+                            if (worldPointer.getBlockId(posX + i1 * 2, posY, posZ + k) == Block.bookShelf.blockID)
                             {
                                 j++;
                             }
-                            if (worldPointer.getBlockId(field_40241_i + i1 * 2, field_40238_j + 1, field_40239_k + k) == Block.bookShelf.blockID)
+                            if (worldPointer.getBlockId(posX + i1 * 2, posY + 1, posZ + k) == Block.bookShelf.blockID)
                             {
                                 j++;
                             }
-                            if (worldPointer.getBlockId(field_40241_i + i1, field_40238_j, field_40239_k + k * 2) == Block.bookShelf.blockID)
+                            if (worldPointer.getBlockId(posX + i1, posY, posZ + k * 2) == Block.bookShelf.blockID)
                             {
                                 j++;
                             }
-                            if (worldPointer.getBlockId(field_40241_i + i1, field_40238_j + 1, field_40239_k + k * 2) == Block.bookShelf.blockID)
+                            if (worldPointer.getBlockId(posX + i1, posY + 1, posZ + k * 2) == Block.bookShelf.blockID)
                             {
                                 j++;
                             }
@@ -120,7 +120,7 @@ public class ContainerEnchantment extends Container
 
                     for (int l = 0; l < 3; l++)
                     {
-                        enchantLevels[l] = EnchantmentHelper.calcItemStackEnchantability(field_40237_l, l, j, itemstack);
+                        enchantLevels[l] = EnchantmentHelper.calcItemStackEnchantability(rand, l, j, itemstack);
                     }
 
                     updateCraftingResults();
@@ -132,14 +132,14 @@ public class ContainerEnchantment extends Container
     public boolean enchantItem(EntityPlayer entityplayer, int i)
     {
         ItemStack itemstack = tableInventory.getStackInSlot(0);
-        if (enchantLevels[i] > 0 && itemstack != null && entityplayer.playerLevel >= enchantLevels[i])
+        if (enchantLevels[i] > 0 && itemstack != null && entityplayer.experienceLevel >= enchantLevels[i])
         {
-            if (!worldPointer.multiplayerWorld)
+            if (!worldPointer.isRemote)
             {
-                List list = EnchantmentHelper.buildEnchantmentList(field_40237_l, itemstack, enchantLevels[i]);
+                List list = EnchantmentHelper.buildEnchantmentList(rand, itemstack, enchantLevels[i]);
                 if (list != null)
                 {
-                    entityplayer.decreaseLevel(enchantLevels[i]);
+                    entityplayer.removeExperience(enchantLevels[i]);
                     EnchantmentData enchantmentdata;
                     for (Iterator iterator = list.iterator(); iterator.hasNext(); itemstack.addEnchantment(enchantmentdata.enchantmentobj, enchantmentdata.enchantmentLevel))
                     {
@@ -160,7 +160,7 @@ public class ContainerEnchantment extends Container
     public void onCraftGuiClosed(EntityPlayer entityplayer)
     {
         super.onCraftGuiClosed(entityplayer);
-        if (worldPointer.multiplayerWorld)
+        if (worldPointer.isRemote)
         {
             return;
         }
@@ -173,11 +173,11 @@ public class ContainerEnchantment extends Container
 
     public boolean canInteractWith(EntityPlayer entityplayer)
     {
-        if (worldPointer.getBlockId(field_40241_i, field_40238_j, field_40239_k) != Block.enchantmentTable.blockID)
+        if (worldPointer.getBlockId(posX, posY, posZ) != Block.enchantmentTable.blockID)
         {
             return false;
         }
-        return entityplayer.getDistanceSq((double)field_40241_i + 0.5D, (double)field_40238_j + 0.5D, (double)field_40239_k + 0.5D) <= 64D;
+        return entityplayer.getDistanceSq((double)posX + 0.5D, (double)posY + 0.5D, (double)posZ + 0.5D) <= 64D;
     }
 
     public ItemStack transferStackInSlot(int i)

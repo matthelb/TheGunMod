@@ -34,10 +34,10 @@ public class RenderLiving extends Render
         {
             renderPassModel.isRiding = mainModel.isRiding;
         }
-        mainModel.field_40301_k = entityliving.isChild();
+        mainModel.isChild = entityliving.isChild();
         if (renderPassModel != null)
         {
-            renderPassModel.field_40301_k = mainModel.field_40301_k;
+            renderPassModel.isChild = mainModel.isChild;
         }
         try
         {

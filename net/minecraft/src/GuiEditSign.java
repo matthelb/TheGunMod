@@ -30,7 +30,7 @@ public class GuiEditSign extends GuiScreen
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
-        if (mc.theWorld.multiplayerWorld)
+        if (mc.theWorld.isRemote)
         {
             mc.getSendQueue().addToSendQueue(new Packet130UpdateSign(entitySign.xCoord, entitySign.yCoord, entitySign.zCoord, entitySign.signText));
         }

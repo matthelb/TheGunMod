@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import com.heuristix.swing.GunCreator;
-
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -435,7 +433,7 @@ public class Block
 
     public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
     {
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -456,7 +454,7 @@ public class Block
 
     protected void dropBlockAsItem_do(World world, int i, int j, int k, ItemStack itemstack)
     {
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -778,7 +776,7 @@ public class Block
         return iblockaccess.isBlockNormalCube(i, j, k) ? 0.2F : 1.0F;
     }
 
-    public void func_43001_a(World world, int i, int j, int k, Entity entity, float f)
+    public void onFallenUpon(World world, int i, int j, int k, Entity entity, float f)
     {
     }
 
@@ -972,7 +970,6 @@ public class Block
         }
 
         canBlockGrass[0] = true;
-        if(!GunCreator.MC_SRC_MOD)
-            StatList.initBreakableStats();
+        StatList.initBreakableStats();
     }
 }

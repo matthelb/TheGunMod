@@ -17,13 +17,13 @@ public class ItemRecord extends Item
     {
         if (world.getBlockId(i, j, k) == Block.jukebox.blockID && world.getBlockMetadata(i, j, k) == 0)
         {
-            if (world.multiplayerWorld)
+            if (world.isRemote)
             {
                 return true;
             }
             else
             {
-                ((BlockJukeBox)Block.jukebox).ejectRecord(world, i, j, k, shiftedIndex);
+                ((BlockJukeBox)Block.jukebox).insertRecord(world, i, j, k, shiftedIndex);
                 world.playAuxSFXAtEntity(null, 1005, i, j, k, shiftedIndex);
                 itemstack.stackSize--;
                 return true;

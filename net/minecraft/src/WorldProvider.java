@@ -3,7 +3,7 @@ package net.minecraft.src;
 public abstract class WorldProvider
 {
     public World worldObj;
-    public EnumWorldType field_46067_b;
+    public EnumWorldType terrainType;
     public WorldChunkManager worldChunkMgr;
     public boolean isAlternateDimension;
     public boolean isHellWorld;
@@ -25,7 +25,7 @@ public abstract class WorldProvider
     public final void registerWorld(World world)
     {
         worldObj = world;
-        field_46067_b = world.getWorldInfo().func_46133_t();
+        terrainType = world.getWorldInfo().getTerrainType();
         registerWorldChunkManager();
         generateLightBrightnessTable();
     }
@@ -42,7 +42,7 @@ public abstract class WorldProvider
 
     protected void registerWorldChunkManager()
     {
-        if (worldObj.getWorldInfo().func_46133_t() == EnumWorldType.FLAT)
+        if (worldObj.getWorldInfo().getTerrainType() == EnumWorldType.FLAT)
         {
             worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.plains, 0.5F, 0.5F);
         }
@@ -54,13 +54,13 @@ public abstract class WorldProvider
 
     public IChunkProvider getChunkProvider()
     {
-        if (field_46067_b == EnumWorldType.FLAT)
+        if (terrainType == EnumWorldType.FLAT)
         {
-            return new ChunkProviderFlat(worldObj, worldObj.getWorldSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
+            return new ChunkProviderFlat(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
         }
         else
         {
-            return new ChunkProviderGenerate(worldObj, worldObj.getWorldSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
+            return new ChunkProviderGenerate(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
         }
     }
 
@@ -175,9 +175,9 @@ public abstract class WorldProvider
         return null;
     }
 
-    public int func_46066_g()
+    public int getAverageGroundLevel()
     {
-        if (field_46067_b == EnumWorldType.FLAT)
+        if (terrainType == EnumWorldType.FLAT)
         {
             return 4;
         }
@@ -187,13 +187,13 @@ public abstract class WorldProvider
         }
     }
 
-    public boolean func_46064_i()
+    public boolean getWorldHasNoSky()
     {
-        return field_46067_b != EnumWorldType.FLAT && !hasNoSky;
+        return terrainType != EnumWorldType.FLAT && !hasNoSky;
     }
 
     public double func_46065_j()
     {
-        return field_46067_b != EnumWorldType.FLAT ? 0.03125D : 1.0D;
+        return terrainType != EnumWorldType.FLAT ? 0.03125D : 1.0D;
     }
 }

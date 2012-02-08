@@ -16,7 +16,7 @@ public class WorldProviderEnd extends WorldProvider
 
     public IChunkProvider getChunkProvider()
     {
-        return new ChunkProviderEnd(worldObj, worldObj.getWorldSeed());
+        return new ChunkProviderEnd(worldObj, worldObj.getSeed());
     }
 
     public float calculateCelestialAngle(long l, float f)
@@ -83,7 +83,7 @@ public class WorldProviderEnd extends WorldProvider
         return new ChunkCoordinates(100, 50, 0);
     }
 
-    public int func_46066_g()
+    public int getAverageGroundLevel()
     {
         return 50;
     }

@@ -9,7 +9,7 @@ public class Packet9Respawn extends Packet
     public int difficulty;
     public int worldHeight;
     public int creativeMode;
-    public EnumWorldType field_46031_f;
+    public EnumWorldType terrainType;
 
     public Packet9Respawn()
     {
@@ -22,7 +22,7 @@ public class Packet9Respawn extends Packet
         mapSeed = l;
         worldHeight = i;
         creativeMode = j;
-        field_46031_f = enumworldtype;
+        terrainType = enumworldtype;
     }
 
     public void processPacket(NetHandler nethandler)
@@ -39,10 +39,10 @@ public class Packet9Respawn extends Packet
         worldHeight = datainputstream.readShort();
         mapSeed = datainputstream.readLong();
         String s = readString(datainputstream, 16);
-        field_46031_f = EnumWorldType.func_46135_a(s);
-        if (field_46031_f == null)
+        terrainType = EnumWorldType.parseWorldType(s);
+        if (terrainType == null)
         {
-            field_46031_f = EnumWorldType.DEFAULT;
+            terrainType = EnumWorldType.DEFAULT;
         }
     }
 
@@ -54,11 +54,11 @@ public class Packet9Respawn extends Packet
         dataoutputstream.writeByte(creativeMode);
         dataoutputstream.writeShort(worldHeight);
         dataoutputstream.writeLong(mapSeed);
-        writeString(field_46031_f.name(), dataoutputstream);
+        writeString(terrainType.name(), dataoutputstream);
     }
 
     public int getPacketSize()
     {
-        return 13 + field_46031_f.name().length();
+        return 13 + terrainType.name().length();
     }
 }

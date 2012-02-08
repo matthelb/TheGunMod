@@ -6,8 +6,8 @@ import java.util.Map;
 public class PacketCount
 {
     public static boolean allowCounting = true;
-    private static final Map field_40563_b = new HashMap();
-    private static final Map field_40564_c = new HashMap();
+    private static final Map packetCountForID = new HashMap();
+    private static final Map sizeCountForID = new HashMap();
     private static final Object lock = new Object();
 
     public PacketCount()
@@ -22,15 +22,15 @@ public class PacketCount
         }
         synchronized (lock)
         {
-            if (field_40563_b.containsKey(Integer.valueOf(i)))
+            if (packetCountForID.containsKey(Integer.valueOf(i)))
             {
-                field_40563_b.put(Integer.valueOf(i), Long.valueOf(((Long)field_40563_b.get(Integer.valueOf(i))).longValue() + 1L));
-                field_40564_c.put(Integer.valueOf(i), Long.valueOf(((Long)field_40564_c.get(Integer.valueOf(i))).longValue() + l));
+                packetCountForID.put(Integer.valueOf(i), Long.valueOf(((Long)packetCountForID.get(Integer.valueOf(i))).longValue() + 1L));
+                sizeCountForID.put(Integer.valueOf(i), Long.valueOf(((Long)sizeCountForID.get(Integer.valueOf(i))).longValue() + l));
             }
             else
             {
-                field_40563_b.put(Integer.valueOf(i), Long.valueOf(1L));
-                field_40564_c.put(Integer.valueOf(i), Long.valueOf(l));
+                packetCountForID.put(Integer.valueOf(i), Long.valueOf(1L));
+                sizeCountForID.put(Integer.valueOf(i), Long.valueOf(l));
             }
         }
     }

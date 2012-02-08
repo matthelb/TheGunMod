@@ -51,7 +51,7 @@ public class TileEntityMobSpawner extends TileEntity
             yaw2 -= 360D;
         }
 
-        if (!worldObj.multiplayerWorld)
+        if (!worldObj.isRemote)
         {
             if (delay == -1)
             {

@@ -141,7 +141,7 @@ public class PlayerControllerMP extends PlayerController
             curBlockDamageMP += block.blockStrength(mc.thePlayer);
             if (stepSoundTickCounter % 4F == 0.0F && block != null)
             {
-                mc.sndManager.playSound(block.stepSound.stepSoundDir2(), (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, (block.stepSound.getVolume() + 1.0F) / 8F, block.stepSound.getPitch() * 0.5F);
+                mc.sndManager.playSound(block.stepSound.getStepSound(), (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, (block.stepSound.getVolume() + 1.0F) / 8F, block.stepSound.getPitch() * 0.5F);
             }
             stepSoundTickCounter++;
             if (curBlockDamageMP >= 1.0F)

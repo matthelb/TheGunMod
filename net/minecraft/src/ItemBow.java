@@ -13,7 +13,7 @@ public class ItemBow extends Item
 
     public void onPlayerStoppedUsing(ItemStack itemstack, World world, EntityPlayer entityplayer, int i)
     {
-        boolean flag = entityplayer.capabilities.depleteBuckets || EnchantmentHelper.getEnchantmentLevel(Enchantment.field_46042_v.effectId, itemstack) > 0;
+        boolean flag = entityplayer.capabilities.depleteBuckets || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, itemstack) > 0;
         if (flag || entityplayer.inventory.hasItem(Item.arrow.shiftedIndex))
         {
             int j = getMaxItemUseDuration(itemstack) - i;
@@ -32,17 +32,17 @@ public class ItemBow extends Item
             {
                 entityarrow.arrowCritical = true;
             }
-            int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.field_46045_s.effectId, itemstack);
+            int k = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, itemstack);
             if (k > 0)
             {
-                entityarrow.func_46024_b(entityarrow.func_46025_l() + (double)k * 0.5D + 0.5D);
+                entityarrow.setDamage(entityarrow.getDamage() + (double)k * 0.5D + 0.5D);
             }
-            int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.field_46044_t.effectId, itemstack);
+            int l = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, itemstack);
             if (l > 0)
             {
                 entityarrow.func_46023_b(l);
             }
-            if (EnchantmentHelper.getEnchantmentLevel(Enchantment.field_46043_u.effectId, itemstack) > 0)
+            if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, itemstack) > 0)
             {
                 entityarrow.setFire(100);
             }
@@ -56,7 +56,7 @@ public class ItemBow extends Item
             {
                 entityarrow.doesArrowBelongToPlayer = false;
             }
-            if (!world.multiplayerWorld)
+            if (!world.isRemote)
             {
                 world.spawnEntityInWorld(entityarrow);
             }

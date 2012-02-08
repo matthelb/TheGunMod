@@ -32,19 +32,19 @@ public class ChunkCoordIntPair
         return chunkcoordintpair.chunkXPos == chunkXPos && chunkcoordintpair.chunkZPos == chunkZPos;
     }
 
-    public int func_40735_a()
+    public int getCenterXPos()
     {
         return (chunkXPos << 4) + 8;
     }
 
-    public int func_40736_b()
+    public int getCenterZPos()
     {
         return (chunkZPos << 4) + 8;
     }
 
-    public ChunkPosition func_40737_a(int i)
+    public ChunkPosition getChunkPosition(int i)
     {
-        return new ChunkPosition(func_40735_a(), i, func_40736_b());
+        return new ChunkPosition(getCenterXPos(), i, getCenterZPos());
     }
 
     public String toString()

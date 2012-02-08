@@ -113,7 +113,7 @@ public class BlockChest extends BlockContainer
 
     public void unifyAdjacentChests(World world, int i, int j, int k)
     {
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return;
         }
@@ -460,7 +460,7 @@ public class BlockChest extends BlockContainer
         {
             obj = new InventoryLargeChest("Large chest", ((IInventory) (obj)), (TileEntityChest)world.getBlockTileEntity(i, j, k + 1));
         }
-        if (world.multiplayerWorld)
+        if (world.isRemote)
         {
             return true;
         }

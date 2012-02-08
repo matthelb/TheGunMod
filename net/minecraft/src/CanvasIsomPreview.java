@@ -21,33 +21,33 @@ import java.util.Random;
 public class CanvasIsomPreview extends Canvas
     implements KeyListener, MouseListener, MouseMotionListener, Runnable
 {
-    private int field_1793_a;
-    private int field_1792_b;
-    private boolean field_1791_c;
-    private World field_1790_d;
-    private File field_1789_e;
-    private boolean field_1788_f;
-    private java.util.List field_1787_g;
-    private IsoImageBuffer field_1786_h[][];
+    private int currentRender;
+    private int zoom;
+    private boolean showHelp;
+    private World level;
+    private File workDir;
+    private boolean running;
+    private java.util.List zonesToRender;
+    private IsoImageBuffer zoneMap[][];
     private int field_1785_i;
     private int field_1784_j;
     private int field_1783_k;
     private int field_1782_l;
 
-    public File func_1263_a()
+    public File getWorkingDirectory()
     {
-        if (field_1789_e == null)
+        if (workDir == null)
         {
-            field_1789_e = func_1264_a("minecraft");
+            workDir = getWorkingDirectory("minecraft");
         }
-        return field_1789_e;
+        return workDir;
     }
 
-    public File func_1264_a(String s)
+    public File getWorkingDirectory(String s)
     {
         String s1 = System.getProperty("user.home", ".");
         File file;
-        switch (OsMap.field_1193_a[func_1269_e().ordinal()])
+        switch (OsMap.field_1193_a[getPlatform().ordinal()])
         {
             case 1:
             case 2:
@@ -84,7 +84,7 @@ public class CanvasIsomPreview extends Canvas
         }
     }
 
-    private static EnumOS1 func_1269_e()
+    private static EnumOS1 getPlatform()
     {
         String s = System.getProperty("os.name").toLowerCase();
         if (s.contains("win"))
@@ -119,18 +119,18 @@ public class CanvasIsomPreview extends Canvas
 
     public CanvasIsomPreview()
     {
-        field_1793_a = 0;
-        field_1792_b = 2;
-        field_1791_c = true;
-        field_1788_f = true;
-        field_1787_g = Collections.synchronizedList(new LinkedList());
-        field_1786_h = new IsoImageBuffer[64][64];
-        field_1789_e = func_1263_a();
+        currentRender = 0;
+        zoom = 2;
+        showHelp = true;
+        running = true;
+        zonesToRender = Collections.synchronizedList(new LinkedList());
+        zoneMap = new IsoImageBuffer[64][64];
+        workDir = getWorkingDirectory();
         for (int i = 0; i < 64; i++)
         {
             for (int j = 0; j < 64; j++)
             {
-                field_1786_h[i][j] = new IsoImageBuffer(null, i, j);
+                zoneMap[i][j] = new IsoImageBuffer(null, i, j);
             }
         }
 
@@ -142,41 +142,41 @@ public class CanvasIsomPreview extends Canvas
         setBackground(Color.red);
     }
 
-    public void func_1270_b(String s)
+    public void loadLevel(String s)
     {
         field_1785_i = field_1784_j = 0;
-        field_1790_d = new World(new SaveHandler(new File(field_1789_e, "saves"), s, false), s, new WorldSettings((new Random()).nextLong(), 0, true, false, EnumWorldType.DEFAULT));
-        field_1790_d.skylightSubtracted = 0;
-        synchronized (field_1787_g)
+        level = new World(new SaveHandler(new File(workDir, "saves"), s, false), s, new WorldSettings((new Random()).nextLong(), 0, true, false, EnumWorldType.DEFAULT));
+        level.skylightSubtracted = 0;
+        synchronized (zonesToRender)
         {
-            field_1787_g.clear();
+            zonesToRender.clear();
             for (int i = 0; i < 64; i++)
             {
                 for (int j = 0; j < 64; j++)
                 {
-                    field_1786_h[i][j].func_888_a(field_1790_d, i, j);
+                    zoneMap[i][j].init(level, i, j);
                 }
             }
         }
     }
 
-    private void func_1266_a(int i)
+    private void setBrightness(int i)
     {
-        synchronized (field_1787_g)
+        synchronized (zonesToRender)
         {
-            field_1790_d.skylightSubtracted = i;
-            field_1787_g.clear();
+            level.skylightSubtracted = i;
+            zonesToRender.clear();
             for (int j = 0; j < 64; j++)
             {
                 for (int k = 0; k < 64; k++)
                 {
-                    field_1786_h[j][k].func_888_a(field_1790_d, j, k);
+                    zoneMap[j][k].init(level, j, k);
                 }
             }
         }
     }
 
-    public void func_1272_b()
+    public void start()
     {
         (new ThreadRunIsoClient(this)).start();
         for (int i = 0; i < 8; i++)
@@ -185,51 +185,51 @@ public class CanvasIsomPreview extends Canvas
         }
     }
 
-    public void func_1273_c()
+    public void stop()
     {
-        field_1788_f = false;
+        running = false;
     }
 
-    private IsoImageBuffer func_1267_a(int i, int j)
+    private IsoImageBuffer getZone(int i, int j)
     {
         int k = i & 0x3f;
         int l = j & 0x3f;
-        IsoImageBuffer isoimagebuffer = field_1786_h[k][l];
-        if (isoimagebuffer.field_1354_c == i && isoimagebuffer.field_1353_d == j)
+        IsoImageBuffer isoimagebuffer = zoneMap[k][l];
+        if (isoimagebuffer.x == i && isoimagebuffer.y == j)
         {
             return isoimagebuffer;
         }
-        synchronized (field_1787_g)
+        synchronized (zonesToRender)
         {
-            field_1787_g.remove(isoimagebuffer);
+            zonesToRender.remove(isoimagebuffer);
         }
-        isoimagebuffer.func_889_a(i, j);
+        isoimagebuffer.init(i, j);
         return isoimagebuffer;
     }
 
     public void run()
     {
         TerrainTextureManager terraintexturemanager = new TerrainTextureManager();
-        while (field_1788_f)
+        while (running)
         {
             IsoImageBuffer isoimagebuffer = null;
-            synchronized (field_1787_g)
+            synchronized (zonesToRender)
             {
-                if (field_1787_g.size() > 0)
+                if (zonesToRender.size() > 0)
                 {
-                    isoimagebuffer = (IsoImageBuffer)field_1787_g.remove(0);
+                    isoimagebuffer = (IsoImageBuffer)zonesToRender.remove(0);
                 }
             }
             if (isoimagebuffer != null)
             {
-                if (field_1793_a - isoimagebuffer.field_1350_g < 2)
+                if (currentRender - isoimagebuffer.lastVisible < 2)
                 {
-                    terraintexturemanager.func_799_a(isoimagebuffer);
+                    terraintexturemanager.render(isoimagebuffer);
                     repaint();
                 }
                 else
                 {
-                    isoimagebuffer.field_1349_h = false;
+                    isoimagebuffer.addedToRenderQueue = false;
                 }
             }
             try
@@ -251,7 +251,7 @@ public class CanvasIsomPreview extends Canvas
     {
     }
 
-    public void func_1265_d()
+    public void render()
     {
         BufferStrategy bufferstrategy = getBufferStrategy();
         if (bufferstrategy == null)
@@ -261,24 +261,24 @@ public class CanvasIsomPreview extends Canvas
         }
         else
         {
-            func_1268_a((Graphics2D)bufferstrategy.getDrawGraphics());
+            render((Graphics2D)bufferstrategy.getDrawGraphics());
             bufferstrategy.show();
             return;
         }
     }
 
-    public void func_1268_a(Graphics2D graphics2d)
+    public void render(Graphics2D graphics2d)
     {
-        field_1793_a++;
+        currentRender++;
         java.awt.geom.AffineTransform affinetransform = graphics2d.getTransform();
         graphics2d.setClip(0, 0, getWidth(), getHeight());
         graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         graphics2d.translate(getWidth() / 2, getHeight() / 2);
-        graphics2d.scale(field_1792_b, field_1792_b);
+        graphics2d.scale(zoom, zoom);
         graphics2d.translate(field_1785_i, field_1784_j);
-        if (field_1790_d != null)
+        if (level != null)
         {
-            ChunkCoordinates chunkcoordinates = field_1790_d.getSpawnPoint();
+            ChunkCoordinates chunkcoordinates = level.getSpawnPoint();
             graphics2d.translate(-(chunkcoordinates.posX + chunkcoordinates.posZ), -(-chunkcoordinates.posX + chunkcoordinates.posZ) + 64);
         }
         Rectangle rectangle = graphics2d.getClipBounds();
@@ -289,35 +289,35 @@ public class CanvasIsomPreview extends Canvas
         int i = rectangle.x / byte0 / 2 - 2 - byte1;
         int j = (rectangle.x + rectangle.width) / byte0 / 2 + 1 + byte1;
         int k = rectangle.y / byte0 - 1 - byte1 * 2;
-        int l = (rectangle.y + rectangle.height + 16 + field_1790_d.worldHeight) / byte0 + 1 + byte1 * 2;
+        int l = (rectangle.y + rectangle.height + 16 + level.worldHeight) / byte0 + 1 + byte1 * 2;
         for (int i1 = k; i1 <= l; i1++)
         {
             for (int k1 = i; k1 <= j; k1++)
             {
                 int l1 = k1 - (i1 >> 1);
                 int i2 = k1 + (i1 + 1 >> 1);
-                IsoImageBuffer isoimagebuffer = func_1267_a(l1, i2);
-                isoimagebuffer.field_1350_g = field_1793_a;
-                if (!isoimagebuffer.field_1352_e)
+                IsoImageBuffer isoimagebuffer = getZone(l1, i2);
+                isoimagebuffer.lastVisible = currentRender;
+                if (!isoimagebuffer.rendered)
                 {
-                    if (!isoimagebuffer.field_1349_h)
+                    if (!isoimagebuffer.addedToRenderQueue)
                     {
-                        isoimagebuffer.field_1349_h = true;
-                        field_1787_g.add(isoimagebuffer);
+                        isoimagebuffer.addedToRenderQueue = true;
+                        zonesToRender.add(isoimagebuffer);
                     }
                     continue;
                 }
-                isoimagebuffer.field_1349_h = false;
-                if (!isoimagebuffer.field_1351_f)
+                isoimagebuffer.addedToRenderQueue = false;
+                if (!isoimagebuffer.noContent)
                 {
                     int j2 = k1 * byte0 * 2 + (i1 & 1) * byte0;
-                    int k2 = i1 * byte0 - field_1790_d.worldHeight - 16;
-                    graphics2d.drawImage(isoimagebuffer.field_1348_a, j2, k2, null);
+                    int k2 = i1 * byte0 - level.worldHeight - 16;
+                    graphics2d.drawImage(isoimagebuffer.image, j2, k2, null);
                 }
             }
         }
 
-        if (field_1791_c)
+        if (showHelp)
         {
             graphics2d.setTransform(affinetransform);
             int j1 = getHeight() - 32 - 4;
@@ -332,8 +332,8 @@ public class CanvasIsomPreview extends Canvas
 
     public void mouseDragged(MouseEvent mouseevent)
     {
-        int i = mouseevent.getX() / field_1792_b;
-        int j = mouseevent.getY() / field_1792_b;
+        int i = mouseevent.getX() / zoom;
+        int j = mouseevent.getY() / zoom;
         field_1785_i += i - field_1783_k;
         field_1784_j += j - field_1782_l;
         field_1783_k = i;
@@ -349,7 +349,7 @@ public class CanvasIsomPreview extends Canvas
     {
         if (mouseevent.getClickCount() == 2)
         {
-            field_1792_b = 3 - field_1792_b;
+            zoom = 3 - zoom;
             repaint();
         }
     }
@@ -364,8 +364,8 @@ public class CanvasIsomPreview extends Canvas
 
     public void mousePressed(MouseEvent mouseevent)
     {
-        int i = mouseevent.getX() / field_1792_b;
-        int j = mouseevent.getY() / field_1792_b;
+        int i = mouseevent.getX() / zoom;
+        int j = mouseevent.getY() / zoom;
         field_1783_k = i;
         field_1782_l = j;
     }
@@ -378,63 +378,63 @@ public class CanvasIsomPreview extends Canvas
     {
         if (keyevent.getKeyCode() == 48)
         {
-            func_1266_a(11);
+            setBrightness(11);
         }
         if (keyevent.getKeyCode() == 49)
         {
-            func_1266_a(10);
+            setBrightness(10);
         }
         if (keyevent.getKeyCode() == 50)
         {
-            func_1266_a(9);
+            setBrightness(9);
         }
         if (keyevent.getKeyCode() == 51)
         {
-            func_1266_a(7);
+            setBrightness(7);
         }
         if (keyevent.getKeyCode() == 52)
         {
-            func_1266_a(6);
+            setBrightness(6);
         }
         if (keyevent.getKeyCode() == 53)
         {
-            func_1266_a(5);
+            setBrightness(5);
         }
         if (keyevent.getKeyCode() == 54)
         {
-            func_1266_a(3);
+            setBrightness(3);
         }
         if (keyevent.getKeyCode() == 55)
         {
-            func_1266_a(2);
+            setBrightness(2);
         }
         if (keyevent.getKeyCode() == 56)
         {
-            func_1266_a(1);
+            setBrightness(1);
         }
         if (keyevent.getKeyCode() == 57)
         {
-            func_1266_a(0);
+            setBrightness(0);
         }
         if (keyevent.getKeyCode() == 112)
         {
-            func_1270_b("World1");
+            loadLevel("World1");
         }
         if (keyevent.getKeyCode() == 113)
         {
-            func_1270_b("World2");
+            loadLevel("World2");
         }
         if (keyevent.getKeyCode() == 114)
         {
-            func_1270_b("World3");
+            loadLevel("World3");
         }
         if (keyevent.getKeyCode() == 115)
         {
-            func_1270_b("World4");
+            loadLevel("World4");
         }
         if (keyevent.getKeyCode() == 116)
         {
-            func_1270_b("World5");
+            loadLevel("World5");
         }
         if (keyevent.getKeyCode() == 32)
         {
@@ -442,7 +442,7 @@ public class CanvasIsomPreview extends Canvas
         }
         if (keyevent.getKeyCode() == 27)
         {
-            field_1791_c = !field_1791_c;
+            showHelp = !showHelp;
         }
         repaint();
     }
@@ -455,8 +455,8 @@ public class CanvasIsomPreview extends Canvas
     {
     }
 
-    static boolean func_1271_a(CanvasIsomPreview canvasisompreview)
+    static boolean isRunning(CanvasIsomPreview canvasisompreview)
     {
-        return canvasisompreview.field_1788_f;
+        return canvasisompreview.running;
     }
 }

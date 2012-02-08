@@ -412,12 +412,12 @@ public final class ItemStack
         return arraylist;
     }
 
-    public boolean func_40713_r()
+    public boolean hasEffect()
     {
         return getItem().hasEffect(this);
     }
 
-    public EnumRarity func_40707_s()
+    public EnumRarity getRarity()
     {
         return getItem().getRarity(this);
     }

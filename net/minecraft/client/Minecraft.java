@@ -303,11 +303,11 @@ public abstract class Minecraft
         loadScreen();
         fontRenderer = new FontRenderer(gameSettings, "/font/default.png", renderEngine, false);
         standardGalacticFontRenderer = new FontRenderer(gameSettings, "/font/alternate.png", renderEngine, false);
-        if (gameSettings.field_44018_Q != null)
+        if (gameSettings.language != null)
         {
-            StringTranslate.getInstance().func_44023_a(gameSettings.field_44018_Q);
-            fontRenderer.func_44032_a(StringTranslate.getInstance().func_46110_d());
-            fontRenderer.func_46123_b(StringTranslate.func_46109_d(gameSettings.field_44018_Q));
+            StringTranslate.getInstance().setLanguage(gameSettings.language);
+            fontRenderer.setUnicodeFlag(StringTranslate.getInstance().func_46110_d());
+            fontRenderer.setBidiFlag(StringTranslate.func_46109_d(gameSettings.language));
         }
         ColorizerWater.setWaterBiomeColorizer(renderEngine.getTextureContents("/misc/watercolor.png"));
         ColorizerGrass.setGrassBiomeColorizer(renderEngine.getTextureContents("/misc/grasscolor.png"));
@@ -1284,7 +1284,7 @@ public abstract class Minecraft
         Profiler.endStartSection("centerChunkSource");
         if (thePlayer != null)
         {
-            net.minecraft.src.IChunkProvider ichunkprovider = theWorld.getIChunkProvider();
+            net.minecraft.src.IChunkProvider ichunkprovider = theWorld.getChunkProvider();
             if (ichunkprovider instanceof ChunkProviderLoadOrGenerate)
             {
                 ChunkProviderLoadOrGenerate chunkproviderloadorgenerate = (ChunkProviderLoadOrGenerate)ichunkprovider;
@@ -1310,7 +1310,7 @@ public abstract class Minecraft
             {
                 displayGuiScreen(null);
             }
-            else if (thePlayer.isPlayerSleeping() && theWorld != null && theWorld.multiplayerWorld)
+            else if (thePlayer.isPlayerSleeping() && theWorld != null && theWorld.isRemote)
             {
                 displayGuiScreen(new GuiSleepMP());
             }
@@ -1524,7 +1524,7 @@ public abstract class Minecraft
             {
                 theWorld.difficultySetting = gameSettings.difficulty;
             }
-            if (theWorld.multiplayerWorld)
+            if (theWorld.isRemote)
             {
                 theWorld.difficultySetting = 1;
             }
@@ -1549,7 +1549,7 @@ public abstract class Minecraft
             }
             if (!isGamePaused || isMultiplayerWorld())
             {
-                theWorld.setAllowedMobSpawns(theWorld.difficultySetting > 0, true);
+                theWorld.setAllowedSpawnTypes(theWorld.difficultySetting > 0, true);
                 theWorld.tick();
             }
             Profiler.endStartSection("animateTick");
@@ -1577,7 +1577,7 @@ public abstract class Minecraft
 
     public boolean isMultiplayerWorld()
     {
-        return theWorld != null && theWorld.multiplayerWorld;
+        return theWorld != null && theWorld.isRemote;
     }
 
     public void startWorld(String s, String s1, WorldSettings worldsettings)
@@ -1739,7 +1739,7 @@ public abstract class Minecraft
                     world.spawnEntityInWorld(thePlayer);
                 }
             }
-            if (!world.multiplayerWorld)
+            if (!world.isRemote)
             {
                 preloadWorld(s);
             }
@@ -1762,7 +1762,7 @@ public abstract class Minecraft
             {
                 world.emptyMethod1();
             }
-            net.minecraft.src.IChunkProvider ichunkprovider = world.getIChunkProvider();
+            net.minecraft.src.IChunkProvider ichunkprovider = world.getChunkProvider();
             if (ichunkprovider instanceof ChunkProviderLoadOrGenerate)
             {
                 ChunkProviderLoadOrGenerate chunkproviderloadorgenerate = (ChunkProviderLoadOrGenerate)ichunkprovider;
@@ -1810,7 +1810,7 @@ public abstract class Minecraft
         int i = 0;
         int j = (c * 2) / 16 + 1;
         j *= j;
-        net.minecraft.src.IChunkProvider ichunkprovider = theWorld.getIChunkProvider();
+        net.minecraft.src.IChunkProvider ichunkprovider = theWorld.getChunkProvider();
         ChunkCoordinates chunkcoordinates = theWorld.getSpawnPoint();
         if (thePlayer != null)
         {
@@ -1899,7 +1899,7 @@ public abstract class Minecraft
 
     public void respawn(boolean flag, int i, boolean flag1)
     {
-        if (!theWorld.multiplayerWorld && !theWorld.worldProvider.canRespawnHere())
+        if (!theWorld.isRemote && !theWorld.worldProvider.canRespawnHere())
         {
             usePortal(0);
         }
@@ -1908,7 +1908,7 @@ public abstract class Minecraft
         boolean flag2 = true;
         if (thePlayer != null && !flag)
         {
-            chunkcoordinates = thePlayer.getPlayerSpawnCoordinate();
+            chunkcoordinates = thePlayer.getSpawnChunk();
             if (chunkcoordinates != null)
             {
                 chunkcoordinates1 = EntityPlayer.verifyRespawnCoordinates(theWorld, chunkcoordinates);
@@ -1923,7 +1923,7 @@ public abstract class Minecraft
             chunkcoordinates1 = theWorld.getSpawnPoint();
             flag2 = false;
         }
-        net.minecraft.src.IChunkProvider ichunkprovider = theWorld.getIChunkProvider();
+        net.minecraft.src.IChunkProvider ichunkprovider = theWorld.getChunkProvider();
         if (ichunkprovider instanceof ChunkProviderLoadOrGenerate)
         {
             ChunkProviderLoadOrGenerate chunkproviderloadorgenerate = (ChunkProviderLoadOrGenerate)ichunkprovider;
@@ -1949,7 +1949,7 @@ public abstract class Minecraft
         thePlayer.preparePlayerToSpawn();
         if (flag2)
         {
-            thePlayer.setPlayerSpawnCoordinate(chunkcoordinates);
+            thePlayer.setSpawnChunk(chunkcoordinates);
             thePlayer.setLocationAndAngles((float)chunkcoordinates1.posX + 0.5F, (float)chunkcoordinates1.posY + 0.1F, (float)chunkcoordinates1.posZ + 0.5F, 0.0F, 0.0F);
         }
         playerController.flipPlayer(thePlayer);
@@ -1991,7 +1991,7 @@ public abstract class Minecraft
         }
         else
         {
-            minecraftimpl.session = new Session((new StringBuilder()).append("Player").append("0").toString(), "");
+            minecraftimpl.session = new Session((new StringBuilder()).append("Player").append(System.currentTimeMillis() % 1000L).toString(), "");
         }
         if (s2 != null)
         {
@@ -2019,7 +2019,7 @@ public abstract class Minecraft
     {
         String s = null;
         String s1 = null;
-        s = (new StringBuilder()).append("Player").append("0").toString();
+        s = (new StringBuilder()).append("Player").append(System.currentTimeMillis() % 1000L).toString();
         if (args.length > 0)
         {
             s = args[0];

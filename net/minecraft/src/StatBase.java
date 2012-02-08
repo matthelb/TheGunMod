@@ -1,7 +1,5 @@
 package net.minecraft.src;
 
-import com.heuristix.swing.GunCreator;
-
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
@@ -48,9 +46,7 @@ public class StatBase
         {
             StatList.field_25188_a.add(this);
             StatList.oneShotStats.put(Integer.valueOf(statId), this);
-            if(!GunCreator.MC_SRC_MOD) {
-                statGuid = AchievementMap.getGuid(statId);
-            }
+            statGuid = AchievementMap.getGuid(statId);
             return this;
         }
     }

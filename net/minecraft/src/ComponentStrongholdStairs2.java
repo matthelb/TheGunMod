@@ -15,15 +15,15 @@ public class ComponentStrongholdStairs2 extends ComponentStrongholdStairs
         field_35037_b = new ArrayList();
     }
 
-    public ChunkPosition func_40008_a_()
+    public ChunkPosition getCenter()
     {
         if (field_40009_b != null)
         {
-            return field_40009_b.func_40008_a_();
+            return field_40009_b.getCenter();
         }
         else
         {
-            return super.func_40008_a_();
+            return super.getCenter();
         }
     }
 }

@@ -72,7 +72,7 @@ public class ModelRenderer
     public ModelRenderer addBox(String s, float f, float f1, float f2, int i, int j, int k)
     {
         s = (new StringBuilder()).append(boxName).append(".").append(s).toString();
-        TextureOffset textureoffset = baseModel.func_40297_a(s);
+        TextureOffset textureoffset = baseModel.getTextureOffset(s);
         setTextureOffset(textureoffset.field_40734_a, textureoffset.field_40733_b);
         cubeList.add((new ModelBox(this, textureOffsetX, textureOffsetY, f, f1, f2, i, j, k, 0.0F)).func_40671_a(s));
         return this;
@@ -84,9 +84,9 @@ public class ModelRenderer
         return this;
     }
 
-    public void addBox(float x, float y, float z, int width, int length, int depth, float f3)
+    public void addBox(float f, float f1, float f2, int i, int j, int k, float f3)
     {
-        cubeList.add(new ModelBox(this, textureOffsetX, textureOffsetY, x, y, z, width, length, depth, f3));
+        cubeList.add(new ModelBox(this, textureOffsetX, textureOffsetY, f, f1, f2, i, j, k, f3));
     }
 
     public void setRotationPoint(float f, float f1, float f2)
@@ -237,7 +237,7 @@ public class ModelRenderer
         Tessellator tessellator = Tessellator.instance;
         for (int i = 0; i < cubeList.size(); i++)
         {
-            ((ModelBox)cubeList.get(i)).func_40670_a(tessellator, f);
+            ((ModelBox)cubeList.get(i)).render(tessellator, f);
         }
 
         GL11.glEndList();
