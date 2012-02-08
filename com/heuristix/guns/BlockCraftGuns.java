@@ -20,7 +20,7 @@ public class BlockCraftGuns extends Block implements CustomEntity {
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if(player instanceof EntityPlayerMP) {
             EntityPlayerMP playerMP = (EntityPlayerMP) player;
-            if(!world.singleplayerWorld) {
+            if(!world.isRemote) {
                 ContainerCraftGuns container = new ContainerCraftGuns(playerMP, playerMP.itemInWorldManager.getGameType() == 1);
                 Util.displayGUI(playerMP, container.getInventory(), container);
                 return true;
@@ -55,5 +55,9 @@ public class BlockCraftGuns extends Block implements CustomEntity {
 
     public int getCraftingAmount() {
         return 1;
+    }
+
+    public boolean isShapelessRecipe() {
+        return false;
     }
 }

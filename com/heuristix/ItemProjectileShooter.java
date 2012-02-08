@@ -81,7 +81,7 @@ public abstract class ItemProjectileShooter extends ItemCustom {
             float rand = itemRand.nextFloat();
             world.playSoundAtEntity(player, getShootSound(), rand + 0.5f, 1.0f / (rand * 0.4f + 0.8f));
         }
-        if (!world.singleplayerWorld) {
+        if (!world.isRemote) {
             spawnProjectile(world, player);
         }
         lastRound = System.currentTimeMillis();

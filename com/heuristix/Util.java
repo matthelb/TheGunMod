@@ -422,8 +422,8 @@ public class Util {
         int currentWindowId = (Integer) names.getFieldValue(EntityPlayerMP.class, player, "currentWindowId");
         currentWindowId = currentWindowId % 100 + 1;
         player.playerNetServerHandler.sendPacket(new PacketOpenCraftGuns(currentWindowId, inventory.getInvName(), inventory.getSizeInventory()));
-        player.currentCraftingInventory = container;
-        player.currentCraftingInventory.windowId = currentWindowId;
+        player.craftingInventory = container;
+        player.craftingInventory.windowId = currentWindowId;
         names.setFieldValue(EntityPlayerMP.class, player, "currentWindowId", currentWindowId);
     }
 

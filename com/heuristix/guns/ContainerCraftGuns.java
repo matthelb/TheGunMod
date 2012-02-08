@@ -123,7 +123,7 @@ public class ContainerCraftGuns extends Container {
                         inventoryPlayer.setItemStack(ItemStack.copyItemStack(stack));
                     }
                 } else {
-                    return super.slotClick(slot.id, mouseButton, shiftHeld, player);
+                    return super.slotClick(slot.slotNumber, mouseButton, shiftHeld, player);
                 }
             } else {
                 if (inventoryPlayer.getItemStack() != null) {

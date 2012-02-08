@@ -65,7 +65,7 @@ public class EntityBullet extends EntityProjectile {
     }
 
     public boolean onBlockHit(MovingObjectPosition position) {
-        if(!worldObj.singleplayerWorld) {
+        if(!worldObj.isRemote) {
             if(getOwner() instanceof EntityPlayerMP) {
                 ItemInWorldManager controller = ((EntityPlayerMP) getOwner()).itemInWorldManager;
                 if(controller != null) {

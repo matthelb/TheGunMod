@@ -17,4 +17,6 @@ public interface CustomEntity {
     Object[] getCraftingRecipe();
 
     int getCraftingAmount();
+
+    boolean isShapelessRecipe();
 }

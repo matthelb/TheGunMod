@@ -397,7 +397,6 @@ public class MinecraftServer
             {
                 System.exit(0);
             }
-            break MISSING_BLOCK_LABEL_350;
         }
         try
         {
@@ -412,9 +411,6 @@ public class MinecraftServer
         {
             System.exit(0);
         }
-        break MISSING_BLOCK_LABEL_350;
-        Exception exception2;
-        exception2;
         try
         {
             stopServer();
@@ -428,7 +424,6 @@ public class MinecraftServer
         {
             System.exit(0);
         }
-        throw exception2;
     }
 
     private void doTick()

@@ -99,6 +99,10 @@ public abstract class ItemGun extends ItemProjectileShooter {
         return false;
     }
 
+    public boolean isShapelessRecipe() {
+        return false;
+    }
+
     public Object[] getCraftingRecipe() {
         if(craftingRecipe == null) {
             EntityProjectile entityProjectile = null;

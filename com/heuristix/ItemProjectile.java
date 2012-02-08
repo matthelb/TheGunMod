@@ -42,6 +42,10 @@ public abstract class ItemProjectile extends ItemCustom {
         return false;
     }
 
+    public boolean isShapelessRecipe() {
+        return false;
+    }
+
     public Object[] getCraftingRecipe() {
         return new Object[]{Item.ingotIron, 1 / 8f, Item.gunpowder, 1 / 16f};
     }
