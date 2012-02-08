@@ -30,12 +30,7 @@ import java.util.logging.Level;
 */
 public class mod_Guns extends ModMP {
 
-    public static boolean DEBUG = false;
-
-    public static final int MOUSE_LEFT = 0;
-    public static final int MOUSE_RIGHT = 1;
-
-    private static final Properties DEFAULT_CONFIG = new Properties();
+    public static boolean DEBUG = true;
 
     private static final Map<String, Class> classes = new HashMap<String, Class>();
 

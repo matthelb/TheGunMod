@@ -15,9 +15,9 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
     static {
-        ReflectionFacade.getInstance().putField(Entity.class, "heartsLife", "Y" /*"bW"*/);
-        ReflectionFacade.getInstance().putField(EntityLiving.class, "heartsHalvesLife", "ba" /*"S"*/);
-        ReflectionFacade.getInstance().putField(EntityLiving.class, "naturalArmorRating", "cc"/*"aU"*/);
+        ReflectionFacade.getInstance().putField(Entity.class, "heartsLife", "bW");
+        ReflectionFacade.getInstance().putField(EntityLiving.class, "heartsHalvesLife", "S");
+        ReflectionFacade.getInstance().putField(EntityLiving.class, "naturalArmorRating", "aU");
     }
 
     public EntityLiving owner;
@@ -52,7 +52,7 @@ public abstract class EntityProjectile extends Entity {
         this.posY = y;
         this.posZ = z;
         this.start = Vec3D.createVector(posX, posY, posZ);
-         setVelocity(computeVelocity());
+        setVelocity(computeVelocity());
         changeVelocity(getSpeed());
     }
 
