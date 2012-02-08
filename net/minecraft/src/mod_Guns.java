@@ -163,8 +163,8 @@ public class mod_Guns extends ModMP {
                 }
                 break;
             case 2:
-                if(player.currentCraftingInventory instanceof ContainerCraftGuns) {
-                    ContainerCraftGuns container = (ContainerCraftGuns) player.currentCraftingInventory;
+                if(player.craftingInventory instanceof ContainerCraftGuns) {
+                    ContainerCraftGuns container = (ContainerCraftGuns) player.craftingInventory;
                     container.onArrowClick(packet.dataInt[0]);
                 }
                 break;
