@@ -14,10 +14,13 @@ import com.heuristix.util.*;
 import java.io.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
+
 
 /**
 * Created by IntelliJ IDEA.
@@ -28,6 +31,11 @@ import java.util.Properties;
 public class mod_Guns extends ModMP {
 
     public static boolean DEBUG = false;
+
+    public static final int MOUSE_LEFT = 0;
+    public static final int MOUSE_RIGHT = 1;
+
+    private static final Properties DEFAULT_CONFIG = new Properties();
 
     private static final Map<String, Class> classes = new HashMap<String, Class>();
 
@@ -59,6 +67,16 @@ public class mod_Guns extends ModMP {
 
     public void load() {
         try {
+            Log.addHandler(this);
+        } catch (IOException e) {
+            Log.getLogger().log(Level.SEVERE, "Could not initiate LogHandler for " + this.getClass());
+        }
+        try {
+            loadConfig(getConfig());
+        } catch (IOException e) {
+            Log.fine("Failed to read config file", getClass());
+        }
+        try {
             initItems();
         } catch (Exception e) {
             Log.fine("Failed to initialize items", getClass());
@@ -77,6 +95,7 @@ public class mod_Guns extends ModMP {
             if (!gunsDir.exists()) {
                 gunsDir.mkdirs();
             } else {
+                GunBridge gb = null;
                 for (File f : gunsDir.listFiles(new FilenameFilter() {
                     public boolean accept(File dir, String name) {
                         return name.toLowerCase().endsWith(".gun2");
@@ -84,7 +103,17 @@ public class mod_Guns extends ModMP {
                 })) {
                     Gun gun = new Gun(Util.read(f));
                     if(gun != null) {
-                        registerGun(gun);
+                        int[] versionCreated = gun.getProperties().get("versionCreated");
+                        if(versionCreated == null || !Util.getStringFromBytes(versionCreated).equals(AbstractGunBridge.VERSION)) {
+                            if(gb == null)
+                                gb = new DefaultGunBridge();
+                            gb.read(gun, DEBUG);
+                            gb.write(new FileOutputStream(f));
+                            gun = new Gun(Util.read(f));
+                        }
+                        registerGun(gun, DEBUG);
+                    } else {
+                        Log.fine("Could not load gun " + f.getName(), getClass());
                     }
                 }
 
@@ -94,41 +123,42 @@ public class mod_Guns extends ModMP {
         }
     }
 
-    public void registerGun(Gun gun) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
+    public void registerGun(Gun gun, boolean deobfuscate) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
         List<com.heuristix.util.Pair<String, byte[]>> gunClasses = gun.getClasses();
+        Map<String, byte[]> resources = gun.getResources();
 
         Class entityBulletClass = classes.get(gunClasses.get(0).getFirst());
         if (entityBulletClass == null) {
             ReflectionFacade names = ReflectionFacade.getInstance();
             byte[] entityBulletClassBytes = gunClasses.get(0).getSecond();
-            String projectileType = ClassDescriptor.getClassDescription(entityBulletClassBytes).getSuperName();
+             String projectileType = ClassDescriptor.getClassDescription(entityBulletClassBytes).getSuperName();
             HashMap<String, Method> methods = new HashMap<String, Method>();
-            String worldClass = (DEBUG) ? "net/minecraft/src/World" : names.getName(World.class);
-            String entityLivingClass = (DEBUG) ? "net/minecraft/src/EntityLiving" : names.getName(EntityLiving.class);
+            String worldClass = (deobfuscate) ? "net/minecraft/src/World" : names.getName(World.class);
+            String entityLivingClass = (deobfuscate) ? "net/minecraft/src/EntityLiving" : names.getName(EntityLiving.class);
             for (int i = 0; i < GunCreator.OBFUSCATED_CLASS_NAMES.size(); i++) {
-                com.heuristix.util.Pair<String, String> obfuscatedNames = GunCreator.OBFUSCATED_CLASS_NAMES.get(i);
+                com.heuristix.util.Pair<String, String> obfuscatedNames = AbstractGunBridge.OBFUSCATED_CLASS_NAMES.get(i);
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V", new Method("(L" + worldClass + ";L" + entityLivingClass + ";)V",
                         new InvokeMethod(GunCreator.SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass + ";L" + entityLivingClass + ";)V", false, true, false)));
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V", new Method("(L" + worldClass + ";)V",
                         new InvokeMethod(GunCreator.SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass + ";)V", false, true, false)));
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V", new Method("(L" + worldClass + ";DDD)V",
-                            new InvokeMethod(GunCreator.SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass +";DDD)V", false, true, false)));
+                        new InvokeMethod(GunCreator.SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass +";DDD)V", false, true, false)));
             }
             entityBulletClassBytes = ExtensibleClassAdapter.modifyClassBytes(entityBulletClassBytes, gunClasses.get(0).getFirst(), methods, false);
             entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
             classes.put(entityBulletClass.getName(), entityBulletClass);
         }
-        ItemProjectile itemBullet = projectiles.get(gunClasses.get(1).getFirst());
-        if (itemBullet == null) {
-            Class itemBulletClass = classes.get(gunClasses.get(1).getFirst());
-            if (itemBulletClass == null) {
-                itemBulletClass = Util.defineClass(gunClasses.get(1).getSecond(), null/*gunClasses.get(1).getFirst()*/, ItemProjectileBase.class.getClassLoader());
-                classes.put(itemBulletClass.getName(), itemBulletClass);
+        ItemProjectile itemProjectile = projectiles.get(gunClasses.get(1).getFirst());
+        if (itemProjectile == null) {
+            Class itemProjectileClass = classes.get(gunClasses.get(1).getFirst());
+            if (itemProjectileClass == null) {
+                itemProjectileClass = Util.defineClass(gunClasses.get(1).getSecond(), null/*gunClasses.get(1).getFirst()*/, ItemProjectileBase.class.getClassLoader());
+                classes.put(itemProjectileClass.getName(), itemProjectileClass);
             }
-            Constructor itemBulletConstructor = itemBulletClass.getDeclaredConstructor(int.class);
-            itemBulletConstructor.setAccessible(true);
-            itemBullet = (ItemProjectile) itemBulletConstructor.newInstance(gun.getItemBulletId());
-            projectiles.put(itemBulletClass.getName(), itemBullet);
+            Constructor itemProjectileConstructor = itemProjectileClass.getDeclaredConstructor(int.class);
+            itemProjectileConstructor.setAccessible(true);
+            itemProjectile = (ItemProjectile) itemProjectileConstructor.newInstance(gun.getItemProjectileId());
+            projectiles.put(itemProjectileClass.getName(), itemProjectile);
         }
 
         Class itemGunClass = classes.get(gunClasses.get(2).getFirst());
@@ -138,11 +168,11 @@ public class mod_Guns extends ModMP {
             classes.put(itemGunClass.getName(), itemGunClass);
             Constructor itemGunConstructor = itemGunClass.getDeclaredConstructor(int.class, ItemProjectile.class);
             itemGunConstructor.setAccessible(true);
-            itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemBullet);
+            itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemProjectile);
         }
-        itemBullet.putProjectileClass(itemGun, entityBulletClass);
-        projectiles.put(gunClasses.get(1).getFirst(), itemBullet);
-        ModLoaderMp.RegisterEntityTrackerEntry(entityBulletClass, true ,getUniqueEntityProjectileId());
+        itemProjectile.putProjectileClass(itemGun, entityBulletClass);
+        projectiles.put(gunClasses.get(1).getFirst(), itemProjectile);
+        ModLoaderMp.RegisterEntityTrackerEntry(entityBulletClass, true , getUniqueEntityProjectileId());
         ModLoaderMp.RegisterEntityTracker(entityBulletClass, 256, 1);
         Log.fine("Gun loaded " + itemGun.getName());
     }
