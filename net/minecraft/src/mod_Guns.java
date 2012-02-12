@@ -50,7 +50,7 @@ public class mod_Guns extends ModMP {
 
 
     public String getModVersion() {
-        return "0.9.7";
+        return "0.9.81";
     }
 
     public Properties getConfig() throws IOException {

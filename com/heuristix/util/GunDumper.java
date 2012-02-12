@@ -46,7 +46,7 @@ public final class GunDumper {
                         out.flush();
                         out.close();
                     }
-                    for (int i = 0; i < gun.getResources().size(); i++) {
+                    /*for (int i = 0; i < gun.getResources().size(); i++) {
                         String name = "";
                         switch (i) {
                             case 0:
@@ -81,7 +81,7 @@ public final class GunDumper {
                         gun.write(out1);
                         out.flush();
                         out.close();*/
-                    }
+                    //}
                 } catch (IllegalArgumentException e) {
                     System.out.println("Could not load gun file: " + f.toString());
                 }
