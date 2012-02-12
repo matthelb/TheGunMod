@@ -87,6 +87,9 @@ public abstract class ModMP extends BaseModMp implements Mod {
     public final boolean OnTickInGame(float tick, Minecraft minecraft) {
         if (!texturesRegistered && minecraft.renderEngine != null) {
             for (TextureFX texture : textures) {
+                if(texture instanceof TextureDefaultMultipleFX) {
+                    ((TextureDefaultMultipleFX) texture).setRenderEngine(minecraft.renderEngine);
+                }
                  minecraft.renderEngine.registerTextureFX(texture);
             }
             texturesRegistered = true;
@@ -115,14 +118,8 @@ public abstract class ModMP extends BaseModMp implements Mod {
     }
 
     public int registerTexture(boolean item, BufferedImage... textures) {
-        Class[] paramTypes = new Class[]{int.class, boolean.class, boolean.class, BufferedImage[].class};
-        Object[] params = new Object[]{0, item, true, textures};
         Class textureFXClass = getCurrentHDTextureClass();
-        if(TextureDefaultMultipleFX.class.isAssignableFrom(textureFXClass)) {
-            paramTypes = new Class[]{int.class, boolean.class, boolean.class, RenderEngine.class, BufferedImage[].class};
-            params = new Object[]{0, item, true, ModLoader.getMinecraftInstance().renderEngine, textures};
-        }
-        TextureMultipleFX textureFX = (TextureMultipleFX) ReflectionFacade.getInstance().invokeConstructor(textureFXClass, paramTypes, params);
+        TextureMultipleFX textureFX = (TextureMultipleFX) ReflectionFacade.getInstance().invokeConstructor(textureFXClass, new Class[]{int.class, boolean.class, BufferedImage[].class}, 0, item, textures);
         return registerTexture(textureFX);
     }
 
@@ -134,27 +131,27 @@ public abstract class ModMP extends BaseModMp implements Mod {
     }
 
     public void registerSound(String name, byte[] bytes) {
-        HashMap sounds = this.sounds.get(SOUND_KEYS[0]);
+        HashMap<String, byte[]> sounds = this.sounds.get(SOUND_KEYS[0]);
         if (sounds == null) {
-            sounds = new HashMap();
+            sounds = new HashMap<String, byte[]>();
         }
         sounds.put(name, bytes);
         this.sounds.put(SOUND_KEYS[0], sounds);
     }
 
     public void registerMusic(String name, byte[] bytes) {
-        HashMap music = this.sounds.get(SOUND_KEYS[1]);
+        HashMap<String, byte[]> music = this.sounds.get(SOUND_KEYS[1]);
         if (music == null) {
-            music = new HashMap();
+            music = new HashMap<String, byte[]>();
         }
         music.put(name, bytes);
         this.sounds.put(SOUND_KEYS[1], music);
     }
 
     public void registerStreaming(String name, byte[] bytes) {
-        HashMap streaming = this.sounds.get(SOUND_KEYS[2]);
+        HashMap<String, byte[]> streaming = this.sounds.get(SOUND_KEYS[2]);
         if (streaming == null) {
-            streaming = new HashMap();
+            streaming = new HashMap<String, byte[]>();
         }
         streaming.put(name, bytes);
         this.sounds.put(SOUND_KEYS[2], streaming);
@@ -216,11 +213,7 @@ public abstract class ModMP extends BaseModMp implements Mod {
     public static Class<? extends TextureMultipleFX> getCurrentHDTextureClass() {
         if(currentHDTextureClass == null) {
             currentHDTextureClass = getHDTextureCompatibleClass();
-            Class[] params = new Class[]{int.class, boolean.class, boolean.class, BufferedImage[].class};
-            if(TextureDefaultMultipleFX.class.isAssignableFrom(currentHDTextureClass)) {
-                params = new Class[]{int.class, boolean.class, boolean.class, RenderEngine.class, BufferedImage[].class};
-            }
-            ReflectionFacade.getInstance().putConstructor(currentHDTextureClass, params);
+            ReflectionFacade.getInstance().putConstructor(currentHDTextureClass, int.class, boolean.class, BufferedImage[].class);
         }
         return currentHDTextureClass;
     }
@@ -231,14 +224,14 @@ public abstract class ModMP extends BaseModMp implements Mod {
                 return TextureOptifineMultipleFX.class;
             }
         } catch(ClassNotFoundException e) {
-            Log.getLogger().throwing(ModMP.class.getName(), "getHDTextureCompatibleClass()", e);
+            Log.getLogger().fine("TextureHDFX not found; Optifine is not installed or is missing files");
         }
         try {
             if(Class.forName("com.pclewis.mcpatcher.mod.TileSize") != null) {
                 return TexturePatchedMultipleFX.class;
             }
         } catch(ClassNotFoundException e) {
-            Log.getLogger().throwing(ModMP.class.getName(), "getHDTextureCompatibleClass()", e);
+            Log.getLogger().fine("TileSize not found; minecraft.jar has not been patched by MCPatcher or is incorrectly patched");
         }
         return TextureDefaultMultipleFX.class;
     }

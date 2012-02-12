@@ -13,6 +13,10 @@ import java.awt.image.BufferedImage;
  */
 public class TexturePatchedMultipleFX extends TextureMultipleFX {
 
+    public TexturePatchedMultipleFX(int iconIndex, boolean item, BufferedImage... textures) {
+        this(iconIndex, item, false, textures);
+    }
+
     public TexturePatchedMultipleFX(int iconIndex, boolean item, boolean setupOnTick, BufferedImage... textures) {
         this(iconIndex, 1, item, setupOnTick, textures);
     }

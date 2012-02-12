@@ -13,19 +13,26 @@ import java.awt.image.BufferedImage;
  */
 public class TextureDefaultMultipleFX extends TextureMultipleFX {
 
-    private final RenderEngine engine;
+    private RenderEngine engine;
 
-    public TextureDefaultMultipleFX(int iconIndex, boolean item, boolean setupOnTick, RenderEngine engine, BufferedImage... textures) {
-        this(iconIndex, 1, item, setupOnTick, engine, textures);
+    public TextureDefaultMultipleFX(int iconIndex, boolean item, BufferedImage... textures) {
+        this(iconIndex, item, true, textures);
     }
 
-    public TextureDefaultMultipleFX(int iconIndex, int tileSize, boolean item, boolean setupOnTick, RenderEngine engine, BufferedImage... textures) {
+    public TextureDefaultMultipleFX(int iconIndex, boolean item, boolean setupOnTick, BufferedImage... textures) {
+        this(iconIndex, 1, item, setupOnTick, textures);
+    }
+
+    public TextureDefaultMultipleFX(int iconIndex, int tileSize, boolean item, boolean setupOnTick, BufferedImage... textures) {
         super(iconIndex, tileSize, item, setupOnTick, textures);
-        this.engine = engine;
     }
 
     @Override
     public Dimension getMaxTextureDimension() {
         return Util.getTextureDimensions(tileImage == 1, engine);
+    }
+
+    public void setRenderEngine(RenderEngine engine) {
+        this.engine = engine;
     }
 }

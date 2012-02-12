@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class GunCreator extends AbstractGunBridge {
 
-    public static final boolean MC_SRC_MOD = false;
+    public static final boolean MC_SRC_MOD = true;
 
     private static final Dimension COMPONENT_SIZE = new Dimension(100, 20);
     private static final NumberFormatter INTEGER_FORMATTER = new NumberFormatter(new DecimalFormat("#"));

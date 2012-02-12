@@ -46,7 +46,7 @@ public final class GunDumper {
                         out.flush();
                         out.close();
                     }
-                    for (int i = 0; i < gun.getResources().size(); i++) {
+                    /*for (int i = 0; i < gun.getResources().size(); i++) {
                         String name = "";
                         switch (i) {
                             case 0:
@@ -70,7 +70,7 @@ public final class GunDumper {
                         out.write(gun.getResources().get(i));
                         out.flush();
                         out.close();
-                        /*if(id == 0) {
+                        if(id == 0) {
                             id = gun.getItemGunId();
                         }
                         System.out.println(gun.getItemGunId());
@@ -80,8 +80,8 @@ public final class GunDumper {
                         FileOutputStream out1 = new FileOutputStream(new File(outDir.getAbsolutePath() + File.separator + f.getName() + ".gun2"));
                         gun.write(out1);
                         out.flush();
-                        out.close();*/
-                    }
+                        out.close();
+                    }             */
                 } catch (IllegalArgumentException e) {
                     System.out.println("Could not read gun file: " + f.toString());
                 }

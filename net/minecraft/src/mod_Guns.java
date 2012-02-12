@@ -68,7 +68,7 @@ public class mod_Guns extends ModMP {
     }
 
     public String getModVersion() {
-        return "0.9.7";
+        return "0.9.81";
     }
 
     @Override
@@ -227,7 +227,7 @@ public class mod_Guns extends ModMP {
             itemGun.setIconIndex(registerTexture(true, gunTextures.toArray(new BufferedImage[projectileTextures.size()])));
             registerItem(itemGun);
             registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get("shootSound"));
-            if (resources.size() > 3) {
+            if (resources.get("reloadSound") != null) {
                 registerStreaming(itemGun.getReloadSound().replaceFirst("\\.", "/") + ".ogg", resources.get("reloadSound"));
             }
         }
@@ -310,11 +310,11 @@ public class mod_Guns extends ModMP {
             if (equippedStack != null) {
                 Item item = equippedStack.getItem();
                 if (item instanceof ItemGun)
-                    zoom(minecraft, (ItemGun) item, minecraft.thePlayer, minecraft.theWorld, in);
+                    zoom(minecraft, (ItemGun) item, in);
                 else {
                     currentZoom = 1.0f;
                     isZoomed = false;
-                    zoom(minecraft, null, minecraft.thePlayer, minecraft.theWorld, in);
+                    zoom(minecraft, null, in);
                 }
             }
         }
@@ -369,7 +369,7 @@ public class mod_Guns extends ModMP {
         }
     }
 
-    private void zoom(Minecraft mc, ItemGun gun, EntityPlayer player, World world, boolean in) {
+    private void zoom(Minecraft mc, ItemGun gun, boolean in) {
         float increment = 0.1f + (((gun != null) ? gun.getZoom(): 0) / 30f);
         currentZoom = (currentZoom + ((in) ? increment : -increment));
         currentZoom = (in) ? Math.min(gun.getZoom(), currentZoom) : Math.max(1.0f, currentZoom);
@@ -386,6 +386,5 @@ public class mod_Guns extends ModMP {
     public File getLogFile() {
         return Util.getHeuristixFile("guns", "log.txt");
     }
-
 
 }

@@ -19,6 +19,7 @@ public abstract class TextureMultipleFX extends TextureFX {
     private int[] imagePixelColors;
 
     private boolean setup;
+    private Dimension currentTextureDimension;
 
     public TextureMultipleFX(int iconIndex, boolean item, boolean setupOnTick, BufferedImage... textures) {
         this(iconIndex, 1, item, setupOnTick, textures);
@@ -36,7 +37,7 @@ public abstract class TextureMultipleFX extends TextureFX {
 
     @Override
     public void onTick() {
-        if(!setup) {
+        if(!setup || !getMaxTextureDimension().equals(currentTextureDimension)) {
             setup();
         }
         if(oldAnalygraph != anaglyphEnabled) {
@@ -63,16 +64,16 @@ public abstract class TextureMultipleFX extends TextureFX {
     }
 
     private void setup() {
-        Dimension textureDimensions = getMaxTextureDimension();
-        if(textureDimensions.width == 0) {
-            textureDimensions.width = textureDimensions.height;
+        currentTextureDimension = getMaxTextureDimension();
+        if(currentTextureDimension.width == 0) {
+            currentTextureDimension.width = currentTextureDimension.height;
         }
-        if(textureDimensions.height == 0) {
-            textureDimensions.width = textureDimensions.height = 16;
+        if(currentTextureDimension.height == 0) {
+            currentTextureDimension.width = currentTextureDimension.height = 16;
         }
-        BufferedImage image = getTexture(textureDimensions.width, textureDimensions.height);
-        imagePixelColors = new int[textureDimensions.width * textureDimensions.height];
-        imageData = new byte[textureDimensions.width * textureDimensions.height * 4];
+        BufferedImage image = getTexture(currentTextureDimension.width, currentTextureDimension.height);
+        imagePixelColors = new int[currentTextureDimension.width * currentTextureDimension.height];
+        imageData = new byte[currentTextureDimension.width * currentTextureDimension.height * 4];
         image.getRGB(0, 0, image.getWidth(), image.getHeight(), imagePixelColors, 0, image.getWidth());
         setup = true;
         updateImageData();
@@ -86,15 +87,21 @@ public abstract class TextureMultipleFX extends TextureFX {
         for(BufferedImage image : textures) {
             if(image.getWidth() == width && image.getHeight() == height) {
                 return image;
-            } else if((image.getWidth() > closestWidth && image.getWidth() < width && image.getHeight() > closestHeight && image.getHeight() < height)
-                    || (closestWidth == -1 && closestHeight == -1)) {
-                closest = image;
-                closestWidth = image.getWidth();
-                closestHeight = image.getHeight();
+            } else {
+                int imageWidth = image.getWidth(), imageHeight = image.getHeight();
+                if((imageWidth < width && imageHeight < height) ||
+                        ((imageWidth < closestWidth && imageHeight < closestHeight) && (closestWidth > width && closestHeight > height))
+                            || (closestWidth == -1 && closestHeight == -1)) {
+                    closestWidth = imageWidth;
+                    closestHeight = imageHeight;
+                    closest = image;
+                }
             }
-
         }
-        return Util.resizeImage(closest, width, height);
+        if(closest != null && closest.getWidth() != width) {
+            closest = Util.resizeImage(closest, width, height);
+        }
+        return closest;
     }
 
 
