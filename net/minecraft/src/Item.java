@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.heuristix.swing.GunCreator;
+
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Random;
@@ -545,6 +547,8 @@ public class Item
         brewingStand = (new ItemReed(123, Block.brewingStand)).setIconCoord(12, 10).setItemName("brewingStand");
         cauldron = (new ItemReed(124, Block.cauldron)).setIconCoord(12, 9).setItemName("cauldron");
         speckledMelon = (new Item(126)).setIconCoord(9, 8).setItemName("speckledMelon").setPotionEffect(PotionHelper.speckledMelonEffect);
-        StatList.initStats();
+        if(!GunCreator.MC_SRC_MOD) {
+            StatList.initStats();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import com.heuristix.swing.GunCreator;
+
 import java.util.*;
 
 public class StatList
@@ -222,6 +224,8 @@ public class StatList
         distanceByMinecartStat = (new StatBasic(2006, "stat.minecartOneCm", StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByBoatStat = (new StatBasic(2007, "stat.boatOneCm", StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByPigStat = (new StatBasic(2008, "stat.pigOneCm", StatBase.distanceStatType)).initIndependentStat().registerStat();
-        AchievementList.init();
+        if(!GunCreator.MC_SRC_MOD) {
+            AchievementList.init();
+        }
     }
 }
