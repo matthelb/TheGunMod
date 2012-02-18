@@ -70,9 +70,10 @@ public final class ReflectionFacade {
             try {
                 return method.invoke(o, params);
             } catch (IllegalAccessException e) {
-               Log.getLogger().fine("Not allowed to invoke " + Modifier.toString(method.getModifiers()) + " method " + method.getDeclaringClass().getName() + "+" + method.getName());
+                Log.getLogger().fine("Not allowed to invoke " + Modifier.toString(method.getModifiers()) + " method " + method.getDeclaringClass().getName() + "+" + method.getName());
             } catch (InvocationTargetException e) {
-               Log.getLogger().fine("Could not invoke " + method.getDeclaringClass().getName() + "+" + method.getName());
+                Log.getLogger().fine("Could not invoke " + method.getDeclaringClass().getName() + "+" + method.getName());
+                Log.getLogger().throwing(getClass().getName(), "invokeMethod(Class clazz, Class[] paramTypes, Object... params", e);
             }
         }
         return null;
@@ -84,11 +85,13 @@ public final class ReflectionFacade {
             try {
                 return constructor.newInstance(params);
             } catch (IllegalAccessException e) {
-               Log.getLogger().fine("Not allowed to invoke " + Modifier.toString(constructor.getModifiers()) + " method " + constructor.getDeclaringClass().getName() + "+" + Arrays.toString(constructor.getParameterTypes()));
+                Log.getLogger().fine("Not allowed to invoke " + Modifier.toString(constructor.getModifiers()) + " method " + constructor.getDeclaringClass().getName() + "+" + Arrays.toString(constructor.getParameterTypes()));
             } catch (InstantiationException e) {
-               Log.getLogger().fine("Could not instantiate " + constructor.getDeclaringClass().getName() + "+" + Arrays.toString(constructor.getParameterTypes()));
+                Log.getLogger().fine("Could not instantiate " + constructor.getDeclaringClass().getName() + "+" + Arrays.toString(constructor.getParameterTypes()));
+                Log.getLogger().throwing(getClass().getName(), "invokeConstructor(Class clazz, Class[] paramTypes, Object... params", e);
             } catch (InvocationTargetException e) {
-               Log.getLogger().fine("Could not invoke " + constructor.getDeclaringClass().getName() + "+" + Arrays.toString(constructor.getParameterTypes()));
+                Log.getLogger().fine("Could not invoke " + constructor.getDeclaringClass().getName() + "+" + Arrays.toString(constructor.getParameterTypes()));
+                Log.getLogger().throwing(getClass().getName(), "invokeConstructor(Class clazz, Class[] paramTypes, Object... params", e);
             }
         }
         return null;
