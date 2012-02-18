@@ -61,6 +61,9 @@ public class mod_Guns extends ModMP {
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
         DEFAULT_CONFIG.setProperty("key.zoom", Keyboard.getKeyName(Keyboard.KEY_Z));
         DEFAULT_CONFIG.setProperty("guns.dir", Util.getHeuristixDir("guns").getAbsolutePath());
+        mod_Guns mod = new mod_Guns();
+        DEFAULT_CONFIG.setProperty("guns.version", mod.getModVersion());
+        mod = null;
     }
 
     private static final Map<String, Class> classes = new HashMap<String, Class>();
@@ -120,7 +123,6 @@ public class mod_Guns extends ModMP {
         ModLoader.SetInGameHook(this, true, false);
         Util.setPacketId(PacketOpenCraftGuns.class, PacketOpenCraftGuns.PACKET_ID, true, true);
         ModLoaderMp.RegisterGUI(this, PacketOpenCraftGuns.INVENTORY_TYPE);
-
     }
 
     public Properties getConfig() throws IOException {
