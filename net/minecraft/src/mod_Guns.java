@@ -33,6 +33,7 @@ public class mod_Guns extends ModMP {
 
     private KeyBinding reloadKeybinding = new KeyBinding("key.reload", Keyboard.KEY_R);
     private KeyBinding zoomKeybinding = new KeyBinding("key.zoom", Keyboard.KEY_Z);
+    private File gunsDir;
 
     public static boolean DEBUG = false;
 
@@ -59,6 +60,7 @@ public class mod_Guns extends ModMP {
 
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
         DEFAULT_CONFIG.setProperty("key.zoom", Keyboard.getKeyName(Keyboard.KEY_Z));
+        DEFAULT_CONFIG.setProperty("guns.dir", Util.getHeuristixDir("guns").getAbsolutePath());
     }
 
     private static final Map<String, Class> classes = new HashMap<String, Class>();
@@ -68,7 +70,7 @@ public class mod_Guns extends ModMP {
     }
 
     public String getModVersion() {
-        return "0.9.81";
+        return "0.9.82";
     }
 
     @Override
@@ -89,8 +91,18 @@ public class mod_Guns extends ModMP {
             Log.fine("Failed to initialize items", getClass());
             Log.throwing(getClass(), "load()", e, getClass());
         }
-        registerSound("guns/hit.ogg", Util.read(Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"))));
-        registerSound("guns/move.ogg", Util.read(Util.getFile("move.ogg", Util.getHeuristixDir("sounds"))));
+        File hitSound = Util.getFile("hit.ogg", Util.getHeuristixDir("sounds"));
+        if(hitSound != null) {
+            registerSound("guns/hit.ogg", Util.read(hitSound));
+        } else {
+            Log.fine("Missing sound file hit.ogg in .minecraft/heuristix/sounds/ directory");
+        }
+        File moveSound = Util.getFile("move.ogg", Util.getHeuristixDir("sounds"));
+        if(moveSound != null) {
+            registerSound("guns/move.ogg", Util.read(moveSound));
+        } else {
+            Log.fine("Missing sound file move.ogg in .minecraft/heuristix/sounds/ directory");
+        }
         BufferedImage blockTextures = getImageResource("/heuristix/gun-blocks.png");
         if(blockTextures != null) {
             Integer[] textureIndices = registerTextures(false, blockTextures, 16);
@@ -99,7 +111,7 @@ public class mod_Guns extends ModMP {
             block.setSideTextureIndex(textureIndices[1]);
             block.setBottomTextureIndex(textureIndices[2]);
         } else {
-            Log.fine("Could not register block textures", getClass());
+            Log.fine("Missing block textures file blocks.png in minecraft.jar/heuristix/", getClass());
         }
         ModLoader.RegisterKey(this, reloadKeybinding, false);
         ModLoader.RegisterKey(this, zoomKeybinding, false);
@@ -116,19 +128,27 @@ public class mod_Guns extends ModMP {
         Properties config = DEFAULT_CONFIG;
         if(configFile.exists()) {
             config.load(new FileInputStream(configFile));
-        } else {
-            config.store(new FileOutputStream(configFile), "TheGunMod v" + getVersion() + " Configuration");
+            if(config.getProperty("guns.version").equals(DEFAULT_CONFIG.getProperty("guns.version"))) {
+                return config;
+            } else {
+                for(Map.Entry<Object, Object> entry : DEFAULT_CONFIG.entrySet()) {
+                    if(!config.contains(entry.getKey())) {
+                        config.put(entry.getKey(), entry.getValue());
+                    }
+                }
+            }
         }
+        config.store(new FileOutputStream(configFile), "TheGunMod v" + getVersion() + " Configuration");
         return config;
     }
 
     public void loadConfig(Properties config) {
         reloadKeybinding = new KeyBinding("key.reload", Keyboard.getKeyIndex(config.getProperty("key.reload")));
         zoomKeybinding = new KeyBinding("key.zoom", Keyboard.getKeyIndex(config.getProperty("key.zoom")));
+        gunsDir = new File(config.getProperty("guns.dir"));
     }
 
     private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        File gunsDir = Util.getHeuristixDir("guns");
         if (gunsDir != null) {
             if (!gunsDir.exists()) {
                 gunsDir.mkdirs();
