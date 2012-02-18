@@ -29,6 +29,7 @@ public abstract class ModMP extends BaseModMp implements Mod {
 
     private boolean soundsRegistered;
     private final Map<String, HashMap<String, byte[]>> sounds;
+
     private static final String[] SOUND_KEYS = {"sounds", "music", "streaming"};
     private static Class<? extends TextureMultipleFX> currentHDTextureClass;
 
