@@ -85,7 +85,10 @@ public class ContainerCraftGuns extends Container {
     }
 
     public ItemGun getCurrentGun() {
-        return (ItemGun) GUN_ITEM_STACKS.get(index).getItem();
+        if(index < GUN_ITEM_STACKS.size()) {
+            return (ItemGun) GUN_ITEM_STACKS.get(index).getItem();
+        }
+        return null;
     }
 
     public InventoryBasic getInventory() {

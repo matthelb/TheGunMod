@@ -48,29 +48,32 @@ public class GuiCraftGuns extends GuiContainer {
     protected void drawGuiContainerForegroundLayer() {
         fontRenderer.drawString(TITLE, xSize / 2 - (fontRenderer.getStringWidth(TITLE) / 2), 8, FONT_COLOR);
         ItemGun gun = container.getCurrentGun();
-        fontRenderer.drawString(gun.getName(), xSize / 2 - (fontRenderer.getStringWidth(gun.getName()) / 2), ContainerCraftGuns.PIXEL_CURRENT_GUN_SLOT.y - 8, FONT_COLOR);
+
         fontRenderer.drawString("Gun Cost:", ContainerCraftGuns.PIXEL_FIRST_INVENTORY_SLOT.x, ContainerCraftGuns.PIXEL_CURRENT_PROJECTILE_SLOT.y + ContainerCraftGuns.SLOT_SIZE + 2, FONT_COLOR);
         fontRenderer.drawString("Ammo Cost:", xSize / 2, ContainerCraftGuns.PIXEL_CURRENT_PROJECTILE_SLOT.y + ContainerCraftGuns.SLOT_SIZE + 2, FONT_COLOR);
-        CustomEntity[] costables = new CustomEntity[]{gun, gun.getProjectile()};
-        int available = 38;
-        int[] xPoints = new int[]{PIXEL_GUN_COST_AREA.x + 1, PIXEL_PROJECTILE_COST_AREA.x + 1};
-        int yPoint = ContainerCraftGuns.PIXEL_CURRENT_PROJECTILE_SLOT.y + ContainerCraftGuns.SLOT_SIZE + 12;
-        for(int i = 0; i < costables.length; i++) {
-            Object[] craftingCost = costables[i].getCraftingRecipe();
-            int items = craftingCost.length / 2;
-            int rows = (int) Math.ceil(Math.sqrt(items));
-            int columns = (items == 2) ? 2 : rows;
-            float scale = Math.min(1.0f, available / (16f * rows));
-            int index = 0;
-            for(int r = 0; r < rows; r++) {
-                for(int c = 0; c < columns; c++, index += 2) {
-                    if(index >= craftingCost.length - 1) {
-                        break;
+        if(gun != null) {
+            CustomEntity[] costables = new CustomEntity[]{gun, gun.getProjectile()};
+            fontRenderer.drawString(gun.getName(), xSize / 2 - (fontRenderer.getStringWidth(gun.getName()) / 2), ContainerCraftGuns.PIXEL_CURRENT_GUN_SLOT.y - 8, FONT_COLOR);
+            int available = 38;
+            int[] xPoints = new int[]{PIXEL_GUN_COST_AREA.x + 1, PIXEL_PROJECTILE_COST_AREA.x + 1};
+            int yPoint = ContainerCraftGuns.PIXEL_CURRENT_PROJECTILE_SLOT.y + ContainerCraftGuns.SLOT_SIZE + 12;
+            for(int i = 0; i < costables.length; i++) {
+                Object[] craftingCost = costables[i].getCraftingRecipe();
+                int items = craftingCost.length / 2;
+                int rows = (int) Math.ceil(Math.sqrt(items));
+                int columns = (items == 2) ? 2 : rows;
+                float scale = Math.min(1.0f, available / (16f * rows));
+                int index = 0;
+                for(int r = 0; r < rows; r++) {
+                    for(int c = 0; c < columns; c++, index += 2) {
+                        if(index >= craftingCost.length - 1) {
+                            break;
+                        }
+                        Item item = (Item) craftingCost[index];
+                        int amount = (int) (container.getSlot(i).getStack().stackSize * ((Number) craftingCost[index + 1]).doubleValue());
+                        int color = (Util.getItemSlot(mc.thePlayer.inventory, item.shiftedIndex) == -1 ? COLOR_RED : COLOR_GREEN);
+                        renderItemIcon(item, amount, (int) (xPoints[i] + (c * 16 * scale)), (int) (yPoint + (r * 16 * scale)), scale, color);
                     }
-                    Item item = (Item) craftingCost[index];
-                    int amount = (int) (container.getSlot(i).getStack().stackSize * ((Number) craftingCost[index + 1]).doubleValue());
-                    int color = (Util.getItemSlot(mc.thePlayer.inventory, item.shiftedIndex) == -1 ? COLOR_RED : COLOR_GREEN);
-                    renderItemIcon(item, amount, (int) (xPoints[i] + (c * 16 * scale)), (int) (yPoint + (r * 16 * scale)), scale, color);
                 }
             }
         }
