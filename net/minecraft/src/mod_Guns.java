@@ -73,7 +73,7 @@ public class mod_Guns extends ModMP {
     }
 
     public String getModVersion() {
-        return "0.9.82";
+        return "0.9.83";
     }
 
     @Override
