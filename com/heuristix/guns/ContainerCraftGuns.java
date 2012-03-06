@@ -131,12 +131,12 @@ public class ContainerCraftGuns extends Container {
             } else {
                 if (inventoryPlayer.getItemStack() != null) {
                     if (mouseButton == 0) {
-                        player.dropPlayerItem(inventoryPlayer.getItemStack());
+                        player.func_48348_b(inventoryPlayer.getItemStack());
                         inventoryPlayer.setItemStack(null);
                     }
                     if (mouseButton == 1) {
                         ItemStack tempStack = inventoryPlayer.getItemStack().splitStack(1);
-                        player.dropPlayerItem(tempStack);
+                        player.func_48348_b(tempStack);
                         if (inventoryPlayer.getItemStack().stackSize == 0) {
                             inventoryPlayer.setItemStack(null);
                         }

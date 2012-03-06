@@ -147,7 +147,7 @@ public abstract class EntityProjectile extends Entity {
     }
 
     public boolean onEntityHit(Entity hit) {
-        if (hit != null && (hit instanceof EntityLiving || hit instanceof DragonPart)) {
+        if (hit != null && (hit instanceof EntityLiving || hit instanceof EntityDragonPart)) {
             return damageEntityWithoutDelay(hit, Math.round(getDamage() * getDamageModifier()));
                 //ReflectionFacade.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
         }

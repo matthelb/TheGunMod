@@ -20,7 +20,7 @@ import java.util.*;
  */
 public abstract class ModMP extends BaseModMp implements Mod {
 
-    public static final String CURRENT_VERSION = "1.1.0";
+    public static final String CURRENT_VERSION = "1.2.3";
 
     public ModMP() {
     }
@@ -38,7 +38,7 @@ public abstract class ModMP extends BaseModMp implements Mod {
             item.setItemName(item.getName());
         }
         if (item.hasWorkbenchRecipe() && item.getCraftingRecipe() != null && item.getCraftingRecipe().length > 0) {
-            ModLoader.AddRecipe(new ItemStack(item, item.getCraftingAmount()), item.getCraftingRecipe());
+            ModLoader.addRecipe(new ItemStack(item, item.getCraftingAmount()), item.getCraftingRecipe());
         }
     }
 
@@ -50,7 +50,7 @@ public abstract class ModMP extends BaseModMp implements Mod {
             block.setBlockName(block.getName());
         }
         if(block.getCraftingRecipe() != null && block.getCraftingRecipe().length > 0) {
-            ModLoader.AddRecipe(new ItemStack(block, block.getCraftingAmount()), block.getCraftingRecipe());
+            ModLoader.addRecipe(new ItemStack(block, block.getCraftingAmount()), block.getCraftingRecipe());
         }
         Item.itemsList[block.blockID] = new ItemBlock(block.blockID - 256);
     }

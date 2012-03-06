@@ -40,8 +40,8 @@ public class mod_Guns extends ModMP {
 
     static {
         ReflectionFacade names = ReflectionFacade.getInstance();
-        names.putName(World.class, "World", "fq");
-        names.putName(EntityLiving.class, "EntityLiving", "lx");
+        names.putName(World.class, "World", "gd");
+        names.putName(EntityLiving.class, "EntityLiving", "nc");
     }
 
     public mod_Guns() {
@@ -49,7 +49,7 @@ public class mod_Guns extends ModMP {
 
 
     public String getModVersion() {
-        return "0.9.83";
+        return "0.9.9";
     }
 
     public Properties getConfig() throws IOException {
@@ -80,7 +80,7 @@ public class mod_Guns extends ModMP {
         Util.setPacketId(PacketOpenCraftGuns.class, PacketOpenCraftGuns.PACKET_ID, true, true);
         Util.setPacketId(PacketCraftGunsArrowClick.class, PacketCraftGunsArrowClick.PACKET_ID, true, true);
         registerBlock(new BlockCraftGuns(212));
-        ModLoader.SetInGameHook(this, true, false);
+        ModLoader.setInGameHook(this, true, false);
     }
 
     private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException {
@@ -166,13 +166,13 @@ public class mod_Guns extends ModMP {
         }
         itemProjectile.putProjectileClass(itemGun, entityBulletClass);
         projectiles.put(gunClasses.get(1).getFirst(), itemProjectile);
-        ModLoaderMp.RegisterEntityTrackerEntry(entityBulletClass, true , getUniqueEntityProjectileId());
-        ModLoaderMp.RegisterEntityTracker(entityBulletClass, 256, 1);
+        ModLoaderMp.registerEntityTrackerEntry(entityBulletClass, true , getUniqueEntityProjectileId());
+        ModLoaderMp.registerEntityTracker(entityBulletClass, 256, 1);
         Log.fine("Gun loaded " + itemGun.getName());
     }
 
     @Override
-    public void HandlePacket(Packet230ModLoader packet, EntityPlayerMP player) {
+    public void handlePacket(Packet230ModLoader packet, EntityPlayerMP player) {
         switch(packet.packetType) {
             case 0:
                 ItemProjectileShooter shooter = getEquippedShooter(player);
