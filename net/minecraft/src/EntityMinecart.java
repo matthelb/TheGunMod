@@ -3,12 +3,13 @@ package net.minecraft.src;
 import java.util.List;
 import java.util.Random;
 
-public class EntityMinecart extends Entity
-    implements IInventory
+public class EntityMinecart extends Entity implements IInventory
 {
     private ItemStack cargoItems[];
     private int fuel;
     private boolean field_856_i;
+
+    /** The type of minecart, 2 for powered, 1 for storage. */
     public int minecartType;
     public double pushX;
     public double pushZ;
@@ -86,9 +87,9 @@ public class EntityMinecart extends Entity
     private double velocityY;
     private double velocityZ;
 
-    public EntityMinecart(World world)
+    public EntityMinecart(World par1World)
     {
-        super(world);
+        super(par1World);
         cargoItems = new ItemStack[36];
         fuel = 0;
         field_856_i = false;
@@ -97,6 +98,10 @@ public class EntityMinecart extends Entity
         yOffset = height / 2.0F;
     }
 
+    /**
+     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+     * prevent them from trampling crops
+     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -110,85 +115,111 @@ public class EntityMinecart extends Entity
         dataWatcher.addObject(19, new Integer(0));
     }
 
-    public AxisAlignedBB getCollisionBox(Entity entity)
+    /**
+     * Returns a boundingBox used to collide the entity with other entities and blocks. This enables the entity to be
+     * pushable on contact, like boats or minecarts.
+     */
+    public AxisAlignedBB getCollisionBox(Entity par1Entity)
     {
-        return entity.boundingBox;
+        return par1Entity.boundingBox;
     }
 
+    /**
+     * returns the bounding box for this entity
+     */
     public AxisAlignedBB getBoundingBox()
     {
         return null;
     }
 
+    /**
+     * Returns true if this entity should push and be pushed by other entities when colliding.
+     */
     public boolean canBePushed()
     {
         return true;
     }
 
-    public EntityMinecart(World world, double d, double d1, double d2,
-            int i)
+    public EntityMinecart(World par1World, double par2, double par4, double par6, int par8)
     {
-        this(world);
-        setPosition(d, d1 + (double)yOffset, d2);
+        this(par1World);
+        setPosition(par2, par4 + (double)yOffset, par6);
         motionX = 0.0D;
         motionY = 0.0D;
         motionZ = 0.0D;
-        prevPosX = d;
-        prevPosY = d1;
-        prevPosZ = d2;
-        minecartType = i;
+        prevPosX = par2;
+        prevPosY = par4;
+        prevPosZ = par6;
+        minecartType = par8;
     }
 
+    /**
+     * Returns the Y offset from the entity's position for any entity riding this one.
+     */
     public double getMountedYOffset()
     {
-        return (double)height * 0.0D - 0.30000001192092896D;
+        return (double)height * 0.0D - 0.3D;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         if (worldObj.isRemote || isDead)
         {
             return true;
         }
+
         func_41029_h(-func_41030_m());
         func_41028_c(10);
         setBeenAttacked();
-        func_41024_b(func_41025_i() + i * 10);
+        func_41024_b(func_41025_i() + par2 * 10);
+
         if (func_41025_i() > 40)
         {
             if (riddenByEntity != null)
             {
                 riddenByEntity.mountEntity(this);
             }
+
             setEntityDead();
             dropItemWithOffset(Item.minecartEmpty.shiftedIndex, 1, 0.0F);
+
             if (minecartType == 1)
             {
                 EntityMinecart entityminecart = this;
                 label0:
-                for (int j = 0; j < entityminecart.getSizeInventory(); j++)
+
+                for (int i = 0; i < entityminecart.getSizeInventory(); i++)
                 {
-                    ItemStack itemstack = entityminecart.getStackInSlot(j);
+                    ItemStack itemstack = entityminecart.getStackInSlot(i);
+
                     if (itemstack == null)
                     {
                         continue;
                     }
+
                     float f = rand.nextFloat() * 0.8F + 0.1F;
                     float f1 = rand.nextFloat() * 0.8F + 0.1F;
                     float f2 = rand.nextFloat() * 0.8F + 0.1F;
+
                     do
                     {
                         if (itemstack.stackSize <= 0)
                         {
                             continue label0;
                         }
-                        int k = rand.nextInt(21) + 10;
-                        if (k > itemstack.stackSize)
+
+                        int j = rand.nextInt(21) + 10;
+
+                        if (j > itemstack.stackSize)
                         {
-                            k = itemstack.stackSize;
+                            j = itemstack.stackSize;
                         }
-                        itemstack.stackSize -= k;
-                        EntityItem entityitem = new EntityItem(worldObj, posX + (double)f, posY + (double)f1, posZ + (double)f2, new ItemStack(itemstack.itemID, k, itemstack.getItemDamage()));
+
+                        itemstack.stackSize -= j;
+                        EntityItem entityitem = new EntityItem(worldObj, posX + (double)f, posY + (double)f1, posZ + (double)f2, new ItemStack(itemstack.itemID, j, itemstack.getItemDamage()));
                         float f3 = 0.05F;
                         entityitem.motionX = (float)rand.nextGaussian() * f3;
                         entityitem.motionY = (float)rand.nextGaussian() * f3 + 0.2F;
@@ -205,9 +236,13 @@ public class EntityMinecart extends Entity
                 dropItemWithOffset(Block.stoneOvenIdle.blockID, 1, 0.0F);
             }
         }
+
         return true;
     }
 
+    /**
+     * Setups the entity to do the hurt animation. Only used by packets in multiplayer.
+     */
     public void performHurtAnimation()
     {
         func_41029_h(-func_41030_m());
@@ -215,35 +250,48 @@ public class EntityMinecart extends Entity
         func_41024_b(func_41025_i() + func_41025_i() * 10);
     }
 
+    /**
+     * Returns true if other Entities should be prevented from moving through this Entity.
+     */
     public boolean canBeCollidedWith()
     {
         return !isDead;
     }
 
+    /**
+     * Will get destroyed next tick
+     */
     public void setEntityDead()
     {
         label0:
+
         for (int i = 0; i < getSizeInventory(); i++)
         {
             ItemStack itemstack = getStackInSlot(i);
+
             if (itemstack == null)
             {
                 continue;
             }
+
             float f = rand.nextFloat() * 0.8F + 0.1F;
             float f1 = rand.nextFloat() * 0.8F + 0.1F;
             float f2 = rand.nextFloat() * 0.8F + 0.1F;
+
             do
             {
                 if (itemstack.stackSize <= 0)
                 {
                     continue label0;
                 }
+
                 int j = rand.nextInt(21) + 10;
+
                 if (j > itemstack.stackSize)
                 {
                     j = itemstack.stackSize;
                 }
+
                 itemstack.stackSize -= j;
                 EntityItem entityitem = new EntityItem(worldObj, posX + (double)f, posY + (double)f1, posZ + (double)f2, new ItemStack(itemstack.itemID, j, itemstack.getItemDamage()));
                 float f3 = 0.05F;
@@ -258,20 +306,26 @@ public class EntityMinecart extends Entity
         super.setEntityDead();
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         if (func_41023_l() > 0)
         {
             func_41028_c(func_41023_l() - 1);
         }
+
         if (func_41025_i() > 0)
         {
             func_41024_b(func_41025_i() - 1);
         }
+
         if (isMinecartPowered() && rand.nextInt(4) == 0)
         {
-            worldObj.spawnParticle("largesmoke", posX, posY + 0.80000000000000004D, posZ, 0.0D, 0.0D, 0.0D);
+            worldObj.spawnParticle("largesmoke", posX, posY + 0.8D, posZ, 0.0D, 0.0D, 0.0D);
         }
+
         if (worldObj.isRemote)
         {
             if (turnProgress > 0)
@@ -280,8 +334,11 @@ public class EntityMinecart extends Entity
                 double d1 = posY + (minecartY - posY) / (double)turnProgress;
                 double d3 = posZ + (minecartZ - posZ) / (double)turnProgress;
                 double d5;
+
                 for (d5 = minecartYaw - (double)rotationYaw; d5 < -180D; d5 += 360D) { }
+
                 for (; d5 >= 180D; d5 -= 360D) { }
+
                 rotationYaw += d5 / (double)turnProgress;
                 rotationPitch += (minecartPitch - (double)rotationPitch) / (double)turnProgress;
                 turnProgress--;
@@ -293,22 +350,27 @@ public class EntityMinecart extends Entity
                 setPosition(posX, posY, posZ);
                 setRotation(rotationYaw, rotationPitch);
             }
+
             return;
         }
+
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
-        motionY -= 0.039999999105930328D;
+        motionY -= 0.04D;
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posY);
         int k = MathHelper.floor_double(posZ);
+
         if (BlockRail.isRailBlockAt(worldObj, i, j - 1, k))
         {
             j--;
         }
-        double d2 = 0.40000000000000002D;
+
+        double d2 = 0.4D;
         double d4 = 0.0078125D;
         int l = worldObj.getBlockId(i, j, k);
+
         if (BlockRail.isRailBlock(l))
         {
             Vec3D vec3d = func_514_g(posX, posY, posZ);
@@ -316,52 +378,64 @@ public class EntityMinecart extends Entity
             posY = j;
             boolean flag = false;
             boolean flag1 = false;
+
             if (l == Block.railPowered.blockID)
             {
                 flag = (i1 & 8) != 0;
                 flag1 = !flag;
             }
-            if (((BlockRail)Block.blocksList[l]).getIsPowered())
+
+            if (((BlockRail)Block.blocksList[l]).isPowered())
             {
                 i1 &= 7;
             }
+
             if (i1 >= 2 && i1 <= 5)
             {
                 posY = j + 1;
             }
+
             if (i1 == 2)
             {
                 motionX -= d4;
             }
+
             if (i1 == 3)
             {
                 motionX += d4;
             }
+
             if (i1 == 4)
             {
                 motionZ += d4;
             }
+
             if (i1 == 5)
             {
                 motionZ -= d4;
             }
+
             int ai[][] = field_855_j[i1];
             double d9 = ai[1][0] - ai[0][0];
             double d10 = ai[1][2] - ai[0][2];
             double d11 = Math.sqrt(d9 * d9 + d10 * d10);
             double d12 = motionX * d9 + motionZ * d10;
+
             if (d12 < 0.0D)
             {
                 d9 = -d9;
                 d10 = -d10;
             }
+
             double d13 = Math.sqrt(motionX * motionX + motionZ * motionZ);
             motionX = (d13 * d9) / d11;
             motionZ = (d13 * d10) / d11;
+
             if (flag1)
             {
                 double d16 = Math.sqrt(motionX * motionX + motionZ * motionZ);
-                if (d16 < 0.029999999999999999D)
+
+                if (d16 < 0.03D)
                 {
                     motionX *= 0.0D;
                     motionY *= 0.0D;
@@ -374,6 +448,7 @@ public class EntityMinecart extends Entity
                     motionZ *= 0.5D;
                 }
             }
+
             double d17 = 0.0D;
             double d18 = (double)i + 0.5D + (double)ai[0][0] * 0.5D;
             double d19 = (double)k + 0.5D + (double)ai[0][2] * 0.5D;
@@ -381,6 +456,7 @@ public class EntityMinecart extends Entity
             double d21 = (double)k + 0.5D + (double)ai[1][2] * 0.5D;
             d9 = d20 - d18;
             d10 = d21 - d19;
+
             if (d9 == 0.0D)
             {
                 posX = (double)i + 0.5D;
@@ -398,33 +474,41 @@ public class EntityMinecart extends Entity
                 double d26 = (d22 * d9 + d24 * d10) * 2D;
                 d17 = d26;
             }
+
             posX = d18 + d9 * d17;
             posZ = d19 + d10 * d17;
             setPosition(posX, posY + (double)yOffset, posZ);
             double d23 = motionX;
             double d25 = motionZ;
+
             if (riddenByEntity != null)
             {
                 d23 *= 0.75D;
                 d25 *= 0.75D;
             }
+
             if (d23 < -d2)
             {
                 d23 = -d2;
             }
+
             if (d23 > d2)
             {
                 d23 = d2;
             }
+
             if (d25 < -d2)
             {
                 d25 = -d2;
             }
+
             if (d25 > d2)
             {
                 d25 = d2;
             }
+
             moveEntity(d23, 0.0D, d25);
+
             if (ai[0][1] != 0 && MathHelper.floor_double(posX) - i == ai[0][0] && MathHelper.floor_double(posZ) - k == ai[0][2])
             {
                 setPosition(posX, posY + (double)ai[0][1], posZ);
@@ -433,66 +517,78 @@ public class EntityMinecart extends Entity
             {
                 setPosition(posX, posY + (double)ai[1][1], posZ);
             }
+
             if (riddenByEntity != null)
             {
-                motionX *= 0.99699997901916504D;
+                motionX *= 0.997D;
                 motionY *= 0.0D;
-                motionZ *= 0.99699997901916504D;
+                motionZ *= 0.997D;
             }
             else
             {
                 if (minecartType == 2)
                 {
                     double d27 = MathHelper.sqrt_double(pushX * pushX + pushZ * pushZ);
+
                     if (d27 > 0.01D)
                     {
                         pushX /= d27;
                         pushZ /= d27;
-                        double d29 = 0.040000000000000001D;
-                        motionX *= 0.80000001192092896D;
+                        double d29 = 0.04D;
+                        motionX *= 0.8D;
                         motionY *= 0.0D;
-                        motionZ *= 0.80000001192092896D;
+                        motionZ *= 0.8D;
                         motionX += pushX * d29;
                         motionZ += pushZ * d29;
                     }
                     else
                     {
-                        motionX *= 0.89999997615814209D;
+                        motionX *= 0.9D;
                         motionY *= 0.0D;
-                        motionZ *= 0.89999997615814209D;
+                        motionZ *= 0.9D;
                     }
                 }
-                motionX *= 0.95999997854232788D;
+
+                motionX *= 0.96D;
                 motionY *= 0.0D;
-                motionZ *= 0.95999997854232788D;
+                motionZ *= 0.96D;
             }
+
             Vec3D vec3d1 = func_514_g(posX, posY, posZ);
+
             if (vec3d1 != null && vec3d != null)
             {
-                double d28 = (vec3d.yCoord - vec3d1.yCoord) * 0.050000000000000003D;
+                double d28 = (vec3d.yCoord - vec3d1.yCoord) * 0.05D;
                 double d14 = Math.sqrt(motionX * motionX + motionZ * motionZ);
+
                 if (d14 > 0.0D)
                 {
                     motionX = (motionX / d14) * (d14 + d28);
                     motionZ = (motionZ / d14) * (d14 + d28);
                 }
+
                 setPosition(posX, vec3d1.yCoord, posZ);
             }
+
             int k1 = MathHelper.floor_double(posX);
             int l1 = MathHelper.floor_double(posZ);
+
             if (k1 != i || l1 != k)
             {
                 double d15 = Math.sqrt(motionX * motionX + motionZ * motionZ);
                 motionX = d15 * (double)(k1 - i);
                 motionZ = d15 * (double)(l1 - k);
             }
+
             if (minecartType == 2)
             {
                 double d30 = MathHelper.sqrt_double(pushX * pushX + pushZ * pushZ);
+
                 if (d30 > 0.01D && motionX * motionX + motionZ * motionZ > 0.001D)
                 {
                     pushX /= d30;
                     pushZ /= d30;
+
                     if (pushX * motionX + pushZ * motionZ < 0.0D)
                     {
                         pushX = 0.0D;
@@ -505,12 +601,14 @@ public class EntityMinecart extends Entity
                     }
                 }
             }
+
             if (flag)
             {
                 double d31 = Math.sqrt(motionX * motionX + motionZ * motionZ);
+
                 if (d31 > 0.01D)
                 {
-                    double d32 = 0.059999999999999998D;
+                    double d32 = 0.06D;
                     motionX += (motionX / d31) * d32;
                     motionZ += (motionZ / d31) * d32;
                 }
@@ -544,122 +642,152 @@ public class EntityMinecart extends Entity
             {
                 motionX = -d2;
             }
+
             if (motionX > d2)
             {
                 motionX = d2;
             }
+
             if (motionZ < -d2)
             {
                 motionZ = -d2;
             }
+
             if (motionZ > d2)
             {
                 motionZ = d2;
             }
+
             if (onGround)
             {
                 motionX *= 0.5D;
                 motionY *= 0.5D;
                 motionZ *= 0.5D;
             }
+
             moveEntity(motionX, motionY, motionZ);
+
             if (!onGround)
             {
-                motionX *= 0.94999998807907104D;
-                motionY *= 0.94999998807907104D;
-                motionZ *= 0.94999998807907104D;
+                motionX *= 0.95D;
+                motionY *= 0.95D;
+                motionZ *= 0.95D;
             }
         }
+
         rotationPitch = 0.0F;
         double d6 = prevPosX - posX;
         double d7 = prevPosZ - posZ;
+
         if (d6 * d6 + d7 * d7 > 0.001D)
         {
-            rotationYaw = (float)((Math.atan2(d7, d6) * 180D) / 3.1415926535897931D);
+            rotationYaw = (float)((Math.atan2(d7, d6) * 180D) / Math.PI);
+
             if (field_856_i)
             {
                 rotationYaw += 180F;
             }
         }
+
         double d8;
+
         for (d8 = rotationYaw - prevRotationYaw; d8 >= 180D; d8 -= 360D) { }
+
         for (; d8 < -180D; d8 += 360D) { }
+
         if (d8 < -170D || d8 >= 170D)
         {
             rotationYaw += 180F;
             field_856_i = !field_856_i;
         }
+
         setRotation(rotationYaw, rotationPitch);
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
+
         if (list != null && list.size() > 0)
         {
             for (int j1 = 0; j1 < list.size(); j1++)
             {
                 Entity entity = (Entity)list.get(j1);
+
                 if (entity != riddenByEntity && entity.canBePushed() && (entity instanceof EntityMinecart))
                 {
                     entity.applyEntityCollision(this);
                 }
             }
         }
+
         if (riddenByEntity != null && riddenByEntity.isDead)
         {
             if (riddenByEntity.ridingEntity == this)
             {
                 riddenByEntity.ridingEntity = null;
             }
+
             riddenByEntity = null;
         }
+
         if (fuel > 0)
         {
             fuel--;
         }
+
         if (fuel <= 0)
         {
             pushX = pushZ = 0.0D;
         }
+
         setMinecartPowered(fuel > 0);
     }
 
-    public Vec3D func_515_a(double d, double d1, double d2, double d3)
+    public Vec3D func_515_a(double par1, double par3, double par5, double par7)
     {
-        int i = MathHelper.floor_double(d);
-        int j = MathHelper.floor_double(d1);
-        int k = MathHelper.floor_double(d2);
+        int i = MathHelper.floor_double(par1);
+        int j = MathHelper.floor_double(par3);
+        int k = MathHelper.floor_double(par5);
+
         if (BlockRail.isRailBlockAt(worldObj, i, j - 1, k))
         {
             j--;
         }
+
         int l = worldObj.getBlockId(i, j, k);
+
         if (BlockRail.isRailBlock(l))
         {
             int i1 = worldObj.getBlockMetadata(i, j, k);
-            if (((BlockRail)Block.blocksList[l]).getIsPowered())
+
+            if (((BlockRail)Block.blocksList[l]).isPowered())
             {
                 i1 &= 7;
             }
-            d1 = j;
+
+            par3 = j;
+
             if (i1 >= 2 && i1 <= 5)
             {
-                d1 = j + 1;
+                par3 = j + 1;
             }
+
             int ai[][] = field_855_j[i1];
-            double d4 = ai[1][0] - ai[0][0];
-            double d5 = ai[1][2] - ai[0][2];
-            double d6 = Math.sqrt(d4 * d4 + d5 * d5);
-            d4 /= d6;
-            d5 /= d6;
-            d += d4 * d3;
-            d2 += d5 * d3;
-            if (ai[0][1] != 0 && MathHelper.floor_double(d) - i == ai[0][0] && MathHelper.floor_double(d2) - k == ai[0][2])
+            double d = ai[1][0] - ai[0][0];
+            double d1 = ai[1][2] - ai[0][2];
+            double d2 = Math.sqrt(d * d + d1 * d1);
+            d /= d2;
+            d1 /= d2;
+            par1 += d * par7;
+            par5 += d1 * par7;
+
+            if (ai[0][1] != 0 && MathHelper.floor_double(par1) - i == ai[0][0] && MathHelper.floor_double(par5) - k == ai[0][2])
             {
-                d1 += ai[0][1];
+                par3 += ai[0][1];
             }
-            else if (ai[1][1] != 0 && MathHelper.floor_double(d) - i == ai[1][0] && MathHelper.floor_double(d2) - k == ai[1][2])
+            else if (ai[1][1] != 0 && MathHelper.floor_double(par1) - i == ai[1][0] && MathHelper.floor_double(par5) - k == ai[1][2])
             {
-                d1 += ai[1][1];
+                par3 += ai[1][1];
             }
-            return func_514_g(d, d1, d2);
+
+            return func_514_g(par1, par3, par5);
         }
         else
         {
@@ -667,68 +795,79 @@ public class EntityMinecart extends Entity
         }
     }
 
-    public Vec3D func_514_g(double d, double d1, double d2)
+    public Vec3D func_514_g(double par1, double par3, double par5)
     {
-        int i = MathHelper.floor_double(d);
-        int j = MathHelper.floor_double(d1);
-        int k = MathHelper.floor_double(d2);
+        int i = MathHelper.floor_double(par1);
+        int j = MathHelper.floor_double(par3);
+        int k = MathHelper.floor_double(par5);
+
         if (BlockRail.isRailBlockAt(worldObj, i, j - 1, k))
         {
             j--;
         }
+
         int l = worldObj.getBlockId(i, j, k);
+
         if (BlockRail.isRailBlock(l))
         {
             int i1 = worldObj.getBlockMetadata(i, j, k);
-            d1 = j;
-            if (((BlockRail)Block.blocksList[l]).getIsPowered())
+            par3 = j;
+
+            if (((BlockRail)Block.blocksList[l]).isPowered())
             {
                 i1 &= 7;
             }
+
             if (i1 >= 2 && i1 <= 5)
             {
-                d1 = j + 1;
+                par3 = j + 1;
             }
+
             int ai[][] = field_855_j[i1];
-            double d3 = 0.0D;
-            double d4 = (double)i + 0.5D + (double)ai[0][0] * 0.5D;
-            double d5 = (double)j + 0.5D + (double)ai[0][1] * 0.5D;
-            double d6 = (double)k + 0.5D + (double)ai[0][2] * 0.5D;
-            double d7 = (double)i + 0.5D + (double)ai[1][0] * 0.5D;
-            double d8 = (double)j + 0.5D + (double)ai[1][1] * 0.5D;
-            double d9 = (double)k + 0.5D + (double)ai[1][2] * 0.5D;
-            double d10 = d7 - d4;
-            double d11 = (d8 - d5) * 2D;
-            double d12 = d9 - d6;
-            if (d10 == 0.0D)
+            double d = 0.0D;
+            double d1 = (double)i + 0.5D + (double)ai[0][0] * 0.5D;
+            double d2 = (double)j + 0.5D + (double)ai[0][1] * 0.5D;
+            double d3 = (double)k + 0.5D + (double)ai[0][2] * 0.5D;
+            double d4 = (double)i + 0.5D + (double)ai[1][0] * 0.5D;
+            double d5 = (double)j + 0.5D + (double)ai[1][1] * 0.5D;
+            double d6 = (double)k + 0.5D + (double)ai[1][2] * 0.5D;
+            double d7 = d4 - d1;
+            double d8 = (d5 - d2) * 2D;
+            double d9 = d6 - d3;
+
+            if (d7 == 0.0D)
             {
-                d = (double)i + 0.5D;
-                d3 = d2 - (double)k;
+                par1 = (double)i + 0.5D;
+                d = par5 - (double)k;
             }
-            else if (d12 == 0.0D)
+            else if (d9 == 0.0D)
             {
-                d2 = (double)k + 0.5D;
-                d3 = d - (double)i;
+                par5 = (double)k + 0.5D;
+                d = par1 - (double)i;
             }
             else
             {
-                double d13 = d - d4;
-                double d14 = d2 - d6;
-                double d15 = (d13 * d10 + d14 * d12) * 2D;
-                d3 = d15;
+                double d10 = par1 - d1;
+                double d11 = par5 - d3;
+                double d12 = (d10 * d7 + d11 * d9) * 2D;
+                d = d12;
             }
-            d = d4 + d10 * d3;
-            d1 = d5 + d11 * d3;
-            d2 = d6 + d12 * d3;
-            if (d11 < 0.0D)
+
+            par1 = d1 + d7 * d;
+            par3 = d2 + d8 * d;
+            par5 = d3 + d9 * d;
+
+            if (d8 < 0.0D)
             {
-                d1++;
+                par3++;
             }
-            if (d11 > 0.0D)
+
+            if (d8 > 0.0D)
             {
-                d1 += 0.5D;
+                par3 += 0.5D;
             }
-            return Vec3D.createVector(d, d1, d2);
+
+            return Vec3D.createVector(par1, par3, par5);
         }
         else
         {
@@ -736,53 +875,64 @@ public class EntityMinecart extends Entity
         }
     }
 
-    protected void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        nbttagcompound.setInteger("Type", minecartType);
+        par1NBTTagCompound.setInteger("Type", minecartType);
+
         if (minecartType == 2)
         {
-            nbttagcompound.setDouble("PushX", pushX);
-            nbttagcompound.setDouble("PushZ", pushZ);
-            nbttagcompound.setShort("Fuel", (short)fuel);
+            par1NBTTagCompound.setDouble("PushX", pushX);
+            par1NBTTagCompound.setDouble("PushZ", pushZ);
+            par1NBTTagCompound.setShort("Fuel", (short)fuel);
         }
         else if (minecartType == 1)
         {
             NBTTagList nbttaglist = new NBTTagList();
+
             for (int i = 0; i < cargoItems.length; i++)
             {
                 if (cargoItems[i] != null)
                 {
-                    NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                    nbttagcompound1.setByte("Slot", (byte)i);
-                    cargoItems[i].writeToNBT(nbttagcompound1);
-                    nbttaglist.setTag(nbttagcompound1);
+                    NBTTagCompound nbttagcompound = new NBTTagCompound();
+                    nbttagcompound.setByte("Slot", (byte)i);
+                    cargoItems[i].writeToNBT(nbttagcompound);
+                    nbttaglist.appendTag(nbttagcompound);
                 }
             }
 
-            nbttagcompound.setTag("Items", nbttaglist);
+            par1NBTTagCompound.setTag("Items", nbttaglist);
         }
     }
 
-    protected void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        minecartType = nbttagcompound.getInteger("Type");
+        minecartType = par1NBTTagCompound.getInteger("Type");
+
         if (minecartType == 2)
         {
-            pushX = nbttagcompound.getDouble("PushX");
-            pushZ = nbttagcompound.getDouble("PushZ");
-            fuel = nbttagcompound.getShort("Fuel");
+            pushX = par1NBTTagCompound.getDouble("PushX");
+            pushZ = par1NBTTagCompound.getDouble("PushZ");
+            fuel = par1NBTTagCompound.getShort("Fuel");
         }
         else if (minecartType == 1)
         {
-            NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
+            NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Items");
             cargoItems = new ItemStack[getSizeInventory()];
+
             for (int i = 0; i < nbttaglist.tagCount(); i++)
             {
-                NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
-                int j = nbttagcompound1.getByte("Slot") & 0xff;
+                NBTTagCompound nbttagcompound = (NBTTagCompound)nbttaglist.tagAt(i);
+                int j = nbttagcompound.getByte("Slot") & 0xff;
+
                 if (j >= 0 && j < cargoItems.length)
                 {
-                    cargoItems[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+                    cargoItems[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
                 }
             }
         }
@@ -793,115 +943,141 @@ public class EntityMinecart extends Entity
         return 0.0F;
     }
 
-    public void applyEntityCollision(Entity entity)
+    /**
+     * Applies a velocity to each of the entities pushing them away from each other. Args: entity
+     */
+    public void applyEntityCollision(Entity par1Entity)
     {
         if (worldObj.isRemote)
         {
             return;
         }
-        if (entity == riddenByEntity)
+
+        if (par1Entity == riddenByEntity)
         {
             return;
         }
-        if ((entity instanceof EntityLiving) && !(entity instanceof EntityPlayer) && minecartType == 0 && motionX * motionX + motionZ * motionZ > 0.01D && riddenByEntity == null && entity.ridingEntity == null)
+
+        if ((par1Entity instanceof EntityLiving) && !(par1Entity instanceof EntityPlayer) && !(par1Entity instanceof EntityIronGolem) && minecartType == 0 && motionX * motionX + motionZ * motionZ > 0.01D && riddenByEntity == null && par1Entity.ridingEntity == null)
         {
-            entity.mountEntity(this);
+            par1Entity.mountEntity(this);
         }
-        double d = entity.posX - posX;
-        double d1 = entity.posZ - posZ;
+
+        double d = par1Entity.posX - posX;
+        double d1 = par1Entity.posZ - posZ;
         double d2 = d * d + d1 * d1;
-        if (d2 >= 9.9999997473787516E-005D)
+
+        if (d2 >= 10.0E-005D)
         {
             d2 = MathHelper.sqrt_double(d2);
             d /= d2;
             d1 /= d2;
             double d3 = 1.0D / d2;
+
             if (d3 > 1.0D)
             {
                 d3 = 1.0D;
             }
+
             d *= d3;
             d1 *= d3;
-            d *= 0.10000000149011612D;
-            d1 *= 0.10000000149011612D;
+            d *= 0.1D;
+            d1 *= 0.1D;
             d *= 1.0F - entityCollisionReduction;
             d1 *= 1.0F - entityCollisionReduction;
             d *= 0.5D;
             d1 *= 0.5D;
-            if (entity instanceof EntityMinecart)
+
+            if (par1Entity instanceof EntityMinecart)
             {
-                double d4 = entity.posX - posX;
-                double d5 = entity.posZ - posZ;
+                double d4 = par1Entity.posX - posX;
+                double d5 = par1Entity.posZ - posZ;
                 Vec3D vec3d = Vec3D.createVector(d4, 0.0D, d5).normalize();
-                Vec3D vec3d1 = Vec3D.createVector(MathHelper.cos((rotationYaw * 3.141593F) / 180F), 0.0D, MathHelper.sin((rotationYaw * 3.141593F) / 180F)).normalize();
+                Vec3D vec3d1 = Vec3D.createVector(MathHelper.cos((rotationYaw * (float)Math.PI) / 180F), 0.0D, MathHelper.sin((rotationYaw * (float)Math.PI) / 180F)).normalize();
                 double d6 = Math.abs(vec3d.dotProduct(vec3d1));
-                if (d6 < 0.80000001192092896D)
+
+                if (d6 < 0.8D)
                 {
                     return;
                 }
-                double d7 = entity.motionX + motionX;
-                double d8 = entity.motionZ + motionZ;
-                if (((EntityMinecart)entity).minecartType == 2 && minecartType != 2)
+
+                double d7 = par1Entity.motionX + motionX;
+                double d8 = par1Entity.motionZ + motionZ;
+
+                if (((EntityMinecart)par1Entity).minecartType == 2 && minecartType != 2)
                 {
-                    motionX *= 0.20000000298023224D;
-                    motionZ *= 0.20000000298023224D;
-                    addVelocity(entity.motionX - d, 0.0D, entity.motionZ - d1);
-                    entity.motionX *= 0.94999998807907104D;
-                    entity.motionZ *= 0.94999998807907104D;
+                    motionX *= 0.2D;
+                    motionZ *= 0.2D;
+                    addVelocity(par1Entity.motionX - d, 0.0D, par1Entity.motionZ - d1);
+                    par1Entity.motionX *= 0.95D;
+                    par1Entity.motionZ *= 0.95D;
                 }
-                else if (((EntityMinecart)entity).minecartType != 2 && minecartType == 2)
+                else if (((EntityMinecart)par1Entity).minecartType != 2 && minecartType == 2)
                 {
-                    entity.motionX *= 0.20000000298023224D;
-                    entity.motionZ *= 0.20000000298023224D;
-                    entity.addVelocity(motionX + d, 0.0D, motionZ + d1);
-                    motionX *= 0.94999998807907104D;
-                    motionZ *= 0.94999998807907104D;
+                    par1Entity.motionX *= 0.2D;
+                    par1Entity.motionZ *= 0.2D;
+                    par1Entity.addVelocity(motionX + d, 0.0D, motionZ + d1);
+                    motionX *= 0.95D;
+                    motionZ *= 0.95D;
                 }
                 else
                 {
                     d7 /= 2D;
                     d8 /= 2D;
-                    motionX *= 0.20000000298023224D;
-                    motionZ *= 0.20000000298023224D;
+                    motionX *= 0.2D;
+                    motionZ *= 0.2D;
                     addVelocity(d7 - d, 0.0D, d8 - d1);
-                    entity.motionX *= 0.20000000298023224D;
-                    entity.motionZ *= 0.20000000298023224D;
-                    entity.addVelocity(d7 + d, 0.0D, d8 + d1);
+                    par1Entity.motionX *= 0.2D;
+                    par1Entity.motionZ *= 0.2D;
+                    par1Entity.addVelocity(d7 + d, 0.0D, d8 + d1);
                 }
             }
             else
             {
                 addVelocity(-d, 0.0D, -d1);
-                entity.addVelocity(d / 4D, 0.0D, d1 / 4D);
+                par1Entity.addVelocity(d / 4D, 0.0D, d1 / 4D);
             }
         }
     }
 
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public int getSizeInventory()
     {
         return 27;
     }
 
-    public ItemStack getStackInSlot(int i)
+    /**
+     * Returns the stack in slot i
+     */
+    public ItemStack getStackInSlot(int par1)
     {
-        return cargoItems[i];
+        return cargoItems[par1];
     }
 
-    public ItemStack decrStackSize(int i, int j)
+    /**
+     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
+     * stack.
+     */
+    public ItemStack decrStackSize(int par1, int par2)
     {
-        if (cargoItems[i] != null)
+        if (cargoItems[par1] != null)
         {
-            if (cargoItems[i].stackSize <= j)
+            if (cargoItems[par1].stackSize <= par2)
             {
-                ItemStack itemstack = cargoItems[i];
-                cargoItems[i] = null;
+                ItemStack itemstack = cargoItems[par1];
+                cargoItems[par1] = null;
                 return itemstack;
             }
-            ItemStack itemstack1 = cargoItems[i].splitStack(j);
-            if (cargoItems[i].stackSize == 0)
+
+            ItemStack itemstack1 = cargoItems[par1].splitStack(par2);
+
+            if (cargoItems[par1].stackSize == 0)
             {
-                cargoItems[i] = null;
+                cargoItems[par1] = null;
             }
+
             return itemstack1;
         }
         else
@@ -910,104 +1086,156 @@ public class EntityMinecart extends Entity
         }
     }
 
-    public void setInventorySlotContents(int i, ItemStack itemstack)
+    public ItemStack func_48081_b(int par1)
     {
-        cargoItems[i] = itemstack;
-        if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+        if (cargoItems[par1] != null)
         {
-            itemstack.stackSize = getInventoryStackLimit();
+            ItemStack itemstack = cargoItems[par1];
+            cargoItems[par1] = null;
+            return itemstack;
+        }
+        else
+        {
+            return null;
         }
     }
 
-    public String getInvName()
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
     {
-        return "Minecart";
+        cargoItems[par1] = par2ItemStack;
+
+        if (par2ItemStack != null && par2ItemStack.stackSize > getInventoryStackLimit())
+        {
+            par2ItemStack.stackSize = getInventoryStackLimit();
+        }
     }
 
+    /**
+     * Returns the name of the inventory.
+     */
+    public String getInvName()
+    {
+        return "container.minecart";
+    }
+
+    /**
+     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended. *Isn't
+     * this more of a set than a get?*
+     */
     public int getInventoryStackLimit()
     {
         return 64;
     }
 
+    /**
+     * Called when an the contents of an Inventory change, usually
+     */
     public void onInventoryChanged()
     {
     }
 
-    public boolean interact(EntityPlayer entityplayer)
+    /**
+     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+     */
+    public boolean interact(EntityPlayer par1EntityPlayer)
     {
         if (minecartType == 0)
         {
-            if (riddenByEntity != null && (riddenByEntity instanceof EntityPlayer) && riddenByEntity != entityplayer)
+            if (riddenByEntity != null && (riddenByEntity instanceof EntityPlayer) && riddenByEntity != par1EntityPlayer)
             {
                 return true;
             }
+
             if (!worldObj.isRemote)
             {
-                entityplayer.mountEntity(this);
+                par1EntityPlayer.mountEntity(this);
             }
         }
         else if (minecartType == 1)
         {
             if (!worldObj.isRemote)
             {
-                entityplayer.displayGUIChest(this);
+                par1EntityPlayer.displayGUIChest(this);
             }
         }
         else if (minecartType == 2)
         {
-            ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+            ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
+
             if (itemstack != null && itemstack.itemID == Item.coal.shiftedIndex)
             {
                 if (--itemstack.stackSize == 0)
                 {
-                    entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+                    par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, null);
                 }
+
                 fuel += 3600;
             }
-            pushX = posX - entityplayer.posX;
-            pushZ = posZ - entityplayer.posZ;
+
+            pushX = posX - par1EntityPlayer.posX;
+            pushZ = posZ - par1EntityPlayer.posZ;
         }
+
         return true;
     }
 
-    public void setPositionAndRotation2(double d, double d1, double d2, float f,
-            float f1, int i)
+    /**
+     * Sets the position and rotation. Only difference from the other one is no bounding on the rotation. Args: posX,
+     * posY, posZ, yaw, pitch
+     */
+    public void setPositionAndRotation2(double par1, double par3, double par5, float par7, float par8, int par9)
     {
-        minecartX = d;
-        minecartY = d1;
-        minecartZ = d2;
-        minecartYaw = f;
-        minecartPitch = f1;
-        turnProgress = i + 2;
+        minecartX = par1;
+        minecartY = par3;
+        minecartZ = par5;
+        minecartYaw = par7;
+        minecartPitch = par8;
+        turnProgress = par9 + 2;
         motionX = velocityX;
         motionY = velocityY;
         motionZ = velocityZ;
     }
 
-    public void setVelocity(double d, double d1, double d2)
+    /**
+     * Sets the velocity to the args. Args: x, y, z
+     */
+    public void setVelocity(double par1, double par3, double par5)
     {
-        velocityX = motionX = d;
-        velocityY = motionY = d1;
-        velocityZ = motionZ = d2;
+        velocityX = motionX = par1;
+        velocityY = motionY = par3;
+        velocityZ = motionZ = par5;
     }
 
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    /**
+     * Do not make give this method the name canInteractWith because it clashes with Container
+     */
+    public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
     {
         if (isDead)
         {
             return false;
         }
-        return entityplayer.getDistanceSqToEntity(this) <= 64D;
+
+        return par1EntityPlayer.getDistanceSqToEntity(this) <= 64D;
     }
 
+    /**
+     * Is this minecart powered (Fuel > 0)
+     */
     protected boolean isMinecartPowered()
     {
         return (dataWatcher.getWatchableObjectByte(16) & 1) != 0;
     }
 
-    protected void setMinecartPowered(boolean flag)
+    /**
+     * Set if this minecart is powered (Fuel > 0)
+     */
+    protected void setMinecartPowered(boolean par1)
     {
-        if (flag)
+        if (par1)
         {
             dataWatcher.updateObject(16, Byte.valueOf((byte)(dataWatcher.getWatchableObjectByte(16) | 1)));
         }
@@ -1025,9 +1253,9 @@ public class EntityMinecart extends Entity
     {
     }
 
-    public void func_41024_b(int i)
+    public void func_41024_b(int par1)
     {
-        dataWatcher.updateObject(19, Integer.valueOf(i));
+        dataWatcher.updateObject(19, Integer.valueOf(par1));
     }
 
     public int func_41025_i()
@@ -1035,9 +1263,9 @@ public class EntityMinecart extends Entity
         return dataWatcher.getWatchableObjectInt(19);
     }
 
-    public void func_41028_c(int i)
+    public void func_41028_c(int par1)
     {
-        dataWatcher.updateObject(17, Integer.valueOf(i));
+        dataWatcher.updateObject(17, Integer.valueOf(par1));
     }
 
     public int func_41023_l()
@@ -1045,9 +1273,9 @@ public class EntityMinecart extends Entity
         return dataWatcher.getWatchableObjectInt(17);
     }
 
-    public void func_41029_h(int i)
+    public void func_41029_h(int par1)
     {
-        dataWatcher.updateObject(18, Integer.valueOf(i));
+        dataWatcher.updateObject(18, Integer.valueOf(par1));
     }
 
     public int func_41030_m()

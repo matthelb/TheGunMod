@@ -2,20 +2,26 @@ package net.minecraft.src;
 
 public class ItemSapling extends ItemBlock
 {
-    public ItemSapling(int i)
+    public ItemSapling(int par1)
     {
-        super(i);
+        super(par1);
         setMaxDamage(0);
         setHasSubtypes(true);
     }
 
-    public int getMetadata(int i)
+    /**
+     * Returns the metadata of the block which this Item (ItemBlock) can place
+     */
+    public int getMetadata(int par1)
     {
-        return i;
+        return par1;
     }
 
-    public int getIconFromDamage(int i)
+    /**
+     * Gets an icon index based on an item's damage value
+     */
+    public int getIconFromDamage(int par1)
     {
-        return Block.sapling.getBlockTextureFromSideAndMetadata(0, i);
+        return Block.sapling.getBlockTextureFromSideAndMetadata(0, par1);
     }
 }

@@ -11,13 +11,12 @@ class MusInputStream extends InputStream
     byte buffer[];
     final CodecMus codec;
 
-    public MusInputStream(CodecMus codecmus, URL url, InputStream inputstream)
+    public MusInputStream(CodecMus par1CodecMus, URL par2URL, InputStream par3InputStream)
     {
-        codec = codecmus;
-
+        codec = par1CodecMus;
         buffer = new byte[1];
-        inputStream = inputstream;
-        String s = url.getPath();
+        inputStream = par3InputStream;
+        String s = par2URL.getPath();
         s = s.substring(s.lastIndexOf("/") + 1);
         hash = s.hashCode();
     }
@@ -25,6 +24,7 @@ class MusInputStream extends InputStream
     public int read()
     {
         int i = read(buffer, 0, 1);
+
         if (i < 0)
         {
             return i;
@@ -35,22 +35,23 @@ class MusInputStream extends InputStream
         }
     }
 
-    public int read(byte abyte0[], int i, int j)
+    public int read(byte par1ArrayOfByte[], int par2, int par3)
     {
         try
         {
-            j = inputStream.read(abyte0, i, j);
+            par3 = inputStream.read(par1ArrayOfByte, par2, par3);
         }
         catch (IOException e)
         {
             return 0;
         }
-        for (int k = 0; k < j; k++)
+
+        for (int i = 0; i < par3; i++)
         {
-            byte byte0 = abyte0[i + k] ^= hash >> 8;
+            byte byte0 = par1ArrayOfByte[par2 + i] ^= hash >> 8;
             hash = hash * 0x1dba038f + 0x14ee3 * byte0;
         }
 
-        return j;
+        return par3;
     }
 }

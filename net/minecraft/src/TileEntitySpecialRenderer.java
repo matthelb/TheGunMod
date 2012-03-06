@@ -2,30 +2,43 @@ package net.minecraft.src;
 
 public abstract class TileEntitySpecialRenderer
 {
+    /**
+     * The TileEntityRenderer instance associated with this TileEntitySpecialRenderer
+     */
     protected TileEntityRenderer tileEntityRenderer;
 
     public TileEntitySpecialRenderer()
     {
     }
 
-    public abstract void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2,
-            float f);
+    public abstract void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2, float f);
 
-    protected void bindTextureByName(String s)
+    /**
+     * Binds a texture to the renderEngine given a filename from the JAR.
+     */
+    protected void bindTextureByName(String par1Str)
     {
         RenderEngine renderengine = tileEntityRenderer.renderEngine;
+
         if (renderengine != null)
         {
-            renderengine.bindTexture(renderengine.getTexture(s));
+            renderengine.bindTexture(renderengine.getTexture(par1Str));
         }
     }
 
-    public void setTileEntityRenderer(TileEntityRenderer tileentityrenderer)
+    /**
+     * Associate a TileEntityRenderer with this TileEntitySpecialRenderer
+     */
+    public void setTileEntityRenderer(TileEntityRenderer par1TileEntityRenderer)
     {
-        tileEntityRenderer = tileentityrenderer;
+        tileEntityRenderer = par1TileEntityRenderer;
     }
 
-    public void func_31069_a(World world)
+    /**
+     * Called from TileEntityRenderer.cacheSpecialRenderInfo() to cache render-related references (currently world
+     * only). Used by TileEntityRendererPiston to create and store a RenderBlocks instance in the blockRenderer field.
+     */
+    public void cacheSpecialRenderInfo(World world)
     {
     }
 

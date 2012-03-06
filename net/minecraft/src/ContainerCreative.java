@@ -4,25 +4,26 @@ import java.util.*;
 
 class ContainerCreative extends Container
 {
+    /** the list of items in this container */
     public List itemList;
 
-    public ContainerCreative(EntityPlayer entityplayer)
+    public ContainerCreative(EntityPlayer par1EntityPlayer)
     {
         itemList = new ArrayList();
         Block ablock[] =
         {
             Block.cobblestone, Block.stone, Block.oreDiamond, Block.oreGold, Block.oreIron, Block.oreCoal, Block.oreLapis, Block.oreRedstone, Block.stoneBrick, Block.stoneBrick,
-            Block.stoneBrick, Block.blockClay, Block.blockDiamond, Block.blockGold, Block.blockSteel, Block.bedrock, Block.blockLapis, Block.brick, Block.cobblestoneMossy, Block.stairSingle,
-            Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.obsidian, Block.netherrack, Block.slowSand, Block.glowStone, Block.wood,
-            Block.wood, Block.wood, Block.leaves, Block.leaves, Block.leaves, Block.dirt, Block.grass, Block.sand, Block.sandStone, Block.gravel,
-            Block.web, Block.planks, Block.sapling, Block.sapling, Block.sapling, Block.deadBush, Block.sponge, Block.ice, Block.blockSnow, Block.plantYellow,
-            Block.plantRed, Block.mushroomBrown, Block.mushroomRed, Block.cactus, Block.melon, Block.pumpkin, Block.pumpkinLantern, Block.vine, Block.fenceIron, Block.thinGlass,
-            Block.netherBrick, Block.netherFence, Block.stairsNetherBrick, Block.whiteStone, Block.mycelium, Block.waterlily, Block.tallGrass, Block.tallGrass, Block.chest, Block.workbench,
-            Block.glass, Block.tnt, Block.bookShelf, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth,
-            Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.dispenser,
-            Block.stoneOvenIdle, Block.music, Block.jukebox, Block.pistonStickyBase, Block.pistonBase, Block.fence, Block.fenceGate, Block.ladder, Block.rail, Block.railPowered,
-            Block.railDetector, Block.torchWood, Block.stairCompactPlanks, Block.stairCompactCobblestone, Block.stairsBrick, Block.stairsStoneBrickSmooth, Block.lever, Block.pressurePlateStone, Block.pressurePlatePlanks, Block.torchRedstoneActive,
-            Block.button, Block.trapdoor, Block.enchantmentTable
+            Block.stoneBrick, Block.stoneBrick, Block.blockClay, Block.blockDiamond, Block.blockGold, Block.blockSteel, Block.bedrock, Block.blockLapis, Block.brick, Block.cobblestoneMossy,
+            Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.obsidian, Block.netherrack, Block.slowSand, Block.glowStone,
+            Block.wood, Block.wood, Block.wood, Block.wood, Block.leaves, Block.leaves, Block.leaves, Block.leaves, Block.dirt, Block.grass,
+            Block.sand, Block.sandStone, Block.gravel, Block.web, Block.planks, Block.sapling, Block.sapling, Block.sapling, Block.sapling, Block.deadBush,
+            Block.sponge, Block.ice, Block.blockSnow, Block.plantYellow, Block.plantRed, Block.mushroomBrown, Block.mushroomRed, Block.cactus, Block.melon, Block.pumpkin,
+            Block.pumpkinLantern, Block.vine, Block.fenceIron, Block.thinGlass, Block.netherBrick, Block.netherFence, Block.stairsNetherBrick, Block.whiteStone, Block.mycelium, Block.waterlily,
+            Block.tallGrass, Block.tallGrass, Block.chest, Block.workbench, Block.glass, Block.tnt, Block.bookShelf, Block.cloth, Block.cloth, Block.cloth,
+            Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth,
+            Block.cloth, Block.cloth, Block.cloth, Block.dispenser, Block.stoneOvenIdle, Block.music, Block.jukebox, Block.pistonStickyBase, Block.pistonBase, Block.fence,
+            Block.fenceGate, Block.ladder, Block.rail, Block.railPowered, Block.railDetector, Block.torchWood, Block.stairCompactPlanks, Block.stairCompactCobblestone, Block.stairsBrick, Block.stairsStoneBrickSmooth,
+            Block.lever, Block.pressurePlateStone, Block.pressurePlatePlanks, Block.torchRedstoneActive, Block.button, Block.trapdoor, Block.enchantmentTable, Block.field_48209_bL
         };
         int i = 0;
         int j = 0;
@@ -31,9 +32,11 @@ class ContainerCreative extends Container
         int i1 = 0;
         int j1 = 0;
         int k1 = 1;
+
         for (int l1 = 0; l1 < ablock.length; l1++)
         {
             int k2 = 0;
+
             if (ablock[l1] == Block.cloth)
             {
                 k2 = i++;
@@ -62,6 +65,7 @@ class ContainerCreative extends Container
             {
                 k2 = j1++;
             }
+
             itemList.add(new ItemStack(ablock[l1], 1, k2));
         }
 
@@ -79,12 +83,14 @@ class ContainerCreative extends Container
         }
 
         Integer integer;
+
         for (Iterator iterator = EntityList.entityEggs.keySet().iterator(); iterator.hasNext(); itemList.add(new ItemStack(Item.monsterPlacer.shiftedIndex, 1, integer.intValue())))
         {
             integer = (Integer)iterator.next();
         }
 
-        InventoryPlayer inventoryplayer = entityplayer.inventory;
+        InventoryPlayer inventoryplayer = par1EntityPlayer.inventory;
+
         for (int l2 = 0; l2 < 9; l2++)
         {
             for (int j3 = 0; j3 < 8; j3++)
@@ -101,24 +107,30 @@ class ContainerCreative extends Container
         scrollTo(0.0F);
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean canInteractWith(EntityPlayer par1EntityPlayer)
     {
         return true;
     }
 
-    public void scrollTo(float f)
+    /**
+     * Updates the gui slots ItemStack's based on scroll position.
+     */
+    public void scrollTo(float par1)
     {
         int i = (itemList.size() / 8 - 8) + 1;
-        int j = (int)((double)(f * (float)i) + 0.5D);
+        int j = (int)((double)(par1 * (float)i) + 0.5D);
+
         if (j < 0)
         {
             j = 0;
         }
+
         for (int k = 0; k < 9; k++)
         {
             for (int l = 0; l < 8; l++)
             {
                 int i1 = l + (k + j) * 8;
+
                 if (i1 >= 0 && i1 < itemList.size())
                 {
                     GuiContainerCreative.getInventory().setInventorySlotContents(l + k * 8, (ItemStack)itemList.get(i1));

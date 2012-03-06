@@ -5,20 +5,11 @@ class WorldBlockPositionType
     int posX;
     int posY;
     int posZ;
+
+    /**
+     * Counts down 80 ticks until the position is accepted from the receive queue into the world.
+     */
     int acceptCountdown;
     int blockID;
     int metadata;
-    final WorldClient worldClient;
-
-    public WorldBlockPositionType(WorldClient worldclient, int i, int j, int k, int l, int i1)
-    {
-        worldClient = worldclient;
-
-        posX = i;
-        posY = j;
-        posZ = k;
-        acceptCountdown = 80;
-        blockID = l;
-        metadata = i1;
-    }
 }

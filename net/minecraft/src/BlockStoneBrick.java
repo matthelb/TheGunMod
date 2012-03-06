@@ -2,14 +2,17 @@ package net.minecraft.src;
 
 public class BlockStoneBrick extends Block
 {
-    public BlockStoneBrick(int i)
+    public BlockStoneBrick(int par1)
     {
-        super(i, 54, Material.rock);
+        super(par1, 54, Material.rock);
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        switch (j)
+        switch (par2)
         {
             default:
                 return 54;
@@ -19,11 +22,17 @@ public class BlockStoneBrick extends Block
 
             case 2:
                 return 101;
+
+            case 3:
+                return 213;
         }
     }
 
-    protected int damageDropped(int i)
+    /**
+     * Determines the damage on the item the block drops. Used in cloth and wood.
+     */
+    protected int damageDropped(int par1)
     {
-        return i;
+        return par1;
     }
 }

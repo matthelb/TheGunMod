@@ -4,23 +4,29 @@ public class ItemMinecart extends Item
 {
     public int minecartType;
 
-    public ItemMinecart(int i, int j)
+    public ItemMinecart(int par1, int par2)
     {
-        super(i);
+        super(par1);
         maxStackSize = 1;
-        minecartType = j;
+        minecartType = par2;
     }
 
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
+     */
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7)
     {
-        int i1 = world.getBlockId(i, j, k);
-        if (BlockRail.isRailBlock(i1))
+        int i = par3World.getBlockId(par4, par5, par6);
+
+        if (BlockRail.isRailBlock(i))
         {
-            if (!world.isRemote)
+            if (!par3World.isRemote)
             {
-                world.spawnEntityInWorld(new EntityMinecart(world, (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, minecartType));
+                par3World.spawnEntityInWorld(new EntityMinecart(par3World, (float)par4 + 0.5F, (float)par5 + 0.5F, (float)par6 + 0.5F, minecartType));
             }
-            itemstack.stackSize--;
+
+            par1ItemStack.stackSize--;
             return true;
         }
         else

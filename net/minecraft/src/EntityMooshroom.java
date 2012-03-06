@@ -2,44 +2,57 @@ package net.minecraft.src;
 
 public class EntityMooshroom extends EntityCow
 {
-    public EntityMooshroom(World world)
+    public EntityMooshroom(World par1World)
     {
-        super(world);
+        super(par1World);
         texture = "/mob/redcow.png";
         setSize(0.9F, 1.3F);
     }
 
-    public boolean interact(EntityPlayer entityplayer)
+    /**
+     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+     */
+    public boolean interact(EntityPlayer par1EntityPlayer)
     {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if (itemstack != null && itemstack.itemID == Item.bowlEmpty.shiftedIndex && getDelay() >= 0)
+        ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
+
+        if (itemstack != null && itemstack.itemID == Item.bowlEmpty.shiftedIndex && func_48123_at() >= 0)
         {
-            entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, new ItemStack(Item.bowlSoup));
+            par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, new ItemStack(Item.bowlSoup));
             return true;
         }
-        if (itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && getDelay() >= 0)
+
+        if (itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && func_48123_at() >= 0)
         {
             setEntityDead();
-            EntityCow entitycow = new EntityCow(worldObj);
-            entitycow.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
-            entitycow.setEntityHealth(getEntityHealth());
-            entitycow.renderYawOffset = renderYawOffset;
-            worldObj.spawnEntityInWorld(entitycow);
             worldObj.spawnParticle("largeexplode", posX, posY + (double)(height / 2.0F), posZ, 0.0D, 0.0D, 0.0D);
-            for (int i = 0; i < 5; i++)
+
+            if (!worldObj.isRemote)
             {
-                worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY + (double)height, posZ, new ItemStack(Block.mushroomRed)));
+                EntityCow entitycow = new EntityCow(worldObj);
+                entitycow.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
+                entitycow.setEntityHealth(getEntityHealth());
+                entitycow.renderYawOffset = renderYawOffset;
+                worldObj.spawnEntityInWorld(entitycow);
+
+                for (int i = 0; i < 5; i++)
+                {
+                    worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY + (double)height, posZ, new ItemStack(Block.mushroomRed)));
+                }
             }
 
             return true;
         }
         else
         {
-            return super.interact(entityplayer);
+            return super.interact(par1EntityPlayer);
         }
     }
 
-    protected EntityAnimal spawnBabyAnimal(EntityAnimal entityanimal)
+    /**
+     * [This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.]
+     */
+    public EntityAnimal spawnBabyAnimal(EntityAnimal par1EntityAnimal)
     {
         return new EntityMooshroom(worldObj);
     }

@@ -6,73 +6,87 @@ public class EntityLavaFX extends EntityFX
 {
     private float lavaParticleScale;
 
-    public EntityLavaFX(World world, double d, double d1, double d2)
+    public EntityLavaFX(World par1World, double par2, double par4, double par6)
     {
-        super(world, d, d1, d2, 0.0D, 0.0D, 0.0D);
-        motionX *= 0.80000001192092896D;
-        motionY *= 0.80000001192092896D;
-        motionZ *= 0.80000001192092896D;
+        super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
+        motionX *= 0.8D;
+        motionY *= 0.8D;
+        motionZ *= 0.8D;
         motionY = rand.nextFloat() * 0.4F + 0.05F;
         particleRed = particleGreen = particleBlue = 1.0F;
         particleScale *= rand.nextFloat() * 2.0F + 0.2F;
         lavaParticleScale = particleScale;
-        particleMaxAge = (int)(16D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
+        particleMaxAge = (int)(16D / (Math.random() * 0.8D + 0.2D));
         noClip = false;
         setParticleTextureIndex(49);
     }
 
-    public int getEntityBrightnessForRender(float f)
+    public int getEntityBrightnessForRender(float par1)
     {
-        float f1 = ((float)particleAge + f) / (float)particleMaxAge;
-        if (f1 < 0.0F)
+        float f = ((float)particleAge + par1) / (float)particleMaxAge;
+
+        if (f < 0.0F)
         {
-            f1 = 0.0F;
+            f = 0.0F;
         }
-        if (f1 > 1.0F)
+
+        if (f > 1.0F)
         {
-            f1 = 1.0F;
+            f = 1.0F;
         }
-        int i = super.getEntityBrightnessForRender(f);
+
+        int i = super.getEntityBrightnessForRender(par1);
         char c = '\360';
         int j = i >> 16 & 0xff;
         return c | j << 16;
     }
 
-    public float getEntityBrightness(float f)
+    /**
+     * Gets how bright this entity is.
+     */
+    public float getEntityBrightness(float par1)
     {
         return 1.0F;
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        float f6 = ((float)particleAge + f) / (float)particleMaxAge;
-        particleScale = lavaParticleScale * (1.0F - f6 * f6);
-        super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
+        float f = ((float)particleAge + par2) / (float)particleMaxAge;
+        particleScale = lavaParticleScale * (1.0F - f * f);
+        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
+
         if (particleAge++ >= particleMaxAge)
         {
             setEntityDead();
         }
+
         float f = (float)particleAge / (float)particleMaxAge;
+
         if (rand.nextFloat() > f)
         {
             worldObj.spawnParticle("smoke", posX, posY, posZ, motionX, motionY, motionZ);
         }
-        motionY -= 0.029999999999999999D;
+
+        motionY -= 0.03D;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.99900001287460327D;
-        motionY *= 0.99900001287460327D;
-        motionZ *= 0.99900001287460327D;
+        motionX *= 0.999D;
+        motionY *= 0.999D;
+        motionZ *= 0.999D;
+
         if (onGround)
         {
-            motionX *= 0.69999998807907104D;
-            motionZ *= 0.69999998807907104D;
+            motionX *= 0.7D;
+            motionZ *= 0.7D;
         }
     }
 }

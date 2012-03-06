@@ -4,64 +4,91 @@ import java.util.Random;
 
 public class BlockPistonMoving extends BlockContainer
 {
-    public BlockPistonMoving(int i)
+    public BlockPistonMoving(int par1)
     {
-        super(i, Material.piston);
+        super(par1, Material.piston);
         setHardness(-1F);
     }
 
+    /**
+     * Returns the TileEntity used by this block.
+     */
     public TileEntity getBlockEntity()
     {
         return null;
     }
 
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
     public void onBlockAdded(World world, int i, int j, int k)
     {
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
-        TileEntity tileentity = world.getBlockTileEntity(i, j, k);
+        TileEntity tileentity = par1World.getBlockTileEntity(par2, par3, par4);
+
         if (tileentity != null && (tileentity instanceof TileEntityPiston))
         {
             ((TileEntityPiston)tileentity).clearPistonTileEntity();
         }
         else
         {
-            super.onBlockRemoval(world, i, j, k);
+            super.onBlockRemoval(par1World, par2, par3, par4);
         }
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int i)
     {
         return false;
     }
 
-    public boolean canPlaceBlockOnSide(World world, int i, int j, int k, int l)
+    public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int i, int j)
     {
         return false;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return -1;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        if (!world.isRemote && world.getBlockTileEntity(i, j, k) == null)
+        if (!par1World.isRemote && par1World.getBlockTileEntity(par2, par3, par4) == null)
         {
-            world.setBlockWithNotify(i, j, k, 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
             return true;
         }
         else
@@ -70,109 +97,165 @@ public class BlockPistonMoving extends BlockContainer
         }
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return 0;
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
+    /**
+     * Drops the block items with a specified chance of dropping the specified items
+     */
+    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        TileEntityPiston tileentitypiston = getTileEntityAtLocation(world, i, j, k);
+
+        TileEntityPiston tileentitypiston = getTileEntityAtLocation(par1World, par2, par3, par4);
+
         if (tileentitypiston == null)
         {
             return;
         }
         else
         {
-            Block.blocksList[tileentitypiston.getStoredBlockID()].dropBlockAsItem(world, i, j, k, tileentitypiston.getBlockMetadata(), 0);
+            Block.blocksList[tileentitypiston.getStoredBlockID()].dropBlockAsItem(par1World, par2, par3, par4, tileentitypiston.getBlockMetadata(), 0);
             return;
         }
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (!world.isRemote)
+        if (!par1World.isRemote)
         {
-            if (world.getBlockTileEntity(i, j, k) != null);
+            if (par1World.getBlockTileEntity(par2, par3, par4) != null);
         }
     }
 
-    public static TileEntity getTileEntity(int i, int j, int k, boolean flag, boolean flag1)
+    /**
+     * gets a new TileEntityPiston created with the arguments provided.
+     */
+    public static TileEntity getTileEntity(int par0, int par1, int par2, boolean par3, boolean par4)
     {
-        return new TileEntityPiston(i, j, k, flag, flag1);
+        return new TileEntityPiston(par0, par1, par2, par3, par4);
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
-        TileEntityPiston tileentitypiston = getTileEntityAtLocation(world, i, j, k);
+        TileEntityPiston tileentitypiston = getTileEntityAtLocation(par1World, par2, par3, par4);
+
         if (tileentitypiston == null)
         {
             return null;
         }
-        float f = tileentitypiston.func_31008_a(0.0F);
+
+        float f = tileentitypiston.getProgress(0.0F);
+
         if (tileentitypiston.isExtending())
         {
             f = 1.0F - f;
         }
-        return getAxisAlignedBB(world, i, j, k, tileentitypiston.getStoredBlockID(), f, tileentitypiston.getPistonOrientation());
+
+        return getAxisAlignedBB(par1World, par2, par3, par4, tileentitypiston.getStoredBlockID(), f, tileentitypiston.getPistonOrientation());
     }
 
-    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        TileEntityPiston tileentitypiston = getTileEntityAtLocation(iblockaccess, i, j, k);
+        TileEntityPiston tileentitypiston = getTileEntityAtLocation(par1IBlockAccess, par2, par3, par4);
+
         if (tileentitypiston != null)
         {
             Block block = Block.blocksList[tileentitypiston.getStoredBlockID()];
+
             if (block == null || block == this)
             {
                 return;
             }
-            block.setBlockBoundsBasedOnState(iblockaccess, i, j, k);
-            float f = tileentitypiston.func_31008_a(0.0F);
+
+            block.setBlockBoundsBasedOnState(par1IBlockAccess, par2, par3, par4);
+            float f = tileentitypiston.getProgress(0.0F);
+
             if (tileentitypiston.isExtending())
             {
                 f = 1.0F - f;
             }
-            int l = tileentitypiston.getPistonOrientation();
-            minX = block.minX - (double)((float)Facing.offsetsXForSide[l] * f);
-            minY = block.minY - (double)((float)Facing.offsetsYForSide[l] * f);
-            minZ = block.minZ - (double)((float)Facing.offsetsZForSide[l] * f);
-            maxX = block.maxX - (double)((float)Facing.offsetsXForSide[l] * f);
-            maxY = block.maxY - (double)((float)Facing.offsetsYForSide[l] * f);
-            maxZ = block.maxZ - (double)((float)Facing.offsetsZForSide[l] * f);
+
+            int i = tileentitypiston.getPistonOrientation();
+            minX = block.minX - (double)((float)Facing.offsetsXForSide[i] * f);
+            minY = block.minY - (double)((float)Facing.offsetsYForSide[i] * f);
+            minZ = block.minZ - (double)((float)Facing.offsetsZForSide[i] * f);
+            maxX = block.maxX - (double)((float)Facing.offsetsXForSide[i] * f);
+            maxY = block.maxY - (double)((float)Facing.offsetsYForSide[i] * f);
+            maxZ = block.maxZ - (double)((float)Facing.offsetsZForSide[i] * f);
         }
     }
 
-    public AxisAlignedBB getAxisAlignedBB(World world, int i, int j, int k, int l, float f, int i1)
+    /**
+     * gets the axis-alignedbb of this piston
+     */
+    public AxisAlignedBB getAxisAlignedBB(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
-        if (l == 0 || l == blockID)
+        if (par5 == 0 || par5 == blockID)
         {
             return null;
         }
-        AxisAlignedBB axisalignedbb = Block.blocksList[l].getCollisionBoundingBoxFromPool(world, i, j, k);
+
+        AxisAlignedBB axisalignedbb = Block.blocksList[par5].getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
+
         if (axisalignedbb == null)
         {
             return null;
         }
+
+        if (Facing.offsetsXForSide[par7] < 0)
+        {
+            axisalignedbb.minX -= (float)Facing.offsetsXForSide[par7] * par6;
+        }
         else
         {
-            axisalignedbb.minX -= (float)Facing.offsetsXForSide[i1] * f;
-            axisalignedbb.maxX -= (float)Facing.offsetsXForSide[i1] * f;
-            axisalignedbb.minY -= (float)Facing.offsetsYForSide[i1] * f;
-            axisalignedbb.maxY -= (float)Facing.offsetsYForSide[i1] * f;
-            axisalignedbb.minZ -= (float)Facing.offsetsZForSide[i1] * f;
-            axisalignedbb.maxZ -= (float)Facing.offsetsZForSide[i1] * f;
-            return axisalignedbb;
+            axisalignedbb.maxX -= (float)Facing.offsetsXForSide[par7] * par6;
         }
+
+        if (Facing.offsetsYForSide[par7] < 0)
+        {
+            axisalignedbb.minY -= (float)Facing.offsetsYForSide[par7] * par6;
+        }
+        else
+        {
+            axisalignedbb.maxY -= (float)Facing.offsetsYForSide[par7] * par6;
+        }
+
+        if (Facing.offsetsZForSide[par7] < 0)
+        {
+            axisalignedbb.minZ -= (float)Facing.offsetsZForSide[par7] * par6;
+        }
+        else
+        {
+            axisalignedbb.maxZ -= (float)Facing.offsetsZForSide[par7] * par6;
+        }
+
+        return axisalignedbb;
     }
 
-    private TileEntityPiston getTileEntityAtLocation(IBlockAccess iblockaccess, int i, int j, int k)
+    private TileEntityPiston getTileEntityAtLocation(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        TileEntity tileentity = iblockaccess.getBlockTileEntity(i, j, k);
+        TileEntity tileentity = par1IBlockAccess.getBlockTileEntity(par2, par3, par4);
+
         if (tileentity != null && (tileentity instanceof TileEntityPiston))
         {
             return (TileEntityPiston)tileentity;

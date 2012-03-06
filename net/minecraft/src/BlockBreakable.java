@@ -4,27 +4,36 @@ public class BlockBreakable extends Block
 {
     private boolean localFlag;
 
-    protected BlockBreakable(int i, int j, Material material, boolean flag)
+    protected BlockBreakable(int par1, int par2, Material par3Material, boolean par4)
     {
-        super(i, j, material);
-        localFlag = flag;
+        super(par1, par2, par3Material);
+        localFlag = par4;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Returns true if the given side of this block type should be rendered, if the adjacent block is at the given
+     * coordinates.  Args: blockAccess, x, y, z, side
+     */
+    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
-        int i1 = iblockaccess.getBlockId(i, j, k);
-        if (!localFlag && i1 == blockID)
+        int i = par1IBlockAccess.getBlockId(par2, par3, par4);
+
+        if (!localFlag && i == blockID)
         {
             return false;
         }
         else
         {
-            return super.shouldSideBeRendered(iblockaccess, i, j, k, l);
+            return super.shouldSideBeRendered(par1IBlockAccess, par2, par3, par4, par5);
         }
     }
 }

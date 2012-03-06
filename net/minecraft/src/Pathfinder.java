@@ -2,233 +2,372 @@ package net.minecraft.src;
 
 public class PathFinder
 {
+    /** Used to find obstacles */
     private IBlockAccess worldMap;
+
+    /** The path being generated */
     private Path path;
+
+    /** The points in the path */
     private IntHashMap pointMap;
     private PathPoint pathOptions[];
+    private boolean field_48617_e;
+    private boolean field_48615_f;
+    private boolean field_48616_g;
+    private boolean field_48618_h;
 
-    public PathFinder(IBlockAccess iblockaccess)
+    public PathFinder(IBlockAccess par1IBlockAccess, boolean par2, boolean par3, boolean par4, boolean par5)
     {
         path = new Path();
         pointMap = new IntHashMap();
         pathOptions = new PathPoint[32];
-        worldMap = iblockaccess;
+        worldMap = par1IBlockAccess;
+        field_48617_e = par2;
+        field_48615_f = par3;
+        field_48616_g = par4;
+        field_48618_h = par5;
     }
 
-    public PathEntity createEntityPathTo(Entity entity, Entity entity1, float f)
+    /**
+     * Creates a path from one entity to another within a minimum distance
+     */
+    public PathEntity createEntityPathTo(Entity par1Entity, Entity par2Entity, float par3)
     {
-        return createEntityPathTo(entity, entity1.posX, entity1.boundingBox.minY, entity1.posZ, f);
+        return createEntityPathTo(par1Entity, par2Entity.posX, par2Entity.boundingBox.minY, par2Entity.posZ, par3);
     }
 
-    public PathEntity createEntityPathTo(Entity entity, int i, int j, int k, float f)
+    /**
+     * Creates a path from an entity to a specified location within a minimum distance
+     */
+    public PathEntity createEntityPathTo(Entity par1Entity, int par2, int par3, int par4, float par5)
     {
-        return createEntityPathTo(entity, (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, f);
+        return createEntityPathTo(par1Entity, (float)par2 + 0.5F, (float)par3 + 0.5F, (float)par4 + 0.5F, par5);
     }
 
-    private PathEntity createEntityPathTo(Entity entity, double d, double d1, double d2,
-            float f)
+    /**
+     * Internal implementation of creating a path from an entity to a point
+     */
+    private PathEntity createEntityPathTo(Entity par1Entity, double par2, double par4, double par6, float par8)
     {
         path.clearPath();
         pointMap.clearMap();
-        PathPoint pathpoint = openPoint(MathHelper.floor_double(entity.boundingBox.minX), MathHelper.floor_double(entity.boundingBox.minY), MathHelper.floor_double(entity.boundingBox.minZ));
-        PathPoint pathpoint1 = openPoint(MathHelper.floor_double(d - (double)(entity.width / 2.0F)), MathHelper.floor_double(d1), MathHelper.floor_double(d2 - (double)(entity.width / 2.0F)));
-        PathPoint pathpoint2 = new PathPoint(MathHelper.floor_float(entity.width + 1.0F), MathHelper.floor_float(entity.height + 1.0F), MathHelper.floor_float(entity.width + 1.0F));
-        PathEntity pathentity = addToPath(entity, pathpoint, pathpoint1, pathpoint2, f);
+        boolean flag = field_48616_g;
+        int i = MathHelper.floor_double(par1Entity.boundingBox.minY + 0.5D);
+
+        if (field_48618_h && par1Entity.isInWater())
+        {
+            i = (int)par1Entity.boundingBox.minY;
+
+            for (int j = worldMap.getBlockId(MathHelper.floor_double(par1Entity.posX), i, MathHelper.floor_double(par1Entity.posZ)); j == Block.waterMoving.blockID || j == Block.waterStill.blockID; j = worldMap.getBlockId(MathHelper.floor_double(par1Entity.posX), i, MathHelper.floor_double(par1Entity.posZ)))
+            {
+                i++;
+            }
+
+            flag = field_48616_g;
+            field_48616_g = false;
+        }
+        else
+        {
+            i = MathHelper.floor_double(par1Entity.boundingBox.minY + 0.5D);
+        }
+
+        PathPoint pathpoint = openPoint(MathHelper.floor_double(par1Entity.boundingBox.minX), i, MathHelper.floor_double(par1Entity.boundingBox.minZ));
+        PathPoint pathpoint1 = openPoint(MathHelper.floor_double(par2 - (double)(par1Entity.width / 2.0F)), MathHelper.floor_double(par4), MathHelper.floor_double(par6 - (double)(par1Entity.width / 2.0F)));
+        PathPoint pathpoint2 = new PathPoint(MathHelper.floor_float(par1Entity.width + 1.0F), MathHelper.floor_float(par1Entity.height + 1.0F), MathHelper.floor_float(par1Entity.width + 1.0F));
+        PathEntity pathentity = addToPath(par1Entity, pathpoint, pathpoint1, pathpoint2, par8);
+        field_48616_g = flag;
         return pathentity;
     }
 
-    private PathEntity addToPath(Entity entity, PathPoint pathpoint, PathPoint pathpoint1, PathPoint pathpoint2, float f)
+    /**
+     * Adds a path from start to end and returns the whole path (args: unused, start, end, unused, maxDistance)
+     */
+    private PathEntity addToPath(Entity par1Entity, PathPoint par2PathPoint, PathPoint par3PathPoint, PathPoint par4PathPoint, float par5)
     {
-        pathpoint.totalPathDistance = 0.0F;
-        pathpoint.distanceToNext = pathpoint.distanceTo(pathpoint1);
-        pathpoint.distanceToTarget = pathpoint.distanceToNext;
+        par2PathPoint.totalPathDistance = 0.0F;
+        par2PathPoint.distanceToNext = par2PathPoint.distanceTo(par3PathPoint);
+        par2PathPoint.distanceToTarget = par2PathPoint.distanceToNext;
         path.clearPath();
-        path.addPoint(pathpoint);
-        PathPoint pathpoint3 = pathpoint;
+        path.addPoint(par2PathPoint);
+        PathPoint pathpoint = par2PathPoint;
+
         while (!path.isPathEmpty())
         {
-            PathPoint pathpoint4 = path.dequeue();
-            if (pathpoint4.equals(pathpoint1))
+            PathPoint pathpoint1 = path.dequeue();
+
+            if (pathpoint1.equals(par3PathPoint))
             {
-                return createEntityPath(pathpoint, pathpoint1);
+                return createEntityPath(par2PathPoint, par3PathPoint);
             }
-            if (pathpoint4.distanceTo(pathpoint1) < pathpoint3.distanceTo(pathpoint1))
+
+            if (pathpoint1.distanceTo(par3PathPoint) < pathpoint.distanceTo(par3PathPoint))
             {
-                pathpoint3 = pathpoint4;
+                pathpoint = pathpoint1;
             }
-            pathpoint4.isFirst = true;
-            int i = findPathOptions(entity, pathpoint4, pathpoint2, pathpoint1, f);
+
+            pathpoint1.isFirst = true;
+            int i = findPathOptions(par1Entity, pathpoint1, par4PathPoint, par3PathPoint, par5);
             int j = 0;
+
             while (j < i)
             {
-                PathPoint pathpoint5 = pathOptions[j];
-                float f1 = pathpoint4.totalPathDistance + pathpoint4.distanceTo(pathpoint5);
-                if (!pathpoint5.isAssigned() || f1 < pathpoint5.totalPathDistance)
+                PathPoint pathpoint2 = pathOptions[j];
+                float f = pathpoint1.totalPathDistance + pathpoint1.distanceTo(pathpoint2);
+
+                if (!pathpoint2.isAssigned() || f < pathpoint2.totalPathDistance)
                 {
-                    pathpoint5.previous = pathpoint4;
-                    pathpoint5.totalPathDistance = f1;
-                    pathpoint5.distanceToNext = pathpoint5.distanceTo(pathpoint1);
-                    if (pathpoint5.isAssigned())
+                    pathpoint2.previous = pathpoint1;
+                    pathpoint2.totalPathDistance = f;
+                    pathpoint2.distanceToNext = pathpoint2.distanceTo(par3PathPoint);
+
+                    if (pathpoint2.isAssigned())
                     {
-                        path.changeDistance(pathpoint5, pathpoint5.totalPathDistance + pathpoint5.distanceToNext);
+                        path.changeDistance(pathpoint2, pathpoint2.totalPathDistance + pathpoint2.distanceToNext);
                     }
                     else
                     {
-                        pathpoint5.distanceToTarget = pathpoint5.totalPathDistance + pathpoint5.distanceToNext;
-                        path.addPoint(pathpoint5);
+                        pathpoint2.distanceToTarget = pathpoint2.totalPathDistance + pathpoint2.distanceToNext;
+                        path.addPoint(pathpoint2);
                     }
                 }
+
                 j++;
             }
         }
-        if (pathpoint3 == pathpoint)
+
+        if (pathpoint == par2PathPoint)
         {
             return null;
         }
         else
         {
-            return createEntityPath(pathpoint, pathpoint3);
+            return createEntityPath(par2PathPoint, pathpoint);
         }
     }
 
-    private int findPathOptions(Entity entity, PathPoint pathpoint, PathPoint pathpoint1, PathPoint pathpoint2, float f)
+    /**
+     * populates pathOptions with available points and returns the number of options found (args: unused1, currentPoint,
+     * unused2, targetPoint, maxDistance)
+     */
+    private int findPathOptions(Entity par1Entity, PathPoint par2PathPoint, PathPoint par3PathPoint, PathPoint par4PathPoint, float par5)
     {
         int i = 0;
         int j = 0;
-        if (getVerticalOffset(entity, pathpoint.xCoord, pathpoint.yCoord + 1, pathpoint.zCoord, pathpoint1) == 1)
+
+        if (getVerticalOffset(par1Entity, par2PathPoint.xCoord, par2PathPoint.yCoord + 1, par2PathPoint.zCoord, par3PathPoint) == 1)
         {
             j = 1;
         }
-        PathPoint pathpoint3 = getSafePoint(entity, pathpoint.xCoord, pathpoint.yCoord, pathpoint.zCoord + 1, pathpoint1, j);
-        PathPoint pathpoint4 = getSafePoint(entity, pathpoint.xCoord - 1, pathpoint.yCoord, pathpoint.zCoord, pathpoint1, j);
-        PathPoint pathpoint5 = getSafePoint(entity, pathpoint.xCoord + 1, pathpoint.yCoord, pathpoint.zCoord, pathpoint1, j);
-        PathPoint pathpoint6 = getSafePoint(entity, pathpoint.xCoord, pathpoint.yCoord, pathpoint.zCoord - 1, pathpoint1, j);
-        if (pathpoint3 != null && !pathpoint3.isFirst && pathpoint3.distanceTo(pathpoint2) < f)
+
+        PathPoint pathpoint = getSafePoint(par1Entity, par2PathPoint.xCoord, par2PathPoint.yCoord, par2PathPoint.zCoord + 1, par3PathPoint, j);
+        PathPoint pathpoint1 = getSafePoint(par1Entity, par2PathPoint.xCoord - 1, par2PathPoint.yCoord, par2PathPoint.zCoord, par3PathPoint, j);
+        PathPoint pathpoint2 = getSafePoint(par1Entity, par2PathPoint.xCoord + 1, par2PathPoint.yCoord, par2PathPoint.zCoord, par3PathPoint, j);
+        PathPoint pathpoint3 = getSafePoint(par1Entity, par2PathPoint.xCoord, par2PathPoint.yCoord, par2PathPoint.zCoord - 1, par3PathPoint, j);
+
+        if (pathpoint != null && !pathpoint.isFirst && pathpoint.distanceTo(par4PathPoint) < par5)
+        {
+            pathOptions[i++] = pathpoint;
+        }
+
+        if (pathpoint1 != null && !pathpoint1.isFirst && pathpoint1.distanceTo(par4PathPoint) < par5)
+        {
+            pathOptions[i++] = pathpoint1;
+        }
+
+        if (pathpoint2 != null && !pathpoint2.isFirst && pathpoint2.distanceTo(par4PathPoint) < par5)
+        {
+            pathOptions[i++] = pathpoint2;
+        }
+
+        if (pathpoint3 != null && !pathpoint3.isFirst && pathpoint3.distanceTo(par4PathPoint) < par5)
         {
             pathOptions[i++] = pathpoint3;
         }
-        if (pathpoint4 != null && !pathpoint4.isFirst && pathpoint4.distanceTo(pathpoint2) < f)
-        {
-            pathOptions[i++] = pathpoint4;
-        }
-        if (pathpoint5 != null && !pathpoint5.isFirst && pathpoint5.distanceTo(pathpoint2) < f)
-        {
-            pathOptions[i++] = pathpoint5;
-        }
-        if (pathpoint6 != null && !pathpoint6.isFirst && pathpoint6.distanceTo(pathpoint2) < f)
-        {
-            pathOptions[i++] = pathpoint6;
-        }
+
         return i;
     }
 
-    private PathPoint getSafePoint(Entity entity, int i, int j, int k, PathPoint pathpoint, int l)
+    /**
+     * Returns a point that the entity can safely move to
+     */
+    private PathPoint getSafePoint(Entity par1Entity, int par2, int par3, int par4, PathPoint par5PathPoint, int par6)
     {
-        PathPoint pathpoint1 = null;
-        if (getVerticalOffset(entity, i, j, k, pathpoint) == 1)
+        PathPoint pathpoint = null;
+        int i = getVerticalOffset(par1Entity, par2, par3, par4, par5PathPoint);
+
+        if (i == 2)
         {
-            pathpoint1 = openPoint(i, j, k);
+            return openPoint(par2, par3, par4);
         }
-        if (pathpoint1 == null && l > 0 && getVerticalOffset(entity, i, j + l, k, pathpoint) == 1)
+
+        if (i == 1)
         {
-            pathpoint1 = openPoint(i, j + l, k);
-            j += l;
+            pathpoint = openPoint(par2, par3, par4);
         }
-        if (pathpoint1 != null)
+
+        if (pathpoint == null && par6 > 0 && i != -3 && i != -4 && getVerticalOffset(par1Entity, par2, par3 + par6, par4, par5PathPoint) == 1)
         {
-            int i1 = 0;
-            int j1 = 0;
+            pathpoint = openPoint(par2, par3 + par6, par4);
+            par3 += par6;
+        }
+
+        if (pathpoint != null)
+        {
+            int j = 0;
+            int k = 0;
+
             do
             {
-                if (j <= 0 || (j1 = getVerticalOffset(entity, i, j - 1, k, pathpoint)) != 1)
+                if (par3 <= 0)
                 {
                     break;
                 }
-                if (++i1 >= 4)
+
+                k = getVerticalOffset(par1Entity, par2, par3 - 1, par4, par5PathPoint);
+
+                if (field_48616_g && k == -1)
                 {
                     return null;
                 }
-                if (--j > 0)
+
+                if (k != 1)
                 {
-                    pathpoint1 = openPoint(i, j, k);
+                    break;
+                }
+
+                if (++j >= 4)
+                {
+                    return null;
+                }
+
+                if (--par3 > 0)
+                {
+                    pathpoint = openPoint(par2, par3, par4);
                 }
             }
             while (true);
-            if (j1 == -2)
+
+            if (k == -2)
             {
                 return null;
             }
         }
-        return pathpoint1;
-    }
 
-    private final PathPoint openPoint(int i, int j, int k)
-    {
-        int l = PathPoint.makeHash(i, j, k);
-        PathPoint pathpoint = (PathPoint)pointMap.lookup(l);
-        if (pathpoint == null)
-        {
-            pathpoint = new PathPoint(i, j, k);
-            pointMap.addKey(l, pathpoint);
-        }
         return pathpoint;
     }
 
-    private int getVerticalOffset(Entity entity, int i, int j, int k, PathPoint pathpoint)
+    /**
+     * Returns a mapped point or creates and adds one
+     */
+    private final PathPoint openPoint(int par1, int par2, int par3)
     {
-        for (int l = i; l < i + pathpoint.xCoord; l++)
+        int i = PathPoint.makeHash(par1, par2, par3);
+        PathPoint pathpoint = (PathPoint)pointMap.lookup(i);
+
+        if (pathpoint == null)
         {
-            for (int i1 = j; i1 < j + pathpoint.yCoord; i1++)
+            pathpoint = new PathPoint(par1, par2, par3);
+            pointMap.addKey(i, pathpoint);
+        }
+
+        return pathpoint;
+    }
+
+    /**
+     * Given an x y z, returns a vertical offset needed to search to find a block to stand on
+     */
+    private int getVerticalOffset(Entity par1Entity, int par2, int par3, int par4, PathPoint par5PathPoint)
+    {
+        boolean flag = false;
+
+        for (int i = par2; i < par2 + par5PathPoint.xCoord; i++)
+        {
+            for (int j = par3; j < par3 + par5PathPoint.yCoord; j++)
             {
-                for (int j1 = k; j1 < k + pathpoint.zCoord; j1++)
+                for (int k = par4; k < par4 + par5PathPoint.zCoord; k++)
                 {
-                    int k1 = worldMap.getBlockId(l, i1, j1);
-                    if (k1 <= 0)
+                    int l = worldMap.getBlockId(i, j, k);
+
+                    if (l <= 0)
                     {
                         continue;
                     }
-                    if (k1 == Block.doorSteel.blockID || k1 == Block.doorWood.blockID)
+
+                    if (l == Block.trapdoor.blockID)
                     {
-                        int l1 = worldMap.getBlockMetadata(l, i1, j1);
-                        if (!BlockDoor.isOpen(l1))
+                        flag = true;
+                    }
+                    else if (l == Block.waterMoving.blockID || l == Block.waterStill.blockID)
+                    {
+                        if (!field_48616_g)
                         {
-                            return 0;
+                            flag = true;
                         }
-                        continue;
+                        else
+                        {
+                            return -1;
+                        }
                     }
-                    Material material = Block.blocksList[k1].blockMaterial;
-                    if (material.getIsSolid())
+                    else if (!field_48617_e && l == Block.doorWood.blockID)
                     {
                         return 0;
                     }
-                    if (material == Material.water)
+
+                    Block block = Block.blocksList[l];
+
+                    if (block.func_48204_b(worldMap, i, j, k) || field_48615_f && l == Block.doorWood.blockID)
                     {
-                        return -1;
+                        continue;
                     }
+
+                    if (l == Block.fence.blockID || l == Block.fenceGate.blockID)
+                    {
+                        return -3;
+                    }
+
+                    if (l == Block.trapdoor.blockID)
+                    {
+                        return -4;
+                    }
+
+                    Material material = block.blockMaterial;
+
                     if (material == Material.lava)
                     {
-                        return -2;
+                        if (!par1Entity.handleLavaMovement())
+                        {
+                            return -2;
+                        }
+                    }
+                    else
+                    {
+                        return 0;
                     }
                 }
             }
         }
 
-        return 1;
+        return flag ? 2 : 1;
     }
 
-    private PathEntity createEntityPath(PathPoint pathpoint, PathPoint pathpoint1)
+    /**
+     * Returns a new PathEntity for a given start and end point
+     */
+    private PathEntity createEntityPath(PathPoint par1PathPoint, PathPoint par2PathPoint)
     {
         int i = 1;
-        for (PathPoint pathpoint2 = pathpoint1; pathpoint2.previous != null; pathpoint2 = pathpoint2.previous)
+
+        for (PathPoint pathpoint = par2PathPoint; pathpoint.previous != null; pathpoint = pathpoint.previous)
         {
             i++;
         }
 
         PathPoint apathpoint[] = new PathPoint[i];
-        PathPoint pathpoint3 = pathpoint1;
-        for (apathpoint[--i] = pathpoint3; pathpoint3.previous != null; apathpoint[--i] = pathpoint3)
+        PathPoint pathpoint1 = par2PathPoint;
+
+        for (apathpoint[--i] = pathpoint1; pathpoint1.previous != null; apathpoint[--i] = pathpoint1)
         {
-            pathpoint3 = pathpoint3.previous;
+            pathpoint1 = pathpoint1.previous;
         }
 
         return new PathEntity(apathpoint);

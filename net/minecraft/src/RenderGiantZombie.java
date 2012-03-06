@@ -4,21 +4,29 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderGiantZombie extends RenderLiving
 {
+    /** Scale of the model to use */
     private float scale;
 
-    public RenderGiantZombie(ModelBase modelbase, float f, float f1)
+    public RenderGiantZombie(ModelBase par1ModelBase, float par2, float par3)
     {
-        super(modelbase, f * f1);
-        scale = f1;
+        super(par1ModelBase, par2 * par3);
+        scale = par3;
     }
 
-    protected void preRenderScale(EntityGiantZombie entitygiantzombie, float f)
+    /**
+     * Applies the scale to the transform matrix
+     */
+    protected void preRenderScale(EntityGiantZombie par1EntityGiantZombie, float par2)
     {
         GL11.glScalef(scale, scale, scale);
     }
 
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    /**
+     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
+     * entityLiving, partialTickTime
+     */
+    protected void preRenderCallback(EntityLiving par1EntityLiving, float par2)
     {
-        preRenderScale((EntityGiantZombie)entityliving, f);
+        preRenderScale((EntityGiantZombie)par1EntityLiving, par2);
     }
 }

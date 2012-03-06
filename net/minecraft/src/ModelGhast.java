@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import java.util.Random;
+import org.lwjgl.opengl.GL11;
 
 public class ModelGhast extends ModelBase
 {
@@ -15,6 +16,7 @@ public class ModelGhast extends ModelBase
         body.addBox(-8F, -8F, -8F, 16, 16, 16);
         body.rotationPointY += 24 + byte0;
         Random random = new Random(1660L);
+
         for (int i = 0; i < tentacles.length; i++)
         {
             tentacles[i] = new ModelRenderer(this, 0, 0);
@@ -28,21 +30,32 @@ public class ModelGhast extends ModelBase
         }
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
         for (int i = 0; i < tentacles.length; i++)
         {
-            tentacles[i].rotateAngleX = 0.2F * MathHelper.sin(f2 * 0.3F + (float)i) + 0.4F;
+            tentacles[i].rotateAngleX = 0.2F * MathHelper.sin(par3 * 0.3F + (float)i) + 0.4F;
         }
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles then renders the model.
+     */
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        setRotationAngles(f, f1, f2, f3, f4, f5);
-        body.render(f5);
+        setRotationAngles(par2, par3, par4, par5, par6, par7);
+        GL11.glPushMatrix();
+        GL11.glTranslatef(0.0F, 0.6F, 0.0F);
+        body.render(par7);
+
         for (int i = 0; i < tentacles.length; i++)
         {
-            tentacles[i].render(f5);
+            tentacles[i].render(par7);
         }
+
+        GL11.glPopMatrix();
     }
 }

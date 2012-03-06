@@ -21,9 +21,12 @@ public class ModelSkeleton extends ModelZombie
         bipedLeftLeg.setRotationPoint(2.0F, 12F, 0.0F);
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
         aimedBow = true;
-        super.setRotationAngles(f, f1, f2, f3, f4, f5);
+        super.setRotationAngles(par1, par2, par3, par4, par5, par6);
     }
 }

@@ -4,26 +4,39 @@ import java.util.Random;
 
 public class BlockMobSpawner extends BlockContainer
 {
-    protected BlockMobSpawner(int i, int j)
+    protected BlockMobSpawner(int par1, int par2)
     {
-        super(i, j, Material.rock);
+        super(par1, par2, Material.rock);
     }
 
+    /**
+     * Returns the TileEntity used by this block.
+     */
     public TileEntity getBlockEntity()
     {
         return new TileEntityMobSpawner();
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return 0;
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 0;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;

@@ -7,10 +7,9 @@ public class EntityHugeExplodeFX extends EntityFX
     private int field_35139_a;
     private int field_35138_ay;
 
-    public EntityHugeExplodeFX(World world, double d, double d1, double d2,
-            double d3, double d4, double d5)
+    public EntityHugeExplodeFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
-        super(world, d, d1, d2, 0.0D, 0.0D, 0.0D);
+        super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
         field_35139_a = 0;
         field_35138_ay = 0;
         field_35138_ay = 8;
@@ -20,6 +19,9 @@ public class EntityHugeExplodeFX extends EntityFX
     {
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         for (int i = 0; i < 6; i++)
@@ -31,6 +33,7 @@ public class EntityHugeExplodeFX extends EntityFX
         }
 
         field_35139_a++;
+
         if (field_35139_a == field_35138_ay)
         {
             setEntityDead();

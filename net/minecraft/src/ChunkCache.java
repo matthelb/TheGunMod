@@ -1,190 +1,262 @@
 package net.minecraft.src;
 
-public class ChunkCache
-    implements IBlockAccess
+public class ChunkCache implements IBlockAccess
 {
     private int chunkX;
     private int chunkZ;
     private Chunk chunkArray[][];
+    private boolean field_48467_d;
+
+    /** Reference to the World object. */
     private World worldObj;
 
-    public ChunkCache(World world, int i, int j, int k, int l, int i1, int j1)
+    public ChunkCache(World par1World, int par2, int par3, int par4, int par5, int par6, int par7)
     {
-        worldObj = world;
-        chunkX = i >> 4;
-        chunkZ = k >> 4;
-        int k1 = l >> 4;
-        int l1 = j1 >> 4;
-        chunkArray = new Chunk[(k1 - chunkX) + 1][(l1 - chunkZ) + 1];
-        for (int i2 = chunkX; i2 <= k1; i2++)
+        worldObj = par1World;
+        chunkX = par2 >> 4;
+        chunkZ = par4 >> 4;
+        int i = par5 >> 4;
+        int j = par7 >> 4;
+        chunkArray = new Chunk[(i - chunkX) + 1][(j - chunkZ) + 1];
+        field_48467_d = true;
+
+        for (int k = chunkX; k <= i; k++)
         {
-            for (int j2 = chunkZ; j2 <= l1; j2++)
+            for (int l = chunkZ; l <= j; l++)
             {
-                chunkArray[i2 - chunkX][j2 - chunkZ] = world.getChunkFromChunkCoords(i2, j2);
+                Chunk chunk = par1World.getChunkFromChunkCoords(k, l);
+
+                if (chunk == null)
+                {
+                    continue;
+                }
+
+                chunkArray[k - chunkX][l - chunkZ] = chunk;
+
+                if (!chunk.func_48492_c(par3, par6))
+                {
+                    field_48467_d = false;
+                }
             }
         }
     }
 
-    public int getBlockId(int i, int j, int k)
+    public boolean func_48452_a()
     {
-        if (j < 0)
+        return field_48467_d;
+    }
+
+    /**
+     * Returns the block ID at coords x,y,z
+     */
+    public int getBlockId(int par1, int par2, int par3)
+    {
+        if (par2 < 0)
         {
             return 0;
         }
-        if (j >= worldObj.worldHeight)
+
+        if (par2 >= 256)
         {
             return 0;
         }
-        int l = (i >> 4) - chunkX;
-        int i1 = (k >> 4) - chunkZ;
-        if (l < 0 || l >= chunkArray.length || i1 < 0 || i1 >= chunkArray[l].length)
+
+        int i = (par1 >> 4) - chunkX;
+        int j = (par3 >> 4) - chunkZ;
+
+        if (i < 0 || i >= chunkArray.length || j < 0 || j >= chunkArray[i].length)
         {
             return 0;
         }
-        Chunk chunk = chunkArray[l][i1];
+
+        Chunk chunk = chunkArray[i][j];
+
         if (chunk == null)
         {
             return 0;
         }
         else
         {
-            return chunk.getBlockID(i & 0xf, j, k & 0xf);
+            return chunk.getBlockID(par1 & 0xf, par2, par3 & 0xf);
         }
     }
 
-    public TileEntity getBlockTileEntity(int i, int j, int k)
+    /**
+     * Returns the TileEntity associated with a given block in X,Y,Z coordinates, or null if no TileEntity exists
+     */
+    public TileEntity getBlockTileEntity(int par1, int par2, int par3)
     {
-        int l = (i >> 4) - chunkX;
-        int i1 = (k >> 4) - chunkZ;
-        return chunkArray[l][i1].getChunkBlockTileEntity(i & 0xf, j, k & 0xf);
+        int i = (par1 >> 4) - chunkX;
+        int j = (par3 >> 4) - chunkZ;
+        return chunkArray[i][j].getChunkBlockTileEntity(par1 & 0xf, par2, par3 & 0xf);
     }
 
-    public float getBrightness(int i, int j, int k, int l)
+    public float getBrightness(int par1, int par2, int par3, int par4)
     {
-        int i1 = getLightValue(i, j, k);
-        if (i1 < l)
+        int i = getLightValue(par1, par2, par3);
+
+        if (i < par4)
         {
-            i1 = l;
+            i = par4;
         }
-        return worldObj.worldProvider.lightBrightnessTable[i1];
+
+        return worldObj.worldProvider.lightBrightnessTable[i];
     }
 
-    public int getLightBrightnessForSkyBlocks(int i, int j, int k, int l)
+    /**
+     * 'Any Light rendered on a 1.8 Block goes through here'
+     */
+    public int getLightBrightnessForSkyBlocks(int par1, int par2, int par3, int par4)
     {
-        int i1 = getSkyBlockTypeBrightness(EnumSkyBlock.Sky, i, j, k);
-        int j1 = getSkyBlockTypeBrightness(EnumSkyBlock.Block, i, j, k);
-        if (j1 < l)
+        int i = getSkyBlockTypeBrightness(EnumSkyBlock.Sky, par1, par2, par3);
+        int j = getSkyBlockTypeBrightness(EnumSkyBlock.Block, par1, par2, par3);
+
+        if (j < par4)
         {
-            j1 = l;
+            j = par4;
         }
-        return i1 << 20 | j1 << 4;
+
+        return i << 20 | j << 4;
     }
 
-    public float getLightBrightness(int i, int j, int k)
+    /**
+     * Returns how bright the block is shown as which is the block's light value looked up in a lookup table (light
+     * values aren't linear for brightness). Args: x, y, z
+     */
+    public float getLightBrightness(int par1, int par2, int par3)
     {
-        return worldObj.worldProvider.lightBrightnessTable[getLightValue(i, j, k)];
+        return worldObj.worldProvider.lightBrightnessTable[getLightValue(par1, par2, par3)];
     }
 
-    public int getLightValue(int i, int j, int k)
+    /**
+     * Gets the light value of the specified block coords. Args: x, y, z
+     */
+    public int getLightValue(int par1, int par2, int par3)
     {
-        return getLightValueExt(i, j, k, true);
+        return getLightValueExt(par1, par2, par3, true);
     }
 
-    public int getLightValueExt(int i, int j, int k, boolean flag)
+    /**
+     * Get light value with flag
+     */
+    public int getLightValueExt(int par1, int par2, int par3, boolean par4)
     {
-        if (i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k > 0x1c9c380)
+        if (par1 < 0xfe363c80 || par3 < 0xfe363c80 || par1 >= 0x1c9c380 || par3 > 0x1c9c380)
         {
             return 15;
         }
-        if (flag)
+
+        if (par4)
         {
-            int l = getBlockId(i, j, k);
-            if (l == Block.stairSingle.blockID || l == Block.tilledField.blockID || l == Block.stairCompactPlanks.blockID || l == Block.stairCompactCobblestone.blockID)
+            int i = getBlockId(par1, par2, par3);
+
+            if (i == Block.stairSingle.blockID || i == Block.tilledField.blockID || i == Block.stairCompactPlanks.blockID || i == Block.stairCompactCobblestone.blockID)
             {
-                int k1 = getLightValueExt(i, j + 1, k, false);
-                int i2 = getLightValueExt(i + 1, j, k, false);
-                int j2 = getLightValueExt(i - 1, j, k, false);
-                int k2 = getLightValueExt(i, j, k + 1, false);
-                int l2 = getLightValueExt(i, j, k - 1, false);
-                if (i2 > k1)
+                int l = getLightValueExt(par1, par2 + 1, par3, false);
+                int j1 = getLightValueExt(par1 + 1, par2, par3, false);
+                int k1 = getLightValueExt(par1 - 1, par2, par3, false);
+                int l1 = getLightValueExt(par1, par2, par3 + 1, false);
+                int i2 = getLightValueExt(par1, par2, par3 - 1, false);
+
+                if (j1 > l)
                 {
-                    k1 = i2;
+                    l = j1;
                 }
-                if (j2 > k1)
+
+                if (k1 > l)
                 {
-                    k1 = j2;
+                    l = k1;
                 }
-                if (k2 > k1)
+
+                if (l1 > l)
                 {
-                    k1 = k2;
+                    l = l1;
                 }
-                if (l2 > k1)
+
+                if (i2 > l)
                 {
-                    k1 = l2;
+                    l = i2;
                 }
-                return k1;
+
+                return l;
             }
         }
-        if (j < 0)
+
+        if (par2 < 0)
         {
             return 0;
         }
-        if (j >= worldObj.worldHeight)
+
+        if (par2 >= 256)
         {
-            int i1 = 15 - worldObj.skylightSubtracted;
-            if (i1 < 0)
+            int j = 15 - worldObj.skylightSubtracted;
+
+            if (j < 0)
             {
-                i1 = 0;
+                j = 0;
             }
-            return i1;
+
+            return j;
         }
         else
         {
-            int j1 = (i >> 4) - chunkX;
-            int l1 = (k >> 4) - chunkZ;
-            return chunkArray[j1][l1].getBlockLightValue(i & 0xf, j, k & 0xf, worldObj.skylightSubtracted);
+            int k = (par1 >> 4) - chunkX;
+            int i1 = (par3 >> 4) - chunkZ;
+            return chunkArray[k][i1].getBlockLightValue(par1 & 0xf, par2, par3 & 0xf, worldObj.skylightSubtracted);
         }
     }
 
-    public int getBlockMetadata(int i, int j, int k)
+    /**
+     * Returns the block metadata at coords x,y,z
+     */
+    public int getBlockMetadata(int par1, int par2, int par3)
     {
-        if (j < 0)
+        if (par2 < 0)
         {
             return 0;
         }
-        if (j >= worldObj.worldHeight)
+
+        if (par2 >= 256)
         {
             return 0;
         }
         else
         {
-            int l = (i >> 4) - chunkX;
-            int i1 = (k >> 4) - chunkZ;
-            return chunkArray[l][i1].getBlockMetadata(i & 0xf, j, k & 0xf);
+            int i = (par1 >> 4) - chunkX;
+            int j = (par3 >> 4) - chunkZ;
+            return chunkArray[i][j].getBlockMetadata(par1 & 0xf, par2, par3 & 0xf);
         }
     }
 
-    public Material getBlockMaterial(int i, int j, int k)
+    /**
+     * Returns the block's material.
+     */
+    public Material getBlockMaterial(int par1, int par2, int par3)
     {
-        int l = getBlockId(i, j, k);
-        if (l == 0)
+        int i = getBlockId(par1, par2, par3);
+
+        if (i == 0)
         {
             return Material.air;
         }
         else
         {
-            return Block.blocksList[l].blockMaterial;
+            return Block.blocksList[i].blockMaterial;
         }
     }
 
-    public WorldChunkManager getWorldChunkManager()
+    public BiomeGenBase func_48454_a(int par1, int par2)
     {
-        return worldObj.getWorldChunkManager();
+        return worldObj.func_48454_a(par1, par2);
     }
 
-    public boolean isBlockOpaqueCube(int i, int j, int k)
+    /**
+     * Returns true if the block at the specified coordinates is an opaque cube. Args: x, y, z
+     */
+    public boolean isBlockOpaqueCube(int par1, int par2, int par3)
     {
-        Block block = Block.blocksList[getBlockId(i, j, k)];
+        Block block = Block.blocksList[getBlockId(par1, par2, par3)];
+
         if (block == null)
         {
             return false;
@@ -195,96 +267,120 @@ public class ChunkCache
         }
     }
 
-    public boolean isBlockNormalCube(int i, int j, int k)
+    /**
+     * Indicate if a material is a normal solid opaque cube.
+     */
+    public boolean isBlockNormalCube(int par1, int par2, int par3)
     {
-        Block block = Block.blocksList[getBlockId(i, j, k)];
+        Block block = Block.blocksList[getBlockId(par1, par2, par3)];
+
         if (block == null)
         {
             return false;
         }
         else
         {
-            return block.blockMaterial.getIsSolid() && block.renderAsNormalBlock();
+            return block.blockMaterial.blocksMovement() && block.renderAsNormalBlock();
         }
     }
 
-    public boolean isAirBlock(int i, int j, int k)
+    /**
+     * Returns true if the block at the specified coordinates is empty
+     */
+    public boolean isAirBlock(int par1, int par2, int par3)
     {
-        Block block = Block.blocksList[getBlockId(i, j, k)];
+        Block block = Block.blocksList[getBlockId(par1, par2, par3)];
         return block == null;
     }
 
-    public int getSkyBlockTypeBrightness(EnumSkyBlock enumskyblock, int i, int j, int k)
+    /**
+     * 'Brightness for SkyBlock.Sky is clear white and (through color computing i assume) DEPENDANT ON DAYTIME.
+     * Brightness for SkyBlock.Block is yellowish and independant'
+     */
+    public int getSkyBlockTypeBrightness(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int par4)
     {
-        if (j < 0)
+        if (par3 < 0)
         {
-            j = 0;
+            par3 = 0;
         }
-        if (j >= worldObj.worldHeight)
+
+        if (par3 >= 256)
         {
-            j = worldObj.worldHeight - 1;
+            par3 = 255;
         }
-        if (j < 0 || j >= worldObj.worldHeight || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k > 0x1c9c380)
+
+        if (par3 < 0 || par3 >= 256 || par2 < 0xfe363c80 || par4 < 0xfe363c80 || par2 >= 0x1c9c380 || par4 > 0x1c9c380)
         {
-            return enumskyblock.defaultLightValue;
+            return par1EnumSkyBlock.defaultLightValue;
         }
-        if (Block.useNeighborBrightness[getBlockId(i, j, k)])
+
+        if (Block.useNeighborBrightness[getBlockId(par2, par3, par4)])
         {
-            int l = getSpecialBlockBrightness(enumskyblock, i, j + 1, k);
-            int j1 = getSpecialBlockBrightness(enumskyblock, i + 1, j, k);
-            int l1 = getSpecialBlockBrightness(enumskyblock, i - 1, j, k);
-            int i2 = getSpecialBlockBrightness(enumskyblock, i, j, k + 1);
-            int j2 = getSpecialBlockBrightness(enumskyblock, i, j, k - 1);
-            if (j1 > l)
+            int i = getSpecialBlockBrightness(par1EnumSkyBlock, par2, par3 + 1, par4);
+            int k = getSpecialBlockBrightness(par1EnumSkyBlock, par2 + 1, par3, par4);
+            int i1 = getSpecialBlockBrightness(par1EnumSkyBlock, par2 - 1, par3, par4);
+            int j1 = getSpecialBlockBrightness(par1EnumSkyBlock, par2, par3, par4 + 1);
+            int k1 = getSpecialBlockBrightness(par1EnumSkyBlock, par2, par3, par4 - 1);
+
+            if (k > i)
             {
-                l = j1;
+                i = k;
             }
-            if (l1 > l)
+
+            if (i1 > i)
             {
-                l = l1;
+                i = i1;
             }
-            if (i2 > l)
+
+            if (j1 > i)
             {
-                l = i2;
+                i = j1;
             }
-            if (j2 > l)
+
+            if (k1 > i)
             {
-                l = j2;
+                i = k1;
             }
-            return l;
+
+            return i;
         }
         else
         {
-            int i1 = (i >> 4) - chunkX;
-            int k1 = (k >> 4) - chunkZ;
-            return chunkArray[i1][k1].getSavedLightValue(enumskyblock, i & 0xf, j, k & 0xf);
+            int j = (par2 >> 4) - chunkX;
+            int l = (par4 >> 4) - chunkZ;
+            return chunkArray[j][l].getSavedLightValue(par1EnumSkyBlock, par2 & 0xf, par3, par4 & 0xf);
         }
     }
 
-    public int getSpecialBlockBrightness(EnumSkyBlock enumskyblock, int i, int j, int k)
+    /**
+     * 'is only used on stairs and tilled fields'
+     */
+    public int getSpecialBlockBrightness(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int par4)
     {
-        if (j < 0)
+        if (par3 < 0)
         {
-            j = 0;
+            par3 = 0;
         }
-        if (j >= worldObj.worldHeight)
+
+        if (par3 >= 256)
         {
-            j = worldObj.worldHeight - 1;
+            par3 = 255;
         }
-        if (j < 0 || j >= worldObj.worldHeight || i < 0xfe363c80 || k < 0xfe363c80 || i >= 0x1c9c380 || k > 0x1c9c380)
+
+        if (par3 < 0 || par3 >= 256 || par2 < 0xfe363c80 || par4 < 0xfe363c80 || par2 >= 0x1c9c380 || par4 > 0x1c9c380)
         {
-            return enumskyblock.defaultLightValue;
+            return par1EnumSkyBlock.defaultLightValue;
         }
         else
         {
-            int l = (i >> 4) - chunkX;
-            int i1 = (k >> 4) - chunkZ;
-            return chunkArray[l][i1].getSavedLightValue(enumskyblock, i & 0xf, j, k & 0xf);
+            int i = (par2 >> 4) - chunkX;
+            int j = (par4 >> 4) - chunkZ;
+            return chunkArray[i][j].getSavedLightValue(par1EnumSkyBlock, par2 & 0xf, par3, par4 & 0xf);
         }
     }
 
-    public int getWorldHeight()
+    public int func_48453_b()
     {
-        return worldObj.worldHeight;
+        return 256;
     }
 }

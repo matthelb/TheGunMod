@@ -2,12 +2,15 @@ package net.minecraft.src;
 
 public class ChatLine
 {
+    /** The chat message. */
     public String message;
+
+    /** Counts the number of screen updates. */
     public int updateCounter;
 
-    public ChatLine(String s)
+    public ChatLine(String par1Str)
     {
-        message = s;
+        message = par1Str;
         updateCounter = 0;
     }
 }

@@ -5,17 +5,20 @@ import java.util.Random;
 
 public class BiomeGenTaiga extends BiomeGenBase
 {
-    public BiomeGenTaiga(int i)
+    public BiomeGenTaiga(int par1)
     {
-        super(i);
+        super(par1);
         spawnableCreatureList.add(new SpawnListEntry(net.minecraft.src.EntityWolf.class, 8, 4, 4));
         biomeDecorator.treesPerChunk = 10;
         biomeDecorator.grassPerChunk = 1;
     }
 
-    public WorldGenerator getRandomWorldGenForTrees(Random random)
+    /**
+     * Gets a WorldGen appropriate for this biome.
+     */
+    public WorldGenerator getRandomWorldGenForTrees(Random par1Random)
     {
-        if (random.nextInt(3) == 0)
+        if (par1Random.nextInt(3) == 0)
         {
             return new WorldGenTaiga1();
         }

@@ -2,8 +2,8 @@ package net.minecraft.src;
 
 public class ItemMapBase extends Item
 {
-    protected ItemMapBase(int i)
+    protected ItemMapBase(int par1)
     {
-        super(i);
+        super(par1);
     }
 }

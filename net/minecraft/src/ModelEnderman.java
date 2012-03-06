@@ -2,7 +2,10 @@ package net.minecraft.src;
 
 public class ModelEnderman extends ModelBiped
 {
+    /** Is the enderman carrying a block? */
     public boolean isCarrying;
+
+    /** Is the enderman attacking an entity? */
     public boolean isAttacking;
 
     public ModelEnderman()
@@ -34,13 +37,16 @@ public class ModelEnderman extends ModelBiped
         bipedLeftLeg.setRotationPoint(2.0F, 12F + f, 0.0F);
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5);
+        super.setRotationAngles(par1, par2, par3, par4, par5, par6);
         bipedHead.showModel = true;
-        float f6 = -14F;
+        float f = -14F;
         bipedBody.rotateAngleX = 0.0F;
-        bipedBody.rotationPointY = f6;
+        bipedBody.rotationPointY = f;
         bipedBody.rotationPointZ = -0F;
         bipedRightLeg.rotateAngleX -= 0.0F;
         bipedLeftLeg.rotateAngleX -= 0.0F;
@@ -48,39 +54,48 @@ public class ModelEnderman extends ModelBiped
         bipedLeftArm.rotateAngleX *= 0.5D;
         bipedRightLeg.rotateAngleX *= 0.5D;
         bipedLeftLeg.rotateAngleX *= 0.5D;
-        float f7 = 0.4F;
-        if (bipedRightArm.rotateAngleX > f7)
+        float f1 = 0.4F;
+
+        if (bipedRightArm.rotateAngleX > f1)
         {
-            bipedRightArm.rotateAngleX = f7;
+            bipedRightArm.rotateAngleX = f1;
         }
-        if (bipedLeftArm.rotateAngleX > f7)
+
+        if (bipedLeftArm.rotateAngleX > f1)
         {
-            bipedLeftArm.rotateAngleX = f7;
+            bipedLeftArm.rotateAngleX = f1;
         }
-        if (bipedRightArm.rotateAngleX < -f7)
+
+        if (bipedRightArm.rotateAngleX < -f1)
         {
-            bipedRightArm.rotateAngleX = -f7;
+            bipedRightArm.rotateAngleX = -f1;
         }
-        if (bipedLeftArm.rotateAngleX < -f7)
+
+        if (bipedLeftArm.rotateAngleX < -f1)
         {
-            bipedLeftArm.rotateAngleX = -f7;
+            bipedLeftArm.rotateAngleX = -f1;
         }
-        if (bipedRightLeg.rotateAngleX > f7)
+
+        if (bipedRightLeg.rotateAngleX > f1)
         {
-            bipedRightLeg.rotateAngleX = f7;
+            bipedRightLeg.rotateAngleX = f1;
         }
-        if (bipedLeftLeg.rotateAngleX > f7)
+
+        if (bipedLeftLeg.rotateAngleX > f1)
         {
-            bipedLeftLeg.rotateAngleX = f7;
+            bipedLeftLeg.rotateAngleX = f1;
         }
-        if (bipedRightLeg.rotateAngleX < -f7)
+
+        if (bipedRightLeg.rotateAngleX < -f1)
         {
-            bipedRightLeg.rotateAngleX = -f7;
+            bipedRightLeg.rotateAngleX = -f1;
         }
-        if (bipedLeftLeg.rotateAngleX < -f7)
+
+        if (bipedLeftLeg.rotateAngleX < -f1)
         {
-            bipedLeftLeg.rotateAngleX = -f7;
+            bipedLeftLeg.rotateAngleX = -f1;
         }
+
         if (isCarrying)
         {
             bipedRightArm.rotateAngleX = -0.5F;
@@ -88,24 +103,26 @@ public class ModelEnderman extends ModelBiped
             bipedRightArm.rotateAngleZ = 0.05F;
             bipedLeftArm.rotateAngleZ = -0.05F;
         }
+
         bipedRightArm.rotationPointZ = 0.0F;
         bipedLeftArm.rotationPointZ = 0.0F;
         bipedRightLeg.rotationPointZ = 0.0F;
         bipedLeftLeg.rotationPointZ = 0.0F;
-        bipedRightLeg.rotationPointY = 9F + f6;
-        bipedLeftLeg.rotationPointY = 9F + f6;
+        bipedRightLeg.rotationPointY = 9F + f;
+        bipedLeftLeg.rotationPointY = 9F + f;
         bipedHead.rotationPointZ = -0F;
-        bipedHead.rotationPointY = f6 + 1.0F;
+        bipedHead.rotationPointY = f + 1.0F;
         bipedHeadwear.rotationPointX = bipedHead.rotationPointX;
         bipedHeadwear.rotationPointY = bipedHead.rotationPointY;
         bipedHeadwear.rotationPointZ = bipedHead.rotationPointZ;
         bipedHeadwear.rotateAngleX = bipedHead.rotateAngleX;
         bipedHeadwear.rotateAngleY = bipedHead.rotateAngleY;
         bipedHeadwear.rotateAngleZ = bipedHead.rotateAngleZ;
+
         if (isAttacking)
         {
-            float f8 = 1.0F;
-            bipedHead.rotationPointY -= f8 * 5F;
+            float f2 = 1.0F;
+            bipedHead.rotationPointY -= f2 * 5F;
         }
     }
 }

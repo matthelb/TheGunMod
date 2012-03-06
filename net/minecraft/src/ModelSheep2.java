@@ -15,16 +15,23 @@ public class ModelSheep2 extends ModelQuadruped
         body.setRotationPoint(0.0F, 5F, 2.0F);
     }
 
-    public void setLivingAnimations(EntityLiving entityliving, float f, float f1, float f2)
+    /**
+     * Used for easily adding entity-dependent animations. The second and third float params here are the same second
+     * and third as in the setRotationAngles method.
+     */
+    public void setLivingAnimations(EntityLiving par1EntityLiving, float par2, float par3, float par4)
     {
-        super.setLivingAnimations(entityliving, f, f1, f2);
-        head.rotationPointY = 6F + ((EntitySheep)entityliving).func_44003_c(f2) * 9F;
-        field_44017_o = ((EntitySheep)entityliving).func_44002_d(f2);
+        super.setLivingAnimations(par1EntityLiving, par2, par3, par4);
+        head.rotationPointY = 6F + ((EntitySheep)par1EntityLiving).func_44003_c(par4) * 9F;
+        field_44017_o = ((EntitySheep)par1EntityLiving).func_44002_d(par4);
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5);
+        super.setRotationAngles(par1, par2, par3, par4, par5, par6);
         head.rotateAngleX = field_44017_o;
     }
 }

@@ -22,7 +22,7 @@ public class BlockCraftGuns extends Block implements CustomEntity {
     public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
         if(player instanceof EntityPlayerSP) {
             if(!world.isRemote) {
-                ModLoader.OpenGUI(player, new GuiCraftGuns(new ContainerCraftGuns(player, Util.isCreative((EntityPlayerSP) player))));
+                ModLoader.openGUI(player, new GuiCraftGuns(new ContainerCraftGuns(player, Util.isCreative((EntityPlayerSP) player))));
             }
             return true;
         }

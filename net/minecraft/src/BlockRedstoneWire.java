@@ -4,353 +4,449 @@ import java.util.*;
 
 public class BlockRedstoneWire extends Block
 {
+    /**
+     * When false, power transmission methods do not look at other redstone wires.  Used internally during
+     * updateCurrentStrength.
+     */
     private boolean wiresProvidePower;
     private Set blocksNeedingUpdate;
 
-    public BlockRedstoneWire(int i, int j)
+    public BlockRedstoneWire(int par1, int par2)
     {
-        super(i, j, Material.circuits);
+        super(par1, par2, Material.circuits);
         wiresProvidePower = true;
         blocksNeedingUpdate = new HashSet();
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.0625F, 1.0F);
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
         return blockIndexInTexture;
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int i)
     {
         return null;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 5;
     }
 
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color. Note only called
+     * when first determining what to render.
+     */
+    public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         return 0x800000;
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        return world.isBlockNormalCube(i, j - 1, k);
+        return par1World.isBlockNormalCube(par2, par3 - 1, par4) || par1World.getBlockId(par2, par3 - 1, par4) == Block.glowStone.blockID;
     }
 
-    private void updateAndPropagateCurrentStrength(World world, int i, int j, int k)
+    /**
+     * Sets the strength of the wire current (0-15) for this block based on neighboring blocks and propagates to
+     * neighboring redstone wires
+     */
+    private void updateAndPropagateCurrentStrength(World par1World, int par2, int par3, int par4)
     {
-        calculateCurrentChanges(world, i, j, k, i, j, k);
+        calculateCurrentChanges(par1World, par2, par3, par4, par2, par3, par4);
         ArrayList arraylist = new ArrayList(blocksNeedingUpdate);
         blocksNeedingUpdate.clear();
-        for (int l = 0; l < arraylist.size(); l++)
+
+        for (int i = 0; i < arraylist.size(); i++)
         {
-            ChunkPosition chunkposition = (ChunkPosition)arraylist.get(l);
-            world.notifyBlocksOfNeighborChange(chunkposition.x, chunkposition.y, chunkposition.z, blockID);
+            ChunkPosition chunkposition = (ChunkPosition)arraylist.get(i);
+            par1World.notifyBlocksOfNeighborChange(chunkposition.x, chunkposition.y, chunkposition.z, blockID);
         }
     }
 
-    private void calculateCurrentChanges(World world, int i, int j, int k, int l, int i1, int j1)
+    private void calculateCurrentChanges(World par1World, int par2, int par3, int par4, int par5, int par6, int par7)
     {
-        int k1 = world.getBlockMetadata(i, j, k);
-        int l1 = 0;
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = 0;
         wiresProvidePower = false;
-        boolean flag = world.isBlockIndirectlyGettingPowered(i, j, k);
+        boolean flag = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4);
         wiresProvidePower = true;
+
         if (flag)
         {
-            l1 = 15;
+            j = 15;
         }
         else
         {
-            for (int i2 = 0; i2 < 4; i2++)
+            for (int k = 0; k < 4; k++)
             {
-                int k2 = i;
-                int i3 = k;
-                if (i2 == 0)
+                int i1 = par2;
+                int k1 = par4;
+
+                if (k == 0)
                 {
-                    k2--;
+                    i1--;
                 }
-                if (i2 == 1)
+
+                if (k == 1)
                 {
-                    k2++;
+                    i1++;
                 }
-                if (i2 == 2)
+
+                if (k == 2)
                 {
-                    i3--;
+                    k1--;
                 }
-                if (i2 == 3)
+
+                if (k == 3)
                 {
-                    i3++;
+                    k1++;
                 }
-                if (k2 != l || j != i1 || i3 != j1)
+
+                if (i1 != par5 || par3 != par6 || k1 != par7)
                 {
-                    l1 = getMaxCurrentStrength(world, k2, j, i3, l1);
+                    j = getMaxCurrentStrength(par1World, i1, par3, k1, j);
                 }
-                if (world.isBlockNormalCube(k2, j, i3) && !world.isBlockNormalCube(i, j + 1, k))
+
+                if (par1World.isBlockNormalCube(i1, par3, k1) && !par1World.isBlockNormalCube(par2, par3 + 1, par4))
                 {
-                    if (k2 != l || j + 1 != i1 || i3 != j1)
+                    if (i1 != par5 || par3 + 1 != par6 || k1 != par7)
                     {
-                        l1 = getMaxCurrentStrength(world, k2, j + 1, i3, l1);
+                        j = getMaxCurrentStrength(par1World, i1, par3 + 1, k1, j);
                     }
+
                     continue;
                 }
-                if (!world.isBlockNormalCube(k2, j, i3) && (k2 != l || j - 1 != i1 || i3 != j1))
+
+                if (!par1World.isBlockNormalCube(i1, par3, k1) && (i1 != par5 || par3 - 1 != par6 || k1 != par7))
                 {
-                    l1 = getMaxCurrentStrength(world, k2, j - 1, i3, l1);
+                    j = getMaxCurrentStrength(par1World, i1, par3 - 1, k1, j);
                 }
             }
 
-            if (l1 > 0)
+            if (j > 0)
             {
-                l1--;
+                j--;
             }
             else
             {
-                l1 = 0;
+                j = 0;
             }
         }
-        if (k1 != l1)
+
+        if (i != j)
         {
-            world.editingBlocks = true;
-            world.setBlockMetadataWithNotify(i, j, k, l1);
-            world.markBlocksDirty(i, j, k, i, j, k);
-            world.editingBlocks = false;
-            for (int j2 = 0; j2 < 4; j2++)
+            par1World.editingBlocks = true;
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, j);
+            par1World.markBlocksDirty(par2, par3, par4, par2, par3, par4);
+            par1World.editingBlocks = false;
+
+            for (int l = 0; l < 4; l++)
             {
-                int l2 = i;
-                int j3 = k;
-                int k3 = j - 1;
-                if (j2 == 0)
+                int j1 = par2;
+                int l1 = par4;
+                int i2 = par3 - 1;
+
+                if (l == 0)
                 {
-                    l2--;
+                    j1--;
                 }
-                if (j2 == 1)
+
+                if (l == 1)
                 {
-                    l2++;
+                    j1++;
                 }
-                if (j2 == 2)
-                {
-                    j3--;
-                }
-                if (j2 == 3)
-                {
-                    j3++;
-                }
-                if (world.isBlockNormalCube(l2, j, j3))
-                {
-                    k3 += 2;
-                }
-                int l3 = 0;
-                l3 = getMaxCurrentStrength(world, l2, j, j3, -1);
-                l1 = world.getBlockMetadata(i, j, k);
-                if (l1 > 0)
+
+                if (l == 2)
                 {
                     l1--;
                 }
-                if (l3 >= 0 && l3 != l1)
+
+                if (l == 3)
                 {
-                    calculateCurrentChanges(world, l2, j, j3, i, j, k);
+                    l1++;
                 }
-                l3 = getMaxCurrentStrength(world, l2, k3, j3, -1);
-                l1 = world.getBlockMetadata(i, j, k);
-                if (l1 > 0)
+
+                if (par1World.isBlockNormalCube(j1, par3, l1))
                 {
-                    l1--;
+                    i2 += 2;
                 }
-                if (l3 >= 0 && l3 != l1)
+
+                int j2 = 0;
+                j2 = getMaxCurrentStrength(par1World, j1, par3, l1, -1);
+                j = par1World.getBlockMetadata(par2, par3, par4);
+
+                if (j > 0)
                 {
-                    calculateCurrentChanges(world, l2, k3, j3, i, j, k);
+                    j--;
+                }
+
+                if (j2 >= 0 && j2 != j)
+                {
+                    calculateCurrentChanges(par1World, j1, par3, l1, par2, par3, par4);
+                }
+
+                j2 = getMaxCurrentStrength(par1World, j1, i2, l1, -1);
+                j = par1World.getBlockMetadata(par2, par3, par4);
+
+                if (j > 0)
+                {
+                    j--;
+                }
+
+                if (j2 >= 0 && j2 != j)
+                {
+                    calculateCurrentChanges(par1World, j1, i2, l1, par2, par3, par4);
                 }
             }
 
-            if (k1 < l1 || l1 == 0)
+            if (i < j || j == 0)
             {
-                blocksNeedingUpdate.add(new ChunkPosition(i, j, k));
-                blocksNeedingUpdate.add(new ChunkPosition(i - 1, j, k));
-                blocksNeedingUpdate.add(new ChunkPosition(i + 1, j, k));
-                blocksNeedingUpdate.add(new ChunkPosition(i, j - 1, k));
-                blocksNeedingUpdate.add(new ChunkPosition(i, j + 1, k));
-                blocksNeedingUpdate.add(new ChunkPosition(i, j, k - 1));
-                blocksNeedingUpdate.add(new ChunkPosition(i, j, k + 1));
+                blocksNeedingUpdate.add(new ChunkPosition(par2, par3, par4));
+                blocksNeedingUpdate.add(new ChunkPosition(par2 - 1, par3, par4));
+                blocksNeedingUpdate.add(new ChunkPosition(par2 + 1, par3, par4));
+                blocksNeedingUpdate.add(new ChunkPosition(par2, par3 - 1, par4));
+                blocksNeedingUpdate.add(new ChunkPosition(par2, par3 + 1, par4));
+                blocksNeedingUpdate.add(new ChunkPosition(par2, par3, par4 - 1));
+                blocksNeedingUpdate.add(new ChunkPosition(par2, par3, par4 + 1));
             }
         }
     }
 
-    private void notifyWireNeighborsOfNeighborChange(World world, int i, int j, int k)
+    /**
+     * Calls World.notifyBlocksOfNeighborChange() for all neighboring blocks, but only if the given block is a redstone
+     * wire.
+     */
+    private void notifyWireNeighborsOfNeighborChange(World par1World, int par2, int par3, int par4)
     {
-        if (world.getBlockId(i, j, k) != blockID)
+        if (par1World.getBlockId(par2, par3, par4) != blockID)
         {
             return;
         }
         else
         {
-            world.notifyBlocksOfNeighborChange(i, j, k, blockID);
-            world.notifyBlocksOfNeighborChange(i - 1, j, k, blockID);
-            world.notifyBlocksOfNeighborChange(i + 1, j, k, blockID);
-            world.notifyBlocksOfNeighborChange(i, j, k - 1, blockID);
-            world.notifyBlocksOfNeighborChange(i, j, k + 1, blockID);
-            world.notifyBlocksOfNeighborChange(i, j - 1, k, blockID);
-            world.notifyBlocksOfNeighborChange(i, j + 1, k, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
             return;
         }
     }
 
-    public void onBlockAdded(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+    public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
-        super.onBlockAdded(world, i, j, k);
-        if (world.isRemote)
+        super.onBlockAdded(par1World, par2, par3, par4);
+
+        if (par1World.isRemote)
         {
             return;
         }
-        updateAndPropagateCurrentStrength(world, i, j, k);
-        world.notifyBlocksOfNeighborChange(i, j + 1, k, blockID);
-        world.notifyBlocksOfNeighborChange(i, j - 1, k, blockID);
-        notifyWireNeighborsOfNeighborChange(world, i - 1, j, k);
-        notifyWireNeighborsOfNeighborChange(world, i + 1, j, k);
-        notifyWireNeighborsOfNeighborChange(world, i, j, k - 1);
-        notifyWireNeighborsOfNeighborChange(world, i, j, k + 1);
-        if (world.isBlockNormalCube(i - 1, j, k))
+
+        updateAndPropagateCurrentStrength(par1World, par2, par3, par4);
+        par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
+        notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3, par4);
+        notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3, par4);
+        notifyWireNeighborsOfNeighborChange(par1World, par2, par3, par4 - 1);
+        notifyWireNeighborsOfNeighborChange(par1World, par2, par3, par4 + 1);
+
+        if (par1World.isBlockNormalCube(par2 - 1, par3, par4))
         {
-            notifyWireNeighborsOfNeighborChange(world, i - 1, j + 1, k);
+            notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3 + 1, par4);
         }
         else
         {
-            notifyWireNeighborsOfNeighborChange(world, i - 1, j - 1, k);
+            notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3 - 1, par4);
         }
-        if (world.isBlockNormalCube(i + 1, j, k))
+
+        if (par1World.isBlockNormalCube(par2 + 1, par3, par4))
         {
-            notifyWireNeighborsOfNeighborChange(world, i + 1, j + 1, k);
-        }
-        else
-        {
-            notifyWireNeighborsOfNeighborChange(world, i + 1, j - 1, k);
-        }
-        if (world.isBlockNormalCube(i, j, k - 1))
-        {
-            notifyWireNeighborsOfNeighborChange(world, i, j + 1, k - 1);
+            notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3 + 1, par4);
         }
         else
         {
-            notifyWireNeighborsOfNeighborChange(world, i, j - 1, k - 1);
+            notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3 - 1, par4);
         }
-        if (world.isBlockNormalCube(i, j, k + 1))
+
+        if (par1World.isBlockNormalCube(par2, par3, par4 - 1))
         {
-            notifyWireNeighborsOfNeighborChange(world, i, j + 1, k + 1);
+            notifyWireNeighborsOfNeighborChange(par1World, par2, par3 + 1, par4 - 1);
         }
         else
         {
-            notifyWireNeighborsOfNeighborChange(world, i, j - 1, k + 1);
+            notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 - 1);
+        }
+
+        if (par1World.isBlockNormalCube(par2, par3, par4 + 1))
+        {
+            notifyWireNeighborsOfNeighborChange(par1World, par2, par3 + 1, par4 + 1);
+        }
+        else
+        {
+            notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 + 1);
         }
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
-        super.onBlockRemoval(world, i, j, k);
-        if (world.isRemote)
+        super.onBlockRemoval(par1World, par2, par3, par4);
+
+        if (par1World.isRemote)
         {
             return;
         }
-        world.notifyBlocksOfNeighborChange(i, j + 1, k, blockID);
-        world.notifyBlocksOfNeighborChange(i, j - 1, k, blockID);
-        world.notifyBlocksOfNeighborChange(i + 1, j, k, blockID);
-        world.notifyBlocksOfNeighborChange(i - 1, j, k, blockID);
-        world.notifyBlocksOfNeighborChange(i, j, k + 1, blockID);
-        world.notifyBlocksOfNeighborChange(i, j, k - 1, blockID);
-        updateAndPropagateCurrentStrength(world, i, j, k);
-        notifyWireNeighborsOfNeighborChange(world, i - 1, j, k);
-        notifyWireNeighborsOfNeighborChange(world, i + 1, j, k);
-        notifyWireNeighborsOfNeighborChange(world, i, j, k - 1);
-        notifyWireNeighborsOfNeighborChange(world, i, j, k + 1);
-        if (world.isBlockNormalCube(i - 1, j, k))
+
+        par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
+        updateAndPropagateCurrentStrength(par1World, par2, par3, par4);
+        notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3, par4);
+        notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3, par4);
+        notifyWireNeighborsOfNeighborChange(par1World, par2, par3, par4 - 1);
+        notifyWireNeighborsOfNeighborChange(par1World, par2, par3, par4 + 1);
+
+        if (par1World.isBlockNormalCube(par2 - 1, par3, par4))
         {
-            notifyWireNeighborsOfNeighborChange(world, i - 1, j + 1, k);
+            notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3 + 1, par4);
         }
         else
         {
-            notifyWireNeighborsOfNeighborChange(world, i - 1, j - 1, k);
+            notifyWireNeighborsOfNeighborChange(par1World, par2 - 1, par3 - 1, par4);
         }
-        if (world.isBlockNormalCube(i + 1, j, k))
+
+        if (par1World.isBlockNormalCube(par2 + 1, par3, par4))
         {
-            notifyWireNeighborsOfNeighborChange(world, i + 1, j + 1, k);
-        }
-        else
-        {
-            notifyWireNeighborsOfNeighborChange(world, i + 1, j - 1, k);
-        }
-        if (world.isBlockNormalCube(i, j, k - 1))
-        {
-            notifyWireNeighborsOfNeighborChange(world, i, j + 1, k - 1);
+            notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3 + 1, par4);
         }
         else
         {
-            notifyWireNeighborsOfNeighborChange(world, i, j - 1, k - 1);
+            notifyWireNeighborsOfNeighborChange(par1World, par2 + 1, par3 - 1, par4);
         }
-        if (world.isBlockNormalCube(i, j, k + 1))
+
+        if (par1World.isBlockNormalCube(par2, par3, par4 - 1))
         {
-            notifyWireNeighborsOfNeighborChange(world, i, j + 1, k + 1);
+            notifyWireNeighborsOfNeighborChange(par1World, par2, par3 + 1, par4 - 1);
         }
         else
         {
-            notifyWireNeighborsOfNeighborChange(world, i, j - 1, k + 1);
+            notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 - 1);
+        }
+
+        if (par1World.isBlockNormalCube(par2, par3, par4 + 1))
+        {
+            notifyWireNeighborsOfNeighborChange(par1World, par2, par3 + 1, par4 + 1);
+        }
+        else
+        {
+            notifyWireNeighborsOfNeighborChange(par1World, par2, par3 - 1, par4 + 1);
         }
     }
 
-    private int getMaxCurrentStrength(World world, int i, int j, int k, int l)
+    /**
+     * Returns the current strength at the specified block if it is greater than the passed value, or the passed value
+     * otherwise.  Signature: (world, x, y, z, strength)
+     */
+    private int getMaxCurrentStrength(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (world.getBlockId(i, j, k) != blockID)
+        if (par1World.getBlockId(par2, par3, par4) != blockID)
         {
-            return l;
+            return par5;
         }
-        int i1 = world.getBlockMetadata(i, j, k);
-        if (i1 > l)
+
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+
+        if (i > par5)
         {
-            return i1;
+            return i;
         }
         else
         {
-            return l;
+            return par5;
         }
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        int i1 = world.getBlockMetadata(i, j, k);
-        boolean flag = canPlaceBlockAt(world, i, j, k);
+
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        boolean flag = canPlaceBlockAt(par1World, par2, par3, par4);
+
         if (!flag)
         {
-            dropBlockAsItem(world, i, j, k, i1, 0);
-            world.setBlockWithNotify(i, j, k, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, i, 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
         }
         else
         {
-            updateAndPropagateCurrentStrength(world, i, j, k);
+            updateAndPropagateCurrentStrength(par1World, par2, par3, par4);
         }
-        super.onNeighborBlockChange(world, i, j, k, l);
+
+        super.onNeighborBlockChange(par1World, par2, par3, par4, par5);
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Item.redstone.shiftedIndex;
     }
 
-    public boolean isIndirectlyPoweringTo(World world, int i, int j, int k, int l)
+    /**
+     * Is this block indirectly powering the block on the specified side
+     */
+    public boolean isIndirectlyPoweringTo(World par1World, int par2, int par3, int par4, int par5)
     {
         if (!wiresProvidePower)
         {
@@ -358,129 +454,169 @@ public class BlockRedstoneWire extends Block
         }
         else
         {
-            return isPoweringTo(world, i, j, k, l);
+            return isPoweringTo(par1World, par2, par3, par4, par5);
         }
     }
 
-    public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Is this block powering the block on the specified side
+     */
+    public boolean isPoweringTo(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
         if (!wiresProvidePower)
         {
             return false;
         }
-        if (iblockaccess.getBlockMetadata(i, j, k) == 0)
+
+        if (par1IBlockAccess.getBlockMetadata(par2, par3, par4) == 0)
         {
             return false;
         }
-        if (l == 1)
+
+        if (par5 == 1)
         {
             return true;
         }
-        boolean flag = isPoweredOrRepeater(iblockaccess, i - 1, j, k, 1) || !iblockaccess.isBlockNormalCube(i - 1, j, k) && isPoweredOrRepeater(iblockaccess, i - 1, j - 1, k, -1);
-        boolean flag1 = isPoweredOrRepeater(iblockaccess, i + 1, j, k, 3) || !iblockaccess.isBlockNormalCube(i + 1, j, k) && isPoweredOrRepeater(iblockaccess, i + 1, j - 1, k, -1);
-        boolean flag2 = isPoweredOrRepeater(iblockaccess, i, j, k - 1, 2) || !iblockaccess.isBlockNormalCube(i, j, k - 1) && isPoweredOrRepeater(iblockaccess, i, j - 1, k - 1, -1);
-        boolean flag3 = isPoweredOrRepeater(iblockaccess, i, j, k + 1, 0) || !iblockaccess.isBlockNormalCube(i, j, k + 1) && isPoweredOrRepeater(iblockaccess, i, j - 1, k + 1, -1);
-        if (!iblockaccess.isBlockNormalCube(i, j + 1, k))
+
+        boolean flag = isPoweredOrRepeater(par1IBlockAccess, par2 - 1, par3, par4, 1) || !par1IBlockAccess.isBlockNormalCube(par2 - 1, par3, par4) && isPoweredOrRepeater(par1IBlockAccess, par2 - 1, par3 - 1, par4, -1);
+        boolean flag1 = isPoweredOrRepeater(par1IBlockAccess, par2 + 1, par3, par4, 3) || !par1IBlockAccess.isBlockNormalCube(par2 + 1, par3, par4) && isPoweredOrRepeater(par1IBlockAccess, par2 + 1, par3 - 1, par4, -1);
+        boolean flag2 = isPoweredOrRepeater(par1IBlockAccess, par2, par3, par4 - 1, 2) || !par1IBlockAccess.isBlockNormalCube(par2, par3, par4 - 1) && isPoweredOrRepeater(par1IBlockAccess, par2, par3 - 1, par4 - 1, -1);
+        boolean flag3 = isPoweredOrRepeater(par1IBlockAccess, par2, par3, par4 + 1, 0) || !par1IBlockAccess.isBlockNormalCube(par2, par3, par4 + 1) && isPoweredOrRepeater(par1IBlockAccess, par2, par3 - 1, par4 + 1, -1);
+
+        if (!par1IBlockAccess.isBlockNormalCube(par2, par3 + 1, par4))
         {
-            if (iblockaccess.isBlockNormalCube(i - 1, j, k) && isPoweredOrRepeater(iblockaccess, i - 1, j + 1, k, -1))
+            if (par1IBlockAccess.isBlockNormalCube(par2 - 1, par3, par4) && isPoweredOrRepeater(par1IBlockAccess, par2 - 1, par3 + 1, par4, -1))
             {
                 flag = true;
             }
-            if (iblockaccess.isBlockNormalCube(i + 1, j, k) && isPoweredOrRepeater(iblockaccess, i + 1, j + 1, k, -1))
+
+            if (par1IBlockAccess.isBlockNormalCube(par2 + 1, par3, par4) && isPoweredOrRepeater(par1IBlockAccess, par2 + 1, par3 + 1, par4, -1))
             {
                 flag1 = true;
             }
-            if (iblockaccess.isBlockNormalCube(i, j, k - 1) && isPoweredOrRepeater(iblockaccess, i, j + 1, k - 1, -1))
+
+            if (par1IBlockAccess.isBlockNormalCube(par2, par3, par4 - 1) && isPoweredOrRepeater(par1IBlockAccess, par2, par3 + 1, par4 - 1, -1))
             {
                 flag2 = true;
             }
-            if (iblockaccess.isBlockNormalCube(i, j, k + 1) && isPoweredOrRepeater(iblockaccess, i, j + 1, k + 1, -1))
+
+            if (par1IBlockAccess.isBlockNormalCube(par2, par3, par4 + 1) && isPoweredOrRepeater(par1IBlockAccess, par2, par3 + 1, par4 + 1, -1))
             {
                 flag3 = true;
             }
         }
-        if (!flag2 && !flag1 && !flag && !flag3 && l >= 2 && l <= 5)
+
+        if (!flag2 && !flag1 && !flag && !flag3 && par5 >= 2 && par5 <= 5)
         {
             return true;
         }
-        if (l == 2 && flag2 && !flag && !flag1)
+
+        if (par5 == 2 && flag2 && !flag && !flag1)
         {
             return true;
         }
-        if (l == 3 && flag3 && !flag && !flag1)
+
+        if (par5 == 3 && flag3 && !flag && !flag1)
         {
             return true;
         }
-        if (l == 4 && flag && !flag2 && !flag3)
+
+        if (par5 == 4 && flag && !flag2 && !flag3)
         {
             return true;
         }
-        return l == 5 && flag1 && !flag2 && !flag3;
+
+        return par5 == 5 && flag1 && !flag2 && !flag3;
     }
 
+    /**
+     * Can this block provide power. Only wire currently seems to have this change based on its state.
+     */
     public boolean canProvidePower()
     {
         return wiresProvidePower;
     }
 
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
+    /**
+     * A randomly called display update to be able to add particles or other items for display
+     */
+    public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        if (l > 0)
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+
+        if (i > 0)
         {
-            double d = (double)i + 0.5D + ((double)random.nextFloat() - 0.5D) * 0.20000000000000001D;
-            double d1 = (float)j + 0.0625F;
-            double d2 = (double)k + 0.5D + ((double)random.nextFloat() - 0.5D) * 0.20000000000000001D;
-            float f = (float)l / 15F;
+            double d = (double)par2 + 0.5D + ((double)par5Random.nextFloat() - 0.5D) * 0.2D;
+            double d1 = (float)par3 + 0.0625F;
+            double d2 = (double)par4 + 0.5D + ((double)par5Random.nextFloat() - 0.5D) * 0.2D;
+            float f = (float)i / 15F;
             float f1 = f * 0.6F + 0.4F;
-            if (l == 0)
+
+            if (i == 0)
             {
                 f1 = 0.0F;
             }
+
             float f2 = f * f * 0.7F - 0.5F;
             float f3 = f * f * 0.6F - 0.7F;
+
             if (f2 < 0.0F)
             {
                 f2 = 0.0F;
             }
+
             if (f3 < 0.0F)
             {
                 f3 = 0.0F;
             }
-            world.spawnParticle("reddust", d, d1, d2, f1, f2, f3);
+
+            par1World.spawnParticle("reddust", d, d1, d2, f1, f2, f3);
         }
     }
 
-    public static boolean isPowerProviderOrWire(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Calls canProvidePower() on the specified block and returns the result, but bypasses the wiresProvidePower flag
+     */
+    public static boolean isPowerProviderOrWire(IBlockAccess par0IBlockAccess, int par1, int par2, int par3, int par4)
     {
-        int i1 = iblockaccess.getBlockId(i, j, k);
-        if (i1 == Block.redstoneWire.blockID)
+        int i = par0IBlockAccess.getBlockId(par1, par2, par3);
+
+        if (i == Block.redstoneWire.blockID)
         {
             return true;
         }
-        if (i1 == 0)
+
+        if (i == 0)
         {
             return false;
         }
-        if (i1 == Block.redstoneRepeaterIdle.blockID || i1 == Block.redstoneRepeaterActive.blockID)
+
+        if (i == Block.redstoneRepeaterIdle.blockID || i == Block.redstoneRepeaterActive.blockID)
         {
-            int j1 = iblockaccess.getBlockMetadata(i, j, k);
-            return l == (j1 & 3) || l == Direction.footInvisibleFaceRemap[j1 & 3];
+            int j = par0IBlockAccess.getBlockMetadata(par1, par2, par3);
+            return par4 == (j & 3) || par4 == Direction.footInvisibleFaceRemap[j & 3];
         }
-        return Block.blocksList[i1].canProvidePower() && l != -1;
+
+        return Block.blocksList[i].canProvidePower() && par4 != -1;
     }
 
-    public static boolean isPoweredOrRepeater(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Returns true if the block coordinate passed can provide power, or is a redstone wire, or if its a repeater that
+     * is powered.
+     */
+    public static boolean isPoweredOrRepeater(IBlockAccess par0IBlockAccess, int par1, int par2, int par3, int par4)
     {
-        if (isPowerProviderOrWire(iblockaccess, i, j, k, l))
+        if (isPowerProviderOrWire(par0IBlockAccess, par1, par2, par3, par4))
         {
             return true;
         }
-        int i1 = iblockaccess.getBlockId(i, j, k);
-        if (i1 == Block.redstoneRepeaterActive.blockID)
+
+        int i = par0IBlockAccess.getBlockId(par1, par2, par3);
+
+        if (i == Block.redstoneRepeaterActive.blockID)
         {
-            int j1 = iblockaccess.getBlockMetadata(i, j, k);
-            return l == (j1 & 3);
+            int j = par0IBlockAccess.getBlockMetadata(par1, par2, par3);
+            return par4 == (j & 3);
         }
         else
         {

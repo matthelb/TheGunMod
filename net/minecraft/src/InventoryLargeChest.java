@@ -1,87 +1,132 @@
 package net.minecraft.src;
 
-public class InventoryLargeChest
-    implements IInventory
+public class InventoryLargeChest implements IInventory
 {
+    /** Name of the chest. */
     private String name;
+
+    /** Inventory object corresponding to double chest upper part */
     private IInventory upperChest;
+
+    /** Inventory object corresponding to double chest lower part */
     private IInventory lowerChest;
 
-    public InventoryLargeChest(String s, IInventory iinventory, IInventory iinventory1)
+    public InventoryLargeChest(String par1Str, IInventory par2IInventory, IInventory par3IInventory)
     {
-        name = s;
-        if (iinventory == null)
+        name = par1Str;
+
+        if (par2IInventory == null)
         {
-            iinventory = iinventory1;
+            par2IInventory = par3IInventory;
         }
-        if (iinventory1 == null)
+
+        if (par3IInventory == null)
         {
-            iinventory1 = iinventory;
+            par3IInventory = par2IInventory;
         }
-        upperChest = iinventory;
-        lowerChest = iinventory1;
+
+        upperChest = par2IInventory;
+        lowerChest = par3IInventory;
     }
 
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public int getSizeInventory()
     {
         return upperChest.getSizeInventory() + lowerChest.getSizeInventory();
     }
 
+    /**
+     * Returns the name of the inventory.
+     */
     public String getInvName()
     {
         return name;
     }
 
-    public ItemStack getStackInSlot(int i)
+    /**
+     * Returns the stack in slot i
+     */
+    public ItemStack getStackInSlot(int par1)
     {
-        if (i >= upperChest.getSizeInventory())
+        if (par1 >= upperChest.getSizeInventory())
         {
-            return lowerChest.getStackInSlot(i - upperChest.getSizeInventory());
+            return lowerChest.getStackInSlot(par1 - upperChest.getSizeInventory());
         }
         else
         {
-            return upperChest.getStackInSlot(i);
+            return upperChest.getStackInSlot(par1);
         }
     }
 
-    public ItemStack decrStackSize(int i, int j)
+    /**
+     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
+     * stack.
+     */
+    public ItemStack decrStackSize(int par1, int par2)
     {
-        if (i >= upperChest.getSizeInventory())
+        if (par1 >= upperChest.getSizeInventory())
         {
-            return lowerChest.decrStackSize(i - upperChest.getSizeInventory(), j);
+            return lowerChest.decrStackSize(par1 - upperChest.getSizeInventory(), par2);
         }
         else
         {
-            return upperChest.decrStackSize(i, j);
+            return upperChest.decrStackSize(par1, par2);
         }
     }
 
-    public void setInventorySlotContents(int i, ItemStack itemstack)
+    public ItemStack func_48081_b(int par1)
     {
-        if (i >= upperChest.getSizeInventory())
+        if (par1 >= upperChest.getSizeInventory())
         {
-            lowerChest.setInventorySlotContents(i - upperChest.getSizeInventory(), itemstack);
+            return lowerChest.func_48081_b(par1 - upperChest.getSizeInventory());
         }
         else
         {
-            upperChest.setInventorySlotContents(i, itemstack);
+            return upperChest.func_48081_b(par1);
         }
     }
 
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
+    {
+        if (par1 >= upperChest.getSizeInventory())
+        {
+            lowerChest.setInventorySlotContents(par1 - upperChest.getSizeInventory(), par2ItemStack);
+        }
+        else
+        {
+            upperChest.setInventorySlotContents(par1, par2ItemStack);
+        }
+    }
+
+    /**
+     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended. *Isn't
+     * this more of a set than a get?*
+     */
     public int getInventoryStackLimit()
     {
         return upperChest.getInventoryStackLimit();
     }
 
+    /**
+     * Called when an the contents of an Inventory change, usually
+     */
     public void onInventoryChanged()
     {
         upperChest.onInventoryChanged();
         lowerChest.onInventoryChanged();
     }
 
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    /**
+     * Do not make give this method the name canInteractWith because it clashes with Container
+     */
+    public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
     {
-        return upperChest.isUseableByPlayer(entityplayer) && lowerChest.isUseableByPlayer(entityplayer);
+        return upperChest.isUseableByPlayer(par1EntityPlayer) && lowerChest.isUseableByPlayer(par1EntityPlayer);
     }
 
     public void openChest()

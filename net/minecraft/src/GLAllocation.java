@@ -7,38 +7,53 @@ import org.lwjgl.opengl.GL11;
 
 public class GLAllocation
 {
+    /**
+     * An ArrayList that stores the first index and the length of each display list.
+     */
     private static List displayLists = new ArrayList();
+
+    /** An ArrayList that stores all the generated texture names. */
     private static List textureNames = new ArrayList();
 
     public GLAllocation()
     {
     }
 
-    public static synchronized int generateDisplayLists(int i)
+    /**
+     * Generates the specified number of display lists and returns the first index.
+     */
+    public static synchronized int generateDisplayLists(int par0)
     {
-        int j = GL11.glGenLists(i);
-        displayLists.add(Integer.valueOf(j));
+        int i = GL11.glGenLists(par0);
         displayLists.add(Integer.valueOf(i));
-        return j;
+        displayLists.add(Integer.valueOf(par0));
+        return i;
     }
 
-    public static synchronized void generateTextureNames(IntBuffer intbuffer)
+    /**
+     * Generates texture names and stores them in the specified buffer.
+     */
+    public static synchronized void generateTextureNames(IntBuffer par0IntBuffer)
     {
-        GL11.glGenTextures(intbuffer);
-        for (int i = intbuffer.position(); i < intbuffer.limit(); i++)
+        GL11.glGenTextures(par0IntBuffer);
+
+        for (int i = par0IntBuffer.position(); i < par0IntBuffer.limit(); i++)
         {
-            textureNames.add(Integer.valueOf(intbuffer.get(i)));
+            textureNames.add(Integer.valueOf(par0IntBuffer.get(i)));
         }
     }
 
-    public static synchronized void deleteDisplayLists(int i)
+    public static synchronized void deleteDisplayLists(int par0)
     {
-        int j = displayLists.indexOf(Integer.valueOf(i));
-        GL11.glDeleteLists(((Integer)displayLists.get(j)).intValue(), ((Integer)displayLists.get(j + 1)).intValue());
-        displayLists.remove(j);
-        displayLists.remove(j);
+        int i = displayLists.indexOf(Integer.valueOf(par0));
+        GL11.glDeleteLists(((Integer)displayLists.get(i)).intValue(), ((Integer)displayLists.get(i + 1)).intValue());
+        displayLists.remove(i);
+        displayLists.remove(i);
     }
 
+    /**
+     * Deletes all textures and display lists. Called when Minecraft is shutdown to free up resources.
+     */
     public static synchronized void deleteTexturesAndDisplayLists()
     {
         for (int i = 0; i < displayLists.size(); i += 2)
@@ -49,6 +64,7 @@ public class GLAllocation
         IntBuffer intbuffer = createDirectIntBuffer(textureNames.size());
         intbuffer.flip();
         GL11.glDeleteTextures(intbuffer);
+
         for (int j = 0; j < textureNames.size(); j++)
         {
             intbuffer.put(((Integer)textureNames.get(j)).intValue());
@@ -60,19 +76,29 @@ public class GLAllocation
         textureNames.clear();
     }
 
-    public static synchronized ByteBuffer createDirectByteBuffer(int i)
+    /**
+     * Creates and returns a direct byte buffer with the specified capacity. Applies native ordering to speed up access.
+     */
+    public static synchronized ByteBuffer createDirectByteBuffer(int par0)
     {
-        ByteBuffer bytebuffer = ByteBuffer.allocateDirect(i).order(ByteOrder.nativeOrder());
+        ByteBuffer bytebuffer = ByteBuffer.allocateDirect(par0).order(ByteOrder.nativeOrder());
         return bytebuffer;
     }
 
-    public static IntBuffer createDirectIntBuffer(int i)
+    /**
+     * Creates and returns a direct int buffer with the specified capacity. Applies native ordering to speed up access.
+     */
+    public static IntBuffer createDirectIntBuffer(int par0)
     {
-        return createDirectByteBuffer(i << 2).asIntBuffer();
+        return createDirectByteBuffer(par0 << 2).asIntBuffer();
     }
 
-    public static FloatBuffer createDirectFloatBuffer(int i)
+    /**
+     * Creates and returns a direct float buffer with the specified capacity. Applies native ordering to speed up
+     * access.
+     */
+    public static FloatBuffer createDirectFloatBuffer(int par0)
     {
-        return createDirectByteBuffer(i << 2).asFloatBuffer();
+        return createDirectByteBuffer(par0 << 2).asFloatBuffer();
     }
 }

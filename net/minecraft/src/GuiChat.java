@@ -5,9 +5,11 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiChat extends GuiScreen
 {
+    /** The chat message. */
     protected String message;
+
+    /** Counts the number of screen updates. Used to make the caret flash. */
     private int updateCounter;
-    private static final String allowedCharacters;
 
     public GuiChat()
     {
@@ -15,84 +17,107 @@ public class GuiChat extends GuiScreen
         updateCounter = 0;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
         Keyboard.enableRepeatEvents(true);
     }
 
+    /**
+     * Called when the screen is unloaded. Used to disable keyboard repeat events
+     */
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
     }
 
+    /**
+     * Called from the main game loop to update the screen.
+     */
     public void updateScreen()
     {
         updateCounter++;
     }
 
-    protected void keyTyped(char c, int i)
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char par1, int par2)
     {
-        if (i == 1)
+        if (par2 == 1)
         {
             mc.displayGuiScreen(null);
             return;
         }
-        if (i == 28)
+
+        if (par2 == 28)
         {
             String s = message.trim();
+
             if (s.length() > 0)
             {
                 String s1 = message.trim();
+
                 if (!mc.lineIsCommand(s1))
                 {
                     mc.thePlayer.sendChatMessage(s1);
                 }
             }
+
             mc.displayGuiScreen(null);
             return;
         }
-        if (i == 14 && message.length() > 0)
+
+        if (par2 == 14 && message.length() > 0)
         {
             message = message.substring(0, message.length() - 1);
         }
-        if ((allowedCharacters.indexOf(c) >= 0 || c > ' ') && message.length() < 100)
+
+        if (!(!ChatAllowedCharacters.func_48614_a(par1) || message.length() >= 100))
         {
-            message += c;
+            message += par1;
         }
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
         drawRect(2, height - 14, width - 2, height - 2, 0x80000000);
         drawString(fontRenderer, (new StringBuilder()).append("> ").append(message).append((updateCounter / 6) % 2 != 0 ? "" : "_").toString(), 4, height - 12, 0xe0e0e0);
-        super.drawScreen(i, j, f);
+        super.drawScreen(par1, par2, par3);
     }
 
-    protected void mouseClicked(int i, int j, int k)
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int par1, int par2, int par3)
     {
-        super.mouseClicked(i, j, k);
-        if (k != 0)
+        if (par3 != 0)
         {
             return;
         }
+
         if (mc.ingameGUI.field_933_a == null)
         {
+            super.mouseClicked(par1, par2, par3);
             return;
         }
-        if (message.length() > 0 && !message.endsWith(" "))
+
+        if (!(message.length() <= 0 || message.endsWith(" ")))
         {
             message += " ";
         }
+
         message += mc.ingameGUI.field_933_a;
         byte byte0 = 100;
+
         if (message.length() > byte0)
         {
             message = message.substring(0, byte0);
         }
-    }
-
-    static
-    {
-        allowedCharacters = ChatAllowedCharacters.allowedCharacters;
     }
 }

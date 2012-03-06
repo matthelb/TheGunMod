@@ -2,24 +2,24 @@ package net.minecraft.src;
 
 import java.util.Comparator;
 
-class SorterStatsBlock
-    implements Comparator
+class SorterStatsBlock implements Comparator
 {
     final GuiStats statsGUI;
     final GuiSlotStatsBlock slotStatsBlockGUI;
 
-    SorterStatsBlock(GuiSlotStatsBlock guislotstatsblock, GuiStats guistats)
+    SorterStatsBlock(GuiSlotStatsBlock par1GuiSlotStatsBlock, GuiStats par2GuiStats)
     {
-        slotStatsBlockGUI = guislotstatsblock;
-        statsGUI = guistats;
+        slotStatsBlockGUI = par1GuiSlotStatsBlock;
+        statsGUI = par2GuiStats;
     }
 
-    public int func_27297_a(StatCrafting statcrafting, StatCrafting statcrafting1)
+    public int func_27297_a(StatCrafting par1StatCrafting, StatCrafting par2StatCrafting)
     {
-        int i = statcrafting.func_25072_b();
-        int j = statcrafting1.func_25072_b();
+        int i = par1StatCrafting.getItemID();
+        int j = par2StatCrafting.getItemID();
         StatBase statbase = null;
         StatBase statbase1 = null;
+
         if (slotStatsBlockGUI.field_27271_e == 2)
         {
             statbase = StatList.mineBlockStatArray[i];
@@ -35,28 +35,33 @@ class SorterStatsBlock
             statbase = StatList.objectUseStats[i];
             statbase1 = StatList.objectUseStats[j];
         }
+
         if (statbase != null || statbase1 != null)
         {
             if (statbase == null)
             {
                 return 1;
             }
+
             if (statbase1 == null)
             {
                 return -1;
             }
+
             int k = GuiStats.getStatsFileWriter(slotStatsBlockGUI.field_27274_a).writeStat(statbase);
             int l = GuiStats.getStatsFileWriter(slotStatsBlockGUI.field_27274_a).writeStat(statbase1);
+
             if (k != l)
             {
                 return (k - l) * slotStatsBlockGUI.field_27270_f;
             }
         }
+
         return i - j;
     }
 
-    public int compare(Object obj, Object obj1)
+    public int compare(Object par1Obj, Object par2Obj)
     {
-        return func_27297_a((StatCrafting)obj, (StatCrafting)obj1);
+        return func_27297_a((StatCrafting)par1Obj, (StatCrafting)par2Obj);
     }
 }

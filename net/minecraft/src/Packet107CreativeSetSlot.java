@@ -11,31 +11,41 @@ public class Packet107CreativeSetSlot extends Packet
     {
     }
 
-    public Packet107CreativeSetSlot(int i, ItemStack itemstack)
+    public Packet107CreativeSetSlot(int par1, ItemStack par2ItemStack)
     {
-        slot = i;
-        itemStack = itemstack;
+        slot = par1;
+        itemStack = par2ItemStack;
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleCreativeSetSlot(this);
+        par1NetHandler.handleCreativeSetSlot(this);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        slot = datainputstream.readShort();
-        itemStack = readItemStack(datainputstream);
+        slot = par1DataInputStream.readShort();
+        itemStack = readItemStack(par1DataInputStream);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeShort(slot);
-        writeItemStack(itemStack, dataoutputstream);
+        par1DataOutputStream.writeShort(slot);
+        writeItemStack(itemStack, par1DataOutputStream);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 8;

@@ -2,22 +2,31 @@ package net.minecraft.src;
 
 public class EnchantmentArrowDamage extends Enchantment
 {
-    public EnchantmentArrowDamage(int i, int j)
+    public EnchantmentArrowDamage(int par1, int par2)
     {
-        super(i, j, EnumEnchantmentType.bow);
+        super(par1, par2, EnumEnchantmentType.bow);
         setName("arrowDamage");
     }
 
-    public int getMinEnchantability(int i)
+    /**
+     * Returns the minimal value of enchantability nedded on the enchantment level passed.
+     */
+    public int getMinEnchantability(int par1)
     {
-        return 1 + (i - 1) * 10;
+        return 1 + (par1 - 1) * 10;
     }
 
-    public int getMaxEnchantability(int i)
+    /**
+     * Returns the maximum value of enchantability nedded on the enchantment level passed.
+     */
+    public int getMaxEnchantability(int par1)
     {
-        return getMinEnchantability(i) + 15;
+        return getMinEnchantability(par1) + 15;
     }
 
+    /**
+     * Returns the maximum level that the enchantment can have.
+     */
     public int getMaxLevel()
     {
         return 5;

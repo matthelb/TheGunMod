@@ -6,19 +6,23 @@ public class StructureStrongholdPieces
 {
     private static final StructureStrongholdPieceWeight pieceWeightArray[];
     private static List structurePieceList;
-    private static Class field_40752_d;
+    private static Class strongComponentType;
     static int totalWeight = 0;
-    private static final StructureStrongholdStones field_35854_d = new StructureStrongholdStones(null);
+    private static final StructureStrongholdStones strongholdStones = new StructureStrongholdStones(null);
 
     public StructureStrongholdPieces()
     {
     }
 
+    /**
+     * 'sets up Arrays with the Structure pieces and their weights'
+     */
     public static void prepareStructurePieces()
     {
         structurePieceList = new ArrayList();
         StructureStrongholdPieceWeight astructurestrongholdpieceweight[] = pieceWeightArray;
         int i = astructurestrongholdpieceweight.length;
+
         for (int j = 0; j < i; j++)
         {
             StructureStrongholdPieceWeight structurestrongholdpieceweight = astructurestrongholdpieceweight[j];
@@ -26,77 +30,85 @@ public class StructureStrongholdPieces
             structurePieceList.add(structurestrongholdpieceweight);
         }
 
-        field_40752_d = null;
+        strongComponentType = null;
     }
 
     private static boolean canAddStructurePieces()
     {
         boolean flag = false;
         totalWeight = 0;
+
         for (Iterator iterator = structurePieceList.iterator(); iterator.hasNext();)
         {
             StructureStrongholdPieceWeight structurestrongholdpieceweight = (StructureStrongholdPieceWeight)iterator.next();
+
             if (structurestrongholdpieceweight.instancesLimit > 0 && structurestrongholdpieceweight.instancesSpawned < structurestrongholdpieceweight.instancesLimit)
             {
                 flag = true;
             }
+
             totalWeight += structurestrongholdpieceweight.pieceWeight;
         }
 
         return flag;
     }
 
-    private static ComponentStronghold getStrongholdComponentFromWeightedPiece(Class class1, List list, Random random, int i, int j, int k, int l, int i1)
+    /**
+     * 'translates the PieceWeight class to the Component class'
+     */
+    private static ComponentStronghold getStrongholdComponentFromWeightedPiece(Class par0Class, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
         Object obj = null;
-        if (class1 == (net.minecraft.src.ComponentStrongholdStraight.class))
+
+        if (par0Class == (net.minecraft.src.ComponentStrongholdStraight.class))
         {
-            obj = ComponentStrongholdStraight.func_35047_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdStraight.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdPrison.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdPrison.class))
         {
-            obj = ComponentStrongholdPrison.func_35063_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdPrison.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdLeftTurn.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdLeftTurn.class))
         {
-            obj = ComponentStrongholdLeftTurn.func_35045_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdLeftTurn.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdRightTurn.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdRightTurn.class))
         {
-            obj = ComponentStrongholdRightTurn.func_35045_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdRightTurn.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdRoomCrossing.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdRoomCrossing.class))
         {
-            obj = ComponentStrongholdRoomCrossing.func_35059_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdRoomCrossing.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdStairsStraight.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdStairsStraight.class))
         {
-            obj = ComponentStrongholdStairsStraight.func_35053_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdStairsStraight.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdStairs.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdStairs.class))
         {
-            obj = ComponentStrongholdStairs.getStrongholdStairsComponent(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdStairs.getStrongholdStairsComponent(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdCrossing.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdCrossing.class))
         {
-            obj = ComponentStrongholdCrossing.func_35039_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdCrossing.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdChestCorridor.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdChestCorridor.class))
         {
-            obj = ComponentStrongholdChestCorridor.func_40010_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdChestCorridor.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdLibrary.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdLibrary.class))
         {
-            obj = ComponentStrongholdLibrary.func_35055_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdLibrary.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        else if (class1 == (net.minecraft.src.ComponentStrongholdPortalRoom.class))
+        else if (par0Class == (net.minecraft.src.ComponentStrongholdPortalRoom.class))
         {
-            obj = ComponentStrongholdPortalRoom.func_40014_a(list, random, i, j, k, l, i1);
+            obj = ComponentStrongholdPortalRoom.findValidPlacement(par1List, par2Random, par3, par4, par5, par6, par7);
         }
-        return ((ComponentStronghold) (obj));
+
+        return ((ComponentStronghold)(obj));
     }
 
-    private static ComponentStronghold func_35847_b(ComponentStrongholdStairs2 var0, List var1, Random var2, int var3, int var4, int var5, int var6, int var7)
+    private static ComponentStronghold getNextComponent(ComponentStrongholdStairs2 par0ComponentStrongholdStairs2, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
         if (!canAddStructurePieces())
         {
@@ -104,10 +116,11 @@ public class StructureStrongholdPieces
         }
         else
         {
-            if (field_40752_d != null)
+            if (strongComponentType != null)
             {
-                ComponentStronghold var8 = getStrongholdComponentFromWeightedPiece(field_40752_d, var1, var2, var3, var4, var5, var6, var7);
-                field_40752_d = null;
+                ComponentStronghold var8 = getStrongholdComponentFromWeightedPiece(strongComponentType, par1List, par2Random, par3, par4, par5, par6, par7);
+                strongComponentType = null;
+
                 if (var8 != null)
                 {
                     return var8;
@@ -119,25 +132,28 @@ public class StructureStrongholdPieces
             while (var13 < 5)
             {
                 ++var13;
-                int var9 = var2.nextInt(totalWeight);
+                int var9 = par2Random.nextInt(totalWeight);
                 Iterator var10 = structurePieceList.iterator();
 
                 while (var10.hasNext())
                 {
                     StructureStrongholdPieceWeight var11 = (StructureStrongholdPieceWeight)var10.next();
                     var9 -= var11.pieceWeight;
+
                     if (var9 < 0)
                     {
-                        if (!var11.canSpawnMoreStructuresOfType(var7) || var11 == var0.field_35038_a)
+                        if (!var11.canSpawnMoreStructuresOfType(par7) || var11 == par0ComponentStrongholdStairs2.field_35038_a)
                         {
                             break;
                         }
 
-                        ComponentStronghold var12 = getStrongholdComponentFromWeightedPiece(var11.pieceClass, var1, var2, var3, var4, var5, var6, var7);
+                        ComponentStronghold var12 = getStrongholdComponentFromWeightedPiece(var11.pieceClass, par1List, par2Random, par3, par4, par5, par6, par7);
+
                         if (var12 != null)
                         {
                             ++var11.instancesSpawned;
-                            var0.field_35038_a = var11;
+                            par0ComponentStrongholdStairs2.field_35038_a = var11;
+
                             if (!var11.canSpawnMoreStructures())
                             {
                                 structurePieceList.remove(var11);
@@ -149,10 +165,11 @@ public class StructureStrongholdPieces
                 }
             }
 
-            StructureBoundingBox var14 = ComponentStrongholdCorridor.func_35051_a(var1, var2, var3, var4, var5, var6);
+            StructureBoundingBox var14 = ComponentStrongholdCorridor.func_35051_a(par1List, par2Random, par3, par4, par5, par6);
+
             if (var14 != null && var14.minY > 1)
             {
-                return new ComponentStrongholdCorridor(var7, var2, var14, var6);
+                return new ComponentStrongholdCorridor(par7, par2Random, var14, par6);
             }
             else
             {
@@ -161,38 +178,42 @@ public class StructureStrongholdPieces
         }
     }
 
-    private static StructureComponent func_35848_c(ComponentStrongholdStairs2 componentstrongholdstairs2, List list, Random random, int i, int j, int k, int l, int i1)
+    private static StructureComponent getNextValidComponent(ComponentStrongholdStairs2 par0ComponentStrongholdStairs2, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
-        if (i1 > 50)
+        if (par7 > 50)
         {
             return null;
         }
-        if (Math.abs(i - componentstrongholdstairs2.getBoundingBox().minX) > 112 || Math.abs(k - componentstrongholdstairs2.getBoundingBox().minZ) > 112)
+
+        if (Math.abs(par3 - par0ComponentStrongholdStairs2.getBoundingBox().minX) > 112 || Math.abs(par5 - par0ComponentStrongholdStairs2.getBoundingBox().minZ) > 112)
         {
             return null;
         }
-        ComponentStronghold componentstronghold = func_35847_b(componentstrongholdstairs2, list, random, i, j, k, l, i1 + 1);
+
+        ComponentStronghold componentstronghold = getNextComponent(par0ComponentStrongholdStairs2, par1List, par2Random, par3, par4, par5, par6, par7 + 1);
+
         if (componentstronghold != null)
         {
-            list.add(componentstronghold);
-            componentstrongholdstairs2.field_35037_b.add(componentstronghold);
+            par1List.add(componentstronghold);
+            par0ComponentStrongholdStairs2.field_35037_b.add(componentstronghold);
         }
+
         return componentstronghold;
     }
 
-    static StructureComponent func_35850_a(ComponentStrongholdStairs2 componentstrongholdstairs2, List list, Random random, int i, int j, int k, int l, int i1)
+    static StructureComponent getNextValidComponentAccess(ComponentStrongholdStairs2 par0ComponentStrongholdStairs2, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
-        return func_35848_c(componentstrongholdstairs2, list, random, i, j, k, l, i1);
+        return getNextValidComponent(par0ComponentStrongholdStairs2, par1List, par2Random, par3, par4, par5, par6, par7);
     }
 
-    static Class func_40751_a(Class class1)
+    static Class setComponentType(Class par0Class)
     {
-        return field_40752_d = class1;
+        return strongComponentType = par0Class;
     }
 
     static StructureStrongholdStones getStrongholdStones()
     {
-        return field_35854_d;
+        return strongholdStones;
     }
 
     static

@@ -5,31 +5,43 @@ import java.io.*;
 public class Packet38EntityStatus extends Packet
 {
     public int entityId;
+
+    /** 2 for hurt, 3 for dead */
     public byte entityStatus;
 
     public Packet38EntityStatus()
     {
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        entityStatus = datainputstream.readByte();
+        entityId = par1DataInputStream.readInt();
+        entityStatus = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        dataoutputstream.writeByte(entityStatus);
+        par1DataOutputStream.writeInt(entityId);
+        par1DataOutputStream.writeByte(entityStatus);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleEntityStatus(this);
+        par1NetHandler.handleEntityStatus(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 5;

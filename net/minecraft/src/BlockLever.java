@@ -4,156 +4,206 @@ import java.util.Random;
 
 public class BlockLever extends Block
 {
-    protected BlockLever(int i, int j)
+    protected BlockLever(int par1, int par2)
     {
-        super(i, j, Material.circuits);
+        super(par1, par2, Material.circuits);
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int i)
     {
         return null;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 12;
     }
 
-    public boolean canPlaceBlockOnSide(World world, int i, int j, int k, int l)
+    public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (l == 1 && world.isBlockNormalCube(i, j - 1, k))
+        if (par5 == 1 && par1World.isBlockNormalCube(par2, par3 - 1, par4))
         {
             return true;
         }
-        if (l == 2 && world.isBlockNormalCube(i, j, k + 1))
+
+        if (par5 == 2 && par1World.isBlockNormalCube(par2, par3, par4 + 1))
         {
             return true;
         }
-        if (l == 3 && world.isBlockNormalCube(i, j, k - 1))
+
+        if (par5 == 3 && par1World.isBlockNormalCube(par2, par3, par4 - 1))
         {
             return true;
         }
-        if (l == 4 && world.isBlockNormalCube(i + 1, j, k))
+
+        if (par5 == 4 && par1World.isBlockNormalCube(par2 + 1, par3, par4))
         {
             return true;
         }
-        return l == 5 && world.isBlockNormalCube(i - 1, j, k);
+
+        return par5 == 5 && par1World.isBlockNormalCube(par2 - 1, par3, par4);
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        if (world.isBlockNormalCube(i - 1, j, k))
+        if (par1World.isBlockNormalCube(par2 - 1, par3, par4))
         {
             return true;
         }
-        if (world.isBlockNormalCube(i + 1, j, k))
+
+        if (par1World.isBlockNormalCube(par2 + 1, par3, par4))
         {
             return true;
         }
-        if (world.isBlockNormalCube(i, j, k - 1))
+
+        if (par1World.isBlockNormalCube(par2, par3, par4 - 1))
         {
             return true;
         }
-        if (world.isBlockNormalCube(i, j, k + 1))
+
+        if (par1World.isBlockNormalCube(par2, par3, par4 + 1))
         {
             return true;
         }
-        return world.isBlockNormalCube(i, j - 1, k);
+
+        return par1World.isBlockNormalCube(par2, par3 - 1, par4);
     }
 
-    public void onBlockPlaced(World world, int i, int j, int k, int l)
+    /**
+     * Called when a block is placed using an item. Used often for taking the facing and figuring out how to position
+     * the item. Args: x, y, z, facing
+     */
+    public void onBlockPlaced(World par1World, int par2, int par3, int par4, int par5)
     {
-        int i1 = world.getBlockMetadata(i, j, k);
-        int j1 = i1 & 8;
-        i1 &= 7;
-        i1 = -1;
-        if (l == 1 && world.isBlockNormalCube(i, j - 1, k))
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = i & 8;
+        i &= 7;
+        i = -1;
+
+        if (par5 == 1 && par1World.isBlockNormalCube(par2, par3 - 1, par4))
         {
-            i1 = 5 + world.rand.nextInt(2);
+            i = 5 + par1World.rand.nextInt(2);
         }
-        if (l == 2 && world.isBlockNormalCube(i, j, k + 1))
+
+        if (par5 == 2 && par1World.isBlockNormalCube(par2, par3, par4 + 1))
         {
-            i1 = 4;
+            i = 4;
         }
-        if (l == 3 && world.isBlockNormalCube(i, j, k - 1))
+
+        if (par5 == 3 && par1World.isBlockNormalCube(par2, par3, par4 - 1))
         {
-            i1 = 3;
+            i = 3;
         }
-        if (l == 4 && world.isBlockNormalCube(i + 1, j, k))
+
+        if (par5 == 4 && par1World.isBlockNormalCube(par2 + 1, par3, par4))
         {
-            i1 = 2;
+            i = 2;
         }
-        if (l == 5 && world.isBlockNormalCube(i - 1, j, k))
+
+        if (par5 == 5 && par1World.isBlockNormalCube(par2 - 1, par3, par4))
         {
-            i1 = 1;
+            i = 1;
         }
-        if (i1 == -1)
+
+        if (i == -1)
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-            world.setBlockWithNotify(i, j, k, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
             return;
         }
         else
         {
-            world.setBlockMetadataWithNotify(i, j, k, i1 + j1);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, i + j);
             return;
         }
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (checkIfAttachedToBlock(world, i, j, k))
+        if (checkIfAttachedToBlock(par1World, par2, par3, par4))
         {
-            int i1 = world.getBlockMetadata(i, j, k) & 7;
+            int i = par1World.getBlockMetadata(par2, par3, par4) & 7;
             boolean flag = false;
-            if (!world.isBlockNormalCube(i - 1, j, k) && i1 == 1)
+
+            if (!par1World.isBlockNormalCube(par2 - 1, par3, par4) && i == 1)
             {
                 flag = true;
             }
-            if (!world.isBlockNormalCube(i + 1, j, k) && i1 == 2)
+
+            if (!par1World.isBlockNormalCube(par2 + 1, par3, par4) && i == 2)
             {
                 flag = true;
             }
-            if (!world.isBlockNormalCube(i, j, k - 1) && i1 == 3)
+
+            if (!par1World.isBlockNormalCube(par2, par3, par4 - 1) && i == 3)
             {
                 flag = true;
             }
-            if (!world.isBlockNormalCube(i, j, k + 1) && i1 == 4)
+
+            if (!par1World.isBlockNormalCube(par2, par3, par4 + 1) && i == 4)
             {
                 flag = true;
             }
-            if (!world.isBlockNormalCube(i, j - 1, k) && i1 == 5)
+
+            if (!par1World.isBlockNormalCube(par2, par3 - 1, par4) && i == 5)
             {
                 flag = true;
             }
-            if (!world.isBlockNormalCube(i, j - 1, k) && i1 == 6)
+
+            if (!par1World.isBlockNormalCube(par2, par3 - 1, par4) && i == 6)
             {
                 flag = true;
             }
+
             if (flag)
             {
-                dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-                world.setBlockWithNotify(i, j, k, 0);
+                dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+                par1World.setBlockWithNotify(par2, par3, par4, 0);
             }
         }
     }
 
-    private boolean checkIfAttachedToBlock(World world, int i, int j, int k)
+    /**
+     * Checks if the block is attached to another block. If it is not, it returns false and drops the block as an item.
+     * If it is it returns true.
+     */
+    private boolean checkIfAttachedToBlock(World par1World, int par2, int par3, int par4)
     {
-        if (!canPlaceBlockAt(world, i, j, k))
+        if (!canPlaceBlockAt(par1World, par2, par3, par4))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-            world.setBlockWithNotify(i, j, k, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
             return false;
         }
         else
@@ -162,23 +212,27 @@ public class BlockLever extends Block
         }
     }
 
-    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        int l = iblockaccess.getBlockMetadata(i, j, k) & 7;
+        int i = par1IBlockAccess.getBlockMetadata(par2, par3, par4) & 7;
         float f = 0.1875F;
-        if (l == 1)
+
+        if (i == 1)
         {
             setBlockBounds(0.0F, 0.2F, 0.5F - f, f * 2.0F, 0.8F, 0.5F + f);
         }
-        else if (l == 2)
+        else if (i == 2)
         {
             setBlockBounds(1.0F - f * 2.0F, 0.2F, 0.5F - f, 1.0F, 0.8F, 0.5F + f);
         }
-        else if (l == 3)
+        else if (i == 3)
         {
             setBlockBounds(0.5F - f, 0.2F, 0.0F, 0.5F + f, 0.8F, f * 2.0F);
         }
-        else if (l == 4)
+        else if (i == 4)
         {
             setBlockBounds(0.5F - f, 0.2F, 1.0F - f * 2.0F, 0.5F + f, 0.8F, 1.0F);
         }
@@ -189,114 +243,147 @@ public class BlockLever extends Block
         }
     }
 
-    public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called when the block is clicked by a player. Args: x, y, z, entityPlayer
+     */
+    public void onBlockClicked(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        blockActivated(world, i, j, k, entityplayer);
+        blockActivated(par1World, par2, par3, par4, par5EntityPlayer);
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return true;
         }
-        int l = world.getBlockMetadata(i, j, k);
-        int i1 = l & 7;
-        int j1 = 8 - (l & 8);
-        world.setBlockMetadataWithNotify(i, j, k, i1 + j1);
-        world.markBlocksDirty(i, j, k, i, j, k);
-        world.playSoundEffect((double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D, "random.click", 0.3F, j1 <= 0 ? 0.5F : 0.6F);
-        world.notifyBlocksOfNeighborChange(i, j, k, blockID);
-        if (i1 == 1)
+
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = i & 7;
+        int k = 8 - (i & 8);
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, j + k);
+        par1World.markBlocksDirty(par2, par3, par4, par2, par3, par4);
+        par1World.playSoundEffect((double)par2 + 0.5D, (double)par3 + 0.5D, (double)par4 + 0.5D, "random.click", 0.3F, k <= 0 ? 0.5F : 0.6F);
+        par1World.notifyBlocksOfNeighborChange(par2, par3, par4, blockID);
+
+        if (j == 1)
         {
-            world.notifyBlocksOfNeighborChange(i - 1, j, k, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
         }
-        else if (i1 == 2)
+        else if (j == 2)
         {
-            world.notifyBlocksOfNeighborChange(i + 1, j, k, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
         }
-        else if (i1 == 3)
+        else if (j == 3)
         {
-            world.notifyBlocksOfNeighborChange(i, j, k - 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
         }
-        else if (i1 == 4)
+        else if (j == 4)
         {
-            world.notifyBlocksOfNeighborChange(i, j, k + 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
         }
         else
         {
-            world.notifyBlocksOfNeighborChange(i, j - 1, k, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
         }
+
         return true;
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        if ((l & 8) > 0)
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+
+        if ((i & 8) > 0)
         {
-            world.notifyBlocksOfNeighborChange(i, j, k, blockID);
-            int i1 = l & 7;
-            if (i1 == 1)
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4, blockID);
+            int j = i & 7;
+
+            if (j == 1)
             {
-                world.notifyBlocksOfNeighborChange(i - 1, j, k, blockID);
+                par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
             }
-            else if (i1 == 2)
+            else if (j == 2)
             {
-                world.notifyBlocksOfNeighborChange(i + 1, j, k, blockID);
+                par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
             }
-            else if (i1 == 3)
+            else if (j == 3)
             {
-                world.notifyBlocksOfNeighborChange(i, j, k - 1, blockID);
+                par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
             }
-            else if (i1 == 4)
+            else if (j == 4)
             {
-                world.notifyBlocksOfNeighborChange(i, j, k + 1, blockID);
+                par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
             }
             else
             {
-                world.notifyBlocksOfNeighborChange(i, j - 1, k, blockID);
+                par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
             }
         }
-        super.onBlockRemoval(world, i, j, k);
+
+        super.onBlockRemoval(par1World, par2, par3, par4);
     }
 
-    public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Is this block powering the block on the specified side
+     */
+    public boolean isPoweringTo(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
-        return (iblockaccess.getBlockMetadata(i, j, k) & 8) > 0;
+        return (par1IBlockAccess.getBlockMetadata(par2, par3, par4) & 8) > 0;
     }
 
-    public boolean isIndirectlyPoweringTo(World world, int i, int j, int k, int l)
+    /**
+     * Is this block indirectly powering the block on the specified side
+     */
+    public boolean isIndirectlyPoweringTo(World par1World, int par2, int par3, int par4, int par5)
     {
-        int i1 = world.getBlockMetadata(i, j, k);
-        if ((i1 & 8) == 0)
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+
+        if ((i & 8) == 0)
         {
             return false;
         }
-        int j1 = i1 & 7;
-        if (j1 == 6 && l == 1)
+
+        int j = i & 7;
+
+        if (j == 6 && par5 == 1)
         {
             return true;
         }
-        if (j1 == 5 && l == 1)
+
+        if (j == 5 && par5 == 1)
         {
             return true;
         }
-        if (j1 == 4 && l == 2)
+
+        if (j == 4 && par5 == 2)
         {
             return true;
         }
-        if (j1 == 3 && l == 3)
+
+        if (j == 3 && par5 == 3)
         {
             return true;
         }
-        if (j1 == 2 && l == 4)
+
+        if (j == 2 && par5 == 4)
         {
             return true;
         }
-        return j1 == 1 && l == 5;
+
+        return j == 1 && par5 == 5;
     }
 
+    /**
+     * Can this block provide power. Only wire currently seems to have this change based on its state.
+     */
     public boolean canProvidePower()
     {
         return true;

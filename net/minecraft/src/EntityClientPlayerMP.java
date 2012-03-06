@@ -5,6 +5,10 @@ import net.minecraft.client.Minecraft;
 public class EntityClientPlayerMP extends EntityPlayerSP
 {
     public NetClientHandler sendQueue;
+
+    /**
+     * Tick counter that resets every 20 ticks, used for sending inventory updates
+     */
     private int inventoryUpdateTickCounter;
     private boolean field_21093_bH;
     private double oldPosX;
@@ -18,30 +22,39 @@ public class EntityClientPlayerMP extends EntityPlayerSP
     private boolean wasSneaking;
     private int field_12242_bI;
 
-    public EntityClientPlayerMP(Minecraft minecraft, World world, Session session, NetClientHandler netclienthandler)
+    public EntityClientPlayerMP(Minecraft par1Minecraft, World par2World, Session par3Session, NetClientHandler par4NetClientHandler)
     {
-        super(minecraft, world, session, 0);
+        super(par1Minecraft, par2World, par3Session, 0);
         inventoryUpdateTickCounter = 0;
         field_21093_bH = false;
         field_9382_bF = false;
         field_35227_cs = false;
         wasSneaking = false;
         field_12242_bI = 0;
-        sendQueue = netclienthandler;
+        sendQueue = par4NetClientHandler;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         return false;
     }
 
+    /**
+     * Heal living entity (param: amount of half-hearts)
+     */
     public void heal(int i)
     {
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
-        if (!worldObj.blockExists(MathHelper.floor_double(posX), worldObj.worldHeight / 2, MathHelper.floor_double(posZ)))
+        if (!worldObj.blockExists(MathHelper.floor_double(posX), 0, MathHelper.floor_double(posZ)))
         {
             return;
         }
@@ -60,7 +73,9 @@ public class EntityClientPlayerMP extends EntityPlayerSP
             sendInventoryChanged();
             inventoryUpdateTickCounter = 0;
         }
+
         boolean flag = isSprinting();
+
         if (flag != wasSneaking)
         {
             if (flag)
@@ -71,9 +86,12 @@ public class EntityClientPlayerMP extends EntityPlayerSP
             {
                 sendQueue.addToSendQueue(new Packet19EntityAction(this, 5));
             }
+
             wasSneaking = flag;
         }
+
         boolean flag1 = isSneaking();
+
         if (flag1 != field_35227_cs)
         {
             if (flag1)
@@ -84,8 +102,10 @@ public class EntityClientPlayerMP extends EntityPlayerSP
             {
                 sendQueue.addToSendQueue(new Packet19EntityAction(this, 2));
             }
+
             field_35227_cs = flag1;
         }
+
         double d = posX - oldPosX;
         double d1 = boundingBox.minY - field_9378_bz;
         double d2 = posY - oldPosY;
@@ -94,6 +114,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         double d5 = rotationPitch - oldRotationPitch;
         boolean flag2 = d1 != 0.0D || d2 != 0.0D || d != 0.0D || d3 != 0.0D;
         boolean flag3 = d4 != 0.0D || d5 != 0.0D;
+
         if (ridingEntity != null)
         {
             if (flag3)
@@ -104,6 +125,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
             {
                 sendQueue.addToSendQueue(new Packet13PlayerLookMove(motionX, -999D, -999D, motionZ, rotationYaw, rotationPitch, onGround));
             }
+
             flag2 = false;
         }
         else if (flag2 && flag3)
@@ -124,6 +146,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         else
         {
             sendQueue.addToSendQueue(new Packet10Flying(onGround));
+
             if (field_9382_bF != onGround || field_12242_bI > 200)
             {
                 field_12242_bI = 0;
@@ -133,7 +156,9 @@ public class EntityClientPlayerMP extends EntityPlayerSP
                 field_12242_bI++;
             }
         }
+
         field_9382_bF = onGround;
+
         if (flag2)
         {
             oldPosX = posX;
@@ -141,6 +166,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
             oldPosY = posY;
             oldPosZ = posZ;
         }
+
         if (flag3)
         {
             oldRotationYaw = rotationYaw;
@@ -148,24 +174,37 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         }
     }
 
-    public void dropCurrentItem()
+    public EntityItem func_48152_as()
     {
         sendQueue.addToSendQueue(new Packet14BlockDig(4, 0, 0, 0, 0));
+        return null;
     }
 
+    /**
+     * Send a inventory changed message to the server if the current inventory has been modified.
+     */
     public void sendInventoryChanged()
     {
     }
 
+    /**
+     * Joins the passed in entity item with the world. Args: entityItem
+     */
     protected void joinEntityItemWithWorld(EntityItem entityitem)
     {
     }
 
-    public void sendChatMessage(String s)
+    /**
+     * Sends a chat message from the player. Args: chatMessage
+     */
+    public void sendChatMessage(String par1Str)
     {
-        sendQueue.addToSendQueue(new Packet3Chat(s));
+        sendQueue.addToSendQueue(new Packet3Chat(par1Str));
     }
 
+    /**
+     * Swings the item the player is holding.
+     */
     public void swingItem()
     {
         super.swingItem();
@@ -175,14 +214,21 @@ public class EntityClientPlayerMP extends EntityPlayerSP
     public void respawnPlayer()
     {
         sendInventoryChanged();
-        sendQueue.addToSendQueue(new Packet9Respawn((byte)dimension, (byte)worldObj.difficultySetting, worldObj.getSeed(), worldObj.getWorldInfo().getTerrainType(), worldObj.worldHeight, 0));
+        sendQueue.addToSendQueue(new Packet9Respawn(dimension, (byte)worldObj.difficultySetting, worldObj.getWorldInfo().getTerrainType(), worldObj.func_48453_b(), 0));
     }
 
-    protected void damageEntity(DamageSource damagesource, int i)
+    /**
+     * Deals damage to the entity. If its a EntityPlayer then will take damage from the armor first and then health
+     * second with the reduced value. Args: damageAmount
+     */
+    protected void damageEntity(DamageSource par1DamageSource, int par2)
     {
-        setEntityHealth(getEntityHealth() - i);
+        setEntityHealth(getEntityHealth() - par2);
     }
 
+    /**
+     * sets current screen to null (used on escape buttons of GUIs)
+     */
     public void closeScreen()
     {
         sendQueue.addToSendQueue(new Packet101CloseWindow(craftingInventory.windowId));
@@ -190,40 +236,51 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         super.closeScreen();
     }
 
-    public void setHealth(int i)
+    /**
+     * Updates health locally.
+     */
+    public void setHealth(int par1)
     {
         if (field_21093_bH)
         {
-            super.setHealth(i);
+            super.setHealth(par1);
         }
         else
         {
-            setEntityHealth(i);
+            setEntityHealth(par1);
             field_21093_bH = true;
         }
     }
 
-    public void addStat(StatBase statbase, int i)
+    /**
+     * Adds a value to a statistic field.
+     */
+    public void addStat(StatBase par1StatBase, int par2)
     {
-        if (statbase == null)
+        if (par1StatBase == null)
         {
             return;
         }
-        if (statbase.isIndependent)
+
+        if (par1StatBase.isIndependent)
         {
-            super.addStat(statbase, i);
+            super.addStat(par1StatBase, par2);
         }
     }
 
-    public void incrementStat(StatBase statbase, int i)
+    /**
+     * Used by NetClientHandler.handleStatistic
+     */
+    public void incrementStat(StatBase par1StatBase, int par2)
     {
-        if (statbase == null)
+        if (par1StatBase == null)
         {
             return;
         }
-        if (!statbase.isIndependent)
+
+        if (!par1StatBase.isIndependent)
         {
-            super.addStat(statbase, i);
+            super.addStat(par1StatBase, par2);
         }
     }
 }

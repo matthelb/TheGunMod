@@ -6,9 +6,14 @@ import java.util.*;
 
 public class StatBase
 {
+    /** The Stat ID */
     public final int statId;
+
+    /** The Stat name */
     private final String statName;
     public boolean isIndependent;
+
+    /** Holds the GUID of the stat. */
     public String statGuid;
     private final IStatType type;
     private static NumberFormat numberFormat;
@@ -17,25 +22,32 @@ public class StatBase
     public static IStatType timeStatType = new StatTypeTime();
     public static IStatType distanceStatType = new StatTypeDistance();
 
-    public StatBase(int i, String s, IStatType istattype)
+    public StatBase(int par1, String par2Str, IStatType par3IStatType)
     {
         isIndependent = false;
-        statId = i;
-        statName = s;
-        type = istattype;
+        statId = par1;
+        statName = par2Str;
+        type = par3IStatType;
     }
 
-    public StatBase(int i, String s)
+    public StatBase(int par1, String par2Str)
     {
-        this(i, s, simpleStatType);
+        this(par1, par2Str, simpleStatType);
     }
 
+    /**
+     * Initializes the current stat as independent (i.e., lacking prerequisites for being updated) and returns the
+     * current instance.
+     */
     public StatBase initIndependentStat()
     {
         isIndependent = true;
         return this;
     }
 
+    /**
+     * Register the stat into StatList.
+     */
     public StatBase registerStat()
     {
         if (StatList.oneShotStats.containsKey(Integer.valueOf(statId)))
@@ -44,24 +56,27 @@ public class StatBase
         }
         else
         {
-            StatList.field_25188_a.add(this);
+            StatList.allStats.add(this);
             StatList.oneShotStats.put(Integer.valueOf(statId), this);
             statGuid = AchievementMap.getGuid(statId);
             return this;
         }
     }
 
+    /**
+     * Returns whether or not the StatBase-derived class is a statistic (running counter) or an achievement (one-shot).
+     */
     public boolean isAchievement()
     {
         return false;
     }
 
-    public String func_27084_a(int i)
+    public String func_27084_a(int par1)
     {
-        return type.format(i);
+        return type.format(par1);
     }
 
-    public String func_44020_i()
+    public String getName()
     {
         return statName;
     }

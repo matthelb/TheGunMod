@@ -2,33 +2,46 @@ package net.minecraft.src;
 
 public class EnchantmentLootBonus extends Enchantment
 {
-    protected EnchantmentLootBonus(int i, int j, EnumEnchantmentType enumenchantmenttype)
+    protected EnchantmentLootBonus(int par1, int par2, EnumEnchantmentType par3EnumEnchantmentType)
     {
-        super(i, j, enumenchantmenttype);
+        super(par1, par2, par3EnumEnchantmentType);
         setName("lootBonus");
-        if (enumenchantmenttype == EnumEnchantmentType.digger)
+
+        if (par3EnumEnchantmentType == EnumEnchantmentType.digger)
         {
             setName("lootBonusDigger");
         }
     }
 
-    public int getMinEnchantability(int i)
+    /**
+     * Returns the minimal value of enchantability nedded on the enchantment level passed.
+     */
+    public int getMinEnchantability(int par1)
     {
-        return 20 + (i - 1) * 12;
+        return 20 + (par1 - 1) * 12;
     }
 
-    public int getMaxEnchantability(int i)
+    /**
+     * Returns the maximum value of enchantability nedded on the enchantment level passed.
+     */
+    public int getMaxEnchantability(int par1)
     {
-        return super.getMinEnchantability(i) + 50;
+        return super.getMinEnchantability(par1) + 50;
     }
 
+    /**
+     * Returns the maximum level that the enchantment can have.
+     */
     public int getMaxLevel()
     {
         return 3;
     }
 
-    public boolean canApplyTogether(Enchantment enchantment)
+    /**
+     * Determines if the enchantment passed can be applyied together with this enchantment.
+     */
+    public boolean canApplyTogether(Enchantment par1Enchantment)
     {
-        return super.canApplyTogether(enchantment) && enchantment.effectId != silkTouch.effectId;
+        return super.canApplyTogether(par1Enchantment) && par1Enchantment.effectId != silkTouch.effectId;
     }
 }

@@ -3,25 +3,25 @@ package net.minecraft.src;
 import java.util.List;
 import java.util.Random;
 
-public class ChunkProviderFlat
-    implements IChunkProvider
+public class ChunkProviderFlat implements IChunkProvider
 {
     private World worldObj;
     private Random random;
     private final boolean useStructures;
     private MapGenVillage villageGen;
 
-    public ChunkProviderFlat(World world, long l, boolean flag)
+    public ChunkProviderFlat(World par1World, long par2, boolean par4)
     {
         villageGen = new MapGenVillage(1);
-        worldObj = world;
-        useStructures = flag;
-        random = new Random(l);
+        worldObj = par1World;
+        useStructures = par4;
+        random = new Random(par2);
     }
 
-    private void generate(byte abyte0[])
+    private void generate(byte par1ArrayOfByte[])
     {
-        int i = abyte0.length / 256;
+        int i = par1ArrayOfByte.length / 256;
+
         for (int j = 0; j < 16; j++)
         {
             for (int k = 0; k < 16; k++)
@@ -29,6 +29,7 @@ public class ChunkProviderFlat
                 for (int l = 0; l < i; l++)
                 {
                     int i1 = 0;
+
                     if (l == 0)
                     {
                         i1 = Block.bedrock.blockID;
@@ -41,86 +42,119 @@ public class ChunkProviderFlat
                     {
                         i1 = Block.grass.blockID;
                     }
-                    abyte0[j << 11 | k << 7 | l] = (byte)i1;
+
+                    par1ArrayOfByte[j << 11 | k << 7 | l] = (byte)i1;
                 }
             }
         }
     }
 
-    public Chunk loadChunk(int i, int j)
+    /**
+     * Creates an empty chunk ready to put data from the server in
+     */
+    public Chunk loadChunk(int par1, int par2)
     {
-        return provideChunk(i, j);
+        return provideChunk(par1, par2);
     }
 
-    public Chunk provideChunk(int i, int j)
+    /**
+     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
+     * specified chunk from the map seed and chunk seed
+     */
+    public Chunk provideChunk(int par1, int par2)
     {
-        byte abyte0[] = new byte[16 * worldObj.worldHeight * 16];
-        Chunk chunk = new Chunk(worldObj, abyte0, i, j);
+        byte abyte0[] = new byte[32768];
         generate(abyte0);
+        Chunk chunk = new Chunk(worldObj, abyte0, par1, par2);
+
         if (useStructures)
         {
-            villageGen.generate(this, worldObj, i, j, abyte0);
+            villageGen.generate(this, worldObj, par1, par2, abyte0);
         }
+
         chunk.generateSkylightMap();
         return chunk;
     }
 
-    public boolean chunkExists(int i, int j)
+    /**
+     * Checks to see if a chunk exists at x, y
+     */
+    public boolean chunkExists(int par1, int par2)
     {
         return true;
     }
 
-    public void populate(IChunkProvider ichunkprovider, int i, int j)
+    /**
+     * Populates chunk with ores etc etc
+     */
+    public void populate(IChunkProvider par1IChunkProvider, int par2, int par3)
     {
         random.setSeed(worldObj.getSeed());
         long l = (random.nextLong() / 2L) * 2L + 1L;
         long l1 = (random.nextLong() / 2L) * 2L + 1L;
-        random.setSeed((long)i * l + (long)j * l1 ^ worldObj.getSeed());
+        random.setSeed((long)par2 * l + (long)par3 * l1 ^ worldObj.getSeed());
+
         if (useStructures)
         {
-            villageGen.generateStructuresInChunk(worldObj, random, i, j);
+            villageGen.generateStructuresInChunk(worldObj, random, par2, par3);
         }
     }
 
-    public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate)
+    /**
+     * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
+     * Return true if all chunks have been saved.
+     */
+    public boolean saveChunks(boolean par1, IProgressUpdate par2IProgressUpdate)
     {
         return true;
     }
 
+    /**
+     * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
+     * is always empty and will not remove any chunks.
+     */
     public boolean unload100OldestChunks()
     {
         return false;
     }
 
+    /**
+     * Returns if the IChunkProvider supports saving.
+     */
     public boolean canSave()
     {
         return true;
     }
 
+    /**
+     * Converts the instance data to a readable string.
+     */
     public String makeString()
     {
         return "FlatLevelSource";
     }
 
-    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    /**
+     * Returns a list of creatures of the specified type that can spawn at the given location.
+     */
+    public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int par4)
     {
-        WorldChunkManager worldchunkmanager = worldObj.getWorldChunkManager();
-        if (worldchunkmanager == null)
-        {
-            return null;
-        }
-        BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAtChunkCoord(new ChunkCoordIntPair(i >> 4, k >> 4));
+        BiomeGenBase biomegenbase = worldObj.func_48454_a(par2, par4);
+
         if (biomegenbase == null)
         {
             return null;
         }
         else
         {
-            return biomegenbase.getSpawnableList(enumcreaturetype);
+            return biomegenbase.getSpawnableList(par1EnumCreatureType);
         }
     }
 
-    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
+    /**
+     * Returns the location of the closest structure of the specified type. If not found returns null.
+     */
+    public ChunkPosition findClosestStructure(World par1World, String par2Str, int par3, int i, int j)
     {
         return null;
     }

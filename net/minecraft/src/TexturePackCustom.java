@@ -10,34 +10,43 @@ import org.lwjgl.opengl.GL11;
 public class TexturePackCustom extends TexturePackBase
 {
     private ZipFile texturePackZipFile;
+
+    /**
+     * The allocated OpenGL texture name for this texture pack, or -1 if it hasn't been allocated yet.
+     */
     private int texturePackName;
     private BufferedImage texturePackThumbnail;
     private File texturePackFile;
 
-    public TexturePackCustom(File file)
+    public TexturePackCustom(File par1File)
     {
         texturePackName = -1;
-        texturePackFileName = file.getName();
-        texturePackFile = file;
+        texturePackFileName = par1File.getName();
+        texturePackFile = par1File;
     }
 
-    private String truncateString(String s)
+    /**
+     * Truncates the specified string to 34 characters in length and returns it.
+     */
+    private String truncateString(String par1Str)
     {
-        if (s != null && s.length() > 34)
+        if (par1Str != null && par1Str.length() > 34)
         {
-            s = s.substring(0, 34);
+            par1Str = par1Str.substring(0, 34);
         }
-        return s;
+
+        return par1Str;
     }
 
-    public void func_6485_a(Minecraft minecraft)
-    throws IOException
+    public void func_6485_a(Minecraft par1Minecraft) throws IOException
     {
         ZipFile zipfile = null;
         InputStream inputstream = null;
+
         try
         {
             zipfile = new ZipFile(texturePackFile);
+
             try
             {
                 inputstream = zipfile.getInputStream(zipfile.getEntry("pack.txt"));
@@ -48,6 +57,7 @@ public class TexturePackCustom extends TexturePackBase
                 inputstream.close();
             }
             catch (Exception exception) { }
+
             try
             {
                 inputstream = zipfile.getInputStream(zipfile.getEntry("pack.png"));
@@ -55,6 +65,7 @@ public class TexturePackCustom extends TexturePackBase
                 inputstream.close();
             }
             catch (Exception exception1) { }
+
             zipfile.close();
         }
         catch (Exception exception2)
@@ -68,6 +79,7 @@ public class TexturePackCustom extends TexturePackBase
                 inputstream.close();
             }
             catch (Exception exception4) { }
+
             try
             {
                 zipfile.close();
@@ -76,28 +88,36 @@ public class TexturePackCustom extends TexturePackBase
         }
     }
 
-    public void func_6484_b(Minecraft minecraft)
+    /**
+     * Unbinds the thumbnail texture for texture pack screen
+     */
+    public void unbindThumbnailTexture(Minecraft par1Minecraft)
     {
         if (texturePackThumbnail != null)
         {
-            minecraft.renderEngine.deleteTexture(texturePackName);
+            par1Minecraft.renderEngine.deleteTexture(texturePackName);
         }
+
         closeTexturePackFile();
     }
 
-    public void bindThumbnailTexture(Minecraft minecraft)
+    /**
+     * binds the texture corresponding to the pack's thumbnail image
+     */
+    public void bindThumbnailTexture(Minecraft par1Minecraft)
     {
         if (texturePackThumbnail != null && texturePackName < 0)
         {
-            texturePackName = minecraft.renderEngine.allocateAndSetupTexture(texturePackThumbnail);
+            texturePackName = par1Minecraft.renderEngine.allocateAndSetupTexture(texturePackThumbnail);
         }
+
         if (texturePackThumbnail != null)
         {
-            minecraft.renderEngine.bindTexture(texturePackName);
+            par1Minecraft.renderEngine.bindTexture(texturePackName);
         }
         else
         {
-            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, minecraft.renderEngine.getTexture("/gui/unknown_pack.png"));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1Minecraft.renderEngine.getTexture("/gui/unknown_pack.png"));
         }
     }
 
@@ -110,6 +130,9 @@ public class TexturePackCustom extends TexturePackBase
         catch (Exception exception) { }
     }
 
+    /**
+     * Closes the zipfile associated to this texture pack. Does nothing for the default texture pack.
+     */
     public void closeTexturePackFile()
     {
         try
@@ -117,20 +140,26 @@ public class TexturePackCustom extends TexturePackBase
             texturePackZipFile.close();
         }
         catch (Exception exception) { }
+
         texturePackZipFile = null;
     }
 
-    public InputStream getResourceAsStream(String s)
+    /**
+     * Gives a texture resource as InputStream.
+     */
+    public InputStream getResourceAsStream(String par1Str)
     {
         try
         {
-            java.util.zip.ZipEntry zipentry = texturePackZipFile.getEntry(s.substring(1));
+            java.util.zip.ZipEntry zipentry = texturePackZipFile.getEntry(par1Str.substring(1));
+
             if (zipentry != null)
             {
                 return texturePackZipFile.getInputStream(zipentry);
             }
         }
         catch (Exception exception) { }
-        return (net.minecraft.src.TexturePackBase.class).getResourceAsStream(s);
+
+        return (net.minecraft.src.TexturePackBase.class).getResourceAsStream(par1Str);
     }
 }

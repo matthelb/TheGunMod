@@ -8,6 +8,7 @@ public class ModelBlaze extends ModelBase
     public ModelBlaze()
     {
         field_40323_a = new ModelRenderer[12];
+
         for (int i = 0; i < field_40323_a.length; i++)
         {
             field_40323_a[i] = new ModelRenderer(this, 0, 16);
@@ -23,46 +24,56 @@ public class ModelBlaze extends ModelBase
         return 8;
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles then renders the model.
+     */
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        setRotationAngles(f, f1, f2, f3, f4, f5);
-        field_40322_b.render(f5);
+        setRotationAngles(par2, par3, par4, par5, par6, par7);
+        field_40322_b.render(par7);
+
         for (int i = 0; i < field_40323_a.length; i++)
         {
-            field_40323_a[i].render(f5);
+            field_40323_a[i].render(par7);
         }
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
-        float f6 = f2 * 3.141593F * -0.1F;
+        float f = par3 * (float)Math.PI * -0.1F;
+
         for (int i = 0; i < 4; i++)
         {
-            field_40323_a[i].rotationPointY = -2F + MathHelper.cos(((float)(i * 2) + f2) * 0.25F);
-            field_40323_a[i].rotationPointX = MathHelper.cos(f6) * 9F;
-            field_40323_a[i].rotationPointZ = MathHelper.sin(f6) * 9F;
-            f6 += 1.570796F;
+            field_40323_a[i].rotationPointY = -2F + MathHelper.cos(((float)(i * 2) + par3) * 0.25F);
+            field_40323_a[i].rotationPointX = MathHelper.cos(f) * 9F;
+            field_40323_a[i].rotationPointZ = MathHelper.sin(f) * 9F;
+            f += ((float)Math.PI / 2F);
         }
 
-        f6 = 0.7853982F + f2 * 3.141593F * 0.03F;
+        f = ((float)Math.PI / 4F) + par3 * (float)Math.PI * 0.03F;
+
         for (int j = 4; j < 8; j++)
         {
-            field_40323_a[j].rotationPointY = 2.0F + MathHelper.cos(((float)(j * 2) + f2) * 0.25F);
-            field_40323_a[j].rotationPointX = MathHelper.cos(f6) * 7F;
-            field_40323_a[j].rotationPointZ = MathHelper.sin(f6) * 7F;
-            f6 += 1.570796F;
+            field_40323_a[j].rotationPointY = 2.0F + MathHelper.cos(((float)(j * 2) + par3) * 0.25F);
+            field_40323_a[j].rotationPointX = MathHelper.cos(f) * 7F;
+            field_40323_a[j].rotationPointZ = MathHelper.sin(f) * 7F;
+            f += ((float)Math.PI / 2F);
         }
 
-        f6 = 0.4712389F + f2 * 3.141593F * -0.05F;
+        f = 0.4712389F + par3 * (float)Math.PI * -0.05F;
+
         for (int k = 8; k < 12; k++)
         {
-            field_40323_a[k].rotationPointY = 11F + MathHelper.cos(((float)k * 1.5F + f2) * 0.5F);
-            field_40323_a[k].rotationPointX = MathHelper.cos(f6) * 5F;
-            field_40323_a[k].rotationPointZ = MathHelper.sin(f6) * 5F;
-            f6 += 1.570796F;
+            field_40323_a[k].rotationPointY = 11F + MathHelper.cos(((float)k * 1.5F + par3) * 0.5F);
+            field_40323_a[k].rotationPointX = MathHelper.cos(f) * 5F;
+            field_40323_a[k].rotationPointZ = MathHelper.sin(f) * 5F;
+            f += ((float)Math.PI / 2F);
         }
 
-        field_40322_b.rotateAngleY = f3 / 57.29578F;
-        field_40322_b.rotateAngleX = f4 / 57.29578F;
+        field_40322_b.rotateAngleY = par4 / (180F / (float)Math.PI);
+        field_40322_b.rotateAngleX = par5 / (180F / (float)Math.PI);
     }
 }

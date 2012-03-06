@@ -4,56 +4,70 @@ import java.io.*;
 
 public class Packet52MultiBlockChange extends Packet
 {
+    /** Chunk X position. */
     public int xPosition;
+
+    /** Chunk Z position. */
     public int zPosition;
-    public short coordinateArray[];
-    public byte typeArray[];
     public byte metadataArray[];
+
+    /** The size of the arrays. */
     public int size;
+    private static byte field_48168_e[] = new byte[0];
 
     public Packet52MultiBlockChange()
     {
         isChunkDataPacket = true;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        xPosition = datainputstream.readInt();
-        zPosition = datainputstream.readInt();
-        size = datainputstream.readShort() & 0xffff;
-        coordinateArray = new short[size];
-        typeArray = new byte[size];
-        metadataArray = new byte[size];
-        for (int i = 0; i < size; i++)
+        xPosition = par1DataInputStream.readInt();
+        zPosition = par1DataInputStream.readInt();
+        size = par1DataInputStream.readShort() & 0xffff;
+        int i = par1DataInputStream.readInt();
+
+        if (i > 0)
         {
-            coordinateArray[i] = datainputstream.readShort();
+            metadataArray = new byte[i];
+            par1DataInputStream.readFully(metadataArray);
         }
-
-        datainputstream.readFully(typeArray);
-        datainputstream.readFully(metadataArray);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(xPosition);
-        dataoutputstream.writeInt(zPosition);
-        dataoutputstream.writeShort((short)size);
-        for (int i = 0; i < size; i++)
+        par1DataOutputStream.writeInt(xPosition);
+        par1DataOutputStream.writeInt(zPosition);
+        par1DataOutputStream.writeShort((short)size);
+
+        if (metadataArray != null)
         {
-            dataoutputstream.writeShort(coordinateArray[i]);
+            par1DataOutputStream.writeInt(metadataArray.length);
+            par1DataOutputStream.write(metadataArray);
         }
-
-        dataoutputstream.write(typeArray);
-        dataoutputstream.write(metadataArray);
+        else
+        {
+            par1DataOutputStream.writeInt(0);
+        }
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleMultiBlockChange(this);
+        par1NetHandler.handleMultiBlockChange(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 10 + size * 4;

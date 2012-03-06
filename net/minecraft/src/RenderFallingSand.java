@@ -12,36 +12,45 @@ public class RenderFallingSand extends Render
         shadowSize = 0.5F;
     }
 
-    public void doRenderFallingSand(EntityFallingSand entityfallingsand, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * The actual render method that is used in doRender
+     */
+    public void doRenderFallingSand(EntityFallingSand par1EntityFallingSand, double par2, double par4, double par6, float par8, float par9)
     {
         GL11.glPushMatrix();
-        GL11.glTranslatef((float)d, (float)d1, (float)d2);
+        GL11.glTranslatef((float)par2, (float)par4, (float)par6);
         loadTexture("/terrain.png");
-        Block block = Block.blocksList[entityfallingsand.blockID];
-        World world = entityfallingsand.getWorld();
-        GL11.glDisable(2896 /*GL_LIGHTING*/);
+        Block block = Block.blocksList[par1EntityFallingSand.blockID];
+        World world = par1EntityFallingSand.getWorld();
+        GL11.glDisable(GL11.GL_LIGHTING);
+
         if (block == Block.dragonEgg)
         {
             renderBlocks.blockAccess = world;
             Tessellator tessellator = Tessellator.instance;
             tessellator.startDrawingQuads();
-            tessellator.setTranslationD((float)(-MathHelper.floor_double(entityfallingsand.posX)) - 0.5F, (float)(-MathHelper.floor_double(entityfallingsand.posY)) - 0.5F, (float)(-MathHelper.floor_double(entityfallingsand.posZ)) - 0.5F);
-            renderBlocks.renderBlockByRenderType(block, MathHelper.floor_double(entityfallingsand.posX), MathHelper.floor_double(entityfallingsand.posY), MathHelper.floor_double(entityfallingsand.posZ));
+            tessellator.setTranslationD((float)(-MathHelper.floor_double(par1EntityFallingSand.posX)) - 0.5F, (float)(-MathHelper.floor_double(par1EntityFallingSand.posY)) - 0.5F, (float)(-MathHelper.floor_double(par1EntityFallingSand.posZ)) - 0.5F);
+            renderBlocks.renderBlockByRenderType(block, MathHelper.floor_double(par1EntityFallingSand.posX), MathHelper.floor_double(par1EntityFallingSand.posY), MathHelper.floor_double(par1EntityFallingSand.posZ));
             tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
             tessellator.draw();
         }
         else
         {
-            renderBlocks.renderBlockFallingSand(block, world, MathHelper.floor_double(entityfallingsand.posX), MathHelper.floor_double(entityfallingsand.posY), MathHelper.floor_double(entityfallingsand.posZ));
+            renderBlocks.renderBlockFallingSand(block, world, MathHelper.floor_double(par1EntityFallingSand.posX), MathHelper.floor_double(par1EntityFallingSand.posY), MathHelper.floor_double(par1EntityFallingSand.posZ));
         }
-        GL11.glEnable(2896 /*GL_LIGHTING*/);
+
+        GL11.glEnable(GL11.GL_LIGHTING);
         GL11.glPopMatrix();
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
+     */
+    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        doRenderFallingSand((EntityFallingSand)entity, d, d1, d2, f, f1);
+        doRenderFallingSand((EntityFallingSand)par1Entity, par2, par4, par6, par8, par9);
     }
 }

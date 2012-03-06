@@ -5,13 +5,16 @@ import java.net.*;
 
 class ThreadPollServers extends Thread
 {
+    /** The server getting checked */
     final ServerNBTStorage server;
+
+    /** Slot container for the server list */
     final GuiSlotServer serverSlotContainer;
 
-    ThreadPollServers(GuiSlotServer guislotserver, ServerNBTStorage servernbtstorage)
+    ThreadPollServers(GuiSlotServer par1GuiSlotServer, ServerNBTStorage par2ServerNBTStorage)
     {
-        serverSlotContainer = guislotserver;
-        server = servernbtstorage;
+        serverSlotContainer = par1GuiSlotServer;
+        server = par2ServerNBTStorage;
     }
 
     public void run()

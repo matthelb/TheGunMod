@@ -6,78 +6,113 @@ public class WorldProviderEnd extends WorldProvider
     {
     }
 
+    /**
+     * creates a new world chunk manager for WorldProvider
+     */
     public void registerWorldChunkManager()
     {
         worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.sky, 0.5F, 0.0F);
         worldType = 1;
         hasNoSky = true;
-        isAlternateDimension = true;
     }
 
+    /**
+     * Returns the chunk provider back for the world provider
+     */
     public IChunkProvider getChunkProvider()
     {
         return new ChunkProviderEnd(worldObj, worldObj.getSeed());
     }
 
-    public float calculateCelestialAngle(long l, float f)
+    /**
+     * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
+     */
+    public float calculateCelestialAngle(long par1, float par3)
     {
         return 0.0F;
     }
 
-    public float[] calcSunriseSunsetColors(float f, float f1)
+    /**
+     * Returns array with sunrise/sunset colors
+     */
+    public float[] calcSunriseSunsetColors(float par1, float par2)
     {
         return null;
     }
 
-    public Vec3D getFogColor(float f, float f1)
+    /**
+     * Return Vec3D with biome specific fog color
+     */
+    public Vec3D getFogColor(float par1, float par2)
     {
         int i = 0x8080a0;
-        float f2 = MathHelper.cos(f * 3.141593F * 2.0F) * 2.0F + 0.5F;
-        if (f2 < 0.0F)
+        float f = MathHelper.cos(par1 * (float)Math.PI * 2.0F) * 2.0F + 0.5F;
+
+        if (f < 0.0F)
         {
-            f2 = 0.0F;
+            f = 0.0F;
         }
-        if (f2 > 1.0F)
+
+        if (f > 1.0F)
         {
-            f2 = 1.0F;
+            f = 1.0F;
         }
-        float f3 = (float)(i >> 16 & 0xff) / 255F;
-        float f4 = (float)(i >> 8 & 0xff) / 255F;
-        float f5 = (float)(i & 0xff) / 255F;
-        f3 *= f2 * 0.0F + 0.15F;
-        f4 *= f2 * 0.0F + 0.15F;
-        f5 *= f2 * 0.0F + 0.15F;
-        return Vec3D.createVector(f3, f4, f5);
+
+        float f1 = (float)(i >> 16 & 0xff) / 255F;
+        float f2 = (float)(i >> 8 & 0xff) / 255F;
+        float f3 = (float)(i & 0xff) / 255F;
+        f1 *= f * 0.0F + 0.15F;
+        f2 *= f * 0.0F + 0.15F;
+        f3 *= f * 0.0F + 0.15F;
+        return Vec3D.createVector(f1, f2, f3);
     }
 
-    public boolean func_28112_c()
+    public boolean isSkyColored()
     {
         return false;
     }
 
+    /**
+     * True if the player can respawn in this dimension (true = overworld, false = nether).
+     */
     public boolean canRespawnHere()
     {
         return false;
     }
 
+    public boolean func_48217_e()
+    {
+        return false;
+    }
+
+    /**
+     * the y level at which clouds are rendered.
+     */
     public float getCloudHeight()
     {
         return 8F;
     }
 
-    public boolean canCoordinateBeSpawn(int i, int j)
+    /**
+     * Will check if the x, z position specified is alright to be set as the map spawn point
+     */
+    public boolean canCoordinateBeSpawn(int par1, int par2)
     {
-        int k = worldObj.getFirstUncoveredBlock(i, j);
-        if (k == 0)
+        int i = worldObj.getFirstUncoveredBlock(par1, par2);
+
+        if (i == 0)
         {
             return false;
         }
         else
         {
-            return Block.blocksList[k].blockMaterial.getIsSolid();
+            return Block.blocksList[i].blockMaterial.blocksMovement();
         }
     }
 
+    /**
+     * Gets the hard-coded portal location to use when entering this dimension
+     */
     public ChunkCoordinates getEntrancePortalLocation()
     {
         return new ChunkCoordinates(100, 50, 0);
@@ -86,5 +121,10 @@ public class WorldProviderEnd extends WorldProvider
     public int getAverageGroundLevel()
     {
         return 50;
+    }
+
+    public boolean func_48218_b(int par1, int par2)
+    {
+        return true;
     }
 }

@@ -2,8 +2,13 @@ package net.minecraft.src;
 
 public class ModelChest extends ModelBase
 {
+    /** The chest lid in the chest's model. */
     public ModelRenderer chestLid;
+
+    /** The model of the bottom of the chest. */
     public ModelRenderer chestBelow;
+
+    /** The chest's knob in the chest model. */
     public ModelRenderer chestKnob;
 
     public ModelChest()
@@ -25,7 +30,10 @@ public class ModelChest extends ModelBase
         chestBelow.rotationPointZ = 1.0F;
     }
 
-    public void func_35402_a()
+    /**
+     * This method renders out all parts of the chest model.
+     */
+    public void renderAll()
     {
         chestKnob.rotateAngleX = chestLid.rotateAngleX;
         chestLid.render(0.0625F);

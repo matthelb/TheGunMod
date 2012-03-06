@@ -2,45 +2,55 @@ package net.minecraft.src;
 
 public class ItemLilyPad extends ItemColored
 {
-    public ItemLilyPad(int i)
+    public ItemLilyPad(int par1)
     {
-        super(i, false);
+        super(par1, false);
     }
 
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    /**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, entityplayer, true);
+        MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, true);
+
         if (movingobjectposition == null)
         {
-            return itemstack;
+            return par1ItemStack;
         }
+
         if (movingobjectposition.typeOfHit == EnumMovingObjectType.TILE)
         {
             int i = movingobjectposition.blockX;
             int j = movingobjectposition.blockY;
             int k = movingobjectposition.blockZ;
-            if (!world.canMineBlock(entityplayer, i, j, k))
+
+            if (!par2World.canMineBlock(par3EntityPlayer, i, j, k))
             {
-                return itemstack;
+                return par1ItemStack;
             }
-            if (!entityplayer.canPlayerEdit(i, j, k))
+
+            if (!par3EntityPlayer.canPlayerEdit(i, j, k))
             {
-                return itemstack;
+                return par1ItemStack;
             }
-            if (world.getBlockMaterial(i, j, k) == Material.water && world.getBlockMetadata(i, j, k) == 0 && world.isAirBlock(i, j + 1, k))
+
+            if (par2World.getBlockMaterial(i, j, k) == Material.water && par2World.getBlockMetadata(i, j, k) == 0 && par2World.isAirBlock(i, j + 1, k))
             {
-                world.setBlockWithNotify(i, j + 1, k, Block.waterlily.blockID);
-                if (!entityplayer.capabilities.depleteBuckets)
+                par2World.setBlockWithNotify(i, j + 1, k, Block.waterlily.blockID);
+
+                if (!par3EntityPlayer.capabilities.depleteBuckets)
                 {
-                    itemstack.stackSize--;
+                    par1ItemStack.stackSize--;
                 }
             }
         }
-        return itemstack;
+
+        return par1ItemStack;
     }
 
-    public int getColorFromDamage(int i, int j)
+    public int getColorFromDamage(int par1, int par2)
     {
-        return Block.waterlily.getRenderColor(i);
+        return Block.waterlily.getRenderColor(par1);
     }
 }

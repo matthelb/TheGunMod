@@ -5,6 +5,10 @@ import java.io.*;
 public class Packet131MapData extends Packet
 {
     public short itemID;
+
+    /**
+     * Contains a unique ID for the item that this packet will be populating.
+     */
     public short uniqueID;
     public byte itemData[];
 
@@ -13,29 +17,39 @@ public class Packet131MapData extends Packet
         isChunkDataPacket = true;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        itemID = datainputstream.readShort();
-        uniqueID = datainputstream.readShort();
-        itemData = new byte[datainputstream.readByte() & 0xff];
-        datainputstream.readFully(itemData);
+        itemID = par1DataInputStream.readShort();
+        uniqueID = par1DataInputStream.readShort();
+        itemData = new byte[par1DataInputStream.readByte() & 0xff];
+        par1DataInputStream.readFully(itemData);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeShort(itemID);
-        dataoutputstream.writeShort(uniqueID);
-        dataoutputstream.writeByte(itemData.length);
-        dataoutputstream.write(itemData);
+        par1DataOutputStream.writeShort(itemID);
+        par1DataOutputStream.writeShort(uniqueID);
+        par1DataOutputStream.writeByte(itemData.length);
+        par1DataOutputStream.write(itemData);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleMapData(this);
+        par1NetHandler.handleMapData(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 4 + itemData.length;

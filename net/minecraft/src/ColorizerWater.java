@@ -8,8 +8,8 @@ public class ColorizerWater
     {
     }
 
-    public static void setWaterBiomeColorizer(int ai[])
+    public static void setWaterBiomeColorizer(int par0ArrayOfInteger[])
     {
-        waterBuffer = ai;
+        waterBuffer = par0ArrayOfInteger;
     }
 }

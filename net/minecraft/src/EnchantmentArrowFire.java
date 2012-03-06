@@ -2,22 +2,31 @@ package net.minecraft.src;
 
 public class EnchantmentArrowFire extends Enchantment
 {
-    public EnchantmentArrowFire(int i, int j)
+    public EnchantmentArrowFire(int par1, int par2)
     {
-        super(i, j, EnumEnchantmentType.bow);
+        super(par1, par2, EnumEnchantmentType.bow);
         setName("arrowFire");
     }
 
-    public int getMinEnchantability(int i)
+    /**
+     * Returns the minimal value of enchantability nedded on the enchantment level passed.
+     */
+    public int getMinEnchantability(int par1)
     {
         return 20;
     }
 
-    public int getMaxEnchantability(int i)
+    /**
+     * Returns the maximum value of enchantability nedded on the enchantment level passed.
+     */
+    public int getMaxEnchantability(int par1)
     {
         return 50;
     }
 
+    /**
+     * Returns the maximum level that the enchantment can have.
+     */
     public int getMaxLevel()
     {
         return 1;

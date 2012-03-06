@@ -4,23 +4,25 @@ import java.util.Random;
 
 public class WorldGenFlowers extends WorldGenerator
 {
+    /** The ID of the plant block used in this plant generator. */
     private int plantBlockId;
 
-    public WorldGenFlowers(int i)
+    public WorldGenFlowers(int par1)
     {
-        plantBlockId = i;
+        plantBlockId = par1;
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        for (int l = 0; l < 64; l++)
+        for (int i = 0; i < 64; i++)
         {
-            int i1 = (i + random.nextInt(8)) - random.nextInt(8);
-            int j1 = (j + random.nextInt(4)) - random.nextInt(4);
-            int k1 = (k + random.nextInt(8)) - random.nextInt(8);
-            if (world.isAirBlock(i1, j1, k1) && ((BlockFlower)Block.blocksList[plantBlockId]).canBlockStay(world, i1, j1, k1))
+            int j = (par3 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+            int k = (par4 + par2Random.nextInt(4)) - par2Random.nextInt(4);
+            int l = (par5 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+
+            if (par1World.isAirBlock(j, k, l) && ((BlockFlower)Block.blocksList[plantBlockId]).canBlockStay(par1World, j, k, l))
             {
-                world.setBlock(i1, j1, k1, plantBlockId);
+                par1World.setBlock(j, k, l, plantBlockId);
             }
         }
 

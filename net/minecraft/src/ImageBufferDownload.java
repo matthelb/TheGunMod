@@ -3,8 +3,7 @@ package net.minecraft.src;
 import java.awt.Graphics;
 import java.awt.image.*;
 
-public class ImageBufferDownload
-    implements ImageBuffer
+public class ImageBufferDownload implements ImageBuffer
 {
     private int imageData[];
     private int imageWidth;
@@ -14,28 +13,31 @@ public class ImageBufferDownload
     {
     }
 
-    public BufferedImage parseUserSkin(BufferedImage bufferedimage)
+    public BufferedImage parseUserSkin(BufferedImage par1BufferedImage)
     {
-        if (bufferedimage == null)
+        if (par1BufferedImage == null)
         {
             return null;
         }
+
         imageWidth = 64;
         imageHeight = 32;
-        BufferedImage bufferedimage1 = new BufferedImage(imageWidth, imageHeight, 2);
-        Graphics g = bufferedimage1.getGraphics();
-        g.drawImage(bufferedimage, 0, 0, null);
+        BufferedImage bufferedimage = new BufferedImage(imageWidth, imageHeight, 2);
+        Graphics g = bufferedimage.getGraphics();
+        g.drawImage(par1BufferedImage, 0, 0, null);
         g.dispose();
-        imageData = ((DataBufferInt)bufferedimage1.getRaster().getDataBuffer()).getData();
+        imageData = ((DataBufferInt)bufferedimage.getRaster().getDataBuffer()).getData();
         func_884_b(0, 0, 32, 16);
         func_885_a(32, 0, 64, 32);
         func_884_b(0, 16, 64, 32);
         boolean flag = false;
+
         for (int i = 32; i < 64; i++)
         {
             for (int k = 0; k < 16; k++)
             {
                 int i1 = imageData[i + k * 64];
+
                 if ((i1 >> 24 & 0xff) < 128)
                 {
                     flag = true;
@@ -51,6 +53,7 @@ public class ImageBufferDownload
                 {
                     int j1 = imageData[j + l * 64];
                     boolean flag1;
+
                     if ((j1 >> 24 & 0xff) < 128)
                     {
                         flag1 = true;
@@ -58,43 +61,46 @@ public class ImageBufferDownload
                 }
             }
         }
-        return bufferedimage1;
+
+        return bufferedimage;
     }
 
-    private void func_885_a(int i, int j, int k, int l)
+    private void func_885_a(int par1, int par2, int par3, int par4)
     {
-        if (func_886_c(i, j, k, l))
+        if (func_886_c(par1, par2, par3, par4))
         {
             return;
         }
-        for (int i1 = i; i1 < k; i1++)
+
+        for (int i = par1; i < par3; i++)
         {
-            for (int j1 = j; j1 < l; j1++)
+            for (int j = par2; j < par4; j++)
             {
-                imageData[i1 + j1 * imageWidth] &= 0xffffff;
+                imageData[i + j * imageWidth] &= 0xffffff;
             }
         }
     }
 
-    private void func_884_b(int i, int j, int k, int l)
+    private void func_884_b(int par1, int par2, int par3, int par4)
     {
-        for (int i1 = i; i1 < k; i1++)
+        for (int i = par1; i < par3; i++)
         {
-            for (int j1 = j; j1 < l; j1++)
+            for (int j = par2; j < par4; j++)
             {
-                imageData[i1 + j1 * imageWidth] |= 0xff000000;
+                imageData[i + j * imageWidth] |= 0xff000000;
             }
         }
     }
 
-    private boolean func_886_c(int i, int j, int k, int l)
+    private boolean func_886_c(int par1, int par2, int par3, int par4)
     {
-        for (int i1 = i; i1 < k; i1++)
+        for (int i = par1; i < par3; i++)
         {
-            for (int j1 = j; j1 < l; j1++)
+            for (int j = par2; j < par4; j++)
             {
-                int k1 = imageData[i1 + j1 * imageWidth];
-                if ((k1 >> 24 & 0xff) < 128)
+                int k = imageData[i + j * imageWidth];
+
+                if ((k >> 24 & 0xff) < 128)
                 {
                     return true;
                 }

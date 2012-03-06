@@ -7,55 +7,66 @@ public class ComponentStrongholdLeftTurn extends ComponentStronghold
 {
     protected final EnumDoor doorType;
 
-    public ComponentStrongholdLeftTurn(int i, Random random, StructureBoundingBox structureboundingbox, int j)
+    public ComponentStrongholdLeftTurn(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
-        super(i);
-        coordBaseMode = j;
-        doorType = getRandomDoor(random);
-        boundingBox = structureboundingbox;
+        super(par1);
+        coordBaseMode = par4;
+        doorType = getRandomDoor(par2Random);
+        boundingBox = par3StructureBoundingBox;
     }
 
-    public void buildComponent(StructureComponent structurecomponent, List list, Random random)
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
+    public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
         if (coordBaseMode == 2 || coordBaseMode == 3)
         {
-            func_35032_b((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
+            getNextComponentX((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 1, 1);
         }
         else
         {
-            func_35029_c((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
+            getNextComponentZ((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 1, 1);
         }
     }
 
-    public static ComponentStrongholdLeftTurn func_35045_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentStrongholdLeftTurn findValidPlacement(List par0List, Random par1Random, int par2, int par3, int par4, int par5, int par6)
     {
-        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -1, 0, 5, 5, 5, l);
-        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
+        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(par2, par3, par4, -1, -1, 0, 5, 5, 5, par5);
+
+        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(par0List, structureboundingbox) != null)
         {
             return null;
         }
         else
         {
-            return new ComponentStrongholdLeftTurn(i1, random, structureboundingbox, l);
+            return new ComponentStrongholdLeftTurn(par6, par1Random, structureboundingbox, par5);
         }
     }
 
-    public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
+    public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
-        if (isLiquidInStructureBoundingBox(world, structureboundingbox))
+        if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))
         {
             return false;
         }
-        fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 4, 4, 4, true, random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(world, random, structureboundingbox, doorType, 1, 1, 0);
+
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 4, 4, 4, true, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, doorType, 1, 1, 0);
+
         if (coordBaseMode == 2 || coordBaseMode == 3)
         {
-            fillWithBlocks(world, structureboundingbox, 0, 1, 1, 0, 3, 3, 0, 0, false);
+            fillWithBlocks(par1World, par3StructureBoundingBox, 0, 1, 1, 0, 3, 3, 0, 0, false);
         }
         else
         {
-            fillWithBlocks(world, structureboundingbox, 4, 1, 1, 4, 3, 3, 0, 0, false);
+            fillWithBlocks(par1World, par3StructureBoundingBox, 4, 1, 1, 4, 3, 3, 0, 0, false);
         }
+
         return true;
     }
 }

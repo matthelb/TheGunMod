@@ -4,21 +4,44 @@ import org.lwjgl.opengl.GL11;
 
 public class ModelDragon extends ModelBase
 {
+    /** The head Model renderer of the dragon */
     private ModelRenderer head;
+
+    /** The neck Model renderer of the dragon */
     private ModelRenderer neck;
+
+    /** The jaw Model renderer of the dragon */
     private ModelRenderer jaw;
+
+    /** The body Model renderer of the dragon */
     private ModelRenderer body;
+
+    /** The rear leg Model renderer of the dragon */
     private ModelRenderer rearLeg;
+
+    /** The front leg Model renderer of the dragon */
     private ModelRenderer frontLeg;
+
+    /** The rear leg tip Model renderer of the dragon */
     private ModelRenderer rearLegTip;
+
+    /** The front leg tip Model renderer of the dragon */
     private ModelRenderer frontLegTip;
+
+    /** The rear foot Model renderer of the dragon */
     private ModelRenderer rearFoot;
+
+    /** The front foot Model renderer of the dragon */
     private ModelRenderer frontFoot;
+
+    /** The wing Model renderer of the dragon */
     private ModelRenderer wing;
+
+    /** The wing tip Model renderer of the dragon */
     private ModelRenderer wingTip;
     private float field_40317_s;
 
-    public ModelDragon(float f)
+    public ModelDragon(float par1)
     {
         textureWidth = 256;
         textureHeight = 256;
@@ -41,18 +64,18 @@ public class ModelDragon extends ModelBase
         setTextureOffset("head.scale", 0, 0);
         setTextureOffset("neck.scale", 48, 0);
         setTextureOffset("head.nostril", 112, 0);
-        float f1 = -16F;
+        float f = -16F;
         head = new ModelRenderer(this, "head");
-        head.addBox("upperlip", -6F, -1F, -8F + f1, 12, 5, 16);
-        head.addBox("upperhead", -8F, -8F, 6F + f1, 16, 16, 16);
+        head.addBox("upperlip", -6F, -1F, -8F + f, 12, 5, 16);
+        head.addBox("upperhead", -8F, -8F, 6F + f, 16, 16, 16);
         head.mirror = true;
-        head.addBox("scale", -5F, -12F, 12F + f1, 2, 4, 6);
-        head.addBox("nostril", -5F, -3F, -6F + f1, 2, 2, 4);
+        head.addBox("scale", -5F, -12F, 12F + f, 2, 4, 6);
+        head.addBox("nostril", -5F, -3F, -6F + f, 2, 2, 4);
         head.mirror = false;
-        head.addBox("scale", 3F, -12F, 12F + f1, 2, 4, 6);
-        head.addBox("nostril", 3F, -3F, -6F + f1, 2, 2, 4);
+        head.addBox("scale", 3F, -12F, 12F + f, 2, 4, 6);
+        head.addBox("nostril", 3F, -3F, -6F + f, 2, 2, 4);
         jaw = new ModelRenderer(this, "jaw");
-        jaw.setRotationPoint(0.0F, 4F, 8F + f1);
+        jaw.setRotationPoint(0.0F, 4F, 8F + f);
         jaw.addBox("jaw", -6F, 0.0F, -16F, 12, 4, 16);
         head.addChild(jaw);
         neck = new ModelRenderer(this, "neck");
@@ -97,123 +120,144 @@ public class ModelDragon extends ModelBase
         rearLegTip.addChild(rearFoot);
     }
 
-    public void setLivingAnimations(EntityLiving entityliving, float f, float f1, float f2)
+    /**
+     * Used for easily adding entity-dependent animations. The second and third float params here are the same second
+     * and third as in the setRotationAngles method.
+     */
+    public void setLivingAnimations(EntityLiving par1EntityLiving, float par2, float par3, float par4)
     {
-        field_40317_s = f2;
+        field_40317_s = par4;
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles then renders the model.
+     */
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
         GL11.glPushMatrix();
-        EntityDragon entitydragon = (EntityDragon)entity;
-        float f6 = entitydragon.field_40173_aw + (entitydragon.field_40172_ax - entitydragon.field_40173_aw) * field_40317_s;
-        jaw.rotateAngleX = (float)(Math.sin(f6 * 3.141593F * 2.0F) + 1.0D) * 0.2F;
-        float f7 = (float)(Math.sin(f6 * 3.141593F * 2.0F - 1.0F) + 1.0D);
-        f7 = (f7 * f7 * 1.0F + f7 * 2.0F) * 0.05F;
-        GL11.glTranslatef(0.0F, f7 - 2.0F, -3F);
-        GL11.glRotatef(f7 * 2.0F, 1.0F, 0.0F, 0.0F);
-        float f8 = -30F;
-        float f9 = 22F;
-        float f10 = 0.0F;
-        float f11 = 1.5F;
+        EntityDragon entitydragon = (EntityDragon)par1Entity;
+        float f = entitydragon.field_40173_aw + (entitydragon.field_40172_ax - entitydragon.field_40173_aw) * field_40317_s;
+        jaw.rotateAngleX = (float)(Math.sin(f * (float)Math.PI * 2.0F) + 1.0D) * 0.2F;
+        float f1 = (float)(Math.sin(f * (float)Math.PI * 2.0F - 1.0F) + 1.0D);
+        f1 = (f1 * f1 * 1.0F + f1 * 2.0F) * 0.05F;
+        GL11.glTranslatef(0.0F, f1 - 2.0F, -3F);
+        GL11.glRotatef(f1 * 2.0F, 1.0F, 0.0F, 0.0F);
+        float f2 = -30F;
+        float f3 = 22F;
+        float f4 = 0.0F;
+        float f5 = 1.5F;
         double ad[] = entitydragon.func_40160_a(6, field_40317_s);
-        float f12 = updateRotations(entitydragon.func_40160_a(5, field_40317_s)[0] - entitydragon.func_40160_a(10, field_40317_s)[0]);
-        float f13 = updateRotations(entitydragon.func_40160_a(5, field_40317_s)[0] + (double)(f12 / 2.0F));
-        f8 += 2.0F;
-        float f14 = 0.0F;
-        float f15 = f6 * 3.141593F * 2.0F;
-        f8 = 20F;
-        f9 = -12F;
+        float f6 = updateRotations(entitydragon.func_40160_a(5, field_40317_s)[0] - entitydragon.func_40160_a(10, field_40317_s)[0]);
+        float f7 = updateRotations(entitydragon.func_40160_a(5, field_40317_s)[0] + (double)(f6 / 2.0F));
+        f2 += 2.0F;
+        float f8 = 0.0F;
+        float f9 = f * (float)Math.PI * 2.0F;
+        f2 = 20F;
+        f3 = -12F;
+
         for (int i = 0; i < 5; i++)
         {
             double ad3[] = entitydragon.func_40160_a(5 - i, field_40317_s);
-            f14 = (float)Math.cos((float)i * 0.45F + f15) * 0.15F;
-            neck.rotateAngleY = ((updateRotations(ad3[0] - ad[0]) * 3.141593F) / 180F) * f11;
-            neck.rotateAngleX = f14 + (((float)(ad3[1] - ad[1]) * 3.141593F) / 180F) * f11 * 5F;
-            neck.rotateAngleZ = ((-updateRotations(ad3[0] - (double)f13) * 3.141593F) / 180F) * f11;
-            neck.rotationPointY = f8;
-            neck.rotationPointZ = f9;
-            neck.rotationPointX = f10;
-            f8 = (float)((double)f8 + Math.sin(neck.rotateAngleX) * 10D);
-            f9 = (float)((double)f9 - Math.cos(neck.rotateAngleY) * Math.cos(neck.rotateAngleX) * 10D);
-            f10 = (float)((double)f10 - Math.sin(neck.rotateAngleY) * Math.cos(neck.rotateAngleX) * 10D);
-            neck.render(f5);
+            f8 = (float)Math.cos((float)i * 0.45F + f9) * 0.15F;
+            neck.rotateAngleY = ((updateRotations(ad3[0] - ad[0]) * (float)Math.PI) / 180F) * f5;
+            neck.rotateAngleX = f8 + (((float)(ad3[1] - ad[1]) * (float)Math.PI) / 180F) * f5 * 5F;
+            neck.rotateAngleZ = ((-updateRotations(ad3[0] - (double)f7) * (float)Math.PI) / 180F) * f5;
+            neck.rotationPointY = f2;
+            neck.rotationPointZ = f3;
+            neck.rotationPointX = f4;
+            f2 = (float)((double)f2 + Math.sin(neck.rotateAngleX) * 10D);
+            f3 = (float)((double)f3 - Math.cos(neck.rotateAngleY) * Math.cos(neck.rotateAngleX) * 10D);
+            f4 = (float)((double)f4 - Math.sin(neck.rotateAngleY) * Math.cos(neck.rotateAngleX) * 10D);
+            neck.render(par7);
         }
 
-        head.rotationPointY = f8;
-        head.rotationPointZ = f9;
-        head.rotationPointX = f10;
+        head.rotationPointY = f2;
+        head.rotationPointZ = f3;
+        head.rotationPointX = f4;
         double ad1[] = entitydragon.func_40160_a(0, field_40317_s);
-        head.rotateAngleY = ((updateRotations(ad1[0] - ad[0]) * 3.141593F) / 180F) * 1.0F;
-        head.rotateAngleZ = ((-updateRotations(ad1[0] - (double)f13) * 3.141593F) / 180F) * 1.0F;
-        head.render(f5);
+        head.rotateAngleY = ((updateRotations(ad1[0] - ad[0]) * (float)Math.PI) / 180F) * 1.0F;
+        head.rotateAngleZ = ((-updateRotations(ad1[0] - (double)f7) * (float)Math.PI) / 180F) * 1.0F;
+        head.render(par7);
         GL11.glPushMatrix();
         GL11.glTranslatef(0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(-f12 * f11 * 1.0F, 0.0F, 0.0F, 1.0F);
+        GL11.glRotatef(-f6 * f5 * 1.0F, 0.0F, 0.0F, 1.0F);
         GL11.glTranslatef(0.0F, -1F, 0.0F);
         body.rotateAngleZ = 0.0F;
-        body.render(f5);
+        body.render(par7);
+
         for (int j = 0; j < 2; j++)
         {
-            GL11.glEnable(2884 /*GL_CULL_FACE*/);
-            float f16 = f6 * 3.141593F * 2.0F;
-            wing.rotateAngleX = 0.125F - (float)Math.cos(f16) * 0.2F;
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            float f10 = f * (float)Math.PI * 2.0F;
+            wing.rotateAngleX = 0.125F - (float)Math.cos(f10) * 0.2F;
             wing.rotateAngleY = 0.25F;
-            wing.rotateAngleZ = (float)(Math.sin(f16) + 0.125D) * 0.8F;
-            wingTip.rotateAngleZ = -(float)(Math.sin(f16 + 2.0F) + 0.5D) * 0.75F;
-            rearLeg.rotateAngleX = 1.0F + f7 * 0.1F;
-            rearLegTip.rotateAngleX = 0.5F + f7 * 0.1F;
-            rearFoot.rotateAngleX = 0.75F + f7 * 0.1F;
-            frontLeg.rotateAngleX = 1.3F + f7 * 0.1F;
-            frontLegTip.rotateAngleX = -0.5F - f7 * 0.1F;
-            frontFoot.rotateAngleX = 0.75F + f7 * 0.1F;
-            wing.render(f5);
-            frontLeg.render(f5);
-            rearLeg.render(f5);
+            wing.rotateAngleZ = (float)(Math.sin(f10) + 0.125D) * 0.8F;
+            wingTip.rotateAngleZ = -(float)(Math.sin(f10 + 2.0F) + 0.5D) * 0.75F;
+            rearLeg.rotateAngleX = 1.0F + f1 * 0.1F;
+            rearLegTip.rotateAngleX = 0.5F + f1 * 0.1F;
+            rearFoot.rotateAngleX = 0.75F + f1 * 0.1F;
+            frontLeg.rotateAngleX = 1.3F + f1 * 0.1F;
+            frontLegTip.rotateAngleX = -0.5F - f1 * 0.1F;
+            frontFoot.rotateAngleX = 0.75F + f1 * 0.1F;
+            wing.render(par7);
+            frontLeg.render(par7);
+            rearLeg.render(par7);
             GL11.glScalef(-1F, 1.0F, 1.0F);
+
             if (j == 0)
             {
-                GL11.glCullFace(1028 /*GL_FRONT*/);
+                GL11.glCullFace(GL11.GL_FRONT);
             }
         }
 
         GL11.glPopMatrix();
-        GL11.glCullFace(1029 /*GL_BACK*/);
-        GL11.glDisable(2884 /*GL_CULL_FACE*/);
-        f14 = -(float)Math.sin(f6 * 3.141593F * 2.0F) * 0.0F;
-        f15 = f6 * 3.141593F * 2.0F;
-        f8 = 10F;
-        f9 = 60F;
-        f10 = 0.0F;
+        GL11.glCullFace(GL11.GL_BACK);
+        GL11.glDisable(GL11.GL_CULL_FACE);
+        f8 = -(float)Math.sin(f * (float)Math.PI * 2.0F) * 0.0F;
+        f9 = f * (float)Math.PI * 2.0F;
+        f2 = 10F;
+        f3 = 60F;
+        f4 = 0.0F;
         ad = entitydragon.func_40160_a(11, field_40317_s);
+
         for (int k = 0; k < 12; k++)
         {
             double ad2[] = entitydragon.func_40160_a(12 + k, field_40317_s);
-            f14 = (float)((double)f14 + Math.sin((float)k * 0.45F + f15) * 0.05000000074505806D);
-            neck.rotateAngleY = ((updateRotations(ad2[0] - ad[0]) * f11 + 180F) * 3.141593F) / 180F;
-            neck.rotateAngleX = f14 + (((float)(ad2[1] - ad[1]) * 3.141593F) / 180F) * f11 * 5F;
-            neck.rotateAngleZ = ((updateRotations(ad2[0] - (double)f13) * 3.141593F) / 180F) * f11;
-            neck.rotationPointY = f8;
-            neck.rotationPointZ = f9;
-            neck.rotationPointX = f10;
-            f8 = (float)((double)f8 + Math.sin(neck.rotateAngleX) * 10D);
-            f9 = (float)((double)f9 - Math.cos(neck.rotateAngleY) * Math.cos(neck.rotateAngleX) * 10D);
-            f10 = (float)((double)f10 - Math.sin(neck.rotateAngleY) * Math.cos(neck.rotateAngleX) * 10D);
-            neck.render(f5);
+            f8 = (float)((double)f8 + Math.sin((float)k * 0.45F + f9) * 0.05D);
+            neck.rotateAngleY = ((updateRotations(ad2[0] - ad[0]) * f5 + 180F) * (float)Math.PI) / 180F;
+            neck.rotateAngleX = f8 + (((float)(ad2[1] - ad[1]) * (float)Math.PI) / 180F) * f5 * 5F;
+            neck.rotateAngleZ = ((updateRotations(ad2[0] - (double)f7) * (float)Math.PI) / 180F) * f5;
+            neck.rotationPointY = f2;
+            neck.rotationPointZ = f3;
+            neck.rotationPointX = f4;
+            f2 = (float)((double)f2 + Math.sin(neck.rotateAngleX) * 10D);
+            f3 = (float)((double)f3 - Math.cos(neck.rotateAngleY) * Math.cos(neck.rotateAngleX) * 10D);
+            f4 = (float)((double)f4 - Math.sin(neck.rotateAngleY) * Math.cos(neck.rotateAngleX) * 10D);
+            neck.render(par7);
         }
 
         GL11.glPopMatrix();
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5);
+        super.setRotationAngles(par1, par2, par3, par4, par5, par6);
     }
 
-    private float updateRotations(double d)
+    /**
+     * Updates the rotations in the parameters for rotations greater than 180 degrees or less than -180 degrees. It adds
+     * or subtracts 360 degrees, so that the appearance is the same, although the numbers are then simplified to range
+     * -180 to 180
+     */
+    private float updateRotations(double par1)
     {
-        for (; d >= 180D; d -= 360D) { }
-        for (; d < -180D; d += 360D) { }
-        return (float)d;
+        for (; par1 >= 180D; par1 -= 360D) { }
+
+        for (; par1 < -180D; par1 += 360D) { }
+
+        return (float)par1;
     }
 }

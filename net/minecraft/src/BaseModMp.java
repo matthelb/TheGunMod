@@ -11,20 +11,21 @@ public abstract class BaseModMp extends BaseMod
         return toString().hashCode();
     }
 
-    public void ModsLoaded()
+    public void modsLoaded()
     {
-        ModLoaderMp.Init();
+        ModLoaderMp.initialize();
+        super.modsLoaded();
     }
 
-    public void HandlePacket(Packet230ModLoader packet230modloader)
-    {
-    }
-
-    public void HandleTileEntityPacket(int i, int j, int k, int l, int ai[], float af[], String as[])
+    public void handlePacket(Packet230ModLoader packet230modloader)
     {
     }
 
-    public GuiScreen HandleGUI(int i)
+    public void handleTileEntityPacket(int i, int j, int k, int l, int ai[], float af[], String as[])
+    {
+    }
+
+    public GuiScreen handleGUI(int i)
     {
         return null;
     }

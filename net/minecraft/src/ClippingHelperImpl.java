@@ -18,19 +18,25 @@ public class ClippingHelperImpl extends ClippingHelper
         field_1691_h = GLAllocation.createDirectFloatBuffer(16);
     }
 
+    /**
+     * Initialises the ClippingHelper object then returns an instance of it.
+     */
     public static ClippingHelper getInstance()
     {
         instance.init();
         return instance;
     }
 
-    private void normalize(float af[][], int i)
+    /**
+     * Normalize the frustum.
+     */
+    private void normalize(float par1ArrayOfFloat[][], int par2)
     {
-        float f = MathHelper.sqrt_float(af[i][0] * af[i][0] + af[i][1] * af[i][1] + af[i][2] * af[i][2]);
-        af[i][0] /= f;
-        af[i][1] /= f;
-        af[i][2] /= f;
-        af[i][3] /= f;
+        float f = MathHelper.sqrt_float(par1ArrayOfFloat[par2][0] * par1ArrayOfFloat[par2][0] + par1ArrayOfFloat[par2][1] * par1ArrayOfFloat[par2][1] + par1ArrayOfFloat[par2][2] * par1ArrayOfFloat[par2][2]);
+        par1ArrayOfFloat[par2][0] /= f;
+        par1ArrayOfFloat[par2][1] /= f;
+        par1ArrayOfFloat[par2][2] /= f;
+        par1ArrayOfFloat[par2][3] /= f;
     }
 
     private void init()
@@ -38,8 +44,8 @@ public class ClippingHelperImpl extends ClippingHelper
         projectionMatrixBuffer.clear();
         modelviewMatrixBuffer.clear();
         field_1691_h.clear();
-        GL11.glGetFloat(2983 /*GL_PROJECTION_MATRIX*/, projectionMatrixBuffer);
-        GL11.glGetFloat(2982 /*GL_MODELVIEW_MATRIX*/, modelviewMatrixBuffer);
+        GL11.glGetFloat(GL11.GL_PROJECTION_MATRIX, projectionMatrixBuffer);
+        GL11.glGetFloat(GL11.GL_MODELVIEW_MATRIX, modelviewMatrixBuffer);
         projectionMatrixBuffer.flip().limit(16);
         projectionMatrixBuffer.get(projectionMatrix);
         modelviewMatrixBuffer.flip().limit(16);

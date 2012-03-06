@@ -9,63 +9,77 @@ public class ComponentStrongholdStraight extends ComponentStronghold
     private final boolean field_35048_b;
     private final boolean field_35049_c;
 
-    public ComponentStrongholdStraight(int i, Random random, StructureBoundingBox structureboundingbox, int j)
+    public ComponentStrongholdStraight(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
-        super(i);
-        coordBaseMode = j;
-        field_35050_a = getRandomDoor(random);
-        boundingBox = structureboundingbox;
-        field_35048_b = random.nextInt(2) == 0;
-        field_35049_c = random.nextInt(2) == 0;
+        super(par1);
+        coordBaseMode = par4;
+        field_35050_a = getRandomDoor(par2Random);
+        boundingBox = par3StructureBoundingBox;
+        field_35048_b = par2Random.nextInt(2) == 0;
+        field_35049_c = par2Random.nextInt(2) == 0;
     }
 
-    public void buildComponent(StructureComponent structurecomponent, List list, Random random)
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
+    public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
-        func_35028_a((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
+        getNextComponentNormal((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 1, 1);
+
         if (field_35048_b)
         {
-            func_35032_b((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 2);
+            getNextComponentX((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 1, 2);
         }
+
         if (field_35049_c)
         {
-            func_35029_c((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 2);
+            getNextComponentZ((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 1, 2);
         }
     }
 
-    public static ComponentStrongholdStraight func_35047_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentStrongholdStraight findValidPlacement(List par0List, Random par1Random, int par2, int par3, int par4, int par5, int par6)
     {
-        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -1, 0, 5, 5, 7, l);
-        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
+        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(par2, par3, par4, -1, -1, 0, 5, 5, 7, par5);
+
+        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(par0List, structureboundingbox) != null)
         {
             return null;
         }
         else
         {
-            return new ComponentStrongholdStraight(i1, random, structureboundingbox, l);
+            return new ComponentStrongholdStraight(par6, par1Random, structureboundingbox, par5);
         }
     }
 
-    public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
+    public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
-        if (isLiquidInStructureBoundingBox(world, structureboundingbox))
+        if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))
         {
             return false;
         }
-        fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 4, 4, 6, true, random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(world, random, structureboundingbox, field_35050_a, 1, 1, 0);
-        placeDoor(world, random, structureboundingbox, EnumDoor.OPENING, 1, 1, 6);
-        randomlyPlaceBlock(world, structureboundingbox, random, 0.1F, 1, 2, 1, Block.torchWood.blockID, 0);
-        randomlyPlaceBlock(world, structureboundingbox, random, 0.1F, 3, 2, 1, Block.torchWood.blockID, 0);
-        randomlyPlaceBlock(world, structureboundingbox, random, 0.1F, 1, 2, 5, Block.torchWood.blockID, 0);
-        randomlyPlaceBlock(world, structureboundingbox, random, 0.1F, 3, 2, 5, Block.torchWood.blockID, 0);
+
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 4, 4, 6, true, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, field_35050_a, 1, 1, 0);
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, EnumDoor.OPENING, 1, 1, 6);
+        randomlyPlaceBlock(par1World, par3StructureBoundingBox, par2Random, 0.1F, 1, 2, 1, Block.torchWood.blockID, 0);
+        randomlyPlaceBlock(par1World, par3StructureBoundingBox, par2Random, 0.1F, 3, 2, 1, Block.torchWood.blockID, 0);
+        randomlyPlaceBlock(par1World, par3StructureBoundingBox, par2Random, 0.1F, 1, 2, 5, Block.torchWood.blockID, 0);
+        randomlyPlaceBlock(par1World, par3StructureBoundingBox, par2Random, 0.1F, 3, 2, 5, Block.torchWood.blockID, 0);
+
         if (field_35048_b)
         {
-            fillWithBlocks(world, structureboundingbox, 0, 1, 2, 0, 3, 4, 0, 0, false);
+            fillWithBlocks(par1World, par3StructureBoundingBox, 0, 1, 2, 0, 3, 4, 0, 0, false);
         }
+
         if (field_35049_c)
         {
-            fillWithBlocks(world, structureboundingbox, 4, 1, 2, 4, 3, 4, 0, 0, false);
+            fillWithBlocks(par1World, par3StructureBoundingBox, 4, 1, 2, 4, 3, 4, 0, 0, false);
         }
+
         return true;
     }
 }

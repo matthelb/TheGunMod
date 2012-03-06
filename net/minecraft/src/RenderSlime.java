@@ -6,46 +6,58 @@ public class RenderSlime extends RenderLiving
 {
     private ModelBase scaleAmount;
 
-    public RenderSlime(ModelBase modelbase, ModelBase modelbase1, float f)
+    public RenderSlime(ModelBase par1ModelBase, ModelBase par2ModelBase, float par3)
     {
-        super(modelbase, f);
-        scaleAmount = modelbase1;
+        super(par1ModelBase, par3);
+        scaleAmount = par2ModelBase;
     }
 
-    protected int func_40287_a(EntitySlime entityslime, int i, float f)
+    protected int func_40287_a(EntitySlime par1EntitySlime, int par2, float par3)
     {
-        if (i == 0)
+        if (par2 == 0)
         {
             setRenderPassModel(scaleAmount);
-            GL11.glEnable(2977 /*GL_NORMALIZE*/);
-            GL11.glEnable(3042 /*GL_BLEND*/);
-            GL11.glBlendFunc(770, 771);
+            GL11.glEnable(GL11.GL_NORMALIZE);
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
             return 1;
         }
-        if (i == 1)
+
+        if (par2 == 1)
         {
-            GL11.glDisable(3042 /*GL_BLEND*/);
+            GL11.glDisable(GL11.GL_BLEND);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         }
+
         return -1;
     }
 
-    protected void scaleSlime(EntitySlime entityslime, float f)
+    /**
+     * sets the scale for the slime based on getSlimeSize in EntitySlime
+     */
+    protected void scaleSlime(EntitySlime par1EntitySlime, float par2)
     {
-        int i = entityslime.getSlimeSize();
-        float f1 = (entityslime.field_767_b + (entityslime.field_768_a - entityslime.field_767_b) * f) / ((float)i * 0.5F + 1.0F);
-        float f2 = 1.0F / (f1 + 1.0F);
-        float f3 = i;
-        GL11.glScalef(f2 * f3, (1.0F / f2) * f3, f2 * f3);
+        int i = par1EntitySlime.getSlimeSize();
+        float f = (par1EntitySlime.field_767_b + (par1EntitySlime.field_768_a - par1EntitySlime.field_767_b) * par2) / ((float)i * 0.5F + 1.0F);
+        float f1 = 1.0F / (f + 1.0F);
+        float f2 = i;
+        GL11.glScalef(f1 * f2, (1.0F / f1) * f2, f1 * f2);
     }
 
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    /**
+     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
+     * entityLiving, partialTickTime
+     */
+    protected void preRenderCallback(EntityLiving par1EntityLiving, float par2)
     {
-        scaleSlime((EntitySlime)entityliving, f);
+        scaleSlime((EntitySlime)par1EntityLiving, par2);
     }
 
-    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    /**
+     * Queries whether should render the specified pass or not.
+     */
+    protected int shouldRenderPass(EntityLiving par1EntityLiving, int par2, float par3)
     {
-        return func_40287_a((EntitySlime)entityliving, i, f);
+        return func_40287_a((EntitySlime)par1EntityLiving, par2, par3);
     }
 }

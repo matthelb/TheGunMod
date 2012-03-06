@@ -8,40 +8,49 @@ public class WorldGenSwamp extends WorldGenerator
     {
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        int l = random.nextInt(4) + 5;
-        for (; world.getBlockMaterial(i, j - 1, k) == Material.water; j--) { }
+        int i = par2Random.nextInt(4) + 5;
+
+        for (; par1World.getBlockMaterial(par3, par4 - 1, par5) == Material.water; par4--) { }
+
         boolean flag = true;
-        if (j < 1 || j + l + 1 > world.worldHeight)
+
+        if (par4 < 1 || par4 + i + 1 > 128)
         {
             return false;
         }
-        for (int i1 = j; i1 <= j + 1 + l; i1++)
+
+        for (int j = par4; j <= par4 + 1 + i; j++)
         {
             byte byte0 = 1;
-            if (i1 == j)
+
+            if (j == par4)
             {
                 byte0 = 0;
             }
-            if (i1 >= (j + 1 + l) - 2)
+
+            if (j >= (par4 + 1 + i) - 2)
             {
                 byte0 = 3;
             }
-            for (int j2 = i - byte0; j2 <= i + byte0 && flag; j2++)
+
+            for (int k1 = par3 - byte0; k1 <= par3 + byte0 && flag; k1++)
             {
-                for (int j3 = k - byte0; j3 <= k + byte0 && flag; j3++)
+                for (int k2 = par5 - byte0; k2 <= par5 + byte0 && flag; k2++)
                 {
-                    if (i1 >= 0 && i1 < world.worldHeight)
+                    if (j >= 0 && j < 128)
                     {
-                        int i4 = world.getBlockId(j2, i1, j3);
-                        if (i4 == 0 || i4 == Block.leaves.blockID)
+                        int j3 = par1World.getBlockId(k1, j, k2);
+
+                        if (j3 == 0 || j3 == Block.leaves.blockID)
                         {
                             continue;
                         }
-                        if (i4 == Block.waterStill.blockID || i4 == Block.waterMoving.blockID)
+
+                        if (j3 == Block.waterStill.blockID || j3 == Block.waterMoving.blockID)
                         {
-                            if (i1 > j)
+                            if (j > par4)
                             {
                                 flag = false;
                             }
@@ -63,66 +72,79 @@ public class WorldGenSwamp extends WorldGenerator
         {
             return false;
         }
-        int j1 = world.getBlockId(i, j - 1, k);
-        if (j1 != Block.grass.blockID && j1 != Block.dirt.blockID || j >= world.worldHeight - l - 1)
+
+        int k = par1World.getBlockId(par3, par4 - 1, par5);
+
+        if (k != Block.grass.blockID && k != Block.dirt.blockID || par4 >= 128 - i - 1)
         {
             return false;
         }
-        world.setBlock(i, j - 1, k, Block.dirt.blockID);
-        for (int k1 = (j - 3) + l; k1 <= j + l; k1++)
+
+        par1World.setBlock(par3, par4 - 1, par5, Block.dirt.blockID);
+
+        for (int l = (par4 - 3) + i; l <= par4 + i; l++)
         {
-            int k2 = k1 - (j + l);
-            int k3 = 2 - k2 / 2;
-            for (int j4 = i - k3; j4 <= i + k3; j4++)
+            int l1 = l - (par4 + i);
+            int l2 = 2 - l1 / 2;
+
+            for (int k3 = par3 - l2; k3 <= par3 + l2; k3++)
             {
-                int l4 = j4 - i;
-                for (int j5 = k - k3; j5 <= k + k3; j5++)
+                int i4 = k3 - par3;
+
+                for (int k4 = par5 - l2; k4 <= par5 + l2; k4++)
                 {
-                    int k5 = j5 - k;
-                    if ((Math.abs(l4) != k3 || Math.abs(k5) != k3 || random.nextInt(2) != 0 && k2 != 0) && !Block.opaqueCubeLookup[world.getBlockId(j4, k1, j5)])
+                    int l4 = k4 - par5;
+
+                    if ((Math.abs(i4) != l2 || Math.abs(l4) != l2 || par2Random.nextInt(2) != 0 && l1 != 0) && !Block.opaqueCubeLookup[par1World.getBlockId(k3, l, k4)])
                     {
-                        world.setBlock(j4, k1, j5, Block.leaves.blockID);
+                        par1World.setBlock(k3, l, k4, Block.leaves.blockID);
                     }
                 }
             }
         }
 
-        for (int l1 = 0; l1 < l; l1++)
+        for (int i1 = 0; i1 < i; i1++)
         {
-            int l2 = world.getBlockId(i, j + l1, k);
-            if (l2 == 0 || l2 == Block.leaves.blockID || l2 == Block.waterMoving.blockID || l2 == Block.waterStill.blockID)
+            int i2 = par1World.getBlockId(par3, par4 + i1, par5);
+
+            if (i2 == 0 || i2 == Block.leaves.blockID || i2 == Block.waterMoving.blockID || i2 == Block.waterStill.blockID)
             {
-                world.setBlock(i, j + l1, k, Block.wood.blockID);
+                par1World.setBlock(par3, par4 + i1, par5, Block.wood.blockID);
             }
         }
 
-        for (int i2 = (j - 3) + l; i2 <= j + l; i2++)
+        for (int j1 = (par4 - 3) + i; j1 <= par4 + i; j1++)
         {
-            int i3 = i2 - (j + l);
-            int l3 = 2 - i3 / 2;
-            for (int k4 = i - l3; k4 <= i + l3; k4++)
+            int j2 = j1 - (par4 + i);
+            int i3 = 2 - j2 / 2;
+
+            for (int l3 = par3 - i3; l3 <= par3 + i3; l3++)
             {
-                for (int i5 = k - l3; i5 <= k + l3; i5++)
+                for (int j4 = par5 - i3; j4 <= par5 + i3; j4++)
                 {
-                    if (world.getBlockId(k4, i2, i5) != Block.leaves.blockID)
+                    if (par1World.getBlockId(l3, j1, j4) != Block.leaves.blockID)
                     {
                         continue;
                     }
-                    if (random.nextInt(4) == 0 && world.getBlockId(k4 - 1, i2, i5) == 0)
+
+                    if (par2Random.nextInt(4) == 0 && par1World.getBlockId(l3 - 1, j1, j4) == 0)
                     {
-                        generateVines(world, k4 - 1, i2, i5, 8);
+                        generateVines(par1World, l3 - 1, j1, j4, 8);
                     }
-                    if (random.nextInt(4) == 0 && world.getBlockId(k4 + 1, i2, i5) == 0)
+
+                    if (par2Random.nextInt(4) == 0 && par1World.getBlockId(l3 + 1, j1, j4) == 0)
                     {
-                        generateVines(world, k4 + 1, i2, i5, 2);
+                        generateVines(par1World, l3 + 1, j1, j4, 2);
                     }
-                    if (random.nextInt(4) == 0 && world.getBlockId(k4, i2, i5 - 1) == 0)
+
+                    if (par2Random.nextInt(4) == 0 && par1World.getBlockId(l3, j1, j4 - 1) == 0)
                     {
-                        generateVines(world, k4, i2, i5 - 1, 1);
+                        generateVines(par1World, l3, j1, j4 - 1, 1);
                     }
-                    if (random.nextInt(4) == 0 && world.getBlockId(k4, i2, i5 + 1) == 0)
+
+                    if (par2Random.nextInt(4) == 0 && par1World.getBlockId(l3, j1, j4 + 1) == 0)
                     {
-                        generateVines(world, k4, i2, i5 + 1, 4);
+                        generateVines(par1World, l3, j1, j4 + 1, 4);
                     }
                 }
             }
@@ -131,12 +153,16 @@ public class WorldGenSwamp extends WorldGenerator
         return true;
     }
 
-    private void generateVines(World world, int i, int j, int k, int l)
+    /**
+     * Generates vines at the given position until it hits a block.
+     */
+    private void generateVines(World par1World, int par2, int par3, int par4, int par5)
     {
-        world.setBlockAndMetadataWithNotify(i, j, k, Block.vine.blockID, l);
-        for (int i1 = 4; world.getBlockId(i, --j, k) == 0 && i1 > 0; i1--)
+        par1World.setBlockAndMetadataWithNotify(par2, par3, par4, Block.vine.blockID, par5);
+
+        for (int i = 4; par1World.getBlockId(par2, --par3, par4) == 0 && i > 0; i--)
         {
-            world.setBlockAndMetadataWithNotify(i, j, k, Block.vine.blockID, l);
+            par1World.setBlockAndMetadataWithNotify(par2, par3, par4, Block.vine.blockID, par5);
         }
     }
 }

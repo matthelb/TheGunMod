@@ -8,9 +8,9 @@ public class ThreadCheckHasPaid extends Thread
 {
     final Minecraft mc;
 
-    public ThreadCheckHasPaid(Minecraft minecraft)
+    public ThreadCheckHasPaid(Minecraft par1Minecraft)
     {
-        mc = minecraft;
+        mc = par1Minecraft;
     }
 
     public void run()
@@ -19,10 +19,12 @@ public class ThreadCheckHasPaid extends Thread
         {
             HttpURLConnection httpurlconnection = (HttpURLConnection)(new URL((new StringBuilder()).append("https://login.minecraft.net/session?name=").append(mc.session.username).append("&session=").append(mc.session.sessionId).toString())).openConnection();
             httpurlconnection.connect();
+
             if (httpurlconnection.getResponseCode() == 400 && this == null)
             {
                 Minecraft.hasPaidCheckTime = System.currentTimeMillis();
             }
+
             httpurlconnection.disconnect();
         }
         catch (Exception exception)

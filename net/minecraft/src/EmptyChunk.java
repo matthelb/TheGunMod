@@ -5,36 +5,37 @@ import java.util.Random;
 
 public class EmptyChunk extends Chunk
 {
-    public EmptyChunk(World world, int i, int j)
+    public EmptyChunk(World par1World, int par2, int par3)
     {
-        super(world, i, j);
-        neverSave = true;
+        super(par1World, par2, par3);
     }
 
-    public EmptyChunk(World world, byte abyte0[], int i, int j)
+    /**
+     * Checks whether the chunk is at the X/Z location specified
+     */
+    public boolean isAtLocation(int par1, int par2)
     {
-        super(world, abyte0, i, j);
-        neverSave = true;
+        return par1 == xPosition && par2 == zPosition;
     }
 
-    public boolean isAtLocation(int i, int j)
-    {
-        return i == xPosition && j == zPosition;
-    }
-
-    public int getHeightValue(int i, int j)
+    /**
+     * Returns the value in the height map at this x, z coordinate in the chunk
+     */
+    public int getHeightValue(int par1, int par2)
     {
         return 0;
     }
 
-    public void func_1014_a()
-    {
-    }
-
+    /**
+     * Generates the height map for a chunk from scratch
+     */
     public void generateHeightMap()
     {
     }
 
+    /**
+     * Generates the initial skylight map for the chunk upon generation or load.
+     */
     public void generateSkylightMap()
     {
     }
@@ -43,120 +44,188 @@ public class EmptyChunk extends Chunk
     {
     }
 
-    public int getBlockID(int i, int j, int k)
+    /**
+     * Return the ID of a block in the chunk.
+     */
+    public int getBlockID(int par1, int par2, int par3)
     {
         return 0;
     }
 
-    public boolean setBlockIDWithMetadata(int i, int j, int k, int l, int i1)
+    public int func_48499_b(int par1, int par2, int par3)
+    {
+        return 255;
+    }
+
+    /**
+     * Sets a blockID of a position within a chunk with metadata. Args: x, y, z, blockID, metadata
+     */
+    public boolean setBlockIDWithMetadata(int par1, int par2, int par3, int i, int j)
     {
         return true;
     }
 
-    public boolean setBlockID(int i, int j, int k, int l)
+    /**
+     * Sets a blockID for a position in the chunk. Args: x, y, z, blockID
+     */
+    public boolean setBlockID(int par1, int par2, int par3, int i)
     {
         return true;
     }
 
-    public int getBlockMetadata(int i, int j, int k)
+    /**
+     * Return the metadata corresponding to the given coordinates inside a chunk.
+     */
+    public int getBlockMetadata(int par1, int par2, int par3)
     {
         return 0;
     }
 
-    public boolean setBlockMetadata(int i, int j, int k, int l)
+    /**
+     * Set the metadata of a block in the chunk
+     */
+    public boolean setBlockMetadata(int par1, int par2, int par3, int i)
     {
         return false;
     }
 
-    public int getSavedLightValue(EnumSkyBlock enumskyblock, int i, int j, int k)
+    /**
+     * Gets the amount of light saved in this block (doesn't adjust for daylight)
+     */
+    public int getSavedLightValue(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int i)
     {
         return 0;
     }
 
+    /**
+     * Sets the light value at the coordinate. If enumskyblock is set to sky it sets it in the skylightmap and if its a
+     * block then into the blocklightmap. Args enumSkyBlock, x, y, z, lightValue
+     */
     public void setLightValue(EnumSkyBlock enumskyblock, int i, int j, int k, int l)
     {
     }
 
-    public int getBlockLightValue(int i, int j, int k, int l)
+    /**
+     * Gets the amount of light on a block taking into account sunlight
+     */
+    public int getBlockLightValue(int par1, int par2, int par3, int i)
     {
         return 0;
     }
 
+    /**
+     * Adds an entity to the chunk. Args: entity
+     */
     public void addEntity(Entity entity)
     {
     }
 
+    /**
+     * removes entity using its y chunk coordinate as its index
+     */
     public void removeEntity(Entity entity)
     {
     }
 
+    /**
+     * removes entity at index i from entity array
+     */
     public void removeEntityAtIndex(Entity entity, int i)
     {
     }
 
-    public boolean canBlockSeeTheSky(int i, int j, int k)
+    /**
+     * Returns whether is not a block above this one blocking sight to the sky (done via checking against the heightmap)
+     */
+    public boolean canBlockSeeTheSky(int par1, int par2, int par3)
     {
         return false;
     }
 
-    public TileEntity getChunkBlockTileEntity(int i, int j, int k)
+    /**
+     * Gets the TileEntity for a given block in this chunk
+     */
+    public TileEntity getChunkBlockTileEntity(int par1, int par2, int par3)
     {
         return null;
     }
 
+    /**
+     * Adds a TileEntity to a chunk
+     */
     public void addTileEntity(TileEntity tileentity)
     {
     }
 
+    /**
+     * Sets the TileEntity for a given block in this chunk
+     */
     public void setChunkBlockTileEntity(int i, int j, int k, TileEntity tileentity)
     {
     }
 
+    /**
+     * Removes the TileEntity for a given block in this chunk
+     */
     public void removeChunkBlockTileEntity(int i, int j, int k)
     {
     }
 
+    /**
+     * Called when this Chunk is loaded by the ChunkProvider
+     */
     public void onChunkLoad()
     {
     }
 
+    /**
+     * Called when this Chunk is unloaded by the ChunkProvider
+     */
     public void onChunkUnload()
     {
     }
 
+    /**
+     * Sets the isModified flag for this Chunk
+     */
     public void setChunkModified()
     {
     }
 
+    /**
+     * Fills the given list of all entities that intersect within the given bounding box that aren't the passed entity
+     * Args: entity, aabb, listToFill
+     */
     public void getEntitiesWithinAABBForEntity(Entity entity, AxisAlignedBB axisalignedbb, List list)
     {
     }
 
+    /**
+     * Gets all entities that can be assigned to the specified class. Args: entityClass, aabb, listToFill
+     */
     public void getEntitiesOfTypeWithinAAAB(Class class1, AxisAlignedBB axisalignedbb, List list)
     {
     }
 
-    public boolean needsSaving(boolean flag)
+    /**
+     * Returns true if this Chunk needs to be saved
+     */
+    public boolean needsSaving(boolean par1)
     {
         return false;
     }
 
-    public int setChunkData(byte abyte0[], int i, int j, int k, int l, int i1, int j1,
-            int k1)
+    public Random getRandomWithSeed(long par1)
     {
-        int l1 = l - i;
-        int i2 = i1 - j;
-        int j2 = j1 - k;
-        int k2 = l1 * i2 * j2;
-        return k2 + (k2 / 2) * 3;
-    }
-
-    public Random getRandomWithSeed(long l)
-    {
-        return new Random(worldObj.getSeed() + (long)(xPosition * xPosition * 0x4c1906) + (long)(xPosition * 0x5ac0db) + (long)(zPosition * zPosition) * 0x4307a7L + (long)(zPosition * 0x5f24f) ^ l);
+        return new Random(worldObj.getSeed() + (long)(xPosition * xPosition * 0x4c1906) + (long)(xPosition * 0x5ac0db) + (long)(zPosition * zPosition) * 0x4307a7L + (long)(zPosition * 0x5f24f) ^ par1);
     }
 
     public boolean isEmpty()
+    {
+        return true;
+    }
+
+    public boolean func_48492_c(int par1, int par2)
     {
         return true;
     }

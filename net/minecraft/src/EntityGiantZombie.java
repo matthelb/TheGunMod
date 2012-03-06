@@ -2,9 +2,9 @@ package net.minecraft.src;
 
 public class EntityGiantZombie extends EntityMob
 {
-    public EntityGiantZombie(World world)
+    public EntityGiantZombie(World par1World)
     {
-        super(world);
+        super(par1World);
         texture = "/mob/zombie.png";
         moveSpeed = 0.5F;
         attackStrength = 50;
@@ -17,8 +17,12 @@ public class EntityGiantZombie extends EntityMob
         return 100;
     }
 
-    public float getBlockPathWeight(int i, int j, int k)
+    /**
+     * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block.
+     * Args: x, y, z
+     */
+    public float getBlockPathWeight(int par1, int par2, int par3)
     {
-        return worldObj.getLightBrightness(i, j, k) - 0.5F;
+        return worldObj.getLightBrightness(par1, par2, par3) - 0.5F;
     }
 }

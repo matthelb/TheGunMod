@@ -5,11 +5,17 @@ import java.util.*;
 
 public class StringTranslate
 {
+    /** Is the private singleton instance of StringTranslate. */
     private static StringTranslate instance = new StringTranslate();
+
+    /**
+     * Contains all key/value pairs to be translated - is loaded from '/lang/en_US.lang' when the StringTranslate is
+     * created.
+     */
     private Properties translateTable;
     private TreeMap languageList;
     private String currentLanguage;
-    private boolean field_46111_e;
+    private boolean isUnicode;
 
     private StringTranslate()
     {
@@ -18,6 +24,9 @@ public class StringTranslate
         setLanguage("en_US");
     }
 
+    /**
+     * Return the StringTranslate singleton instance
+     */
     public static StringTranslate getInstance()
     {
         return instance;
@@ -26,12 +35,15 @@ public class StringTranslate
     private void loadLanguageList()
     {
         TreeMap treemap = new TreeMap();
+
         try
         {
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.StringTranslate.class).getResourceAsStream("/lang/languages.txt"), "UTF-8"));
+
             for (String s = bufferedreader.readLine(); s != null; s = bufferedreader.readLine())
             {
                 String as[] = s.split("=");
+
                 if (as != null && as.length == 2)
                 {
                     treemap.put(as[0], as[1]);
@@ -43,36 +55,40 @@ public class StringTranslate
             ioexception.printStackTrace();
             return;
         }
+
         languageList = treemap;
     }
 
-    public TreeMap func_44022_b()
+    public TreeMap getLanguageList()
     {
         return languageList;
     }
 
-    private void loadLanguage(Properties properties, String s)
-    throws IOException
+    private void loadLanguage(Properties par1Properties, String par2Str) throws IOException
     {
-        BufferedReader bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.StringTranslate.class).getResourceAsStream((new StringBuilder()).append("/lang/").append(s).append(".lang").toString()), "UTF-8"));
-        for (String s1 = bufferedreader.readLine(); s1 != null; s1 = bufferedreader.readLine())
+        BufferedReader bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.StringTranslate.class).getResourceAsStream((new StringBuilder()).append("/lang/").append(par2Str).append(".lang").toString()), "UTF-8"));
+
+        for (String s = bufferedreader.readLine(); s != null; s = bufferedreader.readLine())
         {
-            s1 = s1.trim();
-            if (s1.startsWith("#"))
+            s = s.trim();
+
+            if (s.startsWith("#"))
             {
                 continue;
             }
-            String as[] = s1.split("=");
+
+            String as[] = s.split("=");
+
             if (as != null && as.length == 2)
             {
-                properties.setProperty(as[0], as[1]);
+                par1Properties.setProperty(as[0], as[1]);
             }
         }
     }
 
-    public void setLanguage(String var1)
+    public void setLanguage(String par1Str)
     {
-        if (!var1.equals(this.currentLanguage))
+        if (!par1Str.equals(this.currentLanguage))
         {
             Properties var2 = new Properties();
 
@@ -85,18 +101,20 @@ public class StringTranslate
                 ;
             }
 
-            this.field_46111_e = false;
-            if (!"en_US".equals(var1))
+            this.isUnicode = false;
+
+            if (!"en_US".equals(par1Str))
             {
                 try
                 {
-                    this.loadLanguage(var2, var1);
+                    this.loadLanguage(var2, par1Str);
                     Enumeration var3 = var2.propertyNames();
 
-                    while (var3.hasMoreElements() && !this.field_46111_e)
+                    while (var3.hasMoreElements() && !this.isUnicode)
                     {
                         Object var4 = var3.nextElement();
                         Object var5 = var2.get(var4);
+
                         if (var5 != null)
                         {
                             String var6 = var5.toString();
@@ -105,7 +123,7 @@ public class StringTranslate
                             {
                                 if (var6.charAt(var7) >= 256)
                                 {
-                                    this.field_46111_e = true;
+                                    this.isUnicode = true;
                                     break;
                                 }
                             }
@@ -119,39 +137,48 @@ public class StringTranslate
                 }
             }
 
-            this.currentLanguage = var1;
+            this.currentLanguage = par1Str;
             this.translateTable = var2;
         }
     }
 
-    public String func_44024_c()
+    public String getCurrentLanguage()
     {
         return currentLanguage;
     }
 
-    public boolean func_46110_d()
+    public boolean isUnicode()
     {
-        return field_46111_e;
+        return isUnicode;
     }
 
-    public String translateKey(String s)
+    /**
+     * Translate a key to current language.
+     */
+    public String translateKey(String par1Str)
     {
-        return translateTable.getProperty(s, s);
+        return translateTable.getProperty(par1Str, par1Str);
     }
 
-    public String translateKeyFormat(String s, Object aobj[])
+    /**
+     * Translate a key to current language applying String.format()
+     */
+    public String translateKeyFormat(String par1Str, Object par2ArrayOfObj[])
     {
-        String s1 = translateTable.getProperty(s, s);
-        return String.format(s1, aobj);
+        String s = translateTable.getProperty(par1Str, par1Str);
+        return String.format(s, par2ArrayOfObj);
     }
 
-    public String translateNamedKey(String s)
+    /**
+     * Translate a key with a extra '.name' at end added, is used by blocks and items.
+     */
+    public String translateNamedKey(String par1Str)
     {
-        return translateTable.getProperty((new StringBuilder()).append(s).append(".name").toString(), "");
+        return translateTable.getProperty((new StringBuilder()).append(par1Str).append(".name").toString(), "");
     }
 
-    public static boolean func_46109_d(String s)
+    public static boolean isBidrectional(String par0Str)
     {
-        return "ar_SA".equals(s) || "he_IL".equals(s);
+        return "ar_SA".equals(par0Str) || "he_IL".equals(par0Str);
     }
 }

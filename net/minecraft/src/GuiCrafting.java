@@ -5,29 +5,38 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiCrafting extends GuiContainer
 {
-    public GuiCrafting(InventoryPlayer inventoryplayer, World world, int i, int j, int k)
+    public GuiCrafting(InventoryPlayer par1InventoryPlayer, World par2World, int par3, int par4, int par5)
     {
-        super(new ContainerWorkbench(inventoryplayer, world, i, j, k));
+        super(new ContainerWorkbench(par1InventoryPlayer, par2World, par3, par4, par5));
     }
 
+    /**
+     * Called when the screen is unloaded. Used to disable keyboard repeat events
+     */
     public void onGuiClosed()
     {
         super.onGuiClosed();
     }
 
+    /**
+     * Draw the foreground layer for the GuiContainer (everythin in front of the items)
+     */
     protected void drawGuiContainerForegroundLayer()
     {
-        fontRenderer.drawString("Crafting", 28, 6, 0x404040);
-        fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("container.crafting"), 28, 6, 0x404040);
+        fontRenderer.drawString(StatCollector.translateToLocal("container.inventory"), 8, (ySize - 96) + 2, 0x404040);
     }
 
-    protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
+    /**
+     * Draw the background layer for the GuiContainer (everything behind the items)
+     */
+    protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3)
     {
-        int k = mc.renderEngine.getTexture("/gui/crafting.png");
+        int i = mc.renderEngine.getTexture("/gui/crafting.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(k);
-        int l = (width - xSize) / 2;
-        int i1 = (height - ySize) / 2;
-        drawTexturedModalRect(l, i1, 0, 0, xSize, ySize);
+        mc.renderEngine.bindTexture(i);
+        int j = (width - xSize) / 2;
+        int k = (height - ySize) / 2;
+        drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
     }
 }

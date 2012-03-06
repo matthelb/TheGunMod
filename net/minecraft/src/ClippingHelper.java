@@ -15,11 +15,14 @@ public class ClippingHelper
         clippingMatrix = new float[16];
     }
 
-    public boolean isBoxInFrustum(double d, double d1, double d2, double d3, double d4, double d5)
+    /**
+     * Returns true if the box is inside all 6 clipping planes, otherwise returns false.
+     */
+    public boolean isBoxInFrustum(double par1, double par3, double par5, double par7, double par9, double par11)
     {
         for (int i = 0; i < 6; i++)
         {
-            if ((double)frustum[i][0] * d + (double)frustum[i][1] * d1 + (double)frustum[i][2] * d2 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * d3 + (double)frustum[i][1] * d1 + (double)frustum[i][2] * d2 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * d + (double)frustum[i][1] * d4 + (double)frustum[i][2] * d2 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * d3 + (double)frustum[i][1] * d4 + (double)frustum[i][2] * d2 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * d + (double)frustum[i][1] * d1 + (double)frustum[i][2] * d5 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * d3 + (double)frustum[i][1] * d1 + (double)frustum[i][2] * d5 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * d + (double)frustum[i][1] * d4 + (double)frustum[i][2] * d5 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * d3 + (double)frustum[i][1] * d4 + (double)frustum[i][2] * d5 + (double)frustum[i][3] <= 0.0D)
+            if ((double)frustum[i][0] * par1 + (double)frustum[i][1] * par3 + (double)frustum[i][2] * par5 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * par7 + (double)frustum[i][1] * par3 + (double)frustum[i][2] * par5 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * par1 + (double)frustum[i][1] * par9 + (double)frustum[i][2] * par5 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * par7 + (double)frustum[i][1] * par9 + (double)frustum[i][2] * par5 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * par1 + (double)frustum[i][1] * par3 + (double)frustum[i][2] * par11 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * par7 + (double)frustum[i][1] * par3 + (double)frustum[i][2] * par11 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * par1 + (double)frustum[i][1] * par9 + (double)frustum[i][2] * par11 + (double)frustum[i][3] <= 0.0D && (double)frustum[i][0] * par7 + (double)frustum[i][1] * par9 + (double)frustum[i][2] * par11 + (double)frustum[i][3] <= 0.0D)
             {
                 return false;
             }

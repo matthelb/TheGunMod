@@ -8,16 +8,19 @@ public class ColorizerGrass
     {
     }
 
-    public static void setGrassBiomeColorizer(int ai[])
+    public static void setGrassBiomeColorizer(int par0ArrayOfInteger[])
     {
-        grassBuffer = ai;
+        grassBuffer = par0ArrayOfInteger;
     }
 
-    public static int getGrassColor(double d, double d1)
+    /**
+     * Gets grass color from temperature and humidity. Args: temperature, humidity
+     */
+    public static int getGrassColor(double par0, double par2)
     {
-        d1 *= d;
-        int i = (int)((1.0D - d) * 255D);
-        int j = (int)((1.0D - d1) * 255D);
+        par2 *= par0;
+        int i = (int)((1.0D - par0) * 255D);
+        int j = (int)((1.0D - par2) * 255D);
         return grassBuffer[j << 8 | i];
     }
 }

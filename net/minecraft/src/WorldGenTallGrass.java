@@ -4,26 +4,29 @@ import java.util.Random;
 
 public class WorldGenTallGrass extends WorldGenerator
 {
+    /** Stores ID for WorldGenTallGrass */
     private int tallGrassID;
     private int tallGrassMetadata;
 
-    public WorldGenTallGrass(int i, int j)
+    public WorldGenTallGrass(int par1, int par2)
     {
-        tallGrassID = i;
-        tallGrassMetadata = j;
+        tallGrassID = par1;
+        tallGrassMetadata = par2;
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        for (int l = 0; ((l = world.getBlockId(i, j, k)) == 0 || l == Block.leaves.blockID) && j > 0; j--) { }
-        for (int i1 = 0; i1 < 128; i1++)
+        for (int i = 0; ((i = par1World.getBlockId(par3, par4, par5)) == 0 || i == Block.leaves.blockID) && par4 > 0; par4--) { }
+
+        for (int j = 0; j < 128; j++)
         {
-            int j1 = (i + random.nextInt(8)) - random.nextInt(8);
-            int k1 = (j + random.nextInt(4)) - random.nextInt(4);
-            int l1 = (k + random.nextInt(8)) - random.nextInt(8);
-            if (world.isAirBlock(j1, k1, l1) && ((BlockFlower)Block.blocksList[tallGrassID]).canBlockStay(world, j1, k1, l1))
+            int k = (par3 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+            int l = (par4 + par2Random.nextInt(4)) - par2Random.nextInt(4);
+            int i1 = (par5 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+
+            if (par1World.isAirBlock(k, l, i1) && ((BlockFlower)Block.blocksList[tallGrassID]).canBlockStay(par1World, k, l, i1))
             {
-                world.setBlockAndMetadata(j1, k1, l1, tallGrassID, tallGrassMetadata);
+                par1World.setBlockAndMetadata(k, l, i1, tallGrassID, tallGrassMetadata);
             }
         }
 

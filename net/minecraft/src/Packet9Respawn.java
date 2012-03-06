@@ -4,61 +4,74 @@ import java.io.*;
 
 public class Packet9Respawn extends Packet
 {
-    public long mapSeed;
     public int respawnDimension;
+
+    /** 0 thru 3 for Peaceful, Easy, Normal, Hard. 1 is always sent c->s */
     public int difficulty;
+
+    /** Defaults to 128 */
     public int worldHeight;
+
+    /** 0 for survival, 1 for creative */
     public int creativeMode;
-    public EnumWorldType terrainType;
+    public WorldType terrainType;
 
     public Packet9Respawn()
     {
     }
 
-    public Packet9Respawn(byte byte0, byte byte1, long l, EnumWorldType enumworldtype, int i, int j)
+    public Packet9Respawn(int par1, byte par2, WorldType par3WorldType, int par4, int par5)
     {
-        respawnDimension = byte0;
-        difficulty = byte1;
-        mapSeed = l;
-        worldHeight = i;
-        creativeMode = j;
-        terrainType = enumworldtype;
+        respawnDimension = par1;
+        difficulty = par2;
+        worldHeight = par4;
+        creativeMode = par5;
+        terrainType = par3WorldType;
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleRespawn(this);
+        par1NetHandler.handleRespawn(this);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        respawnDimension = datainputstream.readByte();
-        difficulty = datainputstream.readByte();
-        creativeMode = datainputstream.readByte();
-        worldHeight = datainputstream.readShort();
-        mapSeed = datainputstream.readLong();
-        String s = readString(datainputstream, 16);
-        terrainType = EnumWorldType.parseWorldType(s);
+        respawnDimension = par1DataInputStream.readInt();
+        difficulty = par1DataInputStream.readByte();
+        creativeMode = par1DataInputStream.readByte();
+        worldHeight = par1DataInputStream.readShort();
+        String s = readString(par1DataInputStream, 16);
+        terrainType = WorldType.parseWorldType(s);
+
         if (terrainType == null)
         {
-            terrainType = EnumWorldType.DEFAULT;
+            terrainType = WorldType.field_48635_b;
         }
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeByte(respawnDimension);
-        dataoutputstream.writeByte(difficulty);
-        dataoutputstream.writeByte(creativeMode);
-        dataoutputstream.writeShort(worldHeight);
-        dataoutputstream.writeLong(mapSeed);
-        writeString(terrainType.name(), dataoutputstream);
+        par1DataOutputStream.writeInt(respawnDimension);
+        par1DataOutputStream.writeByte(difficulty);
+        par1DataOutputStream.writeByte(creativeMode);
+        par1DataOutputStream.writeShort(worldHeight);
+        writeString(terrainType.func_48628_a(), par1DataOutputStream);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
-        return 13 + terrainType.name().length();
+        return 8 + terrainType.func_48628_a().length();
     }
 }

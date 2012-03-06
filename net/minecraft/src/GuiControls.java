@@ -5,17 +5,26 @@ import net.minecraft.client.Minecraft;
 
 public class GuiControls extends GuiScreen
 {
+    /**
+     * A reference to the screen object that created this. Used for navigating between screens.
+     */
     private GuiScreen parentScreen;
+
+    /** The title string that is displayed in the top-center of the screen. */
     protected String screenTitle;
+
+    /** Reference to the GameSettings object. */
     private GameSettings options;
+
+    /** The ID of the  button that has been pressed. */
     private int buttonId;
 
-    public GuiControls(GuiScreen guiscreen, GameSettings gamesettings)
+    public GuiControls(GuiScreen par1GuiScreen, GameSettings par2GameSettings)
     {
         screenTitle = "Controls";
         buttonId = -1;
-        parentScreen = guiscreen;
-        options = gamesettings;
+        parentScreen = par1GuiScreen;
+        options = par2GameSettings;
     }
 
     private int func_20080_j()
@@ -23,10 +32,14 @@ public class GuiControls extends GuiScreen
         return width / 2 - 155;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
         int i = func_20080_j();
+
         for (int j = 0; j < options.keyBindings.length; j++)
         {
             controlList.add(new GuiSmallButton(j, i + (j % 2) * 160, height / 6 + 24 * (j >> 1), 70, 20, options.getOptionDisplayString(j)));
@@ -36,86 +49,102 @@ public class GuiControls extends GuiScreen
         screenTitle = stringtranslate.translateKey("controls.title");
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton par1GuiButton)
     {
         for (int i = 0; i < options.keyBindings.length; i++)
         {
             ((GuiButton)controlList.get(i)).displayString = options.getOptionDisplayString(i);
         }
 
-        if (guibutton.id == 200)
+        if (par1GuiButton.id == 200)
         {
             mc.displayGuiScreen(parentScreen);
         }
         else
         {
-            buttonId = guibutton.id;
-            guibutton.displayString = (new StringBuilder()).append("> ").append(options.getOptionDisplayString(guibutton.id)).append(" <").toString();
+            buttonId = par1GuiButton.id;
+            par1GuiButton.displayString = (new StringBuilder()).append("> ").append(options.getOptionDisplayString(par1GuiButton.id)).append(" <").toString();
         }
     }
 
-    protected void mouseClicked(int i, int j, int k)
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int par1, int par2, int par3)
     {
         if (buttonId >= 0)
         {
-            options.setKeyBinding(buttonId, -100 + k);
+            options.setKeyBinding(buttonId, -100 + par3);
             ((GuiButton)controlList.get(buttonId)).displayString = options.getOptionDisplayString(buttonId);
             buttonId = -1;
             KeyBinding.resetKeyBindingArrayAndHash();
         }
         else
         {
-            super.mouseClicked(i, j, k);
+            super.mouseClicked(par1, par2, par3);
         }
     }
 
-    protected void keyTyped(char c, int i)
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char par1, int par2)
     {
         if (buttonId >= 0)
         {
-            options.setKeyBinding(buttonId, i);
+            options.setKeyBinding(buttonId, par2);
             ((GuiButton)controlList.get(buttonId)).displayString = options.getOptionDisplayString(buttonId);
             buttonId = -1;
             KeyBinding.resetKeyBindingArrayAndHash();
         }
         else
         {
-            super.keyTyped(c, i);
+            super.keyTyped(par1, par2);
         }
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
         drawDefaultBackground();
         drawCenteredString(fontRenderer, screenTitle, width / 2, 20, 0xffffff);
-        int k = func_20080_j();
-        for (int l = 0; l < options.keyBindings.length; l++)
+        int i = func_20080_j();
+
+        for (int j = 0; j < options.keyBindings.length; j++)
         {
             boolean flag = false;
-            for (int i1 = 0; i1 < options.keyBindings.length; i1++)
+
+            for (int k = 0; k < options.keyBindings.length; k++)
             {
-                if (i1 != l && options.keyBindings[l].keyCode == options.keyBindings[i1].keyCode)
+                if (k != j && options.keyBindings[j].keyCode == options.keyBindings[k].keyCode)
                 {
                     flag = true;
                 }
             }
 
-            int j1 = l;
-            if (buttonId == l)
+            int l = j;
+
+            if (buttonId == j)
             {
-                ((GuiButton)controlList.get(j1)).displayString = "\247f> \247e??? \247f<";
+                ((GuiButton)controlList.get(l)).displayString = "\247f> \247e??? \247f<";
             }
             else if (flag)
             {
-                ((GuiButton)controlList.get(j1)).displayString = (new StringBuilder()).append("\247c").append(options.getOptionDisplayString(j1)).toString();
+                ((GuiButton)controlList.get(l)).displayString = (new StringBuilder()).append("\247c").append(options.getOptionDisplayString(l)).toString();
             }
             else
             {
-                ((GuiButton)controlList.get(j1)).displayString = options.getOptionDisplayString(j1);
+                ((GuiButton)controlList.get(l)).displayString = options.getOptionDisplayString(l);
             }
-            drawString(fontRenderer, options.getKeyBindingDescription(l), k + (l % 2) * 160 + 70 + 6, height / 6 + 24 * (l >> 1) + 7, -1);
+
+            drawString(fontRenderer, options.getKeyBindingDescription(j), i + (j % 2) * 160 + 70 + 6, height / 6 + 24 * (j >> 1) + 7, -1);
         }
 
-        super.drawScreen(i, j, f);
+        super.drawScreen(par1, par2, par3);
     }
 }

@@ -8,23 +8,26 @@ public class WorldGenCactus extends WorldGenerator
     {
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        for (int l = 0; l < 10; l++)
+        for (int i = 0; i < 10; i++)
         {
-            int i1 = (i + random.nextInt(8)) - random.nextInt(8);
-            int j1 = (j + random.nextInt(4)) - random.nextInt(4);
-            int k1 = (k + random.nextInt(8)) - random.nextInt(8);
-            if (!world.isAirBlock(i1, j1, k1))
+            int j = (par3 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+            int k = (par4 + par2Random.nextInt(4)) - par2Random.nextInt(4);
+            int l = (par5 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+
+            if (!par1World.isAirBlock(j, k, l))
             {
                 continue;
             }
-            int l1 = 1 + random.nextInt(random.nextInt(3) + 1);
-            for (int i2 = 0; i2 < l1; i2++)
+
+            int i1 = 1 + par2Random.nextInt(par2Random.nextInt(3) + 1);
+
+            for (int j1 = 0; j1 < i1; j1++)
             {
-                if (Block.cactus.canBlockStay(world, i1, j1 + i2, k1))
+                if (Block.cactus.canBlockStay(par1World, j, k + j1, l))
                 {
-                    world.setBlock(i1, j1 + i2, k1, Block.cactus.blockID);
+                    par1World.setBlock(j, k + j1, l, Block.cactus.blockID);
                 }
             }
         }

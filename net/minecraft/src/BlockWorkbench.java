@@ -2,23 +2,28 @@ package net.minecraft.src;
 
 public class BlockWorkbench extends Block
 {
-    protected BlockWorkbench(int i)
+    protected BlockWorkbench(int par1)
     {
-        super(i, Material.wood);
+        super(par1, Material.wood);
         blockIndexInTexture = 59;
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        if (i == 1)
+        if (par1 == 1)
         {
             return blockIndexInTexture - 16;
         }
-        if (i == 0)
+
+        if (par1 == 0)
         {
             return Block.planks.getBlockTextureFromSide(0);
         }
-        if (i == 2 || i == 4)
+
+        if (par1 == 2 || par1 == 4)
         {
             return blockIndexInTexture + 1;
         }
@@ -28,15 +33,19 @@ public class BlockWorkbench extends Block
         }
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return true;
         }
         else
         {
-            entityplayer.displayWorkbenchGUI(i, j, k);
+            par5EntityPlayer.displayWorkbenchGUI(par2, par3, par4);
             return true;
         }
     }

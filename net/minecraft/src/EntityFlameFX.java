@@ -6,84 +6,100 @@ public class EntityFlameFX extends EntityFX
 {
     private float field_672_a;
 
-    public EntityFlameFX(World world, double d, double d1, double d2,
-            double d3, double d4, double d5)
+    public EntityFlameFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
-        super(world, d, d1, d2, d3, d4, d5);
-        motionX = motionX * 0.0099999997764825821D + d3;
-        motionY = motionY * 0.0099999997764825821D + d4;
-        motionZ = motionZ * 0.0099999997764825821D + d5;
-        d += (rand.nextFloat() - rand.nextFloat()) * 0.05F;
-        d1 += (rand.nextFloat() - rand.nextFloat()) * 0.05F;
-        d2 += (rand.nextFloat() - rand.nextFloat()) * 0.05F;
+        super(par1World, par2, par4, par6, par8, par10, par12);
+        motionX = motionX * 0.01D + par8;
+        motionY = motionY * 0.01D + par10;
+        motionZ = motionZ * 0.01D + par12;
+        par2 += (rand.nextFloat() - rand.nextFloat()) * 0.05F;
+        par4 += (rand.nextFloat() - rand.nextFloat()) * 0.05F;
+        par6 += (rand.nextFloat() - rand.nextFloat()) * 0.05F;
         field_672_a = particleScale;
         particleRed = particleGreen = particleBlue = 1.0F;
-        particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D)) + 4;
+        particleMaxAge = (int)(8D / (Math.random() * 0.8D + 0.2D)) + 4;
         noClip = true;
         setParticleTextureIndex(48);
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        float f6 = ((float)particleAge + f) / (float)particleMaxAge;
-        particleScale = field_672_a * (1.0F - f6 * f6 * 0.5F);
-        super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
+        float f = ((float)particleAge + par2) / (float)particleMaxAge;
+        particleScale = field_672_a * (1.0F - f * f * 0.5F);
+        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
-    public int getEntityBrightnessForRender(float f)
+    public int getEntityBrightnessForRender(float par1)
     {
-        float f1 = ((float)particleAge + f) / (float)particleMaxAge;
-        if (f1 < 0.0F)
+        float f = ((float)particleAge + par1) / (float)particleMaxAge;
+
+        if (f < 0.0F)
         {
-            f1 = 0.0F;
+            f = 0.0F;
         }
-        if (f1 > 1.0F)
+
+        if (f > 1.0F)
         {
-            f1 = 1.0F;
+            f = 1.0F;
         }
-        int i = super.getEntityBrightnessForRender(f);
+
+        int i = super.getEntityBrightnessForRender(par1);
         int j = i & 0xff;
         int k = i >> 16 & 0xff;
-        j += (int)(f1 * 15F * 16F);
+        j += (int)(f * 15F * 16F);
+
         if (j > 240)
         {
             j = 240;
         }
+
         return j | k << 16;
     }
 
-    public float getEntityBrightness(float f)
+    /**
+     * Gets how bright this entity is.
+     */
+    public float getEntityBrightness(float par1)
     {
-        float f1 = ((float)particleAge + f) / (float)particleMaxAge;
-        if (f1 < 0.0F)
+        float f = ((float)particleAge + par1) / (float)particleMaxAge;
+
+        if (f < 0.0F)
         {
-            f1 = 0.0F;
+            f = 0.0F;
         }
-        if (f1 > 1.0F)
+
+        if (f > 1.0F)
         {
-            f1 = 1.0F;
+            f = 1.0F;
         }
-        float f2 = super.getEntityBrightness(f);
-        return f2 * f1 + (1.0F - f1);
+
+        float f1 = super.getEntityBrightness(par1);
+        return f1 * f + (1.0F - f);
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
+
         if (particleAge++ >= particleMaxAge)
         {
             setEntityDead();
         }
+
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.95999997854232788D;
-        motionY *= 0.95999997854232788D;
-        motionZ *= 0.95999997854232788D;
+        motionX *= 0.96D;
+        motionY *= 0.96D;
+        motionZ *= 0.96D;
+
         if (onGround)
         {
-            motionX *= 0.69999998807907104D;
-            motionZ *= 0.69999998807907104D;
+            motionX *= 0.7D;
+            motionZ *= 0.7D;
         }
     }
 }

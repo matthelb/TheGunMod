@@ -2,16 +2,16 @@ package net.minecraft.src;
 
 public class ItemCoal extends Item
 {
-    public ItemCoal(int i)
+    public ItemCoal(int par1)
     {
-        super(i);
+        super(par1);
         setHasSubtypes(true);
         setMaxDamage(0);
     }
 
-    public String getItemNameIS(ItemStack itemstack)
+    public String getItemNameIS(ItemStack par1ItemStack)
     {
-        if (itemstack.getItemDamage() == 1)
+        if (par1ItemStack.getItemDamage() == 1)
         {
             return "item.charcoal";
         }

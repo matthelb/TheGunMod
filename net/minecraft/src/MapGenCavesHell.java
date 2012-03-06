@@ -8,128 +8,155 @@ public class MapGenCavesHell extends MapGenBase
     {
     }
 
-    protected void generateLargeCaveNode(int i, int j, byte abyte0[], double d, double d1,
-            double d2)
+    /**
+     * Generates a larger initial cave node than usual. Called 25% of the time.
+     */
+    protected void generateLargeCaveNode(int par1, int par2, byte par3ArrayOfByte[], double par4, double par6, double par8)
     {
-        generateCaveNode(i, j, abyte0, d, d1, d2, 1.0F + rand.nextFloat() * 6F, 0.0F, 0.0F, -1, -1, 0.5D);
+        generateCaveNode(par1, par2, par3ArrayOfByte, par4, par6, par8, 1.0F + rand.nextFloat() * 6F, 0.0F, 0.0F, -1, -1, 0.5D);
     }
 
-    protected void generateCaveNode(int i, int j, byte abyte0[], double d, double d1,
-            double d2, float f, float f1, float f2, int k, int l,
-            double d3)
+    /**
+     * Generates a node in the current cave system recursion tree.
+     */
+    protected void generateCaveNode(int par1, int par2, byte par3ArrayOfByte[], double par4, double par6, double par8, float par10, float par11, float par12, int par13, int par14, double par15)
     {
-        double d4 = i * 16 + 8;
-        double d5 = j * 16 + 8;
-        float f3 = 0.0F;
-        float f4 = 0.0F;
+        double d = par1 * 16 + 8;
+        double d1 = par2 * 16 + 8;
+        float f = 0.0F;
+        float f1 = 0.0F;
         Random random = new Random(rand.nextLong());
-        if (l <= 0)
+
+        if (par14 <= 0)
         {
-            int i1 = range * 16 - 16;
-            l = i1 - random.nextInt(i1 / 4);
+            int i = range * 16 - 16;
+            par14 = i - random.nextInt(i / 4);
         }
+
         boolean flag = false;
-        if (k == -1)
+
+        if (par13 == -1)
         {
-            k = l / 2;
+            par13 = par14 / 2;
             flag = true;
         }
-        int j1 = random.nextInt(l / 2) + l / 4;
+
+        int j = random.nextInt(par14 / 2) + par14 / 4;
         boolean flag1 = random.nextInt(6) == 0;
-        for (; k < l; k++)
+
+        for (; par13 < par14; par13++)
         {
-            double d6 = 1.5D + (double)(MathHelper.sin(((float)k * 3.141593F) / (float)l) * f * 1.0F);
-            double d7 = d6 * d3;
-            float f5 = MathHelper.cos(f2);
-            float f6 = MathHelper.sin(f2);
-            d += MathHelper.cos(f1) * f5;
-            d1 += f6;
-            d2 += MathHelper.sin(f1) * f5;
+            double d2 = 1.5D + (double)(MathHelper.sin(((float)par13 * (float)Math.PI) / (float)par14) * par10 * 1.0F);
+            double d3 = d2 * par15;
+            float f2 = MathHelper.cos(par12);
+            float f3 = MathHelper.sin(par12);
+            par4 += MathHelper.cos(par11) * f2;
+            par6 += f3;
+            par8 += MathHelper.sin(par11) * f2;
+
             if (flag1)
             {
-                f2 *= 0.92F;
+                par12 *= 0.92F;
             }
             else
             {
-                f2 *= 0.7F;
+                par12 *= 0.7F;
             }
-            f2 += f4 * 0.1F;
-            f1 += f3 * 0.1F;
-            f4 *= 0.9F;
-            f3 *= 0.75F;
-            f4 += (random.nextFloat() - random.nextFloat()) * random.nextFloat() * 2.0F;
-            f3 += (random.nextFloat() - random.nextFloat()) * random.nextFloat() * 4F;
-            if (!flag && k == j1 && f > 1.0F)
+
+            par12 += f1 * 0.1F;
+            par11 += f * 0.1F;
+            f1 *= 0.9F;
+            f *= 0.75F;
+            f1 += (random.nextFloat() - random.nextFloat()) * random.nextFloat() * 2.0F;
+            f += (random.nextFloat() - random.nextFloat()) * random.nextFloat() * 4F;
+
+            if (!flag && par13 == j && par10 > 1.0F)
             {
-                generateCaveNode(i, j, abyte0, d, d1, d2, random.nextFloat() * 0.5F + 0.5F, f1 - 1.570796F, f2 / 3F, k, l, 1.0D);
-                generateCaveNode(i, j, abyte0, d, d1, d2, random.nextFloat() * 0.5F + 0.5F, f1 + 1.570796F, f2 / 3F, k, l, 1.0D);
+                generateCaveNode(par1, par2, par3ArrayOfByte, par4, par6, par8, random.nextFloat() * 0.5F + 0.5F, par11 - ((float)Math.PI / 2F), par12 / 3F, par13, par14, 1.0D);
+                generateCaveNode(par1, par2, par3ArrayOfByte, par4, par6, par8, random.nextFloat() * 0.5F + 0.5F, par11 + ((float)Math.PI / 2F), par12 / 3F, par13, par14, 1.0D);
                 return;
             }
+
             if (!flag && random.nextInt(4) == 0)
             {
                 continue;
             }
-            double d8a = d - d4;
-            double d9a = d2 - d5;
-            double d10a = l - k;
-            double d11 = f + 2.0F + 16F;
-            if ((d8a * d8a + d9a * d9a) - d10a * d10a > d11 * d11)
+
+            double d4a = par4 - d;
+            double d5a = par8 - d1;
+            double d6a = par14 - par13;
+            double d7 = par10 + 2.0F + 16F;
+
+            if ((d4a * d4a + d5a * d5a) - d6a * d6a > d7 * d7)
             {
                 return;
             }
-            if (d < d4 - 16D - d6 * 2D || d2 < d5 - 16D - d6 * 2D || d > d4 + 16D + d6 * 2D || d2 > d5 + 16D + d6 * 2D)
+
+            if (par4 < d - 16D - d2 * 2D || par8 < d1 - 16D - d2 * 2D || par4 > d + 16D + d2 * 2D || par8 > d1 + 16D + d2 * 2D)
             {
                 continue;
             }
-            int d8 = MathHelper.floor_double(d - d6) - i * 16 - 1;
-            int k1 = (MathHelper.floor_double(d + d6) - i * 16) + 1;
-            int d9 = MathHelper.floor_double(d1 - d7) - 1;
-            int l1 = MathHelper.floor_double(d1 + d7) + 1;
-            int d10 = MathHelper.floor_double(d2 - d6) - j * 16 - 1;
-            int i2 = (MathHelper.floor_double(d2 + d6) - j * 16) + 1;
-            if (d8 < 0)
+
+            int d4 = MathHelper.floor_double(par4 - d2) - par1 * 16 - 1;
+            int k = (MathHelper.floor_double(par4 + d2) - par1 * 16) + 1;
+            int d5 = MathHelper.floor_double(par6 - d3) - 1;
+            int l = MathHelper.floor_double(par6 + d3) + 1;
+            int d6 = MathHelper.floor_double(par8 - d2) - par2 * 16 - 1;
+            int i1 = (MathHelper.floor_double(par8 + d2) - par2 * 16) + 1;
+
+            if (d4 < 0)
             {
-                d8 = 0;
+                d4 = 0;
             }
-            if (k1 > 16)
+
+            if (k > 16)
             {
-                k1 = 16;
+                k = 16;
             }
-            if (d9 < 1)
+
+            if (d5 < 1)
             {
-                d9 = 1;
+                d5 = 1;
             }
-            if (l1 > worldObj.worldHeight - 8)
+
+            if (l > 120)
             {
-                l1 = worldObj.worldHeight - 8;
+                l = 120;
             }
-            if (d10 < 0)
+
+            if (d6 < 0)
             {
-                d10 = 0;
+                d6 = 0;
             }
-            if (i2 > 16)
+
+            if (i1 > 16)
             {
-                i2 = 16;
+                i1 = 16;
             }
+
             boolean flag2 = false;
-            for (int j2 = d8; !flag2 && j2 < k1; j2++)
+
+            for (int j1 = d4; !flag2 && j1 < k; j1++)
             {
-                for (int l2 = d10; !flag2 && l2 < i2; l2++)
+                for (int l1 = d6; !flag2 && l1 < i1; l1++)
                 {
-                    for (int i3 = l1 + 1; !flag2 && i3 >= d9 - 1; i3--)
+                    for (int i2 = l + 1; !flag2 && i2 >= d5 - 1; i2--)
                     {
-                        int j3 = (j2 * 16 + l2) * worldObj.worldHeight + i3;
-                        if (i3 < 0 || i3 >= worldObj.worldHeight)
+                        int j2 = (j1 * 16 + l1) * 128 + i2;
+
+                        if (i2 < 0 || i2 >= 128)
                         {
                             continue;
                         }
-                        if (abyte0[j3] == Block.lavaMoving.blockID || abyte0[j3] == Block.lavaStill.blockID)
+
+                        if (par3ArrayOfByte[j2] == Block.lavaMoving.blockID || par3ArrayOfByte[j2] == Block.lavaStill.blockID)
                         {
                             flag2 = true;
                         }
-                        if (i3 != d9 - 1 && j2 != d8 && j2 != k1 - 1 && l2 != d10 && l2 != i2 - 1)
+
+                        if (i2 != d5 - 1 && j1 != d4 && j1 != k - 1 && l1 != d6 && l1 != i1 - 1)
                         {
-                            i3 = d9;
+                            i2 = d5;
                         }
                     }
                 }
@@ -139,25 +166,31 @@ public class MapGenCavesHell extends MapGenBase
             {
                 continue;
             }
-            for (int k2 = d8; k2 < k1; k2++)
+
+            for (int k1 = d4; k1 < k; k1++)
             {
-                double d12 = (((double)(k2 + i * 16) + 0.5D) - d) / d6;
-                for (int k3 = d10; k3 < i2; k3++)
+                double d8 = (((double)(k1 + par1 * 16) + 0.5D) - par4) / d2;
+
+                for (int k2 = d6; k2 < i1; k2++)
                 {
-                    double d13 = (((double)(k3 + j * 16) + 0.5D) - d2) / d6;
-                    int l3 = (k2 * 16 + k3) * worldObj.worldHeight + l1;
-                    for (int i4 = l1 - 1; i4 >= d9; i4--)
+                    double d9 = (((double)(k2 + par2 * 16) + 0.5D) - par8) / d2;
+                    int l2 = (k1 * 16 + k2) * 128 + l;
+
+                    for (int i3 = l - 1; i3 >= d5; i3--)
                     {
-                        double d14 = (((double)i4 + 0.5D) - d1) / d7;
-                        if (d14 > -0.69999999999999996D && d12 * d12 + d14 * d14 + d13 * d13 < 1.0D)
+                        double d10 = (((double)i3 + 0.5D) - par6) / d3;
+
+                        if (d10 > -0.7D && d8 * d8 + d10 * d10 + d9 * d9 < 1.0D)
                         {
-                            byte byte0 = abyte0[l3];
+                            byte byte0 = par3ArrayOfByte[l2];
+
                             if (byte0 == Block.netherrack.blockID || byte0 == Block.dirt.blockID || byte0 == Block.grass.blockID)
                             {
-                                abyte0[l3] = 0;
+                                par3ArrayOfByte[l2] = 0;
                             }
                         }
-                        l3--;
+
+                        l2--;
                     }
                 }
             }
@@ -169,30 +202,37 @@ public class MapGenCavesHell extends MapGenBase
         }
     }
 
-    protected void recursiveGenerate(World world, int i, int j, int k, int l, byte abyte0[])
+    /**
+     * Recursively called by generate() (generate) and optionally by itself.
+     */
+    protected void recursiveGenerate(World par1World, int par2, int par3, int par4, int par5, byte par6ArrayOfByte[])
     {
-        int i1 = rand.nextInt(rand.nextInt(rand.nextInt(10) + 1) + 1);
+        int i = rand.nextInt(rand.nextInt(rand.nextInt(10) + 1) + 1);
+
         if (rand.nextInt(5) != 0)
         {
-            i1 = 0;
+            i = 0;
         }
-        for (int j1 = 0; j1 < i1; j1++)
+
+        for (int j = 0; j < i; j++)
         {
-            double d = i * 16 + rand.nextInt(16);
-            double d1 = rand.nextInt(world.worldHeight);
-            double d2 = j * 16 + rand.nextInt(16);
-            int k1 = 1;
+            double d = par2 * 16 + rand.nextInt(16);
+            double d1 = rand.nextInt(128);
+            double d2 = par3 * 16 + rand.nextInt(16);
+            int k = 1;
+
             if (rand.nextInt(4) == 0)
             {
-                generateLargeCaveNode(k, l, abyte0, d, d1, d2);
-                k1 += rand.nextInt(4);
+                generateLargeCaveNode(par4, par5, par6ArrayOfByte, d, d1, d2);
+                k += rand.nextInt(4);
             }
-            for (int l1 = 0; l1 < k1; l1++)
+
+            for (int l = 0; l < k; l++)
             {
-                float f = rand.nextFloat() * 3.141593F * 2.0F;
+                float f = rand.nextFloat() * (float)Math.PI * 2.0F;
                 float f1 = ((rand.nextFloat() - 0.5F) * 2.0F) / 8F;
                 float f2 = rand.nextFloat() * 2.0F + rand.nextFloat();
-                generateCaveNode(k, l, abyte0, d, d1, d2, f2 * 2.0F, f, f1, 0, 0, 0.5D);
+                generateCaveNode(par4, par5, par6ArrayOfByte, d, d1, d2, f2 * 2.0F, f, f1, 0, 0, 0.5D);
             }
         }
     }

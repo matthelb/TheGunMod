@@ -10,20 +10,21 @@ public class EntityLargeExplodeFX extends EntityFX
     private RenderEngine field_35128_az;
     private float field_35131_aA;
 
-    public EntityLargeExplodeFX(RenderEngine renderengine, World world, double d, double d1, double d2, double d3, double d4, double d5)
+    public EntityLargeExplodeFX(RenderEngine par1RenderEngine, World par2World, double par3, double par5, double par7, double par9, double par11, double par13)
     {
-        super(world, d, d1, d2, 0.0D, 0.0D, 0.0D);
+        super(par2World, par3, par5, par7, 0.0D, 0.0D, 0.0D);
         field_35130_a = 0;
         field_35129_ay = 0;
-        field_35128_az = renderengine;
+        field_35128_az = par1RenderEngine;
         field_35129_ay = 6 + rand.nextInt(4);
         particleRed = particleGreen = particleBlue = rand.nextFloat() * 0.6F + 0.4F;
-        field_35131_aA = 1.0F - (float)d3 * 0.5F;
+        field_35131_aA = 1.0F - (float)par9 * 0.5F;
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        int i = (int)((((float)field_35130_a + f) * 15F) / (float)field_35129_ay);
+        int i = (int)((((float)field_35130_a + par2) * 15F) / (float)field_35129_ay);
+
         if (i > 15)
         {
             return;
@@ -31,43 +32,47 @@ public class EntityLargeExplodeFX extends EntityFX
         else
         {
             field_35128_az.bindTexture(field_35128_az.getTexture("/misc/explosion.png"));
-            float f6 = (float)(i % 4) / 4F;
-            float f7 = f6 + 0.24975F;
-            float f8 = (float)(i / 4) / 4F;
-            float f9 = f8 + 0.24975F;
-            float f10 = 2.0F * field_35131_aA;
-            float f11 = (float)((prevPosX + (posX - prevPosX) * (double)f) - interpPosX);
-            float f12 = (float)((prevPosY + (posY - prevPosY) * (double)f) - interpPosY);
-            float f13 = (float)((prevPosZ + (posZ - prevPosZ) * (double)f) - interpPosZ);
+            float f = (float)(i % 4) / 4F;
+            float f1 = f + 0.24975F;
+            float f2 = (float)(i / 4) / 4F;
+            float f3 = f2 + 0.24975F;
+            float f4 = 2.0F * field_35131_aA;
+            float f5 = (float)((prevPosX + (posX - prevPosX) * (double)par2) - interpPosX);
+            float f6 = (float)((prevPosY + (posY - prevPosY) * (double)par2) - interpPosY);
+            float f7 = (float)((prevPosZ + (posZ - prevPosZ) * (double)par2) - interpPosZ);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            GL11.glDisable(2896 /*GL_LIGHTING*/);
+            GL11.glDisable(GL11.GL_LIGHTING);
             RenderHelper.disableStandardItemLighting();
-            tessellator.startDrawingQuads();
-            tessellator.setColorRGBA_F(particleRed, particleGreen, particleBlue, 1.0F);
-            tessellator.setNormal(0.0F, 1.0F, 0.0F);
-            tessellator.setBrightness(240);
-            tessellator.addVertexWithUV(f11 - f1 * f10 - f4 * f10, f12 - f2 * f10, f13 - f3 * f10 - f5 * f10, f7, f9);
-            tessellator.addVertexWithUV((f11 - f1 * f10) + f4 * f10, f12 + f2 * f10, (f13 - f3 * f10) + f5 * f10, f7, f8);
-            tessellator.addVertexWithUV(f11 + f1 * f10 + f4 * f10, f12 + f2 * f10, f13 + f3 * f10 + f5 * f10, f6, f8);
-            tessellator.addVertexWithUV((f11 + f1 * f10) - f4 * f10, f12 - f2 * f10, (f13 + f3 * f10) - f5 * f10, f6, f9);
-            tessellator.draw();
+            par1Tessellator.startDrawingQuads();
+            par1Tessellator.setColorRGBA_F(particleRed, particleGreen, particleBlue, 1.0F);
+            par1Tessellator.setNormal(0.0F, 1.0F, 0.0F);
+            par1Tessellator.setBrightness(240);
+            par1Tessellator.addVertexWithUV(f5 - par3 * f4 - par6 * f4, f6 - par4 * f4, f7 - par5 * f4 - par7 * f4, f1, f3);
+            par1Tessellator.addVertexWithUV((f5 - par3 * f4) + par6 * f4, f6 + par4 * f4, (f7 - par5 * f4) + par7 * f4, f1, f2);
+            par1Tessellator.addVertexWithUV(f5 + par3 * f4 + par6 * f4, f6 + par4 * f4, f7 + par5 * f4 + par7 * f4, f, f2);
+            par1Tessellator.addVertexWithUV((f5 + par3 * f4) - par6 * f4, f6 - par4 * f4, (f7 + par5 * f4) - par7 * f4, f, f3);
+            par1Tessellator.draw();
             GL11.glPolygonOffset(0.0F, 0.0F);
-            GL11.glEnable(2896 /*GL_LIGHTING*/);
+            GL11.glEnable(GL11.GL_LIGHTING);
             return;
         }
     }
 
-    public int getEntityBrightnessForRender(float f)
+    public int getEntityBrightnessForRender(float par1)
     {
         return 61680;
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
         field_35130_a++;
+
         if (field_35130_a == field_35129_ay)
         {
             setEntityDead();

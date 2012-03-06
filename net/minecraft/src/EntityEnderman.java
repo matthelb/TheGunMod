@@ -6,13 +6,19 @@ import java.util.Random;
 public class EntityEnderman extends EntityMob
 {
     private static boolean canCarryBlocks[];
+
+    /** Is the enderman attacking another entity? */
     public boolean isAttacking;
+
+    /**
+     * Counter to delay the teleportation of an enderman towards the currently attacked target
+     */
     private int teleportDelay;
     private int field_35185_e;
 
-    public EntityEnderman(World world)
+    public EntityEnderman(World par1World)
     {
-        super(world);
+        super(par1World);
         isAttacking = false;
         teleportDelay = 0;
         field_35185_e = 0;
@@ -35,23 +41,34 @@ public class EntityEnderman extends EntityMob
         dataWatcher.addObject(17, new Byte((byte)0));
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeEntityToNBT(nbttagcompound);
-        nbttagcompound.setShort("carried", (short)getCarried());
-        nbttagcompound.setShort("carriedData", (short)getCarryingData());
+        super.writeEntityToNBT(par1NBTTagCompound);
+        par1NBTTagCompound.setShort("carried", (short)getCarried());
+        par1NBTTagCompound.setShort("carriedData", (short)getCarryingData());
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readEntityFromNBT(nbttagcompound);
-        setCarried(nbttagcompound.getShort("carried"));
-        setCarryingData(nbttagcompound.getShort("carriedData"));
+        super.readEntityFromNBT(par1NBTTagCompound);
+        setCarried(par1NBTTagCompound.getShort("carried"));
+        setCarryingData(par1NBTTagCompound.getShort("carriedData"));
     }
 
+    /**
+     * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
+     * (Animals, Spiders at day, peaceful PigZombies).
+     */
     protected Entity findPlayerToAttack()
     {
         EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 64D);
+
         if (entityplayer != null)
         {
             if (shouldAttackPlayer(entityplayer))
@@ -67,34 +84,44 @@ public class EntityEnderman extends EntityMob
                 field_35185_e = 0;
             }
         }
+
         return null;
     }
 
-    public int getEntityBrightnessForRender(float f)
+    public int getEntityBrightnessForRender(float par1)
     {
-        return super.getEntityBrightnessForRender(f);
+        return super.getEntityBrightnessForRender(par1);
     }
 
-    public float getEntityBrightness(float f)
+    /**
+     * Gets how bright this entity is.
+     */
+    public float getEntityBrightness(float par1)
     {
-        return super.getEntityBrightness(f);
+        return super.getEntityBrightness(par1);
     }
 
-    private boolean shouldAttackPlayer(EntityPlayer entityplayer)
+    /**
+     * Checks to see if this enderman should be attacking this player
+     */
+    private boolean shouldAttackPlayer(EntityPlayer par1EntityPlayer)
     {
-        ItemStack itemstack = entityplayer.inventory.armorInventory[3];
+        ItemStack itemstack = par1EntityPlayer.inventory.armorInventory[3];
+
         if (itemstack != null && itemstack.itemID == Block.pumpkin.blockID)
         {
             return false;
         }
-        Vec3D vec3d = entityplayer.getLook(1.0F).normalize();
-        Vec3D vec3d1 = Vec3D.createVector(posX - entityplayer.posX, (boundingBox.minY + (double)(height / 2.0F)) - (entityplayer.posY + (double)entityplayer.getEyeHeight()), posZ - entityplayer.posZ);
+
+        Vec3D vec3d = par1EntityPlayer.getLook(1.0F).normalize();
+        Vec3D vec3d1 = Vec3D.createVector(posX - par1EntityPlayer.posX, (boundingBox.minY + (double)(height / 2.0F)) - (par1EntityPlayer.posY + (double)par1EntityPlayer.getEyeHeight()), posZ - par1EntityPlayer.posZ);
         double d = vec3d1.lengthVector();
         vec3d1 = vec3d1.normalize();
         double d1 = vec3d.dotProduct(vec3d1);
-        if (d1 > 1.0D - 0.025000000000000001D / d)
+
+        if (d1 > 1.0D - 0.025D / d)
         {
-            return entityplayer.canEntityBeSeen(this);
+            return par1EntityPlayer.canEntityBeSeen(this);
         }
         else
         {
@@ -102,14 +129,20 @@ public class EntityEnderman extends EntityMob
         }
     }
 
+    /**
+     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+     * use this to react to sunlight and start to burn.
+     */
     public void onLivingUpdate()
     {
         if (isWet())
         {
             attackEntityFrom(DamageSource.drown, 1);
         }
+
         isAttacking = entityToAttack != null;
         moveSpeed = entityToAttack == null ? 0.3F : 6.5F;
+
         if (!worldObj.isRemote)
         {
             if (getCarried() == 0)
@@ -120,6 +153,7 @@ public class EntityEnderman extends EntityMob
                     int l = MathHelper.floor_double(posY + rand.nextDouble() * 3D);
                     int j1 = MathHelper.floor_double((posZ - 2D) + rand.nextDouble() * 4D);
                     int l1 = worldObj.getBlockId(i, l, j1);
+
                     if (canCarryBlocks[l1])
                     {
                         setCarried(worldObj.getBlockId(i, l, j1));
@@ -135,6 +169,7 @@ public class EntityEnderman extends EntityMob
                 int k1 = MathHelper.floor_double((posZ - 1.0D) + rand.nextDouble() * 2D);
                 int i2 = worldObj.getBlockId(j, i1, k1);
                 int j2 = worldObj.getBlockId(j, i1 - 1, k1);
+
                 if (i2 == 0 && j2 > 0 && Block.blocksList[j2].renderAsNormalBlock())
                 {
                     worldObj.setBlockAndMetadataWithNotify(j, i1, k1, getCarried(), getCarryingData());
@@ -142,6 +177,7 @@ public class EntityEnderman extends EntityMob
                 }
             }
         }
+
         for (int k = 0; k < 2; k++)
         {
             worldObj.spawnParticle("portal", posX + (rand.nextDouble() - 0.5D) * (double)width, (posY + rand.nextDouble() * (double)height) - 0.25D, posZ + (rand.nextDouble() - 0.5D) * (double)width, (rand.nextDouble() - 0.5D) * 2D, -rand.nextDouble(), (rand.nextDouble() - 0.5D) * 2D);
@@ -150,22 +186,27 @@ public class EntityEnderman extends EntityMob
         if (worldObj.isDaytime() && !worldObj.isRemote)
         {
             float f = getEntityBrightness(1.0F);
+
             if (f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
             {
                 entityToAttack = null;
                 teleportRandomly();
             }
         }
+
         if (isWet())
         {
             entityToAttack = null;
             teleportRandomly();
         }
+
         isJumping = false;
+
         if (entityToAttack != null)
         {
             faceEntity(entityToAttack, 100F, 100F);
         }
+
         if (!worldObj.isRemote && isEntityAlive())
         {
             if (entityToAttack != null)
@@ -174,10 +215,12 @@ public class EntityEnderman extends EntityMob
                 {
                     moveStrafing = moveForward = 0.0F;
                     moveSpeed = 0.0F;
+
                     if (entityToAttack.getDistanceSqToEntity(this) < 16D)
                     {
                         teleportRandomly();
                     }
+
                     teleportDelay = 0;
                 }
                 else if (entityToAttack.getDistanceSqToEntity(this) > 256D && teleportDelay++ >= 30 && teleportToEntity(entityToAttack))
@@ -190,9 +233,13 @@ public class EntityEnderman extends EntityMob
                 teleportDelay = 0;
             }
         }
+
         super.onLivingUpdate();
     }
 
+    /**
+     * Teleport the enderman to a random nearby position
+     */
     protected boolean teleportRandomly()
     {
         double d = posX + (rand.nextDouble() - 0.5D) * 64D;
@@ -201,9 +248,12 @@ public class EntityEnderman extends EntityMob
         return teleportTo(d, d1, d2);
     }
 
-    protected boolean teleportToEntity(Entity entity)
+    /**
+     * Teleport the enderman to another entity
+     */
+    protected boolean teleportToEntity(Entity par1Entity)
     {
-        Vec3D vec3d = Vec3D.createVector(posX - entity.posX, ((boundingBox.minY + (double)(height / 2.0F)) - entity.posY) + (double)entity.getEyeHeight(), posZ - entity.posZ);
+        Vec3D vec3d = Vec3D.createVector(posX - par1Entity.posX, ((boundingBox.minY + (double)(height / 2.0F)) - par1Entity.posY) + (double)par1Entity.getEyeHeight(), posZ - par1Entity.posZ);
         vec3d = vec3d.normalize();
         double d = 16D;
         double d1 = (posX + (rand.nextDouble() - 0.5D) * 8D) - vec3d.xCoord * d;
@@ -212,25 +262,31 @@ public class EntityEnderman extends EntityMob
         return teleportTo(d1, d2, d3);
     }
 
-    protected boolean teleportTo(double d, double d1, double d2)
+    /**
+     * Teleport the enderman
+     */
+    protected boolean teleportTo(double par1, double par3, double par5)
     {
-        double d3 = posX;
-        double d4 = posY;
-        double d5 = posZ;
-        posX = d;
-        posY = d1;
-        posZ = d2;
+        double d = posX;
+        double d1 = posY;
+        double d2 = posZ;
+        posX = par1;
+        posY = par3;
+        posZ = par5;
         boolean flag = false;
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posY);
         int k = MathHelper.floor_double(posZ);
+
         if (worldObj.blockExists(i, j, k))
         {
             boolean flag1;
+
             for (flag1 = false; !flag1 && j > 0;)
             {
                 int i1 = worldObj.getBlockId(i, j - 1, k);
-                if (i1 == 0 || !Block.blocksList[i1].blockMaterial.getIsSolid())
+
+                if (i1 == 0 || !Block.blocksList[i1].blockMaterial.blocksMovement())
                 {
                     posY--;
                     j--;
@@ -244,93 +300,129 @@ public class EntityEnderman extends EntityMob
             if (flag1)
             {
                 setPosition(posX, posY, posZ);
-                if (worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0 && !worldObj.getIsAnyLiquid(boundingBox))
+
+                if (worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0 && !worldObj.isAnyLiquid(boundingBox))
                 {
                     flag = true;
                 }
             }
         }
+
         if (!flag)
         {
-            setPosition(d3, d4, d5);
+            setPosition(d, d1, d2);
             return false;
         }
+
         int l = 128;
+
         for (int j1 = 0; j1 < l; j1++)
         {
-            double d6 = (double)j1 / ((double)l - 1.0D);
+            double d3 = (double)j1 / ((double)l - 1.0D);
             float f = (rand.nextFloat() - 0.5F) * 0.2F;
             float f1 = (rand.nextFloat() - 0.5F) * 0.2F;
             float f2 = (rand.nextFloat() - 0.5F) * 0.2F;
-            double d7 = d3 + (posX - d3) * d6 + (rand.nextDouble() - 0.5D) * (double)width * 2D;
-            double d8 = d4 + (posY - d4) * d6 + rand.nextDouble() * (double)height;
-            double d9 = d5 + (posZ - d5) * d6 + (rand.nextDouble() - 0.5D) * (double)width * 2D;
-            worldObj.spawnParticle("portal", d7, d8, d9, f, f1, f2);
+            double d4 = d + (posX - d) * d3 + (rand.nextDouble() - 0.5D) * (double)width * 2D;
+            double d5 = d1 + (posY - d1) * d3 + rand.nextDouble() * (double)height;
+            double d6 = d2 + (posZ - d2) * d3 + (rand.nextDouble() - 0.5D) * (double)width * 2D;
+            worldObj.spawnParticle("portal", d4, d5, d6, f, f1, f2);
         }
 
-        worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
+        worldObj.playSoundEffect(d, d1, d2, "mob.endermen.portal", 1.0F, 1.0F);
         worldObj.playSoundAtEntity(this, "mob.endermen.portal", 1.0F, 1.0F);
         return true;
     }
 
+    /**
+     * Returns the sound this mob makes while it's alive.
+     */
     protected String getLivingSound()
     {
         return "mob.endermen.idle";
     }
 
+    /**
+     * Returns the sound this mob makes when it is hurt.
+     */
     protected String getHurtSound()
     {
         return "mob.endermen.hit";
     }
 
+    /**
+     * Returns the sound this mob makes on death.
+     */
     protected String getDeathSound()
     {
         return "mob.endermen.death";
     }
 
+    /**
+     * Returns the item ID for the item the mob drops on death.
+     */
     protected int getDropItemId()
     {
         return Item.enderPearl.shiftedIndex;
     }
 
-    protected void dropFewItems(boolean flag, int i)
+    /**
+     * Drop 0-2 items of this living's type
+     */
+    protected void dropFewItems(boolean par1, int par2)
     {
-        int j = getDropItemId();
-        if (j > 0)
+        int i = getDropItemId();
+
+        if (i > 0)
         {
-            int k = rand.nextInt(2 + i);
-            for (int l = 0; l < k; l++)
+            int j = rand.nextInt(2 + par2);
+
+            for (int k = 0; k < j; k++)
             {
-                dropItem(j, 1);
+                dropItem(i, 1);
             }
         }
     }
 
-    public void setCarried(int i)
+    /**
+     * Set the id of the block an enderman carries
+     */
+    public void setCarried(int par1)
     {
-        dataWatcher.updateObject(16, Byte.valueOf((byte)(i & 0xff)));
+        dataWatcher.updateObject(16, Byte.valueOf((byte)(par1 & 0xff)));
     }
 
+    /**
+     * Get the id of the block an enderman carries
+     */
     public int getCarried()
     {
         return dataWatcher.getWatchableObjectByte(16);
     }
 
-    public void setCarryingData(int i)
+    /**
+     * Set the metadata of the block an enderman carries
+     */
+    public void setCarryingData(int par1)
     {
-        dataWatcher.updateObject(17, Byte.valueOf((byte)(i & 0xff)));
+        dataWatcher.updateObject(17, Byte.valueOf((byte)(par1 & 0xff)));
     }
 
+    /**
+     * Get the metadata of the block an enderman carries
+     */
     public int getCarryingData()
     {
         return dataWatcher.getWatchableObjectByte(17);
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
-        if (damagesource instanceof EntityDamageSourceIndirect)
+        if (par1DamageSource instanceof EntityDamageSourceIndirect)
         {
-            for (int j = 0; j < 64; j++)
+            for (int i = 0; i < 64; i++)
             {
                 if (teleportRandomly())
                 {
@@ -342,7 +434,7 @@ public class EntityEnderman extends EntityMob
         }
         else
         {
-            return super.attackEntityFrom(damagesource, i);
+            return super.attackEntityFrom(par1DamageSource, par2);
         }
     }
 

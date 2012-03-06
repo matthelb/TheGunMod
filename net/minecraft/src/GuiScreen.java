@@ -9,13 +9,24 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiScreen extends Gui
 {
+    /** Reference to the Minecraft object. */
     protected Minecraft mc;
+
+    /** The width of the screen object. */
     public int width;
+
+    /** The height of the screen object. */
     public int height;
+
+    /** A list of all the controls added to this container. */
     protected List controlList;
     public boolean allowUserInput;
+
+    /** The FontRenderer used by GuiScreen */
     protected FontRenderer fontRenderer;
     public GuiParticle guiParticles;
+
+    /** The button that was just pressed. */
     private GuiButton selectedButton;
 
     public GuiScreen()
@@ -25,29 +36,39 @@ public class GuiScreen extends Gui
         selectedButton = null;
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
-        for (int k = 0; k < controlList.size(); k++)
+        for (int i = 0; i < controlList.size(); i++)
         {
-            GuiButton guibutton = (GuiButton)controlList.get(k);
-            guibutton.drawButton(mc, i, j);
+            GuiButton guibutton = (GuiButton)controlList.get(i);
+            guibutton.drawButton(mc, par1, par2);
         }
     }
 
-    protected void keyTyped(char c, int i)
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char par1, int par2)
     {
-        if (i == 1)
+        if (par2 == 1)
         {
             mc.displayGuiScreen(null);
             mc.setIngameFocus();
         }
     }
 
+    /**
+     * Returns a string stored in the system clipboard.
+     */
     public static String getClipboardString()
     {
         try
         {
             java.awt.datatransfer.Transferable transferable = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
+
             if (transferable != null && transferable.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor))
             {
                 String s = (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
@@ -55,17 +76,22 @@ public class GuiScreen extends Gui
             }
         }
         catch (Exception exception) { }
+
         return null;
     }
 
-    protected void mouseClicked(int i, int j, int k)
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int par1, int par2, int par3)
     {
-        if (k == 0)
+        if (par3 == 0)
         {
-            for (int l = 0; l < controlList.size(); l++)
+            for (int i = 0; i < controlList.size(); i++)
             {
-                GuiButton guibutton = (GuiButton)controlList.get(l);
-                if (guibutton.mousePressed(mc, i, j))
+                GuiButton guibutton = (GuiButton)controlList.get(i);
+
+                if (guibutton.mousePressed(mc, par1, par2))
                 {
                     selectedButton = guibutton;
                     mc.sndManager.playSoundFX("random.click", 1.0F, 1.0F);
@@ -75,40 +101,61 @@ public class GuiScreen extends Gui
         }
     }
 
-    protected void mouseMovedOrUp(int i, int j, int k)
+    /**
+     * Called when the mouse is moved or a mouse button is released.  Signature: (mouseX, mouseY, which) which==-1 is
+     * mouseMove, which==0 or which==1 is mouseUp
+     */
+    protected void mouseMovedOrUp(int par1, int par2, int par3)
     {
-        if (selectedButton != null && k == 0)
+        if (selectedButton != null && par3 == 0)
         {
-            selectedButton.mouseReleased(i, j);
+            selectedButton.mouseReleased(par1, par2);
             selectedButton = null;
         }
     }
 
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
     protected void actionPerformed(GuiButton guibutton)
     {
     }
 
-    public void setWorldAndResolution(Minecraft minecraft, int i, int j)
+    /**
+     * Causes the screen to lay out its subcomponents again. This is the equivalent of the Java call
+     * Container.validate()
+     */
+    public void setWorldAndResolution(Minecraft par1Minecraft, int par2, int par3)
     {
-        guiParticles = new GuiParticle(minecraft);
-        mc = minecraft;
-        fontRenderer = minecraft.fontRenderer;
-        width = i;
-        height = j;
+        guiParticles = new GuiParticle(par1Minecraft);
+        mc = par1Minecraft;
+        fontRenderer = par1Minecraft.fontRenderer;
+        width = par2;
+        height = par3;
         controlList.clear();
         initGui();
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
     }
 
+    /**
+     * Delegates mouse and keyboard input.
+     */
     public void handleInput()
     {
         for (; Mouse.next(); handleMouseInput()) { }
+
         for (; Keyboard.next(); handleKeyboardInput()) { }
     }
 
+    /**
+     * Handles mouse input.
+     */
     public void handleMouseInput()
     {
         if (Mouse.getEventButtonState())
@@ -125,6 +172,9 @@ public class GuiScreen extends Gui
         }
     }
 
+    /**
+     * Handles keyboard input.
+     */
     public void handleKeyboardInput()
     {
         if (Keyboard.getEventKeyState())
@@ -134,24 +184,34 @@ public class GuiScreen extends Gui
                 mc.toggleFullscreen();
                 return;
             }
+
             keyTyped(Keyboard.getEventCharacter(), Keyboard.getEventKey());
         }
     }
 
+    /**
+     * Called from the main game loop to update the screen.
+     */
     public void updateScreen()
     {
     }
 
+    /**
+     * Called when the screen is unloaded. Used to disable keyboard repeat events
+     */
     public void onGuiClosed()
     {
     }
 
+    /**
+     * Draws either a gradient over the background screen (when it exists) or a flat gradient over background.png
+     */
     public void drawDefaultBackground()
     {
         drawWorldBackground(0);
     }
 
-    public void drawWorldBackground(int i)
+    public void drawWorldBackground(int par1)
     {
         if (mc.theWorld != null)
         {
@@ -159,32 +219,41 @@ public class GuiScreen extends Gui
         }
         else
         {
-            drawBackground(i);
+            drawBackground(par1);
         }
     }
 
-    public void drawBackground(int i)
+    /**
+     * Draws the background (i is always 0 as of 1.2.2)
+     */
+    public void drawBackground(int par1)
     {
-        GL11.glDisable(2896 /*GL_LIGHTING*/);
-        GL11.glDisable(2912 /*GL_FOG*/);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_FOG);
         Tessellator tessellator = Tessellator.instance;
-        GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, mc.renderEngine.getTexture("/gui/background.png"));
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/gui/background.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         float f = 32F;
         tessellator.startDrawingQuads();
         tessellator.setColorOpaque_I(0x404040);
-        tessellator.addVertexWithUV(0.0D, height, 0.0D, 0.0D, (float)height / f + (float)i);
-        tessellator.addVertexWithUV(width, height, 0.0D, (float)width / f, (float)height / f + (float)i);
-        tessellator.addVertexWithUV(width, 0.0D, 0.0D, (float)width / f, 0 + i);
-        tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, 0 + i);
+        tessellator.addVertexWithUV(0.0D, height, 0.0D, 0.0D, (float)height / f + (float)par1);
+        tessellator.addVertexWithUV(width, height, 0.0D, (float)width / f, (float)height / f + (float)par1);
+        tessellator.addVertexWithUV(width, 0.0D, 0.0D, (float)width / f, 0 + par1);
+        tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, 0 + par1);
         tessellator.draw();
     }
 
+    /**
+     * Returns true if this GUI should pause the game when it is displayed in single-player
+     */
     public boolean doesGuiPauseGame()
     {
         return true;
     }
 
+    /**
+     * Deletes the selected world.
+     */
     public void deleteWorld(boolean flag, int i)
     {
     }

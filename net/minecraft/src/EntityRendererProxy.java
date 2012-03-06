@@ -12,9 +12,12 @@ public class EntityRendererProxy extends EntityRenderer
         game = minecraft;
     }
 
+    /**
+     * Will update any inputs that effect the camera angle (mouse) and then render the world and GUI
+     */
     public void updateCameraAndRender(float f)
     {
         super.updateCameraAndRender(f);
-        ModLoader.OnTick(f, game);
+        ModLoader.onTick(f, game);
     }
 }

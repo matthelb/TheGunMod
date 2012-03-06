@@ -9,26 +9,28 @@ public class ComponentNetherBridgeStartPiece extends ComponentNetherBridgeCrossi
     public List field_40036_c;
     public ArrayList field_40034_d;
 
-    public ComponentNetherBridgeStartPiece(Random random, int i, int j)
+    public ComponentNetherBridgeStartPiece(Random par1Random, int par2, int par3)
     {
-        super(random, i, j);
+        super(par1Random, par2, par3);
         field_40034_d = new ArrayList();
         field_40035_b = new ArrayList();
-        StructureNetherBridgePieceWeight astructurenetherbridgepieceweight[] = StructureNetherBridgePieces.func_40689_a();
-        int k = astructurenetherbridgepieceweight.length;
-        for (int l = 0; l < k; l++)
+        StructureNetherBridgePieceWeight astructurenetherbridgepieceweight[] = StructureNetherBridgePieces.getPrimaryComponents();
+        int i = astructurenetherbridgepieceweight.length;
+
+        for (int j = 0; j < i; j++)
         {
-            StructureNetherBridgePieceWeight structurenetherbridgepieceweight = astructurenetherbridgepieceweight[l];
+            StructureNetherBridgePieceWeight structurenetherbridgepieceweight = astructurenetherbridgepieceweight[j];
             structurenetherbridgepieceweight.field_40698_c = 0;
             field_40035_b.add(structurenetherbridgepieceweight);
         }
 
         field_40036_c = new ArrayList();
-        astructurenetherbridgepieceweight = StructureNetherBridgePieces.func_40687_b();
-        k = astructurenetherbridgepieceweight.length;
-        for (int i1 = 0; i1 < k; i1++)
+        astructurenetherbridgepieceweight = StructureNetherBridgePieces.getSecondaryComponents();
+        i = astructurenetherbridgepieceweight.length;
+
+        for (int k = 0; k < i; k++)
         {
-            StructureNetherBridgePieceWeight structurenetherbridgepieceweight1 = astructurenetherbridgepieceweight[i1];
+            StructureNetherBridgePieceWeight structurenetherbridgepieceweight1 = astructurenetherbridgepieceweight[k];
             structurenetherbridgepieceweight1.field_40698_c = 0;
             field_40036_c.add(structurenetherbridgepieceweight1);
         }

@@ -7,11 +7,11 @@ class RedstoneUpdateInfo
     int z;
     long updateTime;
 
-    public RedstoneUpdateInfo(int i, int j, int k, long l)
+    public RedstoneUpdateInfo(int par1, int par2, int par3, long par4)
     {
-        x = i;
-        y = j;
-        z = k;
-        updateTime = l;
+        x = par1;
+        y = par2;
+        z = par3;
+        updateTime = par4;
     }
 }

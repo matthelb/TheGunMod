@@ -4,9 +4,9 @@ import java.util.List;
 
 public class BiomeGenBeach extends BiomeGenBase
 {
-    public BiomeGenBeach(int i)
+    public BiomeGenBeach(int par1)
     {
-        super(i);
+        super(par1);
         spawnableCreatureList.clear();
         topBlock = (byte)Block.sand.blockID;
         fillerBlock = (byte)Block.sand.blockID;

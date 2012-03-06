@@ -22,20 +22,19 @@ public class RenderList
         field_1234_i = false;
     }
 
-    public void func_861_a(int i, int j, int k, double d, double d1,
-            double d2)
+    public void func_861_a(int par1, int par2, int par3, double par4, double par6, double par8)
     {
         field_1235_h = true;
         field_1236_g.clear();
-        field_1242_a = i;
-        field_1241_b = j;
-        field_1240_c = k;
-        field_1239_d = d;
-        field_1238_e = d1;
-        field_1237_f = d2;
+        field_1242_a = par1;
+        field_1241_b = par2;
+        field_1240_c = par3;
+        field_1239_d = par4;
+        field_1238_e = par6;
+        field_1237_f = par8;
     }
 
-    public boolean func_862_a(int i, int j, int k)
+    public boolean func_862_a(int par1, int par2, int par3)
     {
         if (!field_1235_h)
         {
@@ -43,13 +42,14 @@ public class RenderList
         }
         else
         {
-            return i == field_1242_a && j == field_1241_b && k == field_1240_c;
+            return par1 == field_1242_a && par2 == field_1241_b && par3 == field_1240_c;
         }
     }
 
-    public void func_858_a(int i)
+    public void func_858_a(int par1)
     {
-        field_1236_g.put(i);
+        field_1236_g.put(par1);
+
         if (field_1236_g.remaining() == 0)
         {
             func_860_a();
@@ -62,11 +62,13 @@ public class RenderList
         {
             return;
         }
+
         if (!field_1234_i)
         {
             field_1236_g.flip();
             field_1234_i = true;
         }
+
         if (field_1236_g.remaining() > 0)
         {
             GL11.glPushMatrix();

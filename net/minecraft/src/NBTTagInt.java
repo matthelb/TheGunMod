@@ -4,52 +4,63 @@ import java.io.*;
 
 public class NBTTagInt extends NBTBase
 {
-    public int intValue;
+    /** The integer value for the tag. */
+    public int data;
 
-    public NBTTagInt(String s)
+    public NBTTagInt(String par1Str)
     {
-        super(s);
+        super(par1Str);
     }
 
-    public NBTTagInt(String s, int i)
+    public NBTTagInt(String par1Str, int par2)
     {
-        super(s);
-        intValue = i;
+        super(par1Str);
+        data = par2;
     }
 
-    void writeTagContents(DataOutput dataoutput)
-    throws IOException
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput par1DataOutput) throws IOException
     {
-        dataoutput.writeInt(intValue);
+        par1DataOutput.writeInt(data);
     }
 
-    void readTagContents(DataInput datainput)
-    throws IOException
+    /**
+     * Read the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void load(DataInput par1DataInput) throws IOException
     {
-        intValue = datainput.readInt();
+        data = par1DataInput.readInt();
     }
 
-    public byte getType()
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
     {
         return 3;
     }
 
     public String toString()
     {
-        return (new StringBuilder()).append("").append(intValue).toString();
+        return (new StringBuilder()).append("").append(data).toString();
     }
 
-    public NBTBase cloneTag()
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
     {
-        return new NBTTagInt(getKey(), intValue);
+        return new NBTTagInt(getName(), data);
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (super.equals(obj))
+        if (super.equals(par1Obj))
         {
-            NBTTagInt nbttagint = (NBTTagInt)obj;
-            return intValue == nbttagint.intValue;
+            NBTTagInt nbttagint = (NBTTagInt)par1Obj;
+            return data == nbttagint.data;
         }
         else
         {

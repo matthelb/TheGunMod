@@ -9,22 +9,29 @@ public class Packet32EntityLook extends Packet30Entity
         rotating = true;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        super.readPacketData(datainputstream);
-        yaw = datainputstream.readByte();
-        pitch = datainputstream.readByte();
+        super.readPacketData(par1DataInputStream);
+        yaw = par1DataInputStream.readByte();
+        pitch = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        super.writePacketData(dataoutputstream);
-        dataoutputstream.writeByte(yaw);
-        dataoutputstream.writeByte(pitch);
+        super.writePacketData(par1DataOutputStream);
+        par1DataOutputStream.writeByte(yaw);
+        par1DataOutputStream.writeByte(pitch);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 6;

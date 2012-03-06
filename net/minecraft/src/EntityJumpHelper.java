@@ -5,10 +5,10 @@ public class EntityJumpHelper
     private EntityLiving entity;
     private boolean isJumping;
 
-    public EntityJumpHelper(EntityLiving entityliving)
+    public EntityJumpHelper(EntityLiving par1EntityLiving)
     {
         isJumping = false;
-        entity = entityliving;
+        entity = par1EntityLiving;
     }
 
     public void setJumping()
@@ -16,17 +16,12 @@ public class EntityJumpHelper
         isJumping = true;
     }
 
+    /**
+     * Called to actually make the entity jump if isJumping is true.
+     */
     public void doJump()
     {
-        if (!isJumping)
-        {
-            return;
-        }
-        else
-        {
-            entity.setIsJumping(true);
-            isJumping = false;
-            return;
-        }
+        entity.setJumping(isJumping);
+        isJumping = false;
     }
 }

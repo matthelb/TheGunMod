@@ -4,39 +4,47 @@ import java.util.Random;
 
 public class WorldGenSand extends WorldGenerator
 {
+    /** Stores ID for WorldGenSand */
     private int sandID;
+
+    /** The maximum radius used when generating a patch of blocks. */
     private int radius;
 
-    public WorldGenSand(int i, int j)
+    public WorldGenSand(int par1, int par2)
     {
-        sandID = j;
-        radius = i;
+        sandID = par2;
+        radius = par1;
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        if (world.getBlockMaterial(i, j, k) != Material.water)
+        if (par1World.getBlockMaterial(par3, par4, par5) != Material.water)
         {
             return false;
         }
-        int l = random.nextInt(radius - 2) + 2;
+
+        int i = par2Random.nextInt(radius - 2) + 2;
         byte byte0 = 2;
-        for (int i1 = i - l; i1 <= i + l; i1++)
+
+        for (int j = par3 - i; j <= par3 + i; j++)
         {
-            for (int j1 = k - l; j1 <= k + l; j1++)
+            for (int k = par5 - i; k <= par5 + i; k++)
             {
-                int k1 = i1 - i;
-                int l1 = j1 - k;
-                if (k1 * k1 + l1 * l1 > l * l)
+                int l = j - par3;
+                int i1 = k - par5;
+
+                if (l * l + i1 * i1 > i * i)
                 {
                     continue;
                 }
-                for (int i2 = j - byte0; i2 <= j + byte0; i2++)
+
+                for (int j1 = par4 - byte0; j1 <= par4 + byte0; j1++)
                 {
-                    int j2 = world.getBlockId(i1, i2, j1);
-                    if (j2 == Block.dirt.blockID || j2 == Block.grass.blockID)
+                    int k1 = par1World.getBlockId(j, j1, k);
+
+                    if (k1 == Block.dirt.blockID || k1 == Block.grass.blockID)
                     {
-                        world.setBlock(i1, i2, j1, sandID);
+                        par1World.setBlock(j, j1, k, sandID);
                     }
                 }
             }

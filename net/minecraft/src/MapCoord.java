@@ -8,13 +8,12 @@ public class MapCoord
     public byte iconRotation;
     final MapData data;
 
-    public MapCoord(MapData mapdata, byte byte0, byte byte1, byte byte2, byte byte3)
+    public MapCoord(MapData par1MapData, byte par2, byte par3, byte par4, byte par5)
     {
-        data = mapdata;
-
-        field_28217_a = byte0;
-        centerX = byte1;
-        centerZ = byte2;
-        iconRotation = byte3;
+        data = par1MapData;
+        field_28217_a = par2;
+        centerX = par3;
+        centerZ = par4;
+        iconRotation = par5;
     }
 }

@@ -9,8 +9,8 @@ public abstract class EntityLiving extends Entity
     public float field_9363_r;
     public float renderYawOffset;
     public float prevRenderYawOffset;
-    public float field_46015_bf;
-    public float field_46016_bg;
+    public float prevRotationYaw2;
+    public float prevRotationYaw3;
     protected float field_9362_u;
     protected float field_9361_v;
     protected float field_9360_w;
@@ -21,70 +21,148 @@ public abstract class EntityLiving extends Entity
     protected float field_9353_B;
     protected String entityType;
     protected float field_9349_D;
+
+    /** The score value of the Mob, the amount of points the mob is worth. */
     protected int scoreValue;
     protected float field_9345_F;
+
+    /**
+     * A factor used to determine how far this entity will move each tick if it is walking on land. Adjusted by speed,
+     * and slipperiness of the current block.
+     */
     public float landMovementFactor;
+
+    /**
+     * A factor used to determine how far this entity will move each tick if it is jumping or falling.
+     */
     public float jumpMovementFactor;
     public float prevSwingProgress;
     public float swingProgress;
     protected int health;
     public int prevHealth;
+
+    /**
+     * in each step in the damage calculations, this is set to the 'carryover' that would result if someone was damaged
+     * .25 hearts (for example), and added to the damage in the next step
+     */
     protected int carryoverDamage;
+
+    /** Number of ticks since this EntityLiving last produced its sound */
     private int livingSoundTime;
+
+    /**
+     * The amount of time remaining this entity should act 'hurt'. (Visual appearance of red tint)
+     */
     public int hurtTime;
+
+    /** What the hurt time was max set to last. */
     public int maxHurtTime;
+
+    /** The yaw at which this entity was last attacked from. */
     public float attackedAtYaw;
+
+    /**
+     * The amount of time remaining this entity should act 'dead', i.e. have a corpse in the world.
+     */
     public int deathTime;
     public int attackTime;
     public float prevCameraPitch;
     public float cameraPitch;
-    protected boolean unused_flag;
+
+    /**
+     * This gets set on entity death, but never used. Looks like a duplicate of isDead
+     */
+    protected boolean dead;
     protected int experienceValue;
     public int field_9326_T;
     public float field_9325_U;
     public float field_705_Q;
     public float field_704_R;
     public float field_703_S;
+
+    /** The most recent player that has attacked this entity */
     protected EntityPlayer attackingPlayer;
+
+    /**
+     * Set to 60 when hit by the player or the player's wolf, then decrements. Used to determine whether the entity
+     * should drop items on death.
+     */
     protected int recentlyHit;
-    protected EntityLiving entityLivingToAttack;
+
+    /** is only being set, has no uses as of MC 1.1 */
+    private EntityLiving entityLivingToAttack;
+    private int field_48103_c;
+    private EntityLiving field_48102_d;
     public int arrowHitTempCounter;
     public int arrowHitTimer;
     protected HashMap activePotionsMap;
-    private boolean field_39001_b;
+
+    /** Whether the DataWatcher needs to be updated with the active potions */
+    private boolean potionsNeedUpdate;
     private int field_39002_c;
     private EntityLookHelper lookHelper;
     private EntityMoveHelper moveHelper;
     private EntityJumpHelper jumpHelper;
-    private INavigate navigation;
+    private EntityBodyHelper field_48108_aq;
+    private PathNavigate field_48107_ar;
     protected EntityAITasks tasks;
+    protected EntityAITasks field_48105_bU;
+    private EntityLiving field_48106_as;
+    private EntitySenses field_48104_at;
+    private float field_48111_au;
+    private ChunkCoordinates field_48110_av;
+    private float field_48109_aw;
+
+    /**
+     * The number of updates over which the new position and rotation are to be applied to the entity.
+     */
     protected int newPosRotationIncrements;
+
+    /** The new X position to be applied to the entity. */
     protected double newPosX;
+
+    /** The new Y position to be applied to the entity. */
     protected double newPosY;
+
+    /** The new Z position to be applied to the entity. */
     protected double newPosZ;
+
+    /** The new yaw rotation to be applied to the entity. */
     protected double newRotationYaw;
+
+    /** The new yaw rotation to be applied to the entity. */
     protected double newRotationPitch;
     float field_9348_ae;
     protected int naturalArmorRating;
+
+    /** Holds the living entity age, used to control the despawn. */
     protected int entityAge;
     protected float moveStrafing;
     protected float moveForward;
     protected float randomYawVelocity;
+
+    /** used to check whether entity is jumping. */
     protected boolean isJumping;
     protected float defaultPitch;
     protected float moveSpeed;
-    private int field_39003_d;
+
+    /** Number of ticks since last jump */
+    private int jumpTicks;
+
+    /** This entities' current target */
     private Entity currentTarget;
+
+    /** How long to keep a specific target entity */
     protected int numTicksToChaseTarget;
 
-    public EntityLiving(World world)
+    public EntityLiving(World par1World)
     {
-        super(world);
+        super(par1World);
         heartsHalvesLife = 20;
         renderYawOffset = 0.0F;
         prevRenderYawOffset = 0.0F;
-        field_46015_bf = 0.0F;
-        field_46016_bg = 0.0F;
+        prevRotationYaw2 = 0.0F;
+        prevRotationYaw3 = 0.0F;
         field_9358_y = true;
         texture = "/mob/char.png";
         field_9355_A = true;
@@ -98,36 +176,43 @@ public abstract class EntityLiving extends Entity
         attackedAtYaw = 0.0F;
         deathTime = 0;
         attackTime = 0;
-        unused_flag = false;
+        dead = false;
         field_9326_T = -1;
-        field_9325_U = (float)(Math.random() * 0.89999997615814209D + 0.10000000149011612D);
+        field_9325_U = (float)(Math.random() * 0.9D + 0.1D);
         attackingPlayer = null;
         recentlyHit = 0;
         entityLivingToAttack = null;
+        field_48103_c = 0;
+        field_48102_d = null;
         arrowHitTempCounter = 0;
         arrowHitTimer = 0;
         activePotionsMap = new HashMap();
-        field_39001_b = true;
+        potionsNeedUpdate = true;
         tasks = new EntityAITasks();
+        field_48105_bU = new EntityAITasks();
+        field_48110_av = new ChunkCoordinates(0, 0, 0);
+        field_48109_aw = -1F;
         field_9348_ae = 0.0F;
         naturalArmorRating = 0;
         entityAge = 0;
         isJumping = false;
         defaultPitch = 0.0F;
         moveSpeed = 0.7F;
-        field_39003_d = 0;
+        jumpTicks = 0;
         numTicksToChaseTarget = 0;
         health = getMaxHealth();
         preventEntitySpawning = true;
         lookHelper = new EntityLookHelper(this);
-        moveHelper = new EntityMoveHelper(this, moveSpeed);
+        moveHelper = new EntityMoveHelper(this);
         jumpHelper = new EntityJumpHelper(this);
-        navigation = new PathNavigate(this, world);
+        field_48108_aq = new EntityBodyHelper(this);
+        field_48107_ar = new PathNavigate(this, par1World, 16F);
+        field_48104_at = new EntitySenses(this);
         field_9363_r = (float)(Math.random() + 1.0D) * 0.01F;
         setPosition(posX, posY, posZ);
         field_9365_p = (float)Math.random() * 12398F;
-        rotationYaw = (float)(Math.random() * 3.1415927410125732D * 2D);
-        field_46015_bf = rotationYaw;
+        rotationYaw = (float)(Math.random() * Math.PI * 2D);
+        prevRotationYaw2 = rotationYaw;
         stepHeight = 0.5F;
     }
 
@@ -146,9 +231,14 @@ public abstract class EntityLiving extends Entity
         return jumpHelper;
     }
 
-    public INavigate func_46012_aJ()
+    public PathNavigate func_48084_aL()
     {
-        return navigation;
+        return field_48107_ar;
+    }
+
+    public EntitySenses func_48090_aM()
+    {
+        return field_48104_at;
     }
 
     public Random getRNG()
@@ -156,9 +246,22 @@ public abstract class EntityLiving extends Entity
         return rand;
     }
 
-    public EntityLiving func_46007_aL()
+    public EntityLiving getAITarget()
     {
         return entityLivingToAttack;
+    }
+
+    public EntityLiving func_48088_aP()
+    {
+        return field_48102_d;
+    }
+
+    public void func_48089_l(Entity par1Entity)
+    {
+        if (par1Entity instanceof EntityLiving)
+        {
+            field_48102_d = (EntityLiving)par1Entity;
+        }
     }
 
     public int getAge()
@@ -166,26 +269,128 @@ public abstract class EntityLiving extends Entity
         return entityAge;
     }
 
+    public void func_48079_f(float par1)
+    {
+        prevRotationYaw2 = par1;
+    }
+
+    public float func_48101_aR()
+    {
+        return field_48111_au;
+    }
+
+    public void func_48098_g(float par1)
+    {
+        field_48111_au = par1;
+        setMoveForward(par1);
+    }
+
+    public boolean attackEntityAsMob(Entity par1Entity)
+    {
+        func_48089_l(par1Entity);
+        return false;
+    }
+
+    public EntityLiving func_48094_aS()
+    {
+        return field_48106_as;
+    }
+
+    public void func_48092_c(EntityLiving par1EntityLiving)
+    {
+        field_48106_as = par1EntityLiving;
+    }
+
+    public boolean func_48100_a(Class par1Class)
+    {
+        return (net.minecraft.src.EntityCreeper.class) != par1Class && (net.minecraft.src.EntityGhast.class) != par1Class;
+    }
+
+    public void func_48095_u()
+    {
+    }
+
+    public boolean func_48093_aT()
+    {
+        return func_48096_f(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
+    }
+
+    public boolean func_48096_f(int par1, int par2, int par3)
+    {
+        if (field_48109_aw == -1F)
+        {
+            return true;
+        }
+        else
+        {
+            return field_48110_av.func_48655_c(par1, par2, par3) < field_48109_aw * field_48109_aw;
+        }
+    }
+
+    public void func_48082_b(int par1, int par2, int par3, int par4)
+    {
+        field_48110_av.func_48656_a(par1, par2, par3);
+        field_48109_aw = par4;
+    }
+
+    public ChunkCoordinates func_48091_aU()
+    {
+        return field_48110_av;
+    }
+
+    public float func_48099_aV()
+    {
+        return field_48109_aw;
+    }
+
+    public void func_48083_aW()
+    {
+        field_48109_aw = -1F;
+    }
+
+    public boolean func_48087_aX()
+    {
+        return field_48109_aw != -1F;
+    }
+
+    public void func_48086_a(EntityLiving par1EntityLiving)
+    {
+        entityLivingToAttack = par1EntityLiving;
+        field_48103_c = entityLivingToAttack == null ? 0 : 60;
+    }
+
     protected void entityInit()
     {
         dataWatcher.addObject(8, Integer.valueOf(field_39002_c));
     }
 
-    public boolean canEntityBeSeen(Entity entity)
+    /**
+     * returns true if the entity provided in the argument can be seen. (Raytrace)
+     */
+    public boolean canEntityBeSeen(Entity par1Entity)
     {
-        return worldObj.rayTraceBlocks(Vec3D.createVector(posX, posY + (double)getEyeHeight(), posZ), Vec3D.createVector(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ)) == null;
+        return worldObj.rayTraceBlocks(Vec3D.createVector(posX, posY + (double)getEyeHeight(), posZ), Vec3D.createVector(par1Entity.posX, par1Entity.posY + (double)par1Entity.getEyeHeight(), par1Entity.posZ)) == null;
     }
 
+    /**
+     * returns the directory and filename as a String
+     */
     public String getEntityTexture()
     {
         return texture;
     }
 
+    /**
+     * Returns true if other Entities should be prevented from moving through this Entity.
+     */
     public boolean canBeCollidedWith()
     {
         return !isDead;
     }
 
+    /**
+     * Returns true if this entity should push and be pushed by other entities when colliding.
+     */
     public boolean canBePushed()
     {
         return !isDead;
@@ -196,6 +401,9 @@ public abstract class EntityLiving extends Entity
         return height * 0.85F;
     }
 
+    /**
+     * Get number of ticks, at least during which the living entity will be silent
+     */
     public int getTalkInterval()
     {
         return 80;
@@ -204,36 +412,46 @@ public abstract class EntityLiving extends Entity
     public void playLivingSound()
     {
         String s = getLivingSound();
+
         if (s != null)
         {
             worldObj.playSoundAtEntity(this, s, getSoundVolume(), getSoundPitch());
         }
     }
 
+    /**
+     * Gets called every tick from main Entity class
+     */
     public void onEntityUpdate()
     {
         prevSwingProgress = swingProgress;
         super.onEntityUpdate();
         Profiler.startSection("mobBaseTick");
+
         if (rand.nextInt(1000) < livingSoundTime++)
         {
             livingSoundTime = -getTalkInterval();
             playLivingSound();
         }
+
         if (isEntityAlive() && isEntityInsideOpaqueBlock())
         {
             if (!attackEntityFrom(DamageSource.inWall, 1));
         }
+
         if (isImmuneToFire() || worldObj.isRemote)
         {
             extinguish();
         }
+
         if (isEntityAlive() && isInsideOfMaterial(Material.water) && !canBreatheUnderwater() && !activePotionsMap.containsKey(Integer.valueOf(Potion.waterBreathing.id)))
         {
             setAir(decreaseAirSupply(getAir()));
+
             if (getAir() == -20)
             {
                 setAir(0);
+
                 for (int i = 0; i < 8; i++)
                 {
                     float f = rand.nextFloat() - rand.nextFloat();
@@ -244,29 +462,36 @@ public abstract class EntityLiving extends Entity
 
                 attackEntityFrom(DamageSource.drown, 2);
             }
+
             extinguish();
         }
         else
         {
             setAir(300);
         }
+
         prevCameraPitch = cameraPitch;
+
         if (attackTime > 0)
         {
             attackTime--;
         }
+
         if (hurtTime > 0)
         {
             hurtTime--;
         }
+
         if (heartsLife > 0)
         {
             heartsLife--;
         }
+
         if (health <= 0)
         {
             onDeathUpdate();
         }
+
         if (recentlyHit > 0)
         {
             recentlyHit--;
@@ -275,18 +500,44 @@ public abstract class EntityLiving extends Entity
         {
             attackingPlayer = null;
         }
+
+        if (field_48102_d != null && !field_48102_d.isEntityAlive())
+        {
+            field_48102_d = null;
+        }
+
+        if (entityLivingToAttack != null)
+        {
+            if (!entityLivingToAttack.isEntityAlive())
+            {
+                func_48086_a(null);
+            }
+            else if (field_48103_c > 0)
+            {
+                field_48103_c--;
+            }
+            else
+            {
+                func_48086_a(null);
+            }
+        }
+
         updatePotionEffects();
         field_9359_x = field_9360_w;
         prevRenderYawOffset = renderYawOffset;
-        field_46016_bg = field_46015_bf;
+        prevRotationYaw3 = prevRotationYaw2;
         prevRotationYaw = rotationYaw;
         prevRotationPitch = rotationPitch;
         Profiler.endSection();
     }
 
+    /**
+     * handles entity death timer, experience orb and particle creation
+     */
     protected void onDeathUpdate()
     {
         deathTime++;
+
         if (deathTime == 20)
         {
             if (!worldObj.isRemote && (recentlyHit > 0 || isPlayer()) && !isChild())
@@ -298,8 +549,10 @@ public abstract class EntityLiving extends Entity
                     worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, posX, posY, posZ, k));
                 }
             }
+
             onEntityDeath();
             setEntityDead();
+
             for (int j = 0; j < 20; j++)
             {
                 double d = rand.nextGaussian() * 0.02D;
@@ -310,21 +563,30 @@ public abstract class EntityLiving extends Entity
         }
     }
 
-    protected int decreaseAirSupply(int i)
+    /**
+     * Decrements the entity's air supply when underwater
+     */
+    protected int decreaseAirSupply(int par1)
     {
-        return i - 1;
+        return par1 - 1;
     }
 
-    protected int getExperiencePoints(EntityPlayer entityplayer)
+    protected int getExperiencePoints(EntityPlayer par1EntityPlayer)
     {
         return experienceValue;
     }
 
+    /**
+     * Only use is to identify if class is an instance of player for experience dropping
+     */
     protected boolean isPlayer()
     {
         return false;
     }
 
+    /**
+     * Spawns an explosion particle around the Entity's location
+     */
     public void spawnExplosionParticle()
     {
         for (int i = 0; i < 20; i++)
@@ -337,6 +599,9 @@ public abstract class EntityLiving extends Entity
         }
     }
 
+    /**
+     * Handles updating while being ridden by an entity
+     */
     public void updateRidden()
     {
         super.updateRidden();
@@ -345,33 +610,43 @@ public abstract class EntityLiving extends Entity
         fallDistance = 0.0F;
     }
 
-    public void setPositionAndRotation2(double d, double d1, double d2, float f,
-            float f1, int i)
+    /**
+     * Sets the position and rotation. Only difference from the other one is no bounding on the rotation. Args: posX,
+     * posY, posZ, yaw, pitch
+     */
+    public void setPositionAndRotation2(double par1, double par3, double par5, float par7, float par8, int par9)
     {
         yOffset = 0.0F;
-        newPosX = d;
-        newPosY = d1;
-        newPosZ = d2;
-        newRotationYaw = f;
-        newRotationPitch = f1;
-        newPosRotationIncrements = i;
+        newPosX = par1;
+        newPosY = par3;
+        newPosZ = par5;
+        newRotationYaw = par7;
+        newRotationPitch = par8;
+        newPosRotationIncrements = par9;
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         super.onUpdate();
+
         if (arrowHitTempCounter > 0)
         {
             if (arrowHitTimer <= 0)
             {
                 arrowHitTimer = 60;
             }
+
             arrowHitTimer--;
+
             if (arrowHitTimer <= 0)
             {
                 arrowHitTempCounter--;
             }
         }
+
         onLivingUpdate();
         double d = posX - prevPosX;
         double d1 = posZ - prevPosZ;
@@ -380,71 +655,114 @@ public abstract class EntityLiving extends Entity
         float f2 = 0.0F;
         field_9362_u = field_9361_v;
         float f3 = 0.0F;
+
         if (f > 0.05F)
         {
             f3 = 1.0F;
             f2 = f * 3F;
-            f1 = ((float)Math.atan2(d1, d) * 180F) / 3.141593F - 90F;
+            f1 = ((float)Math.atan2(d1, d) * 180F) / (float)Math.PI - 90F;
         }
+
         if (swingProgress > 0.0F)
         {
             f1 = rotationYaw;
         }
+
         if (!onGround)
         {
             f3 = 0.0F;
         }
+
         field_9361_v = field_9361_v + (f3 - field_9361_v) * 0.3F;
-        float f4;
-        for (f4 = f1 - renderYawOffset; f4 < -180F; f4 += 360F) { }
-        for (; f4 >= 180F; f4 -= 360F) { }
-        renderYawOffset += f4 * 0.3F;
-        float f5;
-        for (f5 = rotationYaw - renderYawOffset; f5 < -180F; f5 += 360F) { }
-        for (; f5 >= 180F; f5 -= 360F) { }
-        boolean flag = f5 < -90F || f5 >= 90F;
-        if (f5 < -75F)
+
+        if (isAIEnabled())
         {
-            f5 = -75F;
+            field_48108_aq.func_48650_a();
         }
-        if (f5 >= 75F)
+        else
         {
-            f5 = 75F;
+            float f4;
+
+            for (f4 = f1 - renderYawOffset; f4 < -180F; f4 += 360F) { }
+
+            for (; f4 >= 180F; f4 -= 360F) { }
+
+            renderYawOffset += f4 * 0.3F;
+            float f5;
+
+            for (f5 = rotationYaw - renderYawOffset; f5 < -180F; f5 += 360F) { }
+
+            for (; f5 >= 180F; f5 -= 360F) { }
+
+            boolean flag = f5 < -90F || f5 >= 90F;
+
+            if (f5 < -75F)
+            {
+                f5 = -75F;
+            }
+
+            if (f5 >= 75F)
+            {
+                f5 = 75F;
+            }
+
+            renderYawOffset = rotationYaw - f5;
+
+            if (f5 * f5 > 2500F)
+            {
+                renderYawOffset += f5 * 0.2F;
+            }
+
+            if (flag)
+            {
+                f2 *= -1F;
+            }
         }
-        renderYawOffset = rotationYaw - f5;
-        if (f5 * f5 > 2500F)
-        {
-            renderYawOffset += f5 * 0.2F;
-        }
-        if (flag)
-        {
-            f2 *= -1F;
-        }
+
         for (; rotationYaw - prevRotationYaw < -180F; prevRotationYaw -= 360F) { }
+
         for (; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
+
         for (; renderYawOffset - prevRenderYawOffset < -180F; prevRenderYawOffset -= 360F) { }
+
         for (; renderYawOffset - prevRenderYawOffset >= 180F; prevRenderYawOffset += 360F) { }
+
         for (; rotationPitch - prevRotationPitch < -180F; prevRotationPitch -= 360F) { }
+
         for (; rotationPitch - prevRotationPitch >= 180F; prevRotationPitch += 360F) { }
+
+        for (; prevRotationYaw2 - prevRotationYaw3 < -180F; prevRotationYaw3 -= 360F) { }
+
+        for (; prevRotationYaw2 - prevRotationYaw3 >= 180F; prevRotationYaw3 += 360F) { }
+
         field_9360_w += f2;
     }
 
-    protected void setSize(float f, float f1)
+    /**
+     * Sets the width and height of the entity. Args: width, height
+     */
+    protected void setSize(float par1, float par2)
     {
-        super.setSize(f, f1);
+        super.setSize(par1, par2);
     }
 
-    public void heal(int i)
+    /**
+     * Heal living entity (param: amount of half-hearts)
+     */
+    public void heal(int par1)
     {
         if (health <= 0)
         {
             return;
         }
-        health += i;
+
+        health += par1;
+
         if (health > getMaxHealth())
         {
             health = getMaxHealth();
         }
+
         heartsLife = heartsHalvesLife / 2;
     }
 
@@ -455,54 +773,71 @@ public abstract class EntityLiving extends Entity
         return health;
     }
 
-    public void setEntityHealth(int i)
+    public void setEntityHealth(int par1)
     {
-        health = i;
-        if (i > getMaxHealth())
+        health = par1;
+
+        if (par1 > getMaxHealth())
         {
-            i = getMaxHealth();
+            par1 = getMaxHealth();
         }
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         if (worldObj.isRemote)
         {
             return false;
         }
+
         entityAge = 0;
+
         if (health <= 0)
         {
             return false;
         }
-        if (damagesource.fireDamage() && isPotionActive(Potion.fireResistance))
+
+        if (par1DamageSource.fireDamage() && isPotionActive(Potion.fireResistance))
         {
             return false;
         }
+
         field_704_R = 1.5F;
         boolean flag = true;
+
         if ((float)heartsLife > (float)heartsHalvesLife / 2.0F)
         {
-            if (i <= naturalArmorRating)
+            if (par2 <= naturalArmorRating)
             {
                 return false;
             }
-            damageEntity(damagesource, i - naturalArmorRating);
-            naturalArmorRating = i;
+
+            damageEntity(par1DamageSource, par2 - naturalArmorRating);
+            naturalArmorRating = par2;
             flag = false;
         }
         else
         {
-            naturalArmorRating = i;
+            naturalArmorRating = par2;
             prevHealth = health;
             heartsLife = heartsHalvesLife;
-            damageEntity(damagesource, i);
+            damageEntity(par1DamageSource, par2);
             hurtTime = maxHurtTime = 10;
         }
+
         attackedAtYaw = 0.0F;
-        Entity entity = damagesource.getEntity();
+        Entity entity = par1DamageSource.getEntity();
+
         if (entity != null)
         {
+            if (entity instanceof EntityLiving)
+            {
+                func_48086_a((EntityLiving)entity);
+            }
+
             if (entity instanceof EntityPlayer)
             {
                 recentlyHit = 60;
@@ -511,49 +846,59 @@ public abstract class EntityLiving extends Entity
             else if (entity instanceof EntityWolf)
             {
                 EntityWolf entitywolf = (EntityWolf)entity;
-                if (entitywolf.isTamed())
+
+                if (entitywolf.func_48139_F_())
                 {
                     recentlyHit = 60;
                     attackingPlayer = null;
                 }
             }
         }
+
         if (flag)
         {
             worldObj.setEntityState(this, (byte)2);
             setBeenAttacked();
+
             if (entity != null)
             {
                 double d = entity.posX - posX;
                 double d1;
+
                 for (d1 = entity.posZ - posZ; d * d + d1 * d1 < 0.0001D; d1 = (Math.random() - Math.random()) * 0.01D)
                 {
                     d = (Math.random() - Math.random()) * 0.01D;
                 }
 
-                attackedAtYaw = (float)((Math.atan2(d1, d) * 180D) / 3.1415927410125732D) - rotationYaw;
-                knockBack(entity, i, d, d1);
+                attackedAtYaw = (float)((Math.atan2(d1, d) * 180D) / Math.PI) - rotationYaw;
+                knockBack(entity, par2, d, d1);
             }
             else
             {
                 attackedAtYaw = (int)(Math.random() * 2D) * 180;
             }
         }
+
         if (health <= 0)
         {
             if (flag)
             {
                 worldObj.playSoundAtEntity(this, getDeathSound(), getSoundVolume(), getSoundPitch());
             }
-            onDeath(damagesource);
+
+            onDeath(par1DamageSource);
         }
         else if (flag)
         {
             worldObj.playSoundAtEntity(this, getHurtSound(), getSoundVolume(), getSoundPitch());
         }
+
         return true;
     }
 
+    /**
+     * Gets the pitch of living sounds in living entities.
+     */
     private float getSoundPitch()
     {
         if (isChild())
@@ -566,144 +911,215 @@ public abstract class EntityLiving extends Entity
         }
     }
 
+    /**
+     * Setups the entity to do the hurt animation. Only used by packets in multiplayer.
+     */
     public void performHurtAnimation()
     {
         hurtTime = maxHurtTime = 10;
         attackedAtYaw = 0.0F;
     }
 
+    /**
+     * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+     */
     public int getTotalArmorValue()
     {
         return 0;
     }
 
-    protected void func_40125_g(int i)
+    protected void damageArmor(int i)
     {
     }
 
-    protected int applyArmorCalculations(DamageSource damagesource, int i)
+    /**
+     * Reduces damage, depending on armor
+     */
+    protected int applyArmorCalculations(DamageSource par1DamageSource, int par2)
     {
-        if (!damagesource.isUnblockable())
+        if (!par1DamageSource.isUnblockable())
         {
-            int j = 25 - getTotalArmorValue();
-            int k = i * j + carryoverDamage;
-            func_40125_g(i);
-            i = k / 25;
-            carryoverDamage = k % 25;
+            int i = 25 - getTotalArmorValue();
+            int j = par2 * i + carryoverDamage;
+            damageArmor(par2);
+            par2 = j / 25;
+            carryoverDamage = j % 25;
         }
-        return i;
+
+        return par2;
     }
 
-    protected int applyPotionDamageCalculations(DamageSource damagesource, int i)
+    /**
+     * Reduces damage, depending on potions
+     */
+    protected int applyPotionDamageCalculations(DamageSource par1DamageSource, int par2)
     {
         if (isPotionActive(Potion.resistance))
         {
-            int j = (getActivePotionEffect(Potion.resistance).getAmplifier() + 1) * 5;
-            int k = 25 - j;
-            int l = i * k + carryoverDamage;
-            i = l / 25;
-            carryoverDamage = l % 25;
+            int i = (getActivePotionEffect(Potion.resistance).getAmplifier() + 1) * 5;
+            int j = 25 - i;
+            int k = par2 * j + carryoverDamage;
+            par2 = k / 25;
+            carryoverDamage = k % 25;
         }
-        return i;
+
+        return par2;
     }
 
-    protected void damageEntity(DamageSource damagesource, int i)
+    /**
+     * Deals damage to the entity. If its a EntityPlayer then will take damage from the armor first and then health
+     * second with the reduced value. Args: damageAmount
+     */
+    protected void damageEntity(DamageSource par1DamageSource, int par2)
     {
-        i = applyArmorCalculations(damagesource, i);
-        i = applyPotionDamageCalculations(damagesource, i);
-        health -= i;
+        par2 = applyArmorCalculations(par1DamageSource, par2);
+        par2 = applyPotionDamageCalculations(par1DamageSource, par2);
+        health -= par2;
     }
 
+    /**
+     * Returns the volume for the sounds this mob makes.
+     */
     protected float getSoundVolume()
     {
         return 1.0F;
     }
 
+    /**
+     * Returns the sound this mob makes while it's alive.
+     */
     protected String getLivingSound()
     {
         return null;
     }
 
+    /**
+     * Returns the sound this mob makes when it is hurt.
+     */
     protected String getHurtSound()
     {
         return "damage.hurtflesh";
     }
 
+    /**
+     * Returns the sound this mob makes on death.
+     */
     protected String getDeathSound()
     {
         return "damage.hurtflesh";
     }
 
-    public void knockBack(Entity entity, int i, double d, double d1)
+    /**
+     * knocks back this entity
+     */
+    public void knockBack(Entity par1Entity, int par2, double par3, double par5)
     {
         isAirBorne = true;
-        float f = MathHelper.sqrt_double(d * d + d1 * d1);
+        float f = MathHelper.sqrt_double(par3 * par3 + par5 * par5);
         float f1 = 0.4F;
         motionX /= 2D;
         motionY /= 2D;
         motionZ /= 2D;
-        motionX -= (d / (double)f) * (double)f1;
+        motionX -= (par3 / (double)f) * (double)f1;
         motionY += f1;
-        motionZ -= (d1 / (double)f) * (double)f1;
-        if (motionY > 0.40000000596046448D)
+        motionZ -= (par5 / (double)f) * (double)f1;
+
+        if (motionY > 0.4D)
         {
-            motionY = 0.40000000596046448D;
+            motionY = 0.4D;
         }
     }
 
-    public void onDeath(DamageSource damagesource)
+    /**
+     * Called when the mob's health reaches 0.
+     */
+    public void onDeath(DamageSource par1DamageSource)
     {
-        Entity entity = damagesource.getEntity();
+        Entity entity = par1DamageSource.getEntity();
+
         if (scoreValue >= 0 && entity != null)
         {
             entity.addToPlayerScore(this, scoreValue);
         }
+
         if (entity != null)
         {
             entity.onKillEntity(this);
         }
-        unused_flag = true;
+
+        dead = true;
+
         if (!worldObj.isRemote)
         {
             int i = 0;
+
             if (entity instanceof EntityPlayer)
             {
                 i = EnchantmentHelper.getLootingModifier(((EntityPlayer)entity).inventory);
             }
+
             if (!isChild())
             {
                 dropFewItems(recentlyHit > 0, i);
+
+                if (recentlyHit > 0)
+                {
+                    int j = rand.nextInt(200) - i;
+
+                    if (j < 5)
+                    {
+                        func_48085_j_(j > 0 ? 0 : 1);
+                    }
+                }
             }
         }
+
         worldObj.setEntityState(this, (byte)3);
     }
 
-    protected void dropFewItems(boolean flag, int i)
+    protected void func_48085_j_(int i)
     {
-        int j = getDropItemId();
-        if (j > 0)
+    }
+
+    /**
+     * Drop 0-2 items of this living's type
+     */
+    protected void dropFewItems(boolean par1, int par2)
+    {
+        int i = getDropItemId();
+
+        if (i > 0)
         {
-            int k = rand.nextInt(3);
-            if (i > 0)
+            int j = rand.nextInt(3);
+
+            if (par2 > 0)
             {
-                k += rand.nextInt(i + 1);
+                j += rand.nextInt(par2 + 1);
             }
-            for (int l = 0; l < k; l++)
+
+            for (int k = 0; k < j; k++)
             {
-                dropItem(j, 1);
+                dropItem(i, 1);
             }
         }
     }
 
+    /**
+     * Returns the item ID for the item the mob drops on death.
+     */
     protected int getDropItemId()
     {
         return 0;
     }
 
-    protected void fall(float f)
+    /**
+     * Called when the mob is falling. Calculates and applies fall damage.
+     */
+    protected void fall(float par1)
     {
-        super.fall(f);
-        int i = (int)Math.ceil(f - 3F);
+        super.fall(par1);
+        int i = (int)Math.ceil(par1 - 3F);
+
         if (i > 0)
         {
             if (i > 4)
@@ -714,8 +1130,10 @@ public abstract class EntityLiving extends Entity
             {
                 worldObj.playSoundAtEntity(this, "damage.fallsmall", 1.0F, 1.0F);
             }
+
             attackEntityFrom(DamageSource.fall, i);
-            int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.20000000298023224D - (double)yOffset), MathHelper.floor_double(posZ));
+            int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(posY - 0.2D - (double)yOffset), MathHelper.floor_double(posZ));
+
             if (j > 0)
             {
                 StepSound stepsound = Block.blocksList[j].stepSound;
@@ -724,167 +1142,231 @@ public abstract class EntityLiving extends Entity
         }
     }
 
-    public void moveEntityWithHeading(float f, float f1)
+    /**
+     * Moves the entity based on the specified heading.  Args: strafe, forward
+     */
+    public void moveEntityWithHeading(float par1, float par2)
     {
         if (isInWater())
         {
             double d = posY;
-            moveFlying(f, f1, 0.02F);
+            moveFlying(par1, par2, isAIEnabled() ? 0.04F : 0.02F);
             moveEntity(motionX, motionY, motionZ);
-            motionX *= 0.80000001192092896D;
-            motionY *= 0.80000001192092896D;
-            motionZ *= 0.80000001192092896D;
+            motionX *= 0.8D;
+            motionY *= 0.8D;
+            motionZ *= 0.8D;
             motionY -= 0.02D;
-            if (isCollidedHorizontally && isOffsetPositionInLiquid(motionX, ((motionY + 0.60000002384185791D) - posY) + d, motionZ))
+
+            if (isCollidedHorizontally && isOffsetPositionInLiquid(motionX, ((motionY + 0.6D) - posY) + d, motionZ))
             {
-                motionY = 0.30000001192092896D;
+                motionY = 0.3D;
             }
         }
         else if (handleLavaMovement())
         {
             double d1 = posY;
-            moveFlying(f, f1, 0.02F);
+            moveFlying(par1, par2, 0.02F);
             moveEntity(motionX, motionY, motionZ);
             motionX *= 0.5D;
             motionY *= 0.5D;
             motionZ *= 0.5D;
             motionY -= 0.02D;
-            if (isCollidedHorizontally && isOffsetPositionInLiquid(motionX, ((motionY + 0.60000002384185791D) - posY) + d1, motionZ))
+
+            if (isCollidedHorizontally && isOffsetPositionInLiquid(motionX, ((motionY + 0.6D) - posY) + d1, motionZ))
             {
-                motionY = 0.30000001192092896D;
+                motionY = 0.3D;
             }
         }
         else
         {
-            float f2 = 0.91F;
+            float f = 0.91F;
+
             if (onGround)
             {
-                f2 = 0.5460001F;
+                f = 0.5460001F;
                 int i = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(posZ));
+
                 if (i > 0)
                 {
-                    f2 = Block.blocksList[i].slipperiness * 0.91F;
+                    f = Block.blocksList[i].slipperiness * 0.91F;
                 }
             }
-            float f3 = 0.1627714F / (f2 * f2 * f2);
-            float f4 = onGround ? landMovementFactor * f3 : jumpMovementFactor;
-            moveFlying(f, f1, f4);
-            f2 = 0.91F;
+
+            float f1 = 0.1627714F / (f * f * f);
+            float f2;
+
             if (onGround)
             {
-                f2 = 0.5460001F;
+                if (isAIEnabled())
+                {
+                    f2 = func_48101_aR();
+                }
+                else
+                {
+                    f2 = landMovementFactor;
+                }
+
+                f2 *= f1;
+            }
+            else
+            {
+                f2 = jumpMovementFactor;
+            }
+
+            moveFlying(par1, par2, f2);
+            f = 0.91F;
+
+            if (onGround)
+            {
+                f = 0.5460001F;
                 int j = worldObj.getBlockId(MathHelper.floor_double(posX), MathHelper.floor_double(boundingBox.minY) - 1, MathHelper.floor_double(posZ));
+
                 if (j > 0)
                 {
-                    f2 = Block.blocksList[j].slipperiness * 0.91F;
+                    f = Block.blocksList[j].slipperiness * 0.91F;
                 }
             }
+
             if (isOnLadder())
             {
-                float f5 = 0.15F;
-                if (motionX < (double)(-f5))
+                float f3 = 0.15F;
+
+                if (motionX < (double)(-f3))
                 {
-                    motionX = -f5;
+                    motionX = -f3;
                 }
-                if (motionX > (double)f5)
+
+                if (motionX > (double)f3)
                 {
-                    motionX = f5;
+                    motionX = f3;
                 }
-                if (motionZ < (double)(-f5))
+
+                if (motionZ < (double)(-f3))
                 {
-                    motionZ = -f5;
+                    motionZ = -f3;
                 }
-                if (motionZ > (double)f5)
+
+                if (motionZ > (double)f3)
                 {
-                    motionZ = f5;
+                    motionZ = f3;
                 }
+
                 fallDistance = 0.0F;
-                if (motionY < -0.14999999999999999D)
+
+                if (motionY < -0.15D)
                 {
-                    motionY = -0.14999999999999999D;
+                    motionY = -0.15D;
                 }
-                if (isSneaking() && motionY < 0.0D)
+
+                boolean flag = isSneaking() && (this instanceof EntityPlayer);
+
+                if (flag && motionY < 0.0D)
                 {
                     motionY = 0.0D;
                 }
             }
+
             moveEntity(motionX, motionY, motionZ);
+
             if (isCollidedHorizontally && isOnLadder())
             {
-                motionY = 0.20000000000000001D;
+                motionY = 0.2D;
             }
-            motionY -= 0.080000000000000002D;
-            motionY *= 0.98000001907348633D;
-            motionX *= f2;
-            motionZ *= f2;
+
+            motionY -= 0.08D;
+            motionY *= 0.98D;
+            motionX *= f;
+            motionZ *= f;
         }
+
         field_705_Q = field_704_R;
         double d2 = posX - prevPosX;
         double d3 = posZ - prevPosZ;
-        float f6 = MathHelper.sqrt_double(d2 * d2 + d3 * d3) * 4F;
-        if (f6 > 1.0F)
+        float f4 = MathHelper.sqrt_double(d2 * d2 + d3 * d3) * 4F;
+
+        if (f4 > 1.0F)
         {
-            f6 = 1.0F;
+            f4 = 1.0F;
         }
-        field_704_R += (f6 - field_704_R) * 0.4F;
+
+        field_704_R += (f4 - field_704_R) * 0.4F;
         field_703_S += field_704_R;
     }
 
+    /**
+     * returns true if this entity is by a ladder, false otherwise
+     */
     public boolean isOnLadder()
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
-        return worldObj.getBlockId(i, j, k) == Block.ladder.blockID;
+        int l = worldObj.getBlockId(i, j, k);
+        return l == Block.ladder.blockID || l == Block.vine.blockID;
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        nbttagcompound.setShort("Health", (short)health);
-        nbttagcompound.setShort("HurtTime", (short)hurtTime);
-        nbttagcompound.setShort("DeathTime", (short)deathTime);
-        nbttagcompound.setShort("AttackTime", (short)attackTime);
+        par1NBTTagCompound.setShort("Health", (short)health);
+        par1NBTTagCompound.setShort("HurtTime", (short)hurtTime);
+        par1NBTTagCompound.setShort("DeathTime", (short)deathTime);
+        par1NBTTagCompound.setShort("AttackTime", (short)attackTime);
+
         if (!activePotionsMap.isEmpty())
         {
             NBTTagList nbttaglist = new NBTTagList();
-            NBTTagCompound nbttagcompound1;
-            for (Iterator iterator = activePotionsMap.values().iterator(); iterator.hasNext(); nbttaglist.setTag(nbttagcompound1))
+            NBTTagCompound nbttagcompound;
+
+            for (Iterator iterator = activePotionsMap.values().iterator(); iterator.hasNext(); nbttaglist.appendTag(nbttagcompound))
             {
                 PotionEffect potioneffect = (PotionEffect)iterator.next();
-                nbttagcompound1 = new NBTTagCompound();
-                nbttagcompound1.setByte("Id", (byte)potioneffect.getPotionID());
-                nbttagcompound1.setByte("Amplifier", (byte)potioneffect.getAmplifier());
-                nbttagcompound1.setInteger("Duration", potioneffect.getDuration());
+                nbttagcompound = new NBTTagCompound();
+                nbttagcompound.setByte("Id", (byte)potioneffect.getPotionID());
+                nbttagcompound.setByte("Amplifier", (byte)potioneffect.getAmplifier());
+                nbttagcompound.setInteger("Duration", potioneffect.getDuration());
             }
 
-            nbttagcompound.setTag("ActiveEffects", nbttaglist);
+            par1NBTTagCompound.setTag("ActiveEffects", nbttaglist);
         }
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        health = nbttagcompound.getShort("Health");
-        if (!nbttagcompound.hasKey("Health"))
+        health = par1NBTTagCompound.getShort("Health");
+
+        if (!par1NBTTagCompound.hasKey("Health"))
         {
             health = getMaxHealth();
         }
-        hurtTime = nbttagcompound.getShort("HurtTime");
-        deathTime = nbttagcompound.getShort("DeathTime");
-        attackTime = nbttagcompound.getShort("AttackTime");
-        if (nbttagcompound.hasKey("ActiveEffects"))
+
+        hurtTime = par1NBTTagCompound.getShort("HurtTime");
+        deathTime = par1NBTTagCompound.getShort("DeathTime");
+        attackTime = par1NBTTagCompound.getShort("AttackTime");
+
+        if (par1NBTTagCompound.hasKey("ActiveEffects"))
         {
-            NBTTagList nbttaglist = nbttagcompound.getTagList("ActiveEffects");
+            NBTTagList nbttaglist = par1NBTTagCompound.getTagList("ActiveEffects");
+
             for (int i = 0; i < nbttaglist.tagCount(); i++)
             {
-                NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
-                byte byte0 = nbttagcompound1.getByte("Id");
-                byte byte1 = nbttagcompound1.getByte("Amplifier");
-                int j = nbttagcompound1.getInteger("Duration");
+                NBTTagCompound nbttagcompound = (NBTTagCompound)nbttaglist.tagAt(i);
+                byte byte0 = nbttagcompound.getByte("Id");
+                byte byte1 = nbttagcompound.getByte("Amplifier");
+                int j = nbttagcompound.getInteger("Duration");
                 activePotionsMap.put(Integer.valueOf(byte0), new PotionEffect(byte0, j, byte1));
             }
         }
     }
 
+    /**
+     * Checks whether target entity is alive.
+     */
     public boolean isEntityAlive()
     {
         return !isDead && health > 0;
@@ -895,47 +1377,53 @@ public abstract class EntityLiving extends Entity
         return false;
     }
 
-    public void setMoveForward(float f)
+    public void setMoveForward(float par1)
     {
-        moveForward = f;
+        moveForward = par1;
     }
 
-    public void setIsJumping(boolean flag)
+    public void setJumping(boolean par1)
     {
-        isJumping = flag;
+        isJumping = par1;
     }
 
-    public float getMoveSpeed()
-    {
-        return moveSpeed;
-    }
-
+    /**
+     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+     * use this to react to sunlight and start to burn.
+     */
     public void onLivingUpdate()
     {
-        if (field_39003_d > 0)
+        if (jumpTicks > 0)
         {
-            field_39003_d--;
+            jumpTicks--;
         }
+
         if (newPosRotationIncrements > 0)
         {
             double d = posX + (newPosX - posX) / (double)newPosRotationIncrements;
             double d1 = posY + (newPosY - posY) / (double)newPosRotationIncrements;
             double d2 = posZ + (newPosZ - posZ) / (double)newPosRotationIncrements;
             double d3;
+
             for (d3 = newRotationYaw - (double)rotationYaw; d3 < -180D; d3 += 360D) { }
+
             for (; d3 >= 180D; d3 -= 360D) { }
+
             rotationYaw += d3 / (double)newPosRotationIncrements;
             rotationPitch += (newRotationPitch - (double)rotationPitch) / (double)newPosRotationIncrements;
             newPosRotationIncrements--;
             setPosition(d, d1, d2);
             setRotation(rotationYaw, rotationPitch);
             List list1 = worldObj.getCollidingBoundingBoxes(this, boundingBox.contract(0.03125D, 0.0D, 0.03125D));
+
             if (list1.size() > 0)
             {
                 double d4 = 0.0D;
+
                 for (int j = 0; j < list1.size(); j++)
                 {
                     AxisAlignedBB axisalignedbb = (AxisAlignedBB)list1.get(j);
+
                     if (axisalignedbb.maxY > d4)
                     {
                         d4 = axisalignedbb.maxY;
@@ -946,7 +1434,9 @@ public abstract class EntityLiving extends Entity
                 setPosition(d, d1, d2);
             }
         }
+
         Profiler.startSection("ai");
+
         if (isMovementBlocked())
         {
             isJumping = false;
@@ -954,41 +1444,48 @@ public abstract class EntityLiving extends Entity
             moveForward = 0.0F;
             randomYawVelocity = 0.0F;
         }
-        else if (func_44001_ad())
+        else if (isClientWorld())
         {
             if (isAIEnabled())
             {
+                Profiler.startSection("newAi");
                 updateAITasks();
+                Profiler.endSection();
             }
             else
             {
+                Profiler.startSection("oldAi");
                 updateEntityActionState();
-                field_46015_bf = rotationYaw;
+                Profiler.endSection();
+                prevRotationYaw2 = rotationYaw;
             }
         }
+
         Profiler.endSection();
         boolean flag = isInWater();
         boolean flag1 = handleLavaMovement();
+
         if (isJumping)
         {
             if (flag)
             {
-                motionY += 0.039999999105930328D;
+                motionY += 0.04D;
             }
             else if (flag1)
             {
-                motionY += 0.039999999105930328D;
+                motionY += 0.04D;
             }
-            else if (onGround && field_39003_d == 0)
+            else if (onGround && jumpTicks == 0)
             {
                 jump();
-                field_39003_d = 10;
+                jumpTicks = 10;
             }
         }
         else
         {
-            field_39003_d = 0;
+            jumpTicks = 0;
         }
+
         moveStrafing *= 0.98F;
         moveForward *= 0.98F;
         randomYawVelocity *= 0.9F;
@@ -997,31 +1494,43 @@ public abstract class EntityLiving extends Entity
         moveEntityWithHeading(moveStrafing, moveForward);
         landMovementFactor = f;
         Profiler.startSection("push");
-        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.20000000298023224D, 0.0D, 0.20000000298023224D));
+        List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(0.2D, 0.0D, 0.2D));
+
         if (list != null && list.size() > 0)
         {
             for (int i = 0; i < list.size(); i++)
             {
                 Entity entity = (Entity)list.get(i);
+
                 if (entity.canBePushed())
                 {
                     entity.applyEntityCollision(this);
                 }
             }
         }
+
         Profiler.endSection();
     }
 
+    /**
+     * Returns true if the newer Entity AI code should be run
+     */
     protected boolean isAIEnabled()
     {
         return false;
     }
 
-    protected boolean func_44001_ad()
+    /**
+     * Returns whether the entity is in a local (client) world
+     */
+    protected boolean isClientWorld()
     {
         return !worldObj.isRemote;
     }
 
+    /**
+     * Dead and sleeping entities cannot move
+     */
     protected boolean isMovementBlocked()
     {
         return health <= 0;
@@ -1032,40 +1541,55 @@ public abstract class EntityLiving extends Entity
         return false;
     }
 
+    /**
+     * jump, Causes this entity to do an upwards motion (jumping)
+     */
     protected void jump()
     {
-        motionY = 0.41999998688697815D;
+        motionY = 0.42D;
+
         if (isPotionActive(Potion.jump))
         {
             motionY += (float)(getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
         }
+
         if (isSprinting())
         {
             float f = rotationYaw * 0.01745329F;
             motionX -= MathHelper.sin(f) * 0.2F;
             motionZ += MathHelper.cos(f) * 0.2F;
         }
+
         isAirBorne = true;
     }
 
+    /**
+     * Determines if an entity can be despawned, used on idle far away entities
+     */
     protected boolean canDespawn()
     {
         return true;
     }
 
+    /**
+     * Makes the entity despawn if requirements are reached
+     */
     protected void despawnEntity()
     {
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, -1D);
+
         if (entityplayer != null)
         {
-            double d = ((Entity) (entityplayer)).posX - posX;
-            double d1 = ((Entity) (entityplayer)).posY - posY;
-            double d2 = ((Entity) (entityplayer)).posZ - posZ;
+            double d = ((Entity)(entityplayer)).posX - posX;
+            double d1 = ((Entity)(entityplayer)).posY - posY;
+            double d2 = ((Entity)(entityplayer)).posZ - posZ;
             double d3 = d * d + d1 * d1 + d2 * d2;
+
             if (canDespawn() && d3 > 16384D)
             {
                 setEntityDead();
             }
+
             if (entityAge > 600 && rand.nextInt(800) == 0 && d3 > 1024D && canDespawn())
             {
                 setEntityDead();
@@ -1080,16 +1604,33 @@ public abstract class EntityLiving extends Entity
     protected void updateAITasks()
     {
         entityAge++;
+        Profiler.startSection("checkDespawn");
         despawnEntity();
-        if (entityLivingToAttack != null && !entityLivingToAttack.isEntityAlive())
-        {
-            entityLivingToAttack = null;
-        }
+        Profiler.endSection();
+        Profiler.startSection("sensing");
+        field_48104_at.func_48481_a();
+        Profiler.endSection();
+        Profiler.startSection("targetSelector");
+        field_48105_bU.onUpdateTasks();
+        Profiler.endSection();
+        Profiler.startSection("goalSelector");
         tasks.onUpdateTasks();
-        navigation.onUpdateNavigation();
+        Profiler.endSection();
+        Profiler.startSection("navigation");
+        field_48107_ar.onUpdateNavigation();
+        Profiler.endSection();
+        Profiler.startSection("mob tick");
+        func_48097_s_();
+        Profiler.endSection();
+        Profiler.startSection("controls");
         moveHelper.onUpdateMoveHelper();
-        lookHelper.func_46142_a();
+        lookHelper.onUpdateLook();
         jumpHelper.doJump();
+        Profiler.endSection();
+    }
+
+    protected void func_48097_s_()
+    {
     }
 
     protected void updateEntityActionState()
@@ -1100,9 +1641,11 @@ public abstract class EntityLiving extends Entity
         moveStrafing = 0.0F;
         moveForward = 0.0F;
         float f = 8F;
+
         if (rand.nextFloat() < 0.02F)
         {
             EntityPlayer entityplayer1 = worldObj.getClosestPlayerToEntity(this, f);
+
             if (entityplayer1 != null)
             {
                 currentTarget = entityplayer1;
@@ -1113,9 +1656,11 @@ public abstract class EntityLiving extends Entity
                 randomYawVelocity = (rand.nextFloat() - 0.5F) * 20F;
             }
         }
+
         if (currentTarget != null)
         {
             faceEntity(currentTarget, 10F, getVerticalFaceSpeed());
+
             if (numTicksToChaseTarget-- <= 0 || currentTarget.isDead || currentTarget.getDistanceSqToEntity(this) > (double)(f * f))
             {
                 currentTarget = null;
@@ -1127,161 +1672,206 @@ public abstract class EntityLiving extends Entity
             {
                 randomYawVelocity = (rand.nextFloat() - 0.5F) * 20F;
             }
+
             rotationYaw += randomYawVelocity;
             rotationPitch = defaultPitch;
         }
+
         boolean flag = isInWater();
         boolean flag1 = handleLavaMovement();
+
         if (flag || flag1)
         {
             isJumping = rand.nextFloat() < 0.8F;
         }
     }
 
+    /**
+     * The speed it takes to move the entityliving's rotationPitch through the faceEntity method. This is only currently
+     * use in wolves.
+     */
     public int getVerticalFaceSpeed()
     {
         return 40;
     }
 
-    public void faceEntity(Entity entity, float f, float f1)
+    /**
+     * changes pitch and yaw so that the entity calling the function is facing the entity provided as an argument
+     */
+    public void faceEntity(Entity par1Entity, float par2, float par3)
     {
-        double d = entity.posX - posX;
-        double d2 = entity.posZ - posZ;
+        double d = par1Entity.posX - posX;
+        double d2 = par1Entity.posZ - posZ;
         double d1;
-        if (entity instanceof EntityLiving)
+
+        if (par1Entity instanceof EntityLiving)
         {
-            EntityLiving entityliving = (EntityLiving)entity;
+            EntityLiving entityliving = (EntityLiving)par1Entity;
             d1 = (posY + (double)getEyeHeight()) - (entityliving.posY + (double)entityliving.getEyeHeight());
         }
         else
         {
-            d1 = (entity.boundingBox.minY + entity.boundingBox.maxY) / 2D - (posY + (double)getEyeHeight());
+            d1 = (par1Entity.boundingBox.minY + par1Entity.boundingBox.maxY) / 2D - (posY + (double)getEyeHeight());
         }
+
         double d3 = MathHelper.sqrt_double(d * d + d2 * d2);
-        float f2 = (float)((Math.atan2(d2, d) * 180D) / 3.1415927410125732D) - 90F;
-        float f3 = (float)(-((Math.atan2(d1, d3) * 180D) / 3.1415927410125732D));
-        rotationPitch = -updateRotation(rotationPitch, f3, f1);
-        rotationYaw = updateRotation(rotationYaw, f2, f);
+        float f = (float)((Math.atan2(d2, d) * 180D) / Math.PI) - 90F;
+        float f1 = (float)(-((Math.atan2(d1, d3) * 180D) / Math.PI));
+        rotationPitch = -updateRotation(rotationPitch, f1, par3);
+        rotationYaw = updateRotation(rotationYaw, f, par2);
     }
 
-    public boolean hasCurrentTarget()
+    /**
+     * Arguments: current rotation, intended rotation, max increment.
+     */
+    private float updateRotation(float par1, float par2, float par3)
     {
-        return currentTarget != null;
-    }
+        float f;
 
-    public Entity getCurrentTarget()
-    {
-        return currentTarget;
-    }
+        for (f = par2 - par1; f < -180F; f += 360F) { }
 
-    private float updateRotation(float f, float f1, float f2)
-    {
-        float f3;
-        for (f3 = f1 - f; f3 < -180F; f3 += 360F) { }
-        for (; f3 >= 180F; f3 -= 360F) { }
-        if (f3 > f2)
+        for (; f >= 180F; f -= 360F) { }
+
+        if (f > par3)
         {
-            f3 = f2;
+            f = par3;
         }
-        if (f3 < -f2)
+
+        if (f < -par3)
         {
-            f3 = -f2;
+            f = -par3;
         }
-        return f + f3;
+
+        return par1 + f;
     }
 
+    /**
+     * Called when the entity vanishes after dies by damage (or other method that put health below or at zero).
+     */
     public void onEntityDeath()
     {
     }
 
+    /**
+     * Checks if the entity's current position is a valid location to spawn this entity.
+     */
     public boolean getCanSpawnHere()
     {
-        return worldObj.checkIfAABBIsClear(boundingBox) && worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0 && !worldObj.getIsAnyLiquid(boundingBox);
+        return worldObj.checkIfAABBIsClear(boundingBox) && worldObj.getCollidingBoundingBoxes(this, boundingBox).size() == 0 && !worldObj.isAnyLiquid(boundingBox);
     }
 
+    /**
+     * sets the dead flag. Used when you fall off the bottom of the world.
+     */
     protected void kill()
     {
         attackEntityFrom(DamageSource.outOfWorld, 4);
     }
 
-    public float getSwingProgress(float f)
+    /**
+     * Returns where in the swing animation the living entity is (from 0 to 1).  Args: partialTickTime
+     */
+    public float getSwingProgress(float par1)
     {
-        float f1 = swingProgress - prevSwingProgress;
-        if (f1 < 0.0F)
+        float f = swingProgress - prevSwingProgress;
+
+        if (f < 0.0F)
         {
-            f1++;
+            f++;
         }
-        return prevSwingProgress + f1 * f;
+
+        return prevSwingProgress + f * par1;
     }
 
-    public Vec3D getPosition(float f)
+    /**
+     * interpolated position vector
+     */
+    public Vec3D getPosition(float par1)
     {
-        if (f == 1.0F)
+        if (par1 == 1.0F)
         {
             return Vec3D.createVector(posX, posY, posZ);
         }
         else
         {
-            double d = prevPosX + (posX - prevPosX) * (double)f;
-            double d1 = prevPosY + (posY - prevPosY) * (double)f;
-            double d2 = prevPosZ + (posZ - prevPosZ) * (double)f;
+            double d = prevPosX + (posX - prevPosX) * (double)par1;
+            double d1 = prevPosY + (posY - prevPosY) * (double)par1;
+            double d2 = prevPosZ + (posZ - prevPosZ) * (double)par1;
             return Vec3D.createVector(d, d1, d2);
         }
     }
 
+    /**
+     * returns a (normalized) vector of where this entity is looking
+     */
     public Vec3D getLookVec()
     {
         return getLook(1.0F);
     }
 
-    public Vec3D getLook(float f)
+    /**
+     * interpolated look vector
+     */
+    public Vec3D getLook(float par1)
     {
-        if (f == 1.0F)
+        if (par1 == 1.0F)
         {
-            float f1 = MathHelper.cos(-rotationYaw * 0.01745329F - 3.141593F);
-            float f3 = MathHelper.sin(-rotationYaw * 0.01745329F - 3.141593F);
-            float f5 = -MathHelper.cos(-rotationPitch * 0.01745329F);
-            float f7 = MathHelper.sin(-rotationPitch * 0.01745329F);
-            return Vec3D.createVector(f3 * f5, f7, f1 * f5);
+            float f = MathHelper.cos(-rotationYaw * 0.01745329F - (float)Math.PI);
+            float f2 = MathHelper.sin(-rotationYaw * 0.01745329F - (float)Math.PI);
+            float f4 = -MathHelper.cos(-rotationPitch * 0.01745329F);
+            float f6 = MathHelper.sin(-rotationPitch * 0.01745329F);
+            return Vec3D.createVector(f2 * f4, f6, f * f4);
         }
         else
         {
-            float f2 = prevRotationPitch + (rotationPitch - prevRotationPitch) * f;
-            float f4 = prevRotationYaw + (rotationYaw - prevRotationYaw) * f;
-            float f6 = MathHelper.cos(-f4 * 0.01745329F - 3.141593F);
-            float f8 = MathHelper.sin(-f4 * 0.01745329F - 3.141593F);
-            float f9 = -MathHelper.cos(-f2 * 0.01745329F);
-            float f10 = MathHelper.sin(-f2 * 0.01745329F);
-            return Vec3D.createVector(f8 * f9, f10, f6 * f9);
+            float f1 = prevRotationPitch + (rotationPitch - prevRotationPitch) * par1;
+            float f3 = prevRotationYaw + (rotationYaw - prevRotationYaw) * par1;
+            float f5 = MathHelper.cos(-f3 * 0.01745329F - (float)Math.PI);
+            float f7 = MathHelper.sin(-f3 * 0.01745329F - (float)Math.PI);
+            float f8 = -MathHelper.cos(-f1 * 0.01745329F);
+            float f9 = MathHelper.sin(-f1 * 0.01745329F);
+            return Vec3D.createVector(f7 * f8, f9, f5 * f8);
         }
     }
 
-    public float func_35159_aC()
+    /**
+     * Returns render size modifier
+     */
+    public float getRenderSizeModifier()
     {
         return 1.0F;
     }
 
-    public MovingObjectPosition rayTrace(double d, float f)
+    /**
+     * Performs a ray trace for the distance specified and using the partial tick time. Args: distance, partialTickTime
+     */
+    public MovingObjectPosition rayTrace(double par1, float par3)
     {
-        Vec3D vec3d = getPosition(f);
-        Vec3D vec3d1 = getLook(f);
-        Vec3D vec3d2 = vec3d.addVector(vec3d1.xCoord * d, vec3d1.yCoord * d, vec3d1.zCoord * d);
+        Vec3D vec3d = getPosition(par3);
+        Vec3D vec3d1 = getLook(par3);
+        Vec3D vec3d2 = vec3d.addVector(vec3d1.xCoord * par1, vec3d1.yCoord * par1, vec3d1.zCoord * par1);
         return worldObj.rayTraceBlocks(vec3d, vec3d2);
     }
 
+    /**
+     * Will return how many at most can spawn in a chunk at once.
+     */
     public int getMaxSpawnedInChunk()
     {
         return 4;
     }
 
+    /**
+     * Returns the item that this EntityLiving is holding, if any.
+     */
     public ItemStack getHeldItem()
     {
         return null;
     }
 
-    public void handleHealthUpdate(byte byte0)
+    public void handleHealthUpdate(byte par1)
     {
-        if (byte0 == 2)
+        if (par1 == 2)
         {
             field_704_R = 1.5F;
             heartsLife = heartsHalvesLife;
@@ -1290,7 +1880,7 @@ public abstract class EntityLiving extends Entity
             worldObj.playSoundAtEntity(this, getHurtSound(), getSoundVolume(), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             attackEntityFrom(DamageSource.generic, 0);
         }
-        else if (byte0 == 3)
+        else if (par1 == 3)
         {
             worldObj.playSoundAtEntity(this, getDeathSound(), getSoundVolume(), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             health = 0;
@@ -1298,31 +1888,40 @@ public abstract class EntityLiving extends Entity
         }
         else
         {
-            super.handleHealthUpdate(byte0);
+            super.handleHealthUpdate(par1);
         }
     }
 
+    /**
+     * Returns whether player is sleeping or not
+     */
     public boolean isPlayerSleeping()
     {
         return false;
     }
 
-    public int getItemIcon(ItemStack itemstack, int i)
+    /**
+     * Gets the Icon Index of the item currently held
+     */
+    public int getItemIcon(ItemStack par1ItemStack, int par2)
     {
-        return itemstack.getIconIndex();
+        return par1ItemStack.getIconIndex();
     }
 
     protected void updatePotionEffects()
     {
         Iterator iterator = activePotionsMap.keySet().iterator();
+
         do
         {
             if (!iterator.hasNext())
             {
                 break;
             }
+
             Integer integer = (Integer)iterator.next();
             PotionEffect potioneffect = (PotionEffect)activePotionsMap.get(integer);
+
             if (!potioneffect.onUpdate(this) && !worldObj.isRemote)
             {
                 iterator.remove();
@@ -1330,7 +1929,8 @@ public abstract class EntityLiving extends Entity
             }
         }
         while (true);
-        if (field_39001_b)
+
+        if (potionsNeedUpdate)
         {
             if (!worldObj.isRemote)
             {
@@ -1344,11 +1944,14 @@ public abstract class EntityLiving extends Entity
                     dataWatcher.updateObject(8, Integer.valueOf(0));
                 }
             }
-            field_39001_b = false;
+
+            potionsNeedUpdate = false;
         }
+
         if (rand.nextBoolean())
         {
             int j = dataWatcher.getWatchableObjectInt(8);
+
             if (j > 0)
             {
                 double d = (double)(j >> 16 & 0xff) / 255D;
@@ -1362,14 +1965,17 @@ public abstract class EntityLiving extends Entity
     public void clearActivePotions()
     {
         Iterator iterator = activePotionsMap.keySet().iterator();
+
         do
         {
             if (!iterator.hasNext())
             {
                 break;
             }
+
             Integer integer = (Integer)iterator.next();
             PotionEffect potioneffect = (PotionEffect)activePotionsMap.get(integer);
+
             if (!worldObj.isRemote)
             {
                 iterator.remove();
@@ -1384,114 +1990,149 @@ public abstract class EntityLiving extends Entity
         return activePotionsMap.values();
     }
 
-    public boolean isPotionActive(Potion potion)
+    public boolean isPotionActive(Potion par1Potion)
     {
-        return activePotionsMap.containsKey(Integer.valueOf(potion.id));
+        return activePotionsMap.containsKey(Integer.valueOf(par1Potion.id));
     }
 
-    public PotionEffect getActivePotionEffect(Potion potion)
+    /**
+     * returns the PotionEffect for the supplied Potion if it is active, null otherwise.
+     */
+    public PotionEffect getActivePotionEffect(Potion par1Potion)
     {
-        return (PotionEffect)activePotionsMap.get(Integer.valueOf(potion.id));
+        return (PotionEffect)activePotionsMap.get(Integer.valueOf(par1Potion.id));
     }
 
-    public void addPotionEffect(PotionEffect potioneffect)
+    /**
+     * adds a PotionEffect to the entity
+     */
+    public void addPotionEffect(PotionEffect par1PotionEffect)
     {
-        if (!func_40126_a(potioneffect))
+        if (!isPotionAplicable(par1PotionEffect))
         {
             return;
         }
-        if (activePotionsMap.containsKey(Integer.valueOf(potioneffect.getPotionID())))
+
+        if (activePotionsMap.containsKey(Integer.valueOf(par1PotionEffect.getPotionID())))
         {
-            ((PotionEffect)activePotionsMap.get(Integer.valueOf(potioneffect.getPotionID()))).combine(potioneffect);
-            onChangedPotionEffect((PotionEffect)activePotionsMap.get(Integer.valueOf(potioneffect.getPotionID())));
+            ((PotionEffect)activePotionsMap.get(Integer.valueOf(par1PotionEffect.getPotionID()))).combine(par1PotionEffect);
+            onChangedPotionEffect((PotionEffect)activePotionsMap.get(Integer.valueOf(par1PotionEffect.getPotionID())));
         }
         else
         {
-            activePotionsMap.put(Integer.valueOf(potioneffect.getPotionID()), potioneffect);
-            onNewPotionEffect(potioneffect);
+            activePotionsMap.put(Integer.valueOf(par1PotionEffect.getPotionID()), par1PotionEffect);
+            onNewPotionEffect(par1PotionEffect);
         }
     }
 
-    public boolean func_40126_a(PotionEffect potioneffect)
+    public boolean isPotionAplicable(PotionEffect par1PotionEffect)
     {
         if (getCreatureAttribute() == EnumCreatureAttribute.UNDEAD)
         {
-            int i = potioneffect.getPotionID();
+            int i = par1PotionEffect.getPotionID();
+
             if (i == Potion.regeneration.id || i == Potion.poison.id)
             {
                 return false;
             }
         }
+
         return true;
     }
 
+    /**
+     * Returns true if this entity is undead.
+     */
     public boolean isEntityUndead()
     {
         return getCreatureAttribute() == EnumCreatureAttribute.UNDEAD;
     }
 
-    public void removePotionEffect(int i)
+    /**
+     * input is the potion id to remove from the current active potion effects
+     */
+    public void removePotionEffect(int par1)
     {
-        activePotionsMap.remove(Integer.valueOf(i));
+        activePotionsMap.remove(Integer.valueOf(par1));
     }
 
-    protected void onNewPotionEffect(PotionEffect potioneffect)
+    protected void onNewPotionEffect(PotionEffect par1PotionEffect)
     {
-        field_39001_b = true;
+        potionsNeedUpdate = true;
     }
 
-    protected void onChangedPotionEffect(PotionEffect potioneffect)
+    protected void onChangedPotionEffect(PotionEffect par1PotionEffect)
     {
-        field_39001_b = true;
+        potionsNeedUpdate = true;
     }
 
-    protected void onFinishedPotionEffect(PotionEffect potioneffect)
+    protected void onFinishedPotionEffect(PotionEffect par1PotionEffect)
     {
-        field_39001_b = true;
+        potionsNeedUpdate = true;
     }
 
+    /**
+     * This method return a value to be applyed directly to entity speed, this factor is less than 1 when a slowdown
+     * potion effect is applyed, more than 1 when a haste potion effect is applyed and 2 for fleeing entities.
+     */
     protected float getSpeedModifier()
     {
         float f = 1.0F;
+
         if (isPotionActive(Potion.moveSpeed))
         {
             f *= 1.0F + 0.2F * (float)(getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1);
         }
+
         if (isPotionActive(Potion.moveSlowdown))
         {
             f *= 1.0F - 0.15F * (float)(getActivePotionEffect(Potion.moveSlowdown).getAmplifier() + 1);
         }
+
         return f;
     }
 
-    public void setPositionAndUpdate(double d, double d1, double d2)
+    /**
+     * Move the entity to the coordinates informed, but keep yaw/pitch values.
+     */
+    public void setPositionAndUpdate(double par1, double par3, double par5)
     {
-        setLocationAndAngles(d, d1, d2, rotationYaw, rotationPitch);
+        setLocationAndAngles(par1, par3, par5, rotationYaw, rotationPitch);
     }
 
+    /**
+     * If Animal, checks if the age timer is negative
+     */
     public boolean isChild()
     {
         return false;
     }
 
+    /**
+     * Get this Entity's EnumCreatureAttribute
+     */
     public EnumCreatureAttribute getCreatureAttribute()
     {
         return EnumCreatureAttribute.UNDEFINED;
     }
 
-    public void func_41005_b(ItemStack itemstack)
+    /**
+     * Renders broken item particles using the given ItemStack
+     */
+    public void renderBrokenItemStack(ItemStack par1ItemStack)
     {
         worldObj.playSoundAtEntity(this, "random.break", 0.8F, 0.8F + worldObj.rand.nextFloat() * 0.4F);
+
         for (int i = 0; i < 5; i++)
         {
-            Vec3D vec3d = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.10000000000000001D, Math.random() * 0.10000000000000001D + 0.10000000000000001D, 0.0D);
-            vec3d.rotateAroundX((-rotationPitch * 3.141593F) / 180F);
-            vec3d.rotateAroundY((-rotationYaw * 3.141593F) / 180F);
-            Vec3D vec3d1 = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.29999999999999999D, (double)(-rand.nextFloat()) * 0.59999999999999998D - 0.29999999999999999D, 0.59999999999999998D);
-            vec3d1.rotateAroundX((-rotationPitch * 3.141593F) / 180F);
-            vec3d1.rotateAroundY((-rotationYaw * 3.141593F) / 180F);
+            Vec3D vec3d = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            vec3d.rotateAroundX((-rotationPitch * (float)Math.PI) / 180F);
+            vec3d.rotateAroundY((-rotationYaw * (float)Math.PI) / 180F);
+            Vec3D vec3d1 = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.3D, (double)(-rand.nextFloat()) * 0.6D - 0.3D, 0.6D);
+            vec3d1.rotateAroundX((-rotationPitch * (float)Math.PI) / 180F);
+            vec3d1.rotateAroundY((-rotationYaw * (float)Math.PI) / 180F);
             vec3d1 = vec3d1.addVector(posX, posY + (double)getEyeHeight(), posZ);
-            worldObj.spawnParticle((new StringBuilder()).append("iconcrack_").append(itemstack.getItem().shiftedIndex).toString(), vec3d1.xCoord, vec3d1.yCoord, vec3d1.zCoord, vec3d.xCoord, vec3d.yCoord + 0.050000000000000003D, vec3d.zCoord);
+            worldObj.spawnParticle((new StringBuilder()).append("iconcrack_").append(par1ItemStack.getItem().shiftedIndex).toString(), vec3d1.xCoord, vec3d1.yCoord, vec3d1.zCoord, vec3d.xCoord, vec3d.yCoord + 0.05D, vec3d.zCoord);
         }
     }
 }

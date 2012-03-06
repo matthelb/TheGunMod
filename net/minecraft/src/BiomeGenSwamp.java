@@ -4,9 +4,9 @@ import java.util.Random;
 
 public class BiomeGenSwamp extends BiomeGenBase
 {
-    protected BiomeGenSwamp(int i)
+    protected BiomeGenSwamp(int par1)
     {
-        super(i);
+        super(par1);
         biomeDecorator.treesPerChunk = 2;
         biomeDecorator.flowersPerChunk = -999;
         biomeDecorator.deadBushPerChunk = 1;
@@ -17,22 +17,25 @@ public class BiomeGenSwamp extends BiomeGenBase
         waterColorMultiplier = 0xe0ffae;
     }
 
-    public WorldGenerator getRandomWorldGenForTrees(Random random)
+    /**
+     * Gets a WorldGen appropriate for this biome.
+     */
+    public WorldGenerator getRandomWorldGenForTrees(Random par1Random)
     {
         return worldGenSwamp;
     }
 
-    public int getGrassColorAtCoords(IBlockAccess iblockaccess, int i, int j, int k)
+    public int func_48415_j()
     {
-        double d = iblockaccess.getWorldChunkManager().getTemperature(i, j, k);
-        double d1 = iblockaccess.getWorldChunkManager().getRainfall(i, k);
+        double d = func_48411_i();
+        double d1 = func_48414_h();
         return ((ColorizerGrass.getGrassColor(d, d1) & 0xfefefe) + 0x4e0e4e) / 2;
     }
 
-    public int getFoliageColorAtCoords(IBlockAccess iblockaccess, int i, int j, int k)
+    public int func_48412_k()
     {
-        double d = iblockaccess.getWorldChunkManager().getTemperature(i, j, k);
-        double d1 = iblockaccess.getWorldChunkManager().getRainfall(i, k);
+        double d = func_48411_i();
+        double d1 = func_48414_h();
         return ((ColorizerFoliage.getFoliageColor(d, d1) & 0xfefefe) + 0x4e0e4e) / 2;
     }
 }

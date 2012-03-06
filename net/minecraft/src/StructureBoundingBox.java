@@ -13,108 +13,131 @@ public class StructureBoundingBox
     {
     }
 
+    /**
+     * 'returns a new StructureBoundingBox with MAX values'
+     */
     public static StructureBoundingBox getNewBoundingBox()
     {
         return new StructureBoundingBox(0x7fffffff, 0x7fffffff, 0x7fffffff, 0x80000000, 0x80000000, 0x80000000);
     }
 
-    public static StructureBoundingBox getComponentToAddBoundingBox(int i, int j, int k, int l, int i1, int j1, int k1, int l1,
-            int i2, int j2)
+    /**
+     * 'used to project a possible new component Bounding Box - to check if it would cut anything already spawned'
+     */
+    public static StructureBoundingBox getComponentToAddBoundingBox(int par0, int par1, int par2, int par3, int par4, int par5, int par6, int par7, int par8, int par9)
     {
-        switch (j2)
+        switch (par9)
         {
             default:
-                return new StructureBoundingBox(i + l, j + i1, k + j1, ((i + k1) - 1) + l, ((j + l1) - 1) + i1, ((k + i2) - 1) + j1);
+                return new StructureBoundingBox(par0 + par3, par1 + par4, par2 + par5, ((par0 + par6) - 1) + par3, ((par1 + par7) - 1) + par4, ((par2 + par8) - 1) + par5);
 
             case 2:
-                return new StructureBoundingBox(i + l, j + i1, (k - i2) + 1 + j1, ((i + k1) - 1) + l, ((j + l1) - 1) + i1, k + j1);
+                return new StructureBoundingBox(par0 + par3, par1 + par4, (par2 - par8) + 1 + par5, ((par0 + par6) - 1) + par3, ((par1 + par7) - 1) + par4, par2 + par5);
 
             case 0:
-                return new StructureBoundingBox(i + l, j + i1, k + j1, ((i + k1) - 1) + l, ((j + l1) - 1) + i1, ((k + i2) - 1) + j1);
+                return new StructureBoundingBox(par0 + par3, par1 + par4, par2 + par5, ((par0 + par6) - 1) + par3, ((par1 + par7) - 1) + par4, ((par2 + par8) - 1) + par5);
 
             case 1:
-                return new StructureBoundingBox((i - i2) + 1 + j1, j + i1, k + l, i + j1, ((j + l1) - 1) + i1, ((k + k1) - 1) + l);
+                return new StructureBoundingBox((par0 - par8) + 1 + par5, par1 + par4, par2 + par3, par0 + par5, ((par1 + par7) - 1) + par4, ((par2 + par6) - 1) + par3);
 
             case 3:
-                return new StructureBoundingBox(i + j1, j + i1, k + l, ((i + i2) - 1) + j1, ((j + l1) - 1) + i1, ((k + k1) - 1) + l);
+                return new StructureBoundingBox(par0 + par5, par1 + par4, par2 + par3, ((par0 + par8) - 1) + par5, ((par1 + par7) - 1) + par4, ((par2 + par6) - 1) + par3);
         }
     }
 
-    public StructureBoundingBox(StructureBoundingBox structureboundingbox)
+    public StructureBoundingBox(StructureBoundingBox par1StructureBoundingBox)
     {
-        minX = structureboundingbox.minX;
-        minY = structureboundingbox.minY;
-        minZ = structureboundingbox.minZ;
-        maxX = structureboundingbox.maxX;
-        maxY = structureboundingbox.maxY;
-        maxZ = structureboundingbox.maxZ;
+        minX = par1StructureBoundingBox.minX;
+        minY = par1StructureBoundingBox.minY;
+        minZ = par1StructureBoundingBox.minZ;
+        maxX = par1StructureBoundingBox.maxX;
+        maxY = par1StructureBoundingBox.maxY;
+        maxZ = par1StructureBoundingBox.maxZ;
     }
 
-    public StructureBoundingBox(int i, int j, int k, int l, int i1, int j1)
+    public StructureBoundingBox(int par1, int par2, int par3, int par4, int par5, int par6)
     {
-        minX = i;
-        minY = j;
-        minZ = k;
-        maxX = l;
-        maxY = i1;
-        maxZ = j1;
+        minX = par1;
+        minY = par2;
+        minZ = par3;
+        maxX = par4;
+        maxY = par5;
+        maxZ = par6;
     }
 
-    public StructureBoundingBox(int i, int j, int k, int l)
+    public StructureBoundingBox(int par1, int par2, int par3, int par4)
     {
-        minX = i;
-        minZ = j;
-        maxX = k;
-        maxZ = l;
+        minX = par1;
+        minZ = par2;
+        maxX = par3;
+        maxZ = par4;
         minY = 1;
         maxY = 512;
     }
 
-    public boolean intersectsWith(StructureBoundingBox structureboundingbox)
+    /**
+     * Returns whether the given bounding box intersects with this one. Args: structureboundingbox
+     */
+    public boolean intersectsWith(StructureBoundingBox par1StructureBoundingBox)
     {
-        return maxX >= structureboundingbox.minX && minX <= structureboundingbox.maxX && maxZ >= structureboundingbox.minZ && minZ <= structureboundingbox.maxZ && maxY >= structureboundingbox.minY && minY <= structureboundingbox.maxY;
+        return maxX >= par1StructureBoundingBox.minX && minX <= par1StructureBoundingBox.maxX && maxZ >= par1StructureBoundingBox.minZ && minZ <= par1StructureBoundingBox.maxZ && maxY >= par1StructureBoundingBox.minY && minY <= par1StructureBoundingBox.maxY;
     }
 
-    public boolean intersectsWith(int i, int j, int k, int l)
+    public boolean intersectsWith(int par1, int par2, int par3, int par4)
     {
-        return maxX >= i && minX <= k && maxZ >= j && minZ <= l;
+        return maxX >= par1 && minX <= par3 && maxZ >= par2 && minZ <= par4;
     }
 
-    public void expandTo(StructureBoundingBox structureboundingbox)
+    public void expandTo(StructureBoundingBox par1StructureBoundingBox)
     {
-        minX = Math.min(minX, structureboundingbox.minX);
-        minY = Math.min(minY, structureboundingbox.minY);
-        minZ = Math.min(minZ, structureboundingbox.minZ);
-        maxX = Math.max(maxX, structureboundingbox.maxX);
-        maxY = Math.max(maxY, structureboundingbox.maxY);
-        maxZ = Math.max(maxZ, structureboundingbox.maxZ);
+        minX = Math.min(minX, par1StructureBoundingBox.minX);
+        minY = Math.min(minY, par1StructureBoundingBox.minY);
+        minZ = Math.min(minZ, par1StructureBoundingBox.minZ);
+        maxX = Math.max(maxX, par1StructureBoundingBox.maxX);
+        maxY = Math.max(maxY, par1StructureBoundingBox.maxY);
+        maxZ = Math.max(maxZ, par1StructureBoundingBox.maxZ);
     }
 
-    public void offset(int i, int j, int k)
+    /**
+     * Offsets the current bounding box by the specified coordinates. Args: x, y, z
+     */
+    public void offset(int par1, int par2, int par3)
     {
-        minX += i;
-        minY += j;
-        minZ += k;
-        maxX += i;
-        maxY += j;
-        maxZ += k;
+        minX += par1;
+        minY += par2;
+        minZ += par3;
+        maxX += par1;
+        maxY += par2;
+        maxZ += par3;
     }
 
-    public boolean isVecInside(int i, int j, int k)
+    /**
+     * Returns true if block is inside bounding box
+     */
+    public boolean isVecInside(int par1, int par2, int par3)
     {
-        return i >= minX && i <= maxX && k >= minZ && k <= maxZ && j >= minY && j <= maxY;
+        return par1 >= minX && par1 <= maxX && par3 >= minZ && par3 <= maxZ && par2 >= minY && par2 <= maxY;
     }
 
+    /**
+     * Returns width of a bounding box
+     */
     public int getXSize()
     {
         return (maxX - minX) + 1;
     }
 
+    /**
+     * Returns height of a bounding box
+     */
     public int getYSize()
     {
         return (maxY - minY) + 1;
     }
 
+    /**
+     * Returns length of a bounding box
+     */
     public int getZSize()
     {
         return (maxZ - minZ) + 1;

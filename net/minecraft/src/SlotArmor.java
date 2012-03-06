@@ -2,28 +2,41 @@ package net.minecraft.src;
 
 class SlotArmor extends Slot
 {
+    /**
+     * The armor type that can be placed on that slot, it uses the same values of armorType field on ItemArmor.
+     */
     final int armorType;
+
+    /** The inventory we want to extract a slot from. */
     final ContainerPlayer inventory;
 
-    SlotArmor(ContainerPlayer containerplayer, IInventory iinventory, int i, int j, int k, int l)
+    SlotArmor(ContainerPlayer par1ContainerPlayer, IInventory par2IInventory, int par3, int par4, int par5, int par6)
     {
-        super(iinventory, i, j, k);
-        inventory = containerplayer;
-        armorType = l;
+        super(par2IInventory, par3, par4, par5);
+        inventory = par1ContainerPlayer;
+        armorType = par6;
     }
 
+    /**
+     * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in the case
+     * of armor slots)
+     */
     public int getSlotStackLimit()
     {
         return 1;
     }
 
-    public boolean isItemValid(ItemStack itemstack)
+    /**
+     * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
+     */
+    public boolean isItemValid(ItemStack par1ItemStack)
     {
-        if (itemstack.getItem() instanceof ItemArmor)
+        if (par1ItemStack.getItem() instanceof ItemArmor)
         {
-            return ((ItemArmor)itemstack.getItem()).armorType == armorType;
+            return ((ItemArmor)par1ItemStack.getItem()).armorType == armorType;
         }
-        if (itemstack.getItem().shiftedIndex == Block.pumpkin.blockID)
+
+        if (par1ItemStack.getItem().shiftedIndex == Block.pumpkin.blockID)
         {
             return armorType == 0;
         }

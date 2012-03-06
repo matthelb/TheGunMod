@@ -12,61 +12,85 @@ public class RenderVillager extends RenderLiving
         field_40295_c = (ModelVillager)mainModel;
     }
 
-    protected int func_40293_a(EntityVillager entityvillager, int i, float f)
+    protected int func_40293_a(EntityVillager par1EntityVillager, int par2, float par3)
     {
         return -1;
     }
 
-    public void renderVillager(EntityVillager entityvillager, double d, double d1, double d2,
-            float f, float f1)
+    public void renderVillager(EntityVillager par1EntityVillager, double par2, double par4, double par6, float par8, float par9)
     {
-        super.doRenderLiving(entityvillager, d, d1, d2, f, f1);
+        super.doRenderLiving(par1EntityVillager, par2, par4, par6, par8, par9);
     }
 
     protected void func_40290_a(EntityVillager entityvillager, double d, double d1, double d2)
     {
     }
 
-    protected void func_40291_a(EntityVillager entityvillager, float f)
+    protected void func_40291_a(EntityVillager par1EntityVillager, float par2)
     {
-        super.renderEquippedItems(entityvillager, f);
+        super.renderEquippedItems(par1EntityVillager, par2);
     }
 
-    protected void func_40292_b(EntityVillager entityvillager, float f)
+    protected void func_40292_b(EntityVillager par1EntityVillager, float par2)
     {
-        float f1 = 0.9375F;
-        GL11.glScalef(f1, f1, f1);
+        float f = 0.9375F;
+
+        if (par1EntityVillager.func_48123_at() < 0)
+        {
+            f = (float)((double)f * 0.5D);
+            shadowSize = 0.25F;
+        }
+        else
+        {
+            shadowSize = 0.5F;
+        }
+
+        GL11.glScalef(f, f, f);
     }
 
-    protected void passSpecialRender(EntityLiving entityliving, double d, double d1, double d2)
+    /**
+     * Passes the specialRender and renders it
+     */
+    protected void passSpecialRender(EntityLiving par1EntityLiving, double par2, double par4, double par6)
     {
-        func_40290_a((EntityVillager)entityliving, d, d1, d2);
+        func_40290_a((EntityVillager)par1EntityLiving, par2, par4, par6);
     }
 
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    /**
+     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
+     * entityLiving, partialTickTime
+     */
+    protected void preRenderCallback(EntityLiving par1EntityLiving, float par2)
     {
-        func_40292_b((EntityVillager)entityliving, f);
+        func_40292_b((EntityVillager)par1EntityLiving, par2);
     }
 
-    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    /**
+     * Queries whether should render the specified pass or not.
+     */
+    protected int shouldRenderPass(EntityLiving par1EntityLiving, int par2, float par3)
     {
-        return func_40293_a((EntityVillager)entityliving, i, f);
+        return func_40293_a((EntityVillager)par1EntityLiving, par2, par3);
     }
 
-    protected void renderEquippedItems(EntityLiving entityliving, float f)
+    protected void renderEquippedItems(EntityLiving par1EntityLiving, float par2)
     {
-        func_40291_a((EntityVillager)entityliving, f);
+        func_40291_a((EntityVillager)par1EntityLiving, par2);
     }
 
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2,
-            float f, float f1)
+    public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
-        renderVillager((EntityVillager)entityliving, d, d1, d2, f, f1);
+        renderVillager((EntityVillager)par1EntityLiving, par2, par4, par6, par8, par9);
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
+     */
+    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        renderVillager((EntityVillager)entity, d, d1, d2, f, f1);
+        renderVillager((EntityVillager)par1Entity, par2, par4, par6, par8, par9);
     }
 }

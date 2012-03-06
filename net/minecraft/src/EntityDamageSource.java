@@ -4,10 +4,10 @@ public class EntityDamageSource extends DamageSource
 {
     protected Entity damageSourceEntity;
 
-    public EntityDamageSource(String s, Entity entity)
+    public EntityDamageSource(String par1Str, Entity par2Entity)
     {
-        super(s);
-        damageSourceEntity = entity;
+        super(par1Str);
+        damageSourceEntity = par2Entity;
     }
 
     public Entity getEntity()

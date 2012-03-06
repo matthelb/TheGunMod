@@ -2,20 +2,27 @@ package net.minecraft.src;
 
 public class BlockSoulSand extends Block
 {
-    public BlockSoulSand(int i, int j)
+    public BlockSoulSand(int par1, int par2)
     {
-        super(i, j, Material.sand);
+        super(par1, par2, Material.sand);
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
         float f = 0.125F;
-        return AxisAlignedBB.getBoundingBoxFromPool(i, j, k, i + 1, (float)(j + 1) - f, k + 1);
+        return AxisAlignedBB.getBoundingBoxFromPool(par2, par3, par4, par2 + 1, (float)(par3 + 1) - f, par4 + 1);
     }
 
-    public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
+    /**
+     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
+     */
+    public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
     {
-        entity.motionX *= 0.40000000000000002D;
-        entity.motionZ *= 0.40000000000000002D;
+        par5Entity.motionX *= 0.4D;
+        par5Entity.motionZ *= 0.4D;
     }
 }

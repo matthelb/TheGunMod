@@ -1,21 +1,30 @@
 package net.minecraft.src;
 
-final class EnchantmentModifierLiving
-    implements IEnchantmentModifier
+final class EnchantmentModifierLiving implements IEnchantmentModifier
 {
+    /**
+     * Used to calculate the (magic) extra damage based on enchantments of current equipped player item.
+     */
     public int livingModifier;
+
+    /**
+     * Used as parameter to calculate the (magic) extra damage based on enchantments of current equipped player item.
+     */
     public EntityLiving entityLiving;
 
     private EnchantmentModifierLiving()
     {
     }
 
-    public void calculateModifier(Enchantment enchantment, int i)
+    /**
+     * Generic method use to calculate modifiers of offensive or defensive enchantment values.
+     */
+    public void calculateModifier(Enchantment par1Enchantment, int par2)
     {
-        livingModifier += enchantment.calcModifierLiving(i, entityLiving);
+        livingModifier += par1Enchantment.calcModifierLiving(par2, entityLiving);
     }
 
-    EnchantmentModifierLiving(Empty3 empty3)
+    EnchantmentModifierLiving(Empty3 par1Empty3)
     {
         this();
     }

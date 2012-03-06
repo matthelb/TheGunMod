@@ -7,83 +7,111 @@ public class PlayerControllerCreative extends PlayerController
 {
     private int field_35647_c;
 
-    public PlayerControllerCreative(Minecraft minecraft)
+    public PlayerControllerCreative(Minecraft par1Minecraft)
     {
-        super(minecraft);
+        super(par1Minecraft);
         isInTestMode = true;
     }
 
-    public static void enableAbilities(EntityPlayer entityplayer)
+    /**
+     * Enables creative abilities to the player
+     */
+    public static void enableAbilities(EntityPlayer par0EntityPlayer)
     {
-        entityplayer.capabilities.allowFlying = true;
-        entityplayer.capabilities.depleteBuckets = true;
-        entityplayer.capabilities.disableDamage = true;
+        par0EntityPlayer.capabilities.allowFlying = true;
+        par0EntityPlayer.capabilities.depleteBuckets = true;
+        par0EntityPlayer.capabilities.disableDamage = true;
     }
 
-    public static void disableAbilities(EntityPlayer entityplayer)
+    /**
+     * Disables creative abilities to the player.
+     */
+    public static void disableAbilities(EntityPlayer par0EntityPlayer)
     {
-        entityplayer.capabilities.allowFlying = false;
-        entityplayer.capabilities.isFlying = false;
-        entityplayer.capabilities.depleteBuckets = false;
-        entityplayer.capabilities.disableDamage = false;
+        par0EntityPlayer.capabilities.allowFlying = false;
+        par0EntityPlayer.capabilities.isFlying = false;
+        par0EntityPlayer.capabilities.depleteBuckets = false;
+        par0EntityPlayer.capabilities.disableDamage = false;
     }
 
-    public void func_6473_b(EntityPlayer entityplayer)
+    public void func_6473_b(EntityPlayer par1EntityPlayer)
     {
-        enableAbilities(entityplayer);
+        enableAbilities(par1EntityPlayer);
+
         for (int i = 0; i < 9; i++)
         {
-            if (entityplayer.inventory.mainInventory[i] == null)
+            if (par1EntityPlayer.inventory.mainInventory[i] == null)
             {
-                entityplayer.inventory.mainInventory[i] = new ItemStack((Block)Session.registeredBlocksList.get(i));
+                par1EntityPlayer.inventory.mainInventory[i] = new ItemStack((Block)Session.registeredBlocksList.get(i));
             }
         }
     }
 
-    public static void clickBlockCreative(Minecraft minecraft, PlayerController playercontroller, int i, int j, int k, int l)
+    /**
+     * Called from a PlayerController when the player is hitting a block with an item in Creative mode. Args: Minecraft
+     * instance, player controller, x, y, z, side
+     */
+    public static void clickBlockCreative(Minecraft par0Minecraft, PlayerController par1PlayerController, int par2, int par3, int par4, int par5)
     {
-        minecraft.theWorld.onBlockHit(minecraft.thePlayer, i, j, k, l);
-        playercontroller.onPlayerDestroyBlock(i, j, k, l);
+        if (!par0Minecraft.theWorld.func_48457_a(par0Minecraft.thePlayer, par2, par3, par4, par5))
+        {
+            par1PlayerController.onPlayerDestroyBlock(par2, par3, par4, par5);
+        }
     }
 
-    public boolean onPlayerRightClick(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l)
+    /**
+     * Handles a players right click
+     */
+    public boolean onPlayerRightClick(EntityPlayer par1EntityPlayer, World par2World, ItemStack par3ItemStack, int par4, int par5, int par6, int par7)
     {
-        int i1 = world.getBlockId(i, j, k);
-        if (i1 > 0 && Block.blocksList[i1].blockActivated(world, i, j, k, entityplayer))
+        int i = par2World.getBlockId(par4, par5, par6);
+
+        if (i > 0 && Block.blocksList[i].blockActivated(par2World, par4, par5, par6, par1EntityPlayer))
         {
             return true;
         }
-        if (itemstack == null)
+
+        if (par3ItemStack == null)
         {
             return false;
         }
         else
         {
-            int j1 = itemstack.getItemDamage();
-            int k1 = itemstack.stackSize;
-            boolean flag = itemstack.useItem(entityplayer, world, i, j, k, l);
-            itemstack.setItemDamage(j1);
-            itemstack.stackSize = k1;
+            int j = par3ItemStack.getItemDamage();
+            int k = par3ItemStack.stackSize;
+            boolean flag = par3ItemStack.useItem(par1EntityPlayer, par2World, par4, par5, par6, par7);
+            par3ItemStack.setItemDamage(j);
+            par3ItemStack.stackSize = k;
             return flag;
         }
     }
 
-    public void clickBlock(int i, int j, int k, int l)
+    /**
+     * Called by Minecraft class when the player is hitting a block with an item. Args: x, y, z, side
+     */
+    public void clickBlock(int par1, int par2, int par3, int par4)
     {
-        clickBlockCreative(mc, this, i, j, k, l);
+        clickBlockCreative(mc, this, par1, par2, par3, par4);
         field_35647_c = 5;
     }
 
-    public void onPlayerDamageBlock(int i, int j, int k, int l)
+    /**
+     * Called when a player damages a block and updates damage counters
+     */
+    public void onPlayerDamageBlock(int par1, int par2, int par3, int par4)
     {
         field_35647_c--;
+
         if (field_35647_c <= 0)
         {
             field_35647_c = 5;
-            clickBlockCreative(mc, this, i, j, k, l);
+            clickBlockCreative(mc, this, par1, par2, par3, par4);
         }
     }
 
+    /**
+     * Resets current block damage and isHittingBlock
+     */
     public void resetBlockRemoving()
     {
     }
@@ -93,26 +121,41 @@ public class PlayerControllerCreative extends PlayerController
         return false;
     }
 
-    public void onWorldChange(World world)
+    /**
+     * Called on world change with the new World as the only parameter.
+     */
+    public void onWorldChange(World par1World)
     {
-        super.onWorldChange(world);
+        super.onWorldChange(par1World);
     }
 
+    /**
+     * player reach distance = 4F
+     */
     public float getBlockReachDistance()
     {
         return 5F;
     }
 
-    public boolean func_35641_g()
+    /**
+     * Checks if the player is not creative, used for checking if it should break a block instantly
+     */
+    public boolean isNotCreative()
     {
         return false;
     }
 
+    /**
+     * returns true if player is in creative mode
+     */
     public boolean isInCreativeMode()
     {
         return true;
     }
 
+    /**
+     * true for hitting entities far away.
+     */
     public boolean extendedReach()
     {
         return true;

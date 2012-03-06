@@ -1,15 +1,16 @@
 package net.minecraft.src;
 
-import com.heuristix.swing.GunCreator;
-
 import java.util.*;
 
 public class StatList
 {
+    /** Tracks one-off stats. */
     protected static Map oneShotStats = new HashMap();
-    public static List field_25188_a = new ArrayList();
+    public static List allStats = new ArrayList();
     public static List generalStats = new ArrayList();
     public static List itemStats = new ArrayList();
+
+    /** Tracks the number of times a given block or item has been mined. */
     public static List objectMineStats = new ArrayList();
     public static StatBase startGameStat = (new StatBasic(1000, "stat.startGame")).initIndependentStat().registerStat();
     public static StatBase createWorldStat = (new StatBasic(1001, "stat.createWorld")).initIndependentStat().registerStat();
@@ -49,36 +50,46 @@ public class StatList
     {
     }
 
+    /**
+     * Initializes statistic fields related to breakable items and blocks.
+     */
     public static void initBreakableStats()
     {
-        objectUseStats = initUsableStats(objectUseStats, "stat.useItem", 0x1020000, 0, Block.blocksList.length);
-        objectBreakStats = initBreakStats(objectBreakStats, "stat.breakItem", 0x1030000, 0, Block.blocksList.length);
+        objectUseStats = initUsableStats(objectUseStats, "stat.useItem", 0x1020000, 0, 256);
+        objectBreakStats = initBreakStats(objectBreakStats, "stat.breakItem", 0x1030000, 0, 256);
         blockStatsInitialized = true;
         initCraftableStats();
     }
 
     public static void initStats()
     {
-        objectUseStats = initUsableStats(objectUseStats, "stat.useItem", 0x1020000, Block.blocksList.length, 32000);
-        objectBreakStats = initBreakStats(objectBreakStats, "stat.breakItem", 0x1030000, Block.blocksList.length, 32000);
+        objectUseStats = initUsableStats(objectUseStats, "stat.useItem", 0x1020000, 256, 32000);
+        objectBreakStats = initBreakStats(objectBreakStats, "stat.breakItem", 0x1030000, 256, 32000);
         itemStatsInitialized = true;
         initCraftableStats();
     }
 
+    /**
+     * Initializes statistics related to craftable items. Is only called after both block and item stats have been
+     * initialized.
+     */
     public static void initCraftableStats()
     {
         if (!blockStatsInitialized || !itemStatsInitialized)
         {
             return;
         }
+
         HashSet hashset = new HashSet();
         IRecipe irecipe;
+
         for (Iterator iterator = CraftingManager.getInstance().getRecipeList().iterator(); iterator.hasNext(); hashset.add(Integer.valueOf(irecipe.getRecipeOutput().itemID)))
         {
             irecipe = (IRecipe)iterator.next();
         }
 
         ItemStack itemstack;
+
         for (Iterator iterator1 = FurnaceRecipes.smelting().getSmeltingList().values().iterator(); iterator1.hasNext(); hashset.add(Integer.valueOf(itemstack.itemID)))
         {
             itemstack = (ItemStack)iterator1.next();
@@ -86,13 +97,16 @@ public class StatList
 
         objectCraftStats = new StatBase[32000];
         Iterator iterator2 = hashset.iterator();
+
         do
         {
             if (!iterator2.hasNext())
             {
                 break;
             }
+
             Integer integer = (Integer)iterator2.next();
+
             if (Item.itemsList[integer.intValue()] != null)
             {
                 String s = StatCollector.translateToLocalFormatted("stat.craftItem", new Object[]
@@ -103,22 +117,27 @@ public class StatList
             }
         }
         while (true);
+
         replaceAllSimilarBlocks(objectCraftStats);
     }
 
-    private static StatBase[] initMinableStats(String s, int i)
+    /**
+     * Initializes statistic fields related to minable items and blocks.
+     */
+    private static StatBase[] initMinableStats(String par0Str, int par1)
     {
         StatBase astatbase[] = new StatBase[256];
-        for (int j = 0; j < 256; j++)
+
+        for (int i = 0; i < 256; i++)
         {
-            if (Block.blocksList[j] != null && Block.blocksList[j].getEnableStats())
+            if (Block.blocksList[i] != null && Block.blocksList[i].getEnableStats())
             {
-                String s1 = StatCollector.translateToLocalFormatted(s, new Object[]
+                String s = StatCollector.translateToLocalFormatted(par0Str, new Object[]
                         {
-                            Block.blocksList[j].translateBlockName()
+                            Block.blocksList[i].translateBlockName()
                         });
-                astatbase[j] = (new StatCrafting(i + j, s1, j)).registerStat();
-                objectMineStats.add((StatCrafting)astatbase[j]);
+                astatbase[i] = (new StatCrafting(par1 + i, s, i)).registerStat();
+                objectMineStats.add((StatCrafting)astatbase[i]);
             }
         }
 
@@ -126,90 +145,103 @@ public class StatList
         return astatbase;
     }
 
-    private static StatBase[] initUsableStats(StatBase astatbase[], String s, int i, int j, int k)
+    /**
+     * Initializes statistic fields related to usable items and blocks.
+     */
+    private static StatBase[] initUsableStats(StatBase par0ArrayOfStatBase[], String par1Str, int par2, int par3, int par4)
     {
-        if (astatbase == null)
+        if (par0ArrayOfStatBase == null)
         {
-            astatbase = new StatBase[32000];
+            par0ArrayOfStatBase = new StatBase[32000];
         }
-        for (int l = j; l < k; l++)
+
+        for (int i = par3; i < par4; i++)
         {
-            if (Item.itemsList[l] == null)
+            if (Item.itemsList[i] == null)
             {
                 continue;
             }
-            String s1 = StatCollector.translateToLocalFormatted(s, new Object[]
+
+            String s = StatCollector.translateToLocalFormatted(par1Str, new Object[]
                     {
-                        Item.itemsList[l].getStatName()
+                        Item.itemsList[i].getStatName()
                     });
-            astatbase[l] = (new StatCrafting(i + l, s1, l)).registerStat();
-            if (l >= Block.blocksList.length)
+            par0ArrayOfStatBase[i] = (new StatCrafting(par2 + i, s, i)).registerStat();
+
+            if (i >= 256)
             {
-                itemStats.add((StatCrafting)astatbase[l]);
+                itemStats.add((StatCrafting)par0ArrayOfStatBase[i]);
             }
         }
 
-        replaceAllSimilarBlocks(astatbase);
-        return astatbase;
+        replaceAllSimilarBlocks(par0ArrayOfStatBase);
+        return par0ArrayOfStatBase;
     }
 
-    private static StatBase[] initBreakStats(StatBase astatbase[], String s, int i, int j, int k)
+    private static StatBase[] initBreakStats(StatBase par0ArrayOfStatBase[], String par1Str, int par2, int par3, int par4)
     {
-        if (astatbase == null)
+        if (par0ArrayOfStatBase == null)
         {
-            astatbase = new StatBase[32000];
+            par0ArrayOfStatBase = new StatBase[32000];
         }
-        for (int l = j; l < k; l++)
+
+        for (int i = par3; i < par4; i++)
         {
-            if (Item.itemsList[l] != null && Item.itemsList[l].isDamageable())
+            if (Item.itemsList[i] != null && Item.itemsList[i].isDamageable())
             {
-                String s1 = StatCollector.translateToLocalFormatted(s, new Object[]
+                String s = StatCollector.translateToLocalFormatted(par1Str, new Object[]
                         {
-                            Item.itemsList[l].getStatName()
+                            Item.itemsList[i].getStatName()
                         });
-                astatbase[l] = (new StatCrafting(i + l, s1, l)).registerStat();
+                par0ArrayOfStatBase[i] = (new StatCrafting(par2 + i, s, i)).registerStat();
             }
         }
 
-        replaceAllSimilarBlocks(astatbase);
-        return astatbase;
+        replaceAllSimilarBlocks(par0ArrayOfStatBase);
+        return par0ArrayOfStatBase;
     }
 
-    private static void replaceAllSimilarBlocks(StatBase astatbase[])
+    /**
+     * Forces all dual blocks to count for each other on the stats list
+     */
+    private static void replaceAllSimilarBlocks(StatBase par0ArrayOfStatBase[])
     {
-        replaceSimilarBlocks(astatbase, Block.waterStill.blockID, Block.waterMoving.blockID);
-        replaceSimilarBlocks(astatbase, Block.lavaStill.blockID, Block.lavaStill.blockID);
-        replaceSimilarBlocks(astatbase, Block.pumpkinLantern.blockID, Block.pumpkin.blockID);
-        replaceSimilarBlocks(astatbase, Block.stoneOvenActive.blockID, Block.stoneOvenIdle.blockID);
-        replaceSimilarBlocks(astatbase, Block.oreRedstoneGlowing.blockID, Block.oreRedstone.blockID);
-        replaceSimilarBlocks(astatbase, Block.redstoneRepeaterActive.blockID, Block.redstoneRepeaterIdle.blockID);
-        replaceSimilarBlocks(astatbase, Block.torchRedstoneActive.blockID, Block.torchRedstoneIdle.blockID);
-        replaceSimilarBlocks(astatbase, Block.mushroomRed.blockID, Block.mushroomBrown.blockID);
-        replaceSimilarBlocks(astatbase, Block.stairDouble.blockID, Block.stairSingle.blockID);
-        replaceSimilarBlocks(astatbase, Block.grass.blockID, Block.dirt.blockID);
-        replaceSimilarBlocks(astatbase, Block.tilledField.blockID, Block.dirt.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.waterStill.blockID, Block.waterMoving.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.lavaStill.blockID, Block.lavaStill.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.pumpkinLantern.blockID, Block.pumpkin.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.stoneOvenActive.blockID, Block.stoneOvenIdle.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.oreRedstoneGlowing.blockID, Block.oreRedstone.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.redstoneRepeaterActive.blockID, Block.redstoneRepeaterIdle.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.torchRedstoneActive.blockID, Block.torchRedstoneIdle.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.mushroomRed.blockID, Block.mushroomBrown.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.stairDouble.blockID, Block.stairSingle.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.grass.blockID, Block.dirt.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.tilledField.blockID, Block.dirt.blockID);
     }
 
-    private static void replaceSimilarBlocks(StatBase astatbase[], int i, int j)
+    /**
+     * Forces stats for one block to add to another block, such as idle and active furnaces
+     */
+    private static void replaceSimilarBlocks(StatBase par0ArrayOfStatBase[], int par1, int par2)
     {
-        if (astatbase[i] != null && astatbase[j] == null)
+        if (par0ArrayOfStatBase[par1] != null && par0ArrayOfStatBase[par2] == null)
         {
-            astatbase[j] = astatbase[i];
+            par0ArrayOfStatBase[par2] = par0ArrayOfStatBase[par1];
             return;
         }
         else
         {
-            field_25188_a.remove(astatbase[i]);
-            objectMineStats.remove(astatbase[i]);
-            generalStats.remove(astatbase[i]);
-            astatbase[i] = astatbase[j];
+            allStats.remove(par0ArrayOfStatBase[par1]);
+            objectMineStats.remove(par0ArrayOfStatBase[par1]);
+            generalStats.remove(par0ArrayOfStatBase[par1]);
+            par0ArrayOfStatBase[par1] = par0ArrayOfStatBase[par2];
             return;
         }
     }
 
-    public static StatBase getOneShotStat(int i)
+    public static StatBase getOneShotStat(int par0)
     {
-        return (StatBase)oneShotStats.get(Integer.valueOf(i));
+        return (StatBase)oneShotStats.get(Integer.valueOf(par0));
     }
 
     static
@@ -224,8 +256,6 @@ public class StatList
         distanceByMinecartStat = (new StatBasic(2006, "stat.minecartOneCm", StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByBoatStat = (new StatBasic(2007, "stat.boatOneCm", StatBase.distanceStatType)).initIndependentStat().registerStat();
         distanceByPigStat = (new StatBasic(2008, "stat.pigOneCm", StatBase.distanceStatType)).initIndependentStat().registerStat();
-        if(!GunCreator.MC_SRC_MOD) {
-            AchievementList.init();
-        }
+        AchievementList.init();
     }
 }

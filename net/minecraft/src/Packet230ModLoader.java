@@ -9,21 +9,26 @@ public class Packet230ModLoader extends Packet
     public int packetType;
     public int dataInt[];
     public float dataFloat[];
+    public double dataDouble[];
     public String dataString[];
 
     public Packet230ModLoader()
     {
         dataInt = new int[0];
         dataFloat = new float[0];
+        dataDouble = new double[0];
         dataString = new String[0];
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream datainputstream) throws IOException
     {
         modId = datainputstream.readInt();
         packetType = datainputstream.readInt();
         int i = datainputstream.readInt();
+
         if (i > 65535)
         {
             throw new IOException(String.format("Integer data size of %d is higher than the max (%d).", new Object[]
@@ -31,13 +36,16 @@ public class Packet230ModLoader extends Packet
                         Integer.valueOf(i), Integer.valueOf(65535)
                     }));
         }
+
         dataInt = new int[i];
+
         for (int j = 0; j < i; j++)
         {
             dataInt[j] = datainputstream.readInt();
         }
 
         int k = datainputstream.readInt();
+
         if (k > 65535)
         {
             throw new IOException(String.format("Float data size of %d is higher than the max (%d).", new Object[]
@@ -45,39 +53,67 @@ public class Packet230ModLoader extends Packet
                         Integer.valueOf(k), Integer.valueOf(65535)
                     }));
         }
+
         dataFloat = new float[k];
+
         for (int l = 0; l < k; l++)
         {
             dataFloat[l] = datainputstream.readFloat();
         }
 
         int i1 = datainputstream.readInt();
+
         if (i1 > 65535)
         {
-            throw new IOException(String.format("String data size of %d is higher than the max (%d).", new Object[]
+            throw new IOException(String.format("Double data size of %d is higher than the max (%d).", new Object[]
                     {
                         Integer.valueOf(i1), Integer.valueOf(65535)
                     }));
         }
-        dataString = new String[i1];
+
+        dataDouble = new double[i1];
+
         for (int j1 = 0; j1 < i1; j1++)
         {
-            int k1 = datainputstream.readInt();
-            if (k1 > 65535)
+            dataDouble[j1] = datainputstream.readDouble();
+        }
+
+        int k1 = datainputstream.readInt();
+
+        if (k1 > 65535)
+        {
+            throw new IOException(String.format("String data size of %d is higher than the max (%d).", new Object[]
+                    {
+                        Integer.valueOf(k1), Integer.valueOf(65535)
+                    }));
+        }
+
+        dataString = new String[k1];
+
+        for (int l1 = 0; l1 < k1; l1++)
+        {
+            int i2 = datainputstream.readInt();
+
+            if (i2 > 65535)
             {
                 throw new IOException(String.format("String length of %d is higher than the max (%d).", new Object[]
                         {
-                            Integer.valueOf(k1), Integer.valueOf(65535)
+                            Integer.valueOf(i2), Integer.valueOf(65535)
                         }));
             }
-            byte abyte0[] = new byte[k1];
-            for (int l1 = 0; l1 < k1; l1 += datainputstream.read(abyte0, l1, k1 - l1)) { }
-            dataString[j1] = new String(abyte0);
+
+            byte abyte0[] = new byte[i2];
+
+            for (int j2 = 0; j2 < i2; j2 += datainputstream.read(abyte0, j2, i2 - j2)) { }
+
+            dataString[l1] = new String(abyte0);
         }
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream dataoutputstream) throws IOException
     {
         if (dataInt != null && dataInt.length > 65535)
         {
@@ -86,6 +122,7 @@ public class Packet230ModLoader extends Packet
                         Integer.valueOf(dataInt.length), Integer.valueOf(65535)
                     }));
         }
+
         if (dataFloat != null && dataFloat.length > 65535)
         {
             throw new IOException(String.format("Float data size of %d is higher than the max (%d).", new Object[]
@@ -93,6 +130,15 @@ public class Packet230ModLoader extends Packet
                         Integer.valueOf(dataFloat.length), Integer.valueOf(65535)
                     }));
         }
+
+        if (dataDouble != null && dataDouble.length > 65535)
+        {
+            throw new IOException(String.format("Double data size of %d is higher than the max (%d).", new Object[]
+                    {
+                        Integer.valueOf(dataDouble.length), Integer.valueOf(65535)
+                    }));
+        }
+
         if (dataString != null && dataString.length > 65535)
         {
             throw new IOException(String.format("String data size of %d is higher than the max (%d).", new Object[]
@@ -100,8 +146,10 @@ public class Packet230ModLoader extends Packet
                         Integer.valueOf(dataString.length), Integer.valueOf(65535)
                     }));
         }
+
         dataoutputstream.writeInt(modId);
         dataoutputstream.writeInt(packetType);
+
         if (dataInt == null)
         {
             dataoutputstream.writeInt(0);
@@ -109,11 +157,13 @@ public class Packet230ModLoader extends Packet
         else
         {
             dataoutputstream.writeInt(dataInt.length);
+
             for (int i = 0; i < dataInt.length; i++)
             {
                 dataoutputstream.writeInt(dataInt[i]);
             }
         }
+
         if (dataFloat == null)
         {
             dataoutputstream.writeInt(0);
@@ -121,11 +171,27 @@ public class Packet230ModLoader extends Packet
         else
         {
             dataoutputstream.writeInt(dataFloat.length);
+
             for (int j = 0; j < dataFloat.length; j++)
             {
                 dataoutputstream.writeFloat(dataFloat[j]);
             }
         }
+
+        if (dataDouble == null)
+        {
+            dataoutputstream.writeInt(0);
+        }
+        else
+        {
+            dataoutputstream.writeInt(dataDouble.length);
+
+            for (int k = 0; k < dataDouble.length; k++)
+            {
+                dataoutputstream.writeDouble(dataDouble[k]);
+            }
+        }
+
         if (dataString == null)
         {
             dataoutputstream.writeInt(0);
@@ -133,40 +199,54 @@ public class Packet230ModLoader extends Packet
         else
         {
             dataoutputstream.writeInt(dataString.length);
-            for (int k = 0; k < dataString.length; k++)
+
+            for (int l = 0; l < dataString.length; l++)
             {
-                if (dataString[k].length() > 65535)
+                if (dataString[l].length() > 65535)
                 {
                     throw new IOException(String.format("String length of %d is higher than the max (%d).", new Object[]
                             {
-                                Integer.valueOf(dataString[k].length()), Integer.valueOf(65535)
+                                Integer.valueOf(dataString[l].length()), Integer.valueOf(65535)
                             }));
                 }
-                dataoutputstream.writeInt(dataString[k].length());
-                dataoutputstream.writeBytes(dataString[k]);
+
+                dataoutputstream.writeInt(dataString[l].length());
+                dataoutputstream.writeBytes(dataString[l]);
             }
         }
     }
 
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
     public void processPacket(NetHandler nethandler)
     {
-        ModLoaderMp.HandleAllPackets(this);
+        ModLoaderMp.handleAllPackets(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
-        int i = 1;
-        i++;
-        i = ++i + (dataInt != null ? dataInt.length * 32 : 0);
-        i = ++i + (dataFloat != null ? dataFloat.length * 32 : 0);
-        i++;
+        int i = 0;
+        i += 4;
+        i += 4;
+        i = (i += 4) + (dataInt == null ? 0 : dataInt.length * 4);
+        i += 4;
+        i = dataFloat == null ? 0 : dataFloat.length * 4;
+        i += 4;
+        i = dataDouble == null ? 0 : dataDouble.length * 8;
+        i += 4;
+
         if (dataString != null)
         {
             for (int j = 0; j < dataString.length; j++)
             {
-                i = ++i + dataString[j].length();
+                i = (i += 4) + dataString[j].length();
             }
         }
+
         return i;
     }
 }

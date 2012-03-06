@@ -18,20 +18,22 @@ public class EnchantmentNameParts
     {
         int i = field_40251_b.nextInt(2) + 3;
         String s = "";
+
         for (int j = 0; j < i; j++)
         {
             if (j > 0)
             {
                 s = (new StringBuilder()).append(s).append(" ").toString();
             }
+
             s = (new StringBuilder()).append(s).append(field_40252_c[field_40251_b.nextInt(field_40252_c.length)]).toString();
         }
 
         return s;
     }
 
-    public void func_40250_a(long l)
+    public void func_40250_a(long par1)
     {
-        field_40251_b.setSeed(l);
+        field_40251_b.setSeed(par1);
     }
 }

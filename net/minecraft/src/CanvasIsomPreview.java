@@ -18,8 +18,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class CanvasIsomPreview extends Canvas
-    implements KeyListener, MouseListener, MouseMotionListener, Runnable
+public class CanvasIsomPreview extends Canvas implements KeyListener, MouseListener, MouseMotionListener, Runnable
 {
     private int currentRender;
     private int zoom;
@@ -40,40 +39,45 @@ public class CanvasIsomPreview extends Canvas
         {
             workDir = getWorkingDirectory("minecraft");
         }
+
         return workDir;
     }
 
-    public File getWorkingDirectory(String s)
+    public File getWorkingDirectory(String par1Str)
     {
-        String s1 = System.getProperty("user.home", ".");
+        String s = System.getProperty("user.home", ".");
         File file;
+
         switch (OsMap.field_1193_a[getPlatform().ordinal()])
         {
             case 1:
             case 2:
-                file = new File(s1, (new StringBuilder()).append('.').append(s).append('/').toString());
+                file = new File(s, (new StringBuilder()).append('.').append(par1Str).append('/').toString());
                 break;
 
             case 3:
-                String s2 = System.getenv("APPDATA");
-                if (s2 != null)
+                String s1 = System.getenv("APPDATA");
+
+                if (s1 != null)
                 {
-                    file = new File(s2, (new StringBuilder()).append(".").append(s).append('/').toString());
+                    file = new File(s1, (new StringBuilder()).append(".").append(par1Str).append('/').toString());
                 }
                 else
                 {
-                    file = new File(s1, (new StringBuilder()).append('.').append(s).append('/').toString());
+                    file = new File(s, (new StringBuilder()).append('.').append(par1Str).append('/').toString());
                 }
+
                 break;
 
             case 4:
-                file = new File(s1, (new StringBuilder()).append("Library/Application Support/").append(s).toString());
+                file = new File(s, (new StringBuilder()).append("Library/Application Support/").append(par1Str).toString());
                 break;
 
             default:
-                file = new File(s1, (new StringBuilder()).append(s).append('/').toString());
+                file = new File(s, (new StringBuilder()).append(par1Str).append('/').toString());
                 break;
         }
+
         if (!file.exists() && !file.mkdirs())
         {
             throw new RuntimeException((new StringBuilder()).append("The working directory could not be created: ").append(file).toString());
@@ -87,26 +91,32 @@ public class CanvasIsomPreview extends Canvas
     private static EnumOS1 getPlatform()
     {
         String s = System.getProperty("os.name").toLowerCase();
+
         if (s.contains("win"))
         {
             return EnumOS1.windows;
         }
+
         if (s.contains("mac"))
         {
             return EnumOS1.macos;
         }
+
         if (s.contains("solaris"))
         {
             return EnumOS1.solaris;
         }
+
         if (s.contains("sunos"))
         {
             return EnumOS1.solaris;
         }
+
         if (s.contains("linux"))
         {
             return EnumOS1.linux;
         }
+
         if (s.contains("unix"))
         {
             return EnumOS1.linux;
@@ -126,6 +136,7 @@ public class CanvasIsomPreview extends Canvas
         zonesToRender = Collections.synchronizedList(new LinkedList());
         zoneMap = new IsoImageBuffer[64][64];
         workDir = getWorkingDirectory();
+
         for (int i = 0; i < 64; i++)
         {
             for (int j = 0; j < 64; j++)
@@ -142,14 +153,16 @@ public class CanvasIsomPreview extends Canvas
         setBackground(Color.red);
     }
 
-    public void loadLevel(String s)
+    public void loadLevel(String par1Str)
     {
         field_1785_i = field_1784_j = 0;
-        level = new World(new SaveHandler(new File(workDir, "saves"), s, false), s, new WorldSettings((new Random()).nextLong(), 0, true, false, EnumWorldType.DEFAULT));
+        level = new World(new SaveHandler(new File(workDir, "saves"), par1Str, false), par1Str, new WorldSettings((new Random()).nextLong(), 0, true, false, WorldType.field_48635_b));
         level.skylightSubtracted = 0;
+
         synchronized (zonesToRender)
         {
             zonesToRender.clear();
+
             for (int i = 0; i < 64; i++)
             {
                 for (int j = 0; j < 64; j++)
@@ -160,17 +173,18 @@ public class CanvasIsomPreview extends Canvas
         }
     }
 
-    private void setBrightness(int i)
+    private void setBrightness(int par1)
     {
         synchronized (zonesToRender)
         {
-            level.skylightSubtracted = i;
+            level.skylightSubtracted = par1;
             zonesToRender.clear();
-            for (int j = 0; j < 64; j++)
+
+            for (int i = 0; i < 64; i++)
             {
-                for (int k = 0; k < 64; k++)
+                for (int j = 0; j < 64; j++)
                 {
-                    zoneMap[j][k].init(level, j, k);
+                    zoneMap[i][j].init(level, i, j);
                 }
             }
         }
@@ -179,6 +193,7 @@ public class CanvasIsomPreview extends Canvas
     public void start()
     {
         (new ThreadRunIsoClient(this)).start();
+
         for (int i = 0; i < 8; i++)
         {
             (new Thread(this)).start();
@@ -190,29 +205,34 @@ public class CanvasIsomPreview extends Canvas
         running = false;
     }
 
-    private IsoImageBuffer getZone(int i, int j)
+    private IsoImageBuffer getZone(int par1, int par2)
     {
-        int k = i & 0x3f;
-        int l = j & 0x3f;
-        IsoImageBuffer isoimagebuffer = zoneMap[k][l];
-        if (isoimagebuffer.x == i && isoimagebuffer.y == j)
+        int i = par1 & 0x3f;
+        int j = par2 & 0x3f;
+        IsoImageBuffer isoimagebuffer = zoneMap[i][j];
+
+        if (isoimagebuffer.x == par1 && isoimagebuffer.y == par2)
         {
             return isoimagebuffer;
         }
+
         synchronized (zonesToRender)
         {
             zonesToRender.remove(isoimagebuffer);
         }
-        isoimagebuffer.init(i, j);
+
+        isoimagebuffer.init(par1, par2);
         return isoimagebuffer;
     }
 
     public void run()
     {
         TerrainTextureManager terraintexturemanager = new TerrainTextureManager();
+
         while (running)
         {
             IsoImageBuffer isoimagebuffer = null;
+
             synchronized (zonesToRender)
             {
                 if (zonesToRender.size() > 0)
@@ -220,6 +240,7 @@ public class CanvasIsomPreview extends Canvas
                     isoimagebuffer = (IsoImageBuffer)zonesToRender.remove(0);
                 }
             }
+
             if (isoimagebuffer != null)
             {
                 if (currentRender - isoimagebuffer.lastVisible < 2)
@@ -232,6 +253,7 @@ public class CanvasIsomPreview extends Canvas
                     isoimagebuffer.addedToRenderQueue = false;
                 }
             }
+
             try
             {
                 Thread.sleep(2L);
@@ -254,6 +276,7 @@ public class CanvasIsomPreview extends Canvas
     public void render()
     {
         BufferStrategy bufferstrategy = getBufferStrategy();
+
         if (bufferstrategy == null)
         {
             createBufferStrategy(2);
@@ -267,29 +290,32 @@ public class CanvasIsomPreview extends Canvas
         }
     }
 
-    public void render(Graphics2D graphics2d)
+    public void render(Graphics2D par1Graphics2D)
     {
         currentRender++;
-        java.awt.geom.AffineTransform affinetransform = graphics2d.getTransform();
-        graphics2d.setClip(0, 0, getWidth(), getHeight());
-        graphics2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-        graphics2d.translate(getWidth() / 2, getHeight() / 2);
-        graphics2d.scale(zoom, zoom);
-        graphics2d.translate(field_1785_i, field_1784_j);
+        java.awt.geom.AffineTransform affinetransform = par1Graphics2D.getTransform();
+        par1Graphics2D.setClip(0, 0, getWidth(), getHeight());
+        par1Graphics2D.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+        par1Graphics2D.translate(getWidth() / 2, getHeight() / 2);
+        par1Graphics2D.scale(zoom, zoom);
+        par1Graphics2D.translate(field_1785_i, field_1784_j);
+
         if (level != null)
         {
             ChunkCoordinates chunkcoordinates = level.getSpawnPoint();
-            graphics2d.translate(-(chunkcoordinates.posX + chunkcoordinates.posZ), -(-chunkcoordinates.posX + chunkcoordinates.posZ) + 64);
+            par1Graphics2D.translate(-(chunkcoordinates.posX + chunkcoordinates.posZ), -(-chunkcoordinates.posX + chunkcoordinates.posZ) + 64);
         }
-        Rectangle rectangle = graphics2d.getClipBounds();
-        graphics2d.setColor(new Color(0xff101020));
-        graphics2d.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+
+        Rectangle rectangle = par1Graphics2D.getClipBounds();
+        par1Graphics2D.setColor(new Color(0xff101020));
+        par1Graphics2D.fillRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
         byte byte0 = 16;
         byte byte1 = 3;
         int i = rectangle.x / byte0 / 2 - 2 - byte1;
         int j = (rectangle.x + rectangle.width) / byte0 / 2 + 1 + byte1;
         int k = rectangle.y / byte0 - 1 - byte1 * 2;
-        int l = (rectangle.y + rectangle.height + 16 + level.worldHeight) / byte0 + 1 + byte1 * 2;
+        int l = (rectangle.y + rectangle.height + 16 + 128) / byte0 + 1 + byte1 * 2;
+
         for (int i1 = k; i1 <= l; i1++)
         {
             for (int k1 = i; k1 <= j; k1++)
@@ -298,6 +324,7 @@ public class CanvasIsomPreview extends Canvas
                 int i2 = k1 + (i1 + 1 >> 1);
                 IsoImageBuffer isoimagebuffer = getZone(l1, i2);
                 isoimagebuffer.lastVisible = currentRender;
+
                 if (!isoimagebuffer.rendered)
                 {
                     if (!isoimagebuffer.addedToRenderQueue)
@@ -305,35 +332,39 @@ public class CanvasIsomPreview extends Canvas
                         isoimagebuffer.addedToRenderQueue = true;
                         zonesToRender.add(isoimagebuffer);
                     }
+
                     continue;
                 }
+
                 isoimagebuffer.addedToRenderQueue = false;
+
                 if (!isoimagebuffer.noContent)
                 {
                     int j2 = k1 * byte0 * 2 + (i1 & 1) * byte0;
-                    int k2 = i1 * byte0 - level.worldHeight - 16;
-                    graphics2d.drawImage(isoimagebuffer.image, j2, k2, null);
+                    int k2 = i1 * byte0 - 128 - 16;
+                    par1Graphics2D.drawImage(isoimagebuffer.image, j2, k2, null);
                 }
             }
         }
 
         if (showHelp)
         {
-            graphics2d.setTransform(affinetransform);
+            par1Graphics2D.setTransform(affinetransform);
             int j1 = getHeight() - 32 - 4;
-            graphics2d.setColor(new Color(0x80000000, true));
-            graphics2d.fillRect(4, getHeight() - 32 - 4, getWidth() - 8, 32);
-            graphics2d.setColor(Color.WHITE);
+            par1Graphics2D.setColor(new Color(0x80000000, true));
+            par1Graphics2D.fillRect(4, getHeight() - 32 - 4, getWidth() - 8, 32);
+            par1Graphics2D.setColor(Color.WHITE);
             String s = "F1 - F5: load levels   |   0-9: Set time of day   |   Space: return to spawn   |   Double click: zoom   |   Escape: hide this text";
-            graphics2d.drawString(s, getWidth() / 2 - graphics2d.getFontMetrics().stringWidth(s) / 2, j1 + 20);
+            par1Graphics2D.drawString(s, getWidth() / 2 - par1Graphics2D.getFontMetrics().stringWidth(s) / 2, j1 + 20);
         }
-        graphics2d.dispose();
+
+        par1Graphics2D.dispose();
     }
 
-    public void mouseDragged(MouseEvent mouseevent)
+    public void mouseDragged(MouseEvent par1MouseEvent)
     {
-        int i = mouseevent.getX() / zoom;
-        int j = mouseevent.getY() / zoom;
+        int i = par1MouseEvent.getX() / zoom;
+        int j = par1MouseEvent.getY() / zoom;
         field_1785_i += i - field_1783_k;
         field_1784_j += j - field_1782_l;
         field_1783_k = i;
@@ -345,9 +376,9 @@ public class CanvasIsomPreview extends Canvas
     {
     }
 
-    public void mouseClicked(MouseEvent mouseevent)
+    public void mouseClicked(MouseEvent par1MouseEvent)
     {
-        if (mouseevent.getClickCount() == 2)
+        if (par1MouseEvent.getClickCount() == 2)
         {
             zoom = 3 - zoom;
             repaint();
@@ -362,10 +393,10 @@ public class CanvasIsomPreview extends Canvas
     {
     }
 
-    public void mousePressed(MouseEvent mouseevent)
+    public void mousePressed(MouseEvent par1MouseEvent)
     {
-        int i = mouseevent.getX() / zoom;
-        int j = mouseevent.getY() / zoom;
+        int i = par1MouseEvent.getX() / zoom;
+        int j = par1MouseEvent.getY() / zoom;
         field_1783_k = i;
         field_1782_l = j;
     }
@@ -374,76 +405,93 @@ public class CanvasIsomPreview extends Canvas
     {
     }
 
-    public void keyPressed(KeyEvent keyevent)
+    public void keyPressed(KeyEvent par1KeyEvent)
     {
-        if (keyevent.getKeyCode() == 48)
+        if (par1KeyEvent.getKeyCode() == 48)
         {
             setBrightness(11);
         }
-        if (keyevent.getKeyCode() == 49)
+
+        if (par1KeyEvent.getKeyCode() == 49)
         {
             setBrightness(10);
         }
-        if (keyevent.getKeyCode() == 50)
+
+        if (par1KeyEvent.getKeyCode() == 50)
         {
             setBrightness(9);
         }
-        if (keyevent.getKeyCode() == 51)
+
+        if (par1KeyEvent.getKeyCode() == 51)
         {
             setBrightness(7);
         }
-        if (keyevent.getKeyCode() == 52)
+
+        if (par1KeyEvent.getKeyCode() == 52)
         {
             setBrightness(6);
         }
-        if (keyevent.getKeyCode() == 53)
+
+        if (par1KeyEvent.getKeyCode() == 53)
         {
             setBrightness(5);
         }
-        if (keyevent.getKeyCode() == 54)
+
+        if (par1KeyEvent.getKeyCode() == 54)
         {
             setBrightness(3);
         }
-        if (keyevent.getKeyCode() == 55)
+
+        if (par1KeyEvent.getKeyCode() == 55)
         {
             setBrightness(2);
         }
-        if (keyevent.getKeyCode() == 56)
+
+        if (par1KeyEvent.getKeyCode() == 56)
         {
             setBrightness(1);
         }
-        if (keyevent.getKeyCode() == 57)
+
+        if (par1KeyEvent.getKeyCode() == 57)
         {
             setBrightness(0);
         }
-        if (keyevent.getKeyCode() == 112)
+
+        if (par1KeyEvent.getKeyCode() == 112)
         {
             loadLevel("World1");
         }
-        if (keyevent.getKeyCode() == 113)
+
+        if (par1KeyEvent.getKeyCode() == 113)
         {
             loadLevel("World2");
         }
-        if (keyevent.getKeyCode() == 114)
+
+        if (par1KeyEvent.getKeyCode() == 114)
         {
             loadLevel("World3");
         }
-        if (keyevent.getKeyCode() == 115)
+
+        if (par1KeyEvent.getKeyCode() == 115)
         {
             loadLevel("World4");
         }
-        if (keyevent.getKeyCode() == 116)
+
+        if (par1KeyEvent.getKeyCode() == 116)
         {
             loadLevel("World5");
         }
-        if (keyevent.getKeyCode() == 32)
+
+        if (par1KeyEvent.getKeyCode() == 32)
         {
             field_1785_i = field_1784_j = 0;
         }
-        if (keyevent.getKeyCode() == 27)
+
+        if (par1KeyEvent.getKeyCode() == 27)
         {
             showHelp = !showHelp;
         }
+
         repaint();
     }
 
@@ -455,8 +503,8 @@ public class CanvasIsomPreview extends Canvas
     {
     }
 
-    static boolean isRunning(CanvasIsomPreview canvasisompreview)
+    static boolean isRunning(CanvasIsomPreview par0CanvasIsomPreview)
     {
-        return canvasisompreview.running;
+        return par0CanvasIsomPreview.running;
     }
 }

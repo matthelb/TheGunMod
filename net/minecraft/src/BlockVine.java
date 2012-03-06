@@ -4,43 +4,60 @@ import java.util.Random;
 
 public class BlockVine extends Block
 {
-    public BlockVine(int i)
+    public BlockVine(int par1)
     {
-        super(i, 143, Material.vine);
-        setTickOnLoad(true);
+        super(par1, 143, Material.vine);
+        setTickRandomly(true);
     }
 
+    /**
+     * Sets the block's bounds for rendering it as an item
+     */
     public void setBlockBoundsForItemRender()
     {
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 20;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        int l = iblockaccess.getBlockMetadata(i, j, k);
+        int i = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
         float f = 1.0F;
         float f1 = 1.0F;
         float f2 = 1.0F;
         float f3 = 0.0F;
         float f4 = 0.0F;
         float f5 = 0.0F;
-        boolean flag = l > 0;
-        if ((l & 2) != 0)
+        boolean flag = i > 0;
+
+        if ((i & 2) != 0)
         {
             f3 = Math.max(f3, 0.0625F);
             f = 0.0F;
@@ -50,7 +67,8 @@ public class BlockVine extends Block
             f5 = 1.0F;
             flag = true;
         }
-        if ((l & 8) != 0)
+
+        if ((i & 8) != 0)
         {
             f = Math.min(f, 0.9375F);
             f3 = 1.0F;
@@ -60,7 +78,8 @@ public class BlockVine extends Block
             f5 = 1.0F;
             flag = true;
         }
-        if ((l & 4) != 0)
+
+        if ((i & 4) != 0)
         {
             f5 = Math.max(f5, 0.0625F);
             f2 = 0.0F;
@@ -70,7 +89,8 @@ public class BlockVine extends Block
             f4 = 1.0F;
             flag = true;
         }
-        if ((l & 1) != 0)
+
+        if ((i & 1) != 0)
         {
             f2 = Math.min(f2, 0.9375F);
             f5 = 1.0F;
@@ -80,7 +100,8 @@ public class BlockVine extends Block
             f4 = 1.0F;
             flag = true;
         }
-        if (!flag && canBePlacedOn(iblockaccess.getBlockId(i, j + 1, k)))
+
+        if (!flag && canBePlacedOn(par1IBlockAccess.getBlockId(par2, par3 + 1, par4)))
         {
             f1 = Math.min(f1, 0.9375F);
             f4 = 1.0F;
@@ -89,71 +110,88 @@ public class BlockVine extends Block
             f2 = 0.0F;
             f5 = 1.0F;
         }
+
         setBlockBounds(f, f1, f2, f3, f4, f5);
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int i)
     {
         return null;
     }
 
-    public boolean canPlaceBlockOnSide(World world, int i, int j, int k, int l)
+    public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
     {
-        switch (l)
+        switch (par5)
         {
             default:
                 return false;
 
             case 1:
-                return canBePlacedOn(world.getBlockId(i, j + 1, k));
+                return canBePlacedOn(par1World.getBlockId(par2, par3 + 1, par4));
 
             case 2:
-                return canBePlacedOn(world.getBlockId(i, j, k + 1));
+                return canBePlacedOn(par1World.getBlockId(par2, par3, par4 + 1));
 
             case 3:
-                return canBePlacedOn(world.getBlockId(i, j, k - 1));
+                return canBePlacedOn(par1World.getBlockId(par2, par3, par4 - 1));
 
             case 5:
-                return canBePlacedOn(world.getBlockId(i - 1, j, k));
+                return canBePlacedOn(par1World.getBlockId(par2 - 1, par3, par4));
 
             case 4:
-                return canBePlacedOn(world.getBlockId(i + 1, j, k));
+                return canBePlacedOn(par1World.getBlockId(par2 + 1, par3, par4));
         }
     }
 
-    private boolean canBePlacedOn(int i)
+    /**
+     * returns true if a vine can be placed on that block (checks for render as normal block and if it is solid)
+     */
+    private boolean canBePlacedOn(int par1)
     {
-        if (i == 0)
+        if (par1 == 0)
         {
             return false;
         }
-        Block block = Block.blocksList[i];
-        return block.renderAsNormalBlock() && block.blockMaterial.getIsSolid();
+
+        Block block = Block.blocksList[par1];
+        return block.renderAsNormalBlock() && block.blockMaterial.blocksMovement();
     }
 
-    private boolean canVineStay(World world, int i, int j, int k)
+    /**
+     * Returns if the vine can stay in the world. It also changes the metadata according to neighboring blocks.
+     */
+    private boolean canVineStay(World par1World, int par2, int par3, int par4)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        int i1 = l;
-        if (i1 > 0)
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = i;
+
+        if (j > 0)
         {
-            for (int j1 = 0; j1 <= 3; j1++)
+            for (int k = 0; k <= 3; k++)
             {
-                int k1 = 1 << j1;
-                if ((l & k1) != 0 && !canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[j1], j, k + Direction.field_35870_b[j1])) && (world.getBlockId(i, j + 1, k) != blockID || (world.getBlockMetadata(i, j + 1, k) & k1) == 0))
+                int l = 1 << k;
+
+                if ((i & l) != 0 && !canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[k], par3, par4 + Direction.offsetZ[k])) && (par1World.getBlockId(par2, par3 + 1, par4) != blockID || (par1World.getBlockMetadata(par2, par3 + 1, par4) & l) == 0))
                 {
-                    i1 &= ~k1;
+                    j &= ~l;
                 }
             }
         }
-        if (i1 == 0 && !canBePlacedOn(world.getBlockId(i, j + 1, k)))
+
+        if (j == 0 && !canBePlacedOn(par1World.getBlockId(par2, par3 + 1, par4)))
         {
             return false;
         }
-        if (i1 != l)
+
+        if (j != i)
         {
-            world.setBlockMetadataWithNotify(i, j, k, i1);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, j);
         }
+
         return true;
     }
 
@@ -162,154 +200,189 @@ public class BlockVine extends Block
         return ColorizerFoliage.getFoliageColorBasic();
     }
 
-    public int getRenderColor(int i)
+    /**
+     * Returns the color this block should be rendered. Used by leaves.
+     */
+    public int getRenderColor(int par1)
     {
         return ColorizerFoliage.getFoliageColorBasic();
     }
 
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color. Note only called
+     * when first determining what to render.
+     */
+    public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        return iblockaccess.getWorldChunkManager().getBiomeGenAt(i, k).getFoliageColorAtCoords(iblockaccess, i, j, k);
+        return par1IBlockAccess.func_48454_a(par2, par4).func_48412_k();
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (!world.isRemote && !canVineStay(world, i, j, k))
+        if (!par1World.isRemote && !canVineStay(par1World, par2, par3, par4))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-            world.setBlockWithNotify(i, j, k, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
         }
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (!world.isRemote && world.rand.nextInt(4) == 0)
+        if (!par1World.isRemote && par1World.rand.nextInt(4) == 0)
         {
             byte byte0 = 4;
-            int l = 5;
+            int i = 5;
             boolean flag = false;
-            int i1 = i - byte0;
+            int j = par2 - byte0;
             label0:
+
             do
             {
-                if (i1 > i + byte0)
+                if (j > par2 + byte0)
                 {
                     break;
                 }
+
                 label1:
-                for (int j1 = k - byte0; j1 <= k + byte0; j1++)
+
+                for (int k = par4 - byte0; k <= par4 + byte0; k++)
                 {
-                    int l1 = j - 1;
+                    int i1 = par3 - 1;
+
                     do
                     {
-                        if (l1 > j + 1)
+                        if (i1 > par3 + 1)
                         {
                             continue label1;
                         }
-                        if (world.getBlockId(i1, l1, j1) == blockID && --l <= 0)
+
+                        if (par1World.getBlockId(j, i1, k) == blockID && --i <= 0)
                         {
                             flag = true;
                             break label0;
                         }
-                        l1++;
+
+                        i1++;
                     }
                     while (true);
                 }
 
-                i1++;
+                j++;
             }
             while (true);
-            i1 = world.getBlockMetadata(i, j, k);
-            int k1 = world.rand.nextInt(6);
-            int i2 = Direction.field_35869_d[k1];
-            if (k1 == 1 && j < world.worldHeight - 1 && world.isAirBlock(i, j + 1, k))
+
+            j = par1World.getBlockMetadata(par2, par3, par4);
+            int l = par1World.rand.nextInt(6);
+            int j1 = Direction.vineGrowth[l];
+
+            if (l == 1 && par3 < 255 && par1World.isAirBlock(par2, par3 + 1, par4))
             {
                 if (flag)
                 {
                     return;
                 }
-                int j2 = world.rand.nextInt(16) & i1;
-                if (j2 > 0)
+
+                int k1 = par1World.rand.nextInt(16) & j;
+
+                if (k1 > 0)
                 {
-                    for (int i3 = 0; i3 <= 3; i3++)
+                    for (int j2 = 0; j2 <= 3; j2++)
                     {
-                        if (!canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i3], j + 1, k + Direction.field_35870_b[i3])))
+                        if (!canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[j2], par3 + 1, par4 + Direction.offsetZ[j2])))
                         {
-                            j2 &= ~(1 << i3);
+                            k1 &= ~(1 << j2);
                         }
                     }
 
-                    if (j2 > 0)
+                    if (k1 > 0)
                     {
-                        world.setBlockAndMetadataWithNotify(i, j + 1, k, blockID, j2);
+                        par1World.setBlockAndMetadataWithNotify(par2, par3 + 1, par4, blockID, k1);
                     }
                 }
             }
-            else if (k1 >= 2 && k1 <= 5 && (i1 & 1 << i2) == 0)
+            else if (l >= 2 && l <= 5 && (j & 1 << j1) == 0)
             {
                 if (flag)
                 {
                     return;
                 }
-                int k2 = world.getBlockId(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2]);
-                if (k2 == 0 || Block.blocksList[k2] == null)
+
+                int l1 = par1World.getBlockId(par2 + Direction.offsetX[j1], par3, par4 + Direction.offsetZ[j1]);
+
+                if (l1 == 0 || Block.blocksList[l1] == null)
                 {
-                    int j3 = i2 + 1 & 3;
-                    int i4 = i2 + 3 & 3;
-                    if ((i1 & 1 << j3) != 0 && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i2] + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[j3])))
+                    int k2 = j1 + 1 & 3;
+                    int j3 = j1 + 3 & 3;
+
+                    if ((j & 1 << k2) != 0 && canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[j1] + Direction.offsetX[k2], par3, par4 + Direction.offsetZ[j1] + Direction.offsetZ[k2])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2], blockID, 1 << j3);
+                        par1World.setBlockAndMetadataWithNotify(par2 + Direction.offsetX[j1], par3, par4 + Direction.offsetZ[j1], blockID, 1 << k2);
                     }
-                    else if ((i1 & 1 << i4) != 0 && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i2] + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[i4])))
+                    else if ((j & 1 << j3) != 0 && canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[j1] + Direction.offsetX[j3], par3, par4 + Direction.offsetZ[j1] + Direction.offsetZ[j3])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2], blockID, 1 << i4);
+                        par1World.setBlockAndMetadataWithNotify(par2 + Direction.offsetX[j1], par3, par4 + Direction.offsetZ[j1], blockID, 1 << j3);
                     }
-                    else if ((i1 & 1 << j3) != 0 && world.isAirBlock(i + Direction.field_35871_a[i2] + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[j3]) && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[j3])))
+                    else if ((j & 1 << k2) != 0 && par1World.isAirBlock(par2 + Direction.offsetX[j1] + Direction.offsetX[k2], par3, par4 + Direction.offsetZ[j1] + Direction.offsetZ[k2]) && canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[k2], par3, par4 + Direction.offsetZ[k2])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2] + Direction.field_35871_a[j3], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[j3], blockID, 1 << (i2 + 2 & 3));
+                        par1World.setBlockAndMetadataWithNotify(par2 + Direction.offsetX[j1] + Direction.offsetX[k2], par3, par4 + Direction.offsetZ[j1] + Direction.offsetZ[k2], blockID, 1 << (j1 + 2 & 3));
                     }
-                    else if ((i1 & 1 << i4) != 0 && world.isAirBlock(i + Direction.field_35871_a[i2] + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[i4]) && canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i4])))
+                    else if ((j & 1 << j3) != 0 && par1World.isAirBlock(par2 + Direction.offsetX[j1] + Direction.offsetX[j3], par3, par4 + Direction.offsetZ[j1] + Direction.offsetZ[j3]) && canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[j3], par3, par4 + Direction.offsetZ[j3])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2] + Direction.field_35871_a[i4], j, k + Direction.field_35870_b[i2] + Direction.field_35870_b[i4], blockID, 1 << (i2 + 2 & 3));
+                        par1World.setBlockAndMetadataWithNotify(par2 + Direction.offsetX[j1] + Direction.offsetX[j3], par3, par4 + Direction.offsetZ[j1] + Direction.offsetZ[j3], blockID, 1 << (j1 + 2 & 3));
                     }
-                    else if (canBePlacedOn(world.getBlockId(i + Direction.field_35871_a[i2], j + 1, k + Direction.field_35870_b[i2])))
+                    else if (canBePlacedOn(par1World.getBlockId(par2 + Direction.offsetX[j1], par3 + 1, par4 + Direction.offsetZ[j1])))
                     {
-                        world.setBlockAndMetadataWithNotify(i + Direction.field_35871_a[i2], j, k + Direction.field_35870_b[i2], blockID, 0);
+                        par1World.setBlockAndMetadataWithNotify(par2 + Direction.offsetX[j1], par3, par4 + Direction.offsetZ[j1], blockID, 0);
                     }
                 }
-                else if (Block.blocksList[k2].blockMaterial.getIsOpaque() && Block.blocksList[k2].renderAsNormalBlock())
+                else if (Block.blocksList[l1].blockMaterial.isOpaque() && Block.blocksList[l1].renderAsNormalBlock())
                 {
-                    world.setBlockMetadataWithNotify(i, j, k, i1 | 1 << i2);
+                    par1World.setBlockMetadataWithNotify(par2, par3, par4, j | 1 << j1);
                 }
             }
-            else if (j > 1)
+            else if (par3 > 1)
             {
-                int l2 = world.getBlockId(i, j - 1, k);
-                if (l2 == 0)
+                int i2 = par1World.getBlockId(par2, par3 - 1, par4);
+
+                if (i2 == 0)
                 {
-                    int k3 = world.rand.nextInt(16) & i1;
-                    if (k3 > 0)
+                    int l2 = par1World.rand.nextInt(16) & j;
+
+                    if (l2 > 0)
                     {
-                        world.setBlockAndMetadataWithNotify(i, j - 1, k, blockID, k3);
+                        par1World.setBlockAndMetadataWithNotify(par2, par3 - 1, par4, blockID, l2);
                     }
                 }
-                else if (l2 == blockID)
+                else if (i2 == blockID)
                 {
-                    int l3 = world.rand.nextInt(16) & i1;
-                    int j4 = world.getBlockMetadata(i, j - 1, k);
-                    if (j4 != (j4 | l3))
+                    int i3 = par1World.rand.nextInt(16) & j;
+                    int k3 = par1World.getBlockMetadata(par2, par3 - 1, par4);
+
+                    if (k3 != (k3 | i3))
                     {
-                        world.setBlockMetadataWithNotify(i, j - 1, k, j4 | l3);
+                        par1World.setBlockMetadataWithNotify(par2, par3 - 1, par4, k3 | i3);
                     }
                 }
             }
         }
     }
 
-    public void onBlockPlaced(World world, int i, int j, int k, int l)
+    /**
+     * Called when a block is placed using an item. Used often for taking the facing and figuring out how to position
+     * the item. Args: x, y, z, facing
+     */
+    public void onBlockPlaced(World par1World, int par2, int par3, int par4, int par5)
     {
         byte byte0 = 0;
-        switch (l)
+
+        switch (par5)
         {
             case 2:
                 byte0 = 1;
@@ -327,32 +400,43 @@ public class BlockVine extends Block
                 byte0 = 2;
                 break;
         }
+
         if (byte0 != 0)
         {
-            world.setBlockMetadataWithNotify(i, j, k, byte0);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, byte0);
         }
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return 0;
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 0;
     }
 
-    public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
+    /**
+     * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the coordinates of the
+     * block and l is the block's subtype/damage.
+     */
+    public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6)
     {
-        if (!world.isRemote && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
+        if (!par1World.isRemote && par2EntityPlayer.getCurrentEquippedItem() != null && par2EntityPlayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
         {
-            entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
-            dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.vine, 1, 0));
+            par2EntityPlayer.addStat(StatList.mineBlockStatArray[blockID], 1);
+            dropBlockAsItem_do(par1World, par3, par4, par5, new ItemStack(Block.vine, 1, 0));
         }
         else
         {
-            super.harvestBlock(world, entityplayer, i, j, k, l);
+            super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
         }
     }
 }

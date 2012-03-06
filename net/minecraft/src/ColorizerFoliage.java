@@ -8,24 +8,33 @@ public class ColorizerFoliage
     {
     }
 
-    public static void getFoilageBiomeColorizer(int ai[])
+    public static void getFoilageBiomeColorizer(int par0ArrayOfInteger[])
     {
-        foliageBuffer = ai;
+        foliageBuffer = par0ArrayOfInteger;
     }
 
-    public static int getFoliageColor(double d, double d1)
+    /**
+     * Gets foliage color from temperature and humidity. Args: temperature, humidity
+     */
+    public static int getFoliageColor(double par0, double par2)
     {
-        d1 *= d;
-        int i = (int)((1.0D - d) * 255D);
-        int j = (int)((1.0D - d1) * 255D);
+        par2 *= par0;
+        int i = (int)((1.0D - par0) * 255D);
+        int j = (int)((1.0D - par2) * 255D);
         return foliageBuffer[j << 8 | i];
     }
 
+    /**
+     * Gets the foliage color for pine type (metadata 1) trees
+     */
     public static int getFoliageColorPine()
     {
         return 0x619961;
     }
 
+    /**
+     * Gets the foliage color for birch type (metadata 2) trees
+     */
     public static int getFoliageColorBirch()
     {
         return 0x80a755;

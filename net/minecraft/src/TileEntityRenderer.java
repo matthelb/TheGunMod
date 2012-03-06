@@ -5,19 +5,42 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntityRenderer
 {
+    /**
+     * A mapping of TileEntitySpecialRenderers used for each TileEntity that has one
+     */
     private Map specialRendererMap;
+
+    /** The static instance of TileEntityRenderer */
     public static TileEntityRenderer instance = new TileEntityRenderer();
+
+    /** The FontRenderer instance used by the TileEntityRenderer */
     private FontRenderer fontRenderer;
+
+    /** The player's current X position (same as playerX) */
     public static double staticPlayerX;
+
+    /** The player's current Y position (same as playerY) */
     public static double staticPlayerY;
+
+    /** The player's current Z position (same as playerZ) */
     public static double staticPlayerZ;
+
+    /** The RenderEngine instance used by the TileEntityRenderer */
     public RenderEngine renderEngine;
+
+    /** Reference to the World object. */
     public World worldObj;
     public EntityLiving entityLivingPlayer;
     public float playerYaw;
     public float playerPitch;
+
+    /** The player's X position in this rendering context */
     public double playerX;
+
+    /** The player's Y position in this rendering context */
     public double playerY;
+
+    /** The player's Z position in this rendering context */
     public double playerZ;
 
     private TileEntityRenderer()
@@ -30,97 +53,129 @@ public class TileEntityRenderer
         specialRendererMap.put(net.minecraft.src.TileEntityEnchantmentTable.class, new RenderEnchantmentTable());
         specialRendererMap.put(net.minecraft.src.TileEntityEndPortal.class, new RenderEndPortal());
         TileEntitySpecialRenderer tileentityspecialrenderer;
+
         for (Iterator iterator = specialRendererMap.values().iterator(); iterator.hasNext(); tileentityspecialrenderer.setTileEntityRenderer(this))
         {
             tileentityspecialrenderer = (TileEntitySpecialRenderer)iterator.next();
         }
     }
 
-    public TileEntitySpecialRenderer getSpecialRendererForClass(Class class1)
+    /**
+     * Returns the TileEntitySpecialRenderer used to render this TileEntity class, or null if it has no special renderer
+     */
+    public TileEntitySpecialRenderer getSpecialRendererForClass(Class par1Class)
     {
-        TileEntitySpecialRenderer tileentityspecialrenderer = (TileEntitySpecialRenderer)specialRendererMap.get(class1);
-        if (tileentityspecialrenderer == null && class1 != (net.minecraft.src.TileEntity.class))
+        TileEntitySpecialRenderer tileentityspecialrenderer = (TileEntitySpecialRenderer)specialRendererMap.get(par1Class);
+
+        if (tileentityspecialrenderer == null && par1Class != (net.minecraft.src.TileEntity.class))
         {
-            tileentityspecialrenderer = getSpecialRendererForClass(class1.getSuperclass());
-            specialRendererMap.put(class1, tileentityspecialrenderer);
+            tileentityspecialrenderer = getSpecialRendererForClass(par1Class.getSuperclass());
+            specialRendererMap.put(par1Class, tileentityspecialrenderer);
         }
+
         return tileentityspecialrenderer;
     }
 
-    public boolean hasSpecialRenderer(TileEntity tileentity)
+    /**
+     * Returns true if this TileEntity instance has a TileEntitySpecialRenderer associated with it, false otherwise.
+     */
+    public boolean hasSpecialRenderer(TileEntity par1TileEntity)
     {
-        return getSpecialRendererForEntity(tileentity) != null;
+        return getSpecialRendererForEntity(par1TileEntity) != null;
     }
 
-    public TileEntitySpecialRenderer getSpecialRendererForEntity(TileEntity tileentity)
+    /**
+     * Returns the TileEntitySpecialRenderer used to render this TileEntity instance, or null if it has no special
+     * renderer
+     */
+    public TileEntitySpecialRenderer getSpecialRendererForEntity(TileEntity par1TileEntity)
     {
-        if (tileentity == null)
+        if (par1TileEntity == null)
         {
             return null;
         }
         else
         {
-            return getSpecialRendererForClass(tileentity.getClass());
+            return getSpecialRendererForClass(par1TileEntity.getClass());
         }
     }
 
-    public void cacheActiveRenderInfo(World world, RenderEngine renderengine, FontRenderer fontrenderer, EntityLiving entityliving, float f)
+    /**
+     * Caches several render-related references, including the active World, RenderEngine, FontRenderer, and the camera-
+     * bound EntityLiving's interpolated pitch, yaw and position. Args: world, renderengine, fontrenderer, entityliving,
+     * partialTickTime
+     */
+    public void cacheActiveRenderInfo(World par1World, RenderEngine par2RenderEngine, FontRenderer par3FontRenderer, EntityLiving par4EntityLiving, float par5)
     {
-        if (worldObj != world)
+        if (worldObj != par1World)
         {
-            func_31072_a(world);
+            cacheSpecialRenderInfo(par1World);
         }
-        renderEngine = renderengine;
-        entityLivingPlayer = entityliving;
-        fontRenderer = fontrenderer;
-        playerYaw = entityliving.prevRotationYaw + (entityliving.rotationYaw - entityliving.prevRotationYaw) * f;
-        playerPitch = entityliving.prevRotationPitch + (entityliving.rotationPitch - entityliving.prevRotationPitch) * f;
-        playerX = entityliving.lastTickPosX + (entityliving.posX - entityliving.lastTickPosX) * (double)f;
-        playerY = entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * (double)f;
-        playerZ = entityliving.lastTickPosZ + (entityliving.posZ - entityliving.lastTickPosZ) * (double)f;
+
+        renderEngine = par2RenderEngine;
+        entityLivingPlayer = par4EntityLiving;
+        fontRenderer = par3FontRenderer;
+        playerYaw = par4EntityLiving.prevRotationYaw + (par4EntityLiving.rotationYaw - par4EntityLiving.prevRotationYaw) * par5;
+        playerPitch = par4EntityLiving.prevRotationPitch + (par4EntityLiving.rotationPitch - par4EntityLiving.prevRotationPitch) * par5;
+        playerX = par4EntityLiving.lastTickPosX + (par4EntityLiving.posX - par4EntityLiving.lastTickPosX) * (double)par5;
+        playerY = par4EntityLiving.lastTickPosY + (par4EntityLiving.posY - par4EntityLiving.lastTickPosY) * (double)par5;
+        playerZ = par4EntityLiving.lastTickPosZ + (par4EntityLiving.posZ - par4EntityLiving.lastTickPosZ) * (double)par5;
     }
 
     public void func_40742_a()
     {
     }
 
-    public void renderTileEntity(TileEntity tileentity, float f)
+    /**
+     * Render this TileEntity at its current position from the player
+     */
+    public void renderTileEntity(TileEntity par1TileEntity, float par2)
     {
-        if (tileentity.getDistanceFrom(playerX, playerY, playerZ) < 4096D)
+        if (par1TileEntity.getDistanceFrom(playerX, playerY, playerZ) < 4096D)
         {
-            int i = worldObj.getLightBrightnessForSkyBlocks(tileentity.xCoord, tileentity.yCoord, tileentity.zCoord, 0);
+            int i = worldObj.getLightBrightnessForSkyBlocks(par1TileEntity.xCoord, par1TileEntity.yCoord, par1TileEntity.zCoord, 0);
             int j = i % 0x10000;
             int k = i / 0x10000;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)j / 1.0F, (float)k / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            renderTileEntityAt(tileentity, (double)tileentity.xCoord - staticPlayerX, (double)tileentity.yCoord - staticPlayerY, (double)tileentity.zCoord - staticPlayerZ, f);
+            renderTileEntityAt(par1TileEntity, (double)par1TileEntity.xCoord - staticPlayerX, (double)par1TileEntity.yCoord - staticPlayerY, (double)par1TileEntity.zCoord - staticPlayerZ, par2);
         }
     }
 
-    public void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2,
-            float f)
+    /**
+     * Render this TileEntity at a given set of coordinates
+     */
+    public void renderTileEntityAt(TileEntity par1TileEntity, double par2, double par4, double par6, float par8)
     {
-        TileEntitySpecialRenderer tileentityspecialrenderer = getSpecialRendererForEntity(tileentity);
+        TileEntitySpecialRenderer tileentityspecialrenderer = getSpecialRendererForEntity(par1TileEntity);
+
         if (tileentityspecialrenderer != null)
         {
-            tileentityspecialrenderer.renderTileEntityAt(tileentity, d, d1, d2, f);
+            tileentityspecialrenderer.renderTileEntityAt(par1TileEntity, par2, par4, par6, par8);
         }
     }
 
-    public void func_31072_a(World world)
+    /**
+     * Called from cacheActiveRenderInfo() to cache render-related references for TileEntitySpecialRenderers in
+     * specialRendererMap. Currently only the world reference from cacheActiveRenderInfo() is passed to this method.
+     */
+    public void cacheSpecialRenderInfo(World par1World)
     {
-        worldObj = world;
+        worldObj = par1World;
         Iterator iterator = specialRendererMap.values().iterator();
+
         do
         {
             if (!iterator.hasNext())
             {
                 break;
             }
+
             TileEntitySpecialRenderer tileentityspecialrenderer = (TileEntitySpecialRenderer)iterator.next();
+
             if (tileentityspecialrenderer != null)
             {
-                tileentityspecialrenderer.func_31069_a(world);
+                tileentityspecialrenderer.cacheSpecialRenderInfo(par1World);
             }
         }
         while (true);

@@ -10,28 +10,38 @@ public class Packet0KeepAlive extends Packet
     {
     }
 
-    public Packet0KeepAlive(int i)
+    public Packet0KeepAlive(int par1)
     {
-        randomId = i;
+        randomId = par1;
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleKeepAlive(this);
+        par1NetHandler.handleKeepAlive(this);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        randomId = datainputstream.readInt();
+        randomId = par1DataInputStream.readInt();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(randomId);
+        par1DataOutputStream.writeInt(randomId);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 4;

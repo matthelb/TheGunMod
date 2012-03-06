@@ -6,10 +6,20 @@ import java.util.Set;
 public class IntHashMap
 {
     private transient IntHashMapEntry slots[];
+
+    /** The number of items stored in this map */
     private transient int count;
+
+    /** The grow threshold */
     private int threshold;
+
+    /** The scale factor used to determine when to grow the table */
     private final float growFactor = 0.75F;
+
+    /** A serial stamp used to mark changes */
     private volatile transient int versionStamp;
+
+    /** The set of all the keys stored in this MCHash object */
     private Set keySet;
 
     public IntHashMap()
@@ -19,23 +29,33 @@ public class IntHashMap
         slots = new IntHashMapEntry[16];
     }
 
-    private static int computeHash(int i)
+    /**
+     * Makes the passed in integer suitable for hashing by a number of shifts
+     */
+    private static int computeHash(int par0)
     {
-        i ^= i >>> 20 ^ i >>> 12;
-        return i ^ i >>> 7 ^ i >>> 4;
+        par0 ^= par0 >>> 20 ^ par0 >>> 12;
+        return par0 ^ par0 >>> 7 ^ par0 >>> 4;
     }
 
-    private static int getSlotIndex(int i, int j)
+    /**
+     * Computes the index of the slot for the hash and slot count passed in.
+     */
+    private static int getSlotIndex(int par0, int par1)
     {
-        return i & j - 1;
+        return par0 & par1 - 1;
     }
 
-    public Object lookup(int i)
+    /**
+     * Returns the object associated to a key
+     */
+    public Object lookup(int par1)
     {
-        int j = computeHash(i);
-        for (IntHashMapEntry inthashmapentry = slots[getSlotIndex(j, slots.length)]; inthashmapentry != null; inthashmapentry = inthashmapentry.nextEntry)
+        int i = computeHash(par1);
+
+        for (IntHashMapEntry inthashmapentry = slots[getSlotIndex(i, slots.length)]; inthashmapentry != null; inthashmapentry = inthashmapentry.nextEntry)
         {
-            if (inthashmapentry.hashEntry == i)
+            if (inthashmapentry.hashEntry == par1)
             {
                 return inthashmapentry.valueEntry;
             }
@@ -44,17 +64,24 @@ public class IntHashMap
         return null;
     }
 
-    public boolean containsItem(int i)
+    /**
+     * Return true if an object is associated with the given key
+     */
+    public boolean containsItem(int par1)
     {
-        return lookupEntry(i) != null;
+        return lookupEntry(par1) != null;
     }
 
-    final IntHashMapEntry lookupEntry(int i)
+    /**
+     * Returns the key/object mapping for a given key as a MCHashEntry
+     */
+    final IntHashMapEntry lookupEntry(int par1)
     {
-        int j = computeHash(i);
-        for (IntHashMapEntry inthashmapentry = slots[getSlotIndex(j, slots.length)]; inthashmapentry != null; inthashmapentry = inthashmapentry.nextEntry)
+        int i = computeHash(par1);
+
+        for (IntHashMapEntry inthashmapentry = slots[getSlotIndex(i, slots.length)]; inthashmapentry != null; inthashmapentry = inthashmapentry.nextEntry)
         {
-            if (inthashmapentry.hashEntry == i)
+            if (inthashmapentry.hashEntry == par1)
             {
                 return inthashmapentry;
             }
@@ -63,107 +90,137 @@ public class IntHashMap
         return null;
     }
 
-    public void addKey(int i, Object obj)
+    /**
+     * Adds a key and associated value to this map
+     */
+    public void addKey(int par1, Object par2Obj)
     {
-        keySet.add(Integer.valueOf(i));
-        int j = computeHash(i);
-        int k = getSlotIndex(j, slots.length);
-        for (IntHashMapEntry inthashmapentry = slots[k]; inthashmapentry != null; inthashmapentry = inthashmapentry.nextEntry)
+        keySet.add(Integer.valueOf(par1));
+        int i = computeHash(par1);
+        int j = getSlotIndex(i, slots.length);
+
+        for (IntHashMapEntry inthashmapentry = slots[j]; inthashmapentry != null; inthashmapentry = inthashmapentry.nextEntry)
         {
-            if (inthashmapentry.hashEntry == i)
+            if (inthashmapentry.hashEntry == par1)
             {
-                inthashmapentry.valueEntry = obj;
+                inthashmapentry.valueEntry = par2Obj;
             }
         }
 
         versionStamp++;
-        insert(j, i, obj, k);
+        insert(i, par1, par2Obj, j);
     }
 
-    private void grow(int i)
+    /**
+     * Increases the number of hash slots
+     */
+    private void grow(int par1)
     {
         IntHashMapEntry ainthashmapentry[] = slots;
-        int j = ainthashmapentry.length;
-        if (j == 0x40000000)
+        int i = ainthashmapentry.length;
+
+        if (i == 0x40000000)
         {
             threshold = 0x7fffffff;
             return;
         }
         else
         {
-            IntHashMapEntry ainthashmapentry1[] = new IntHashMapEntry[i];
+            IntHashMapEntry ainthashmapentry1[] = new IntHashMapEntry[par1];
             copyTo(ainthashmapentry1);
             slots = ainthashmapentry1;
-            threshold = (int)((float)i * growFactor);
+            threshold = (int)((float)par1 * growFactor);
             return;
         }
     }
 
-    private void copyTo(IntHashMapEntry ainthashmapentry[])
+    /**
+     * Copies the hash slots to a new array
+     */
+    private void copyTo(IntHashMapEntry par1ArrayOfIntHashMapEntry[])
     {
-        IntHashMapEntry ainthashmapentry1[] = slots;
-        int i = ainthashmapentry.length;
-        for (int j = 0; j < ainthashmapentry1.length; j++)
+        IntHashMapEntry ainthashmapentry[] = slots;
+        int i = par1ArrayOfIntHashMapEntry.length;
+
+        for (int j = 0; j < ainthashmapentry.length; j++)
         {
-            IntHashMapEntry inthashmapentry = ainthashmapentry1[j];
+            IntHashMapEntry inthashmapentry = ainthashmapentry[j];
+
             if (inthashmapentry == null)
             {
                 continue;
             }
-            ainthashmapentry1[j] = null;
+
+            ainthashmapentry[j] = null;
+
             do
             {
                 IntHashMapEntry inthashmapentry1 = inthashmapentry.nextEntry;
                 int k = getSlotIndex(inthashmapentry.slotHash, i);
-                inthashmapentry.nextEntry = ainthashmapentry[k];
-                ainthashmapentry[k] = inthashmapentry;
+                inthashmapentry.nextEntry = par1ArrayOfIntHashMapEntry[k];
+                par1ArrayOfIntHashMapEntry[k] = inthashmapentry;
                 inthashmapentry = inthashmapentry1;
             }
             while (inthashmapentry != null);
         }
     }
 
-    public Object removeObject(int i)
+    /**
+     * Removes the specified object from the map and returns it
+     */
+    public Object removeObject(int par1)
     {
-        keySet.remove(Integer.valueOf(i));
-        IntHashMapEntry inthashmapentry = removeEntry(i);
+        keySet.remove(Integer.valueOf(par1));
+        IntHashMapEntry inthashmapentry = removeEntry(par1);
         return inthashmapentry != null ? inthashmapentry.valueEntry : null;
     }
 
-    final IntHashMapEntry removeEntry(int i)
+    /**
+     * Removes the specified entry from the map and returns it
+     */
+    final IntHashMapEntry removeEntry(int par1)
     {
-        int j = computeHash(i);
-        int k = getSlotIndex(j, slots.length);
-        IntHashMapEntry inthashmapentry = slots[k];
+        int i = computeHash(par1);
+        int j = getSlotIndex(i, slots.length);
+        IntHashMapEntry inthashmapentry = slots[j];
         IntHashMapEntry inthashmapentry1;
         IntHashMapEntry inthashmapentry2;
+
         for (inthashmapentry1 = inthashmapentry; inthashmapentry1 != null; inthashmapentry1 = inthashmapentry2)
         {
             inthashmapentry2 = inthashmapentry1.nextEntry;
-            if (inthashmapentry1.hashEntry == i)
+
+            if (inthashmapentry1.hashEntry == par1)
             {
                 versionStamp++;
                 count--;
+
                 if (inthashmapentry == inthashmapentry1)
                 {
-                    slots[k] = inthashmapentry2;
+                    slots[j] = inthashmapentry2;
                 }
                 else
                 {
                     inthashmapentry.nextEntry = inthashmapentry2;
                 }
+
                 return inthashmapentry1;
             }
+
             inthashmapentry = inthashmapentry1;
         }
 
         return inthashmapentry1;
     }
 
+    /**
+     * Removes all entries from the map
+     */
     public void clearMap()
     {
         versionStamp++;
         IntHashMapEntry ainthashmapentry[] = slots;
+
         for (int i = 0; i < ainthashmapentry.length; i++)
         {
             ainthashmapentry[i] = null;
@@ -172,23 +229,33 @@ public class IntHashMap
         count = 0;
     }
 
-    private void insert(int i, int j, Object obj, int k)
+    /**
+     * Adds an object to a slot
+     */
+    private void insert(int par1, int par2, Object par3Obj, int par4)
     {
-        IntHashMapEntry inthashmapentry = slots[k];
-        slots[k] = new IntHashMapEntry(i, j, obj, inthashmapentry);
+        IntHashMapEntry inthashmapentry = slots[par4];
+        slots[par4] = new IntHashMapEntry(par1, par2, par3Obj, inthashmapentry);
+
         if (count++ >= threshold)
         {
             grow(2 * slots.length);
         }
     }
 
+    /**
+     * Return the Set of all keys stored in this MCHash object
+     */
     public Set getKeySet()
     {
         return keySet;
     }
 
-    static int getHash(int i)
+    /**
+     * Returns the hash code for a key
+     */
+    static int getHash(int par0)
     {
-        return computeHash(i);
+        return computeHash(par0);
     }
 }

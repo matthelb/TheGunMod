@@ -33,11 +33,19 @@ public class GameSettings
     public int renderDistance;
     public boolean viewBobbing;
     public boolean anaglyph;
+
+    /** Advanced OpenGL */
     public boolean advancedOpengl;
     public int limitFramerate;
     public boolean fancyGraphics;
+
+    /** Smooth Lighting */
     public boolean ambientOcclusion;
+
+    /** Clouds flag */
     public boolean clouds;
+
+    /** The name of the selected texture pack. */
     public String skin;
     public KeyBinding keyBindForward;
     public KeyBinding keyBindLeft;
@@ -58,20 +66,38 @@ public class GameSettings
     public int difficulty;
     public boolean hideGUI;
     public int thirdPersonView;
+
+    /** true if debug info should be displayed instead of version */
     public boolean showDebugInfo;
+
+    /** The lastServer string. */
     public String lastServer;
+
+    /** No clipping for singleplayer */
     public boolean noclip;
+
+    /** Smooth Camera Toggle */
     public boolean smoothCamera;
     public boolean debugCamEnable;
+
+    /** No clipping movement rate */
     public float noclipRate;
+
+    /** Change rate for debug camera */
     public float debugCamRate;
     public float fovSetting;
     public float gammaSetting;
+
+    /** GUI scale */
     public int guiScale;
-    public int particles;
+
+    /** Determines amount of particles. 0 = All, 1 = Decreased, 2 = Minimal */
+    public int particleSetting;
+
+    /** Game settings language */
     public String language;
 
-    public GameSettings(Minecraft minecraft, File file)
+    public GameSettings(Minecraft par1Minecraft, File par2File)
     {
         musicVolume = 1.0F;
         soundVolume = 1.0F;
@@ -117,10 +143,10 @@ public class GameSettings
         fovSetting = 0.0F;
         gammaSetting = 0.0F;
         guiScale = 0;
-        particles = 0;
+        particleSetting = 0;
         language = "en_US";
-        mc = minecraft;
-        optionsFile = new File(file, "options.txt");
+        mc = par1Minecraft;
+        optionsFile = new File(par2File, "options.txt");
         loadOptions();
     }
 
@@ -170,145 +196,180 @@ public class GameSettings
         fovSetting = 0.0F;
         gammaSetting = 0.0F;
         guiScale = 0;
-        particles = 0;
+        particleSetting = 0;
         language = "en_US";
     }
 
-    public String getKeyBindingDescription(int i)
+    public String getKeyBindingDescription(int par1)
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
-        return stringtranslate.translateKey(keyBindings[i].keyDescription);
+        return stringtranslate.translateKey(keyBindings[par1].keyDescription);
     }
 
-    public String getOptionDisplayString(int i)
+    /**
+     * The string that appears inside the button/slider in the options menu.
+     */
+    public String getOptionDisplayString(int par1)
     {
-        int j = keyBindings[i].keyCode;
-        return getKeyDisplayString(j);
+        int i = keyBindings[par1].keyCode;
+        return getKeyDisplayString(i);
     }
 
-    public static String getKeyDisplayString(int i)
+    /**
+     * Represents a key or mouse button as a string. Args: key
+     */
+    public static String getKeyDisplayString(int par0)
     {
-        if (i < 0)
+        if (par0 < 0)
         {
             return StatCollector.translateToLocalFormatted("key.mouseButton", new Object[]
                     {
-                        Integer.valueOf(i + 101)
+                        Integer.valueOf(par0 + 101)
                     });
         }
         else
         {
-            return Keyboard.getKeyName(i);
+            return Keyboard.getKeyName(par0);
         }
     }
 
-    public void setKeyBinding(int i, int j)
+    /**
+     * Sets a key binding.
+     */
+    public void setKeyBinding(int par1, int par2)
     {
-        keyBindings[i].keyCode = j;
+        keyBindings[par1].keyCode = par2;
         saveOptions();
     }
 
-    public void setOptionFloatValue(EnumOptions enumoptions, float f)
+    /**
+     * If the specified option is controlled by a slider (float value), this will set the float value.
+     */
+    public void setOptionFloatValue(EnumOptions par1EnumOptions, float par2)
     {
-        if (enumoptions == EnumOptions.MUSIC)
+        if (par1EnumOptions == EnumOptions.MUSIC)
         {
-            musicVolume = f;
+            musicVolume = par2;
             mc.sndManager.onSoundOptionsChanged();
         }
-        if (enumoptions == EnumOptions.SOUND)
+
+        if (par1EnumOptions == EnumOptions.SOUND)
         {
-            soundVolume = f;
+            soundVolume = par2;
             mc.sndManager.onSoundOptionsChanged();
         }
-        if (enumoptions == EnumOptions.SENSITIVITY)
+
+        if (par1EnumOptions == EnumOptions.SENSITIVITY)
         {
-            mouseSensitivity = f;
+            mouseSensitivity = par2;
         }
-        if (enumoptions == EnumOptions.FOV)
+
+        if (par1EnumOptions == EnumOptions.FOV)
         {
-            fovSetting = f;
+            fovSetting = par2;
         }
-        if (enumoptions == EnumOptions.GAMMA)
+
+        if (par1EnumOptions == EnumOptions.GAMMA)
         {
-            gammaSetting = f;
+            gammaSetting = par2;
         }
     }
 
-    public void setOptionValue(EnumOptions enumoptions, int i)
+    /**
+     * For non-float options. Toggles the option on/off, or cycles through the list i.e. render distances.
+     */
+    public void setOptionValue(EnumOptions par1EnumOptions, int par2)
     {
-        if (enumoptions == EnumOptions.INVERT_MOUSE)
+        if (par1EnumOptions == EnumOptions.INVERT_MOUSE)
         {
             invertMouse = !invertMouse;
         }
-        if (enumoptions == EnumOptions.RENDER_DISTANCE)
+
+        if (par1EnumOptions == EnumOptions.RENDER_DISTANCE)
         {
-            renderDistance = renderDistance + i & 3;
+            renderDistance = renderDistance + par2 & 3;
         }
-        if (enumoptions == EnumOptions.GUI_SCALE)
+
+        if (par1EnumOptions == EnumOptions.GUI_SCALE)
         {
-            guiScale = guiScale + i & 3;
+            guiScale = guiScale + par2 & 3;
         }
-        if (enumoptions == EnumOptions.PARTICLES)
+
+        if (par1EnumOptions == EnumOptions.PARTICLES)
         {
-            particles = (particles + i) % 3;
+            particleSetting = (particleSetting + par2) % 3;
         }
-        if (enumoptions == EnumOptions.VIEW_BOBBING)
+
+        if (par1EnumOptions == EnumOptions.VIEW_BOBBING)
         {
             viewBobbing = !viewBobbing;
         }
-        if (enumoptions == EnumOptions.RENDER_CLOUDS)
+
+        if (par1EnumOptions == EnumOptions.RENDER_CLOUDS)
         {
             clouds = !clouds;
         }
-        if (enumoptions == EnumOptions.ADVANCED_OPENGL)
+
+        if (par1EnumOptions == EnumOptions.ADVANCED_OPENGL)
         {
             advancedOpengl = !advancedOpengl;
             mc.renderGlobal.loadRenderers();
         }
-        if (enumoptions == EnumOptions.ANAGLYPH)
+
+        if (par1EnumOptions == EnumOptions.ANAGLYPH)
         {
             anaglyph = !anaglyph;
             mc.renderEngine.refreshTextures();
         }
-        if (enumoptions == EnumOptions.FRAMERATE_LIMIT)
+
+        if (par1EnumOptions == EnumOptions.FRAMERATE_LIMIT)
         {
-            limitFramerate = (limitFramerate + i + 3) % 3;
+            limitFramerate = (limitFramerate + par2 + 3) % 3;
         }
-        if (enumoptions == EnumOptions.DIFFICULTY)
+
+        if (par1EnumOptions == EnumOptions.DIFFICULTY)
         {
-            difficulty = difficulty + i & 3;
+            difficulty = difficulty + par2 & 3;
         }
-        if (enumoptions == EnumOptions.GRAPHICS)
+
+        if (par1EnumOptions == EnumOptions.GRAPHICS)
         {
             fancyGraphics = !fancyGraphics;
             mc.renderGlobal.loadRenderers();
         }
-        if (enumoptions == EnumOptions.AMBIENT_OCCLUSION)
+
+        if (par1EnumOptions == EnumOptions.AMBIENT_OCCLUSION)
         {
             ambientOcclusion = !ambientOcclusion;
             mc.renderGlobal.loadRenderers();
         }
+
         saveOptions();
     }
 
-    public float getOptionFloatValue(EnumOptions enumoptions)
+    public float getOptionFloatValue(EnumOptions par1EnumOptions)
     {
-        if (enumoptions == EnumOptions.FOV)
+        if (par1EnumOptions == EnumOptions.FOV)
         {
             return fovSetting;
         }
-        if (enumoptions == EnumOptions.GAMMA)
+
+        if (par1EnumOptions == EnumOptions.GAMMA)
         {
             return gammaSetting;
         }
-        if (enumoptions == EnumOptions.MUSIC)
+
+        if (par1EnumOptions == EnumOptions.MUSIC)
         {
             return musicVolume;
         }
-        if (enumoptions == EnumOptions.SOUND)
+
+        if (par1EnumOptions == EnumOptions.SOUND)
         {
             return soundVolume;
         }
-        if (enumoptions == EnumOptions.SENSITIVITY)
+
+        if (par1EnumOptions == EnumOptions.SENSITIVITY)
         {
             return mouseSensitivity;
         }
@@ -318,9 +379,9 @@ public class GameSettings
         }
     }
 
-    public boolean getOptionOrdinalValue(EnumOptions enumoptions)
+    public boolean getOptionOrdinalValue(EnumOptions par1EnumOptions)
     {
-        switch (EnumOptionsMappingHelper.enumOptionsMappingHelperArray[enumoptions.ordinal()])
+        switch (EnumOptionsMappingHelper.enumOptionsMappingHelperArray[par1EnumOptions.ordinal()])
         {
             case 1:
                 return invertMouse;
@@ -340,22 +401,40 @@ public class GameSettings
             case 6:
                 return clouds;
         }
+
         return false;
     }
 
-    public String getKeyBinding(EnumOptions enumoptions)
+    private static String func_48571_a(String par0ArrayOfStr[], int par1)
+    {
+        if (par1 < 0 || par1 >= par0ArrayOfStr.length)
+        {
+            par1 = 0;
+        }
+
+        StringTranslate stringtranslate = StringTranslate.getInstance();
+        return stringtranslate.translateKey(par0ArrayOfStr[par1]);
+    }
+
+    /**
+     * Gets a key binding.
+     */
+    public String getKeyBinding(EnumOptions par1EnumOptions)
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
-        String s = (new StringBuilder()).append(stringtranslate.translateKey(enumoptions.getEnumString())).append(": ").toString();
-        if (enumoptions.getEnumFloat())
+        String s = (new StringBuilder()).append(stringtranslate.translateKey(par1EnumOptions.getEnumString())).append(": ").toString();
+
+        if (par1EnumOptions.getEnumFloat())
         {
-            float f = getOptionFloatValue(enumoptions);
-            if (enumoptions == EnumOptions.SENSITIVITY)
+            float f = getOptionFloatValue(par1EnumOptions);
+
+            if (par1EnumOptions == EnumOptions.SENSITIVITY)
             {
                 if (f == 0.0F)
                 {
                     return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.sensitivity.min")).toString();
                 }
+
                 if (f == 1.0F)
                 {
                     return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.sensitivity.max")).toString();
@@ -365,12 +444,14 @@ public class GameSettings
                     return (new StringBuilder()).append(s).append((int)(f * 200F)).append("%").toString();
                 }
             }
-            if (enumoptions == EnumOptions.FOV)
+
+            if (par1EnumOptions == EnumOptions.FOV)
             {
                 if (f == 0.0F)
                 {
                     return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.fov.min")).toString();
                 }
+
                 if (f == 1.0F)
                 {
                     return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.fov.max")).toString();
@@ -380,12 +461,14 @@ public class GameSettings
                     return (new StringBuilder()).append(s).append((int)(70F + f * 40F)).toString();
                 }
             }
-            if (enumoptions == EnumOptions.GAMMA)
+
+            if (par1EnumOptions == EnumOptions.GAMMA)
             {
                 if (f == 0.0F)
                 {
                     return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.gamma.min")).toString();
                 }
+
                 if (f == 1.0F)
                 {
                     return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.gamma.max")).toString();
@@ -395,6 +478,7 @@ public class GameSettings
                     return (new StringBuilder()).append(s).append("+").append((int)(f * 100F)).append("%").toString();
                 }
             }
+
             if (f == 0.0F)
             {
                 return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.off")).toString();
@@ -404,9 +488,11 @@ public class GameSettings
                 return (new StringBuilder()).append(s).append((int)(f * 100F)).append("%").toString();
             }
         }
-        if (enumoptions.getEnumBoolean())
+
+        if (par1EnumOptions.getEnumBoolean())
         {
-            boolean flag = getOptionOrdinalValue(enumoptions);
+            boolean flag = getOptionOrdinalValue(par1EnumOptions);
+
             if (flag)
             {
                 return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.on")).toString();
@@ -416,27 +502,33 @@ public class GameSettings
                 return (new StringBuilder()).append(s).append(stringtranslate.translateKey("options.off")).toString();
             }
         }
-        if (enumoptions == EnumOptions.RENDER_DISTANCE)
+
+        if (par1EnumOptions == EnumOptions.RENDER_DISTANCE)
         {
-            return (new StringBuilder()).append(s).append(stringtranslate.translateKey(RENDER_DISTANCES[renderDistance])).toString();
+            return (new StringBuilder()).append(s).append(func_48571_a(RENDER_DISTANCES, renderDistance)).toString();
         }
-        if (enumoptions == EnumOptions.DIFFICULTY)
+
+        if (par1EnumOptions == EnumOptions.DIFFICULTY)
         {
-            return (new StringBuilder()).append(s).append(stringtranslate.translateKey(DIFFICULTIES[difficulty])).toString();
+            return (new StringBuilder()).append(s).append(func_48571_a(DIFFICULTIES, difficulty)).toString();
         }
-        if (enumoptions == EnumOptions.GUI_SCALE)
+
+        if (par1EnumOptions == EnumOptions.GUI_SCALE)
         {
-            return (new StringBuilder()).append(s).append(stringtranslate.translateKey(GUISCALES[guiScale])).toString();
+            return (new StringBuilder()).append(s).append(func_48571_a(GUISCALES, guiScale)).toString();
         }
-        if (enumoptions == EnumOptions.PARTICLES)
+
+        if (par1EnumOptions == EnumOptions.PARTICLES)
         {
-            return (new StringBuilder()).append(s).append(stringtranslate.translateKey(PARTICLES[particles])).toString();
+            return (new StringBuilder()).append(s).append(func_48571_a(PARTICLES, particleSetting)).toString();
         }
-        if (enumoptions == EnumOptions.FRAMERATE_LIMIT)
+
+        if (par1EnumOptions == EnumOptions.FRAMERATE_LIMIT)
         {
-            return (new StringBuilder()).append(s).append(StatCollector.translateToLocal(LIMIT_FRAMERATES[limitFramerate])).toString();
+            return (new StringBuilder()).append(s).append(func_48571_a(LIMIT_FRAMERATES, limitFramerate)).toString();
         }
-        if (enumoptions == EnumOptions.GRAPHICS)
+
+        if (par1EnumOptions == EnumOptions.GRAPHICS)
         {
             if (fancyGraphics)
             {
@@ -453,6 +545,9 @@ public class GameSettings
         }
     }
 
+    /**
+     * Loads the options from the options file. It appears that this has replaced the previous 'loadOptions'
+     */
     public void loadOptions()
     {
         try
@@ -461,99 +556,124 @@ public class GameSettings
             {
                 return;
             }
+
             BufferedReader bufferedreader = new BufferedReader(new FileReader(optionsFile));
+
             for (String s = ""; (s = bufferedreader.readLine()) != null;)
             {
                 try
                 {
                     String as[] = s.split(":");
+
                     if (as[0].equals("music"))
                     {
                         musicVolume = parseFloat(as[1]);
                     }
+
                     if (as[0].equals("sound"))
                     {
                         soundVolume = parseFloat(as[1]);
                     }
+
                     if (as[0].equals("mouseSensitivity"))
                     {
                         mouseSensitivity = parseFloat(as[1]);
                     }
+
                     if (as[0].equals("fov"))
                     {
                         fovSetting = parseFloat(as[1]);
                     }
+
                     if (as[0].equals("gamma"))
                     {
                         gammaSetting = parseFloat(as[1]);
                     }
+
                     if (as[0].equals("invertYMouse"))
                     {
                         invertMouse = as[1].equals("true");
                     }
+
                     if (as[0].equals("viewDistance"))
                     {
                         renderDistance = Integer.parseInt(as[1]);
                     }
+
                     if (as[0].equals("guiScale"))
                     {
                         guiScale = Integer.parseInt(as[1]);
                     }
+
                     if (as[0].equals("particles"))
                     {
-                        particles = Integer.parseInt(as[1]);
+                        particleSetting = Integer.parseInt(as[1]);
                     }
+
                     if (as[0].equals("bobView"))
                     {
                         viewBobbing = as[1].equals("true");
                     }
+
                     if (as[0].equals("anaglyph3d"))
                     {
                         anaglyph = as[1].equals("true");
                     }
+
                     if (as[0].equals("advancedOpengl"))
                     {
                         advancedOpengl = as[1].equals("true");
                     }
+
                     if (as[0].equals("fpsLimit"))
                     {
                         limitFramerate = Integer.parseInt(as[1]);
                     }
+
                     if (as[0].equals("difficulty"))
                     {
                         difficulty = Integer.parseInt(as[1]);
                     }
+
                     if (as[0].equals("fancyGraphics"))
                     {
                         fancyGraphics = as[1].equals("true");
                     }
+
                     if (as[0].equals("ao"))
                     {
                         ambientOcclusion = as[1].equals("true");
                     }
+
                     if (as[0].equals("clouds"))
                     {
                         clouds = as[1].equals("true");
                     }
+
                     if (as[0].equals("skin"))
                     {
                         skin = as[1];
                     }
+
                     if (as[0].equals("lastServer") && as.length >= 2)
                     {
                         lastServer = as[1];
                     }
+
                     if (as[0].equals("lang") && as.length >= 2)
                     {
                         language = as[1];
                     }
+
                     int i = 0;
+
                     while (i < keyBindings.length)
                     {
                         if (as[0].equals((new StringBuilder()).append("key_").append(keyBindings[i].keyDescription).toString()))
                         {
                             keyBindings[i].keyCode = Integer.parseInt(as[1]);
                         }
+
                         i++;
                     }
                 }
@@ -573,22 +693,29 @@ public class GameSettings
         }
     }
 
-    private float parseFloat(String s)
+    /**
+     * Parses a string into a float.
+     */
+    private float parseFloat(String par1Str)
     {
-        if (s.equals("true"))
+        if (par1Str.equals("true"))
         {
             return 1.0F;
         }
-        if (s.equals("false"))
+
+        if (par1Str.equals("false"))
         {
             return 0.0F;
         }
         else
         {
-            return Float.parseFloat(s);
+            return Float.parseFloat(par1Str);
         }
     }
 
+    /**
+     * Saves the options to the options file.
+     */
     public void saveOptions()
     {
         try
@@ -602,7 +729,7 @@ public class GameSettings
             printwriter.println((new StringBuilder()).append("gamma:").append(gammaSetting).toString());
             printwriter.println((new StringBuilder()).append("viewDistance:").append(renderDistance).toString());
             printwriter.println((new StringBuilder()).append("guiScale:").append(guiScale).toString());
-            printwriter.println((new StringBuilder()).append("particles:").append(particles).toString());
+            printwriter.println((new StringBuilder()).append("particles:").append(particleSetting).toString());
             printwriter.println((new StringBuilder()).append("bobView:").append(viewBobbing).toString());
             printwriter.println((new StringBuilder()).append("anaglyph3d:").append(anaglyph).toString());
             printwriter.println((new StringBuilder()).append("advancedOpengl:").append(advancedOpengl).toString());
@@ -614,6 +741,7 @@ public class GameSettings
             printwriter.println((new StringBuilder()).append("skin:").append(skin).toString());
             printwriter.println((new StringBuilder()).append("lastServer:").append(lastServer).toString());
             printwriter.println((new StringBuilder()).append("lang:").append(language).toString());
+
             for (int i = 0; i < keyBindings.length; i++)
             {
                 printwriter.println((new StringBuilder()).append("key_").append(keyBindings[i].keyDescription).append(":").append(keyBindings[i].keyCode).toString());
@@ -628,6 +756,9 @@ public class GameSettings
         }
     }
 
+    /**
+     * Should render clouds
+     */
     public boolean shouldRenderClouds()
     {
         return renderDistance < 2 && clouds;

@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 public class ModelSquid extends ModelBase
 {
+    /** The squid's body */
     ModelRenderer squidBody;
     ModelRenderer squidTentacles[];
 
@@ -12,36 +13,44 @@ public class ModelSquid extends ModelBase
         squidBody = new ModelRenderer(this, 0, 0);
         squidBody.addBox(-6F, -8F, -6F, 12, 16, 12);
         squidBody.rotationPointY += 24 + byte0;
+
         for (int i = 0; i < squidTentacles.length; i++)
         {
             squidTentacles[i] = new ModelRenderer(this, 48, 0);
-            double d = ((double)i * 3.1415926535897931D * 2D) / (double)squidTentacles.length;
+            double d = ((double)i * Math.PI * 2D) / (double)squidTentacles.length;
             float f = (float)Math.cos(d) * 5F;
             float f1 = (float)Math.sin(d) * 5F;
             squidTentacles[i].addBox(-1F, 0.0F, -1F, 2, 18, 2);
             squidTentacles[i].rotationPointX = f;
             squidTentacles[i].rotationPointZ = f1;
             squidTentacles[i].rotationPointY = 31 + byte0;
-            d = ((double)i * 3.1415926535897931D * -2D) / (double)squidTentacles.length + 1.5707963267948966D;
+            d = ((double)i * Math.PI * -2D) / (double)squidTentacles.length + (Math.PI / 2D);
             squidTentacles[i].rotateAngleY = (float)d;
         }
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
         for (int i = 0; i < squidTentacles.length; i++)
         {
-            squidTentacles[i].rotateAngleX = f2;
+            squidTentacles[i].rotateAngleX = par3;
         }
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles then renders the model.
+     */
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        setRotationAngles(f, f1, f2, f3, f4, f5);
-        squidBody.render(f5);
+        setRotationAngles(par2, par3, par4, par5, par6, par7);
+        squidBody.render(par7);
+
         for (int i = 0; i < squidTentacles.length; i++)
         {
-            squidTentacles[i].render(f5);
+            squidTentacles[i].render(par7);
         }
     }
 }

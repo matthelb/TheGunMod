@@ -9,54 +9,43 @@ public class EntityAILookIdle extends EntityAIBase
     private double field_46088_c;
     private int field_46086_d;
 
-    public EntityAILookIdle(EntityLiving entityliving)
+    public EntityAILookIdle(EntityLiving par1EntityLiving)
     {
         field_46086_d = 0;
-        field_46089_a = entityliving;
+        field_46089_a = par1EntityLiving;
         func_46079_a(3);
     }
 
-    public boolean func_46082_a()
+    /**
+     * Returns whether the EntityAIBase should begin execution.
+     */
+    public boolean shouldExecute()
     {
         return field_46089_a.getRNG().nextFloat() < 0.02F;
     }
 
-    public boolean func_46084_g()
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
+    public boolean continueExecuting()
     {
         return field_46086_d >= 0;
     }
 
     public void func_46080_e()
     {
-        double d = 6.2831853071795862D * field_46089_a.getRNG().nextDouble();
+        double d = (Math.PI * 2D) * field_46089_a.getRNG().nextDouble();
         field_46087_b = Math.cos(d);
         field_46088_c = Math.sin(d);
         field_46086_d = 20 + field_46089_a.getRNG().nextInt(20);
     }
 
-    public void func_46081_b()
+    /**
+     * Updates the task
+     */
+    public void updateTask()
     {
         field_46086_d--;
-        field_46089_a.getLookHelper().func_46143_a(field_46089_a.posX + field_46087_b, field_46089_a.posY + (double)field_46089_a.getEyeHeight(), field_46089_a.posZ + field_46088_c, 10F, field_46089_a.getVerticalFaceSpeed());
-    }
-
-    public int func_46083_c()
-    {
-        return super.func_46083_c();
-    }
-
-    public void func_46079_a(int i)
-    {
-        super.func_46079_a(i);
-    }
-
-    public void func_46077_d()
-    {
-        super.func_46077_d();
-    }
-
-    public boolean func_46078_f()
-    {
-        return super.func_46078_f();
+        field_46089_a.getLookHelper().setLookPosition(field_46089_a.posX + field_46087_b, field_46089_a.posY + (double)field_46089_a.getEyeHeight(), field_46089_a.posZ + field_46088_c, 10F, field_46089_a.getVerticalFaceSpeed());
     }
 }

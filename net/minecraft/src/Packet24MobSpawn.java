@@ -5,13 +5,29 @@ import java.util.List;
 
 public class Packet24MobSpawn extends Packet
 {
+    /** The entity ID. */
     public int entityId;
+
+    /** The type of mob. */
     public int type;
+
+    /** The X position of the entity. */
     public int xPosition;
+
+    /** The Y position of the entity. */
     public int yPosition;
+
+    /** The Z position of the entity. */
     public int zPosition;
+
+    /** The yaw of the entity. */
     public byte yaw;
+
+    /** The pitch of the entity. */
     public byte pitch;
+    public byte field_48169_h;
+
+    /** Indexed metadata for Mob, terminated by 0x7F */
     private DataWatcher metaData;
     private List receivedMetadata;
 
@@ -19,49 +35,62 @@ public class Packet24MobSpawn extends Packet
     {
     }
 
-    public Packet24MobSpawn(EntityLiving entityliving)
+    public Packet24MobSpawn(EntityLiving par1EntityLiving)
     {
-        entityId = entityliving.entityId;
-        type = (byte)EntityList.getEntityID(entityliving);
-        xPosition = MathHelper.floor_double(entityliving.posX * 32D);
-        yPosition = MathHelper.floor_double(entityliving.posY * 32D);
-        zPosition = MathHelper.floor_double(entityliving.posZ * 32D);
-        yaw = (byte)(int)((entityliving.rotationYaw * 256F) / 360F);
-        pitch = (byte)(int)((entityliving.rotationPitch * 256F) / 360F);
-        metaData = entityliving.getDataWatcher();
+        entityId = par1EntityLiving.entityId;
+        type = (byte)EntityList.getEntityID(par1EntityLiving);
+        xPosition = MathHelper.floor_double(par1EntityLiving.posX * 32D);
+        yPosition = MathHelper.floor_double(par1EntityLiving.posY * 32D);
+        zPosition = MathHelper.floor_double(par1EntityLiving.posZ * 32D);
+        yaw = (byte)(int)((par1EntityLiving.rotationYaw * 256F) / 360F);
+        pitch = (byte)(int)((par1EntityLiving.rotationPitch * 256F) / 360F);
+        field_48169_h = (byte)(int)((par1EntityLiving.prevRotationYaw2 * 256F) / 360F);
+        metaData = par1EntityLiving.getDataWatcher();
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        type = datainputstream.readByte() & 0xff;
-        xPosition = datainputstream.readInt();
-        yPosition = datainputstream.readInt();
-        zPosition = datainputstream.readInt();
-        yaw = datainputstream.readByte();
-        pitch = datainputstream.readByte();
-        receivedMetadata = DataWatcher.readWatchableObjects(datainputstream);
+        entityId = par1DataInputStream.readInt();
+        type = par1DataInputStream.readByte() & 0xff;
+        xPosition = par1DataInputStream.readInt();
+        yPosition = par1DataInputStream.readInt();
+        zPosition = par1DataInputStream.readInt();
+        yaw = par1DataInputStream.readByte();
+        pitch = par1DataInputStream.readByte();
+        field_48169_h = par1DataInputStream.readByte();
+        receivedMetadata = DataWatcher.readWatchableObjects(par1DataInputStream);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        dataoutputstream.writeByte(type & 0xff);
-        dataoutputstream.writeInt(xPosition);
-        dataoutputstream.writeInt(yPosition);
-        dataoutputstream.writeInt(zPosition);
-        dataoutputstream.writeByte(yaw);
-        dataoutputstream.writeByte(pitch);
-        metaData.writeWatchableObjects(dataoutputstream);
+        par1DataOutputStream.writeInt(entityId);
+        par1DataOutputStream.writeByte(type & 0xff);
+        par1DataOutputStream.writeInt(xPosition);
+        par1DataOutputStream.writeInt(yPosition);
+        par1DataOutputStream.writeInt(zPosition);
+        par1DataOutputStream.writeByte(yaw);
+        par1DataOutputStream.writeByte(pitch);
+        par1DataOutputStream.writeByte(field_48169_h);
+        metaData.writeWatchableObjects(par1DataOutputStream);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleMobSpawn(this);
+        par1NetHandler.handleMobSpawn(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 20;

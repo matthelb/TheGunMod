@@ -5,37 +5,37 @@ public class BiomeCacheBlock
     public float temperatureValues[];
     public float rainfallValues[];
     public BiomeGenBase biomes[];
+
+    /** The x coordinate of the BiomeCacheBlock. */
     public int xPosition;
+
+    /** The z coordinate of the BiomeCacheBlock. */
     public int zPosition;
+
+    /** The last time this BiomeCacheBlock was accessed, in milliseconds. */
     public long lastAccessTime;
+
+    /** The BiomeCache objevt that contains this BiomeCacheBlock */
     final BiomeCache biomeCache;
 
-    public BiomeCacheBlock(BiomeCache biomecache, int i, int j)
+    public BiomeCacheBlock(BiomeCache par1BiomeCache, int par2, int par3)
     {
-        biomeCache = biomecache;
-
+        biomeCache = par1BiomeCache;
         temperatureValues = new float[256];
         rainfallValues = new float[256];
         biomes = new BiomeGenBase[256];
-        xPosition = i;
-        zPosition = j;
-        BiomeCache.getChunkManager(biomecache).getTemperatures(temperatureValues, i << 4, j << 4, 16, 16);
-        BiomeCache.getChunkManager(biomecache).getRainfall(rainfallValues, i << 4, j << 4, 16, 16);
-        BiomeCache.getChunkManager(biomecache).getBiomeGenAt(biomes, i << 4, j << 4, 16, 16, false);
+        xPosition = par2;
+        zPosition = par3;
+        BiomeCache.getChunkManager(par1BiomeCache).getTemperatures(temperatureValues, par2 << 4, par3 << 4, 16, 16);
+        BiomeCache.getChunkManager(par1BiomeCache).getRainfall(rainfallValues, par2 << 4, par3 << 4, 16, 16);
+        BiomeCache.getChunkManager(par1BiomeCache).getBiomeGenAt(biomes, par2 << 4, par3 << 4, 16, 16, false);
     }
 
-    public BiomeGenBase getBiomeGenAt(int i, int j)
+    /**
+     * Returns the BiomeGenBase related to the x, z position from the cache block.
+     */
+    public BiomeGenBase getBiomeGenAt(int par1, int par2)
     {
-        return biomes[i & 0xf | (j & 0xf) << 4];
-    }
-
-    public float getTemperature(int i, int j)
-    {
-        return temperatureValues[i & 0xf | (j & 0xf) << 4];
-    }
-
-    public float getRainfall(int i, int j)
-    {
-        return rainfallValues[i & 0xf | (j & 0xf) << 4];
+        return biomes[par1 & 0xf | (par2 & 0xf) << 4];
     }
 }

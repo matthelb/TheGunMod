@@ -3,51 +3,35 @@ package net.minecraft.src;
 import java.util.List;
 import java.util.Random;
 
-public abstract class EntityAnimal extends EntityCreature
+public abstract class EntityAnimal extends EntityAgeable
 {
     private int inLove;
+
+    /**
+     * This is representation of a counter for reproduction progress. (Note that this is different from the inLove which
+     * represent being in Love-Mode)
+     */
     private int breeding;
 
-    public EntityAnimal(World world)
+    public EntityAnimal(World par1World)
     {
-        super(world);
+        super(par1World);
         breeding = 0;
     }
 
-    protected void entityInit()
-    {
-        super.entityInit();
-        dataWatcher.addObject(12, new Integer(0));
-    }
-
-    public int getDelay()
-    {
-        return dataWatcher.getWatchableObjectInt(12);
-    }
-
-    public void setDelay(int i)
-    {
-        dataWatcher.updateObject(12, Integer.valueOf(i));
-    }
-
+    /**
+     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+     * use this to react to sunlight and start to burn.
+     */
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        int i = getDelay();
-        if (i < 0)
-        {
-            i++;
-            setDelay(i);
-        }
-        else if (i > 0)
-        {
-            i--;
-            setDelay(i);
-        }
+
         if (inLove > 0)
         {
             inLove--;
             String s = "heart";
+
             if (inLove % 10 == 0)
             {
                 double d = rand.nextGaussian() * 0.02D;
@@ -62,29 +46,35 @@ public abstract class EntityAnimal extends EntityCreature
         }
     }
 
-    protected void attackEntity(Entity entity, float f)
+    /**
+     * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
+     */
+    protected void attackEntity(Entity par1Entity, float par2)
     {
-        if (entity instanceof EntityPlayer)
+        if (par1Entity instanceof EntityPlayer)
         {
-            if (f < 3F)
+            if (par2 < 3F)
             {
-                double d = entity.posX - posX;
-                double d1 = entity.posZ - posZ;
-                rotationYaw = (float)((Math.atan2(d1, d) * 180D) / 3.1415927410125732D) - 90F;
+                double d = par1Entity.posX - posX;
+                double d1 = par1Entity.posZ - posZ;
+                rotationYaw = (float)((Math.atan2(d1, d) * 180D) / Math.PI) - 90F;
                 hasAttacked = true;
             }
-            EntityPlayer entityplayer = (EntityPlayer)entity;
+
+            EntityPlayer entityplayer = (EntityPlayer)par1Entity;
+
             if (entityplayer.getCurrentEquippedItem() == null || !isWheat(entityplayer.getCurrentEquippedItem()))
             {
                 entityToAttack = null;
             }
         }
-        else if (entity instanceof EntityAnimal)
+        else if (par1Entity instanceof EntityAnimal)
         {
-            EntityAnimal entityanimal = (EntityAnimal)entity;
-            if (getDelay() > 0 && entityanimal.getDelay() < 0)
+            EntityAnimal entityanimal = (EntityAnimal)par1Entity;
+
+            if (func_48123_at() > 0 && entityanimal.func_48123_at() < 0)
             {
-                if ((double)f < 2.5D)
+                if ((double)par2 < 2.5D)
                 {
                     hasAttacked = true;
                 }
@@ -95,18 +85,21 @@ public abstract class EntityAnimal extends EntityCreature
                 {
                     entityanimal.entityToAttack = this;
                 }
-                if (entityanimal.entityToAttack == this && (double)f < 3.5D)
+
+                if (entityanimal.entityToAttack == this && (double)par2 < 3.5D)
                 {
                     entityanimal.inLove++;
                     inLove++;
                     breeding++;
+
                     if (breeding % 4 == 0)
                     {
                         worldObj.spawnParticle("heart", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, 0.0D, 0.0D, 0.0D);
                     }
+
                     if (breeding == 60)
                     {
-                        procreate((EntityAnimal)entity);
+                        procreate((EntityAnimal)par1Entity);
                     }
                 }
                 else
@@ -122,21 +115,27 @@ public abstract class EntityAnimal extends EntityCreature
         }
     }
 
-    private void procreate(EntityAnimal entityanimal)
+    /**
+     * Creates a baby animal according to the animal type of the target at the actual position and spawns 'love'
+     * particles.
+     */
+    private void procreate(EntityAnimal par1EntityAnimal)
     {
-        EntityAnimal entityanimal1 = spawnBabyAnimal(entityanimal);
-        if (entityanimal1 != null)
+        EntityAnimal entityanimal = spawnBabyAnimal(par1EntityAnimal);
+
+        if (entityanimal != null)
         {
-            setDelay(6000);
-            entityanimal.setDelay(6000);
+            func_48122_d(6000);
+            par1EntityAnimal.func_48122_d(6000);
             inLove = 0;
             breeding = 0;
             entityToAttack = null;
-            entityanimal.entityToAttack = null;
-            entityanimal.breeding = 0;
-            entityanimal.inLove = 0;
-            entityanimal1.setDelay(-24000);
-            entityanimal1.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
+            par1EntityAnimal.entityToAttack = null;
+            par1EntityAnimal.breeding = 0;
+            par1EntityAnimal.inLove = 0;
+            entityanimal.func_48122_d(-24000);
+            entityanimal.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
+
             for (int i = 0; i < 7; i++)
             {
                 double d = rand.nextGaussian() * 0.02D;
@@ -145,96 +144,129 @@ public abstract class EntityAnimal extends EntityCreature
                 worldObj.spawnParticle("heart", (posX + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, posY + 0.5D + (double)(rand.nextFloat() * height), (posZ + (double)(rand.nextFloat() * width * 2.0F)) - (double)width, d, d1, d2);
             }
 
-            worldObj.spawnEntityInWorld(entityanimal1);
+            worldObj.spawnEntityInWorld(entityanimal);
         }
     }
 
-    protected abstract EntityAnimal spawnBabyAnimal(EntityAnimal entityanimal);
+    /**
+     * [This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.]
+     */
+    public abstract EntityAnimal spawnBabyAnimal(EntityAnimal entityanimal);
 
+    /**
+     * Used when an entity is close enough to attack but cannot be seen (Creeper de-fuse)
+     */
     protected void attackBlockedEntity(Entity entity, float f)
     {
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         fleeingTick = 60;
         entityToAttack = null;
         inLove = 0;
-        return super.attackEntityFrom(damagesource, i);
+        return super.attackEntityFrom(par1DamageSource, par2);
     }
 
-    public float getBlockPathWeight(int i, int j, int k)
+    /**
+     * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block.
+     * Args: x, y, z
+     */
+    public float getBlockPathWeight(int par1, int par2, int par3)
     {
-        if (worldObj.getBlockId(i, j - 1, k) == Block.grass.blockID)
+        if (worldObj.getBlockId(par1, par2 - 1, par3) == Block.grass.blockID)
         {
             return 10F;
         }
         else
         {
-            return worldObj.getLightBrightness(i, j, k) - 0.5F;
+            return worldObj.getLightBrightness(par1, par2, par3) - 0.5F;
         }
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeEntityToNBT(nbttagcompound);
-        nbttagcompound.setInteger("Age", getDelay());
-        nbttagcompound.setInteger("InLove", inLove);
+        super.writeEntityToNBT(par1NBTTagCompound);
+        par1NBTTagCompound.setInteger("InLove", inLove);
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readEntityFromNBT(nbttagcompound);
-        setDelay(nbttagcompound.getInteger("Age"));
-        inLove = nbttagcompound.getInteger("InLove");
+        super.readEntityFromNBT(par1NBTTagCompound);
+        inLove = par1NBTTagCompound.getInteger("InLove");
     }
 
+    /**
+     * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
+     * (Animals, Spiders at day, peaceful PigZombies).
+     */
     protected Entity findPlayerToAttack()
     {
         if (fleeingTick > 0)
         {
             return null;
         }
+
         float f = 8F;
+
         if (inLove > 0)
         {
             List list = worldObj.getEntitiesWithinAABB(getClass(), boundingBox.expand(f, f, f));
+
             for (int i = 0; i < list.size(); i++)
             {
                 EntityAnimal entityanimal = (EntityAnimal)list.get(i);
+
                 if (entityanimal != this && entityanimal.inLove > 0)
                 {
                     return entityanimal;
                 }
             }
         }
-        else if (getDelay() == 0)
+        else if (func_48123_at() == 0)
         {
             List list1 = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityPlayer.class, boundingBox.expand(f, f, f));
+
             for (int j = 0; j < list1.size(); j++)
             {
                 EntityPlayer entityplayer = (EntityPlayer)list1.get(j);
+
                 if (entityplayer.getCurrentEquippedItem() != null && isWheat(entityplayer.getCurrentEquippedItem()))
                 {
                     return entityplayer;
                 }
             }
         }
-        else if (getDelay() > 0)
+        else if (func_48123_at() > 0)
         {
             List list2 = worldObj.getEntitiesWithinAABB(getClass(), boundingBox.expand(f, f, f));
+
             for (int k = 0; k < list2.size(); k++)
             {
                 EntityAnimal entityanimal1 = (EntityAnimal)list2.get(k);
-                if (entityanimal1 != this && entityanimal1.getDelay() < 0)
+
+                if (entityanimal1 != this && entityanimal1.func_48123_at() < 0)
                 {
                     return entityanimal1;
                 }
             }
         }
+
         return null;
     }
 
+    /**
+     * Checks if the entity's current position is a valid location to spawn this entity.
+     */
     public boolean getCanSpawnHere()
     {
         int i = MathHelper.floor_double(posX);
@@ -243,38 +275,57 @@ public abstract class EntityAnimal extends EntityCreature
         return worldObj.getBlockId(i, j - 1, k) == Block.grass.blockID && worldObj.getFullBlockLightValue(i, j, k) > 8 && super.getCanSpawnHere();
     }
 
+    /**
+     * Get number of ticks, at least during which the living entity will be silent
+     */
     public int getTalkInterval()
     {
         return 120;
     }
 
+    /**
+     * Determines if an entity can be despawned, used on idle far away entities
+     */
     protected boolean canDespawn()
     {
         return false;
     }
 
-    protected int getExperiencePoints(EntityPlayer entityplayer)
+    protected int getExperiencePoints(EntityPlayer par1EntityPlayer)
     {
         return 1 + worldObj.rand.nextInt(3);
     }
 
-    protected boolean isWheat(ItemStack itemstack)
+    /**
+     * Checks if the parameter is an wheat item.
+     */
+    public boolean isWheat(ItemStack par1ItemStack)
     {
-        return itemstack.itemID == Item.wheat.shiftedIndex;
+        return par1ItemStack.itemID == Item.wheat.shiftedIndex;
     }
 
-    public boolean interact(EntityPlayer entityplayer)
+    /**
+     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+     */
+    public boolean interact(EntityPlayer par1EntityPlayer)
     {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
-        if (itemstack != null && isWheat(itemstack) && getDelay() == 0)
+        ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
+
+        if (itemstack != null && isWheat(itemstack) && func_48123_at() == 0)
         {
-            itemstack.stackSize--;
-            if (itemstack.stackSize <= 0)
+            if (worldObj.getWorldInfo().getGameType() != 1)
             {
-                entityplayer.inventory.setInventorySlotContents(entityplayer.inventory.currentItem, null);
+                itemstack.stackSize--;
+
+                if (itemstack.stackSize <= 0)
+                {
+                    par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, null);
+                }
             }
+
             inLove = 600;
             entityToAttack = null;
+
             for (int i = 0; i < 7; i++)
             {
                 double d = rand.nextGaussian() * 0.02D;
@@ -287,12 +338,34 @@ public abstract class EntityAnimal extends EntityCreature
         }
         else
         {
-            return super.interact(entityplayer);
+            return super.interact(par1EntityPlayer);
         }
     }
 
-    public boolean isChild()
+    public boolean func_48136_o_()
     {
-        return getDelay() < 0;
+        return inLove > 0;
+    }
+
+    public void func_48134_p_()
+    {
+        inLove = 0;
+    }
+
+    public boolean func_48135_b(EntityAnimal par1EntityAnimal)
+    {
+        if (par1EntityAnimal == this)
+        {
+            return false;
+        }
+
+        if (par1EntityAnimal.getClass() != getClass())
+        {
+            return false;
+        }
+        else
+        {
+            return func_48136_o_() && par1EntityAnimal.func_48136_o_();
+        }
     }
 }

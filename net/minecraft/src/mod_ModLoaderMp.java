@@ -4,7 +4,7 @@ public class mod_ModLoaderMp extends BaseModMp
 {
     public String getVersion()
     {
-        return "1.0.0";
+        return "1.2.3v1";
     }
 
     public mod_ModLoaderMp()

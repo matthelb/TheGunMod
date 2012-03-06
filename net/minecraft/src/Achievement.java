@@ -4,62 +4,107 @@ import java.util.List;
 
 public class Achievement extends StatBase
 {
+    /**
+     * Is the column (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed.
+     */
     public final int displayColumn;
+
+    /**
+     * Is the row (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed.
+     */
     public final int displayRow;
+
+    /**
+     * Holds the parent achievement, that must be taken before this achievement is avaiable.
+     */
     public final Achievement parentAchievement;
+
+    /**
+     * Holds the description of the achievement, ready to be formatted and/or displayed.
+     */
     private final String achievementDescription;
+
+    /**
+     * Holds a string formatter for the achievement, some of then needs extra dynamic info - like the key used to open
+     * the inventory.
+     */
     private IStatStringFormat statStringFormatter;
+
+    /**
+     * Holds the ItemStack that will be used to draw the achievement into the GUI.
+     */
     public final ItemStack theItemStack;
+
+    /**
+     * Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to
+     * achieve.
+     */
     private boolean isSpecial;
 
-    public Achievement(int i, String s, int j, int k, Item item, Achievement achievement)
+    public Achievement(int par1, String par2Str, int par3, int par4, Item par5Item, Achievement par6Achievement)
     {
-        this(i, s, j, k, new ItemStack(item), achievement);
+        this(par1, par2Str, par3, par4, new ItemStack(par5Item), par6Achievement);
     }
 
-    public Achievement(int i, String s, int j, int k, Block block, Achievement achievement)
+    public Achievement(int par1, String par2Str, int par3, int par4, Block par5Block, Achievement par6Achievement)
     {
-        this(i, s, j, k, new ItemStack(block), achievement);
+        this(par1, par2Str, par3, par4, new ItemStack(par5Block), par6Achievement);
     }
 
-    public Achievement(int i, String s, int j, int k, ItemStack itemstack, Achievement achievement)
+    public Achievement(int par1, String par2Str, int par3, int par4, ItemStack par5ItemStack, Achievement par6Achievement)
     {
-        super(0x500000 + i, (new StringBuilder()).append("achievement.").append(s).toString());
-        theItemStack = itemstack;
-        achievementDescription = (new StringBuilder()).append("achievement.").append(s).append(".desc").toString();
-        displayColumn = j;
-        displayRow = k;
-        if (j < AchievementList.minDisplayColumn)
+        super(0x500000 + par1, (new StringBuilder()).append("achievement.").append(par2Str).toString());
+        theItemStack = par5ItemStack;
+        achievementDescription = (new StringBuilder()).append("achievement.").append(par2Str).append(".desc").toString();
+        displayColumn = par3;
+        displayRow = par4;
+
+        if (par3 < AchievementList.minDisplayColumn)
         {
-            AchievementList.minDisplayColumn = j;
+            AchievementList.minDisplayColumn = par3;
         }
-        if (k < AchievementList.minDisplayRow)
+
+        if (par4 < AchievementList.minDisplayRow)
         {
-            AchievementList.minDisplayRow = k;
+            AchievementList.minDisplayRow = par4;
         }
-        if (j > AchievementList.maxDisplayColumn)
+
+        if (par3 > AchievementList.maxDisplayColumn)
         {
-            AchievementList.maxDisplayColumn = j;
+            AchievementList.maxDisplayColumn = par3;
         }
-        if (k > AchievementList.maxDisplayRow)
+
+        if (par4 > AchievementList.maxDisplayRow)
         {
-            AchievementList.maxDisplayRow = k;
+            AchievementList.maxDisplayRow = par4;
         }
-        parentAchievement = achievement;
+
+        parentAchievement = par6Achievement;
     }
 
+    /**
+     * Indicates whether or not the given achievement or statistic is independent (i.e., lacks prerequisites for being
+     * update).
+     */
     public Achievement setIndependent()
     {
         isIndependent = true;
         return this;
     }
 
+    /**
+     * Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to
+     * achieve.
+     */
     public Achievement setSpecial()
     {
         isSpecial = true;
         return this;
     }
 
+    /**
+     * Adds the achievement on the internal list of registered achievements, also, it's check for duplicated id's.
+     */
     public Achievement registerAchievement()
     {
         super.registerStat();
@@ -67,11 +112,17 @@ public class Achievement extends StatBase
         return this;
     }
 
+    /**
+     * Returns whether or not the StatBase-derived class is a statistic (running counter) or an achievement (one-shot).
+     */
     public boolean isAchievement()
     {
         return true;
     }
 
+    /**
+     * Returns the fully description of the achievement - ready to be displayed on screen.
+     */
     public String getDescription()
     {
         if (statStringFormatter != null)
@@ -84,22 +135,36 @@ public class Achievement extends StatBase
         }
     }
 
-    public Achievement setStatStringFormatter(IStatStringFormat istatstringformat)
+    /**
+     * Defines a string formatter for the achievement.
+     */
+    public Achievement setStatStringFormatter(IStatStringFormat par1IStatStringFormat)
     {
-        statStringFormatter = istatstringformat;
+        statStringFormatter = par1IStatStringFormat;
         return this;
     }
 
+    /**
+     * Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to
+     * achieve.
+     */
     public boolean getSpecial()
     {
         return isSpecial;
     }
 
+    /**
+     * Register the stat into StatList.
+     */
     public StatBase registerStat()
     {
         return registerAchievement();
     }
 
+    /**
+     * Initializes the current stat as independent (i.e., lacking prerequisites for being updated) and returns the
+     * current instance.
+     */
     public StatBase initIndependentStat()
     {
         return setIndependent();

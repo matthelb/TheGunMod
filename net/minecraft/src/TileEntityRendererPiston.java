@@ -5,65 +5,73 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntityRendererPiston extends TileEntitySpecialRenderer
 {
-    private RenderBlocks field_31071_b;
+    /** instance of RenderBlocks used to draw the piston base and extension. */
+    private RenderBlocks blockRenderer;
 
     public TileEntityRendererPiston()
     {
     }
 
-    public void renderPiston(TileEntityPiston tileentitypiston, double d, double d1, double d2,
-            float f)
+    public void renderPiston(TileEntityPiston par1TileEntityPiston, double par2, double par4, double par6, float par8)
     {
-        Block block = Block.blocksList[tileentitypiston.getStoredBlockID()];
-        if (block != null && tileentitypiston.func_31008_a(f) < 1.0F)
+        Block block = Block.blocksList[par1TileEntityPiston.getStoredBlockID()];
+
+        if (block != null && par1TileEntityPiston.getProgress(par8) < 1.0F)
         {
             Tessellator tessellator = Tessellator.instance;
             bindTextureByName("/terrain.png");
             RenderHelper.disableStandardItemLighting();
-            GL11.glBlendFunc(770, 771);
-            GL11.glEnable(3042 /*GL_BLEND*/);
-            GL11.glDisable(2884 /*GL_CULL_FACE*/);
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            GL11.glEnable(GL11.GL_BLEND);
+            GL11.glDisable(GL11.GL_CULL_FACE);
+
             if (Minecraft.isAmbientOcclusionEnabled())
             {
-                GL11.glShadeModel(7425 /*GL_SMOOTH*/);
+                GL11.glShadeModel(GL11.GL_SMOOTH);
             }
             else
             {
-                GL11.glShadeModel(7424 /*GL_FLAT*/);
+                GL11.glShadeModel(GL11.GL_FLAT);
             }
+
             tessellator.startDrawingQuads();
-            tessellator.setTranslationD(((float)d - (float)tileentitypiston.xCoord) + tileentitypiston.func_31017_b(f), ((float)d1 - (float)tileentitypiston.yCoord) + tileentitypiston.func_31014_c(f), ((float)d2 - (float)tileentitypiston.zCoord) + tileentitypiston.func_31013_d(f));
+            tessellator.setTranslationD(((float)par2 - (float)par1TileEntityPiston.xCoord) + par1TileEntityPiston.getOffsetX(par8), ((float)par4 - (float)par1TileEntityPiston.yCoord) + par1TileEntityPiston.getOffsetY(par8), ((float)par6 - (float)par1TileEntityPiston.zCoord) + par1TileEntityPiston.getOffsetZ(par8));
             tessellator.setColorOpaque(1, 1, 1);
-            if (block == Block.pistonExtension && tileentitypiston.func_31008_a(f) < 0.5F)
+
+            if (block == Block.pistonExtension && par1TileEntityPiston.getProgress(par8) < 0.5F)
             {
-                field_31071_b.renderPistonExtensionAllFaces(block, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord, false);
+                blockRenderer.renderPistonExtensionAllFaces(block, par1TileEntityPiston.xCoord, par1TileEntityPiston.yCoord, par1TileEntityPiston.zCoord, false);
             }
-            else if (tileentitypiston.func_31012_k() && !tileentitypiston.isExtending())
+            else if (par1TileEntityPiston.shouldRenderHead() && !par1TileEntityPiston.isExtending())
             {
-                Block.pistonExtension.func_31052_a_(((BlockPistonBase)block).func_31040_i());
-                field_31071_b.renderPistonExtensionAllFaces(Block.pistonExtension, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord, tileentitypiston.func_31008_a(f) < 0.5F);
-                Block.pistonExtension.func_31051_a();
-                tessellator.setTranslationD((float)d - (float)tileentitypiston.xCoord, (float)d1 - (float)tileentitypiston.yCoord, (float)d2 - (float)tileentitypiston.zCoord);
-                field_31071_b.renderPistonBaseAllFaces(block, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord);
+                Block.pistonExtension.setHeadTexture(((BlockPistonBase)block).getPistonExtensionTexture());
+                blockRenderer.renderPistonExtensionAllFaces(Block.pistonExtension, par1TileEntityPiston.xCoord, par1TileEntityPiston.yCoord, par1TileEntityPiston.zCoord, par1TileEntityPiston.getProgress(par8) < 0.5F);
+                Block.pistonExtension.clearHeadTexture();
+                tessellator.setTranslationD((float)par2 - (float)par1TileEntityPiston.xCoord, (float)par4 - (float)par1TileEntityPiston.yCoord, (float)par6 - (float)par1TileEntityPiston.zCoord);
+                blockRenderer.renderPistonBaseAllFaces(block, par1TileEntityPiston.xCoord, par1TileEntityPiston.yCoord, par1TileEntityPiston.zCoord);
             }
             else
             {
-                field_31071_b.renderBlockAllFaces(block, tileentitypiston.xCoord, tileentitypiston.yCoord, tileentitypiston.zCoord);
+                blockRenderer.renderBlockAllFaces(block, par1TileEntityPiston.xCoord, par1TileEntityPiston.yCoord, par1TileEntityPiston.zCoord);
             }
+
             tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
             tessellator.draw();
             RenderHelper.enableStandardItemLighting();
         }
     }
 
-    public void func_31069_a(World world)
+    /**
+     * Called from TileEntityRenderer.cacheSpecialRenderInfo() to cache render-related references (currently world
+     * only). Used by TileEntityRendererPiston to create and store a RenderBlocks instance in the blockRenderer field.
+     */
+    public void cacheSpecialRenderInfo(World par1World)
     {
-        field_31071_b = new RenderBlocks(world);
+        blockRenderer = new RenderBlocks(par1World);
     }
 
-    public void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2,
-            float f)
+    public void renderTileEntityAt(TileEntity par1TileEntity, double par2, double par4, double par6, float par8)
     {
-        renderPiston((TileEntityPiston)tileentity, d, d1, d2, f);
+        renderPiston((TileEntityPiston)par1TileEntity, par2, par4, par6, par8);
     }
 }

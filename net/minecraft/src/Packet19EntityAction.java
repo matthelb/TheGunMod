@@ -4,38 +4,51 @@ import java.io.*;
 
 public class Packet19EntityAction extends Packet
 {
+    /** Player ID. */
     public int entityId;
+
+    /** 1=sneak, 2=normal */
     public int state;
 
     public Packet19EntityAction()
     {
     }
 
-    public Packet19EntityAction(Entity entity, int i)
+    public Packet19EntityAction(Entity par1Entity, int par2)
     {
-        entityId = entity.entityId;
-        state = i;
+        entityId = par1Entity.entityId;
+        state = par2;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        state = datainputstream.readByte();
+        entityId = par1DataInputStream.readInt();
+        state = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        dataoutputstream.writeByte(state);
+        par1DataOutputStream.writeInt(entityId);
+        par1DataOutputStream.writeByte(state);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleEntityAction(this);
+        par1NetHandler.handleEntityAction(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 5;

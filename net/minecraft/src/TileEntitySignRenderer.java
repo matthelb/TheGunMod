@@ -4,70 +4,78 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntitySignRenderer extends TileEntitySpecialRenderer
 {
-    private SignModel signModel;
+    /** The ModelSign instance used by the TileEntitySignRenderer */
+    private ModelSign modelSign;
 
     public TileEntitySignRenderer()
     {
-        signModel = new SignModel();
+        modelSign = new ModelSign();
     }
 
-    public void renderTileEntitySignAt(TileEntitySign tileentitysign, double d, double d1, double d2,
-            float f)
+    public void renderTileEntitySignAt(TileEntitySign par1TileEntitySign, double par2, double par4, double par6, float par8)
     {
-        Block block = tileentitysign.getBlockType();
+        Block block = par1TileEntitySign.getBlockType();
         GL11.glPushMatrix();
-        float f1 = 0.6666667F;
+        float f = 0.6666667F;
+
         if (block == Block.signPost)
         {
-            GL11.glTranslatef((float)d + 0.5F, (float)d1 + 0.75F * f1, (float)d2 + 0.5F);
-            float f2 = (float)(tileentitysign.getBlockMetadata() * 360) / 16F;
-            GL11.glRotatef(-f2, 0.0F, 1.0F, 0.0F);
-            signModel.signStick.showModel = true;
+            GL11.glTranslatef((float)par2 + 0.5F, (float)par4 + 0.75F * f, (float)par6 + 0.5F);
+            float f1 = (float)(par1TileEntitySign.getBlockMetadata() * 360) / 16F;
+            GL11.glRotatef(-f1, 0.0F, 1.0F, 0.0F);
+            modelSign.signStick.showModel = true;
         }
         else
         {
-            int i = tileentitysign.getBlockMetadata();
-            float f3 = 0.0F;
+            int i = par1TileEntitySign.getBlockMetadata();
+            float f2 = 0.0F;
+
             if (i == 2)
             {
-                f3 = 180F;
+                f2 = 180F;
             }
+
             if (i == 4)
             {
-                f3 = 90F;
+                f2 = 90F;
             }
+
             if (i == 5)
             {
-                f3 = -90F;
+                f2 = -90F;
             }
-            GL11.glTranslatef((float)d + 0.5F, (float)d1 + 0.75F * f1, (float)d2 + 0.5F);
-            GL11.glRotatef(-f3, 0.0F, 1.0F, 0.0F);
+
+            GL11.glTranslatef((float)par2 + 0.5F, (float)par4 + 0.75F * f, (float)par6 + 0.5F);
+            GL11.glRotatef(-f2, 0.0F, 1.0F, 0.0F);
             GL11.glTranslatef(0.0F, -0.3125F, -0.4375F);
-            signModel.signStick.showModel = false;
+            modelSign.signStick.showModel = false;
         }
+
         bindTextureByName("/item/sign.png");
         GL11.glPushMatrix();
-        GL11.glScalef(f1, -f1, -f1);
-        signModel.renderSign();
+        GL11.glScalef(f, -f, -f);
+        modelSign.renderSign();
         GL11.glPopMatrix();
         FontRenderer fontrenderer = getFontRenderer();
-        float f4 = 0.01666667F * f1;
-        GL11.glTranslatef(0.0F, 0.5F * f1, 0.07F * f1);
-        GL11.glScalef(f4, -f4, f4);
-        GL11.glNormal3f(0.0F, 0.0F, -1F * f4);
+        float f3 = 0.01666667F * f;
+        GL11.glTranslatef(0.0F, 0.5F * f, 0.07F * f);
+        GL11.glScalef(f3, -f3, f3);
+        GL11.glNormal3f(0.0F, 0.0F, -1F * f3);
         GL11.glDepthMask(false);
         int j = 0;
-        for (int k = 0; k < tileentitysign.signText.length; k++)
+
+        for (int k = 0; k < par1TileEntitySign.signText.length; k++)
         {
-            String s = tileentitysign.signText[k];
-            if (k == tileentitysign.lineBeingEdited)
+            String s = par1TileEntitySign.signText[k];
+
+            if (k == par1TileEntitySign.lineBeingEdited)
             {
                 s = (new StringBuilder()).append("> ").append(s).append(" <").toString();
-                fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, k * 10 - tileentitysign.signText.length * 5, j);
+                fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, k * 10 - par1TileEntitySign.signText.length * 5, j);
             }
             else
             {
-                fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, k * 10 - tileentitysign.signText.length * 5, j);
+                fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, k * 10 - par1TileEntitySign.signText.length * 5, j);
             }
         }
 
@@ -76,9 +84,8 @@ public class TileEntitySignRenderer extends TileEntitySpecialRenderer
         GL11.glPopMatrix();
     }
 
-    public void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2,
-            float f)
+    public void renderTileEntityAt(TileEntity par1TileEntity, double par2, double par4, double par6, float par8)
     {
-        renderTileEntitySignAt((TileEntitySign)tileentity, d, d1, d2, f);
+        renderTileEntitySignAt((TileEntitySign)par1TileEntity, par2, par4, par6, par8);
     }
 }

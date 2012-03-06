@@ -14,31 +14,41 @@ public class Packet61DoorChange extends Packet
     {
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        sfxID = datainputstream.readInt();
-        posX = datainputstream.readInt();
-        posY = datainputstream.readByte();
-        posZ = datainputstream.readInt();
-        auxData = datainputstream.readInt();
+        sfxID = par1DataInputStream.readInt();
+        posX = par1DataInputStream.readInt();
+        posY = par1DataInputStream.readByte() & 0xff;
+        posZ = par1DataInputStream.readInt();
+        auxData = par1DataInputStream.readInt();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(sfxID);
-        dataoutputstream.writeInt(posX);
-        dataoutputstream.writeByte(posY);
-        dataoutputstream.writeInt(posZ);
-        dataoutputstream.writeInt(auxData);
+        par1DataOutputStream.writeInt(sfxID);
+        par1DataOutputStream.writeInt(posX);
+        par1DataOutputStream.writeByte(posY & 0xff);
+        par1DataOutputStream.writeInt(posZ);
+        par1DataOutputStream.writeInt(auxData);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleDoorChange(this);
+        par1NetHandler.handleDoorChange(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 20;

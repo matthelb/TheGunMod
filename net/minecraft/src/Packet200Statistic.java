@@ -11,25 +11,35 @@ public class Packet200Statistic extends Packet
     {
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleStatistic(this);
+        par1NetHandler.handleStatistic(this);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        statisticId = datainputstream.readInt();
-        amount = datainputstream.readByte();
+        statisticId = par1DataInputStream.readInt();
+        amount = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(statisticId);
-        dataoutputstream.writeByte(amount);
+        par1DataOutputStream.writeInt(statisticId);
+        par1DataOutputStream.writeByte(amount);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 6;

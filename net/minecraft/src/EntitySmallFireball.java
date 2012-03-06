@@ -2,42 +2,42 @@ package net.minecraft.src;
 
 public class EntitySmallFireball extends EntityFireball
 {
-    public EntitySmallFireball(World world)
+    public EntitySmallFireball(World par1World)
     {
-        super(world);
+        super(par1World);
         setSize(0.3125F, 0.3125F);
     }
 
-    public EntitySmallFireball(World world, EntityLiving entityliving, double d, double d1, double d2)
+    public EntitySmallFireball(World par1World, EntityLiving par2EntityLiving, double par3, double par5, double par7)
     {
-        super(world, entityliving, d, d1, d2);
+        super(par1World, par2EntityLiving, par3, par5, par7);
         setSize(0.3125F, 0.3125F);
     }
 
-    public EntitySmallFireball(World world, double d, double d1, double d2,
-            double d3, double d4, double d5)
+    public EntitySmallFireball(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
-        super(world, d, d1, d2, d3, d4, d5);
+        super(par1World, par2, par4, par6, par8, par10, par12);
         setSize(0.3125F, 0.3125F);
     }
 
-    protected void func_40071_a(MovingObjectPosition movingobjectposition)
+    protected void func_40071_a(MovingObjectPosition par1MovingObjectPosition)
     {
         if (!worldObj.isRemote)
         {
-            if (movingobjectposition.entityHit != null)
+            if (par1MovingObjectPosition.entityHit != null)
             {
-                if (!movingobjectposition.entityHit.isImmuneToFire() && movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, shootingEntity), 5))
+                if (!par1MovingObjectPosition.entityHit.isImmuneToFire() && par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, shootingEntity), 5))
                 {
-                    movingobjectposition.entityHit.setFire(5);
+                    par1MovingObjectPosition.entityHit.setFire(5);
                 }
             }
             else
             {
-                int i = movingobjectposition.blockX;
-                int j = movingobjectposition.blockY;
-                int k = movingobjectposition.blockZ;
-                switch (movingobjectposition.sideHit)
+                int i = par1MovingObjectPosition.blockX;
+                int j = par1MovingObjectPosition.blockY;
+                int k = par1MovingObjectPosition.blockZ;
+
+                switch (par1MovingObjectPosition.sideHit)
                 {
                     case 1:
                         j++;
@@ -63,21 +63,29 @@ public class EntitySmallFireball extends EntityFireball
                         i--;
                         break;
                 }
+
                 if (worldObj.isAirBlock(i, j, k))
                 {
                     worldObj.setBlockWithNotify(i, j, k, Block.fire.blockID);
                 }
             }
+
             setEntityDead();
         }
     }
 
+    /**
+     * Returns true if other Entities should be prevented from moving through this Entity.
+     */
     public boolean canBeCollidedWith()
     {
         return false;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         return false;
     }

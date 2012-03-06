@@ -9,17 +9,23 @@ import org.w3c.dom.*;
 
 public class ThreadDownloadResources extends Thread
 {
+    /** The folder to store the resources in. */
     public File resourcesFolder;
+
+    /** A reference to the Minecraft object. */
     private Minecraft mc;
+
+    /** Set to true when Minecraft is closing down. */
     private boolean closing;
 
-    public ThreadDownloadResources(File file, Minecraft minecraft)
+    public ThreadDownloadResources(File par1File, Minecraft par2Minecraft)
     {
         closing = false;
-        mc = minecraft;
+        mc = par2Minecraft;
         setName("Resource download thread");
         setDaemon(true);
-        resourcesFolder = new File(file, "resources/");
+        resourcesFolder = new File(par1File, "resources/");
+
         if (!resourcesFolder.exists() && !resourcesFolder.mkdirs())
         {
             throw new RuntimeException((new StringBuilder()).append("The working directory could not be created: ").append(resourcesFolder).toString());
@@ -39,23 +45,29 @@ public class ThreadDownloadResources extends Thread
             DocumentBuilder documentbuilder = documentbuilderfactory.newDocumentBuilder();
             Document document = documentbuilder.parse(url.openStream());
             NodeList nodelist = document.getElementsByTagName("Contents");
+
             for (int i = 0; i < 2; i++)
             {
                 for (int j = 0; j < nodelist.getLength(); j++)
                 {
                     Node node = nodelist.item(j);
+
                     if (node.getNodeType() != 1)
                     {
                         continue;
                     }
+
                     Element element = (Element)node;
                     String s = ((Element)element.getElementsByTagName("Key").item(0)).getChildNodes().item(0).getNodeValue();
                     long l = Long.parseLong(((Element)element.getElementsByTagName("Size").item(0)).getChildNodes().item(0).getNodeValue());
+
                     if (l <= 0L)
                     {
                         continue;
                     }
+
                     downloadAndInstallResource(url, s, l, i);
+
                     if (closing)
                     {
                         return;
@@ -70,61 +82,77 @@ public class ThreadDownloadResources extends Thread
         }
     }
 
+    /**
+     * Reloads the resource folder and passes the resources to Minecraft to install.
+     */
     public void reloadResources()
     {
         loadResource(resourcesFolder, "");
     }
 
-    private void loadResource(File file, String s)
+    /**
+     * Loads a resource and passes it to Minecraft to install.
+     */
+    private void loadResource(File par1File, String par2Str)
     {
-        File afile[] = file.listFiles();
+        File afile[] = par1File.listFiles();
+
         for (int i = 0; i < afile.length; i++)
         {
             if (afile[i].isDirectory())
             {
-                loadResource(afile[i], (new StringBuilder()).append(s).append(afile[i].getName()).append("/").toString());
+                loadResource(afile[i], (new StringBuilder()).append(par2Str).append(afile[i].getName()).append("/").toString());
                 continue;
             }
+
             try
             {
-                mc.installResource((new StringBuilder()).append(s).append(afile[i].getName()).toString(), afile[i]);
+                mc.installResource((new StringBuilder()).append(par2Str).append(afile[i].getName()).toString(), afile[i]);
             }
             catch (Exception exception)
             {
-                System.out.println((new StringBuilder()).append("Failed to add ").append(s).append(afile[i].getName()).toString());
+                System.out.println((new StringBuilder()).append("Failed to add ").append(par2Str).append(afile[i].getName()).toString());
             }
         }
     }
 
-    private void downloadAndInstallResource(URL url, String s, long l, int i)
+    /**
+     * Downloads the resource and saves it to disk then installs it.
+     */
+    private void downloadAndInstallResource(URL par1URL, String par2Str, long par3, int par5)
     {
         try
         {
-            int j = s.indexOf("/");
-            String s1 = s.substring(0, j);
-            if (s1.equals("sound") || s1.equals("newsound"))
+            int i = par2Str.indexOf("/");
+            String s = par2Str.substring(0, i);
+
+            if (s.equals("sound") || s.equals("newsound"))
             {
-                if (i != 0)
+                if (par5 != 0)
                 {
                     return;
                 }
             }
-            else if (i != 1)
+            else if (par5 != 1)
             {
                 return;
             }
-            File file = new File(resourcesFolder, s);
-            if (!file.exists() || file.length() != l)
+
+            File file = new File(resourcesFolder, par2Str);
+
+            if (!file.exists() || file.length() != par3)
             {
                 file.getParentFile().mkdirs();
-                String s2 = s.replaceAll(" ", "%20");
-                downloadResource(new URL(url, s2), file, l);
+                String s1 = par2Str.replaceAll(" ", "%20");
+                downloadResource(new URL(par1URL, s1), file, par3);
+
                 if (closing)
                 {
                     return;
                 }
             }
-            mc.installResource(s, file);
+
+            mc.installResource(par2Str, file);
         }
         catch (Exception exception)
         {
@@ -132,15 +160,19 @@ public class ThreadDownloadResources extends Thread
         }
     }
 
-    private void downloadResource(URL url, File file, long l)
-    throws IOException
+    /**
+     * Downloads the resource and saves it to disk.
+     */
+    private void downloadResource(URL par1URL, File par2File, long par3) throws IOException
     {
         byte abyte0[] = new byte[4096];
-        DataInputStream datainputstream = new DataInputStream(url.openStream());
-        DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(file));
+        DataInputStream datainputstream = new DataInputStream(par1URL.openStream());
+        DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(par2File));
+
         for (int i = 0; (i = datainputstream.read(abyte0)) >= 0;)
         {
             dataoutputstream.write(abyte0, 0, i);
+
             if (closing)
             {
                 return;
@@ -151,6 +183,9 @@ public class ThreadDownloadResources extends Thread
         dataoutputstream.close();
     }
 
+    /**
+     * Called when Minecraft is closing down.
+     */
     public void closeMinecraft()
     {
         closing = true;

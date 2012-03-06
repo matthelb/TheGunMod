@@ -6,6 +6,9 @@ import org.lwjgl.opengl.GL11;
 
 public class TileEntityMobSpawnerRenderer extends TileEntitySpecialRenderer
 {
+    /**
+     * Hash map of the entities that the mob spawner has rendered/rendering spinning inside of them
+     */
     private Map entityHashMap;
 
     public TileEntityMobSpawnerRenderer()
@@ -13,35 +16,36 @@ public class TileEntityMobSpawnerRenderer extends TileEntitySpecialRenderer
         entityHashMap = new HashMap();
     }
 
-    public void renderTileEntityMobSpawner(TileEntityMobSpawner tileentitymobspawner, double d, double d1, double d2,
-            float f)
+    public void renderTileEntityMobSpawner(TileEntityMobSpawner par1TileEntityMobSpawner, double par2, double par4, double par6, float par8)
     {
         GL11.glPushMatrix();
-        GL11.glTranslatef((float)d + 0.5F, (float)d1, (float)d2 + 0.5F);
-        Entity entity = (Entity)entityHashMap.get(tileentitymobspawner.getMobID());
+        GL11.glTranslatef((float)par2 + 0.5F, (float)par4, (float)par6 + 0.5F);
+        Entity entity = (Entity)entityHashMap.get(par1TileEntityMobSpawner.getMobID());
+
         if (entity == null)
         {
-            entity = EntityList.createEntityInWorld(tileentitymobspawner.getMobID(), null);
-            entityHashMap.put(tileentitymobspawner.getMobID(), entity);
+            entity = EntityList.createEntityInWorld(par1TileEntityMobSpawner.getMobID(), null);
+            entityHashMap.put(par1TileEntityMobSpawner.getMobID(), entity);
         }
+
         if (entity != null)
         {
-            entity.setWorld(tileentitymobspawner.worldObj);
-            float f1 = 0.4375F;
+            entity.setWorld(par1TileEntityMobSpawner.worldObj);
+            float f = 0.4375F;
             GL11.glTranslatef(0.0F, 0.4F, 0.0F);
-            GL11.glRotatef((float)(tileentitymobspawner.yaw2 + (tileentitymobspawner.yaw - tileentitymobspawner.yaw2) * (double)f) * 10F, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef((float)(par1TileEntityMobSpawner.yaw2 + (par1TileEntityMobSpawner.yaw - par1TileEntityMobSpawner.yaw2) * (double)par8) * 10F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(-30F, 1.0F, 0.0F, 0.0F);
             GL11.glTranslatef(0.0F, -0.4F, 0.0F);
-            GL11.glScalef(f1, f1, f1);
-            entity.setLocationAndAngles(d, d1, d2, 0.0F, 0.0F);
-            RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, f);
+            GL11.glScalef(f, f, f);
+            entity.setLocationAndAngles(par2, par4, par6, 0.0F, 0.0F);
+            RenderManager.instance.renderEntityWithPosYaw(entity, 0.0D, 0.0D, 0.0D, 0.0F, par8);
         }
+
         GL11.glPopMatrix();
     }
 
-    public void renderTileEntityAt(TileEntity tileentity, double d, double d1, double d2,
-            float f)
+    public void renderTileEntityAt(TileEntity par1TileEntity, double par2, double par4, double par6, float par8)
     {
-        renderTileEntityMobSpawner((TileEntityMobSpawner)tileentity, d, d1, d2, f);
+        renderTileEntityMobSpawner((TileEntityMobSpawner)par1TileEntity, par2, par4, par6, par8);
     }
 }

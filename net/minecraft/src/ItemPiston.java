@@ -2,12 +2,15 @@ package net.minecraft.src;
 
 public class ItemPiston extends ItemBlock
 {
-    public ItemPiston(int i)
+    public ItemPiston(int par1)
     {
-        super(i);
+        super(par1);
     }
 
-    public int getMetadata(int i)
+    /**
+     * Returns the metadata of the block which this Item (ItemBlock) can place
+     */
+    public int getMetadata(int par1)
     {
         return 7;
     }

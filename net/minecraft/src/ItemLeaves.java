@@ -2,30 +2,37 @@ package net.minecraft.src;
 
 public class ItemLeaves extends ItemBlock
 {
-    public ItemLeaves(int i)
+    public ItemLeaves(int par1)
     {
-        super(i);
+        super(par1);
         setMaxDamage(0);
         setHasSubtypes(true);
     }
 
-    public int getMetadata(int i)
+    /**
+     * Returns the metadata of the block which this Item (ItemBlock) can place
+     */
+    public int getMetadata(int par1)
     {
-        return i | 4;
+        return par1 | 4;
     }
 
-    public int getIconFromDamage(int i)
+    /**
+     * Gets an icon index based on an item's damage value
+     */
+    public int getIconFromDamage(int par1)
     {
-        return Block.leaves.getBlockTextureFromSideAndMetadata(0, i);
+        return Block.leaves.getBlockTextureFromSideAndMetadata(0, par1);
     }
 
-    public int getColorFromDamage(int i, int j)
+    public int getColorFromDamage(int par1, int par2)
     {
-        if ((i & 1) == 1)
+        if ((par1 & 1) == 1)
         {
             return ColorizerFoliage.getFoliageColorPine();
         }
-        if ((i & 2) == 2)
+
+        if ((par1 & 2) == 2)
         {
             return ColorizerFoliage.getFoliageColorBirch();
         }

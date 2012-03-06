@@ -4,9 +4,9 @@ class ThreadRunIsoClient extends Thread
 {
     final CanvasIsomPreview field_1197_a;
 
-    ThreadRunIsoClient(CanvasIsomPreview canvasisompreview)
+    ThreadRunIsoClient(CanvasIsomPreview par1CanvasIsomPreview)
     {
-        field_1197_a = canvasisompreview;
+        field_1197_a = par1CanvasIsomPreview;
     }
 
     public void run()
@@ -14,6 +14,7 @@ class ThreadRunIsoClient extends Thread
         while (CanvasIsomPreview.isRunning(field_1197_a))
         {
             field_1197_a.render();
+
             try
             {
                 Thread.sleep(1L);

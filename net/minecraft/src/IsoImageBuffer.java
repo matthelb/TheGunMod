@@ -13,28 +13,28 @@ public class IsoImageBuffer
     public int lastVisible;
     public boolean addedToRenderQueue;
 
-    public IsoImageBuffer(World world, int i, int j)
+    public IsoImageBuffer(World par1World, int par2, int par3)
     {
         rendered = false;
         noContent = false;
         lastVisible = 0;
         addedToRenderQueue = false;
-        level = world;
-        init(i, j);
+        level = par1World;
+        init(par2, par3);
     }
 
-    public void init(int i, int j)
+    public void init(int par1, int par2)
     {
         rendered = false;
-        x = i;
-        y = j;
+        x = par1;
+        y = par2;
         lastVisible = 0;
         addedToRenderQueue = false;
     }
 
-    public void init(World world, int i, int j)
+    public void init(World par1World, int par2, int par3)
     {
-        level = world;
-        init(i, j);
+        level = par1World;
+        init(par2, par3);
     }
 }

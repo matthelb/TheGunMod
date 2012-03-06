@@ -2,24 +2,32 @@ package net.minecraft.src;
 
 public class TileEntityRecordPlayer extends TileEntity
 {
+    /** ID of record which is in Jukebox */
     public int record;
 
     public TileEntityRecordPlayer()
     {
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Reads a tile entity from NBT.
+     */
+    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readFromNBT(nbttagcompound);
-        record = nbttagcompound.getInteger("Record");
+        super.readFromNBT(par1NBTTagCompound);
+        record = par1NBTTagCompound.getInteger("Record");
     }
 
-    public void writeToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Writes a tile entity to NBT.
+     */
+    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeToNBT(nbttagcompound);
+        super.writeToNBT(par1NBTTagCompound);
+
         if (record > 0)
         {
-            nbttagcompound.setInteger("Record", record);
+            par1NBTTagCompound.setInteger("Record", record);
         }
     }
 }

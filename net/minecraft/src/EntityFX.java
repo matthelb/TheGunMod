@@ -11,31 +11,40 @@ public class EntityFX extends Entity
     protected int particleMaxAge;
     protected float particleScale;
     protected float particleGravity;
+
+    /** The red amount of color. Used as a percentage, 1.0 = 255 and 0.0 = 0. */
     protected float particleRed;
+
+    /**
+     * The green amount of color. Used as a percentage, 1.0 = 255 and 0.0 = 0.
+     */
     protected float particleGreen;
+
+    /**
+     * The blue amount of color. Used as a percentage, 1.0 = 255 and 0.0 = 0.
+     */
     protected float particleBlue;
     public static double interpPosX;
     public static double interpPosY;
     public static double interpPosZ;
 
-    public EntityFX(World world, double d, double d1, double d2,
-            double d3, double d4, double d5)
+    public EntityFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
-        super(world);
+        super(par1World);
         particleAge = 0;
         particleMaxAge = 0;
         setSize(0.2F, 0.2F);
         yOffset = height / 2.0F;
-        setPosition(d, d1, d2);
+        setPosition(par2, par4, par6);
         particleRed = particleGreen = particleBlue = 1.0F;
-        motionX = d3 + (double)((float)(Math.random() * 2D - 1.0D) * 0.4F);
-        motionY = d4 + (double)((float)(Math.random() * 2D - 1.0D) * 0.4F);
-        motionZ = d5 + (double)((float)(Math.random() * 2D - 1.0D) * 0.4F);
+        motionX = par8 + (double)((float)(Math.random() * 2D - 1.0D) * 0.4F);
+        motionY = par10 + (double)((float)(Math.random() * 2D - 1.0D) * 0.4F);
+        motionZ = par12 + (double)((float)(Math.random() * 2D - 1.0D) * 0.4F);
         float f = (float)(Math.random() + Math.random() + 1.0D) * 0.15F;
         float f1 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
-        motionX = (motionX / (double)f1) * (double)f * 0.40000000596046448D;
-        motionY = (motionY / (double)f1) * (double)f * 0.40000000596046448D + 0.10000000149011612D;
-        motionZ = (motionZ / (double)f1) * (double)f * 0.40000000596046448D;
+        motionX = (motionX / (double)f1) * (double)f * 0.4D;
+        motionY = (motionY / (double)f1) * (double)f * 0.4D + 0.1D;
+        motionZ = (motionZ / (double)f1) * (double)f * 0.4D;
         particleTextureJitterX = rand.nextFloat() * 3F;
         particleTextureJitterY = rand.nextFloat() * 3F;
         particleScale = (rand.nextFloat() * 0.5F + 0.5F) * 2.0F;
@@ -43,26 +52,26 @@ public class EntityFX extends Entity
         particleAge = 0;
     }
 
-    public EntityFX multiplyVelocity(float f)
+    public EntityFX multiplyVelocity(float par1)
     {
-        motionX *= f;
-        motionY = (motionY - 0.10000000149011612D) * (double)f + 0.10000000149011612D;
-        motionZ *= f;
+        motionX *= par1;
+        motionY = (motionY - 0.1D) * (double)par1 + 0.1D;
+        motionZ *= par1;
         return this;
     }
 
-    public EntityFX func_405_d(float f)
+    public EntityFX func_405_d(float par1)
     {
-        setSize(0.2F * f, 0.2F * f);
-        particleScale *= f;
+        setSize(0.2F * par1, 0.2F * par1);
+        particleScale *= par1;
         return this;
     }
 
-    public void func_40097_b(float f, float f1, float f2)
+    public void func_40097_b(float par1, float par2, float par3)
     {
-        particleRed = f;
-        particleGreen = f1;
-        particleBlue = f2;
+        particleRed = par1;
+        particleGreen = par2;
+        particleBlue = par3;
     }
 
     public float func_40098_n()
@@ -80,6 +89,10 @@ public class EntityFX extends Entity
         return particleBlue;
     }
 
+    /**
+     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+     * prevent them from trampling crops
+     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -89,43 +102,49 @@ public class EntityFX extends Entity
     {
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
+
         if (particleAge++ >= particleMaxAge)
         {
             setEntityDead();
         }
-        motionY -= 0.040000000000000001D * (double)particleGravity;
+
+        motionY -= 0.04D * (double)particleGravity;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.98000001907348633D;
-        motionY *= 0.98000001907348633D;
-        motionZ *= 0.98000001907348633D;
+        motionX *= 0.98D;
+        motionY *= 0.98D;
+        motionZ *= 0.98D;
+
         if (onGround)
         {
-            motionX *= 0.69999998807907104D;
-            motionZ *= 0.69999998807907104D;
+            motionX *= 0.7D;
+            motionZ *= 0.7D;
         }
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        float f6 = (float)(particleTextureIndex % 16) / 16F;
-        float f7 = f6 + 0.0624375F;
-        float f8 = (float)(particleTextureIndex / 16) / 16F;
-        float f9 = f8 + 0.0624375F;
-        float f10 = 0.1F * particleScale;
-        float f11 = (float)((prevPosX + (posX - prevPosX) * (double)f) - interpPosX);
-        float f12 = (float)((prevPosY + (posY - prevPosY) * (double)f) - interpPosY);
-        float f13 = (float)((prevPosZ + (posZ - prevPosZ) * (double)f) - interpPosZ);
-        float f14 = 1.0F;
-        tessellator.setColorOpaque_F(particleRed * f14, particleGreen * f14, particleBlue * f14);
-        tessellator.addVertexWithUV(f11 - f1 * f10 - f4 * f10, f12 - f2 * f10, f13 - f3 * f10 - f5 * f10, f7, f9);
-        tessellator.addVertexWithUV((f11 - f1 * f10) + f4 * f10, f12 + f2 * f10, (f13 - f3 * f10) + f5 * f10, f7, f8);
-        tessellator.addVertexWithUV(f11 + f1 * f10 + f4 * f10, f12 + f2 * f10, f13 + f3 * f10 + f5 * f10, f6, f8);
-        tessellator.addVertexWithUV((f11 + f1 * f10) - f4 * f10, f12 - f2 * f10, (f13 + f3 * f10) - f5 * f10, f6, f9);
+        float f = (float)(particleTextureIndex % 16) / 16F;
+        float f1 = f + 0.0624375F;
+        float f2 = (float)(particleTextureIndex / 16) / 16F;
+        float f3 = f2 + 0.0624375F;
+        float f4 = 0.1F * particleScale;
+        float f5 = (float)((prevPosX + (posX - prevPosX) * (double)par2) - interpPosX);
+        float f6 = (float)((prevPosY + (posY - prevPosY) * (double)par2) - interpPosY);
+        float f7 = (float)((prevPosZ + (posZ - prevPosZ) * (double)par2) - interpPosZ);
+        float f8 = 1.0F;
+        par1Tessellator.setColorOpaque_F(particleRed * f8, particleGreen * f8, particleBlue * f8);
+        par1Tessellator.addVertexWithUV(f5 - par3 * f4 - par6 * f4, f6 - par4 * f4, f7 - par5 * f4 - par7 * f4, f1, f3);
+        par1Tessellator.addVertexWithUV((f5 - par3 * f4) + par6 * f4, f6 + par4 * f4, (f7 - par5 * f4) + par7 * f4, f1, f2);
+        par1Tessellator.addVertexWithUV(f5 + par3 * f4 + par6 * f4, f6 + par4 * f4, f7 + par5 * f4 + par7 * f4, f, f2);
+        par1Tessellator.addVertexWithUV((f5 + par3 * f4) - par6 * f4, f6 - par4 * f4, (f7 + par5 * f4) - par7 * f4, f, f3);
     }
 
     public int getFXLayer()
@@ -133,21 +152,35 @@ public class EntityFX extends Entity
         return 0;
     }
 
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {
     }
 
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
     public void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
     }
 
-    public void setParticleTextureIndex(int i)
+    /**
+     * Public method to set private field particleTextureIndex.
+     */
+    public void setParticleTextureIndex(int par1)
     {
-        particleTextureIndex = i;
+        particleTextureIndex = par1;
     }
 
     public int getParticleTextureIndex()
     {
         return particleTextureIndex;
+    }
+
+    public boolean func_48080_j()
+    {
+        return false;
     }
 }

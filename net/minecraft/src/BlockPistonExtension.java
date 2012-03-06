@@ -5,56 +5,67 @@ import java.util.Random;
 
 public class BlockPistonExtension extends Block
 {
-    private int field_31053_a;
+    /** The texture for the 'head' of the piston. Sticky or normal. */
+    private int headTexture;
 
-    public BlockPistonExtension(int i, int j)
+    public BlockPistonExtension(int par1, int par2)
     {
-        super(i, j, Material.piston);
-        field_31053_a = -1;
+        super(par1, par2, Material.piston);
+        headTexture = -1;
         setStepSound(soundStoneFootstep);
         setHardness(0.5F);
     }
 
-    public void func_31052_a_(int i)
+    public void setHeadTexture(int par1)
     {
-        field_31053_a = i;
+        headTexture = par1;
     }
 
-    public void func_31051_a()
+    public void clearHeadTexture()
     {
-        field_31053_a = -1;
+        headTexture = -1;
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
-        super.onBlockRemoval(world, i, j, k);
-        int l = world.getBlockMetadata(i, j, k);
-        int j1 = Facing.faceToSide[getDirectionMeta(l)];
-        i += Facing.offsetsXForSide[j1];
-        j += Facing.offsetsYForSide[j1];
-        k += Facing.offsetsZForSide[j1];
-        int k1 = world.getBlockId(i, j, k);
-        if (k1 == Block.pistonBase.blockID || k1 == Block.pistonStickyBase.blockID)
+        super.onBlockRemoval(par1World, par2, par3, par4);
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int k = Facing.faceToSide[getDirectionMeta(i)];
+        par2 += Facing.offsetsXForSide[k];
+        par3 += Facing.offsetsYForSide[k];
+        par4 += Facing.offsetsZForSide[k];
+        int l = par1World.getBlockId(par2, par3, par4);
+
+        if (l == Block.pistonBase.blockID || l == Block.pistonStickyBase.blockID)
         {
-            int i1 = world.getBlockMetadata(i, j, k);
-            if (BlockPistonBase.isExtended(i1))
+            int j = par1World.getBlockMetadata(par2, par3, par4);
+
+            if (BlockPistonBase.isExtended(j))
             {
-                Block.blocksList[k1].dropBlockAsItem(world, i, j, k, i1, 0);
-                world.setBlockWithNotify(i, j, k, 0);
+                Block.blocksList[l].dropBlockAsItem(par1World, par2, par3, par4, j, 0);
+                par1World.setBlockWithNotify(par2, par3, par4, 0);
             }
         }
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        int k = getDirectionMeta(j);
-        if (i == k)
+        int i = getDirectionMeta(par2);
+
+        if (par1 == i)
         {
-            if (field_31053_a >= 0)
+            if (headTexture >= 0)
             {
-                return field_31053_a;
+                return headTexture;
             }
-            if ((j & 8) != 0)
+
+            if ((par2 & 8) != 0)
             {
                 return blockIndexInTexture - 1;
             }
@@ -63,93 +74,120 @@ public class BlockPistonExtension extends Block
                 return blockIndexInTexture;
             }
         }
-        return i != Facing.faceToSide[k] ? 108 : 107;
+
+        return par1 != Facing.faceToSide[i] ? 108 : 107;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 17;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int i)
     {
         return false;
     }
 
-    public boolean canPlaceBlockOnSide(World world, int i, int j, int k, int l)
+    public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int i, int j)
     {
         return false;
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 0;
     }
 
-    public void getCollidingBoundingBoxes(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist)
+    /**
+     * Adds to the supplied array any colliding bounding boxes with the passed in bounding box. Args: world, x, y, z,
+     * axisAlignedBB, arrayList
+     */
+    public void getCollidingBoundingBoxes(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, ArrayList par6ArrayList)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        switch (getDirectionMeta(l))
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+
+        switch (getDirectionMeta(i))
         {
             case 0:
                 setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 setBlockBounds(0.375F, 0.25F, 0.375F, 0.625F, 1.0F, 0.625F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 break;
 
             case 1:
                 setBlockBounds(0.0F, 0.75F, 0.0F, 1.0F, 1.0F, 1.0F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 setBlockBounds(0.375F, 0.0F, 0.375F, 0.625F, 0.75F, 0.625F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 break;
 
             case 2:
                 setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.25F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 setBlockBounds(0.25F, 0.375F, 0.25F, 0.75F, 0.625F, 1.0F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 break;
 
             case 3:
                 setBlockBounds(0.0F, 0.0F, 0.75F, 1.0F, 1.0F, 1.0F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 setBlockBounds(0.25F, 0.375F, 0.0F, 0.75F, 0.625F, 0.75F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 break;
 
             case 4:
                 setBlockBounds(0.0F, 0.0F, 0.0F, 0.25F, 1.0F, 1.0F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 setBlockBounds(0.375F, 0.25F, 0.25F, 0.625F, 0.75F, 1.0F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 break;
 
             case 5:
                 setBlockBounds(0.75F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 setBlockBounds(0.0F, 0.375F, 0.25F, 0.75F, 0.625F, 0.75F);
-                super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+                super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
                 break;
         }
+
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        int l = iblockaccess.getBlockMetadata(i, j, k);
-        switch (getDirectionMeta(l))
+        int i = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
+
+        switch (getDirectionMeta(i))
         {
             case 0:
                 setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.25F, 1.0F);
@@ -177,22 +215,27 @@ public class BlockPistonExtension extends Block
         }
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        int i1 = getDirectionMeta(world.getBlockMetadata(i, j, k));
-        int j1 = world.getBlockId(i - Facing.offsetsXForSide[i1], j - Facing.offsetsYForSide[i1], k - Facing.offsetsZForSide[i1]);
-        if (j1 != Block.pistonBase.blockID && j1 != Block.pistonStickyBase.blockID)
+        int i = getDirectionMeta(par1World.getBlockMetadata(par2, par3, par4));
+        int j = par1World.getBlockId(par2 - Facing.offsetsXForSide[i], par3 - Facing.offsetsYForSide[i], par4 - Facing.offsetsZForSide[i]);
+
+        if (j != Block.pistonBase.blockID && j != Block.pistonStickyBase.blockID)
         {
-            world.setBlockWithNotify(i, j, k, 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
         }
         else
         {
-            Block.blocksList[j1].onNeighborBlockChange(world, i - Facing.offsetsXForSide[i1], j - Facing.offsetsYForSide[i1], k - Facing.offsetsZForSide[i1], l);
+            Block.blocksList[j].onNeighborBlockChange(par1World, par2 - Facing.offsetsXForSide[i], par3 - Facing.offsetsYForSide[i], par4 - Facing.offsetsZForSide[i], par5);
         }
     }
 
-    public static int getDirectionMeta(int i)
+    public static int getDirectionMeta(int par0)
     {
-        return i & 7;
+        return par0 & 7;
     }
 }

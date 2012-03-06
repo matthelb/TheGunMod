@@ -6,6 +6,10 @@ import java.util.*;
 public class MapGenStronghold extends MapGenStructure
 {
     private BiomeGenBase allowedBiomeGenBases[];
+
+    /**
+     * is spawned false and set true once the defined BiomeGenBases were compared with the present ones
+     */
     private boolean ranBiomeCheck;
     private ChunkCoordIntPair structureCoords[];
 
@@ -13,56 +17,64 @@ public class MapGenStronghold extends MapGenStructure
     {
         allowedBiomeGenBases = (new BiomeGenBase[]
                 {
-                    BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.taiga, BiomeGenBase.icePlains, BiomeGenBase.iceMountains, BiomeGenBase.desertHills, BiomeGenBase.forestHills, BiomeGenBase.extremeHillsEdge
+                    BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.taiga, BiomeGenBase.icePlains, BiomeGenBase.iceMountains, BiomeGenBase.desertHills, BiomeGenBase.forestHills, BiomeGenBase.extremeHillsEdge,
+                    BiomeGenBase.field_48416_w, BiomeGenBase.field_48417_x
                 });
         structureCoords = new ChunkCoordIntPair[3];
     }
 
-    protected boolean canSpawnStructureAtCoords(int i, int j)
+    protected boolean canSpawnStructureAtCoords(int par1, int par2)
     {
         if (!ranBiomeCheck)
         {
             Random random = new Random();
             random.setSeed(worldObj.getSeed());
-            double d = random.nextDouble() * 3.1415926535897931D * 2D;
-            for (int i1 = 0; i1 < structureCoords.length; i1++)
+            double d = random.nextDouble() * Math.PI * 2D;
+
+            for (int k = 0; k < structureCoords.length; k++)
             {
                 double d1 = (1.25D + random.nextDouble()) * 32D;
-                int j1 = (int)Math.round(Math.cos(d) * d1);
-                int k1 = (int)Math.round(Math.sin(d) * d1);
+                int l = (int)Math.round(Math.cos(d) * d1);
+                int i1 = (int)Math.round(Math.sin(d) * d1);
                 ArrayList arraylist = new ArrayList();
                 BiomeGenBase abiomegenbase[] = allowedBiomeGenBases;
-                int l1 = abiomegenbase.length;
-                for (int i2 = 0; i2 < l1; i2++)
+                int j1 = abiomegenbase.length;
+
+                for (int k1 = 0; k1 < j1; k1++)
                 {
-                    BiomeGenBase biomegenbase = abiomegenbase[i2];
+                    BiomeGenBase biomegenbase = abiomegenbase[k1];
                     arraylist.add(biomegenbase);
                 }
 
-                ChunkPosition chunkposition = worldObj.getWorldChunkManager().findBiomePosition((j1 << 4) + 8, (k1 << 4) + 8, 112, arraylist, random);
+                ChunkPosition chunkposition = worldObj.getWorldChunkManager().findBiomePosition((l << 4) + 8, (i1 << 4) + 8, 112, arraylist, random);
+
                 if (chunkposition != null)
                 {
-                    j1 = chunkposition.x >> 4;
-                    k1 = chunkposition.z >> 4;
+                    l = chunkposition.x >> 4;
+                    i1 = chunkposition.z >> 4;
                 }
                 else
                 {
-                    System.out.println((new StringBuilder()).append("Placed stronghold in INVALID biome at (").append(j1).append(", ").append(k1).append(")").toString());
+                    System.out.println((new StringBuilder()).append("Placed stronghold in INVALID biome at (").append(l).append(", ").append(i1).append(")").toString());
                 }
-                structureCoords[i1] = new ChunkCoordIntPair(j1, k1);
-                d += 6.2831853071795862D / (double)structureCoords.length;
+
+                structureCoords[k] = new ChunkCoordIntPair(l, i1);
+                d += (Math.PI * 2D) / (double)structureCoords.length;
             }
 
             ranBiomeCheck = true;
         }
+
         ChunkCoordIntPair achunkcoordintpair[] = structureCoords;
-        int k = achunkcoordintpair.length;
-        for (int l = 0; l < k; l++)
+        int i = achunkcoordintpair.length;
+
+        for (int j = 0; j < i; j++)
         {
-            ChunkCoordIntPair chunkcoordintpair = achunkcoordintpair[l];
-            if (i == chunkcoordintpair.chunkXPos && j == chunkcoordintpair.chunkZPos)
+            ChunkCoordIntPair chunkcoordintpair = achunkcoordintpair[j];
+
+            if (par1 == chunkcoordintpair.chunkXPos && par2 == chunkcoordintpair.chunkZPos)
             {
-                System.out.println((new StringBuilder()).append(i).append(", ").append(j).toString());
+                System.out.println((new StringBuilder()).append(par1).append(", ").append(par2).toString());
                 return true;
             }
         }
@@ -75,9 +87,11 @@ public class MapGenStronghold extends MapGenStructure
         ArrayList arraylist = new ArrayList();
         ChunkCoordIntPair achunkcoordintpair[] = structureCoords;
         int i = achunkcoordintpair.length;
+
         for (int j = 0; j < i; j++)
         {
             ChunkCoordIntPair chunkcoordintpair = achunkcoordintpair[j];
+
             if (chunkcoordintpair != null)
             {
                 arraylist.add(chunkcoordintpair.getChunkPosition(64));
@@ -87,10 +101,12 @@ public class MapGenStronghold extends MapGenStructure
         return arraylist;
     }
 
-    protected StructureStart getStructureStart(int i, int j)
+    protected StructureStart getStructureStart(int par1, int par2)
     {
         StructureStrongholdStart structurestrongholdstart;
-        for (structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, i, j); structurestrongholdstart.getComponents().isEmpty() || ((ComponentStrongholdStairs2)structurestrongholdstart.getComponents().get(0)).field_40009_b == null; structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, i, j)) { }
+
+        for (structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2); structurestrongholdstart.getComponents().isEmpty() || ((ComponentStrongholdStairs2)structurestrongholdstart.getComponents().get(0)).field_40009_b == null; structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2)) { }
+
         return structurestrongholdstart;
     }
 }

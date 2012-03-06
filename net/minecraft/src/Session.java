@@ -10,10 +10,10 @@ public class Session
     public String sessionId;
     public String mpPassParameter;
 
-    public Session(String s, String s1)
+    public Session(String par1Str, String par2Str)
     {
-        username = s;
-        sessionId = s1;
+        username = par1Str;
+        sessionId = par2Str;
     }
 
     static

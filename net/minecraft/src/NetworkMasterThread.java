@@ -2,11 +2,12 @@ package net.minecraft.src;
 
 class NetworkMasterThread extends Thread
 {
+    /** Reference to the NetworkManager object. */
     final NetworkManager netManager;
 
-    NetworkMasterThread(NetworkManager networkmanager)
+    NetworkMasterThread(NetworkManager par1NetworkManager)
     {
-        netManager = networkmanager;
+        netManager = par1NetworkManager;
     }
 
     public void run()
@@ -14,6 +15,7 @@ class NetworkMasterThread extends Thread
         try
         {
             Thread.sleep(5000L);
+
             if (NetworkManager.getReadThread(netManager).isAlive())
             {
                 try
@@ -22,6 +24,7 @@ class NetworkMasterThread extends Thread
                 }
                 catch (Throwable throwable) { }
             }
+
             if (NetworkManager.getWriteThread(netManager).isAlive())
             {
                 try

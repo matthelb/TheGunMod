@@ -7,52 +7,63 @@ public class ComponentStrongholdStairsStraight extends ComponentStronghold
 {
     private final EnumDoor field_35054_a;
 
-    public ComponentStrongholdStairsStraight(int i, Random random, StructureBoundingBox structureboundingbox, int j)
+    public ComponentStrongholdStairsStraight(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
-        super(i);
-        coordBaseMode = j;
-        field_35054_a = getRandomDoor(random);
-        boundingBox = structureboundingbox;
+        super(par1);
+        coordBaseMode = par4;
+        field_35054_a = getRandomDoor(par2Random);
+        boundingBox = par3StructureBoundingBox;
     }
 
-    public void buildComponent(StructureComponent structurecomponent, List list, Random random)
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
+    public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
-        func_35028_a((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
+        getNextComponentNormal((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 1, 1);
     }
 
-    public static ComponentStrongholdStairsStraight func_35053_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentStrongholdStairsStraight findValidPlacement(List par0List, Random par1Random, int par2, int par3, int par4, int par5, int par6)
     {
-        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -7, 0, 5, 11, 8, l);
-        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
+        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(par2, par3, par4, -1, -7, 0, 5, 11, 8, par5);
+
+        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(par0List, structureboundingbox) != null)
         {
             return null;
         }
         else
         {
-            return new ComponentStrongholdStairsStraight(i1, random, structureboundingbox, l);
+            return new ComponentStrongholdStairsStraight(par6, par1Random, structureboundingbox, par5);
         }
     }
 
-    public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
+    public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
-        if (isLiquidInStructureBoundingBox(world, structureboundingbox))
+        if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))
         {
             return false;
         }
-        fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 4, 10, 7, true, random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(world, random, structureboundingbox, field_35054_a, 1, 7, 0);
-        placeDoor(world, random, structureboundingbox, EnumDoor.OPENING, 1, 1, 7);
+
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 4, 10, 7, true, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, field_35054_a, 1, 7, 0);
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, EnumDoor.OPENING, 1, 1, 7);
         int i = getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 2);
+
         for (int j = 0; j < 6; j++)
         {
-            placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, i, 1, 6 - j, 1 + j, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, i, 2, 6 - j, 1 + j, structureboundingbox);
-            placeBlockAtCurrentPosition(world, Block.stairCompactCobblestone.blockID, i, 3, 6 - j, 1 + j, structureboundingbox);
+            placeBlockAtCurrentPosition(par1World, Block.stairCompactCobblestone.blockID, i, 1, 6 - j, 1 + j, par3StructureBoundingBox);
+            placeBlockAtCurrentPosition(par1World, Block.stairCompactCobblestone.blockID, i, 2, 6 - j, 1 + j, par3StructureBoundingBox);
+            placeBlockAtCurrentPosition(par1World, Block.stairCompactCobblestone.blockID, i, 3, 6 - j, 1 + j, par3StructureBoundingBox);
+
             if (j < 5)
             {
-                placeBlockAtCurrentPosition(world, Block.stoneBrick.blockID, 0, 1, 5 - j, 1 + j, structureboundingbox);
-                placeBlockAtCurrentPosition(world, Block.stoneBrick.blockID, 0, 2, 5 - j, 1 + j, structureboundingbox);
-                placeBlockAtCurrentPosition(world, Block.stoneBrick.blockID, 0, 3, 5 - j, 1 + j, structureboundingbox);
+                placeBlockAtCurrentPosition(par1World, Block.stoneBrick.blockID, 0, 1, 5 - j, 1 + j, par3StructureBoundingBox);
+                placeBlockAtCurrentPosition(par1World, Block.stoneBrick.blockID, 0, 2, 5 - j, 1 + j, par3StructureBoundingBox);
+                placeBlockAtCurrentPosition(par1World, Block.stoneBrick.blockID, 0, 3, 5 - j, 1 + j, par3StructureBoundingBox);
             }
         }
 

@@ -4,24 +4,27 @@ import java.util.Random;
 
 public class WorldGenDeadBush extends WorldGenerator
 {
+    /** stores the ID for WorldGenDeadBush */
     private int deadBushID;
 
-    public WorldGenDeadBush(int i)
+    public WorldGenDeadBush(int par1)
     {
-        deadBushID = i;
+        deadBushID = par1;
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        for (int l = 0; ((l = world.getBlockId(i, j, k)) == 0 || l == Block.leaves.blockID) && j > 0; j--) { }
-        for (int i1 = 0; i1 < 4; i1++)
+        for (int i = 0; ((i = par1World.getBlockId(par3, par4, par5)) == 0 || i == Block.leaves.blockID) && par4 > 0; par4--) { }
+
+        for (int j = 0; j < 4; j++)
         {
-            int j1 = (i + random.nextInt(8)) - random.nextInt(8);
-            int k1 = (j + random.nextInt(4)) - random.nextInt(4);
-            int l1 = (k + random.nextInt(8)) - random.nextInt(8);
-            if (world.isAirBlock(j1, k1, l1) && ((BlockFlower)Block.blocksList[deadBushID]).canBlockStay(world, j1, k1, l1))
+            int k = (par3 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+            int l = (par4 + par2Random.nextInt(4)) - par2Random.nextInt(4);
+            int i1 = (par5 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+
+            if (par1World.isAirBlock(k, l, i1) && ((BlockFlower)Block.blocksList[deadBushID]).canBlockStay(par1World, k, l, i1))
             {
-                world.setBlock(j1, k1, l1, deadBushID);
+                par1World.setBlock(k, l, i1, deadBushID);
             }
         }
 

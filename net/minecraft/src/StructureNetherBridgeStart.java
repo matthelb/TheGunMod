@@ -4,19 +4,20 @@ import java.util.*;
 
 class StructureNetherBridgeStart extends StructureStart
 {
-    public StructureNetherBridgeStart(World world, Random random, int i, int j)
+    public StructureNetherBridgeStart(World par1World, Random par2Random, int par3, int par4)
     {
-        ComponentNetherBridgeStartPiece componentnetherbridgestartpiece = new ComponentNetherBridgeStartPiece(random, (i << 4) + 2, (j << 4) + 2);
+        ComponentNetherBridgeStartPiece componentnetherbridgestartpiece = new ComponentNetherBridgeStartPiece(par2Random, (par3 << 4) + 2, (par4 << 4) + 2);
         components.add(componentnetherbridgestartpiece);
-        componentnetherbridgestartpiece.buildComponent(componentnetherbridgestartpiece, components, random);
+        componentnetherbridgestartpiece.buildComponent(componentnetherbridgestartpiece, components, par2Random);
         StructureComponent structurecomponent;
-        for (ArrayList arraylist = componentnetherbridgestartpiece.field_40034_d; !arraylist.isEmpty(); structurecomponent.buildComponent(componentnetherbridgestartpiece, components, random))
+
+        for (ArrayList arraylist = componentnetherbridgestartpiece.field_40034_d; !arraylist.isEmpty(); structurecomponent.buildComponent(componentnetherbridgestartpiece, components, par2Random))
         {
-            int k = random.nextInt(arraylist.size());
-            structurecomponent = (StructureComponent)arraylist.remove(k);
+            int i = par2Random.nextInt(arraylist.size());
+            structurecomponent = (StructureComponent)arraylist.remove(i);
         }
 
         updateBoundingBox();
-        func_40559_a(world, random, 48, 70);
+        setRandomHeight(par1World, par2Random, 48, 70);
     }
 }

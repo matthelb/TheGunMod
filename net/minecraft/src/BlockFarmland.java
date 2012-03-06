@@ -4,37 +4,52 @@ import java.util.Random;
 
 public class BlockFarmland extends Block
 {
-    protected BlockFarmland(int i)
+    protected BlockFarmland(int par1)
     {
-        super(i, Material.ground);
+        super(par1, Material.ground);
         blockIndexInTexture = 87;
-        setTickOnLoad(true);
+        setTickRandomly(true);
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.9375F, 1.0F);
         setLightOpacity(255);
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
-        return AxisAlignedBB.getBoundingBoxFromPool(i + 0, j + 0, k + 0, i + 1, j + 1, k + 1);
+        return AxisAlignedBB.getBoundingBoxFromPool(par2 + 0, par3 + 0, par4 + 0, par2 + 1, par3 + 1, par4 + 1);
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (i == 1 && j > 0)
+        if (par1 == 1 && par2 > 0)
         {
             return blockIndexInTexture - 1;
         }
-        if (i == 1)
+
+        if (par1 == 1)
         {
             return blockIndexInTexture;
         }
@@ -44,43 +59,55 @@ public class BlockFarmland extends Block
         }
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (isWaterNearby(world, i, j, k) || world.canLightningStrikeAt(i, j + 1, k))
+        if (isWaterNearby(par1World, par2, par3, par4) || par1World.canLightningStrikeAt(par2, par3 + 1, par4))
         {
-            world.setBlockMetadataWithNotify(i, j, k, 7);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 7);
         }
         else
         {
-            int l = world.getBlockMetadata(i, j, k);
-            if (l > 0)
+            int i = par1World.getBlockMetadata(par2, par3, par4);
+
+            if (i > 0)
             {
-                world.setBlockMetadataWithNotify(i, j, k, l - 1);
+                par1World.setBlockMetadataWithNotify(par2, par3, par4, i - 1);
             }
-            else if (!isCropsNearby(world, i, j, k))
+            else if (!isCropsNearby(par1World, par2, par3, par4))
             {
-                world.setBlockWithNotify(i, j, k, Block.dirt.blockID);
+                par1World.setBlockWithNotify(par2, par3, par4, Block.dirt.blockID);
             }
         }
     }
 
-    public void onFallenUpon(World world, int i, int j, int k, Entity entity, float f)
+    /**
+     * Block's chance to react to an entity falling on it.
+     */
+    public void onFallenUpon(World par1World, int par2, int par3, int par4, Entity par5Entity, float par6)
     {
-        if (world.rand.nextFloat() < f - 0.5F)
+        if (par1World.rand.nextFloat() < par6 - 0.5F)
         {
-            world.setBlockWithNotify(i, j, k, Block.dirt.blockID);
+            par1World.setBlockWithNotify(par2, par3, par4, Block.dirt.blockID);
         }
     }
 
-    private boolean isCropsNearby(World world, int i, int j, int k)
+    /**
+     * returns true if there is at least one cropblock nearby (x-1 to x+1, y+1, z-1 to z+1)
+     */
+    private boolean isCropsNearby(World par1World, int par2, int par3, int par4)
     {
-        int l = 0;
-        for (int i1 = i - l; i1 <= i + l; i1++)
+        int i = 0;
+
+        for (int j = par2 - i; j <= par2 + i; j++)
         {
-            for (int j1 = k - l; j1 <= k + l; j1++)
+            for (int k = par4 - i; k <= par4 + i; k++)
             {
-                int k1 = world.getBlockId(i1, j + 1, j1);
-                if (k1 == Block.crops.blockID || k1 == Block.melonStem.blockID || k1 == Block.pumpkinStem.blockID)
+                int l = par1World.getBlockId(j, par3 + 1, k);
+
+                if (l == Block.crops.blockID || l == Block.melonStem.blockID || l == Block.pumpkinStem.blockID)
                 {
                     return true;
                 }
@@ -90,15 +117,18 @@ public class BlockFarmland extends Block
         return false;
     }
 
-    private boolean isWaterNearby(World world, int i, int j, int k)
+    /**
+     * returns true if there's water nearby (x-4 to x+4, y to y+1, k-4 to k+4)
+     */
+    private boolean isWaterNearby(World par1World, int par2, int par3, int par4)
     {
-        for (int l = i - 4; l <= i + 4; l++)
+        for (int i = par2 - 4; i <= par2 + 4; i++)
         {
-            for (int i1 = j; i1 <= j + 1; i1++)
+            for (int j = par3; j <= par3 + 1; j++)
             {
-                for (int j1 = k - 4; j1 <= k + 4; j1++)
+                for (int k = par4 - 4; k <= par4 + 4; k++)
                 {
-                    if (world.getBlockMaterial(l, i1, j1) == Material.water)
+                    if (par1World.getBlockMaterial(i, j, k) == Material.water)
                     {
                         return true;
                     }
@@ -109,18 +139,26 @@ public class BlockFarmland extends Block
         return false;
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        super.onNeighborBlockChange(world, i, j, k, l);
-        Material material = world.getBlockMaterial(i, j + 1, k);
+        super.onNeighborBlockChange(par1World, par2, par3, par4, par5);
+        Material material = par1World.getBlockMaterial(par2, par3 + 1, par4);
+
         if (material.isSolid())
         {
-            world.setBlockWithNotify(i, j, k, Block.dirt.blockID);
+            par1World.setBlockWithNotify(par2, par3, par4, Block.dirt.blockID);
         }
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
-        return Block.dirt.idDropped(0, random, j);
+        return Block.dirt.idDropped(0, par2Random, par3);
     }
 }

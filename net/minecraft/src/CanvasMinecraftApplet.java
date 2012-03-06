@@ -5,11 +5,12 @@ import net.minecraft.client.MinecraftApplet;
 
 public class CanvasMinecraftApplet extends Canvas
 {
+    /** Reference to the MinecraftApplet object. */
     final MinecraftApplet mcApplet;
 
-    public CanvasMinecraftApplet(MinecraftApplet minecraftapplet)
+    public CanvasMinecraftApplet(MinecraftApplet par1MinecraftApplet)
     {
-        mcApplet = minecraftapplet;
+        mcApplet = par1MinecraftApplet;
     }
 
     public synchronized void addNotify()

@@ -4,21 +4,27 @@ public class ItemMetadata extends ItemBlock
 {
     private Block blockObj;
 
-    public ItemMetadata(int i, Block block)
+    public ItemMetadata(int par1, Block par2Block)
     {
-        super(i);
-        blockObj = block;
+        super(par1);
+        blockObj = par2Block;
         setMaxDamage(0);
         setHasSubtypes(true);
     }
 
-    public int getIconFromDamage(int i)
+    /**
+     * Gets an icon index based on an item's damage value
+     */
+    public int getIconFromDamage(int par1)
     {
-        return blockObj.getBlockTextureFromSideAndMetadata(2, i);
+        return blockObj.getBlockTextureFromSideAndMetadata(2, par1);
     }
 
-    public int getMetadata(int i)
+    /**
+     * Returns the metadata of the block which this Item (ItemBlock) can place
+     */
+    public int getMetadata(int par1)
     {
-        return i;
+        return par1;
     }
 }

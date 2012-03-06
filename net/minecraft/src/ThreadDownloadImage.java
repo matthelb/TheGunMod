@@ -6,20 +6,26 @@ import javax.imageio.ImageIO;
 
 class ThreadDownloadImage extends Thread
 {
+    /** The URL of the image to download. */
     final String location;
+
+    /** The image buffer to use. */
     final ImageBuffer buffer;
+
+    /** The image data. */
     final ThreadDownloadImageData imageData;
 
-    ThreadDownloadImage(ThreadDownloadImageData threaddownloadimagedata, String s, ImageBuffer imagebuffer)
+    ThreadDownloadImage(ThreadDownloadImageData par1ThreadDownloadImageData, String par2Str, ImageBuffer par3ImageBuffer)
     {
-        imageData = threaddownloadimagedata;
-        location = s;
-        buffer = imagebuffer;
+        imageData = par1ThreadDownloadImageData;
+        location = par2Str;
+        buffer = par3ImageBuffer;
     }
 
     public void run()
     {
         HttpURLConnection httpurlconnection = null;
+
         try
         {
             URL url = new URL(location);
@@ -27,10 +33,12 @@ class ThreadDownloadImage extends Thread
             httpurlconnection.setDoInput(true);
             httpurlconnection.setDoOutput(false);
             httpurlconnection.connect();
+
             if (httpurlconnection.getResponseCode() / 100 == 4)
             {
                 return;
             }
+
             if (buffer == null)
             {
                 imageData.image = ImageIO.read(httpurlconnection.getInputStream());

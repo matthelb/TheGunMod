@@ -4,19 +4,17 @@ public class EntityDiggingFX extends EntityFX
 {
     private Block blockInstance;
 
-    public EntityDiggingFX(World world, double d, double d1, double d2,
-            double d3, double d4, double d5, Block block,
-            int i, int j)
+    public EntityDiggingFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, Block par14Block, int par15, int par16)
     {
-        super(world, d, d1, d2, d3, d4, d5);
-        blockInstance = block;
-        setParticleTextureIndex(block.getBlockTextureFromSideAndMetadata(0, j));
-        particleGravity = block.blockParticleGravity;
+        super(par1World, par2, par4, par6, par8, par10, par12);
+        blockInstance = par14Block;
+        setParticleTextureIndex(par14Block.getBlockTextureFromSideAndMetadata(0, par16));
+        particleGravity = par14Block.blockParticleGravity;
         particleRed = particleGreen = particleBlue = 0.6F;
         particleScale /= 2.0F;
     }
 
-    public EntityDiggingFX func_4041_a(int i, int j, int k)
+    public EntityDiggingFX func_4041_a(int par1, int par2, int par3)
     {
         if (blockInstance == Block.grass)
         {
@@ -24,10 +22,10 @@ public class EntityDiggingFX extends EntityFX
         }
         else
         {
-            int l = blockInstance.colorMultiplier(worldObj, i, j, k);
-            particleRed *= (float)(l >> 16 & 0xff) / 255F;
-            particleGreen *= (float)(l >> 8 & 0xff) / 255F;
-            particleBlue *= (float)(l & 0xff) / 255F;
+            int i = blockInstance.colorMultiplier(worldObj, par1, par2, par3);
+            particleRed *= (float)(i >> 16 & 0xff) / 255F;
+            particleGreen *= (float)(i >> 8 & 0xff) / 255F;
+            particleBlue *= (float)(i & 0xff) / 255F;
             return this;
         }
     }
@@ -37,21 +35,21 @@ public class EntityDiggingFX extends EntityFX
         return 1;
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        float f6 = ((float)(getParticleTextureIndex() % 16) + particleTextureJitterX / 4F) / 16F;
-        float f7 = f6 + 0.01560938F;
-        float f8 = ((float)(getParticleTextureIndex() / 16) + particleTextureJitterY / 4F) / 16F;
-        float f9 = f8 + 0.01560938F;
-        float f10 = 0.1F * particleScale;
-        float f11 = (float)((prevPosX + (posX - prevPosX) * (double)f) - interpPosX);
-        float f12 = (float)((prevPosY + (posY - prevPosY) * (double)f) - interpPosY);
-        float f13 = (float)((prevPosZ + (posZ - prevPosZ) * (double)f) - interpPosZ);
-        float f14 = 1.0F;
-        tessellator.setColorOpaque_F(f14 * particleRed, f14 * particleGreen, f14 * particleBlue);
-        tessellator.addVertexWithUV(f11 - f1 * f10 - f4 * f10, f12 - f2 * f10, f13 - f3 * f10 - f5 * f10, f6, f9);
-        tessellator.addVertexWithUV((f11 - f1 * f10) + f4 * f10, f12 + f2 * f10, (f13 - f3 * f10) + f5 * f10, f6, f8);
-        tessellator.addVertexWithUV(f11 + f1 * f10 + f4 * f10, f12 + f2 * f10, f13 + f3 * f10 + f5 * f10, f7, f8);
-        tessellator.addVertexWithUV((f11 + f1 * f10) - f4 * f10, f12 - f2 * f10, (f13 + f3 * f10) - f5 * f10, f7, f9);
+        float f = ((float)(getParticleTextureIndex() % 16) + particleTextureJitterX / 4F) / 16F;
+        float f1 = f + 0.01560938F;
+        float f2 = ((float)(getParticleTextureIndex() / 16) + particleTextureJitterY / 4F) / 16F;
+        float f3 = f2 + 0.01560938F;
+        float f4 = 0.1F * particleScale;
+        float f5 = (float)((prevPosX + (posX - prevPosX) * (double)par2) - interpPosX);
+        float f6 = (float)((prevPosY + (posY - prevPosY) * (double)par2) - interpPosY);
+        float f7 = (float)((prevPosZ + (posZ - prevPosZ) * (double)par2) - interpPosZ);
+        float f8 = 1.0F;
+        par1Tessellator.setColorOpaque_F(f8 * particleRed, f8 * particleGreen, f8 * particleBlue);
+        par1Tessellator.addVertexWithUV(f5 - par3 * f4 - par6 * f4, f6 - par4 * f4, f7 - par5 * f4 - par7 * f4, f, f3);
+        par1Tessellator.addVertexWithUV((f5 - par3 * f4) + par6 * f4, f6 + par4 * f4, (f7 - par5 * f4) + par7 * f4, f, f2);
+        par1Tessellator.addVertexWithUV(f5 + par3 * f4 + par6 * f4, f6 + par4 * f4, f7 + par5 * f4 + par7 * f4, f1, f2);
+        par1Tessellator.addVertexWithUV((f5 + par3 * f4) - par6 * f4, f6 - par4 * f4, (f7 + par5 * f4) - par7 * f4, f1, f3);
     }
 }

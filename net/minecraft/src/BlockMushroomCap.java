@@ -4,45 +4,56 @@ import java.util.Random;
 
 public class BlockMushroomCap extends Block
 {
+    /** The mushroom type. 0 for brown, 1 for red. */
     private int mushroomType;
 
-    public BlockMushroomCap(int i, Material material, int j, int k)
+    public BlockMushroomCap(int par1, Material par2Material, int par3, int par4)
     {
-        super(i, j, material);
-        mushroomType = k;
+        super(par1, par3, par2Material);
+        mushroomType = par4;
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (j == 10 && i > 1)
+        if (par2 == 10 && par1 > 1)
         {
             return blockIndexInTexture - 1;
         }
-        if (j >= 1 && j <= 9 && i == 1)
+
+        if (par2 >= 1 && par2 <= 9 && par1 == 1)
         {
             return blockIndexInTexture - 16 - mushroomType;
         }
-        if (j >= 1 && j <= 3 && i == 2)
+
+        if (par2 >= 1 && par2 <= 3 && par1 == 2)
         {
             return blockIndexInTexture - 16 - mushroomType;
         }
-        if (j >= 7 && j <= 9 && i == 3)
+
+        if (par2 >= 7 && par2 <= 9 && par1 == 3)
         {
             return blockIndexInTexture - 16 - mushroomType;
         }
-        if ((j == 1 || j == 4 || j == 7) && i == 4)
+
+        if ((par2 == 1 || par2 == 4 || par2 == 7) && par1 == 4)
         {
             return blockIndexInTexture - 16 - mushroomType;
         }
-        if ((j == 3 || j == 6 || j == 9) && i == 5)
+
+        if ((par2 == 3 || par2 == 6 || par2 == 9) && par1 == 5)
         {
             return blockIndexInTexture - 16 - mushroomType;
         }
-        if (j == 14)
+
+        if (par2 == 14)
         {
             return blockIndexInTexture - 16 - mushroomType;
         }
-        if (j == 15)
+
+        if (par2 == 15)
         {
             return blockIndexInTexture - 1;
         }
@@ -52,17 +63,25 @@ public class BlockMushroomCap extends Block
         }
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
-        int i = random.nextInt(10) - 7;
+        int i = par1Random.nextInt(10) - 7;
+
         if (i < 0)
         {
             i = 0;
         }
+
         return i;
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Block.mushroomBrown.blockID + mushroomType;
     }

@@ -4,52 +4,63 @@ import java.io.*;
 
 public class NBTTagFloat extends NBTBase
 {
-    public float floatValue;
+    /** The float value for the tag. */
+    public float data;
 
-    public NBTTagFloat(String s)
+    public NBTTagFloat(String par1Str)
     {
-        super(s);
+        super(par1Str);
     }
 
-    public NBTTagFloat(String s, float f)
+    public NBTTagFloat(String par1Str, float par2)
     {
-        super(s);
-        floatValue = f;
+        super(par1Str);
+        data = par2;
     }
 
-    void writeTagContents(DataOutput dataoutput)
-    throws IOException
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput par1DataOutput) throws IOException
     {
-        dataoutput.writeFloat(floatValue);
+        par1DataOutput.writeFloat(data);
     }
 
-    void readTagContents(DataInput datainput)
-    throws IOException
+    /**
+     * Read the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void load(DataInput par1DataInput) throws IOException
     {
-        floatValue = datainput.readFloat();
+        data = par1DataInput.readFloat();
     }
 
-    public byte getType()
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
     {
         return 5;
     }
 
     public String toString()
     {
-        return (new StringBuilder()).append("").append(floatValue).toString();
+        return (new StringBuilder()).append("").append(data).toString();
     }
 
-    public NBTBase cloneTag()
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
     {
-        return new NBTTagFloat(getKey(), floatValue);
+        return new NBTTagFloat(getName(), data);
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (super.equals(obj))
+        if (super.equals(par1Obj))
         {
-            NBTTagFloat nbttagfloat = (NBTTagFloat)obj;
-            return floatValue == nbttagfloat.floatValue;
+            NBTTagFloat nbttagfloat = (NBTTagFloat)par1Obj;
+            return data == nbttagfloat.data;
         }
         else
         {

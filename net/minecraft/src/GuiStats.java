@@ -3,26 +3,40 @@ package net.minecraft.src;
 import java.util.List;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class GuiStats extends GuiScreen
 {
     private static RenderItem renderItem = new RenderItem();
     protected GuiScreen parentGui;
+
+    /** The title of the stats screen. */
     protected String statsTitle;
+
+    /** The slot for general stats. */
     private GuiSlotStatsGeneral slotGeneral;
+
+    /** The slot for item stats. */
     private GuiSlotStatsItem slotItem;
+
+    /** The slot for block stats. */
     private GuiSlotStatsBlock slotBlock;
     private StatFileWriter statFileWriter;
+
+    /** The currently-selected slot. */
     private GuiSlot selectedSlot;
 
-    public GuiStats(GuiScreen guiscreen, StatFileWriter statfilewriter)
+    public GuiStats(GuiScreen par1GuiScreen, StatFileWriter par2StatFileWriter)
     {
         statsTitle = "Select world";
         selectedSlot = null;
-        parentGui = guiscreen;
-        statFileWriter = statfilewriter;
+        parentGui = par1GuiScreen;
+        statFileWriter = par2StatFileWriter;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
         statsTitle = StatCollector.translateToLocal("gui.stats");
@@ -36,6 +50,9 @@ public class GuiStats extends GuiScreen
         addHeaderButtons();
     }
 
+    /**
+     * Creates the buttons that appear at the top of the Stats GUI.
+     */
     public void addHeaderButtons()
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
@@ -45,172 +62,238 @@ public class GuiStats extends GuiScreen
         controlList.add(guibutton = new GuiButton(2, width / 2 - 46, height - 52, 100, 20, stringtranslate.translateKey("stat.blocksButton")));
         GuiButton guibutton1;
         controlList.add(guibutton1 = new GuiButton(3, width / 2 + 62, height - 52, 100, 20, stringtranslate.translateKey("stat.itemsButton")));
+
         if (slotBlock.getSize() == 0)
         {
             guibutton.enabled = false;
         }
+
         if (slotItem.getSize() == 0)
         {
             guibutton1.enabled = false;
         }
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton par1GuiButton)
     {
-        if (!guibutton.enabled)
+        if (!par1GuiButton.enabled)
         {
             return;
         }
-        if (guibutton.id == 0)
+
+        if (par1GuiButton.id == 0)
         {
             mc.displayGuiScreen(parentGui);
         }
-        else if (guibutton.id == 1)
+        else if (par1GuiButton.id == 1)
         {
             selectedSlot = slotGeneral;
         }
-        else if (guibutton.id == 3)
+        else if (par1GuiButton.id == 3)
         {
             selectedSlot = slotItem;
         }
-        else if (guibutton.id == 2)
+        else if (par1GuiButton.id == 2)
         {
             selectedSlot = slotBlock;
         }
         else
         {
-            selectedSlot.actionPerformed(guibutton);
+            selectedSlot.actionPerformed(par1GuiButton);
         }
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
-        selectedSlot.drawScreen(i, j, f);
+        selectedSlot.drawScreen(par1, par2, par3);
         drawCenteredString(fontRenderer, statsTitle, width / 2, 20, 0xffffff);
-        super.drawScreen(i, j, f);
+        super.drawScreen(par1, par2, par3);
     }
 
-    private void drawItemSprite(int i, int j, int k)
+    /**
+     * Draws the item sprite on top of the background sprite.
+     */
+    private void drawItemSprite(int par1, int par2, int par3)
     {
-        drawButtonBackground(i + 1, j + 1);
-        GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-        RenderHelper.func_41089_c();
-        renderItem.drawItemIntoGui(fontRenderer, mc.renderEngine, k, 0, Item.itemsList[k].getIconFromDamage(0), i + 2, j + 2);
+        drawButtonBackground(par1 + 1, par2 + 1);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        RenderHelper.enableGUIStandardItemLighting();
+        renderItem.drawItemIntoGui(fontRenderer, mc.renderEngine, par3, 0, Item.itemsList[par3].getIconFromDamage(0), par1 + 2, par2 + 2);
         RenderHelper.disableStandardItemLighting();
-        GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
     }
 
-    private void drawButtonBackground(int i, int j)
+    /**
+     * Draws a gray box that serves as a button background.
+     */
+    private void drawButtonBackground(int par1, int par2)
     {
-        drawSprite(i, j, 0, 0);
+        drawSprite(par1, par2, 0, 0);
     }
 
-    private void drawSprite(int i, int j, int k, int l)
+    /**
+     * Draws a sprite from /gui/slot.png.
+     */
+    private void drawSprite(int par1, int par2, int par3, int par4)
     {
-        int i1 = mc.renderEngine.getTexture("/gui/slot.png");
+        int i = mc.renderEngine.getTexture("/gui/slot.png");
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(i1);
+        mc.renderEngine.bindTexture(i);
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(i + 0, j + 18, zLevel, (float)(k + 0) * 0.0078125F, (float)(l + 18) * 0.0078125F);
-        tessellator.addVertexWithUV(i + 18, j + 18, zLevel, (float)(k + 18) * 0.0078125F, (float)(l + 18) * 0.0078125F);
-        tessellator.addVertexWithUV(i + 18, j + 0, zLevel, (float)(k + 18) * 0.0078125F, (float)(l + 0) * 0.0078125F);
-        tessellator.addVertexWithUV(i + 0, j + 0, zLevel, (float)(k + 0) * 0.0078125F, (float)(l + 0) * 0.0078125F);
+        tessellator.addVertexWithUV(par1 + 0, par2 + 18, zLevel, (float)(par3 + 0) * 0.0078125F, (float)(par4 + 18) * 0.0078125F);
+        tessellator.addVertexWithUV(par1 + 18, par2 + 18, zLevel, (float)(par3 + 18) * 0.0078125F, (float)(par4 + 18) * 0.0078125F);
+        tessellator.addVertexWithUV(par1 + 18, par2 + 0, zLevel, (float)(par3 + 18) * 0.0078125F, (float)(par4 + 0) * 0.0078125F);
+        tessellator.addVertexWithUV(par1 + 0, par2 + 0, zLevel, (float)(par3 + 0) * 0.0078125F, (float)(par4 + 0) * 0.0078125F);
         tessellator.draw();
     }
 
-    static Minecraft getMinecraft(GuiStats guistats)
+    static Minecraft getMinecraft(GuiStats par0GuiStats)
     {
-        return guistats.mc;
+        return par0GuiStats.mc;
     }
 
-    static FontRenderer getFontRenderer1(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer1(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static StatFileWriter getStatsFileWriter(GuiStats guistats)
+    static StatFileWriter getStatsFileWriter(GuiStats par0GuiStats)
     {
-        return guistats.statFileWriter;
+        return par0GuiStats.statFileWriter;
     }
 
-    static FontRenderer getFontRenderer2(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer2(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static FontRenderer getFontRenderer3(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer3(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static Minecraft getMinecraft1(GuiStats guistats)
+    /**
+     * exactly the same as 27141
+     */
+    static Minecraft getMinecraft1(GuiStats par0GuiStats)
     {
-        return guistats.mc;
+        return par0GuiStats.mc;
     }
 
-    static void drawSprite(GuiStats guistats, int i, int j, int k, int l)
+    /**
+     * Draws a sprite from /gui/slot.png.
+     */
+    static void drawSprite(GuiStats par0GuiStats, int par1, int par2, int par3, int par4)
     {
-        guistats.drawSprite(i, j, k, l);
+        par0GuiStats.drawSprite(par1, par2, par3, par4);
     }
 
-    static Minecraft getMinecraft2(GuiStats guistats)
+    /**
+     * exactly the same as 27141 and 27143
+     */
+    static Minecraft getMinecraft2(GuiStats par0GuiStats)
     {
-        return guistats.mc;
+        return par0GuiStats.mc;
     }
 
-    static FontRenderer getFontRenderer4(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer4(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static FontRenderer getFontRenderer5(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer5(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static FontRenderer getFontRenderer6(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer6(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static FontRenderer getFontRenderer7(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer7(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static FontRenderer getFontRenderer8(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer8(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static void drawGradientRect(GuiStats guistats, int i, int j, int k, int l, int i1, int j1)
+    static void drawGradientRect(GuiStats par0GuiStats, int par1, int par2, int par3, int par4, int par5, int par6)
     {
-        guistats.drawGradientRect(i, j, k, l, i1, j1);
+        par0GuiStats.drawGradientRect(par1, par2, par3, par4, par5, par6);
     }
 
-    static FontRenderer getFontRenderer9(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer9(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static FontRenderer getFontRenderer10(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer10(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static void drawGradientRect1(GuiStats guistats, int i, int j, int k, int l, int i1, int j1)
+    /**
+     * exactly the same as 27129
+     */
+    static void drawGradientRect1(GuiStats par0GuiStats, int par1, int par2, int par3, int par4, int par5, int par6)
     {
-        guistats.drawGradientRect(i, j, k, l, i1, j1);
+        par0GuiStats.drawGradientRect(par1, par2, par3, par4, par5, par6);
     }
 
-    static FontRenderer getFontRenderer11(GuiStats guistats)
+    /**
+     * there are 11 identical methods like this
+     */
+    static FontRenderer getFontRenderer11(GuiStats par0GuiStats)
     {
-        return guistats.fontRenderer;
+        return par0GuiStats.fontRenderer;
     }
 
-    static void drawItemSprite(GuiStats guistats, int i, int j, int k)
+    /**
+     * Draws the item sprite on top of the background sprite.
+     */
+    static void drawItemSprite(GuiStats par0GuiStats, int par1, int par2, int par3)
     {
-        guistats.drawItemSprite(i, j, k);
+        par0GuiStats.drawItemSprite(par1, par2, par3);
     }
 }

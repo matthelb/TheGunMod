@@ -10,43 +10,50 @@ public class Packet13PlayerLookMove extends Packet10Flying
         moving = true;
     }
 
-    public Packet13PlayerLookMove(double d, double d1, double d2, double d3, float f, float f1, boolean flag)
+    public Packet13PlayerLookMove(double par1, double par3, double par5, double par7, float par9, float par10, boolean par11)
     {
-        xPosition = d;
-        yPosition = d1;
-        stance = d2;
-        zPosition = d3;
-        yaw = f;
-        pitch = f1;
-        onGround = flag;
+        xPosition = par1;
+        yPosition = par3;
+        stance = par5;
+        zPosition = par7;
+        yaw = par9;
+        pitch = par10;
+        onGround = par11;
         rotating = true;
         moving = true;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        xPosition = datainputstream.readDouble();
-        yPosition = datainputstream.readDouble();
-        stance = datainputstream.readDouble();
-        zPosition = datainputstream.readDouble();
-        yaw = datainputstream.readFloat();
-        pitch = datainputstream.readFloat();
-        super.readPacketData(datainputstream);
+        xPosition = par1DataInputStream.readDouble();
+        yPosition = par1DataInputStream.readDouble();
+        stance = par1DataInputStream.readDouble();
+        zPosition = par1DataInputStream.readDouble();
+        yaw = par1DataInputStream.readFloat();
+        pitch = par1DataInputStream.readFloat();
+        super.readPacketData(par1DataInputStream);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeDouble(xPosition);
-        dataoutputstream.writeDouble(yPosition);
-        dataoutputstream.writeDouble(stance);
-        dataoutputstream.writeDouble(zPosition);
-        dataoutputstream.writeFloat(yaw);
-        dataoutputstream.writeFloat(pitch);
-        super.writePacketData(dataoutputstream);
+        par1DataOutputStream.writeDouble(xPosition);
+        par1DataOutputStream.writeDouble(yPosition);
+        par1DataOutputStream.writeDouble(stance);
+        par1DataOutputStream.writeDouble(zPosition);
+        par1DataOutputStream.writeFloat(yaw);
+        par1DataOutputStream.writeFloat(pitch);
+        super.writePacketData(par1DataOutputStream);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 41;

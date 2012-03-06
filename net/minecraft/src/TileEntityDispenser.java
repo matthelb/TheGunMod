@@ -2,10 +2,13 @@ package net.minecraft.src;
 
 import java.util.Random;
 
-public class TileEntityDispenser extends TileEntity
-    implements IInventory
+public class TileEntityDispenser extends TileEntity implements IInventory
 {
     private ItemStack dispenserContents[];
+
+    /**
+     * random number generator for instance. Used in random item stack selection.
+     */
     private Random dispenserRandom;
 
     public TileEntityDispenser()
@@ -14,32 +17,45 @@ public class TileEntityDispenser extends TileEntity
         dispenserRandom = new Random();
     }
 
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public int getSizeInventory()
     {
         return 9;
     }
 
-    public ItemStack getStackInSlot(int i)
+    /**
+     * Returns the stack in slot i
+     */
+    public ItemStack getStackInSlot(int par1)
     {
-        return dispenserContents[i];
+        return dispenserContents[par1];
     }
 
-    public ItemStack decrStackSize(int i, int j)
+    /**
+     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
+     * stack.
+     */
+    public ItemStack decrStackSize(int par1, int par2)
     {
-        if (dispenserContents[i] != null)
+        if (dispenserContents[par1] != null)
         {
-            if (dispenserContents[i].stackSize <= j)
+            if (dispenserContents[par1].stackSize <= par2)
             {
-                ItemStack itemstack = dispenserContents[i];
-                dispenserContents[i] = null;
+                ItemStack itemstack = dispenserContents[par1];
+                dispenserContents[par1] = null;
                 onInventoryChanged();
                 return itemstack;
             }
-            ItemStack itemstack1 = dispenserContents[i].splitStack(j);
-            if (dispenserContents[i].stackSize == 0)
+
+            ItemStack itemstack1 = dispenserContents[par1].splitStack(par2);
+
+            if (dispenserContents[par1].stackSize == 0)
             {
-                dispenserContents[i] = null;
+                dispenserContents[par1] = null;
             }
+
             onInventoryChanged();
             return itemstack1;
         }
@@ -49,10 +65,28 @@ public class TileEntityDispenser extends TileEntity
         }
     }
 
+    public ItemStack func_48081_b(int par1)
+    {
+        if (dispenserContents[par1] != null)
+        {
+            ItemStack itemstack = dispenserContents[par1];
+            dispenserContents[par1] = null;
+            return itemstack;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * gets stack of one item extracted from a stack chosen at random from the block inventory
+     */
     public ItemStack getRandomStackFromInventory()
     {
         int i = -1;
         int j = 1;
+
         for (int k = 0; k < dispenserContents.length; k++)
         {
             if (dispenserContents[k] != null && dispenserRandom.nextInt(j++) == 0)
@@ -71,67 +105,92 @@ public class TileEntityDispenser extends TileEntity
         }
     }
 
-    public void setInventorySlotContents(int i, ItemStack itemstack)
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
     {
-        dispenserContents[i] = itemstack;
-        if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+        dispenserContents[par1] = par2ItemStack;
+
+        if (par2ItemStack != null && par2ItemStack.stackSize > getInventoryStackLimit())
         {
-            itemstack.stackSize = getInventoryStackLimit();
+            par2ItemStack.stackSize = getInventoryStackLimit();
         }
+
         onInventoryChanged();
     }
 
+    /**
+     * Returns the name of the inventory.
+     */
     public String getInvName()
     {
-        return "Trap";
+        return "container.dispenser";
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Reads a tile entity from NBT.
+     */
+    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readFromNBT(nbttagcompound);
-        NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
+        super.readFromNBT(par1NBTTagCompound);
+        NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Items");
         dispenserContents = new ItemStack[getSizeInventory()];
+
         for (int i = 0; i < nbttaglist.tagCount(); i++)
         {
-            NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
-            int j = nbttagcompound1.getByte("Slot") & 0xff;
+            NBTTagCompound nbttagcompound = (NBTTagCompound)nbttaglist.tagAt(i);
+            int j = nbttagcompound.getByte("Slot") & 0xff;
+
             if (j >= 0 && j < dispenserContents.length)
             {
-                dispenserContents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+                dispenserContents[j] = ItemStack.loadItemStackFromNBT(nbttagcompound);
             }
         }
     }
 
-    public void writeToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Writes a tile entity to NBT.
+     */
+    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeToNBT(nbttagcompound);
+        super.writeToNBT(par1NBTTagCompound);
         NBTTagList nbttaglist = new NBTTagList();
+
         for (int i = 0; i < dispenserContents.length; i++)
         {
             if (dispenserContents[i] != null)
             {
-                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                nbttagcompound1.setByte("Slot", (byte)i);
-                dispenserContents[i].writeToNBT(nbttagcompound1);
-                nbttaglist.setTag(nbttagcompound1);
+                NBTTagCompound nbttagcompound = new NBTTagCompound();
+                nbttagcompound.setByte("Slot", (byte)i);
+                dispenserContents[i].writeToNBT(nbttagcompound);
+                nbttaglist.appendTag(nbttagcompound);
             }
         }
 
-        nbttagcompound.setTag("Items", nbttaglist);
+        par1NBTTagCompound.setTag("Items", nbttaglist);
     }
 
+    /**
+     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended. *Isn't
+     * this more of a set than a get?*
+     */
     public int getInventoryStackLimit()
     {
         return 64;
     }
 
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    /**
+     * Do not make give this method the name canInteractWith because it clashes with Container
+     */
+    public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
     {
         if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
         {
             return false;
         }
-        return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
+
+        return par1EntityPlayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
     }
 
     public void openChest()

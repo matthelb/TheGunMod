@@ -4,9 +4,9 @@ import java.util.Random;
 
 public abstract class EntityWaterMob extends EntityCreature
 {
-    public EntityWaterMob(World world)
+    public EntityWaterMob(World par1World)
     {
-        super(world);
+        super(par1World);
     }
 
     public boolean canBreatheUnderwater()
@@ -14,32 +14,47 @@ public abstract class EntityWaterMob extends EntityCreature
         return true;
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeEntityToNBT(nbttagcompound);
+        super.writeEntityToNBT(par1NBTTagCompound);
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readEntityFromNBT(nbttagcompound);
+        super.readEntityFromNBT(par1NBTTagCompound);
     }
 
+    /**
+     * Checks if the entity's current position is a valid location to spawn this entity.
+     */
     public boolean getCanSpawnHere()
     {
         return worldObj.checkIfAABBIsClear(boundingBox);
     }
 
+    /**
+     * Get number of ticks, at least during which the living entity will be silent
+     */
     public int getTalkInterval()
     {
         return 120;
     }
 
+    /**
+     * Determines if an entity can be despawned, used on idle far away entities
+     */
     protected boolean canDespawn()
     {
         return true;
     }
 
-    protected int getExperiencePoints(EntityPlayer entityplayer)
+    protected int getExperiencePoints(EntityPlayer par1EntityPlayer)
     {
         return 1 + worldObj.rand.nextInt(3);
     }

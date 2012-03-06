@@ -5,78 +5,110 @@ import java.util.Random;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class GuiAchievements extends GuiScreen
 {
+    /** The top x coordinate of the achievement map */
     private static final int guiMapTop;
+
+    /** The left y coordinate of the achievement map */
     private static final int guiMapLeft;
+
+    /** The bottom x coordinate of the achievement map */
     private static final int guiMapBottom;
+
+    /** The right y coordinate of the achievement map */
     private static final int guiMapRight;
     protected int achievementsPaneWidth;
     protected int achievementsPaneHeight;
+
+    /** The current mouse x coordinate */
     protected int mouseX;
+
+    /** The current mouse y coordinate */
     protected int mouseY;
     protected double field_27116_m;
     protected double field_27115_n;
+
+    /** The x position of the achievement map */
     protected double guiMapX;
+
+    /** The y position of the achievement map */
     protected double guiMapY;
     protected double field_27112_q;
     protected double field_27111_r;
+
+    /** Whether the Mouse Button is down or not */
     private int isMouseButtonDown;
     private StatFileWriter statFileWriter;
 
-    public GuiAchievements(StatFileWriter statfilewriter)
+    public GuiAchievements(StatFileWriter par1StatFileWriter)
     {
         achievementsPaneWidth = 256;
         achievementsPaneHeight = 202;
         mouseX = 0;
         mouseY = 0;
         isMouseButtonDown = 0;
-        statFileWriter = statfilewriter;
+        statFileWriter = par1StatFileWriter;
         char c = '\215';
         char c1 = '\215';
         field_27116_m = guiMapX = field_27112_q = AchievementList.openInventory.displayColumn * 24 - c / 2 - 12;
         field_27115_n = guiMapY = field_27111_r = AchievementList.openInventory.displayRow * 24 - c1 / 2;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
         controlList.clear();
         controlList.add(new GuiSmallButton(1, width / 2 + 24, height / 2 + 74, 80, 20, StatCollector.translateToLocal("gui.done")));
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton par1GuiButton)
     {
-        if (guibutton.id == 1)
+        if (par1GuiButton.id == 1)
         {
             mc.displayGuiScreen(null);
             mc.setIngameFocus();
         }
-        super.actionPerformed(guibutton);
+
+        super.actionPerformed(par1GuiButton);
     }
 
-    protected void keyTyped(char c, int i)
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char par1, int par2)
     {
-        if (i == mc.gameSettings.keyBindInventory.keyCode)
+        if (par2 == mc.gameSettings.keyBindInventory.keyCode)
         {
             mc.displayGuiScreen(null);
             mc.setIngameFocus();
         }
         else
         {
-            super.keyTyped(c, i);
+            super.keyTyped(par1, par2);
         }
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
         if (Mouse.isButtonDown(0))
         {
-            int k = (width - achievementsPaneWidth) / 2;
-            int l = (height - achievementsPaneHeight) / 2;
-            int i1 = k + 8;
-            int j1 = l + 17;
-            if ((isMouseButtonDown == 0 || isMouseButtonDown == 1) && i >= i1 && i < i1 + 224 && j >= j1 && j < j1 + 155)
+            int i = (width - achievementsPaneWidth) / 2;
+            int j = (height - achievementsPaneHeight) / 2;
+            int k = i + 8;
+            int l = j + 17;
+
+            if ((isMouseButtonDown == 0 || isMouseButtonDown == 1) && par1 >= k && par1 < k + 224 && par2 >= l && par2 < l + 155)
             {
                 if (isMouseButtonDown == 0)
                 {
@@ -84,26 +116,31 @@ public class GuiAchievements extends GuiScreen
                 }
                 else
                 {
-                    guiMapX -= i - mouseX;
-                    guiMapY -= j - mouseY;
+                    guiMapX -= par1 - mouseX;
+                    guiMapY -= par2 - mouseY;
                     field_27112_q = field_27116_m = guiMapX;
                     field_27111_r = field_27115_n = guiMapY;
                 }
-                mouseX = i;
-                mouseY = j;
+
+                mouseX = par1;
+                mouseY = par2;
             }
+
             if (field_27112_q < (double)guiMapTop)
             {
                 field_27112_q = guiMapTop;
             }
+
             if (field_27111_r < (double)guiMapLeft)
             {
                 field_27111_r = guiMapLeft;
             }
+
             if (field_27112_q >= (double)guiMapBottom)
             {
                 field_27112_q = guiMapBottom - 1;
             }
+
             if (field_27111_r >= (double)guiMapRight)
             {
                 field_27111_r = guiMapRight - 1;
@@ -113,21 +150,26 @@ public class GuiAchievements extends GuiScreen
         {
             isMouseButtonDown = 0;
         }
+
         drawDefaultBackground();
-        genAchievementBackground(i, j, f);
-        GL11.glDisable(2896 /*GL_LIGHTING*/);
-        GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
+        genAchievementBackground(par1, par2, par3);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
         func_27110_k();
-        GL11.glEnable(2896 /*GL_LIGHTING*/);
-        GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
     }
 
+    /**
+     * Called from the main game loop to update the screen.
+     */
     public void updateScreen()
     {
         field_27116_m = guiMapX;
         field_27115_n = guiMapY;
         double d = field_27112_q - guiMapX;
         double d1 = field_27111_r - guiMapY;
+
         if (d * d + d1 * d1 < 4D)
         {
             guiMapX += d;
@@ -135,8 +177,8 @@ public class GuiAchievements extends GuiScreen
         }
         else
         {
-            guiMapX += d * 0.84999999999999998D;
-            guiMapY += d1 * 0.84999999999999998D;
+            guiMapX += d * 0.85D;
+            guiMapY += d1 * 0.85D;
         }
     }
 
@@ -147,238 +189,272 @@ public class GuiAchievements extends GuiScreen
         fontRenderer.drawString("Achievements", i + 15, j + 5, 0x404040);
     }
 
-    protected void genAchievementBackground(int i, int j, float f)
+    protected void genAchievementBackground(int par1, int par2, float par3)
     {
-        int k = MathHelper.floor_double(field_27116_m + (guiMapX - field_27116_m) * (double)f);
-        int l = MathHelper.floor_double(field_27115_n + (guiMapY - field_27115_n) * (double)f);
-        if (k < guiMapTop)
+        int i = MathHelper.floor_double(field_27116_m + (guiMapX - field_27116_m) * (double)par3);
+        int j = MathHelper.floor_double(field_27115_n + (guiMapY - field_27115_n) * (double)par3);
+
+        if (i < guiMapTop)
         {
-            k = guiMapTop;
+            i = guiMapTop;
         }
-        if (l < guiMapLeft)
+
+        if (j < guiMapLeft)
         {
-            l = guiMapLeft;
+            j = guiMapLeft;
         }
-        if (k >= guiMapBottom)
+
+        if (i >= guiMapBottom)
         {
-            k = guiMapBottom - 1;
+            i = guiMapBottom - 1;
         }
-        if (l >= guiMapRight)
+
+        if (j >= guiMapRight)
         {
-            l = guiMapRight - 1;
+            j = guiMapRight - 1;
         }
-        int i1 = mc.renderEngine.getTexture("/terrain.png");
-        int j1 = mc.renderEngine.getTexture("/achievement/bg.png");
-        int k1 = (width - achievementsPaneWidth) / 2;
-        int l1 = (height - achievementsPaneHeight) / 2;
-        int i2 = k1 + 16;
-        int j2 = l1 + 17;
+
+        int k = mc.renderEngine.getTexture("/terrain.png");
+        int l = mc.renderEngine.getTexture("/achievement/bg.png");
+        int i1 = (width - achievementsPaneWidth) / 2;
+        int j1 = (height - achievementsPaneHeight) / 2;
+        int k1 = i1 + 16;
+        int l1 = j1 + 17;
         zLevel = 0.0F;
-        GL11.glDepthFunc(518);
+        GL11.glDepthFunc(GL11.GL_GEQUAL);
         GL11.glPushMatrix();
         GL11.glTranslatef(0.0F, 0.0F, -200F);
-        GL11.glEnable(3553 /*GL_TEXTURE_2D*/);
-        GL11.glDisable(2896 /*GL_LIGHTING*/);
-        GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-        GL11.glEnable(2903 /*GL_COLOR_MATERIAL*/);
-        mc.renderEngine.bindTexture(i1);
-        int k2 = k + 288 >> 4;
-        int i3 = l + 288 >> 4;
-        int j3 = (k + 288) % 16;
-        int i4 = (l + 288) % 16;
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+        mc.renderEngine.bindTexture(k);
+        int i2 = i + 288 >> 4;
+        int k2 = j + 288 >> 4;
+        int l2 = (i + 288) % 16;
+        int k3 = (j + 288) % 16;
         Random random = new Random();
-        for (int l7 = 0; l7 * 16 - i4 < 155; l7++)
+
+        for (int j7 = 0; j7 * 16 - k3 < 155; j7++)
         {
-            float f5 = 0.6F - ((float)(i3 + l7) / 25F) * 0.3F;
-            GL11.glColor4f(f5, f5, f5, 1.0F);
-            for (int i8 = 0; i8 * 16 - j3 < 224; i8++)
+            float f4 = 0.6F - ((float)(k2 + j7) / 25F) * 0.3F;
+            GL11.glColor4f(f4, f4, f4, 1.0F);
+
+            for (int k7 = 0; k7 * 16 - l2 < 224; k7++)
             {
-                random.setSeed(1234 + k2 + i8);
+                random.setSeed(1234 + i2 + k7);
                 random.nextInt();
-                int j8 = random.nextInt(1 + i3 + l7) + (i3 + l7) / 2;
-                int k8 = Block.sand.blockIndexInTexture;
-                if (j8 > 37 || i3 + l7 == 35)
+                int l7 = random.nextInt(1 + k2 + j7) + (k2 + j7) / 2;
+                int i8 = Block.sand.blockIndexInTexture;
+
+                if (l7 > 37 || k2 + j7 == 35)
                 {
-                    k8 = Block.bedrock.blockIndexInTexture;
+                    i8 = Block.bedrock.blockIndexInTexture;
                 }
-                else if (j8 == 22)
+                else if (l7 == 22)
                 {
                     if (random.nextInt(2) == 0)
                     {
-                        k8 = Block.oreDiamond.blockIndexInTexture;
+                        i8 = Block.oreDiamond.blockIndexInTexture;
                     }
                     else
                     {
-                        k8 = Block.oreRedstone.blockIndexInTexture;
+                        i8 = Block.oreRedstone.blockIndexInTexture;
                     }
                 }
-                else if (j8 == 10)
+                else if (l7 == 10)
                 {
-                    k8 = Block.oreIron.blockIndexInTexture;
+                    i8 = Block.oreIron.blockIndexInTexture;
                 }
-                else if (j8 == 8)
+                else if (l7 == 8)
                 {
-                    k8 = Block.oreCoal.blockIndexInTexture;
+                    i8 = Block.oreCoal.blockIndexInTexture;
                 }
-                else if (j8 > 4)
+                else if (l7 > 4)
                 {
-                    k8 = Block.stone.blockIndexInTexture;
+                    i8 = Block.stone.blockIndexInTexture;
                 }
-                else if (j8 > 0)
+                else if (l7 > 0)
                 {
-                    k8 = Block.dirt.blockIndexInTexture;
+                    i8 = Block.dirt.blockIndexInTexture;
                 }
-                drawTexturedModalRect((i2 + i8 * 16) - j3, (j2 + l7 * 16) - i4, k8 % 16 << 4, (k8 >> 4) << 4, 16, 16);
+
+                drawTexturedModalRect((k1 + k7 * 16) - l2, (l1 + j7 * 16) - k3, i8 % 16 << 4, (i8 >> 4) << 4, 16, 16);
             }
         }
 
-        GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
-        GL11.glDepthFunc(515);
-        GL11.glDisable(3553 /*GL_TEXTURE_2D*/);
-        for (int l2 = 0; l2 < AchievementList.achievementList.size(); l2++)
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glDepthFunc(GL11.GL_LEQUAL);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+
+        for (int j2 = 0; j2 < AchievementList.achievementList.size(); j2++)
         {
-            Achievement achievement1 = (Achievement)AchievementList.achievementList.get(l2);
+            Achievement achievement1 = (Achievement)AchievementList.achievementList.get(j2);
+
             if (achievement1.parentAchievement == null)
             {
                 continue;
             }
-            int k3 = (achievement1.displayColumn * 24 - k) + 11 + i2;
-            int j4 = (achievement1.displayRow * 24 - l) + 11 + j2;
-            int k4 = (achievement1.parentAchievement.displayColumn * 24 - k) + 11 + i2;
-            int i5 = (achievement1.parentAchievement.displayRow * 24 - l) + 11 + j2;
-            int l5 = 0;
+
+            int i3 = (achievement1.displayColumn * 24 - i) + 11 + k1;
+            int l3 = (achievement1.displayRow * 24 - j) + 11 + l1;
+            int i4 = (achievement1.parentAchievement.displayColumn * 24 - i) + 11 + k1;
+            int k4 = (achievement1.parentAchievement.displayRow * 24 - j) + 11 + l1;
+            int j5 = 0;
             boolean flag = statFileWriter.hasAchievementUnlocked(achievement1);
             boolean flag1 = statFileWriter.canUnlockAchievement(achievement1);
-            char c = Math.sin(((double)(System.currentTimeMillis() % 600L) / 600D) * 3.1415926535897931D * 2D) <= 0.59999999999999998D ? '\202' : '\377';
+            char c = Math.sin(((double)(System.currentTimeMillis() % 600L) / 600D) * Math.PI * 2D) <= 0.6D ? '\202' : '\377';
+
             if (flag)
             {
-                l5 = 0xff707070;
+                j5 = 0xff707070;
             }
             else if (flag1)
             {
-                l5 = 65280 + (c << 24);
+                j5 = 65280 + (c << 24);
             }
             else
             {
-                l5 = 0xff000000;
+                j5 = 0xff000000;
             }
-            drawHorizontalLine(k3, k4, j4, l5);
-            drawVerticalLine(k4, j4, i5, l5);
+
+            drawHorizontalLine(i3, i4, l3, j5);
+            drawVerticalLine(i4, l3, k4, j5);
         }
 
         Achievement achievement = null;
         RenderItem renderitem = new RenderItem();
-        RenderHelper.func_41089_c();
-        GL11.glDisable(2896 /*GL_LIGHTING*/);
-        GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
-        GL11.glEnable(2903 /*GL_COLOR_MATERIAL*/);
-        for (int l3 = 0; l3 < AchievementList.achievementList.size(); l3++)
+        RenderHelper.enableGUIStandardItemLighting();
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+        GL11.glEnable(GL11.GL_COLOR_MATERIAL);
+
+        for (int j3 = 0; j3 < AchievementList.achievementList.size(); j3++)
         {
-            Achievement achievement3 = (Achievement)AchievementList.achievementList.get(l3);
-            int l4 = achievement3.displayColumn * 24 - k;
-            int j5 = achievement3.displayRow * 24 - l;
-            if (l4 < -24 || j5 < -24 || l4 > 224 || j5 > 155)
+            Achievement achievement3 = (Achievement)AchievementList.achievementList.get(j3);
+            int j4 = achievement3.displayColumn * 24 - i;
+            int l4 = achievement3.displayRow * 24 - j;
+
+            if (j4 < -24 || l4 < -24 || j4 > 224 || l4 > 155)
             {
                 continue;
             }
+
             if (statFileWriter.hasAchievementUnlocked(achievement3))
             {
-                float f1 = 1.0F;
-                GL11.glColor4f(f1, f1, f1, 1.0F);
+                float f = 1.0F;
+                GL11.glColor4f(f, f, f, 1.0F);
             }
             else if (statFileWriter.canUnlockAchievement(achievement3))
             {
-                float f2 = Math.sin(((double)(System.currentTimeMillis() % 600L) / 600D) * 3.1415926535897931D * 2D) >= 0.59999999999999998D ? 0.8F : 0.6F;
+                float f1 = Math.sin(((double)(System.currentTimeMillis() % 600L) / 600D) * Math.PI * 2D) >= 0.6D ? 0.8F : 0.6F;
+                GL11.glColor4f(f1, f1, f1, 1.0F);
+            }
+            else
+            {
+                float f2 = 0.3F;
                 GL11.glColor4f(f2, f2, f2, 1.0F);
             }
-            else
-            {
-                float f3 = 0.3F;
-                GL11.glColor4f(f3, f3, f3, 1.0F);
-            }
-            mc.renderEngine.bindTexture(j1);
-            int i6 = i2 + l4;
-            int k6 = j2 + j5;
+
+            mc.renderEngine.bindTexture(l);
+            int k5 = k1 + j4;
+            int i6 = l1 + l4;
+
             if (achievement3.getSpecial())
             {
-                drawTexturedModalRect(i6 - 2, k6 - 2, 26, 202, 26, 26);
+                drawTexturedModalRect(k5 - 2, i6 - 2, 26, 202, 26, 26);
             }
             else
             {
-                drawTexturedModalRect(i6 - 2, k6 - 2, 0, 202, 26, 26);
+                drawTexturedModalRect(k5 - 2, i6 - 2, 0, 202, 26, 26);
             }
+
             if (!statFileWriter.canUnlockAchievement(achievement3))
             {
-                float f4 = 0.1F;
-                GL11.glColor4f(f4, f4, f4, 1.0F);
+                float f3 = 0.1F;
+                GL11.glColor4f(f3, f3, f3, 1.0F);
                 renderitem.field_27004_a = false;
             }
-            GL11.glEnable(2896 /*GL_LIGHTING*/);
-            GL11.glEnable(2884 /*GL_CULL_FACE*/);
-            renderitem.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, achievement3.theItemStack, i6 + 3, k6 + 3);
-            GL11.glDisable(2896 /*GL_LIGHTING*/);
+
+            GL11.glEnable(GL11.GL_LIGHTING);
+            GL11.glEnable(GL11.GL_CULL_FACE);
+            renderitem.renderItemIntoGUI(mc.fontRenderer, mc.renderEngine, achievement3.theItemStack, k5 + 3, i6 + 3);
+            GL11.glDisable(GL11.GL_LIGHTING);
+
             if (!statFileWriter.canUnlockAchievement(achievement3))
             {
                 renderitem.field_27004_a = true;
             }
+
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-            if (i >= i2 && j >= j2 && i < i2 + 224 && j < j2 + 155 && i >= i6 && i <= i6 + 22 && j >= k6 && j <= k6 + 22)
+
+            if (par1 >= k1 && par2 >= l1 && par1 < k1 + 224 && par2 < l1 + 155 && par1 >= k5 && par1 <= k5 + 22 && par2 >= i6 && par2 <= i6 + 22)
             {
                 achievement = achievement3;
             }
         }
 
-        GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
-        GL11.glEnable(3042 /*GL_BLEND*/);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_BLEND);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        mc.renderEngine.bindTexture(j1);
-        drawTexturedModalRect(k1, l1, 0, 0, achievementsPaneWidth, achievementsPaneHeight);
+        mc.renderEngine.bindTexture(l);
+        drawTexturedModalRect(i1, j1, 0, 0, achievementsPaneWidth, achievementsPaneHeight);
         GL11.glPopMatrix();
         zLevel = 0.0F;
-        GL11.glDepthFunc(515);
-        GL11.glDisable(2929 /*GL_DEPTH_TEST*/);
-        GL11.glEnable(3553 /*GL_TEXTURE_2D*/);
-        super.drawScreen(i, j, f);
+        GL11.glDepthFunc(GL11.GL_LEQUAL);
+        GL11.glDisable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        super.drawScreen(par1, par2, par3);
+
         if (achievement != null)
         {
             Achievement achievement2 = achievement;
-            String s = StatCollector.translateToLocal(achievement2.func_44020_i());
+            String s = StatCollector.translateToLocal(achievement2.getName());
             String s1 = achievement2.getDescription();
-            int k5 = i + 12;
-            int j6 = j - 4;
+            int i5 = par1 + 12;
+            int l5 = par2 - 4;
+
             if (statFileWriter.canUnlockAchievement(achievement2))
             {
-                int l6 = Math.max(fontRenderer.getStringWidth(s), 120);
-                int j7 = fontRenderer.splitStringWidth(s1, l6);
+                int j6 = Math.max(fontRenderer.getStringWidth(s), 120);
+                int l6 = fontRenderer.splitStringWidth(s1, j6);
+
                 if (statFileWriter.hasAchievementUnlocked(achievement2))
                 {
-                    j7 += 12;
+                    l6 += 12;
                 }
-                drawGradientRect(k5 - 3, j6 - 3, k5 + l6 + 3, j6 + j7 + 3 + 12, 0xc0000000, 0xc0000000);
-                fontRenderer.drawSplitString(s1, k5, j6 + 12, l6, 0xffa0a0a0);
+
+                drawGradientRect(i5 - 3, l5 - 3, i5 + j6 + 3, l5 + l6 + 3 + 12, 0xc0000000, 0xc0000000);
+                fontRenderer.drawSplitString(s1, i5, l5 + 12, j6, 0xffa0a0a0);
+
                 if (statFileWriter.hasAchievementUnlocked(achievement2))
                 {
-                    fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("achievement.taken"), k5, j6 + j7 + 4, 0xff9090ff);
+                    fontRenderer.drawStringWithShadow(StatCollector.translateToLocal("achievement.taken"), i5, l5 + l6 + 4, 0xff9090ff);
                 }
             }
             else
             {
-                int i7 = Math.max(fontRenderer.getStringWidth(s), 120);
+                int k6 = Math.max(fontRenderer.getStringWidth(s), 120);
                 String s2 = StatCollector.translateToLocalFormatted("achievement.requires", new Object[]
                         {
-                            StatCollector.translateToLocal(achievement2.parentAchievement.func_44020_i())
+                            StatCollector.translateToLocal(achievement2.parentAchievement.getName())
                         });
-                int k7 = fontRenderer.splitStringWidth(s2, i7);
-                drawGradientRect(k5 - 3, j6 - 3, k5 + i7 + 3, j6 + k7 + 12 + 3, 0xc0000000, 0xc0000000);
-                fontRenderer.drawSplitString(s2, k5, j6 + 12, i7, 0xff705050);
+                int i7 = fontRenderer.splitStringWidth(s2, k6);
+                drawGradientRect(i5 - 3, l5 - 3, i5 + k6 + 3, l5 + i7 + 12 + 3, 0xc0000000, 0xc0000000);
+                fontRenderer.drawSplitString(s2, i5, l5 + 12, k6, 0xff705050);
             }
-            fontRenderer.drawStringWithShadow(s, k5, j6, statFileWriter.canUnlockAchievement(achievement2) ? achievement2.getSpecial() ? -128 : -1 : achievement2.getSpecial() ? 0xff808040 : 0xff808080);
+
+            fontRenderer.drawStringWithShadow(s, i5, l5, statFileWriter.canUnlockAchievement(achievement2) ? achievement2.getSpecial() ? -128 : -1 : achievement2.getSpecial() ? 0xff808040 : 0xff808080);
         }
-        GL11.glEnable(2929 /*GL_DEPTH_TEST*/);
-        GL11.glEnable(2896 /*GL_LIGHTING*/);
+
+        GL11.glEnable(GL11.GL_DEPTH_TEST);
+        GL11.glEnable(GL11.GL_LIGHTING);
         RenderHelper.disableStandardItemLighting();
     }
 
+    /**
+     * Returns true if this GUI should pause the game when it is displayed in single-player
+     */
     public boolean doesGuiPauseGame()
     {
         return true;

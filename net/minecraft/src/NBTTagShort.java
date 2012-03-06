@@ -4,52 +4,63 @@ import java.io.*;
 
 public class NBTTagShort extends NBTBase
 {
-    public short shortValue;
+    /** The short value for the tag. */
+    public short data;
 
-    public NBTTagShort(String s)
+    public NBTTagShort(String par1Str)
     {
-        super(s);
+        super(par1Str);
     }
 
-    public NBTTagShort(String s, short word0)
+    public NBTTagShort(String par1Str, short par2)
     {
-        super(s);
-        shortValue = word0;
+        super(par1Str);
+        data = par2;
     }
 
-    void writeTagContents(DataOutput dataoutput)
-    throws IOException
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput par1DataOutput) throws IOException
     {
-        dataoutput.writeShort(shortValue);
+        par1DataOutput.writeShort(data);
     }
 
-    void readTagContents(DataInput datainput)
-    throws IOException
+    /**
+     * Read the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void load(DataInput par1DataInput) throws IOException
     {
-        shortValue = datainput.readShort();
+        data = par1DataInput.readShort();
     }
 
-    public byte getType()
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
     {
         return 2;
     }
 
     public String toString()
     {
-        return (new StringBuilder()).append("").append(shortValue).toString();
+        return (new StringBuilder()).append("").append(data).toString();
     }
 
-    public NBTBase cloneTag()
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
     {
-        return new NBTTagShort(getKey(), shortValue);
+        return new NBTTagShort(getName(), data);
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (super.equals(obj))
+        if (super.equals(par1Obj))
         {
-            NBTTagShort nbttagshort = (NBTTagShort)obj;
-            return shortValue == nbttagshort.shortValue;
+            NBTTagShort nbttagshort = (NBTTagShort)par1Obj;
+            return data == nbttagshort.data;
         }
         else
         {

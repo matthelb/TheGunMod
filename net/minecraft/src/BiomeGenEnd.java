@@ -4,9 +4,9 @@ import java.util.List;
 
 public class BiomeGenEnd extends BiomeGenBase
 {
-    public BiomeGenEnd(int i)
+    public BiomeGenEnd(int par1)
     {
-        super(i);
+        super(par1);
         spawnableMonsterList.clear();
         spawnableCreatureList.clear();
         spawnableWaterCreatureList.clear();
@@ -16,7 +16,10 @@ public class BiomeGenEnd extends BiomeGenBase
         biomeDecorator = new BiomeEndDecorator(this);
     }
 
-    public int getSkyColorByTemp(float f)
+    /**
+     * takes temperature, returns color
+     */
+    public int getSkyColorByTemp(float par1)
     {
         return 0;
     }

@@ -2,7 +2,7 @@ package net.minecraft.src;
 
 import java.util.Random;
 
-public class BlockRedstoneRepeater extends Block
+public class BlockRedstoneRepeater extends BlockDirectional
 {
     public static final double repeaterTorchOffset[] =
     {
@@ -12,70 +12,90 @@ public class BlockRedstoneRepeater extends Block
     {
         1, 2, 3, 4
     };
+
+    /** Tells whether the repeater is powered or not */
     private final boolean isRepeaterPowered;
 
-    protected BlockRedstoneRepeater(int i, boolean flag)
+    protected BlockRedstoneRepeater(int par1, boolean par2)
     {
-        super(i, 6, Material.circuits);
-        isRepeaterPowered = flag;
+        super(par1, 6, Material.circuits);
+        isRepeaterPowered = par2;
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        if (!world.isBlockNormalCube(i, j - 1, k))
+        if (!par1World.isBlockNormalCube(par2, par3 - 1, par4))
         {
             return false;
         }
         else
         {
-            return super.canPlaceBlockAt(world, i, j, k);
+            return super.canPlaceBlockAt(par1World, par2, par3, par4);
         }
     }
 
-    public boolean canBlockStay(World world, int i, int j, int k)
+    /**
+     * Can this block stay at this position.  Similar to canPlaceBlockAt except gets checked often with plants.
+     */
+    public boolean canBlockStay(World par1World, int par2, int par3, int par4)
     {
-        if (!world.isBlockNormalCube(i, j - 1, k))
+        if (!par1World.isBlockNormalCube(par2, par3 - 1, par4))
         {
             return false;
         }
         else
         {
-            return super.canBlockStay(world, i, j, k);
+            return super.canBlockStay(par1World, par2, par3, par4);
         }
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        boolean flag = ignoreTick(world, i, j, k, l);
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        boolean flag = ignoreTick(par1World, par2, par3, par4, i);
+
         if (isRepeaterPowered && !flag)
         {
-            world.setBlockAndMetadataWithNotify(i, j, k, Block.redstoneRepeaterIdle.blockID, l);
+            par1World.setBlockAndMetadataWithNotify(par2, par3, par4, Block.redstoneRepeaterIdle.blockID, i);
         }
         else if (!isRepeaterPowered)
         {
-            world.setBlockAndMetadataWithNotify(i, j, k, Block.redstoneRepeaterActive.blockID, l);
+            par1World.setBlockAndMetadataWithNotify(par2, par3, par4, Block.redstoneRepeaterActive.blockID, i);
+
             if (!flag)
             {
-                int i1 = (l & 0xc) >> 2;
-                world.scheduleBlockUpdate(i, j, k, Block.redstoneRepeaterActive.blockID, repeaterState[i1] * 2);
+                int j = (i & 0xc) >> 2;
+                par1World.scheduleBlockUpdate(par2, par3, par4, Block.redstoneRepeaterActive.blockID, repeaterState[j] * 2);
             }
         }
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (i == 0)
+        if (par1 == 0)
         {
             return !isRepeaterPowered ? 115 : 99;
         }
-        if (i == 1)
+
+        if (par1 == 1)
         {
             return !isRepeaterPowered ? 131 : 147;
         }
@@ -85,158 +105,219 @@ public class BlockRedstoneRepeater extends Block
         }
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Returns true if the given side of this block type should be rendered, if the adjacent block is at the given
+     * coordinates.  Args: blockAccess, x, y, z, side
+     */
+    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
-        return l != 0 && l != 1;
+        return par5 != 0 && par5 != 1;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 15;
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        return getBlockTextureFromSideAndMetadata(i, 0);
+        return getBlockTextureFromSideAndMetadata(par1, 0);
     }
 
-    public boolean isIndirectlyPoweringTo(World world, int i, int j, int k, int l)
+    /**
+     * Is this block indirectly powering the block on the specified side
+     */
+    public boolean isIndirectlyPoweringTo(World par1World, int par2, int par3, int par4, int par5)
     {
-        return isPoweringTo(world, i, j, k, l);
+        return isPoweringTo(par1World, par2, par3, par4, par5);
     }
 
-    public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Is this block powering the block on the specified side
+     */
+    public boolean isPoweringTo(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
         if (!isRepeaterPowered)
         {
             return false;
         }
-        int i1 = iblockaccess.getBlockMetadata(i, j, k) & 3;
-        if (i1 == 0 && l == 3)
+
+        int i = func_48216_a(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
+
+        if (i == 0 && par5 == 3)
         {
             return true;
         }
-        if (i1 == 1 && l == 4)
+
+        if (i == 1 && par5 == 4)
         {
             return true;
         }
-        if (i1 == 2 && l == 2)
+
+        if (i == 2 && par5 == 2)
         {
             return true;
         }
-        return i1 == 3 && l == 5;
+
+        return i == 3 && par5 == 5;
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (!canBlockStay(world, i, j, k))
+        if (!canBlockStay(par1World, par2, par3, par4))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-            world.setBlockWithNotify(i, j, k, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
             return;
         }
-        int i1 = world.getBlockMetadata(i, j, k);
-        boolean flag = ignoreTick(world, i, j, k, i1);
-        int j1 = (i1 & 0xc) >> 2;
+
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        boolean flag = ignoreTick(par1World, par2, par3, par4, i);
+        int j = (i & 0xc) >> 2;
+
         if (isRepeaterPowered && !flag)
         {
-            world.scheduleBlockUpdate(i, j, k, blockID, repeaterState[j1] * 2);
+            par1World.scheduleBlockUpdate(par2, par3, par4, blockID, repeaterState[j] * 2);
         }
         else if (!isRepeaterPowered && flag)
         {
-            world.scheduleBlockUpdate(i, j, k, blockID, repeaterState[j1] * 2);
+            par1World.scheduleBlockUpdate(par2, par3, par4, blockID, repeaterState[j] * 2);
         }
     }
 
-    private boolean ignoreTick(World world, int i, int j, int k, int l)
+    private boolean ignoreTick(World par1World, int par2, int par3, int par4, int par5)
     {
-        int i1 = l & 3;
-        switch (i1)
+        int i = func_48216_a(par5);
+
+        switch (i)
         {
             case 0:
-                return world.isBlockIndirectlyProvidingPowerTo(i, j, k + 1, 3) || world.getBlockId(i, j, k + 1) == Block.redstoneWire.blockID && world.getBlockMetadata(i, j, k + 1) > 0;
+                return par1World.isBlockIndirectlyProvidingPowerTo(par2, par3, par4 + 1, 3) || par1World.getBlockId(par2, par3, par4 + 1) == Block.redstoneWire.blockID && par1World.getBlockMetadata(par2, par3, par4 + 1) > 0;
 
             case 2:
-                return world.isBlockIndirectlyProvidingPowerTo(i, j, k - 1, 2) || world.getBlockId(i, j, k - 1) == Block.redstoneWire.blockID && world.getBlockMetadata(i, j, k - 1) > 0;
+                return par1World.isBlockIndirectlyProvidingPowerTo(par2, par3, par4 - 1, 2) || par1World.getBlockId(par2, par3, par4 - 1) == Block.redstoneWire.blockID && par1World.getBlockMetadata(par2, par3, par4 - 1) > 0;
 
             case 3:
-                return world.isBlockIndirectlyProvidingPowerTo(i + 1, j, k, 5) || world.getBlockId(i + 1, j, k) == Block.redstoneWire.blockID && world.getBlockMetadata(i + 1, j, k) > 0;
+                return par1World.isBlockIndirectlyProvidingPowerTo(par2 + 1, par3, par4, 5) || par1World.getBlockId(par2 + 1, par3, par4) == Block.redstoneWire.blockID && par1World.getBlockMetadata(par2 + 1, par3, par4) > 0;
 
             case 1:
-                return world.isBlockIndirectlyProvidingPowerTo(i - 1, j, k, 4) || world.getBlockId(i - 1, j, k) == Block.redstoneWire.blockID && world.getBlockMetadata(i - 1, j, k) > 0;
+                return par1World.isBlockIndirectlyProvidingPowerTo(par2 - 1, par3, par4, 4) || par1World.getBlockId(par2 - 1, par3, par4) == Block.redstoneWire.blockID && par1World.getBlockMetadata(par2 - 1, par3, par4) > 0;
         }
+
         return false;
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        int i1 = (l & 0xc) >> 2;
-        i1 = i1 + 1 << 2 & 0xc;
-        world.setBlockMetadataWithNotify(i, j, k, i1 | l & 3);
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = (i & 0xc) >> 2;
+        j = j + 1 << 2 & 0xc;
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, j | i & 3);
         return true;
     }
 
+    /**
+     * Can this block provide power. Only wire currently seems to have this change based on its state.
+     */
     public boolean canProvidePower()
     {
         return true;
     }
 
-    public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving entityliving)
+    /**
+     * Called when a block is placed by using an ItemStack from inventory and passed in who placed it. Args:
+     * x,y,z,entityliving
+     */
+    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
-        int l = ((MathHelper.floor_double((double)((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3) + 2) % 4;
-        world.setBlockMetadataWithNotify(i, j, k, l);
-        boolean flag = ignoreTick(world, i, j, k, l);
+        int i = ((MathHelper.floor_double((double)((par5EntityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 3) + 2) % 4;
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, i);
+        boolean flag = ignoreTick(par1World, par2, par3, par4, i);
+
         if (flag)
         {
-            world.scheduleBlockUpdate(i, j, k, blockID, 1);
+            par1World.scheduleBlockUpdate(par2, par3, par4, blockID, 1);
         }
     }
 
-    public void onBlockAdded(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+    public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
-        world.notifyBlocksOfNeighborChange(i + 1, j, k, blockID);
-        world.notifyBlocksOfNeighborChange(i - 1, j, k, blockID);
-        world.notifyBlocksOfNeighborChange(i, j, k + 1, blockID);
-        world.notifyBlocksOfNeighborChange(i, j, k - 1, blockID);
-        world.notifyBlocksOfNeighborChange(i, j - 1, k, blockID);
-        world.notifyBlocksOfNeighborChange(i, j + 1, k, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
+        par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
     }
 
-    public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
+    /**
+     * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
+     */
+    public void onBlockDestroyedByPlayer(World par1World, int par2, int par3, int par4, int par5)
     {
         if (isRepeaterPowered)
         {
-            world.notifyBlocksOfNeighborChange(i, j + 1, k, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
         }
-        super.onBlockDestroyedByPlayer(world, i, j, k, l);
+
+        super.onBlockDestroyedByPlayer(par1World, par2, par3, par4, par5);
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Item.redstoneRepeater.shiftedIndex;
     }
 
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
+    /**
+     * A randomly called display update to be able to add particles or other items for display
+     */
+    public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
         if (!isRepeaterPowered)
         {
             return;
         }
-        int l = world.getBlockMetadata(i, j, k);
-        double d = (double)((float)i + 0.5F) + (double)(random.nextFloat() - 0.5F) * 0.20000000000000001D;
-        double d1 = (double)((float)j + 0.4F) + (double)(random.nextFloat() - 0.5F) * 0.20000000000000001D;
-        double d2 = (double)((float)k + 0.5F) + (double)(random.nextFloat() - 0.5F) * 0.20000000000000001D;
+
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = func_48216_a(i);
+        double d = (double)((float)par2 + 0.5F) + (double)(par5Random.nextFloat() - 0.5F) * 0.2D;
+        double d1 = (double)((float)par3 + 0.4F) + (double)(par5Random.nextFloat() - 0.5F) * 0.2D;
+        double d2 = (double)((float)par4 + 0.5F) + (double)(par5Random.nextFloat() - 0.5F) * 0.2D;
         double d3 = 0.0D;
         double d4 = 0.0D;
-        if (random.nextInt(2) == 0)
+
+        if (par5Random.nextInt(2) == 0)
         {
-            switch (l & 3)
+            switch (j)
             {
                 case 0:
                     d4 = -0.3125D;
@@ -257,26 +338,28 @@ public class BlockRedstoneRepeater extends Block
         }
         else
         {
-            int i1 = (l & 0xc) >> 2;
-            switch (l & 3)
+            int k = (i & 0xc) >> 2;
+
+            switch (j)
             {
                 case 0:
-                    d4 = repeaterTorchOffset[i1];
+                    d4 = repeaterTorchOffset[k];
                     break;
 
                 case 2:
-                    d4 = -repeaterTorchOffset[i1];
+                    d4 = -repeaterTorchOffset[k];
                     break;
 
                 case 3:
-                    d3 = repeaterTorchOffset[i1];
+                    d3 = repeaterTorchOffset[k];
                     break;
 
                 case 1:
-                    d3 = -repeaterTorchOffset[i1];
+                    d3 = -repeaterTorchOffset[k];
                     break;
             }
         }
-        world.spawnParticle("reddust", d + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+
+        par1World.spawnParticle("reddust", d + d3, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
     }
 }

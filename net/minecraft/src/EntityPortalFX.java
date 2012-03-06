@@ -9,16 +9,15 @@ public class EntityPortalFX extends EntityFX
     private double portalPosY;
     private double portalPosZ;
 
-    public EntityPortalFX(World world, double d, double d1, double d2,
-            double d3, double d4, double d5)
+    public EntityPortalFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
-        super(world, d, d1, d2, d3, d4, d5);
-        motionX = d3;
-        motionY = d4;
-        motionZ = d5;
-        portalPosX = posX = d;
-        portalPosY = posY = d1;
-        portalPosZ = posZ = d2;
+        super(par1World, par2, par4, par6, par8, par10, par12);
+        motionX = par8;
+        motionY = par10;
+        motionZ = par12;
+        portalPosX = posX = par2;
+        portalPosY = posY = par4;
+        portalPosZ = posZ = par6;
         float f = rand.nextFloat() * 0.6F + 0.4F;
         portalParticleScale = particleScale = rand.nextFloat() * 0.2F + 0.5F;
         particleRed = particleGreen = particleBlue = 1.0F * f;
@@ -29,41 +28,49 @@ public class EntityPortalFX extends EntityFX
         setParticleTextureIndex((int)(Math.random() * 8D));
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        float f6 = ((float)particleAge + f) / (float)particleMaxAge;
-        f6 = 1.0F - f6;
-        f6 *= f6;
-        f6 = 1.0F - f6;
-        particleScale = portalParticleScale * f6;
-        super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
+        float f = ((float)particleAge + par2) / (float)particleMaxAge;
+        f = 1.0F - f;
+        f *= f;
+        f = 1.0F - f;
+        particleScale = portalParticleScale * f;
+        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
-    public int getEntityBrightnessForRender(float f)
+    public int getEntityBrightnessForRender(float par1)
     {
-        int i = super.getEntityBrightnessForRender(f);
-        float f1 = (float)particleAge / (float)particleMaxAge;
-        f1 *= f1;
-        f1 *= f1;
+        int i = super.getEntityBrightnessForRender(par1);
+        float f = (float)particleAge / (float)particleMaxAge;
+        f *= f;
+        f *= f;
         int j = i & 0xff;
         int k = i >> 16 & 0xff;
-        k += (int)(f1 * 15F * 16F);
+        k += (int)(f * 15F * 16F);
+
         if (k > 240)
         {
             k = 240;
         }
+
         return j | k << 16;
     }
 
-    public float getEntityBrightness(float f)
+    /**
+     * Gets how bright this entity is.
+     */
+    public float getEntityBrightness(float par1)
     {
-        float f1 = super.getEntityBrightness(f);
-        float f2 = (float)particleAge / (float)particleMaxAge;
-        f2 *= f2;
-        f2 *= f2;
-        return f1 * (1.0F - f2) + f2;
+        float f = super.getEntityBrightness(par1);
+        float f1 = (float)particleAge / (float)particleMaxAge;
+        f1 *= f1;
+        f1 *= f1;
+        return f * (1.0F - f1) + f1;
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
@@ -76,6 +83,7 @@ public class EntityPortalFX extends EntityFX
         posX = portalPosX + motionX * (double)f;
         posY = portalPosY + motionY * (double)f + (double)(1.0F - f1);
         posZ = portalPosZ + motionZ * (double)f;
+
         if (particleAge++ >= particleMaxAge)
         {
             setEntityDead();

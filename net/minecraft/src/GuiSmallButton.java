@@ -4,21 +4,21 @@ public class GuiSmallButton extends GuiButton
 {
     private final EnumOptions enumOptions;
 
-    public GuiSmallButton(int i, int j, int k, String s)
+    public GuiSmallButton(int par1, int par2, int par3, String par4Str)
     {
-        this(i, j, k, null, s);
+        this(par1, par2, par3, null, par4Str);
     }
 
-    public GuiSmallButton(int i, int j, int k, int l, int i1, String s)
+    public GuiSmallButton(int par1, int par2, int par3, int par4, int par5, String par6Str)
     {
-        super(i, j, k, l, i1, s);
+        super(par1, par2, par3, par4, par5, par6Str);
         enumOptions = null;
     }
 
-    public GuiSmallButton(int i, int j, int k, EnumOptions enumoptions, String s)
+    public GuiSmallButton(int par1, int par2, int par3, EnumOptions par4EnumOptions, String par5Str)
     {
-        super(i, j, k, 150, 20, s);
-        enumOptions = enumoptions;
+        super(par1, par2, par3, 150, 20, par5Str);
+        enumOptions = par4EnumOptions;
     }
 
     public EnumOptions returnEnumOptions()

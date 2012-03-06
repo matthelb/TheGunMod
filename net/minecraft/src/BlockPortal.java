@@ -4,19 +4,26 @@ import java.util.Random;
 
 public class BlockPortal extends BlockBreakable
 {
-    public BlockPortal(int i, int j)
+    public BlockPortal(int par1, int par2)
     {
-        super(i, j, Material.portal, false);
+        super(par1, par2, Material.portal, false);
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int i)
     {
         return null;
     }
 
-    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        if (iblockaccess.getBlockId(i - 1, j, k) == blockID || iblockaccess.getBlockId(i + 1, j, k) == blockID)
+        if (par1IBlockAccess.getBlockId(par2 - 1, par3, par4) == blockID || par1IBlockAccess.getBlockId(par2 + 1, par3, par4) == blockID)
         {
             float f = 0.5F;
             float f2 = 0.125F;
@@ -30,108 +37,143 @@ public class BlockPortal extends BlockBreakable
         }
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    public boolean tryToCreatePortal(World world, int i, int j, int k)
+    /**
+     * Checks to see if this location is valid to create a portal and will return True if it does. Args: world, x, y, z
+     */
+    public boolean tryToCreatePortal(World par1World, int par2, int par3, int par4)
     {
-        int l = 0;
-        int i1 = 0;
-        if (world.getBlockId(i - 1, j, k) == Block.obsidian.blockID || world.getBlockId(i + 1, j, k) == Block.obsidian.blockID)
+        int i = 0;
+        int j = 0;
+
+        if (par1World.getBlockId(par2 - 1, par3, par4) == Block.obsidian.blockID || par1World.getBlockId(par2 + 1, par3, par4) == Block.obsidian.blockID)
         {
-            l = 1;
+            i = 1;
         }
-        if (world.getBlockId(i, j, k - 1) == Block.obsidian.blockID || world.getBlockId(i, j, k + 1) == Block.obsidian.blockID)
+
+        if (par1World.getBlockId(par2, par3, par4 - 1) == Block.obsidian.blockID || par1World.getBlockId(par2, par3, par4 + 1) == Block.obsidian.blockID)
         {
-            i1 = 1;
+            j = 1;
         }
-        if (l == i1)
+
+        if (i == j)
         {
             return false;
         }
-        if (world.getBlockId(i - l, j, k - i1) == 0)
+
+        if (par1World.getBlockId(par2 - i, par3, par4 - j) == 0)
         {
-            i -= l;
-            k -= i1;
+            par2 -= i;
+            par4 -= j;
         }
-        for (int j1 = -1; j1 <= 2; j1++)
+
+        for (int k = -1; k <= 2; k++)
         {
-            for (int l1 = -1; l1 <= 3; l1++)
+            for (int i1 = -1; i1 <= 3; i1++)
             {
-                boolean flag = j1 == -1 || j1 == 2 || l1 == -1 || l1 == 3;
-                if ((j1 == -1 || j1 == 2) && (l1 == -1 || l1 == 3))
+                boolean flag = k == -1 || k == 2 || i1 == -1 || i1 == 3;
+
+                if ((k == -1 || k == 2) && (i1 == -1 || i1 == 3))
                 {
                     continue;
                 }
-                int j2 = world.getBlockId(i + l * j1, j + l1, k + i1 * j1);
+
+                int k1 = par1World.getBlockId(par2 + i * k, par3 + i1, par4 + j * k);
+
                 if (flag)
                 {
-                    if (j2 != Block.obsidian.blockID)
+                    if (k1 != Block.obsidian.blockID)
                     {
                         return false;
                     }
+
                     continue;
                 }
-                if (j2 != 0 && j2 != Block.fire.blockID)
+
+                if (k1 != 0 && k1 != Block.fire.blockID)
                 {
                     return false;
                 }
             }
         }
 
-        world.editingBlocks = true;
-        for (int k1 = 0; k1 < 2; k1++)
+        par1World.editingBlocks = true;
+
+        for (int l = 0; l < 2; l++)
         {
-            for (int i2 = 0; i2 < 3; i2++)
+            for (int j1 = 0; j1 < 3; j1++)
             {
-                world.setBlockWithNotify(i + l * k1, j + i2, k + i1 * k1, Block.portal.blockID);
+                par1World.setBlockWithNotify(par2 + i * l, par3 + j1, par4 + j * l, Block.portal.blockID);
             }
         }
 
-        world.editingBlocks = false;
+        par1World.editingBlocks = false;
         return true;
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        int i1 = 0;
-        int j1 = 1;
-        if (world.getBlockId(i - 1, j, k) == blockID || world.getBlockId(i + 1, j, k) == blockID)
+        int i = 0;
+        int j = 1;
+
+        if (par1World.getBlockId(par2 - 1, par3, par4) == blockID || par1World.getBlockId(par2 + 1, par3, par4) == blockID)
         {
-            i1 = 1;
-            j1 = 0;
+            i = 1;
+            j = 0;
         }
-        int k1;
-        for (k1 = j; world.getBlockId(i, k1 - 1, k) == blockID; k1--) { }
-        if (world.getBlockId(i, k1 - 1, k) != Block.obsidian.blockID)
+
+        int k;
+
+        for (k = par3; par1World.getBlockId(par2, k - 1, par4) == blockID; k--) { }
+
+        if (par1World.getBlockId(par2, k - 1, par4) != Block.obsidian.blockID)
         {
-            world.setBlockWithNotify(i, j, k, 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
             return;
         }
-        int l1;
-        for (l1 = 1; l1 < 4 && world.getBlockId(i, k1 + l1, k) == blockID; l1++) { }
-        if (l1 != 3 || world.getBlockId(i, k1 + l1, k) != Block.obsidian.blockID)
+
+        int l;
+
+        for (l = 1; l < 4 && par1World.getBlockId(par2, k + l, par4) == blockID; l++) { }
+
+        if (l != 3 || par1World.getBlockId(par2, k + l, par4) != Block.obsidian.blockID)
         {
-            world.setBlockWithNotify(i, j, k, 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
             return;
         }
-        boolean flag = world.getBlockId(i - 1, j, k) == blockID || world.getBlockId(i + 1, j, k) == blockID;
-        boolean flag1 = world.getBlockId(i, j, k - 1) == blockID || world.getBlockId(i, j, k + 1) == blockID;
+
+        boolean flag = par1World.getBlockId(par2 - 1, par3, par4) == blockID || par1World.getBlockId(par2 + 1, par3, par4) == blockID;
+        boolean flag1 = par1World.getBlockId(par2, par3, par4 - 1) == blockID || par1World.getBlockId(par2, par3, par4 + 1) == blockID;
+
         if (flag && flag1)
         {
-            world.setBlockWithNotify(i, j, k, 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
             return;
         }
-        if ((world.getBlockId(i + i1, j, k + j1) != Block.obsidian.blockID || world.getBlockId(i - i1, j, k - j1) != blockID) && (world.getBlockId(i - i1, j, k - j1) != Block.obsidian.blockID || world.getBlockId(i + i1, j, k + j1) != blockID))
+
+        if ((par1World.getBlockId(par2 + i, par3, par4 + j) != Block.obsidian.blockID || par1World.getBlockId(par2 - i, par3, par4 - j) != blockID) && (par1World.getBlockId(par2 - i, par3, par4 - j) != Block.obsidian.blockID || par1World.getBlockId(par2 + i, par3, par4 + j) != blockID))
         {
-            world.setBlockWithNotify(i, j, k, 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
             return;
         }
         else
@@ -140,80 +182,104 @@ public class BlockPortal extends BlockBreakable
         }
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Returns true if the given side of this block type should be rendered, if the adjacent block is at the given
+     * coordinates.  Args: blockAccess, x, y, z, side
+     */
+    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
-        if (iblockaccess.getBlockId(i, j, k) == blockID)
+        if (par1IBlockAccess.getBlockId(par2, par3, par4) == blockID)
         {
             return false;
         }
-        boolean flag = iblockaccess.getBlockId(i - 1, j, k) == blockID && iblockaccess.getBlockId(i - 2, j, k) != blockID;
-        boolean flag1 = iblockaccess.getBlockId(i + 1, j, k) == blockID && iblockaccess.getBlockId(i + 2, j, k) != blockID;
-        boolean flag2 = iblockaccess.getBlockId(i, j, k - 1) == blockID && iblockaccess.getBlockId(i, j, k - 2) != blockID;
-        boolean flag3 = iblockaccess.getBlockId(i, j, k + 1) == blockID && iblockaccess.getBlockId(i, j, k + 2) != blockID;
+
+        boolean flag = par1IBlockAccess.getBlockId(par2 - 1, par3, par4) == blockID && par1IBlockAccess.getBlockId(par2 - 2, par3, par4) != blockID;
+        boolean flag1 = par1IBlockAccess.getBlockId(par2 + 1, par3, par4) == blockID && par1IBlockAccess.getBlockId(par2 + 2, par3, par4) != blockID;
+        boolean flag2 = par1IBlockAccess.getBlockId(par2, par3, par4 - 1) == blockID && par1IBlockAccess.getBlockId(par2, par3, par4 - 2) != blockID;
+        boolean flag3 = par1IBlockAccess.getBlockId(par2, par3, par4 + 1) == blockID && par1IBlockAccess.getBlockId(par2, par3, par4 + 2) != blockID;
         boolean flag4 = flag || flag1;
         boolean flag5 = flag2 || flag3;
-        if (flag4 && l == 4)
+
+        if (flag4 && par5 == 4)
         {
             return true;
         }
-        if (flag4 && l == 5)
+
+        if (flag4 && par5 == 5)
         {
             return true;
         }
-        if (flag5 && l == 2)
+
+        if (flag5 && par5 == 2)
         {
             return true;
         }
-        return flag5 && l == 3;
+
+        return flag5 && par5 == 3;
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 0;
     }
 
+    /**
+     * Returns which pass should this block be rendered on. 0 for solids and 1 for alpha
+     */
     public int getRenderBlockPass()
     {
         return 1;
     }
 
-    public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
+    /**
+     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
+     */
+    public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
     {
-        if (entity.ridingEntity == null && entity.riddenByEntity == null)
+        if (par5Entity.ridingEntity == null && par5Entity.riddenByEntity == null)
         {
-            entity.setInPortal();
+            par5Entity.setInPortal();
         }
     }
 
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
+    /**
+     * A randomly called display update to be able to add particles or other items for display
+     */
+    public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (random.nextInt(100) == 0)
+        if (par5Random.nextInt(100) == 0)
         {
-            world.playSoundEffect((double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D, "portal.portal", 0.5F, random.nextFloat() * 0.4F + 0.8F);
+            par1World.playSoundEffect((double)par2 + 0.5D, (double)par3 + 0.5D, (double)par4 + 0.5D, "portal.portal", 0.5F, par5Random.nextFloat() * 0.4F + 0.8F);
         }
-        for (int l = 0; l < 4; l++)
+
+        for (int i = 0; i < 4; i++)
         {
-            double d = (float)i + random.nextFloat();
-            double d1 = (float)j + random.nextFloat();
-            double d2 = (float)k + random.nextFloat();
+            double d = (float)par2 + par5Random.nextFloat();
+            double d1 = (float)par3 + par5Random.nextFloat();
+            double d2 = (float)par4 + par5Random.nextFloat();
             double d3 = 0.0D;
             double d4 = 0.0D;
             double d5 = 0.0D;
-            int i1 = random.nextInt(2) * 2 - 1;
-            d3 = ((double)random.nextFloat() - 0.5D) * 0.5D;
-            d4 = ((double)random.nextFloat() - 0.5D) * 0.5D;
-            d5 = ((double)random.nextFloat() - 0.5D) * 0.5D;
-            if (world.getBlockId(i - 1, j, k) == blockID || world.getBlockId(i + 1, j, k) == blockID)
+            int j = par5Random.nextInt(2) * 2 - 1;
+            d3 = ((double)par5Random.nextFloat() - 0.5D) * 0.5D;
+            d4 = ((double)par5Random.nextFloat() - 0.5D) * 0.5D;
+            d5 = ((double)par5Random.nextFloat() - 0.5D) * 0.5D;
+
+            if (par1World.getBlockId(par2 - 1, par3, par4) == blockID || par1World.getBlockId(par2 + 1, par3, par4) == blockID)
             {
-                d2 = (double)k + 0.5D + 0.25D * (double)i1;
-                d5 = random.nextFloat() * 2.0F * (float)i1;
+                d2 = (double)par4 + 0.5D + 0.25D * (double)j;
+                d5 = par5Random.nextFloat() * 2.0F * (float)j;
             }
             else
             {
-                d = (double)i + 0.5D + 0.25D * (double)i1;
-                d3 = random.nextFloat() * 2.0F * (float)i1;
+                d = (double)par2 + 0.5D + 0.25D * (double)j;
+                d3 = par5Random.nextFloat() * 2.0F * (float)j;
             }
-            world.spawnParticle("portal", d, d1, d2, d3, d4, d5);
+
+            par1World.spawnParticle("portal", d, d1, d2, d3, d4, d5);
         }
     }
 }

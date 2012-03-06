@@ -7,10 +7,10 @@ class ThreadStatSyncherSend extends Thread
     final Map field_27233_a;
     final StatsSyncher syncher;
 
-    ThreadStatSyncherSend(StatsSyncher statssyncher, Map map)
+    ThreadStatSyncherSend(StatsSyncher par1StatsSyncher, Map par2Map)
     {
-        syncher = statssyncher;
-        field_27233_a = map;
+        syncher = par1StatsSyncher;
+        field_27233_a = par2Map;
     }
 
     public void run()

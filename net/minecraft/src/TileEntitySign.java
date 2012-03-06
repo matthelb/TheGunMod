@@ -6,6 +6,11 @@ public class TileEntitySign extends TileEntity
     {
         "", "", "", ""
     };
+
+    /**
+     * The index of the line currently being edited. Only used on client side, but defined on both. Note this is only
+     * really used when the > < are going to be visible.
+     */
     public int lineBeingEdited;
     private boolean isEditable;
 
@@ -15,22 +20,30 @@ public class TileEntitySign extends TileEntity
         isEditable = true;
     }
 
-    public void writeToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Writes a tile entity to NBT.
+     */
+    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setString("Text1", signText[0]);
-        nbttagcompound.setString("Text2", signText[1]);
-        nbttagcompound.setString("Text3", signText[2]);
-        nbttagcompound.setString("Text4", signText[3]);
+        super.writeToNBT(par1NBTTagCompound);
+        par1NBTTagCompound.setString("Text1", signText[0]);
+        par1NBTTagCompound.setString("Text2", signText[1]);
+        par1NBTTagCompound.setString("Text3", signText[2]);
+        par1NBTTagCompound.setString("Text4", signText[3]);
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Reads a tile entity from NBT.
+     */
+    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
         isEditable = false;
-        super.readFromNBT(nbttagcompound);
+        super.readFromNBT(par1NBTTagCompound);
+
         for (int i = 0; i < 4; i++)
         {
-            signText[i] = nbttagcompound.getString((new StringBuilder()).append("Text").append(i + 1).toString());
+            signText[i] = par1NBTTagCompound.getString((new StringBuilder()).append("Text").append(i + 1).toString());
+
             if (signText[i].length() > 15)
             {
                 signText[i] = signText[i].substring(0, 15);

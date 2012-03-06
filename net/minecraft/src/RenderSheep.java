@@ -4,20 +4,20 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderSheep extends RenderLiving
 {
-    public RenderSheep(ModelBase modelbase, ModelBase modelbase1, float f)
+    public RenderSheep(ModelBase par1ModelBase, ModelBase par2ModelBase, float par3)
     {
-        super(modelbase, f);
-        setRenderPassModel(modelbase1);
+        super(par1ModelBase, par3);
+        setRenderPassModel(par2ModelBase);
     }
 
-    protected int setWoolColorAndRender(EntitySheep entitysheep, int i, float f)
+    protected int setWoolColorAndRender(EntitySheep par1EntitySheep, int par2, float par3)
     {
-        if (i == 0 && !entitysheep.getSheared())
+        if (par2 == 0 && !par1EntitySheep.getSheared())
         {
             loadTexture("/mob/sheep_fur.png");
-            float f1 = 1.0F;
-            int j = entitysheep.getFleeceColor();
-            GL11.glColor3f(f1 * EntitySheep.fleeceColorTable[j][0], f1 * EntitySheep.fleeceColorTable[j][1], f1 * EntitySheep.fleeceColorTable[j][2]);
+            float f = 1.0F;
+            int i = par1EntitySheep.getFleeceColor();
+            GL11.glColor3f(f * EntitySheep.fleeceColorTable[i][0], f * EntitySheep.fleeceColorTable[i][1], f * EntitySheep.fleeceColorTable[i][2]);
             return 1;
         }
         else
@@ -26,26 +26,32 @@ public class RenderSheep extends RenderLiving
         }
     }
 
-    public void func_40271_a(EntitySheep entitysheep, double d, double d1, double d2,
-            float f, float f1)
+    public void func_40271_a(EntitySheep par1EntitySheep, double par2, double par4, double par6, float par8, float par9)
     {
-        super.doRenderLiving(entitysheep, d, d1, d2, f, f1);
+        super.doRenderLiving(par1EntitySheep, par2, par4, par6, par8, par9);
     }
 
-    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    /**
+     * Queries whether should render the specified pass or not.
+     */
+    protected int shouldRenderPass(EntityLiving par1EntityLiving, int par2, float par3)
     {
-        return setWoolColorAndRender((EntitySheep)entityliving, i, f);
+        return setWoolColorAndRender((EntitySheep)par1EntityLiving, par2, par3);
     }
 
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2,
-            float f, float f1)
+    public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
-        func_40271_a((EntitySheep)entityliving, d, d1, d2, f, f1);
+        func_40271_a((EntitySheep)par1EntityLiving, par2, par4, par6, par8, par9);
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
+     */
+    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        func_40271_a((EntitySheep)entity, d, d1, d2, f, f1);
+        func_40271_a((EntitySheep)par1Entity, par2, par4, par6, par8, par9);
     }
 }

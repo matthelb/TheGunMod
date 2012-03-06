@@ -4,23 +4,29 @@ import java.util.Random;
 
 public class ItemEgg extends Item
 {
-    public ItemEgg(int i)
+    public ItemEgg(int par1)
     {
-        super(i);
+        super(par1);
         maxStackSize = 16;
     }
 
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    /**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        if (!entityplayer.capabilities.depleteBuckets)
+        if (!par3EntityPlayer.capabilities.depleteBuckets)
         {
-            itemstack.stackSize--;
+            par1ItemStack.stackSize--;
         }
-        world.playSoundAtEntity(entityplayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-        if (!world.isRemote)
+
+        par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
+
+        if (!par2World.isRemote)
         {
-            world.spawnEntityInWorld(new EntityEgg(world, entityplayer));
+            par2World.spawnEntityInWorld(new EntityEgg(par2World, par3EntityPlayer));
         }
-        return itemstack;
+
+        return par1ItemStack;
     }
 }

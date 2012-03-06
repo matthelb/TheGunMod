@@ -9,17 +9,24 @@ public class NBTTagEnd extends NBTBase
         super(null);
     }
 
-    void readTagContents(DataInput datainput)
-    throws IOException
+    /**
+     * Read the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void load(DataInput datainput) throws IOException
     {
     }
 
-    void writeTagContents(DataOutput dataoutput)
-    throws IOException
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput dataoutput) throws IOException
     {
     }
 
-    public byte getType()
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
     {
         return 0;
     }
@@ -29,13 +36,16 @@ public class NBTTagEnd extends NBTBase
         return "END";
     }
 
-    public NBTBase cloneTag()
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
     {
         return new NBTTagEnd();
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        return super.equals(obj);
+        return super.equals(par1Obj);
     }
 }

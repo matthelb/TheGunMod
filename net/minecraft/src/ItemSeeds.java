@@ -2,31 +2,43 @@ package net.minecraft.src;
 
 public class ItemSeeds extends Item
 {
+    /**
+     * the type of block this seed turns into (wheat or pumpkin stems for instance)
+     */
     private int blockType;
+
+    /** BlockID of the block the seeds can be planted on. */
     private int soilBlockID;
 
-    public ItemSeeds(int i, int j, int k)
+    public ItemSeeds(int par1, int par2, int par3)
     {
-        super(i);
-        blockType = j;
-        soilBlockID = k;
+        super(par1);
+        blockType = par2;
+        soilBlockID = par3;
     }
 
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
+     */
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7)
     {
-        if (l != 1)
+        if (par7 != 1)
         {
             return false;
         }
-        if (!entityplayer.canPlayerEdit(i, j, k) || !entityplayer.canPlayerEdit(i, j + 1, k))
+
+        if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6) || !par2EntityPlayer.canPlayerEdit(par4, par5 + 1, par6))
         {
             return false;
         }
-        int i1 = world.getBlockId(i, j, k);
-        if (i1 == soilBlockID && world.isAirBlock(i, j + 1, k))
+
+        int i = par3World.getBlockId(par4, par5, par6);
+
+        if (i == soilBlockID && par3World.isAirBlock(par4, par5 + 1, par6))
         {
-            world.setBlockWithNotify(i, j + 1, k, blockType);
-            itemstack.stackSize--;
+            par3World.setBlockWithNotify(par4, par5 + 1, par6, blockType);
+            par1ItemStack.stackSize--;
             return true;
         }
         else

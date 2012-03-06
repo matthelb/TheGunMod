@@ -17,59 +17,68 @@ public class ScreenShotHelper
     private static byte pixelData[];
     private static int imageData[];
 
-    public static String saveScreenshot(File file, int i, int j)
+    /**
+     * Takes a screenshot and saves it to the screenshots directory. Returns the filename of the screenshot.
+     */
+    public static String saveScreenshot(File par0File, int par1, int par2)
     {
-        return func_35879_a(file, null, i, j);
+        return func_35879_a(par0File, null, par1, par2);
     }
 
-    public static String func_35879_a(File file, String s, int i, int j)
+    public static String func_35879_a(File par0File, String par1Str, int par2, int par3)
     {
         try
         {
-            File file1 = new File(file, "screenshots");
-            file1.mkdir();
-            if (buffer == null || buffer.capacity() < i * j)
+            File file = new File(par0File, "screenshots");
+            file.mkdir();
+
+            if (buffer == null || buffer.capacity() < par2 * par3)
             {
-                buffer = BufferUtils.createByteBuffer(i * j * 3);
+                buffer = BufferUtils.createByteBuffer(par2 * par3 * 3);
             }
-            if (imageData == null || imageData.length < i * j * 3)
+
+            if (imageData == null || imageData.length < par2 * par3 * 3)
             {
-                pixelData = new byte[i * j * 3];
-                imageData = new int[i * j];
+                pixelData = new byte[par2 * par3 * 3];
+                imageData = new int[par2 * par3];
             }
-            GL11.glPixelStorei(3333 /*GL_PACK_ALIGNMENT*/, 1);
-            GL11.glPixelStorei(3317 /*GL_UNPACK_ALIGNMENT*/, 1);
+
+            GL11.glPixelStorei(GL11.GL_PACK_ALIGNMENT, 1);
+            GL11.glPixelStorei(GL11.GL_UNPACK_ALIGNMENT, 1);
             buffer.clear();
-            GL11.glReadPixels(0, 0, i, j, 6407 /*GL_RGB*/, 5121 /*GL_UNSIGNED_BYTE*/, buffer);
+            GL11.glReadPixels(0, 0, par2, par3, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, buffer);
             buffer.clear();
-            String s1 = (new StringBuilder()).append("").append(dateFormat.format(new Date())).toString();
-            File file2;
-            if (s == null)
+            String s = (new StringBuilder()).append("").append(dateFormat.format(new Date())).toString();
+            File file1;
+
+            if (par1Str == null)
             {
-                for (int k = 1; (file2 = new File(file1, (new StringBuilder()).append(s1).append(k != 1 ? (new StringBuilder()).append("_").append(k).toString() : "").append(".png").toString())).exists(); k++) { }
+                for (int i = 1; (file1 = new File(file, (new StringBuilder()).append(s).append(i != 1 ? (new StringBuilder()).append("_").append(i).toString() : "").append(".png").toString())).exists(); i++) { }
             }
             else
             {
-                file2 = new File(file1, s);
+                file1 = new File(file, par1Str);
             }
+
             buffer.get(pixelData);
-            for (int l = 0; l < i; l++)
+
+            for (int j = 0; j < par2; j++)
             {
-                for (int i1 = 0; i1 < j; i1++)
+                for (int k = 0; k < par3; k++)
                 {
-                    int j1 = l + (j - i1 - 1) * i;
-                    int k1 = pixelData[j1 * 3 + 0] & 0xff;
-                    int l1 = pixelData[j1 * 3 + 1] & 0xff;
-                    int i2 = pixelData[j1 * 3 + 2] & 0xff;
-                    int j2 = 0xff000000 | k1 << 16 | l1 << 8 | i2;
-                    imageData[l + i1 * i] = j2;
+                    int l = j + (par3 - k - 1) * par2;
+                    int i1 = pixelData[l * 3 + 0] & 0xff;
+                    int j1 = pixelData[l * 3 + 1] & 0xff;
+                    int k1 = pixelData[l * 3 + 2] & 0xff;
+                    int l1 = 0xff000000 | i1 << 16 | j1 << 8 | k1;
+                    imageData[j + k * par2] = l1;
                 }
             }
 
-            BufferedImage bufferedimage = new BufferedImage(i, j, 1);
-            bufferedimage.setRGB(0, 0, i, j, imageData, 0, i);
-            ImageIO.write(bufferedimage, "png", file2);
-            return (new StringBuilder()).append("Saved screenshot as ").append(file2.getName()).toString();
+            BufferedImage bufferedimage = new BufferedImage(par2, par3, 1);
+            bufferedimage.setRGB(0, 0, par2, par3, imageData, 0, par2);
+            ImageIO.write(bufferedimage, "png", file1);
+            return (new StringBuilder()).append("Saved screenshot as ").append(file1.getName()).toString();
         }
         catch (Exception exception)
         {

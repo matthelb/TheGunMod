@@ -4,25 +4,24 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderSquid extends RenderLiving
 {
-    public RenderSquid(ModelBase modelbase, float f)
+    public RenderSquid(ModelBase par1ModelBase, float par2)
     {
-        super(modelbase, f);
+        super(par1ModelBase, par2);
     }
 
-    public void func_21008_a(EntitySquid entitysquid, double d, double d1, double d2,
-            float f, float f1)
+    public void func_21008_a(EntitySquid par1EntitySquid, double par2, double par4, double par6, float par8, float par9)
     {
-        super.doRenderLiving(entitysquid, d, d1, d2, f, f1);
+        super.doRenderLiving(par1EntitySquid, par2, par4, par6, par8, par9);
     }
 
-    protected void func_21007_a(EntitySquid entitysquid, float f, float f1, float f2)
+    protected void func_21007_a(EntitySquid par1EntitySquid, float par2, float par3, float par4)
     {
-        float f3 = entitysquid.field_21088_b + (entitysquid.field_21089_a - entitysquid.field_21088_b) * f2;
-        float f4 = entitysquid.field_21086_f + (entitysquid.field_21087_c - entitysquid.field_21086_f) * f2;
+        float f = par1EntitySquid.field_21088_b + (par1EntitySquid.field_21089_a - par1EntitySquid.field_21088_b) * par4;
+        float f1 = par1EntitySquid.field_21086_f + (par1EntitySquid.field_21087_c - par1EntitySquid.field_21086_f) * par4;
         GL11.glTranslatef(0.0F, 0.5F, 0.0F);
-        GL11.glRotatef(180F - f1, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(f3, 1.0F, 0.0F, 0.0F);
-        GL11.glRotatef(f4, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(180F - par3, 0.0F, 1.0F, 0.0F);
+        GL11.glRotatef(f, 1.0F, 0.0F, 0.0F);
+        GL11.glRotatef(f1, 0.0F, 1.0F, 0.0F);
         GL11.glTranslatef(0.0F, -1.2F, 0.0F);
     }
 
@@ -30,36 +29,47 @@ public class RenderSquid extends RenderLiving
     {
     }
 
-    protected float handleRotationFloat(EntitySquid entitysquid, float f)
+    protected float handleRotationFloat(EntitySquid par1EntitySquid, float par2)
     {
-        float f1 = entitysquid.lastTentacleAngle + (entitysquid.tentacleAngle - entitysquid.lastTentacleAngle) * f;
-        return f1;
+        float f = par1EntitySquid.lastTentacleAngle + (par1EntitySquid.tentacleAngle - par1EntitySquid.lastTentacleAngle) * par2;
+        return f;
     }
 
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    /**
+     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
+     * entityLiving, partialTickTime
+     */
+    protected void preRenderCallback(EntityLiving par1EntityLiving, float par2)
     {
-        func_21005_a((EntitySquid)entityliving, f);
+        func_21005_a((EntitySquid)par1EntityLiving, par2);
     }
 
-    protected float handleRotationFloat(EntityLiving entityliving, float f)
+    /**
+     * Defines what float the third param in setRotationAngles of ModelBase is
+     */
+    protected float handleRotationFloat(EntityLiving par1EntityLiving, float par2)
     {
-        return handleRotationFloat((EntitySquid)entityliving, f);
+        return handleRotationFloat((EntitySquid)par1EntityLiving, par2);
     }
 
-    protected void rotateCorpse(EntityLiving entityliving, float f, float f1, float f2)
+    protected void rotateCorpse(EntityLiving par1EntityLiving, float par2, float par3, float par4)
     {
-        func_21007_a((EntitySquid)entityliving, f, f1, f2);
+        func_21007_a((EntitySquid)par1EntityLiving, par2, par3, par4);
     }
 
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2,
-            float f, float f1)
+    public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
-        func_21008_a((EntitySquid)entityliving, d, d1, d2, f, f1);
+        func_21008_a((EntitySquid)par1EntityLiving, par2, par4, par6, par8, par9);
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
+     */
+    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        func_21008_a((EntitySquid)entity, d, d1, d2, f, f1);
+        func_21008_a((EntitySquid)par1Entity, par2, par4, par6, par8, par9);
     }
 }

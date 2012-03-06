@@ -4,75 +4,98 @@ import java.util.Random;
 
 public class BlockCrops extends BlockFlower
 {
-    protected BlockCrops(int i, int j)
+    protected BlockCrops(int par1, int par2)
     {
-        super(i, j);
-        blockIndexInTexture = j;
-        setTickOnLoad(true);
+        super(par1, par2);
+        blockIndexInTexture = par2;
+        setTickRandomly(true);
         float f = 0.5F;
         setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.25F, 0.5F + f);
     }
 
-    protected boolean canThisPlantGrowOnThisBlockID(int i)
+    /**
+     * Gets passed in the blockID of the block below and supposed to return true if its allowed to grow on the type of
+     * blockID passed in. Args: blockID
+     */
+    protected boolean canThisPlantGrowOnThisBlockID(int par1)
     {
-        return i == Block.tilledField.blockID;
+        return par1 == Block.tilledField.blockID;
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        super.updateTick(world, i, j, k, random);
-        if (world.getBlockLightValue(i, j + 1, k) >= 9)
+        super.updateTick(par1World, par2, par3, par4, par5Random);
+
+        if (par1World.getBlockLightValue(par2, par3 + 1, par4) >= 9)
         {
-            int l = world.getBlockMetadata(i, j, k);
-            if (l < 7)
+            int i = par1World.getBlockMetadata(par2, par3, par4);
+
+            if (i < 7)
             {
-                float f = getGrowthRate(world, i, j, k);
-                if (random.nextInt((int)(25F / f) + 1) == 0)
+                float f = getGrowthRate(par1World, par2, par3, par4);
+
+                if (par5Random.nextInt((int)(25F / f) + 1) == 0)
                 {
-                    l++;
-                    world.setBlockMetadataWithNotify(i, j, k, l);
+                    i++;
+                    par1World.setBlockMetadataWithNotify(par2, par3, par4, i);
                 }
             }
         }
     }
 
-    public void fertilize(World world, int i, int j, int k)
+    /**
+     * Apply bonemeal to the crops.
+     */
+    public void fertilize(World par1World, int par2, int par3, int par4)
     {
-        world.setBlockMetadataWithNotify(i, j, k, 7);
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, 7);
     }
 
-    private float getGrowthRate(World world, int i, int j, int k)
+    /**
+     * Gets the growth rate for the crop. Setup to encourage rows by halving growth rate if there is diagonals, crops on
+     * different sides that aren't opposing, and by adding growth for every crop next to this one (and for crop below
+     * this one). Args: x, y, z
+     */
+    private float getGrowthRate(World par1World, int par2, int par3, int par4)
     {
         float f = 1.0F;
-        int l = world.getBlockId(i, j, k - 1);
-        int i1 = world.getBlockId(i, j, k + 1);
-        int j1 = world.getBlockId(i - 1, j, k);
-        int k1 = world.getBlockId(i + 1, j, k);
-        int l1 = world.getBlockId(i - 1, j, k - 1);
-        int i2 = world.getBlockId(i + 1, j, k - 1);
-        int j2 = world.getBlockId(i + 1, j, k + 1);
-        int k2 = world.getBlockId(i - 1, j, k + 1);
-        boolean flag = j1 == blockID || k1 == blockID;
-        boolean flag1 = l == blockID || i1 == blockID;
-        boolean flag2 = l1 == blockID || i2 == blockID || j2 == blockID || k2 == blockID;
-        for (int l2 = i - 1; l2 <= i + 1; l2++)
+        int i = par1World.getBlockId(par2, par3, par4 - 1);
+        int j = par1World.getBlockId(par2, par3, par4 + 1);
+        int k = par1World.getBlockId(par2 - 1, par3, par4);
+        int l = par1World.getBlockId(par2 + 1, par3, par4);
+        int i1 = par1World.getBlockId(par2 - 1, par3, par4 - 1);
+        int j1 = par1World.getBlockId(par2 + 1, par3, par4 - 1);
+        int k1 = par1World.getBlockId(par2 + 1, par3, par4 + 1);
+        int l1 = par1World.getBlockId(par2 - 1, par3, par4 + 1);
+        boolean flag = k == blockID || l == blockID;
+        boolean flag1 = i == blockID || j == blockID;
+        boolean flag2 = i1 == blockID || j1 == blockID || k1 == blockID || l1 == blockID;
+
+        for (int i2 = par2 - 1; i2 <= par2 + 1; i2++)
         {
-            for (int i3 = k - 1; i3 <= k + 1; i3++)
+            for (int j2 = par4 - 1; j2 <= par4 + 1; j2++)
             {
-                int j3 = world.getBlockId(l2, j - 1, i3);
+                int k2 = par1World.getBlockId(i2, par3 - 1, j2);
                 float f1 = 0.0F;
-                if (j3 == Block.tilledField.blockID)
+
+                if (k2 == Block.tilledField.blockID)
                 {
                     f1 = 1.0F;
-                    if (world.getBlockMetadata(l2, j - 1, i3) > 0)
+
+                    if (par1World.getBlockMetadata(i2, par3 - 1, j2) > 0)
                     {
                         f1 = 3F;
                     }
                 }
-                if (l2 != i || i3 != k)
+
+                if (i2 != par2 || j2 != par4)
                 {
                     f1 /= 4F;
                 }
+
                 f += f1;
             }
         }
@@ -81,49 +104,66 @@ public class BlockCrops extends BlockFlower
         {
             f /= 2.0F;
         }
+
         return f;
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (j < 0)
+        if (par2 < 0)
         {
-            j = 7;
+            par2 = 7;
         }
-        return blockIndexInTexture + j;
+
+        return blockIndexInTexture + par2;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 6;
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
+    /**
+     * Drops the block items with a specified chance of dropping the specified items
+     */
+    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
-        super.dropBlockAsItemWithChance(world, i, j, k, l, f, 0);
-        if (world.isRemote)
+        super.dropBlockAsItemWithChance(par1World, par2, par3, par4, par5, par6, 0);
+
+        if (par1World.isRemote)
         {
             return;
         }
-        int j1 = 3 + i1;
-        for (int k1 = 0; k1 < j1; k1++)
+
+        int i = 3 + par7;
+
+        for (int j = 0; j < i; j++)
         {
-            if (world.rand.nextInt(15) <= l)
+            if (par1World.rand.nextInt(15) <= par5)
             {
-                float f1 = 0.7F;
-                float f2 = world.rand.nextFloat() * f1 + (1.0F - f1) * 0.5F;
-                float f3 = world.rand.nextFloat() * f1 + (1.0F - f1) * 0.5F;
-                float f4 = world.rand.nextFloat() * f1 + (1.0F - f1) * 0.5F;
-                EntityItem entityitem = new EntityItem(world, (float)i + f2, (float)j + f3, (float)k + f4, new ItemStack(Item.seeds));
+                float f = 0.7F;
+                float f1 = par1World.rand.nextFloat() * f + (1.0F - f) * 0.5F;
+                float f2 = par1World.rand.nextFloat() * f + (1.0F - f) * 0.5F;
+                float f3 = par1World.rand.nextFloat() * f + (1.0F - f) * 0.5F;
+                EntityItem entityitem = new EntityItem(par1World, (float)par2 + f1, (float)par3 + f2, (float)par4 + f3, new ItemStack(Item.seeds));
                 entityitem.delayBeforeCanPickup = 10;
-                world.spawnEntityInWorld(entityitem);
+                par1World.spawnEntityInWorld(entityitem);
             }
         }
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
-        if (i == 7)
+        if (par1 == 7)
         {
             return Item.wheat.shiftedIndex;
         }
@@ -133,7 +173,10 @@ public class BlockCrops extends BlockFlower
         }
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 1;
     }

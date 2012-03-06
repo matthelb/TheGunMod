@@ -5,34 +5,42 @@ import org.lwjgl.opengl.GL11;
 
 public class EffectRenderer
 {
+    /** Reference to the World object. */
     protected World worldObj;
     private List fxLayers[];
     private RenderEngine renderer;
+
+    /** RNG. */
     private Random rand;
 
-    public EffectRenderer(World world, RenderEngine renderengine)
+    public EffectRenderer(World par1World, RenderEngine par2RenderEngine)
     {
         fxLayers = new List[4];
         rand = new Random();
-        if (world != null)
+
+        if (par1World != null)
         {
-            worldObj = world;
+            worldObj = par1World;
         }
-        renderer = renderengine;
+
+        renderer = par2RenderEngine;
+
         for (int i = 0; i < 4; i++)
         {
             fxLayers[i] = new ArrayList();
         }
     }
 
-    public void addEffect(EntityFX entityfx)
+    public void addEffect(EntityFX par1EntityFX)
     {
-        int i = entityfx.getFXLayer();
+        int i = par1EntityFX.getFXLayer();
+
         if (fxLayers[i].size() >= 4000)
         {
             fxLayers[i].remove(0);
         }
-        fxLayers[i].add(entityfx);
+
+        fxLayers[i].add(par1EntityFX);
     }
 
     public void updateEffects()
@@ -43,6 +51,7 @@ public class EffectRenderer
             {
                 EntityFX entityfx = (EntityFX)fxLayers[i].get(j);
                 entityfx.onUpdate();
+
                 if (entityfx.isDead)
                 {
                     fxLayers[i].remove(j--);
@@ -51,141 +60,169 @@ public class EffectRenderer
         }
     }
 
-    public void renderParticles(Entity entity, float f)
+    /**
+     * Renders all current particles. Args player, partialTickTime
+     */
+    public void renderParticles(Entity par1Entity, float par2)
     {
-        float f1 = ActiveRenderInfo.rotationX;
-        float f2 = ActiveRenderInfo.rotationZ;
-        float f3 = ActiveRenderInfo.rotationYZ;
-        float f4 = ActiveRenderInfo.rotationXY;
-        float f5 = ActiveRenderInfo.rotationXZ;
-        EntityFX.interpPosX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)f;
-        EntityFX.interpPosY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)f;
-        EntityFX.interpPosZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)f;
+        float f = ActiveRenderInfo.rotationX;
+        float f1 = ActiveRenderInfo.rotationZ;
+        float f2 = ActiveRenderInfo.rotationYZ;
+        float f3 = ActiveRenderInfo.rotationXY;
+        float f4 = ActiveRenderInfo.rotationXZ;
+        EntityFX.interpPosX = par1Entity.lastTickPosX + (par1Entity.posX - par1Entity.lastTickPosX) * (double)par2;
+        EntityFX.interpPosY = par1Entity.lastTickPosY + (par1Entity.posY - par1Entity.lastTickPosY) * (double)par2;
+        EntityFX.interpPosZ = par1Entity.lastTickPosZ + (par1Entity.posZ - par1Entity.lastTickPosZ) * (double)par2;
+
         for (int i = 0; i < 3; i++)
         {
             if (fxLayers[i].size() == 0)
             {
                 continue;
             }
+
             int j = 0;
+
             if (i == 0)
             {
                 j = renderer.getTexture("/particles.png");
             }
+
             if (i == 1)
             {
                 j = renderer.getTexture("/terrain.png");
             }
+
             if (i == 2)
             {
                 j = renderer.getTexture("/gui/items.png");
             }
-            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, j);
+
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, j);
             Tessellator tessellator = Tessellator.instance;
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             tessellator.startDrawingQuads();
+
             for (int k = 0; k < fxLayers[i].size(); k++)
             {
                 EntityFX entityfx = (EntityFX)fxLayers[i].get(k);
-                tessellator.setBrightness(entityfx.getEntityBrightnessForRender(f));
-                entityfx.renderParticle(tessellator, f, f1, f5, f2, f3, f4);
+                tessellator.setBrightness(entityfx.getEntityBrightnessForRender(par2));
+                entityfx.renderParticle(tessellator, par2, f, f4, f1, f2, f3);
             }
 
             tessellator.draw();
         }
     }
 
-    public void func_1187_b(Entity entity, float f)
+    public void func_1187_b(Entity par1Entity, float par2)
     {
-        float f1 = MathHelper.cos((entity.rotationYaw * 3.141593F) / 180F);
-        float f2 = MathHelper.sin((entity.rotationYaw * 3.141593F) / 180F);
-        float f3 = -f2 * MathHelper.sin((entity.rotationPitch * 3.141593F) / 180F);
-        float f4 = f1 * MathHelper.sin((entity.rotationPitch * 3.141593F) / 180F);
-        float f5 = MathHelper.cos((entity.rotationPitch * 3.141593F) / 180F);
+        float f = MathHelper.cos((par1Entity.rotationYaw * (float)Math.PI) / 180F);
+        float f1 = MathHelper.sin((par1Entity.rotationYaw * (float)Math.PI) / 180F);
+        float f2 = -f1 * MathHelper.sin((par1Entity.rotationPitch * (float)Math.PI) / 180F);
+        float f3 = f * MathHelper.sin((par1Entity.rotationPitch * (float)Math.PI) / 180F);
+        float f4 = MathHelper.cos((par1Entity.rotationPitch * (float)Math.PI) / 180F);
         byte byte0 = 3;
+
         if (fxLayers[byte0].size() == 0)
         {
             return;
         }
+
         Tessellator tessellator = Tessellator.instance;
+
         for (int i = 0; i < fxLayers[byte0].size(); i++)
         {
             EntityFX entityfx = (EntityFX)fxLayers[byte0].get(i);
-            tessellator.setBrightness(entityfx.getEntityBrightnessForRender(f));
-            entityfx.renderParticle(tessellator, f, f1, f5, f2, f3, f4);
+            tessellator.setBrightness(entityfx.getEntityBrightnessForRender(par2));
+            entityfx.renderParticle(tessellator, par2, f, f4, f1, f2, f3);
         }
     }
 
-    public void clearEffects(World world)
+    public void clearEffects(World par1World)
     {
-        worldObj = world;
+        worldObj = par1World;
+
         for (int i = 0; i < 4; i++)
         {
             fxLayers[i].clear();
         }
     }
 
-    public void addBlockDestroyEffects(int i, int j, int k, int l, int i1)
+    public void addBlockDestroyEffects(int par1, int par2, int par3, int par4, int par5)
     {
-        if (l == 0)
+        if (par4 == 0)
         {
             return;
         }
-        Block block = Block.blocksList[l];
-        int j1 = 4;
-        for (int k1 = 0; k1 < j1; k1++)
+
+        Block block = Block.blocksList[par4];
+        int i = 4;
+
+        for (int j = 0; j < i; j++)
         {
-            for (int l1 = 0; l1 < j1; l1++)
+            for (int k = 0; k < i; k++)
             {
-                for (int i2 = 0; i2 < j1; i2++)
+                for (int l = 0; l < i; l++)
                 {
-                    double d = (double)i + ((double)k1 + 0.5D) / (double)j1;
-                    double d1 = (double)j + ((double)l1 + 0.5D) / (double)j1;
-                    double d2 = (double)k + ((double)i2 + 0.5D) / (double)j1;
-                    int j2 = rand.nextInt(6);
-                    addEffect((new EntityDiggingFX(worldObj, d, d1, d2, d - (double)i - 0.5D, d1 - (double)j - 0.5D, d2 - (double)k - 0.5D, block, j2, i1)).func_4041_a(i, j, k));
+                    double d = (double)par1 + ((double)j + 0.5D) / (double)i;
+                    double d1 = (double)par2 + ((double)k + 0.5D) / (double)i;
+                    double d2 = (double)par3 + ((double)l + 0.5D) / (double)i;
+                    int i1 = rand.nextInt(6);
+                    addEffect((new EntityDiggingFX(worldObj, d, d1, d2, d - (double)par1 - 0.5D, d1 - (double)par2 - 0.5D, d2 - (double)par3 - 0.5D, block, i1, par5)).func_4041_a(par1, par2, par3));
                 }
             }
         }
     }
 
-    public void addBlockHitEffects(int i, int j, int k, int l)
+    /**
+     * Adds block hit particles for the specified block. Args: x, y, z, sideHit
+     */
+    public void addBlockHitEffects(int par1, int par2, int par3, int par4)
     {
-        int i1 = worldObj.getBlockId(i, j, k);
-        if (i1 == 0)
+        int i = worldObj.getBlockId(par1, par2, par3);
+
+        if (i == 0)
         {
             return;
         }
-        Block block = Block.blocksList[i1];
+
+        Block block = Block.blocksList[i];
         float f = 0.1F;
-        double d = (double)i + rand.nextDouble() * (block.maxX - block.minX - (double)(f * 2.0F)) + (double)f + block.minX;
-        double d1 = (double)j + rand.nextDouble() * (block.maxY - block.minY - (double)(f * 2.0F)) + (double)f + block.minY;
-        double d2 = (double)k + rand.nextDouble() * (block.maxZ - block.minZ - (double)(f * 2.0F)) + (double)f + block.minZ;
-        if (l == 0)
+        double d = (double)par1 + rand.nextDouble() * (block.maxX - block.minX - (double)(f * 2.0F)) + (double)f + block.minX;
+        double d1 = (double)par2 + rand.nextDouble() * (block.maxY - block.minY - (double)(f * 2.0F)) + (double)f + block.minY;
+        double d2 = (double)par3 + rand.nextDouble() * (block.maxZ - block.minZ - (double)(f * 2.0F)) + (double)f + block.minZ;
+
+        if (par4 == 0)
         {
-            d1 = ((double)j + block.minY) - (double)f;
+            d1 = ((double)par2 + block.minY) - (double)f;
         }
-        if (l == 1)
+
+        if (par4 == 1)
         {
-            d1 = (double)j + block.maxY + (double)f;
+            d1 = (double)par2 + block.maxY + (double)f;
         }
-        if (l == 2)
+
+        if (par4 == 2)
         {
-            d2 = ((double)k + block.minZ) - (double)f;
+            d2 = ((double)par3 + block.minZ) - (double)f;
         }
-        if (l == 3)
+
+        if (par4 == 3)
         {
-            d2 = (double)k + block.maxZ + (double)f;
+            d2 = (double)par3 + block.maxZ + (double)f;
         }
-        if (l == 4)
+
+        if (par4 == 4)
         {
-            d = ((double)i + block.minX) - (double)f;
+            d = ((double)par1 + block.minX) - (double)f;
         }
-        if (l == 5)
+
+        if (par4 == 5)
         {
-            d = (double)i + block.maxX + (double)f;
+            d = (double)par1 + block.maxX + (double)f;
         }
-        addEffect((new EntityDiggingFX(worldObj, d, d1, d2, 0.0D, 0.0D, 0.0D, block, l, worldObj.getBlockMetadata(i, j, k))).func_4041_a(i, j, k).multiplyVelocity(0.2F).func_405_d(0.6F));
+
+        addEffect((new EntityDiggingFX(worldObj, d, d1, d2, 0.0D, 0.0D, 0.0D, block, par4, worldObj.getBlockMetadata(par1, par2, par3))).func_4041_a(par1, par2, par3).multiplyVelocity(0.2F).func_405_d(0.6F));
     }
 
     public String getStatistics()

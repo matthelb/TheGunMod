@@ -17,13 +17,11 @@ public class Block
     public static final StepSound soundClothFootstep;
     public static final StepSound soundSandFootstep;
     public static final Block blocksList[];
-    public static final boolean tickOnLoad[] = new boolean[256];
-    public static final boolean opaqueCubeLookup[] = new boolean[256];
-    public static final boolean isBlockContainer[] = new boolean[256];
-    public static final int lightOpacity[] = new int[256];
+    public static final boolean opaqueCubeLookup[] = new boolean[4096];
+    public static final int lightOpacity[] = new int[4096];
     public static final boolean canBlockGrass[];
-    public static final int lightValue[] = new int[256];
-    public static final boolean requiresSelfNotify[] = new boolean[256];
+    public static final int lightValue[] = new int[4096];
+    public static final boolean requiresSelfNotify[] = new boolean[4096];
     public static boolean useNeighborBrightness[];
     public static final Block stone;
     public static final BlockGrass grass;
@@ -32,9 +30,17 @@ public class Block
     public static final Block planks;
     public static final Block sapling;
     public static final Block bedrock;
+
+    /** Flowing water block */
     public static final Block waterMoving;
+
+    /** Stationary water source block */
     public static final Block waterStill;
+
+    /** Flowing lava block */
     public static final Block lavaMoving;
+
+    /** Stationary lava source block */
     public static final Block lavaStill;
     public static final Block sand;
     public static final Block gravel;
@@ -50,20 +56,44 @@ public class Block
     public static final Block dispenser;
     public static final Block sandStone;
     public static final Block music;
+
+    /** Is the block that build the bed in the world. */
     public static final Block bed;
+
+    /** Powered rail track. */
     public static final Block railPowered;
+
+    /** Minecart detector rail track. */
     public static final Block railDetector;
+
+    /** Is the sticky piston block. */
     public static final Block pistonStickyBase;
+
+    /** Slows entities on collision. */
     public static final Block web;
+
+    /** BlockTallGrass */
     public static final BlockTallGrass tallGrass;
+
+    /** BlockDeadBush */
     public static final BlockDeadBush deadBush;
+
+    /** Is the normal piston block. */
     public static final Block pistonBase;
     public static final BlockPistonExtension pistonExtension;
     public static final Block cloth;
     public static final BlockPistonMoving pistonMoving;
+
+    /** Was dandelion */
     public static final BlockFlower plantYellow;
+
+    /** Was rose */
     public static final BlockFlower plantRed;
+
+    /** Was mushroomKingBolete */
     public static final BlockFlower mushroomBrown;
+
+    /** Was mushroomFlyAgaric */
     public static final BlockFlower mushroomRed;
     public static final Block blockGold;
     public static final Block blockSteel;
@@ -110,16 +140,36 @@ public class Block
     public static final Block reed;
     public static final Block jukebox;
     public static final Block fence;
+
+    /** A pumpkin */
     public static final Block pumpkin;
+
+    /** Red block, main part of the nether */
     public static final Block netherrack;
     public static final Block slowSand;
+
+    /** a brittle glass like substance found only in the nether */
     public static final Block glowStone;
+
+    /** The purple teleport blocks inside the obsidian circle */
     public static final BlockPortal portal;
+
+    /** The Jack-O-Lantern */
     public static final Block pumpkinLantern;
     public static final Block cake;
+
+    /** Is the redstone repeater (diode) when isn't powered. */
     public static final Block redstoneRepeaterIdle;
+
+    /** Is the redstone repeater (diode) when powered. */
     public static final Block redstoneRepeaterActive;
+
+    /**
+     * Is the april fools secret locked chest, only spawn on new chunks on 1st April.
+     */
     public static final Block lockedChest;
+
+    /** Trapdoor block. */
     public static final Block trapdoor;
     public static final Block silverfish;
     public static final Block stoneBrick;
@@ -137,6 +187,10 @@ public class Block
     public static final BlockMycelium mycelium;
     public static final Block waterlily;
     public static final Block netherBrick;
+
+    /**
+     * The Block ID that the generator is allowed to replace while generating the terrain.
+     */
     public static final Block netherFence;
     public static final Block stairsNetherBrick;
     public static final Block netherStalk;
@@ -147,511 +201,792 @@ public class Block
     public static final Block endPortalFrame;
     public static final Block whiteStone;
     public static final Block dragonEgg;
+    public static final Block field_48209_bL;
+    public static final Block field_48210_bM;
+
+    /**
+     * The index of the texture to be displayed for this block. May vary based on graphics settings. Mostly seems to
+     * come from terrain.png, and the index is 0-based (grass is 0).
+     */
     public int blockIndexInTexture;
+
+    /** ID of the block. */
     public final int blockID;
+
+    /** Indicates how many hits it takes to break a block. */
     protected float blockHardness;
+
+    /** Indicates the blocks resistance to explosions. */
     protected float blockResistance;
+
+    /**
+     * set to true when Block's constructor is called through the chain of super()'s. Note: Never used
+     */
     protected boolean blockConstructorCalled;
+
+    /**
+     * If this field is true, the block is counted for statistics (mined or placed)
+     */
     protected boolean enableStats;
+    protected boolean field_48208_bT;
+    protected boolean field_48207_bU;
+
+    /** minimum X for the block bounds (local coordinates) */
     public double minX;
+
+    /** minimum Y for the block bounds (local coordinates) */
     public double minY;
+
+    /** minimum Z for the block bounds (local coordinates) */
     public double minZ;
+
+    /** maximum X for the block bounds (local coordinates) */
     public double maxX;
+
+    /** maximum Y for the block bounds (local coordinates) */
     public double maxY;
+
+    /** maximum Z for the block bounds (local coordinates) */
     public double maxZ;
+
+    /** Sound of stepping on the block */
     public StepSound stepSound;
     public float blockParticleGravity;
+
+    /** Block material definition. */
     public final Material blockMaterial;
+
+    /**
+     * Determines how much velocity is maintained while moving on top of this block
+     */
     public float slipperiness;
     private String blockName;
 
-    protected Block(int i, Material material)
+    protected Block(int par1, Material par2Material)
     {
         blockConstructorCalled = true;
         enableStats = true;
         stepSound = soundPowderFootstep;
         blockParticleGravity = 1.0F;
         slipperiness = 0.6F;
-        if (blocksList[i] != null)
+
+        if (blocksList[par1] != null)
         {
-            throw new IllegalArgumentException((new StringBuilder()).append("Slot ").append(i).append(" is already occupied by ").append(blocksList[i]).append(" when adding ").append(this).toString());
+            throw new IllegalArgumentException((new StringBuilder()).append("Slot ").append(par1).append(" is already occupied by ").append(blocksList[par1]).append(" when adding ").append(this).toString());
         }
         else
         {
-            blockMaterial = material;
-            blocksList[i] = this;
-            blockID = i;
+            blockMaterial = par2Material;
+            blocksList[par1] = this;
+            blockID = par1;
             setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-            opaqueCubeLookup[i] = isOpaqueCube();
-            lightOpacity[i] = isOpaqueCube() ? 255 : 0;
-            canBlockGrass[i] = !material.getCanBlockGrass();
-            isBlockContainer[i] = false;
+            opaqueCubeLookup[par1] = isOpaqueCube();
+            lightOpacity[par1] = isOpaqueCube() ? 255 : 0;
+            canBlockGrass[par1] = !par2Material.getCanBlockGrass();
             return;
         }
     }
 
+    /**
+     * Blocks with this attribute will not notify all near blocks when it's metadata change. The default behavior is
+     * always notify every neightbor block when anything changes.
+     */
     protected Block setRequiresSelfNotify()
     {
         requiresSelfNotify[blockID] = true;
         return this;
     }
 
+    /**
+     * This method is called on a block after all other blocks gets already created. You can use it to reference and
+     * configure something on the block that needs the others ones.
+     */
     protected void initializeBlock()
     {
     }
 
-    protected Block(int i, int j, Material material)
+    protected Block(int par1, int par2, Material par3Material)
     {
-        this(i, material);
-        blockIndexInTexture = j;
+        this(par1, par3Material);
+        blockIndexInTexture = par2;
     }
 
-    protected Block setStepSound(StepSound stepsound)
+    /**
+     * Sets the footstep sound for the block. Returns the object for convenience in constructing.
+     */
+    protected Block setStepSound(StepSound par1StepSound)
     {
-        stepSound = stepsound;
+        stepSound = par1StepSound;
         return this;
     }
 
-    protected Block setLightOpacity(int i)
+    /**
+     * Sets how much light is blocked going through this block. Returns the object for convenience in constructing.
+     */
+    protected Block setLightOpacity(int par1)
     {
-        lightOpacity[blockID] = i;
+        lightOpacity[blockID] = par1;
         return this;
     }
 
-    protected Block setLightValue(float f)
+    /**
+     * Sets the amount of light emitted by a block from 0.0f to 1.0f (converts internally to 0-15). Returns the object
+     * for convenience in constructing.
+     */
+    protected Block setLightValue(float par1)
     {
-        lightValue[blockID] = (int)(15F * f);
+        lightValue[blockID] = (int)(15F * par1);
         return this;
     }
 
-    protected Block setResistance(float f)
+    /**
+     * Sets the the blocks resistance to explosions. Returns the object for convenience in constructing.
+     */
+    protected Block setResistance(float par1)
     {
-        blockResistance = f * 3F;
+        blockResistance = par1 * 3F;
         return this;
     }
 
+    public static boolean func_48206_g(int par0)
+    {
+        Block block = blocksList[par0];
+
+        if (block == null)
+        {
+            return false;
+        }
+        else
+        {
+            return block.blockMaterial.isOpaque() && block.renderAsNormalBlock();
+        }
+    }
+
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return true;
     }
 
+    public boolean func_48204_b(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    {
+        return !blockMaterial.blocksMovement();
+    }
+
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 0;
     }
 
-    protected Block setHardness(float f)
+    /**
+     * Sets how many hits it takes to break a block.
+     */
+    protected Block setHardness(float par1)
     {
-        blockHardness = f;
-        if (blockResistance < f * 5F)
+        blockHardness = par1;
+
+        if (blockResistance < par1 * 5F)
         {
-            blockResistance = f * 5F;
+            blockResistance = par1 * 5F;
         }
+
         return this;
     }
 
+    /**
+     * This method will make the hardness of the block equals to -1, and the block is indestructible.
+     */
     protected Block setBlockUnbreakable()
     {
         setHardness(-1F);
         return this;
     }
 
+    /**
+     * Returns the block hardness.
+     */
     public float getHardness()
     {
         return blockHardness;
     }
 
-    protected Block setTickOnLoad(boolean flag)
+    /**
+     * Sets whether this block type will receive random update ticks
+     */
+    protected Block setTickRandomly(boolean par1)
     {
-        tickOnLoad[blockID] = flag;
+        field_48208_bT = par1;
         return this;
     }
 
-    public void setBlockBounds(float f, float f1, float f2, float f3, float f4, float f5)
+    public boolean func_48203_o()
     {
-        minX = f;
-        minY = f1;
-        minZ = f2;
-        maxX = f3;
-        maxY = f4;
-        maxZ = f5;
+        return field_48208_bT;
     }
 
-    public float getBlockBrightness(IBlockAccess iblockaccess, int i, int j, int k)
+    public boolean func_48205_p()
     {
-        return iblockaccess.getBrightness(i, j, k, lightValue[blockID]);
+        return field_48207_bU;
     }
 
-    public int getMixedBrightnessForBlock(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Sets the bounds of the block.  minX, minY, minZ, maxX, maxY, maxZ
+     */
+    public void setBlockBounds(float par1, float par2, float par3, float par4, float par5, float par6)
     {
-        return iblockaccess.getLightBrightnessForSkyBlocks(i, j, k, lightValue[blockID]);
+        minX = par1;
+        minY = par2;
+        minZ = par3;
+        maxX = par4;
+        maxY = par5;
+        maxZ = par6;
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * How bright to render this block based on the light its receiving. Args: iBlockAccess, x, y, z
+     */
+    public float getBlockBrightness(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        if (l == 0 && minY > 0.0D)
+        return par1IBlockAccess.getBrightness(par2, par3, par4, lightValue[blockID]);
+    }
+
+    /**
+     * 'Goes straight to getLightBrightnessForSkyBlocks for Blocks, does some fancy computing for Fluids'
+     */
+    public int getMixedBrightnessForBlock(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    {
+        return par1IBlockAccess.getLightBrightnessForSkyBlocks(par2, par3, par4, lightValue[blockID]);
+    }
+
+    /**
+     * Returns true if the given side of this block type should be rendered, if the adjacent block is at the given
+     * coordinates.  Args: blockAccess, x, y, z, side
+     */
+    public boolean shouldSideBeRendered(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
+    {
+        if (par5 == 0 && minY > 0.0D)
         {
             return true;
         }
-        if (l == 1 && maxY < 1.0D)
+
+        if (par5 == 1 && maxY < 1.0D)
         {
             return true;
         }
-        if (l == 2 && minZ > 0.0D)
+
+        if (par5 == 2 && minZ > 0.0D)
         {
             return true;
         }
-        if (l == 3 && maxZ < 1.0D)
+
+        if (par5 == 3 && maxZ < 1.0D)
         {
             return true;
         }
-        if (l == 4 && minX > 0.0D)
+
+        if (par5 == 4 && minX > 0.0D)
         {
             return true;
         }
-        if (l == 5 && maxX < 1.0D)
+
+        if (par5 == 5 && maxX < 1.0D)
         {
             return true;
         }
         else
         {
-            return !iblockaccess.isBlockOpaqueCube(i, j, k);
+            return !par1IBlockAccess.isBlockOpaqueCube(par2, par3, par4);
         }
     }
 
-    public boolean getIsBlockSolid(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Returns Returns true if the given side of this block type should be rendered (if it's solid or not), if the
+     * adjacent block is at the given coordinates. Args: blockAccess, x, y, z, side
+     */
+    public boolean isBlockSolid(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
-        return iblockaccess.getBlockMaterial(i, j, k).isSolid();
+        return par1IBlockAccess.getBlockMaterial(par2, par3, par4).isSolid();
     }
 
-    public int getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Retrieves the block texture to use based on the display side. Args: iBlockAccess, x, y, z, side
+     */
+    public int getBlockTexture(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
-        return getBlockTextureFromSideAndMetadata(l, iblockaccess.getBlockMetadata(i, j, k));
+        return getBlockTextureFromSideAndMetadata(par5, par1IBlockAccess.getBlockMetadata(par2, par3, par4));
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        return getBlockTextureFromSide(i);
+        return getBlockTextureFromSide(par1);
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
         return blockIndexInTexture;
     }
 
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns the bounding box of the wired rectangular prism to render.
+     */
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
-        return AxisAlignedBB.getBoundingBoxFromPool((double)i + minX, (double)j + minY, (double)k + minZ, (double)i + maxX, (double)j + maxY, (double)k + maxZ);
+        return AxisAlignedBB.getBoundingBoxFromPool((double)par2 + minX, (double)par3 + minY, (double)par4 + minZ, (double)par2 + maxX, (double)par3 + maxY, (double)par4 + maxZ);
     }
 
-    public void getCollidingBoundingBoxes(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist)
+    /**
+     * Adds to the supplied array any colliding bounding boxes with the passed in bounding box. Args: world, x, y, z,
+     * axisAlignedBB, arrayList
+     */
+    public void getCollidingBoundingBoxes(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, ArrayList par6ArrayList)
     {
-        AxisAlignedBB axisalignedbb1 = getCollisionBoundingBoxFromPool(world, i, j, k);
-        if (axisalignedbb1 != null && axisalignedbb.intersectsWith(axisalignedbb1))
+        AxisAlignedBB axisalignedbb = getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
+
+        if (axisalignedbb != null && par5AxisAlignedBB.intersectsWith(axisalignedbb))
         {
-            arraylist.add(axisalignedbb1);
+            par6ArrayList.add(axisalignedbb);
         }
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
-        return AxisAlignedBB.getBoundingBoxFromPool((double)i + minX, (double)j + minY, (double)k + minZ, (double)i + maxX, (double)j + maxY, (double)k + maxZ);
+        return AxisAlignedBB.getBoundingBoxFromPool((double)par2 + minX, (double)par3 + minY, (double)par4 + minZ, (double)par2 + maxX, (double)par3 + maxY, (double)par4 + maxZ);
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return true;
     }
 
-    public boolean canCollideCheck(int i, boolean flag)
+    /**
+     * Returns whether this block is collideable based on the arguments passed in Args: blockMetaData, unknownFlag
+     */
+    public boolean canCollideCheck(int par1, boolean par2)
     {
         return isCollidable();
     }
 
+    /**
+     * Returns if this block is collidable (only used by Fire). Args: x, y, z
+     */
     public boolean isCollidable()
     {
         return true;
     }
 
+    /**
+     * Ticks the block if it's been scheduled
+     */
     public void updateTick(World world, int i, int j, int k, Random random)
     {
     }
 
+    /**
+     * A randomly called display update to be able to add particles or other items for display
+     */
     public void randomDisplayTick(World world, int i, int j, int k, Random random)
     {
     }
 
+    /**
+     * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
+     */
     public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
     {
     }
 
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
     }
 
+    /**
+     * How many world ticks before ticking
+     */
     public int tickRate()
     {
         return 10;
     }
 
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
     public void onBlockAdded(World world, int i, int j, int k)
     {
     }
 
+    /**
+     * Called whenever the block is removed.
+     */
     public void onBlockRemoval(World world, int i, int j, int k)
     {
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 1;
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return blockID;
     }
 
-    public float blockStrength(EntityPlayer entityplayer)
+    /**
+     * Defines whether or not a play can break the block with current tool.
+     */
+    public float blockStrength(EntityPlayer par1EntityPlayer)
     {
         if (blockHardness < 0.0F)
         {
             return 0.0F;
         }
-        if (!entityplayer.canHarvestBlock(this))
+
+        if (!par1EntityPlayer.canHarvestBlock(this))
         {
             return 1.0F / blockHardness / 100F;
         }
         else
         {
-            return entityplayer.getCurrentPlayerStrVsBlock(this) / blockHardness / 30F;
+            return par1EntityPlayer.getCurrentPlayerStrVsBlock(this) / blockHardness / 30F;
         }
     }
 
-    public final void dropBlockAsItem(World world, int i, int j, int k, int l, int i1)
+    /**
+     * Drops the specified block items
+     */
+    public final void dropBlockAsItem(World par1World, int par2, int par3, int par4, int par5, int par6)
     {
-        dropBlockAsItemWithChance(world, i, j, k, l, 1.0F, i1);
+        dropBlockAsItemWithChance(par1World, par2, par3, par4, par5, 1.0F, par6);
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
+    /**
+     * Drops the block items with a specified chance of dropping the specified items
+     */
+    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        int j1 = quantityDroppedWithBonus(i1, world.rand);
-        for (int k1 = 0; k1 < j1; k1++)
+
+        int i = quantityDroppedWithBonus(par7, par1World.rand);
+
+        for (int j = 0; j < i; j++)
         {
-            if (world.rand.nextFloat() > f)
+            if (par1World.rand.nextFloat() > par6)
             {
                 continue;
             }
-            int l1 = idDropped(l, world.rand, i1);
-            if (l1 > 0)
+
+            int k = idDropped(par5, par1World.rand, par7);
+
+            if (k > 0)
             {
-                dropBlockAsItem_do(world, i, j, k, new ItemStack(l1, 1, damageDropped(l)));
+                dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(k, 1, damageDropped(par5)));
             }
         }
     }
 
-    protected void dropBlockAsItem_do(World world, int i, int j, int k, ItemStack itemstack)
+    /**
+     * drops the block as an item. Does nothing if a multiplayer world?
+     */
+    protected void dropBlockAsItem_do(World par1World, int par2, int par3, int par4, ItemStack par5ItemStack)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
         else
         {
             float f = 0.7F;
-            double d = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            double d1 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            double d2 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            EntityItem entityitem = new EntityItem(world, (double)i + d, (double)j + d1, (double)k + d2, itemstack);
+            double d = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            double d1 = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            double d2 = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            EntityItem entityitem = new EntityItem(par1World, (double)par2 + d, (double)par3 + d1, (double)par4 + d2, par5ItemStack);
             entityitem.delayBeforeCanPickup = 10;
-            world.spawnEntityInWorld(entityitem);
+            par1World.spawnEntityInWorld(entityitem);
             return;
         }
     }
 
-    protected int damageDropped(int i)
+    /**
+     * Determines the damage on the item the block drops. Used in cloth and wood.
+     */
+    protected int damageDropped(int par1)
     {
         return 0;
     }
 
-    public float getExplosionResistance(Entity entity)
+    /**
+     * Returns how much this block can resist explosions from the passed in entity.
+     */
+    public float getExplosionResistance(Entity par1Entity)
     {
         return blockResistance / 5F;
     }
 
-    public MovingObjectPosition collisionRayTrace(World world, int i, int j, int k, Vec3D vec3d, Vec3D vec3d1)
+    /**
+     * Ray traces through the blocks collision from start vector to end vector returning a ray trace hit. Args: world,
+     * x, y, z, startVec, endVec
+     */
+    public MovingObjectPosition collisionRayTrace(World par1World, int par2, int par3, int par4, Vec3D par5Vec3D, Vec3D par6Vec3D)
     {
-        setBlockBoundsBasedOnState(world, i, j, k);
-        vec3d = vec3d.addVector(-i, -j, -k);
-        vec3d1 = vec3d1.addVector(-i, -j, -k);
-        Vec3D vec3d2 = vec3d.getIntermediateWithXValue(vec3d1, minX);
-        Vec3D vec3d3 = vec3d.getIntermediateWithXValue(vec3d1, maxX);
-        Vec3D vec3d4 = vec3d.getIntermediateWithYValue(vec3d1, minY);
-        Vec3D vec3d5 = vec3d.getIntermediateWithYValue(vec3d1, maxY);
-        Vec3D vec3d6 = vec3d.getIntermediateWithZValue(vec3d1, minZ);
-        Vec3D vec3d7 = vec3d.getIntermediateWithZValue(vec3d1, maxZ);
-        if (!isVecInsideYZBounds(vec3d2))
+        setBlockBoundsBasedOnState(par1World, par2, par3, par4);
+        par5Vec3D = par5Vec3D.addVector(-par2, -par3, -par4);
+        par6Vec3D = par6Vec3D.addVector(-par2, -par3, -par4);
+        Vec3D vec3d = par5Vec3D.getIntermediateWithXValue(par6Vec3D, minX);
+        Vec3D vec3d1 = par5Vec3D.getIntermediateWithXValue(par6Vec3D, maxX);
+        Vec3D vec3d2 = par5Vec3D.getIntermediateWithYValue(par6Vec3D, minY);
+        Vec3D vec3d3 = par5Vec3D.getIntermediateWithYValue(par6Vec3D, maxY);
+        Vec3D vec3d4 = par5Vec3D.getIntermediateWithZValue(par6Vec3D, minZ);
+        Vec3D vec3d5 = par5Vec3D.getIntermediateWithZValue(par6Vec3D, maxZ);
+
+        if (!isVecInsideYZBounds(vec3d))
+        {
+            vec3d = null;
+        }
+
+        if (!isVecInsideYZBounds(vec3d1))
+        {
+            vec3d1 = null;
+        }
+
+        if (!isVecInsideXZBounds(vec3d2))
         {
             vec3d2 = null;
         }
-        if (!isVecInsideYZBounds(vec3d3))
+
+        if (!isVecInsideXZBounds(vec3d3))
         {
             vec3d3 = null;
         }
-        if (!isVecInsideXZBounds(vec3d4))
+
+        if (!isVecInsideXYBounds(vec3d4))
         {
             vec3d4 = null;
         }
-        if (!isVecInsideXZBounds(vec3d5))
+
+        if (!isVecInsideXYBounds(vec3d5))
         {
             vec3d5 = null;
         }
-        if (!isVecInsideXYBounds(vec3d6))
+
+        Vec3D vec3d6 = null;
+
+        if (vec3d != null && (vec3d6 == null || par5Vec3D.distanceTo(vec3d) < par5Vec3D.distanceTo(vec3d6)))
         {
-            vec3d6 = null;
+            vec3d6 = vec3d;
         }
-        if (!isVecInsideXYBounds(vec3d7))
+
+        if (vec3d1 != null && (vec3d6 == null || par5Vec3D.distanceTo(vec3d1) < par5Vec3D.distanceTo(vec3d6)))
         {
-            vec3d7 = null;
+            vec3d6 = vec3d1;
         }
-        Vec3D vec3d8 = null;
-        if (vec3d2 != null && (vec3d8 == null || vec3d.distanceTo(vec3d2) < vec3d.distanceTo(vec3d8)))
+
+        if (vec3d2 != null && (vec3d6 == null || par5Vec3D.distanceTo(vec3d2) < par5Vec3D.distanceTo(vec3d6)))
         {
-            vec3d8 = vec3d2;
+            vec3d6 = vec3d2;
         }
-        if (vec3d3 != null && (vec3d8 == null || vec3d.distanceTo(vec3d3) < vec3d.distanceTo(vec3d8)))
+
+        if (vec3d3 != null && (vec3d6 == null || par5Vec3D.distanceTo(vec3d3) < par5Vec3D.distanceTo(vec3d6)))
         {
-            vec3d8 = vec3d3;
+            vec3d6 = vec3d3;
         }
-        if (vec3d4 != null && (vec3d8 == null || vec3d.distanceTo(vec3d4) < vec3d.distanceTo(vec3d8)))
+
+        if (vec3d4 != null && (vec3d6 == null || par5Vec3D.distanceTo(vec3d4) < par5Vec3D.distanceTo(vec3d6)))
         {
-            vec3d8 = vec3d4;
+            vec3d6 = vec3d4;
         }
-        if (vec3d5 != null && (vec3d8 == null || vec3d.distanceTo(vec3d5) < vec3d.distanceTo(vec3d8)))
+
+        if (vec3d5 != null && (vec3d6 == null || par5Vec3D.distanceTo(vec3d5) < par5Vec3D.distanceTo(vec3d6)))
         {
-            vec3d8 = vec3d5;
+            vec3d6 = vec3d5;
         }
-        if (vec3d6 != null && (vec3d8 == null || vec3d.distanceTo(vec3d6) < vec3d.distanceTo(vec3d8)))
-        {
-            vec3d8 = vec3d6;
-        }
-        if (vec3d7 != null && (vec3d8 == null || vec3d.distanceTo(vec3d7) < vec3d.distanceTo(vec3d8)))
-        {
-            vec3d8 = vec3d7;
-        }
-        if (vec3d8 == null)
+
+        if (vec3d6 == null)
         {
             return null;
         }
+
         byte byte0 = -1;
-        if (vec3d8 == vec3d2)
+
+        if (vec3d6 == vec3d)
         {
             byte0 = 4;
         }
-        if (vec3d8 == vec3d3)
+
+        if (vec3d6 == vec3d1)
         {
             byte0 = 5;
         }
-        if (vec3d8 == vec3d4)
+
+        if (vec3d6 == vec3d2)
         {
             byte0 = 0;
         }
-        if (vec3d8 == vec3d5)
+
+        if (vec3d6 == vec3d3)
         {
             byte0 = 1;
         }
-        if (vec3d8 == vec3d6)
+
+        if (vec3d6 == vec3d4)
         {
             byte0 = 2;
         }
-        if (vec3d8 == vec3d7)
+
+        if (vec3d6 == vec3d5)
         {
             byte0 = 3;
         }
-        return new MovingObjectPosition(i, j, k, byte0, vec3d8.addVector(i, j, k));
+
+        return new MovingObjectPosition(par2, par3, par4, byte0, vec3d6.addVector(par2, par3, par4));
     }
 
-    private boolean isVecInsideYZBounds(Vec3D vec3d)
+    /**
+     * Checks if a vector is within the Y and Z bounds of the block.
+     */
+    private boolean isVecInsideYZBounds(Vec3D par1Vec3D)
     {
-        if (vec3d == null)
+        if (par1Vec3D == null)
         {
             return false;
         }
         else
         {
-            return vec3d.yCoord >= minY && vec3d.yCoord <= maxY && vec3d.zCoord >= minZ && vec3d.zCoord <= maxZ;
+            return par1Vec3D.yCoord >= minY && par1Vec3D.yCoord <= maxY && par1Vec3D.zCoord >= minZ && par1Vec3D.zCoord <= maxZ;
         }
     }
 
-    private boolean isVecInsideXZBounds(Vec3D vec3d)
+    /**
+     * Checks if a vector is within the X and Z bounds of the block.
+     */
+    private boolean isVecInsideXZBounds(Vec3D par1Vec3D)
     {
-        if (vec3d == null)
+        if (par1Vec3D == null)
         {
             return false;
         }
         else
         {
-            return vec3d.xCoord >= minX && vec3d.xCoord <= maxX && vec3d.zCoord >= minZ && vec3d.zCoord <= maxZ;
+            return par1Vec3D.xCoord >= minX && par1Vec3D.xCoord <= maxX && par1Vec3D.zCoord >= minZ && par1Vec3D.zCoord <= maxZ;
         }
     }
 
-    private boolean isVecInsideXYBounds(Vec3D vec3d)
+    /**
+     * Checks if a vector is within the X and Y bounds of the block.
+     */
+    private boolean isVecInsideXYBounds(Vec3D par1Vec3D)
     {
-        if (vec3d == null)
+        if (par1Vec3D == null)
         {
             return false;
         }
         else
         {
-            return vec3d.xCoord >= minX && vec3d.xCoord <= maxX && vec3d.yCoord >= minY && vec3d.yCoord <= maxY;
+            return par1Vec3D.xCoord >= minX && par1Vec3D.xCoord <= maxX && par1Vec3D.yCoord >= minY && par1Vec3D.yCoord <= maxY;
         }
     }
 
+    /**
+     * Called upon the block being destroyed by an explosion
+     */
     public void onBlockDestroyedByExplosion(World world, int i, int j, int k)
     {
     }
 
+    /**
+     * Returns which pass should this block be rendered on. 0 for solids and 1 for alpha
+     */
     public int getRenderBlockPass()
     {
         return 0;
     }
 
-    public boolean canPlaceBlockOnSide(World world, int i, int j, int k, int l)
+    public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
     {
-        return canPlaceBlockAt(world, i, j, k);
+        return canPlaceBlockAt(par1World, par2, par3, par4);
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        int l = world.getBlockId(i, j, k);
-        return l == 0 || blocksList[l].blockMaterial.getIsGroundCover();
+        int i = par1World.getBlockId(par2, par3, par4);
+        return i == 0 || blocksList[i].blockMaterial.isGroundCover();
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int i, EntityPlayer entityplayer)
     {
         return false;
     }
 
+    /**
+     * Called whenever an entity is walking on top of this block. Args: world, x, y, z, entity
+     */
     public void onEntityWalking(World world, int i, int j, int k, Entity entity)
     {
     }
 
+    /**
+     * Called when a block is placed using an item. Used often for taking the facing and figuring out how to position
+     * the item. Args: x, y, z, facing
+     */
     public void onBlockPlaced(World world, int i, int j, int k, int l)
     {
     }
 
+    /**
+     * Called when the block is clicked by a player. Args: x, y, z, entityPlayer
+     */
     public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
     {
     }
 
+    /**
+     * Can add to the passed in vector for a movement vector to be applied to the entity. Args: x, y, z, entity, vec3d
+     */
     public void velocityToAddToEntity(World world, int i, int j, int k, Entity entity, Vec3D vec3d)
     {
     }
 
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
     public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
     {
     }
@@ -661,85 +996,132 @@ public class Block
         return 0xffffff;
     }
 
-    public int getRenderColor(int i)
+    /**
+     * Returns the color this block should be rendered. Used by leaves.
+     */
+    public int getRenderColor(int par1)
     {
         return 0xffffff;
     }
 
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color. Note only called
+     * when first determining what to render.
+     */
+    public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         return 0xffffff;
     }
 
-    public boolean isPoweringTo(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Is this block powering the block on the specified side
+     */
+    public boolean isPoweringTo(IBlockAccess par1IBlockAccess, int par2, int par3, int i, int j)
     {
         return false;
     }
 
+    /**
+     * Can this block provide power. Only wire currently seems to have this change based on its state.
+     */
     public boolean canProvidePower()
     {
         return false;
     }
 
+    /**
+     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
+     */
     public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
     {
     }
 
-    public boolean isIndirectlyPoweringTo(World world, int i, int j, int k, int l)
+    /**
+     * Is this block indirectly powering the block on the specified side
+     */
+    public boolean isIndirectlyPoweringTo(World par1World, int par2, int par3, int i, int j)
     {
         return false;
     }
 
+    /**
+     * Sets the block's bounds for rendering it as an item
+     */
     public void setBlockBoundsForItemRender()
     {
     }
 
-    public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
+    /**
+     * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the coordinates of the
+     * block and l is the block's subtype/damage.
+     */
+    public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6)
     {
-        entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
-        entityplayer.addExhaustion(0.025F);
-        if (renderAsNormalBlock() && !isBlockContainer[blockID] && EnchantmentHelper.getSilkTouchModifier(entityplayer.inventory))
+        par2EntityPlayer.addStat(StatList.mineBlockStatArray[blockID], 1);
+        par2EntityPlayer.addExhaustion(0.025F);
+
+        if (renderAsNormalBlock() && !field_48207_bU && EnchantmentHelper.getSilkTouchModifier(par2EntityPlayer.inventory))
         {
-            ItemStack itemstack = createStackedBlock(l);
+            ItemStack itemstack = createStackedBlock(par6);
+
             if (itemstack != null)
             {
-                dropBlockAsItem_do(world, i, j, k, itemstack);
+                dropBlockAsItem_do(par1World, par3, par4, par5, itemstack);
             }
         }
         else
         {
-            int i1 = EnchantmentHelper.getFortuneModifier(entityplayer.inventory);
-            dropBlockAsItem(world, i, j, k, l, i1);
+            int i = EnchantmentHelper.getFortuneModifier(par2EntityPlayer.inventory);
+            dropBlockAsItem(par1World, par3, par4, par5, par6, i);
         }
     }
 
-    protected ItemStack createStackedBlock(int i)
+    /**
+     * Returns an item stack containing a single instance of the current block type. 'i' is the block's subtype/damage
+     * and is ignored for blocks which do not support subtypes. Blocks which cannot be harvested should return null.
+     */
+    protected ItemStack createStackedBlock(int par1)
     {
-        int j = 0;
+        int i = 0;
+
         if (blockID >= 0 && blockID < Item.itemsList.length && Item.itemsList[blockID].getHasSubtypes())
         {
-            j = i;
+            i = par1;
         }
-        return new ItemStack(blockID, 1, j);
+
+        return new ItemStack(blockID, 1, i);
     }
 
-    public int quantityDroppedWithBonus(int i, Random random)
+    /**
+     * Returns the usual quantity dropped by the block plus a bonus of 1 to 'i' (inclusive).
+     */
+    public int quantityDroppedWithBonus(int par1, Random par2Random)
     {
-        return quantityDropped(random);
+        return quantityDropped(par2Random);
     }
 
-    public boolean canBlockStay(World world, int i, int j, int k)
+    /**
+     * Can this block stay at this position.  Similar to canPlaceBlockAt except gets checked often with plants.
+     */
+    public boolean canBlockStay(World par1World, int par2, int par3, int i)
     {
         return true;
     }
 
+    /**
+     * Called when a block is placed by using an ItemStack from inventory and passed in who placed it. Args:
+     * x,y,z,entityliving
+     */
     public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving entityliving)
     {
     }
 
-    public Block setBlockName(String s)
+    /**
+     * set name of block from language file
+     */
+    public Block setBlockName(String par1Str)
     {
-        blockName = (new StringBuilder()).append("tile.").append(s).toString();
+        blockName = (new StringBuilder()).append("tile.").append(par1Str).toString();
         return this;
     }
 
@@ -757,41 +1139,45 @@ public class Block
     {
     }
 
+    /**
+     * Return the state of blocks statistics flags - if the block is counted for mined and placed.
+     */
     public boolean getEnableStats()
     {
         return enableStats;
     }
 
+    /**
+     * Disable statistics for the block, the block will no count for mined or placed.
+     */
     protected Block disableStats()
     {
         enableStats = false;
         return this;
     }
 
+    /**
+     * Returns the mobility information of the block, 0 = free, 1 = can't push but can move over, 2 = total immobility
+     * and stop pistons
+     */
     public int getMobilityFlag()
     {
         return blockMaterial.getMaterialMobility();
     }
 
-    public float getAmbientOcclusionLightValue(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Returns the default ambient occlusion value based on block opacity
+     */
+    public float getAmbientOcclusionLightValue(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        return iblockaccess.isBlockNormalCube(i, j, k) ? 0.2F : 1.0F;
+        return par1IBlockAccess.isBlockNormalCube(par2, par3, par4) ? 0.2F : 1.0F;
     }
 
+    /**
+     * Block's chance to react to an entity falling on it.
+     */
     public void onFallenUpon(World world, int i, int j, int k, Entity entity, float f)
     {
-    }
-
-    static Class _mthclass$(String s)
-    {
-        try
-        {
-            return Class.forName(s);
-        }
-        catch (ClassNotFoundException classnotfoundexception)
-        {
-            throw new NoClassDefFoundError(classnotfoundexception.getMessage());
-        }
     }
 
     static
@@ -805,9 +1191,9 @@ public class Block
         soundGlassFootstep = new StepSoundStone("stone", 1.0F, 1.0F);
         soundClothFootstep = new StepSound("cloth", 1.0F, 1.0F);
         soundSandFootstep = new StepSoundSand("sand", 1.0F, 1.0F);
-        blocksList = new Block[256];
-        canBlockGrass = new boolean[256];
-        useNeighborBrightness = new boolean[256];
+        blocksList = new Block[4096];
+        canBlockGrass = new boolean[4096];
+        useNeighborBrightness = new boolean[4096];
         stone = (new BlockStone(1, 1)).setHardness(1.5F).setResistance(10F).setStepSound(soundStoneFootstep).setBlockName("stone");
         grass = (BlockGrass)(new BlockGrass(2)).setHardness(0.6F).setStepSound(soundGrassFootstep).setBlockName("grass");
         dirt = (new BlockDirt(3, 2)).setHardness(0.5F).setStepSound(soundGravelFootstep).setBlockName("dirt");
@@ -902,7 +1288,7 @@ public class Block
         cake = (new BlockCake(92, 121)).setHardness(0.5F).setStepSound(soundClothFootstep).setBlockName("cake").disableStats().setRequiresSelfNotify();
         redstoneRepeaterIdle = (new BlockRedstoneRepeater(93, false)).setHardness(0.0F).setStepSound(soundWoodFootstep).setBlockName("diode").disableStats().setRequiresSelfNotify();
         redstoneRepeaterActive = (new BlockRedstoneRepeater(94, true)).setHardness(0.0F).setLightValue(0.625F).setStepSound(soundWoodFootstep).setBlockName("diode").disableStats().setRequiresSelfNotify();
-        lockedChest = (new BlockLockedChest(95)).setHardness(0.0F).setLightValue(1.0F).setStepSound(soundWoodFootstep).setBlockName("lockedchest").setTickOnLoad(true).setRequiresSelfNotify();
+        lockedChest = (new BlockLockedChest(95)).setHardness(0.0F).setLightValue(1.0F).setStepSound(soundWoodFootstep).setBlockName("lockedchest").setTickRandomly(true).setRequiresSelfNotify();
         trapdoor = (new BlockTrapDoor(96, Material.wood)).setHardness(3F).setStepSound(soundWoodFootstep).setBlockName("trapdoor").disableStats().setRequiresSelfNotify();
         silverfish = (new BlockSilverfish(97)).setHardness(0.75F);
         stoneBrick = (new BlockStoneBrick(98)).setHardness(1.5F).setResistance(10F).setStepSound(soundStoneFootstep).setBlockName("stonebricksmooth");
@@ -930,6 +1316,8 @@ public class Block
         endPortalFrame = (new BlockEndPortalFrame(120)).setStepSound(soundGlassFootstep).setLightValue(0.125F).setHardness(-1F).setBlockName("endPortalFrame").setRequiresSelfNotify().setResistance(6000000F);
         whiteStone = (new Block(121, 175, Material.rock)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setBlockName("whiteStone");
         dragonEgg = (new BlockDragonEgg(122, 167)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setLightValue(0.125F).setBlockName("dragonEgg");
+        field_48209_bL = (new BlockRedstoneLight(123, false)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
+        field_48210_bM = (new BlockRedstoneLight(124, true)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
         Item.itemsList[cloth.blockID] = (new ItemCloth(cloth.blockID - 256)).setItemName("cloth");
         Item.itemsList[wood.blockID] = (new ItemMetadata(wood.blockID - 256, wood)).setItemName("log");
         Item.itemsList[stoneBrick.blockID] = (new ItemMetadata(stoneBrick.blockID - 256, stoneBrick)).setItemName("stonebricksmooth");
@@ -944,30 +1332,42 @@ public class Block
         Item.itemsList[waterlily.blockID] = new ItemLilyPad(waterlily.blockID - 256);
         Item.itemsList[pistonBase.blockID] = new ItemPiston(pistonBase.blockID - 256);
         Item.itemsList[pistonStickyBase.blockID] = new ItemPiston(pistonStickyBase.blockID - 256);
+
         for (int i = 0; i < 256; i++)
         {
             if (blocksList[i] == null)
             {
                 continue;
             }
+
             if (Item.itemsList[i] == null)
             {
                 Item.itemsList[i] = new ItemBlock(i - 256);
                 blocksList[i].initializeBlock();
             }
+
             boolean flag = false;
+
             if (i > 0 && blocksList[i].getRenderType() == 10)
             {
                 flag = true;
             }
+
             if (i > 0 && (blocksList[i] instanceof BlockStep))
             {
                 flag = true;
             }
+
             if (i == tilledField.blockID)
             {
                 flag = true;
             }
+
+            if (canBlockGrass[i])
+            {
+                flag = true;
+            }
+
             useNeighborBrightness[i] = flag;
         }
 

@@ -11,119 +11,139 @@ public class MapGenRavine extends MapGenBase
         field_35627_a = new float[1024];
     }
 
-    protected void func_35626_a(long l, int i, int j, byte abyte0[], double d,
-            double d1, double d2, float f, float f1, float f2,
-            int k, int i1, double d3)
+    protected void generateRavine(long par1, int par3, int par4, byte par5ArrayOfByte[], double par6, double par8, double par10, float par12, float par13, float par14, int par15, int par16, double par17)
     {
-        Random random = new Random(l);
-        double d4 = i * 16 + 8;
-        double d5 = j * 16 + 8;
-        float f3 = 0.0F;
-        float f4 = 0.0F;
-        if (i1 <= 0)
+        Random random = new Random(par1);
+        double d = par3 * 16 + 8;
+        double d1 = par4 * 16 + 8;
+        float f = 0.0F;
+        float f1 = 0.0F;
+
+        if (par16 <= 0)
         {
-            int j1 = range * 16 - 16;
-            i1 = j1 - random.nextInt(j1 / 4);
-        }
-        boolean flag = false;
-        if (k == -1)
-        {
-            k = i1 / 2;
-            flag = true;
-        }
-        float f5 = 1.0F;
-        for (int k1 = 0; k1 < worldObj.worldHeight; k1++)
-        {
-            if (k1 == 0 || random.nextInt(3) == 0)
-            {
-                f5 = 1.0F + random.nextFloat() * random.nextFloat() * 1.0F;
-            }
-            field_35627_a[k1] = f5 * f5;
+            int i = range * 16 - 16;
+            par16 = i - random.nextInt(i / 4);
         }
 
-        for (; k < i1; k++)
+        boolean flag = false;
+
+        if (par15 == -1)
         {
-            double d6 = 1.5D + (double)(MathHelper.sin(((float)k * 3.141593F) / (float)i1) * f * 1.0F);
-            double d7 = d6 * d3;
-            d6 *= (double)random.nextFloat() * 0.25D + 0.75D;
-            d7 *= (double)random.nextFloat() * 0.25D + 0.75D;
-            float f6 = MathHelper.cos(f2);
-            float f7 = MathHelper.sin(f2);
-            d += MathHelper.cos(f1) * f6;
-            d1 += f7;
-            d2 += MathHelper.sin(f1) * f6;
-            f2 *= 0.7F;
-            f2 += f4 * 0.05F;
-            f1 += f3 * 0.05F;
-            f4 *= 0.8F;
-            f3 *= 0.5F;
-            f4 += (random.nextFloat() - random.nextFloat()) * random.nextFloat() * 2.0F;
-            f3 += (random.nextFloat() - random.nextFloat()) * random.nextFloat() * 4F;
+            par15 = par16 / 2;
+            flag = true;
+        }
+
+        float f2 = 1.0F;
+
+        for (int j = 0; j < 128; j++)
+        {
+            if (j == 0 || random.nextInt(3) == 0)
+            {
+                f2 = 1.0F + random.nextFloat() * random.nextFloat() * 1.0F;
+            }
+
+            field_35627_a[j] = f2 * f2;
+        }
+
+        for (; par15 < par16; par15++)
+        {
+            double d2 = 1.5D + (double)(MathHelper.sin(((float)par15 * (float)Math.PI) / (float)par16) * par12 * 1.0F);
+            double d3 = d2 * par17;
+            d2 *= (double)random.nextFloat() * 0.25D + 0.75D;
+            d3 *= (double)random.nextFloat() * 0.25D + 0.75D;
+            float f3 = MathHelper.cos(par14);
+            float f4 = MathHelper.sin(par14);
+            par6 += MathHelper.cos(par13) * f3;
+            par8 += f4;
+            par10 += MathHelper.sin(par13) * f3;
+            par14 *= 0.7F;
+            par14 += f1 * 0.05F;
+            par13 += f * 0.05F;
+            f1 *= 0.8F;
+            f *= 0.5F;
+            f1 += (random.nextFloat() - random.nextFloat()) * random.nextFloat() * 2.0F;
+            f += (random.nextFloat() - random.nextFloat()) * random.nextFloat() * 4F;
+
             if (!flag && random.nextInt(4) == 0)
             {
                 continue;
             }
-            double d8a = d - d4;
-            double d9a = d2 - d5;
-            double d10a = i1 - k;
-            double d11 = f + 2.0F + 16F;
-            if ((d8a * d8a + d9a * d9a) - d10a * d10a > d11 * d11)
+
+            double d4a = par6 - d;
+            double d5a = par10 - d1;
+            double d6a = par16 - par15;
+            double d7 = par12 + 2.0F + 16F;
+
+            if ((d4a * d4a + d5a * d5a) - d6a * d6a > d7 * d7)
             {
                 return;
             }
-            if (d < d4 - 16D - d6 * 2D || d2 < d5 - 16D - d6 * 2D || d > d4 + 16D + d6 * 2D || d2 > d5 + 16D + d6 * 2D)
+
+            if (par6 < d - 16D - d2 * 2D || par10 < d1 - 16D - d2 * 2D || par6 > d + 16D + d2 * 2D || par10 > d1 + 16D + d2 * 2D)
             {
                 continue;
             }
-            int d8 = MathHelper.floor_double(d - d6) - i * 16 - 1;
-            int l1 = (MathHelper.floor_double(d + d6) - i * 16) + 1;
-            int d9 = MathHelper.floor_double(d1 - d7) - 1;
-            int i2 = MathHelper.floor_double(d1 + d7) + 1;
-            int d10 = MathHelper.floor_double(d2 - d6) - j * 16 - 1;
-            int j2 = (MathHelper.floor_double(d2 + d6) - j * 16) + 1;
-            if (d8 < 0)
+
+            int d4 = MathHelper.floor_double(par6 - d2) - par3 * 16 - 1;
+            int k = (MathHelper.floor_double(par6 + d2) - par3 * 16) + 1;
+            int d5 = MathHelper.floor_double(par8 - d3) - 1;
+            int l = MathHelper.floor_double(par8 + d3) + 1;
+            int d6 = MathHelper.floor_double(par10 - d2) - par4 * 16 - 1;
+            int i1 = (MathHelper.floor_double(par10 + d2) - par4 * 16) + 1;
+
+            if (d4 < 0)
             {
-                d8 = 0;
+                d4 = 0;
             }
-            if (l1 > 16)
+
+            if (k > 16)
             {
-                l1 = 16;
+                k = 16;
             }
-            if (d9 < 1)
+
+            if (d5 < 1)
             {
-                d9 = 1;
+                d5 = 1;
             }
-            if (i2 > worldObj.worldHeight - 8)
+
+            if (l > 120)
             {
-                i2 = worldObj.worldHeight - 8;
+                l = 120;
             }
-            if (d10 < 0)
+
+            if (d6 < 0)
             {
-                d10 = 0;
+                d6 = 0;
             }
-            if (j2 > 16)
+
+            if (i1 > 16)
             {
-                j2 = 16;
+                i1 = 16;
             }
+
             boolean flag1 = false;
-            for (int k2 = d8; !flag1 && k2 < l1; k2++)
+
+            for (int j1 = d4; !flag1 && j1 < k; j1++)
             {
-                for (int i3 = d10; !flag1 && i3 < j2; i3++)
+                for (int l1 = d6; !flag1 && l1 < i1; l1++)
                 {
-                    for (int j3 = i2 + 1; !flag1 && j3 >= d9 - 1; j3--)
+                    for (int i2 = l + 1; !flag1 && i2 >= d5 - 1; i2--)
                     {
-                        int k3 = (k2 * 16 + i3) * worldObj.worldHeight + j3;
-                        if (j3 < 0 || j3 >= worldObj.worldHeight)
+                        int j2 = (j1 * 16 + l1) * 128 + i2;
+
+                        if (i2 < 0 || i2 >= 128)
                         {
                             continue;
                         }
-                        if (abyte0[k3] == Block.waterMoving.blockID || abyte0[k3] == Block.waterStill.blockID)
+
+                        if (par5ArrayOfByte[j2] == Block.waterMoving.blockID || par5ArrayOfByte[j2] == Block.waterStill.blockID)
                         {
                             flag1 = true;
                         }
-                        if (j3 != d9 - 1 && k2 != d8 && k2 != l1 - 1 && i3 != d10 && i3 != j2 - 1)
+
+                        if (i2 != d5 - 1 && j1 != d4 && j1 != k - 1 && l1 != d6 && l1 != i1 - 1)
                         {
-                            j3 = d9;
+                            i2 = d5;
                         }
                     }
                 }
@@ -133,52 +153,63 @@ public class MapGenRavine extends MapGenBase
             {
                 continue;
             }
-            for (int l2 = d8; l2 < l1; l2++)
+
+            for (int k1 = d4; k1 < k; k1++)
             {
-                double d12 = (((double)(l2 + i * 16) + 0.5D) - d) / d6;
+                double d8 = (((double)(k1 + par3 * 16) + 0.5D) - par6) / d2;
                 label0:
-                for (int l3 = d10; l3 < j2; l3++)
+
+                for (int k2 = d6; k2 < i1; k2++)
                 {
-                    double d13 = (((double)(l3 + j * 16) + 0.5D) - d2) / d6;
-                    int i4 = (l2 * 16 + l3) * worldObj.worldHeight + i2;
+                    double d9 = (((double)(k2 + par4 * 16) + 0.5D) - par10) / d2;
+                    int l2 = (k1 * 16 + k2) * 128 + l;
                     boolean flag2 = false;
-                    if (d12 * d12 + d13 * d13 >= 1.0D)
+
+                    if (d8 * d8 + d9 * d9 >= 1.0D)
                     {
                         continue;
                     }
-                    int j4 = i2 - 1;
+
+                    int i3 = l - 1;
+
                     do
                     {
-                        if (j4 < d9)
+                        if (i3 < d5)
                         {
                             continue label0;
                         }
-                        double d14 = (((double)j4 + 0.5D) - d1) / d7;
-                        if ((d12 * d12 + d13 * d13) * (double)field_35627_a[j4] + (d14 * d14) / 6D < 1.0D)
+
+                        double d10 = (((double)i3 + 0.5D) - par8) / d3;
+
+                        if ((d8 * d8 + d9 * d9) * (double)field_35627_a[i3] + (d10 * d10) / 6D < 1.0D)
                         {
-                            byte byte0 = abyte0[i4];
+                            byte byte0 = par5ArrayOfByte[l2];
+
                             if (byte0 == Block.grass.blockID)
                             {
                                 flag2 = true;
                             }
+
                             if (byte0 == Block.stone.blockID || byte0 == Block.dirt.blockID || byte0 == Block.grass.blockID)
                             {
-                                if (j4 < 10)
+                                if (i3 < 10)
                                 {
-                                    abyte0[i4] = (byte)Block.lavaMoving.blockID;
+                                    par5ArrayOfByte[l2] = (byte)Block.lavaMoving.blockID;
                                 }
                                 else
                                 {
-                                    abyte0[i4] = 0;
-                                    if (flag2 && abyte0[i4 - 1] == Block.dirt.blockID)
+                                    par5ArrayOfByte[l2] = 0;
+
+                                    if (flag2 && par5ArrayOfByte[l2 - 1] == Block.dirt.blockID)
                                     {
-                                        abyte0[i4 - 1] = worldObj.getWorldChunkManager().getBiomeGenAt(l2 + i * 16, l3 + j * 16).topBlock;
+                                        par5ArrayOfByte[l2 - 1] = worldObj.func_48454_a(k1 + par3 * 16, k2 + par4 * 16).topBlock;
                                     }
                                 }
                             }
                         }
-                        i4--;
-                        j4--;
+
+                        l2--;
+                        i3--;
                     }
                     while (true);
                 }
@@ -191,22 +222,27 @@ public class MapGenRavine extends MapGenBase
         }
     }
 
-    protected void recursiveGenerate(World world, int i, int j, int k, int l, byte abyte0[])
+    /**
+     * Recursively called by generate() (generate) and optionally by itself.
+     */
+    protected void recursiveGenerate(World par1World, int par2, int par3, int par4, int par5, byte par6ArrayOfByte[])
     {
         if (rand.nextInt(50) != 0)
         {
             return;
         }
-        double d = i * 16 + rand.nextInt(16);
+
+        double d = par2 * 16 + rand.nextInt(16);
         double d1 = rand.nextInt(rand.nextInt(40) + 8) + 20;
-        double d2 = j * 16 + rand.nextInt(16);
-        int i1 = 1;
-        for (int j1 = 0; j1 < i1; j1++)
+        double d2 = par3 * 16 + rand.nextInt(16);
+        int i = 1;
+
+        for (int j = 0; j < i; j++)
         {
-            float f = rand.nextFloat() * 3.141593F * 2.0F;
+            float f = rand.nextFloat() * (float)Math.PI * 2.0F;
             float f1 = ((rand.nextFloat() - 0.5F) * 2.0F) / 8F;
             float f2 = (rand.nextFloat() * 2.0F + rand.nextFloat()) * 2.0F;
-            func_35626_a(rand.nextLong(), k, l, abyte0, d, d1, d2, f2, f, f1, 0, 0, 3D);
+            generateRavine(rand.nextLong(), par4, par5, par6ArrayOfByte, d, d1, d2, f2, f, f1, 0, 0, 3D);
         }
     }
 }

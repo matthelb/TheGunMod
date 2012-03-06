@@ -24,22 +24,26 @@ public class Particle
     public double prevTintBlue;
     public double prevTintAlpha;
 
-    public void update(GuiParticle guiparticle)
+    public void update(GuiParticle par1GuiParticle)
     {
         posX += velocityX;
         posY += velocityY;
         velocityX *= accelScale;
         velocityY *= accelScale;
-        velocityY += 0.10000000000000001D;
+        velocityY += 0.1D;
+
         if (++timeTick > timeLimit)
         {
             setDead();
         }
+
         tintAlpha = 2D - ((double)timeTick / (double)timeLimit) * 2D;
+
         if (tintAlpha > 1.0D)
         {
             tintAlpha = 1.0D;
         }
+
         tintAlpha = tintAlpha * tintAlpha;
         tintAlpha *= 0.5D;
     }

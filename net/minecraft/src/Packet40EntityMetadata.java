@@ -12,25 +12,35 @@ public class Packet40EntityMetadata extends Packet
     {
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        metadata = DataWatcher.readWatchableObjects(datainputstream);
+        entityId = par1DataInputStream.readInt();
+        metadata = DataWatcher.readWatchableObjects(par1DataInputStream);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        DataWatcher.writeObjectsInListToStream(metadata, dataoutputstream);
+        par1DataOutputStream.writeInt(entityId);
+        DataWatcher.writeObjectsInListToStream(metadata, par1DataOutputStream);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleEntityMetadata(this);
+        par1NetHandler.handleEntityMetadata(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 5;

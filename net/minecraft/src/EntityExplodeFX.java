@@ -4,42 +4,47 @@ import java.util.Random;
 
 public class EntityExplodeFX extends EntityFX
 {
-    public EntityExplodeFX(World world, double d, double d1, double d2,
-            double d3, double d4, double d5)
+    public EntityExplodeFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
-        super(world, d, d1, d2, d3, d4, d5);
-        motionX = d3 + (double)((float)(Math.random() * 2D - 1.0D) * 0.05F);
-        motionY = d4 + (double)((float)(Math.random() * 2D - 1.0D) * 0.05F);
-        motionZ = d5 + (double)((float)(Math.random() * 2D - 1.0D) * 0.05F);
+        super(par1World, par2, par4, par6, par8, par10, par12);
+        motionX = par8 + (double)((float)(Math.random() * 2D - 1.0D) * 0.05F);
+        motionY = par10 + (double)((float)(Math.random() * 2D - 1.0D) * 0.05F);
+        motionZ = par12 + (double)((float)(Math.random() * 2D - 1.0D) * 0.05F);
         particleRed = particleGreen = particleBlue = rand.nextFloat() * 0.3F + 0.7F;
         particleScale = rand.nextFloat() * rand.nextFloat() * 6F + 1.0F;
-        particleMaxAge = (int)(16D / ((double)rand.nextFloat() * 0.80000000000000004D + 0.20000000000000001D)) + 2;
+        particleMaxAge = (int)(16D / ((double)rand.nextFloat() * 0.8D + 0.2D)) + 2;
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
+        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
+
         if (particleAge++ >= particleMaxAge)
         {
             setEntityDead();
         }
+
         setParticleTextureIndex(7 - (particleAge * 8) / particleMaxAge);
-        motionY += 0.0040000000000000001D;
+        motionY += 0.004D;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.89999997615814209D;
-        motionY *= 0.89999997615814209D;
-        motionZ *= 0.89999997615814209D;
+        motionX *= 0.9D;
+        motionY *= 0.9D;
+        motionZ *= 0.9D;
+
         if (onGround)
         {
-            motionX *= 0.69999998807907104D;
-            motionZ *= 0.69999998807907104D;
+            motionX *= 0.7D;
+            motionZ *= 0.7D;
         }
     }
 }

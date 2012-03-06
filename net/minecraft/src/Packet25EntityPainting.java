@@ -15,43 +15,53 @@ public class Packet25EntityPainting extends Packet
     {
     }
 
-    public Packet25EntityPainting(EntityPainting entitypainting)
+    public Packet25EntityPainting(EntityPainting par1EntityPainting)
     {
-        entityId = entitypainting.entityId;
-        xPosition = entitypainting.xPosition;
-        yPosition = entitypainting.yPosition;
-        zPosition = entitypainting.zPosition;
-        direction = entitypainting.direction;
-        title = entitypainting.art.title;
+        entityId = par1EntityPainting.entityId;
+        xPosition = par1EntityPainting.xPosition;
+        yPosition = par1EntityPainting.yPosition;
+        zPosition = par1EntityPainting.zPosition;
+        direction = par1EntityPainting.direction;
+        title = par1EntityPainting.art.title;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        title = readString(datainputstream, EnumArt.maxArtTitleLength);
-        xPosition = datainputstream.readInt();
-        yPosition = datainputstream.readInt();
-        zPosition = datainputstream.readInt();
-        direction = datainputstream.readInt();
+        entityId = par1DataInputStream.readInt();
+        title = readString(par1DataInputStream, EnumArt.maxArtTitleLength);
+        xPosition = par1DataInputStream.readInt();
+        yPosition = par1DataInputStream.readInt();
+        zPosition = par1DataInputStream.readInt();
+        direction = par1DataInputStream.readInt();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        writeString(title, dataoutputstream);
-        dataoutputstream.writeInt(xPosition);
-        dataoutputstream.writeInt(yPosition);
-        dataoutputstream.writeInt(zPosition);
-        dataoutputstream.writeInt(direction);
+        par1DataOutputStream.writeInt(entityId);
+        writeString(title, par1DataOutputStream);
+        par1DataOutputStream.writeInt(xPosition);
+        par1DataOutputStream.writeInt(yPosition);
+        par1DataOutputStream.writeInt(zPosition);
+        par1DataOutputStream.writeInt(direction);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleEntityPainting(this);
+        par1NetHandler.handleEntityPainting(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 24;

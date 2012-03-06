@@ -6,19 +6,30 @@ import net.minecraft.client.Minecraft;
 public class GuiVideoSettings extends GuiScreen
 {
     private GuiScreen parentGuiScreen;
+
+    /** The title string that is displayed in the top-center of the screen. */
     protected String screenTitle;
+
+    /** GUI game settings */
     private GameSettings guiGameSettings;
-    private boolean field_40231_d;
+
+    /**
+     * True if the system is 64-bit (using a simple indexOf test on a system property)
+     */
+    private boolean is64bit;
     private static EnumOptions videoOptions[];
 
-    public GuiVideoSettings(GuiScreen guiscreen, GameSettings gamesettings)
+    public GuiVideoSettings(GuiScreen par1GuiScreen, GameSettings par2GameSettings)
     {
         screenTitle = "Video Settings";
-        field_40231_d = false;
-        parentGuiScreen = guiscreen;
-        guiGameSettings = gamesettings;
+        is64bit = false;
+        parentGuiScreen = par1GuiScreen;
+        guiGameSettings = par2GameSettings;
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
@@ -26,9 +37,11 @@ public class GuiVideoSettings extends GuiScreen
         int i = 0;
         EnumOptions aobj[] = videoOptions;
         int j = aobj.length;
+
         for (int k = 0; k < j; k++)
         {
             EnumOptions enumoptions = aobj[k];
+
             if (!enumoptions.getEnumFloat())
             {
                 controlList.add(new GuiSmallButton(enumoptions.returnEnumOrdinal(), (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), enumoptions, guiGameSettings.getKeyBinding(enumoptions)));
@@ -37,53 +50,65 @@ public class GuiVideoSettings extends GuiScreen
             {
                 controlList.add(new GuiSlider(enumoptions.returnEnumOrdinal(), (width / 2 - 155) + (i % 2) * 160, height / 6 + 24 * (i >> 1), enumoptions, guiGameSettings.getKeyBinding(enumoptions), guiGameSettings.getOptionFloatValue(enumoptions)));
             }
+
             i++;
         }
 
         controlList.add(new GuiButton(200, width / 2 - 100, height / 6 + 168, stringtranslate.translateKey("gui.done")));
-        field_40231_d = false;
+        is64bit = false;
         String aobj2[] = (new String[]
                 {
                     "sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"
                 });
-        String as[] = ((String []) (aobj2));
+        String as[] = ((String [])(aobj2));
         int l = as.length;
         int i1 = 0;
+
         do
         {
             if (i1 >= l)
             {
                 break;
             }
+
             String s = as[i1];
             String s1 = System.getProperty(s);
+
             if (s1 != null && s1.indexOf("64") >= 0)
             {
-                field_40231_d = true;
+                is64bit = true;
                 break;
             }
+
             i1++;
         }
         while (true);
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton par1GuiButton)
     {
-        if (!guibutton.enabled)
+        if (!par1GuiButton.enabled)
         {
             return;
         }
+
         int i = guiGameSettings.guiScale;
-        if (guibutton.id < 100 && (guibutton instanceof GuiSmallButton))
+
+        if (par1GuiButton.id < 100 && (par1GuiButton instanceof GuiSmallButton))
         {
-            guiGameSettings.setOptionValue(((GuiSmallButton)guibutton).returnEnumOptions(), 1);
-            guibutton.displayString = guiGameSettings.getKeyBinding(EnumOptions.getEnumOptions(guibutton.id));
+            guiGameSettings.setOptionValue(((GuiSmallButton)par1GuiButton).returnEnumOptions(), 1);
+            par1GuiButton.displayString = guiGameSettings.getKeyBinding(EnumOptions.getEnumOptions(par1GuiButton.id));
         }
-        if (guibutton.id == 200)
+
+        if (par1GuiButton.id == 200)
         {
             mc.gameSettings.saveOptions();
             mc.displayGuiScreen(parentGuiScreen);
         }
+
         if (guiGameSettings.guiScale != i)
         {
             ScaledResolution scaledresolution = new ScaledResolution(mc.gameSettings, mc.displayWidth, mc.displayHeight);
@@ -93,16 +118,21 @@ public class GuiVideoSettings extends GuiScreen
         }
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
         drawDefaultBackground();
         drawCenteredString(fontRenderer, screenTitle, width / 2, 20, 0xffffff);
-        if (!field_40231_d && guiGameSettings.renderDistance == 0)
+
+        if (!is64bit && guiGameSettings.renderDistance == 0)
         {
             drawCenteredString(fontRenderer, StatCollector.translateToLocal("options.farWarning1"), width / 2, height / 6 + 144, 0xaf0000);
             drawCenteredString(fontRenderer, StatCollector.translateToLocal("options.farWarning2"), width / 2, height / 6 + 144 + 12, 0xaf0000);
         }
-        super.drawScreen(i, j, f);
+
+        super.drawScreen(par1, par2, par3);
     }
 
     static

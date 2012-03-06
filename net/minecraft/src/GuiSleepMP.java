@@ -10,6 +10,9 @@ public class GuiSleepMP extends GuiChat
     {
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
         Keyboard.enableRepeatEvents(true);
@@ -17,50 +20,67 @@ public class GuiSleepMP extends GuiChat
         controlList.add(new GuiButton(1, width / 2 - 100, height - 40, stringtranslate.translateKey("multiplayer.stopSleeping")));
     }
 
+    /**
+     * Called when the screen is unloaded. Used to disable keyboard repeat events
+     */
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
     }
 
-    protected void keyTyped(char c, int i)
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char par1, int par2)
     {
-        if (i == 1)
+        if (par2 == 1)
         {
-            func_22115_j();
+            wakeEntity();
         }
-        else if (i == 28)
+        else if (par2 == 28)
         {
             String s = message.trim();
+
             if (s.length() > 0)
             {
                 mc.thePlayer.sendChatMessage(message.trim());
             }
+
             message = "";
         }
         else
         {
-            super.keyTyped(c, i);
+            super.keyTyped(par1, par2);
         }
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
-        super.drawScreen(i, j, f);
+        super.drawScreen(par1, par2, par3);
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton par1GuiButton)
     {
-        if (guibutton.id == 1)
+        if (par1GuiButton.id == 1)
         {
-            func_22115_j();
+            wakeEntity();
         }
         else
         {
-            super.actionPerformed(guibutton);
+            super.actionPerformed(par1GuiButton);
         }
     }
 
-    private void func_22115_j()
+    /**
+     * Wakes the entity from the bed
+     */
+    private void wakeEntity()
     {
         if (mc.thePlayer instanceof EntityClientPlayerMP)
         {

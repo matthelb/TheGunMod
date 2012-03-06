@@ -29,31 +29,37 @@ public class ModelSnowMan extends ModelBase
         field_40304_b.setRotationPoint(0.0F, 0.0F + f + 20F, 0.0F);
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5);
-        field_40305_c.rotateAngleY = f3 / 57.29578F;
-        field_40305_c.rotateAngleX = f4 / 57.29578F;
-        field_40306_a.rotateAngleY = (f3 / 57.29578F) * 0.25F;
-        float f6 = MathHelper.sin(field_40306_a.rotateAngleY);
-        float f7 = MathHelper.cos(field_40306_a.rotateAngleY);
+        super.setRotationAngles(par1, par2, par3, par4, par5, par6);
+        field_40305_c.rotateAngleY = par4 / (180F / (float)Math.PI);
+        field_40305_c.rotateAngleX = par5 / (180F / (float)Math.PI);
+        field_40306_a.rotateAngleY = (par4 / (180F / (float)Math.PI)) * 0.25F;
+        float f = MathHelper.sin(field_40306_a.rotateAngleY);
+        float f1 = MathHelper.cos(field_40306_a.rotateAngleY);
         field_40302_d.rotateAngleZ = 1.0F;
         field_40303_e.rotateAngleZ = -1F;
         field_40302_d.rotateAngleY = 0.0F + field_40306_a.rotateAngleY;
-        field_40303_e.rotateAngleY = 3.141593F + field_40306_a.rotateAngleY;
-        field_40302_d.rotationPointX = f7 * 5F;
-        field_40302_d.rotationPointZ = -f6 * 5F;
-        field_40303_e.rotationPointX = -f7 * 5F;
-        field_40303_e.rotationPointZ = f6 * 5F;
+        field_40303_e.rotateAngleY = (float)Math.PI + field_40306_a.rotateAngleY;
+        field_40302_d.rotationPointX = f1 * 5F;
+        field_40302_d.rotationPointZ = -f * 5F;
+        field_40303_e.rotationPointX = -f1 * 5F;
+        field_40303_e.rotationPointZ = f * 5F;
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles then renders the model.
+     */
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        setRotationAngles(f, f1, f2, f3, f4, f5);
-        field_40306_a.render(f5);
-        field_40304_b.render(f5);
-        field_40305_c.render(f5);
-        field_40302_d.render(f5);
-        field_40303_e.render(f5);
+        setRotationAngles(par2, par3, par4, par5, par6, par7);
+        field_40306_a.render(par7);
+        field_40304_b.render(par7);
+        field_40305_c.render(par7);
+        field_40302_d.render(par7);
+        field_40303_e.render(par7);
     }
 }

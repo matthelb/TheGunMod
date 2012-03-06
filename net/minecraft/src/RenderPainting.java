@@ -2,9 +2,11 @@ package net.minecraft.src;
 
 import java.util.Random;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 public class RenderPainting extends Render
 {
+    /** RNG. */
     private Random rand;
 
     public RenderPainting()
@@ -12,42 +14,42 @@ public class RenderPainting extends Render
         rand = new Random();
     }
 
-    public void func_158_a(EntityPainting entitypainting, double d, double d1, double d2,
-            float f, float f1)
+    public void func_158_a(EntityPainting par1EntityPainting, double par2, double par4, double par6, float par8, float par9)
     {
         rand.setSeed(187L);
         GL11.glPushMatrix();
-        GL11.glTranslatef((float)d, (float)d1, (float)d2);
-        GL11.glRotatef(f, 0.0F, 1.0F, 0.0F);
-        GL11.glEnable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+        GL11.glTranslatef((float)par2, (float)par4, (float)par6);
+        GL11.glRotatef(par8, 0.0F, 1.0F, 0.0F);
+        GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         loadTexture("/art/kz.png");
-        EnumArt enumart = entitypainting.art;
-        float f2 = 0.0625F;
-        GL11.glScalef(f2, f2, f2);
-        func_159_a(entitypainting, enumart.sizeX, enumart.sizeY, enumart.offsetX, enumart.offsetY);
-        GL11.glDisable(32826 /*GL_RESCALE_NORMAL_EXT*/);
+        EnumArt enumart = par1EntityPainting.art;
+        float f = 0.0625F;
+        GL11.glScalef(f, f, f);
+        func_159_a(par1EntityPainting, enumart.sizeX, enumart.sizeY, enumart.offsetX, enumart.offsetY);
+        GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         GL11.glPopMatrix();
     }
 
-    private void func_159_a(EntityPainting entitypainting, int i, int j, int k, int l)
+    private void func_159_a(EntityPainting par1EntityPainting, int par2, int par3, int par4, int par5)
     {
-        float f = (float)(-i) / 2.0F;
-        float f1 = (float)(-j) / 2.0F;
+        float f = (float)(-par2) / 2.0F;
+        float f1 = (float)(-par3) / 2.0F;
         float f2 = -0.5F;
         float f3 = 0.5F;
-        for (int i1 = 0; i1 < i / 16; i1++)
+
+        for (int i = 0; i < par2 / 16; i++)
         {
-            for (int j1 = 0; j1 < j / 16; j1++)
+            for (int j = 0; j < par3 / 16; j++)
             {
-                float f4 = f + (float)((i1 + 1) * 16);
-                float f5 = f + (float)(i1 * 16);
-                float f6 = f1 + (float)((j1 + 1) * 16);
-                float f7 = f1 + (float)(j1 * 16);
-                func_160_a(entitypainting, (f4 + f5) / 2.0F, (f6 + f7) / 2.0F);
-                float f8 = (float)((k + i) - i1 * 16) / 256F;
-                float f9 = (float)((k + i) - (i1 + 1) * 16) / 256F;
-                float f10 = (float)((l + j) - j1 * 16) / 256F;
-                float f11 = (float)((l + j) - (j1 + 1) * 16) / 256F;
+                float f4 = f + (float)((i + 1) * 16);
+                float f5 = f + (float)(i * 16);
+                float f6 = f1 + (float)((j + 1) * 16);
+                float f7 = f1 + (float)(j * 16);
+                func_160_a(par1EntityPainting, (f4 + f5) / 2.0F, (f6 + f7) / 2.0F);
+                float f8 = (float)((par4 + par2) - i * 16) / 256F;
+                float f9 = (float)((par4 + par2) - (i + 1) * 16) / 256F;
+                float f10 = (float)((par5 + par3) - j * 16) / 256F;
+                float f11 = (float)((par5 + par3) - (j + 1) * 16) / 256F;
                 float f12 = 0.75F;
                 float f13 = 0.8125F;
                 float f14 = 0.0F;
@@ -97,27 +99,32 @@ public class RenderPainting extends Render
         }
     }
 
-    private void func_160_a(EntityPainting entitypainting, float f, float f1)
+    private void func_160_a(EntityPainting par1EntityPainting, float par2, float par3)
     {
-        int i = MathHelper.floor_double(entitypainting.posX);
-        int j = MathHelper.floor_double(entitypainting.posY + (double)(f1 / 16F));
-        int k = MathHelper.floor_double(entitypainting.posZ);
-        if (entitypainting.direction == 0)
+        int i = MathHelper.floor_double(par1EntityPainting.posX);
+        int j = MathHelper.floor_double(par1EntityPainting.posY + (double)(par3 / 16F));
+        int k = MathHelper.floor_double(par1EntityPainting.posZ);
+
+        if (par1EntityPainting.direction == 0)
         {
-            i = MathHelper.floor_double(entitypainting.posX + (double)(f / 16F));
+            i = MathHelper.floor_double(par1EntityPainting.posX + (double)(par2 / 16F));
         }
-        if (entitypainting.direction == 1)
+
+        if (par1EntityPainting.direction == 1)
         {
-            k = MathHelper.floor_double(entitypainting.posZ - (double)(f / 16F));
+            k = MathHelper.floor_double(par1EntityPainting.posZ - (double)(par2 / 16F));
         }
-        if (entitypainting.direction == 2)
+
+        if (par1EntityPainting.direction == 2)
         {
-            i = MathHelper.floor_double(entitypainting.posX - (double)(f / 16F));
+            i = MathHelper.floor_double(par1EntityPainting.posX - (double)(par2 / 16F));
         }
-        if (entitypainting.direction == 3)
+
+        if (par1EntityPainting.direction == 3)
         {
-            k = MathHelper.floor_double(entitypainting.posZ + (double)(f / 16F));
+            k = MathHelper.floor_double(par1EntityPainting.posZ + (double)(par2 / 16F));
         }
+
         int l = renderManager.worldObj.getLightBrightnessForSkyBlocks(i, j, k, 0);
         int i1 = l % 0x10000;
         int j1 = l / 0x10000;
@@ -125,9 +132,14 @@ public class RenderPainting extends Render
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
+     */
+    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        func_158_a((EntityPainting)entity, d, d1, d2, f, f1);
+        func_158_a((EntityPainting)par1Entity, par2, par4, par6, par8, par9);
     }
 }

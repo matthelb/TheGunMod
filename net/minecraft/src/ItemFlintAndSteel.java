@@ -4,50 +4,63 @@ import java.util.Random;
 
 public class ItemFlintAndSteel extends Item
 {
-    public ItemFlintAndSteel(int i)
+    public ItemFlintAndSteel(int par1)
     {
-        super(i);
+        super(par1);
         maxStackSize = 1;
         setMaxDamage(64);
     }
 
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
+     */
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7)
     {
-        if (l == 0)
+        if (par7 == 0)
         {
-            j--;
+            par5--;
         }
-        if (l == 1)
+
+        if (par7 == 1)
         {
-            j++;
+            par5++;
         }
-        if (l == 2)
+
+        if (par7 == 2)
         {
-            k--;
+            par6--;
         }
-        if (l == 3)
+
+        if (par7 == 3)
         {
-            k++;
+            par6++;
         }
-        if (l == 4)
+
+        if (par7 == 4)
         {
-            i--;
+            par4--;
         }
-        if (l == 5)
+
+        if (par7 == 5)
         {
-            i++;
+            par4++;
         }
-        if (!entityplayer.canPlayerEdit(i, j, k))
+
+        if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6))
         {
             return false;
         }
-        int i1 = world.getBlockId(i, j, k);
-        if (i1 == 0)
+
+        int i = par3World.getBlockId(par4, par5, par6);
+
+        if (i == 0)
         {
-            world.playSoundEffect((double)i + 0.5D, (double)j + 0.5D, (double)k + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
-            world.setBlockWithNotify(i, j, k, Block.fire.blockID);
+            par3World.playSoundEffect((double)par4 + 0.5D, (double)par5 + 0.5D, (double)par6 + 0.5D, "fire.ignite", 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
+            par3World.setBlockWithNotify(par4, par5, par6, Block.fire.blockID);
         }
-        itemstack.damageItem(1, entityplayer);
+
+        par1ItemStack.damageItem(1, par2EntityPlayer);
         return true;
     }
 }

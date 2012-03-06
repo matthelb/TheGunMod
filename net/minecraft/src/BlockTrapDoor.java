@@ -2,88 +2,129 @@ package net.minecraft.src;
 
 public class BlockTrapDoor extends Block
 {
-    protected BlockTrapDoor(int i, Material material)
+    protected BlockTrapDoor(int par1, Material par2Material)
     {
-        super(i, material);
+        super(par1, par2Material);
         blockIndexInTexture = 84;
-        if (material == Material.iron)
+
+        if (par2Material == Material.iron)
         {
             blockIndexInTexture++;
         }
+
         float f = 0.5F;
         float f1 = 1.0F;
         setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f1, 0.5F + f);
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    public boolean func_48204_b(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    {
+        return !isTrapdoorOpen(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
+    }
+
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 0;
     }
 
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns the bounding box of the wired rectangular prism to render.
+     */
+    public AxisAlignedBB getSelectedBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
-        setBlockBoundsBasedOnState(world, i, j, k);
-        return super.getSelectedBoundingBoxFromPool(world, i, j, k);
+        setBlockBoundsBasedOnState(par1World, par2, par3, par4);
+        return super.getSelectedBoundingBoxFromPool(par1World, par2, par3, par4);
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
-        setBlockBoundsBasedOnState(world, i, j, k);
-        return super.getCollisionBoundingBoxFromPool(world, i, j, k);
+        setBlockBoundsBasedOnState(par1World, par2, par3, par4);
+        return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
     }
 
-    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        setBlockBoundsForBlockRender(iblockaccess.getBlockMetadata(i, j, k));
+        setBlockBoundsForBlockRender(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
     }
 
+    /**
+     * Sets the block's bounds for rendering it as an item
+     */
     public void setBlockBoundsForItemRender()
     {
         float f = 0.1875F;
         setBlockBounds(0.0F, 0.5F - f / 2.0F, 0.0F, 1.0F, 0.5F + f / 2.0F, 1.0F);
     }
 
-    public void setBlockBoundsForBlockRender(int i)
+    public void setBlockBoundsForBlockRender(int par1)
     {
         float f = 0.1875F;
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
-        if (isTrapdoorOpen(i))
+
+        if (isTrapdoorOpen(par1))
         {
-            if ((i & 3) == 0)
+            if ((par1 & 3) == 0)
             {
                 setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
             }
-            if ((i & 3) == 1)
+
+            if ((par1 & 3) == 1)
             {
                 setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
             }
-            if ((i & 3) == 2)
+
+            if ((par1 & 3) == 2)
             {
                 setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
             }
-            if ((i & 3) == 3)
+
+            if ((par1 & 3) == 3)
             {
                 setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
             }
         }
     }
 
-    public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called when the block is clicked by a player. Args: x, y, z, entityPlayer
+     */
+    public void onBlockClicked(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        blockActivated(world, i, j, k, entityplayer);
+        blockActivated(par1World, par2, par3, par4, par5EntityPlayer);
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
         if (blockMaterial == Material.iron)
         {
@@ -91,138 +132,174 @@ public class BlockTrapDoor extends Block
         }
         else
         {
-            int l = world.getBlockMetadata(i, j, k);
-            world.setBlockMetadataWithNotify(i, j, k, l ^ 4);
-            world.playAuxSFXAtEntity(entityplayer, 1003, i, j, k, 0);
+            int i = par1World.getBlockMetadata(par2, par3, par4);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, i ^ 4);
+            par1World.playAuxSFXAtEntity(par5EntityPlayer, 1003, par2, par3, par4, 0);
             return true;
         }
     }
 
-    public void onPoweredBlockChange(World world, int i, int j, int k, boolean flag)
+    public void onPoweredBlockChange(World par1World, int par2, int par3, int par4, boolean par5)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        boolean flag1 = (l & 4) > 0;
-        if (flag1 == flag)
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        boolean flag = (i & 4) > 0;
+
+        if (flag == par5)
         {
             return;
         }
         else
         {
-            world.setBlockMetadataWithNotify(i, j, k, l ^ 4);
-            world.playAuxSFXAtEntity(null, 1003, i, j, k, 0);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, i ^ 4);
+            par1World.playAuxSFXAtEntity(null, 1003, par2, par3, par4, 0);
             return;
         }
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        int i1 = world.getBlockMetadata(i, j, k);
-        int j1 = i;
-        int k1 = k;
-        if ((i1 & 3) == 0)
-        {
-            k1++;
-        }
-        if ((i1 & 3) == 1)
-        {
-            k1--;
-        }
-        if ((i1 & 3) == 2)
-        {
-            j1++;
-        }
-        if ((i1 & 3) == 3)
-        {
-            j1--;
-        }
-        if (!isValidSupportBlock(world.getBlockId(j1, j, k1)))
-        {
-            world.setBlockWithNotify(i, j, k, 0);
-            dropBlockAsItem(world, i, j, k, i1, 0);
-        }
-        boolean flag = world.isBlockIndirectlyGettingPowered(i, j, k);
-        if (flag || l > 0 && Block.blocksList[l].canProvidePower() || l == 0)
-        {
-            onPoweredBlockChange(world, i, j, k, flag);
-        }
-    }
 
-    public MovingObjectPosition collisionRayTrace(World world, int i, int j, int k, Vec3D vec3d, Vec3D vec3d1)
-    {
-        setBlockBoundsBasedOnState(world, i, j, k);
-        return super.collisionRayTrace(world, i, j, k, vec3d, vec3d1);
-    }
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = par2;
+        int k = par4;
 
-    public void onBlockPlaced(World world, int i, int j, int k, int l)
-    {
-        byte byte0 = 0;
-        if (l == 2)
-        {
-            byte0 = 0;
-        }
-        if (l == 3)
-        {
-            byte0 = 1;
-        }
-        if (l == 4)
-        {
-            byte0 = 2;
-        }
-        if (l == 5)
-        {
-            byte0 = 3;
-        }
-        world.setBlockMetadataWithNotify(i, j, k, byte0);
-    }
-
-    public boolean canPlaceBlockOnSide(World world, int i, int j, int k, int l)
-    {
-        if (l == 0)
-        {
-            return false;
-        }
-        if (l == 1)
-        {
-            return false;
-        }
-        if (l == 2)
+        if ((i & 3) == 0)
         {
             k++;
         }
-        if (l == 3)
+
+        if ((i & 3) == 1)
         {
             k--;
         }
-        if (l == 4)
+
+        if ((i & 3) == 2)
         {
-            i++;
+            j++;
         }
-        if (l == 5)
+
+        if ((i & 3) == 3)
         {
-            i--;
+            j--;
         }
-        return isValidSupportBlock(world.getBlockId(i, j, k));
+
+        if (!isValidSupportBlock(par1World.getBlockId(j, par3, k)))
+        {
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, i, 0);
+        }
+
+        boolean flag = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4);
+
+        if (flag || par5 > 0 && Block.blocksList[par5].canProvidePower() || par5 == 0)
+        {
+            onPoweredBlockChange(par1World, par2, par3, par4, flag);
+        }
     }
 
-    public static boolean isTrapdoorOpen(int i)
+    /**
+     * Ray traces through the blocks collision from start vector to end vector returning a ray trace hit. Args: world,
+     * x, y, z, startVec, endVec
+     */
+    public MovingObjectPosition collisionRayTrace(World par1World, int par2, int par3, int par4, Vec3D par5Vec3D, Vec3D par6Vec3D)
     {
-        return (i & 4) != 0;
+        setBlockBoundsBasedOnState(par1World, par2, par3, par4);
+        return super.collisionRayTrace(par1World, par2, par3, par4, par5Vec3D, par6Vec3D);
     }
 
-    private static boolean isValidSupportBlock(int i)
+    /**
+     * Called when a block is placed using an item. Used often for taking the facing and figuring out how to position
+     * the item. Args: x, y, z, facing
+     */
+    public void onBlockPlaced(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (i <= 0)
+        byte byte0 = 0;
+
+        if (par5 == 2)
+        {
+            byte0 = 0;
+        }
+
+        if (par5 == 3)
+        {
+            byte0 = 1;
+        }
+
+        if (par5 == 4)
+        {
+            byte0 = 2;
+        }
+
+        if (par5 == 5)
+        {
+            byte0 = 3;
+        }
+
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, byte0);
+    }
+
+    public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
+    {
+        if (par5 == 0)
+        {
+            return false;
+        }
+
+        if (par5 == 1)
+        {
+            return false;
+        }
+
+        if (par5 == 2)
+        {
+            par4++;
+        }
+
+        if (par5 == 3)
+        {
+            par4--;
+        }
+
+        if (par5 == 4)
+        {
+            par2++;
+        }
+
+        if (par5 == 5)
+        {
+            par2--;
+        }
+
+        return isValidSupportBlock(par1World.getBlockId(par2, par3, par4));
+    }
+
+    public static boolean isTrapdoorOpen(int par0)
+    {
+        return (par0 & 4) != 0;
+    }
+
+    /**
+     * Checks if the block ID is a valid support block for the trap door to connect with. If it is not the trapdoor is
+     * dropped into the world.
+     */
+    private static boolean isValidSupportBlock(int par0)
+    {
+        if (par0 <= 0)
         {
             return false;
         }
         else
         {
-            Block block = Block.blocksList[i];
-            return block != null && block.blockMaterial.getIsOpaque() && block.renderAsNormalBlock() || block == Block.glowStone;
+            Block block = Block.blocksList[par0];
+            return block != null && block.blockMaterial.isOpaque() && block.renderAsNormalBlock() || block == Block.glowStone;
         }
     }
 }

@@ -4,22 +4,24 @@ import java.util.Random;
 
 public class EntityBubbleFX extends EntityFX
 {
-    public EntityBubbleFX(World world, double d, double d1, double d2,
-            double d3, double d4, double d5)
+    public EntityBubbleFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
-        super(world, d, d1, d2, d3, d4, d5);
+        super(par1World, par2, par4, par6, par8, par10, par12);
         particleRed = 1.0F;
         particleGreen = 1.0F;
         particleBlue = 1.0F;
         setParticleTextureIndex(32);
         setSize(0.02F, 0.02F);
         particleScale = particleScale * (rand.nextFloat() * 0.6F + 0.2F);
-        motionX = d3 * 0.20000000298023224D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
-        motionY = d4 * 0.20000000298023224D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
-        motionZ = d5 * 0.20000000298023224D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
-        particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
+        motionX = par8 * 0.2D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
+        motionY = par10 * 0.2D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
+        motionZ = par12 * 0.2D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
+        particleMaxAge = (int)(8D / (Math.random() * 0.8D + 0.2D));
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
@@ -27,13 +29,15 @@ public class EntityBubbleFX extends EntityFX
         prevPosZ = posZ;
         motionY += 0.002D;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.85000002384185791D;
-        motionY *= 0.85000002384185791D;
-        motionZ *= 0.85000002384185791D;
+        motionX *= 0.85D;
+        motionY *= 0.85D;
+        motionZ *= 0.85D;
+
         if (worldObj.getBlockMaterial(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) != Material.water)
         {
             setEntityDead();
         }
+
         if (particleMaxAge-- <= 0)
         {
             setEntityDead();

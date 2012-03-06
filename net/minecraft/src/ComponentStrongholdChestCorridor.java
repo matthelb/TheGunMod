@@ -9,49 +9,59 @@ public class ComponentStrongholdChestCorridor extends ComponentStronghold
     private final EnumDoor doorType;
     private boolean field_40012_c;
 
-    public ComponentStrongholdChestCorridor(int i, Random random, StructureBoundingBox structureboundingbox, int j)
+    public ComponentStrongholdChestCorridor(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
-        super(i);
-        coordBaseMode = j;
-        doorType = getRandomDoor(random);
-        boundingBox = structureboundingbox;
+        super(par1);
+        coordBaseMode = par4;
+        doorType = getRandomDoor(par2Random);
+        boundingBox = par3StructureBoundingBox;
     }
 
-    public void buildComponent(StructureComponent structurecomponent, List list, Random random)
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
+    public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
-        func_35028_a((ComponentStrongholdStairs2)structurecomponent, list, random, 1, 1);
+        getNextComponentNormal((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 1, 1);
     }
 
-    public static ComponentStrongholdChestCorridor func_40010_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentStrongholdChestCorridor findValidPlacement(List par0List, Random par1Random, int par2, int par3, int par4, int par5, int par6)
     {
-        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -1, -1, 0, 5, 5, 7, l);
-        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
+        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(par2, par3, par4, -1, -1, 0, 5, 5, 7, par5);
+
+        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(par0List, structureboundingbox) != null)
         {
             return null;
         }
         else
         {
-            return new ComponentStrongholdChestCorridor(i1, random, structureboundingbox, l);
+            return new ComponentStrongholdChestCorridor(par6, par1Random, structureboundingbox, par5);
         }
     }
 
-    public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
+    public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
-        if (isLiquidInStructureBoundingBox(world, structureboundingbox))
+        if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))
         {
             return false;
         }
-        fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 4, 4, 6, true, random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(world, random, structureboundingbox, doorType, 1, 1, 0);
-        placeDoor(world, random, structureboundingbox, EnumDoor.OPENING, 1, 1, 6);
-        fillWithBlocks(world, structureboundingbox, 3, 1, 2, 3, 1, 4, Block.stoneBrick.blockID, Block.stoneBrick.blockID, false);
-        placeBlockAtCurrentPosition(world, Block.stairSingle.blockID, 5, 3, 1, 1, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.stairSingle.blockID, 5, 3, 1, 5, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.stairSingle.blockID, 5, 3, 2, 2, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.stairSingle.blockID, 5, 3, 2, 4, structureboundingbox);
+
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 4, 4, 6, true, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, doorType, 1, 1, 0);
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, EnumDoor.OPENING, 1, 1, 6);
+        fillWithBlocks(par1World, par3StructureBoundingBox, 3, 1, 2, 3, 1, 4, Block.stoneBrick.blockID, Block.stoneBrick.blockID, false);
+        placeBlockAtCurrentPosition(par1World, Block.stairSingle.blockID, 5, 3, 1, 1, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.stairSingle.blockID, 5, 3, 1, 5, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.stairSingle.blockID, 5, 3, 2, 2, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.stairSingle.blockID, 5, 3, 2, 4, par3StructureBoundingBox);
+
         for (int i = 2; i <= 4; i++)
         {
-            placeBlockAtCurrentPosition(world, Block.stairSingle.blockID, 5, 2, 1, i, structureboundingbox);
+            placeBlockAtCurrentPosition(par1World, Block.stairSingle.blockID, 5, 2, 1, i, par3StructureBoundingBox);
         }
 
         if (!field_40012_c)
@@ -59,12 +69,14 @@ public class ComponentStrongholdChestCorridor extends ComponentStronghold
             int j = getYWithOffset(2);
             int k = getXWithOffset(3, 3);
             int l = getZWithOffset(3, 3);
-            if (structureboundingbox.isVecInside(k, j, l))
+
+            if (par3StructureBoundingBox.isVecInside(k, j, l))
             {
                 field_40012_c = true;
-                createTreasureChestAtCurrentPosition(world, structureboundingbox, random, 3, 2, 3, field_40013_a, 2 + random.nextInt(2));
+                createTreasureChestAtCurrentPosition(par1World, par3StructureBoundingBox, par2Random, 3, 2, 3, field_40013_a, 2 + par2Random.nextInt(2));
             }
         }
+
         return true;
     }
 

@@ -7,33 +7,35 @@ public class TextureFX
     public byte imageData[];
     public int iconIndex;
     public boolean anaglyphEnabled;
+
+    /** Texture ID */
     public int textureId;
     public int tileSize;
     public int tileImage;
 
-    public TextureFX(int i)
+    public TextureFX(int par1)
     {
-        imageData = new byte[1024 /*GL_FRONT_LEFT*/];
+        imageData = new byte[1024];
         anaglyphEnabled = false;
         textureId = 0;
         tileSize = 1;
         tileImage = 0;
-        iconIndex = i;
+        iconIndex = par1;
     }
 
     public void onTick()
     {
     }
 
-    public void bindImage(RenderEngine renderengine)
+    public void bindImage(RenderEngine par1RenderEngine)
     {
         if (tileImage == 0)
         {
-            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, renderengine.getTexture("/terrain.png"));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1RenderEngine.getTexture("/terrain.png"));
         }
         else if (tileImage == 1)
         {
-            GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, renderengine.getTexture("/gui/items.png"));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1RenderEngine.getTexture("/gui/items.png"));
         }
     }
 }

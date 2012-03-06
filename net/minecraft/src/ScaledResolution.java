@@ -8,17 +8,20 @@ public class ScaledResolution
     public double scaledHeightD;
     public int scaleFactor;
 
-    public ScaledResolution(GameSettings gamesettings, int i, int j)
+    public ScaledResolution(GameSettings par1GameSettings, int par2, int par3)
     {
-        scaledWidth = i;
-        scaledHeight = j;
+        scaledWidth = par2;
+        scaledHeight = par3;
         scaleFactor = 1;
-        int k = gamesettings.guiScale;
-        if (k == 0)
+        int i = par1GameSettings.guiScale;
+
+        if (i == 0)
         {
-            k = 1000;
+            i = 1000;
         }
-        for (; scaleFactor < k && scaledWidth / (scaleFactor + 1) >= 320 && scaledHeight / (scaleFactor + 1) >= 240; scaleFactor++) { }
+
+        for (; scaleFactor < i && scaledWidth / (scaleFactor + 1) >= 320 && scaledHeight / (scaleFactor + 1) >= 240; scaleFactor++) { }
+
         scaledWidthD = (double)scaledWidth / (double)scaleFactor;
         scaledHeightD = (double)scaledHeight / (double)scaleFactor;
         scaledWidth = (int)Math.ceil(scaledWidthD);

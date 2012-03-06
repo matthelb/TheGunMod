@@ -2,7 +2,7 @@ package net.minecraft.src;
 
 import java.util.*;
 
-public class BlockBed extends Block
+public class BlockBed extends BlockDirectional
 {
     public static final int headBlockToFootBlockMap[][] =
     {
@@ -17,112 +17,139 @@ public class BlockBed extends Block
         }
     };
 
-    public BlockBed(int i)
+    public BlockBed(int par1)
     {
-        super(i, 134, Material.cloth);
+        super(par1, 134, Material.cloth);
         setBounds();
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return true;
         }
-        int l = world.getBlockMetadata(i, j, k);
-        if (!isBlockFootOfBed(l))
+
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+
+        if (!isBlockFootOfBed(i))
         {
-            int i1 = getDirectionFromMetadata(l);
-            i += headBlockToFootBlockMap[i1][0];
-            k += headBlockToFootBlockMap[i1][1];
-            if (world.getBlockId(i, j, k) != blockID)
+            int j = func_48216_a(i);
+            par2 += headBlockToFootBlockMap[j][0];
+            par4 += headBlockToFootBlockMap[j][1];
+
+            if (par1World.getBlockId(par2, par3, par4) != blockID)
             {
                 return true;
             }
-            l = world.getBlockMetadata(i, j, k);
+
+            i = par1World.getBlockMetadata(par2, par3, par4);
         }
-        if (!world.worldProvider.canRespawnHere())
+
+        if (!par1World.worldProvider.canRespawnHere())
         {
-            double d = (double)i + 0.5D;
-            double d1 = (double)j + 0.5D;
-            double d2 = (double)k + 0.5D;
-            world.setBlockWithNotify(i, j, k, 0);
-            int j1 = getDirectionFromMetadata(l);
-            i += headBlockToFootBlockMap[j1][0];
-            k += headBlockToFootBlockMap[j1][1];
-            if (world.getBlockId(i, j, k) == blockID)
+            double d = (double)par2 + 0.5D;
+            double d1 = (double)par3 + 0.5D;
+            double d2 = (double)par4 + 0.5D;
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
+            int k = func_48216_a(i);
+            par2 += headBlockToFootBlockMap[k][0];
+            par4 += headBlockToFootBlockMap[k][1];
+
+            if (par1World.getBlockId(par2, par3, par4) == blockID)
             {
-                world.setBlockWithNotify(i, j, k, 0);
-                d = (d + (double)i + 0.5D) / 2D;
-                d1 = (d1 + (double)j + 0.5D) / 2D;
-                d2 = (d2 + (double)k + 0.5D) / 2D;
+                par1World.setBlockWithNotify(par2, par3, par4, 0);
+                d = (d + (double)par2 + 0.5D) / 2D;
+                d1 = (d1 + (double)par3 + 0.5D) / 2D;
+                d2 = (d2 + (double)par4 + 0.5D) / 2D;
             }
-            world.newExplosion(null, (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, 5F, true);
+
+            par1World.newExplosion(null, (float)par2 + 0.5F, (float)par3 + 0.5F, (float)par4 + 0.5F, 5F, true);
             return true;
         }
-        if (isBedOccupied(l))
+
+        if (isBedOccupied(i))
         {
-            EntityPlayer entityplayer1 = null;
-            Iterator iterator = world.playerEntities.iterator();
+            EntityPlayer entityplayer = null;
+            Iterator iterator = par1World.playerEntities.iterator();
+
             do
             {
                 if (!iterator.hasNext())
                 {
                     break;
                 }
-                EntityPlayer entityplayer2 = (EntityPlayer)iterator.next();
-                if (entityplayer2.isPlayerSleeping())
+
+                EntityPlayer entityplayer1 = (EntityPlayer)iterator.next();
+
+                if (entityplayer1.isPlayerSleeping())
                 {
-                    ChunkCoordinates chunkcoordinates = entityplayer2.playerLocation;
-                    if (chunkcoordinates.posX == i && chunkcoordinates.posY == j && chunkcoordinates.posZ == k)
+                    ChunkCoordinates chunkcoordinates = entityplayer1.playerLocation;
+
+                    if (chunkcoordinates.posX == par2 && chunkcoordinates.posY == par3 && chunkcoordinates.posZ == par4)
                     {
-                        entityplayer1 = entityplayer2;
+                        entityplayer = entityplayer1;
                     }
                 }
             }
             while (true);
-            if (entityplayer1 == null)
+
+            if (entityplayer == null)
             {
-                setBedOccupied(world, i, j, k, false);
+                setBedOccupied(par1World, par2, par3, par4, false);
             }
             else
             {
-                entityplayer.addChatMessage("tile.bed.occupied");
+                par5EntityPlayer.addChatMessage("tile.bed.occupied");
                 return true;
             }
         }
-        EnumStatus enumstatus = entityplayer.sleepInBedAt(i, j, k);
+
+        EnumStatus enumstatus = par5EntityPlayer.sleepInBedAt(par2, par3, par4);
+
         if (enumstatus == EnumStatus.OK)
         {
-            setBedOccupied(world, i, j, k, true);
+            setBedOccupied(par1World, par2, par3, par4, true);
             return true;
         }
+
         if (enumstatus == EnumStatus.NOT_POSSIBLE_NOW)
         {
-            entityplayer.addChatMessage("tile.bed.noSleep");
+            par5EntityPlayer.addChatMessage("tile.bed.noSleep");
         }
         else if (enumstatus == EnumStatus.NOT_SAFE)
         {
-            entityplayer.addChatMessage("tile.bed.notSafe");
+            par5EntityPlayer.addChatMessage("tile.bed.notSafe");
         }
+
         return true;
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (i == 0)
+        if (par1 == 0)
         {
             return Block.planks.blockIndexInTexture;
         }
-        int k = getDirectionFromMetadata(j);
-        int l = Direction.bedDirection[k][i];
-        if (isBlockFootOfBed(j))
+
+        int i = func_48216_a(par2);
+        int j = Direction.bedDirection[i][par1];
+
+        if (isBlockFootOfBed(par2))
         {
-            if (l == 2)
+            if (j == 2)
             {
                 return blockIndexInTexture + 2 + 16;
             }
-            if (l == 5 || l == 4)
+
+            if (j == 5 || j == 4)
             {
                 return blockIndexInTexture + 1 + 16;
             }
@@ -131,11 +158,13 @@ public class BlockBed extends Block
                 return blockIndexInTexture + 1;
             }
         }
-        if (l == 3)
+
+        if (j == 3)
         {
             return (blockIndexInTexture - 1) + 16;
         }
-        if (l == 5 || l == 4)
+
+        if (j == 5 || j == 4)
         {
             return blockIndexInTexture + 16;
         }
@@ -145,50 +174,72 @@ public class BlockBed extends Block
         }
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 14;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
-    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         setBounds();
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        int i1 = world.getBlockMetadata(i, j, k);
-        int j1 = getDirectionFromMetadata(i1);
-        if (isBlockFootOfBed(i1))
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = func_48216_a(i);
+
+        if (isBlockFootOfBed(i))
         {
-            if (world.getBlockId(i - headBlockToFootBlockMap[j1][0], j, k - headBlockToFootBlockMap[j1][1]) != blockID)
+            if (par1World.getBlockId(par2 - headBlockToFootBlockMap[j][0], par3, par4 - headBlockToFootBlockMap[j][1]) != blockID)
             {
-                world.setBlockWithNotify(i, j, k, 0);
+                par1World.setBlockWithNotify(par2, par3, par4, 0);
             }
         }
-        else if (world.getBlockId(i + headBlockToFootBlockMap[j1][0], j, k + headBlockToFootBlockMap[j1][1]) != blockID)
+        else if (par1World.getBlockId(par2 + headBlockToFootBlockMap[j][0], par3, par4 + headBlockToFootBlockMap[j][1]) != blockID)
         {
-            world.setBlockWithNotify(i, j, k, 0);
-            if (!world.isRemote)
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
+
+            if (!par1World.isRemote)
             {
-                dropBlockAsItem(world, i, j, k, i1, 0);
+                dropBlockAsItem(par1World, par2, par3, par4, i, 0);
             }
         }
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
-        if (isBlockFootOfBed(i))
+        if (isBlockFootOfBed(par1))
         {
             return 0;
         }
@@ -198,65 +249,80 @@ public class BlockBed extends Block
         }
     }
 
+    /**
+     * Set the bounds of the bed block.
+     */
     private void setBounds()
     {
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5625F, 1.0F);
     }
 
-    public static int getDirectionFromMetadata(int i)
+    /**
+     * Returns whether or not this bed block is the foot of the bed.
+     */
+    public static boolean isBlockFootOfBed(int par0)
     {
-        return i & 3;
+        return (par0 & 8) != 0;
     }
 
-    public static boolean isBlockFootOfBed(int i)
+    /**
+     * Return whether or not the bed is occupied.
+     */
+    public static boolean isBedOccupied(int par0)
     {
-        return (i & 8) != 0;
+        return (par0 & 4) != 0;
     }
 
-    public static boolean isBedOccupied(int i)
+    /**
+     * Sets whether or not the bed is occupied.
+     */
+    public static void setBedOccupied(World par0World, int par1, int par2, int par3, boolean par4)
     {
-        return (i & 4) != 0;
-    }
+        int i = par0World.getBlockMetadata(par1, par2, par3);
 
-    public static void setBedOccupied(World world, int i, int j, int k, boolean flag)
-    {
-        int l = world.getBlockMetadata(i, j, k);
-        if (flag)
+        if (par4)
         {
-            l |= 4;
+            i |= 4;
         }
         else
         {
-            l &= -5;
+            i &= -5;
         }
-        world.setBlockMetadataWithNotify(i, j, k, l);
+
+        par0World.setBlockMetadataWithNotify(par1, par2, par3, i);
     }
 
-    public static ChunkCoordinates getNearestEmptyChunkCoordinates(World world, int i, int j, int k, int l)
+    /**
+     * Gets the nearest empty chunk coordinates for the player to wake up from a bed into.
+     */
+    public static ChunkCoordinates getNearestEmptyChunkCoordinates(World par0World, int par1, int par2, int par3, int par4)
     {
-        int i1 = world.getBlockMetadata(i, j, k);
-        int j1 = getDirectionFromMetadata(i1);
-        for (int k1 = 0; k1 <= 1; k1++)
+        int i = par0World.getBlockMetadata(par1, par2, par3);
+        int j = BlockDirectional.func_48216_a(i);
+
+        for (int k = 0; k <= 1; k++)
         {
-            int l1 = i - headBlockToFootBlockMap[j1][0] * k1 - 1;
-            int i2 = k - headBlockToFootBlockMap[j1][1] * k1 - 1;
-            int j2 = l1 + 2;
-            int k2 = i2 + 2;
-            for (int l2 = l1; l2 <= j2; l2++)
+            int l = par1 - headBlockToFootBlockMap[j][0] * k - 1;
+            int i1 = par3 - headBlockToFootBlockMap[j][1] * k - 1;
+            int j1 = l + 2;
+            int k1 = i1 + 2;
+
+            for (int l1 = l; l1 <= j1; l1++)
             {
-                for (int i3 = i2; i3 <= k2; i3++)
+                for (int i2 = i1; i2 <= k1; i2++)
                 {
-                    if (!world.isBlockNormalCube(l2, j - 1, i3) || !world.isAirBlock(l2, j, i3) || !world.isAirBlock(l2, j + 1, i3))
+                    if (!par0World.isBlockNormalCube(l1, par2 - 1, i2) || !par0World.isAirBlock(l1, par2, i2) || !par0World.isAirBlock(l1, par2 + 1, i2))
                     {
                         continue;
                     }
-                    if (l > 0)
+
+                    if (par4 > 0)
                     {
-                        l--;
+                        par4--;
                     }
                     else
                     {
-                        return new ChunkCoordinates(l2, j, i3);
+                        return new ChunkCoordinates(l1, par2, i2);
                     }
                 }
             }
@@ -265,14 +331,21 @@ public class BlockBed extends Block
         return null;
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
+    /**
+     * Drops the block items with a specified chance of dropping the specified items
+     */
+    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
-        if (!isBlockFootOfBed(l))
+        if (!isBlockFootOfBed(par5))
         {
-            super.dropBlockAsItemWithChance(world, i, j, k, l, f, 0);
+            super.dropBlockAsItemWithChance(par1World, par2, par3, par4, par5, par6, 0);
         }
     }
 
+    /**
+     * Returns the mobility information of the block, 0 = free, 1 = can't push but can move over, 2 = total immobility
+     * and stop pistons
+     */
     public int getMobilityFlag()
     {
         return 1;

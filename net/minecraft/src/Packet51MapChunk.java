@@ -6,38 +6,61 @@ import java.util.zip.Inflater;
 
 public class Packet51MapChunk extends Packet
 {
-    public int xPosition;
-    public int yPosition;
-    public int zPosition;
-    public int xSize;
-    public int ySize;
-    public int zSize;
-    public byte chunk[];
-    private int chunkSize;
+    public int field_48177_a;
+    public int field_48175_b;
+    public int field_48176_c;
+    public int field_48173_d;
+    public byte field_48174_e[];
+    public boolean field_48171_f;
+    private int field_48172_g;
+    private int field_48178_h;
+    private static byte field_48179_i[] = new byte[0];
 
     public Packet51MapChunk()
     {
         isChunkDataPacket = true;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        xPosition = datainputstream.readInt();
-        yPosition = datainputstream.readShort();
-        zPosition = datainputstream.readInt();
-        xSize = datainputstream.read() + 1;
-        ySize = datainputstream.read() + 1;
-        zSize = datainputstream.read() + 1;
-        chunkSize = datainputstream.readInt();
-        byte abyte0[] = new byte[chunkSize];
-        datainputstream.readFully(abyte0);
-        chunk = new byte[(xSize * ySize * zSize * 5) / 2];
+        field_48177_a = par1DataInputStream.readInt();
+        field_48175_b = par1DataInputStream.readInt();
+        field_48171_f = par1DataInputStream.readBoolean();
+        field_48176_c = par1DataInputStream.readShort();
+        field_48173_d = par1DataInputStream.readShort();
+        field_48172_g = par1DataInputStream.readInt();
+        field_48178_h = par1DataInputStream.readInt();
+
+        if (field_48179_i.length < field_48172_g)
+        {
+            field_48179_i = new byte[field_48172_g];
+        }
+
+        par1DataInputStream.readFully(field_48179_i, 0, field_48172_g);
+        int i = 0;
+
+        for (int j = 0; j < 16; j++)
+        {
+            i += field_48176_c >> j & 1;
+        }
+
+        int k = 12288 * i;
+
+        if (field_48171_f)
+        {
+            k += 256;
+        }
+
+        field_48174_e = new byte[k];
         Inflater inflater = new Inflater();
-        inflater.setInput(abyte0);
+        inflater.setInput(field_48179_i, 0, field_48172_g);
+
         try
         {
-            inflater.inflate(chunk);
+            inflater.inflate(field_48174_e);
         }
         catch (DataFormatException dataformatexception)
         {
@@ -49,26 +72,34 @@ public class Packet51MapChunk extends Packet
         }
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(xPosition);
-        dataoutputstream.writeShort(yPosition);
-        dataoutputstream.writeInt(zPosition);
-        dataoutputstream.write(xSize - 1);
-        dataoutputstream.write(ySize - 1);
-        dataoutputstream.write(zSize - 1);
-        dataoutputstream.writeInt(chunkSize);
-        dataoutputstream.write(chunk, 0, chunkSize);
+        par1DataOutputStream.writeInt(field_48177_a);
+        par1DataOutputStream.writeInt(field_48175_b);
+        par1DataOutputStream.writeBoolean(field_48171_f);
+        par1DataOutputStream.writeShort((short)(field_48176_c & 0xffff));
+        par1DataOutputStream.writeShort((short)(field_48173_d & 0xffff));
+        par1DataOutputStream.writeInt(field_48172_g);
+        par1DataOutputStream.writeInt(field_48178_h);
+        par1DataOutputStream.write(field_48174_e, 0, field_48172_g);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleMapChunk(this);
+        par1NetHandler.func_48487_a(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
-        return 17 + chunkSize;
+        return 17 + field_48172_g;
     }
 }

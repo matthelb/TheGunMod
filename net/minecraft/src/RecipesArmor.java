@@ -34,17 +34,21 @@ public class RecipesArmor
                 });
     }
 
-    public void addRecipes(CraftingManager craftingmanager)
+    /**
+     * Adds the armor recipes to the CraftingManager.
+     */
+    public void addRecipes(CraftingManager par1CraftingManager)
     {
         for (int i = 0; i < recipeItems[0].length; i++)
         {
             Object obj = recipeItems[0][i];
+
             for (int j = 0; j < recipeItems.length - 1; j++)
             {
                 Item item = (Item)recipeItems[j + 1][i];
-                craftingmanager.addRecipe(new ItemStack(item), new Object[]
+                par1CraftingManager.addRecipe(new ItemStack(item), new Object[]
                         {
-                            recipePatterns[j], Character.valueOf('X'), obj
+                            recipePatterns[j], 'X', obj
                         });
             }
         }

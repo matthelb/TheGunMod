@@ -2,29 +2,41 @@ package net.minecraft.src;
 
 public class EnchantmentUntouching extends Enchantment
 {
-    protected EnchantmentUntouching(int i, int j)
+    protected EnchantmentUntouching(int par1, int par2)
     {
-        super(i, j, EnumEnchantmentType.digger);
+        super(par1, par2, EnumEnchantmentType.digger);
         setName("untouching");
     }
 
-    public int getMinEnchantability(int i)
+    /**
+     * Returns the minimal value of enchantability nedded on the enchantment level passed.
+     */
+    public int getMinEnchantability(int par1)
     {
         return 25;
     }
 
-    public int getMaxEnchantability(int i)
+    /**
+     * Returns the maximum value of enchantability nedded on the enchantment level passed.
+     */
+    public int getMaxEnchantability(int par1)
     {
-        return super.getMinEnchantability(i) + 50;
+        return super.getMinEnchantability(par1) + 50;
     }
 
+    /**
+     * Returns the maximum level that the enchantment can have.
+     */
     public int getMaxLevel()
     {
         return 1;
     }
 
-    public boolean canApplyTogether(Enchantment enchantment)
+    /**
+     * Determines if the enchantment passed can be applyied together with this enchantment.
+     */
+    public boolean canApplyTogether(Enchantment par1Enchantment)
     {
-        return super.canApplyTogether(enchantment) && enchantment.effectId != fortune.effectId;
+        return super.canApplyTogether(par1Enchantment) && par1Enchantment.effectId != fortune.effectId;
     }
 }

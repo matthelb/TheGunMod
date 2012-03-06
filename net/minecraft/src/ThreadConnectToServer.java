@@ -6,29 +6,36 @@ import net.minecraft.client.Minecraft;
 
 class ThreadConnectToServer extends Thread
 {
+    /** A reference to the Minecraft object. */
     final Minecraft mc;
-    final String hostName;
+    final String field_48479_b;
+
+    /** A reference to the Minecraft object. */
     final int port;
+
+    /** A reference to the GuiConnecting object. */
     final GuiConnecting connectingGui;
 
-    ThreadConnectToServer(GuiConnecting guiconnecting, Minecraft minecraft, String s, int i)
+    ThreadConnectToServer(GuiConnecting par1GuiConnecting, Minecraft par2Minecraft, String par3Str, int par4)
     {
-        connectingGui = guiconnecting;
-        mc = minecraft;
-        hostName = s;
-        port = i;
+        connectingGui = par1GuiConnecting;
+        mc = par2Minecraft;
+        field_48479_b = par3Str;
+        port = par4;
     }
 
     public void run()
     {
         try
         {
-            GuiConnecting.setNetClientHandler(connectingGui, new NetClientHandler(mc, hostName, port));
+            GuiConnecting.setNetClientHandler(connectingGui, new NetClientHandler(mc, field_48479_b, port));
+
             if (GuiConnecting.isCancelled(connectingGui))
             {
                 return;
             }
-            GuiConnecting.getNetClientHandler(connectingGui).addToSendQueue(new Packet2Handshake(mc.session.username));
+
+            GuiConnecting.getNetClientHandler(connectingGui).addToSendQueue(new Packet2Handshake(mc.session.username, field_48479_b, port));
         }
         catch (UnknownHostException unknownhostexception)
         {
@@ -36,9 +43,10 @@ class ThreadConnectToServer extends Thread
             {
                 return;
             }
+
             mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[]
                     {
-                        (new StringBuilder()).append("Unknown host '").append(hostName).append("'").toString()
+                        (new StringBuilder()).append("Unknown host '").append(field_48479_b).append("'").toString()
                     }));
         }
         catch (ConnectException connectexception)
@@ -47,6 +55,7 @@ class ThreadConnectToServer extends Thread
             {
                 return;
             }
+
             mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[]
                     {
                         connectexception.getMessage()
@@ -58,6 +67,7 @@ class ThreadConnectToServer extends Thread
             {
                 return;
             }
+
             exception.printStackTrace();
             mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[]
                     {

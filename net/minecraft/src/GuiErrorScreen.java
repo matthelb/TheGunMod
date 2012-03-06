@@ -2,41 +2,38 @@ package net.minecraft.src;
 
 public class GuiErrorScreen extends GuiScreen
 {
-    private int field_28098_a;
+    /**
+     * Unused class. Would contain a message drawn to the center of the screen.
+     */
+    private String message1;
 
-    public GuiErrorScreen()
-    {
-        field_28098_a = 0;
-    }
+    /**
+     * Unused class. Would contain a message drawn to the center of the screen.
+     */
+    private String message2;
 
-    public void updateScreen()
-    {
-        field_28098_a++;
-    }
-
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
+        drawGradientRect(0, 0, width, height, 0xff402020, 0xff501010);
+        drawCenteredString(fontRenderer, message1, width / 2, 90, 0xffffff);
+        drawCenteredString(fontRenderer, message2, width / 2, 110, 0xffffff);
+        super.drawScreen(par1, par2, par3);
     }
 
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
     protected void keyTyped(char c, int i)
     {
-    }
-
-    public void drawScreen(int i, int j, float f)
-    {
-        drawDefaultBackground();
-        drawCenteredString(fontRenderer, "Out of memory!", width / 2, (height / 4 - 60) + 20, 0xffffff);
-        drawString(fontRenderer, "Minecraft has run out of memory.", width / 2 - 140, (height / 4 - 60) + 60 + 0, 0xa0a0a0);
-        drawString(fontRenderer, "This could be caused by a bug in the game or by the", width / 2 - 140, (height / 4 - 60) + 60 + 18, 0xa0a0a0);
-        drawString(fontRenderer, "Java Virtual Machine not being allocated enough", width / 2 - 140, (height / 4 - 60) + 60 + 27, 0xa0a0a0);
-        drawString(fontRenderer, "memory. If you are playing in a web browser, try", width / 2 - 140, (height / 4 - 60) + 60 + 36, 0xa0a0a0);
-        drawString(fontRenderer, "downloading the game and playing it offline.", width / 2 - 140, (height / 4 - 60) + 60 + 45, 0xa0a0a0);
-        drawString(fontRenderer, "To prevent level corruption, the current game has quit.", width / 2 - 140, (height / 4 - 60) + 60 + 63, 0xa0a0a0);
-        drawString(fontRenderer, "Please restart the game.", width / 2 - 140, (height / 4 - 60) + 60 + 81, 0xa0a0a0);
-        super.drawScreen(i, j, f);
     }
 }

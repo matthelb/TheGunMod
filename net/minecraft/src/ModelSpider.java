@@ -2,16 +2,37 @@ package net.minecraft.src;
 
 public class ModelSpider extends ModelBase
 {
+    /** The spider's head box */
     public ModelRenderer spiderHead;
+
+    /** The spider's neck box */
     public ModelRenderer spiderNeck;
+
+    /** The spider's body box */
     public ModelRenderer spiderBody;
+
+    /** Spider's first leg */
     public ModelRenderer spiderLeg1;
+
+    /** Spider's second leg */
     public ModelRenderer spiderLeg2;
+
+    /** Spider's third leg */
     public ModelRenderer spiderLeg3;
+
+    /** Spider's fourth leg */
     public ModelRenderer spiderLeg4;
+
+    /** Spider's fifth leg */
     public ModelRenderer spiderLeg5;
+
+    /** Spider's sixth leg */
     public ModelRenderer spiderLeg6;
+
+    /** Spider's seventh leg */
     public ModelRenderer spiderLeg7;
+
+    /** Spider's eight leg */
     public ModelRenderer spiderLeg8;
 
     public ModelSpider()
@@ -53,68 +74,74 @@ public class ModelSpider extends ModelBase
         spiderLeg8.setRotationPoint(4F, 0 + i, -1F);
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles then renders the model.
+     */
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        setRotationAngles(f, f1, f2, f3, f4, f5);
-        spiderHead.render(f5);
-        spiderNeck.render(f5);
-        spiderBody.render(f5);
-        spiderLeg1.render(f5);
-        spiderLeg2.render(f5);
-        spiderLeg3.render(f5);
-        spiderLeg4.render(f5);
-        spiderLeg5.render(f5);
-        spiderLeg6.render(f5);
-        spiderLeg7.render(f5);
-        spiderLeg8.render(f5);
+        setRotationAngles(par2, par3, par4, par5, par6, par7);
+        spiderHead.render(par7);
+        spiderNeck.render(par7);
+        spiderBody.render(par7);
+        spiderLeg1.render(par7);
+        spiderLeg2.render(par7);
+        spiderLeg3.render(par7);
+        spiderLeg4.render(par7);
+        spiderLeg5.render(par7);
+        spiderLeg6.render(par7);
+        spiderLeg7.render(par7);
+        spiderLeg8.render(par7);
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
-        spiderHead.rotateAngleY = f3 / 57.29578F;
-        spiderHead.rotateAngleX = f4 / 57.29578F;
-        float f6 = 0.7853982F;
-        spiderLeg1.rotateAngleZ = -f6;
-        spiderLeg2.rotateAngleZ = f6;
-        spiderLeg3.rotateAngleZ = -f6 * 0.74F;
-        spiderLeg4.rotateAngleZ = f6 * 0.74F;
-        spiderLeg5.rotateAngleZ = -f6 * 0.74F;
-        spiderLeg6.rotateAngleZ = f6 * 0.74F;
-        spiderLeg7.rotateAngleZ = -f6;
-        spiderLeg8.rotateAngleZ = f6;
-        float f7 = -0F;
-        float f8 = 0.3926991F;
-        spiderLeg1.rotateAngleY = f8 * 2.0F + f7;
-        spiderLeg2.rotateAngleY = -f8 * 2.0F - f7;
-        spiderLeg3.rotateAngleY = f8 * 1.0F + f7;
-        spiderLeg4.rotateAngleY = -f8 * 1.0F - f7;
-        spiderLeg5.rotateAngleY = -f8 * 1.0F + f7;
-        spiderLeg6.rotateAngleY = f8 * 1.0F - f7;
-        spiderLeg7.rotateAngleY = -f8 * 2.0F + f7;
-        spiderLeg8.rotateAngleY = f8 * 2.0F - f7;
-        float f9 = -(MathHelper.cos(f * 0.6662F * 2.0F + 0.0F) * 0.4F) * f1;
-        float f10 = -(MathHelper.cos(f * 0.6662F * 2.0F + 3.141593F) * 0.4F) * f1;
-        float f11 = -(MathHelper.cos(f * 0.6662F * 2.0F + 1.570796F) * 0.4F) * f1;
-        float f12 = -(MathHelper.cos(f * 0.6662F * 2.0F + 4.712389F) * 0.4F) * f1;
-        float f13 = Math.abs(MathHelper.sin(f * 0.6662F + 0.0F) * 0.4F) * f1;
-        float f14 = Math.abs(MathHelper.sin(f * 0.6662F + 3.141593F) * 0.4F) * f1;
-        float f15 = Math.abs(MathHelper.sin(f * 0.6662F + 1.570796F) * 0.4F) * f1;
-        float f16 = Math.abs(MathHelper.sin(f * 0.6662F + 4.712389F) * 0.4F) * f1;
-        spiderLeg1.rotateAngleY += f9;
-        spiderLeg2.rotateAngleY += -f9;
-        spiderLeg3.rotateAngleY += f10;
-        spiderLeg4.rotateAngleY += -f10;
-        spiderLeg5.rotateAngleY += f11;
-        spiderLeg6.rotateAngleY += -f11;
-        spiderLeg7.rotateAngleY += f12;
-        spiderLeg8.rotateAngleY += -f12;
-        spiderLeg1.rotateAngleZ += f13;
-        spiderLeg2.rotateAngleZ += -f13;
-        spiderLeg3.rotateAngleZ += f14;
-        spiderLeg4.rotateAngleZ += -f14;
-        spiderLeg5.rotateAngleZ += f15;
-        spiderLeg6.rotateAngleZ += -f15;
-        spiderLeg7.rotateAngleZ += f16;
-        spiderLeg8.rotateAngleZ += -f16;
+        spiderHead.rotateAngleY = par4 / (180F / (float)Math.PI);
+        spiderHead.rotateAngleX = par5 / (180F / (float)Math.PI);
+        float f = ((float)Math.PI / 4F);
+        spiderLeg1.rotateAngleZ = -f;
+        spiderLeg2.rotateAngleZ = f;
+        spiderLeg3.rotateAngleZ = -f * 0.74F;
+        spiderLeg4.rotateAngleZ = f * 0.74F;
+        spiderLeg5.rotateAngleZ = -f * 0.74F;
+        spiderLeg6.rotateAngleZ = f * 0.74F;
+        spiderLeg7.rotateAngleZ = -f;
+        spiderLeg8.rotateAngleZ = f;
+        float f1 = -0F;
+        float f2 = 0.3926991F;
+        spiderLeg1.rotateAngleY = f2 * 2.0F + f1;
+        spiderLeg2.rotateAngleY = -f2 * 2.0F - f1;
+        spiderLeg3.rotateAngleY = f2 * 1.0F + f1;
+        spiderLeg4.rotateAngleY = -f2 * 1.0F - f1;
+        spiderLeg5.rotateAngleY = -f2 * 1.0F + f1;
+        spiderLeg6.rotateAngleY = f2 * 1.0F - f1;
+        spiderLeg7.rotateAngleY = -f2 * 2.0F + f1;
+        spiderLeg8.rotateAngleY = f2 * 2.0F - f1;
+        float f3 = -(MathHelper.cos(par1 * 0.6662F * 2.0F + 0.0F) * 0.4F) * par2;
+        float f4 = -(MathHelper.cos(par1 * 0.6662F * 2.0F + (float)Math.PI) * 0.4F) * par2;
+        float f5 = -(MathHelper.cos(par1 * 0.6662F * 2.0F + ((float)Math.PI / 2F)) * 0.4F) * par2;
+        float f6 = -(MathHelper.cos(par1 * 0.6662F * 2.0F + ((float)Math.PI * 3F / 2F)) * 0.4F) * par2;
+        float f7 = Math.abs(MathHelper.sin(par1 * 0.6662F + 0.0F) * 0.4F) * par2;
+        float f8 = Math.abs(MathHelper.sin(par1 * 0.6662F + (float)Math.PI) * 0.4F) * par2;
+        float f9 = Math.abs(MathHelper.sin(par1 * 0.6662F + ((float)Math.PI / 2F)) * 0.4F) * par2;
+        float f10 = Math.abs(MathHelper.sin(par1 * 0.6662F + ((float)Math.PI * 3F / 2F)) * 0.4F) * par2;
+        spiderLeg1.rotateAngleY += f3;
+        spiderLeg2.rotateAngleY += -f3;
+        spiderLeg3.rotateAngleY += f4;
+        spiderLeg4.rotateAngleY += -f4;
+        spiderLeg5.rotateAngleY += f5;
+        spiderLeg6.rotateAngleY += -f5;
+        spiderLeg7.rotateAngleY += f6;
+        spiderLeg8.rotateAngleY += -f6;
+        spiderLeg1.rotateAngleZ += f7;
+        spiderLeg2.rotateAngleZ += -f7;
+        spiderLeg3.rotateAngleZ += f8;
+        spiderLeg4.rotateAngleZ += -f8;
+        spiderLeg5.rotateAngleZ += f9;
+        spiderLeg6.rotateAngleZ += -f9;
+        spiderLeg7.rotateAngleZ += f10;
+        spiderLeg8.rotateAngleZ += -f10;
     }
 }

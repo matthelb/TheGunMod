@@ -7,19 +7,23 @@ import net.minecraft.client.Minecraft;
 
 public class TextureWatchFX extends TextureFX
 {
+    /**
+     * Holds the game instance to retrieve information like world provider and time.
+     */
     private Minecraft mc;
     private int watchIconImageData[];
     private int dialImageData[];
     private double field_4222_j;
     private double field_4221_k;
 
-    public TextureWatchFX(Minecraft minecraft)
+    public TextureWatchFX(Minecraft par1Minecraft)
     {
         super(Item.pocketSundial.getIconFromDamage(0));
         watchIconImageData = new int[256];
         dialImageData = new int[256];
-        mc = minecraft;
+        mc = par1Minecraft;
         tileImage = 1;
+
         try
         {
             BufferedImage bufferedimage = ImageIO.read((net.minecraft.client.Minecraft.class).getResource("/gui/items.png"));
@@ -38,37 +42,47 @@ public class TextureWatchFX extends TextureFX
     public void onTick()
     {
         double d = 0.0D;
+
         if (mc.theWorld != null && mc.thePlayer != null)
         {
             float f = mc.theWorld.getCelestialAngle(1.0F);
-            d = -f * 3.141593F * 2.0F;
-            if (mc.theWorld.worldProvider.isAlternateDimension)
+            d = -f * (float)Math.PI * 2.0F;
+
+            if (!mc.theWorld.worldProvider.func_48217_e())
             {
-                d = Math.random() * 3.1415927410125732D * 2D;
+                d = Math.random() * Math.PI * 2D;
             }
         }
+
         double d1;
-        for (d1 = d - field_4222_j; d1 < -3.1415926535897931D; d1 += 6.2831853071795862D) { }
-        for (; d1 >= 3.1415926535897931D; d1 -= 6.2831853071795862D) { }
+
+        for (d1 = d - field_4222_j; d1 < -Math.PI; d1 += (Math.PI * 2D)) { }
+
+        for (; d1 >= Math.PI; d1 -= (Math.PI * 2D)) { }
+
         if (d1 < -1D)
         {
             d1 = -1D;
         }
+
         if (d1 > 1.0D)
         {
             d1 = 1.0D;
         }
-        field_4221_k += d1 * 0.10000000000000001D;
-        field_4221_k *= 0.80000000000000004D;
+
+        field_4221_k += d1 * 0.1D;
+        field_4221_k *= 0.8D;
         field_4222_j += field_4221_k;
         double d2 = Math.sin(field_4222_j);
         double d3 = Math.cos(field_4222_j);
+
         for (int i = 0; i < 256; i++)
         {
             int j = watchIconImageData[i] >> 24 & 0xff;
             int k = watchIconImageData[i] >> 16 & 0xff;
             int l = watchIconImageData[i] >> 8 & 0xff;
             int i1 = watchIconImageData[i] >> 0 & 0xff;
+
             if (k == i1 && l == 0 && i1 > 0)
             {
                 double d4 = -((double)(i % 16) / 15D - 0.5D);
@@ -82,6 +96,7 @@ public class TextureWatchFX extends TextureFX
                 l = ((dialImageData[l2] >> 8 & 0xff) * i2) / 255;
                 i1 = ((dialImageData[l2] >> 0 & 0xff) * i2) / 255;
             }
+
             if (anaglyphEnabled)
             {
                 int j1 = (k * 30 + l * 59 + i1 * 11) / 100;
@@ -91,6 +106,7 @@ public class TextureWatchFX extends TextureFX
                 l = k1;
                 i1 = l1;
             }
+
             imageData[i * 4 + 0] = (byte)k;
             imageData[i * 4 + 1] = (byte)l;
             imageData[i * 4 + 2] = (byte)i1;

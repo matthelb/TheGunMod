@@ -10,17 +10,23 @@ public class GuiRenameWorld extends GuiScreen
     private GuiTextField theGuiTextField;
     private final String worldName;
 
-    public GuiRenameWorld(GuiScreen guiscreen, String s)
+    public GuiRenameWorld(GuiScreen par1GuiScreen, String par2Str)
     {
-        parentGuiScreen = guiscreen;
-        worldName = s;
+        parentGuiScreen = par1GuiScreen;
+        worldName = par2Str;
     }
 
+    /**
+     * Called from the main game loop to update the screen.
+     */
     public void updateScreen()
     {
         theGuiTextField.updateCursorCounter();
     }
 
+    /**
+     * Adds the buttons (and other controls) to the screen in question.
+     */
     public void initGui()
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
@@ -36,22 +42,29 @@ public class GuiRenameWorld extends GuiScreen
         theGuiTextField.setMaxStringLength(32);
     }
 
+    /**
+     * Called when the screen is unloaded. Used to disable keyboard repeat events
+     */
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
     }
 
-    protected void actionPerformed(GuiButton guibutton)
+    /**
+     * Fired when a control is clicked. This is the equivalent of ActionListener.actionPerformed(ActionEvent e).
+     */
+    protected void actionPerformed(GuiButton par1GuiButton)
     {
-        if (!guibutton.enabled)
+        if (!par1GuiButton.enabled)
         {
             return;
         }
-        if (guibutton.id == 1)
+
+        if (par1GuiButton.id == 1)
         {
             mc.displayGuiScreen(parentGuiScreen);
         }
-        else if (guibutton.id == 0)
+        else if (par1GuiButton.id == 0)
         {
             ISaveFormat isaveformat = mc.getSaveLoader();
             isaveformat.renameWorld(worldName, theGuiTextField.getText().trim());
@@ -59,29 +72,39 @@ public class GuiRenameWorld extends GuiScreen
         }
     }
 
-    protected void keyTyped(char c, int i)
+    /**
+     * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
+     */
+    protected void keyTyped(char par1, int par2)
     {
-        theGuiTextField.textboxKeyTyped(c, i);
+        theGuiTextField.textboxKeyTyped(par1, par2);
         ((GuiButton)controlList.get(0)).enabled = theGuiTextField.getText().trim().length() > 0;
-        if (c == '\r')
+
+        if (par1 == '\r')
         {
             actionPerformed((GuiButton)controlList.get(0));
         }
     }
 
-    protected void mouseClicked(int i, int j, int k)
+    /**
+     * Called when the mouse is clicked.
+     */
+    protected void mouseClicked(int par1, int par2, int par3)
     {
-        super.mouseClicked(i, j, k);
-        theGuiTextField.mouseClicked(i, j, k);
+        super.mouseClicked(par1, par2, par3);
+        theGuiTextField.mouseClicked(par1, par2, par3);
     }
 
-    public void drawScreen(int i, int j, float f)
+    /**
+     * Draws the screen and all the components in it.
+     */
+    public void drawScreen(int par1, int par2, float par3)
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
         drawDefaultBackground();
         drawCenteredString(fontRenderer, stringtranslate.translateKey("selectWorld.renameTitle"), width / 2, (height / 4 - 60) + 20, 0xffffff);
         drawString(fontRenderer, stringtranslate.translateKey("selectWorld.enterName"), width / 2 - 100, 47, 0xa0a0a0);
         theGuiTextField.drawTextBox();
-        super.drawScreen(i, j, f);
+        super.drawScreen(par1, par2, par3);
     }
 }

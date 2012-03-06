@@ -5,18 +5,29 @@ import org.lwjgl.opengl.GL11;
 
 public class RenderManager
 {
+    /** A map of entity classes and the associated renderer. */
     private Map entityRenderMap;
+
+    /** The static instance of RenderManager. */
     public static RenderManager instance = new RenderManager();
+
+    /** Renders fonts */
     private FontRenderer fontRenderer;
     public static double renderPosX;
     public static double renderPosY;
     public static double renderPosZ;
     public RenderEngine renderEngine;
     public ItemRenderer itemRenderer;
+
+    /** Reference to the World object. */
     public World worldObj;
+
+    /** Rendermanager's variable for the player */
     public EntityLiving livingPlayer;
     public float playerViewY;
     public float playerViewX;
+
+    /** Reference to the GameSettings object. */
     public GameSettings options;
     public double field_1222_l;
     public double field_1221_m;
@@ -33,6 +44,7 @@ public class RenderManager
         entityRenderMap.put(net.minecraft.src.EntityMooshroom.class, new RenderMooshroom(new ModelCow(), 0.7F));
         entityRenderMap.put(net.minecraft.src.EntityWolf.class, new RenderWolf(new ModelWolf(), 0.5F));
         entityRenderMap.put(net.minecraft.src.EntityChicken.class, new RenderChicken(new ModelChicken(), 0.3F));
+        entityRenderMap.put(net.minecraft.src.EntityOcelot.class, new RenderOcelot(new ModelOcelot(), 0.4F));
         entityRenderMap.put(net.minecraft.src.EntitySilverfish.class, new RenderSilverfish());
         entityRenderMap.put(net.minecraft.src.EntityCreeper.class, new RenderCreeper());
         entityRenderMap.put(net.minecraft.src.EntityEnderman.class, new RenderEnderman());
@@ -47,17 +59,11 @@ public class RenderManager
         entityRenderMap.put(net.minecraft.src.EntityGhast.class, new RenderGhast());
         entityRenderMap.put(net.minecraft.src.EntitySquid.class, new RenderSquid(new ModelSquid(), 0.7F));
         entityRenderMap.put(net.minecraft.src.EntityVillager.class, new RenderVillager());
+        entityRenderMap.put(net.minecraft.src.EntityIronGolem.class, new RenderIronGolem());
         entityRenderMap.put(net.minecraft.src.EntityLiving.class, new RenderLiving(new ModelBiped(), 0.5F));
         entityRenderMap.put(net.minecraft.src.EntityDragon.class, new RenderDragon());
         entityRenderMap.put(net.minecraft.src.EntityEnderCrystal.class, new RenderEnderCrystal());
-        try
-        {
-            entityRenderMap.put(net.minecraft.src.Entity.class, (Render)Class.forName("net.minecraft.src.RenderEntity").newInstance());
-        }
-        catch (Throwable throwable)
-        {
-            throwable.printStackTrace();
-        }
+        entityRenderMap.put(net.minecraft.src.Entity.class, new RenderEntity());
         entityRenderMap.put(net.minecraft.src.EntityPainting.class, new RenderPainting());
         entityRenderMap.put(net.minecraft.src.EntityArrow.class, new RenderArrow());
         entityRenderMap.put(net.minecraft.src.EntitySnowball.class, new RenderSnowball(Item.snowball.getIconFromDamage(0)));
@@ -65,6 +71,7 @@ public class RenderManager
         entityRenderMap.put(net.minecraft.src.EntityEnderEye.class, new RenderSnowball(Item.eyeOfEnder.getIconFromDamage(0)));
         entityRenderMap.put(net.minecraft.src.EntityEgg.class, new RenderSnowball(Item.egg.getIconFromDamage(0)));
         entityRenderMap.put(net.minecraft.src.EntityPotion.class, new RenderSnowball(154));
+        entityRenderMap.put(net.minecraft.src.EntityExpBottle.class, new RenderSnowball(Item.field_48438_bD.getIconFromDamage(0)));
         entityRenderMap.put(net.minecraft.src.EntityFireball.class, new RenderFireball(2.0F));
         entityRenderMap.put(net.minecraft.src.EntitySmallFireball.class, new RenderFireball(0.5F));
         entityRenderMap.put(net.minecraft.src.EntityItem.class, new RenderItem());
@@ -75,43 +82,52 @@ public class RenderManager
         entityRenderMap.put(net.minecraft.src.EntityBoat.class, new RenderBoat());
         entityRenderMap.put(net.minecraft.src.EntityFishHook.class, new RenderFish());
         entityRenderMap.put(net.minecraft.src.EntityLightningBolt.class, new RenderLightningBolt());
-        ModLoader.AddAllRenderers(entityRenderMap);
+        ModLoader.addAllRenderers(entityRenderMap);
         Render render;
+
         for (Iterator iterator = entityRenderMap.values().iterator(); iterator.hasNext(); render.setRenderManager(this))
         {
             render = (Render)iterator.next();
         }
     }
 
-    public Render getEntityClassRenderObject(Class class1)
+    public Render getEntityClassRenderObject(Class par1Class)
     {
-        Render render = (Render)entityRenderMap.get(class1);
-        if (render == null && class1 != (net.minecraft.src.Entity.class))
+        Render render = (Render)entityRenderMap.get(par1Class);
+
+        if (render == null && par1Class != (net.minecraft.src.Entity.class))
         {
-            render = getEntityClassRenderObject(class1.getSuperclass());
-            entityRenderMap.put(class1, render);
+            render = getEntityClassRenderObject(par1Class.getSuperclass());
+            entityRenderMap.put(par1Class, render);
         }
+
         return render;
     }
 
-    public Render getEntityRenderObject(Entity entity)
+    public Render getEntityRenderObject(Entity par1Entity)
     {
-        return getEntityClassRenderObject(entity.getClass());
+        return getEntityClassRenderObject(par1Entity.getClass());
     }
 
-    public void cacheActiveRenderInfo(World world, RenderEngine renderengine, FontRenderer fontrenderer, EntityLiving entityliving, GameSettings gamesettings, float f)
+    /**
+     * Caches the current frame's active render info, including the current World, RenderEngine, GameSettings and
+     * FontRenderer settings, as well as interpolated player position, pitch and yaw.
+     */
+    public void cacheActiveRenderInfo(World par1World, RenderEngine par2RenderEngine, FontRenderer par3FontRenderer, EntityLiving par4EntityLiving, GameSettings par5GameSettings, float par6)
     {
-        worldObj = world;
-        renderEngine = renderengine;
-        options = gamesettings;
-        livingPlayer = entityliving;
-        fontRenderer = fontrenderer;
-        if (entityliving.isPlayerSleeping())
+        worldObj = par1World;
+        renderEngine = par2RenderEngine;
+        options = par5GameSettings;
+        livingPlayer = par4EntityLiving;
+        fontRenderer = par3FontRenderer;
+
+        if (par4EntityLiving.isPlayerSleeping())
         {
-            int i = world.getBlockId(MathHelper.floor_double(entityliving.posX), MathHelper.floor_double(entityliving.posY), MathHelper.floor_double(entityliving.posZ));
+            int i = par1World.getBlockId(MathHelper.floor_double(par4EntityLiving.posX), MathHelper.floor_double(par4EntityLiving.posY), MathHelper.floor_double(par4EntityLiving.posZ));
+
             if (i == Block.bed.blockID)
             {
-                int j = world.getBlockMetadata(MathHelper.floor_double(entityliving.posX), MathHelper.floor_double(entityliving.posY), MathHelper.floor_double(entityliving.posZ));
+                int j = par1World.getBlockMetadata(MathHelper.floor_double(par4EntityLiving.posX), MathHelper.floor_double(par4EntityLiving.posY), MathHelper.floor_double(par4EntityLiving.posZ));
                 int k = j & 3;
                 playerViewY = k * 90 + 180;
                 playerViewX = 0.0F;
@@ -119,60 +135,77 @@ public class RenderManager
         }
         else
         {
-            playerViewY = entityliving.prevRotationYaw + (entityliving.rotationYaw - entityliving.prevRotationYaw) * f;
-            playerViewX = entityliving.prevRotationPitch + (entityliving.rotationPitch - entityliving.prevRotationPitch) * f;
+            playerViewY = par4EntityLiving.prevRotationYaw + (par4EntityLiving.rotationYaw - par4EntityLiving.prevRotationYaw) * par6;
+            playerViewX = par4EntityLiving.prevRotationPitch + (par4EntityLiving.rotationPitch - par4EntityLiving.prevRotationPitch) * par6;
         }
-        if (gamesettings.thirdPersonView == 2)
+
+        if (par5GameSettings.thirdPersonView == 2)
         {
             playerViewY += 180F;
         }
-        field_1222_l = entityliving.lastTickPosX + (entityliving.posX - entityliving.lastTickPosX) * (double)f;
-        field_1221_m = entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * (double)f;
-        field_1220_n = entityliving.lastTickPosZ + (entityliving.posZ - entityliving.lastTickPosZ) * (double)f;
+
+        field_1222_l = par4EntityLiving.lastTickPosX + (par4EntityLiving.posX - par4EntityLiving.lastTickPosX) * (double)par6;
+        field_1221_m = par4EntityLiving.lastTickPosY + (par4EntityLiving.posY - par4EntityLiving.lastTickPosY) * (double)par6;
+        field_1220_n = par4EntityLiving.lastTickPosZ + (par4EntityLiving.posZ - par4EntityLiving.lastTickPosZ) * (double)par6;
     }
 
-    public void renderEntity(Entity entity, float f)
+    /**
+     * Will render the specified entity at the specified partial tick time. Args: entity, partialTickTime
+     */
+    public void renderEntity(Entity par1Entity, float par2)
     {
-        double d = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)f;
-        double d1 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)f;
-        double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)f;
-        float f1 = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * f;
-        int i = entity.getEntityBrightnessForRender(f);
-        if (entity.isBurning())
+        double d = par1Entity.lastTickPosX + (par1Entity.posX - par1Entity.lastTickPosX) * (double)par2;
+        double d1 = par1Entity.lastTickPosY + (par1Entity.posY - par1Entity.lastTickPosY) * (double)par2;
+        double d2 = par1Entity.lastTickPosZ + (par1Entity.posZ - par1Entity.lastTickPosZ) * (double)par2;
+        float f = par1Entity.prevRotationYaw + (par1Entity.rotationYaw - par1Entity.prevRotationYaw) * par2;
+        int i = par1Entity.getEntityBrightnessForRender(par2);
+
+        if (par1Entity.isBurning())
         {
             i = 0xf000f0;
         }
+
         int j = i % 0x10000;
         int k = i / 0x10000;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)j / 1.0F, (float)k / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        renderEntityWithPosYaw(entity, d - renderPosX, d1 - renderPosY, d2 - renderPosZ, f1, f);
+        renderEntityWithPosYaw(par1Entity, d - renderPosX, d1 - renderPosY, d2 - renderPosZ, f, par2);
     }
 
-    public void renderEntityWithPosYaw(Entity entity, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Renders the specified entity with the passed in position, yaw, and partialTickTime. Args: entity, x, y, z, yaw,
+     * partialTickTime
+     */
+    public void renderEntityWithPosYaw(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        Render render = getEntityRenderObject(entity);
+        Render render = getEntityRenderObject(par1Entity);
+
         if (render != null)
         {
-            render.doRender(entity, d, d1, d2, f, f1);
-            render.doRenderShadowAndFire(entity, d, d1, d2, f, f1);
+            render.doRender(par1Entity, par2, par4, par6, par8, par9);
+            render.doRenderShadowAndFire(par1Entity, par2, par4, par6, par8, par9);
         }
     }
 
-    public void set(World world)
+    /**
+     * World sets this RenderManager's worldObj to the world provided
+     */
+    public void set(World par1World)
     {
-        worldObj = world;
+        worldObj = par1World;
     }
 
-    public double getDistanceToCamera(double d, double d1, double d2)
+    public double getDistanceToCamera(double par1, double par3, double par5)
     {
-        double d3 = d - field_1222_l;
-        double d4 = d1 - field_1221_m;
-        double d5 = d2 - field_1220_n;
-        return d3 * d3 + d4 * d4 + d5 * d5;
+        double d = par1 - field_1222_l;
+        double d1 = par3 - field_1221_m;
+        double d2 = par5 - field_1220_n;
+        return d * d + d1 * d1 + d2 * d2;
     }
 
+    /**
+     * Returns the font renderer
+     */
     public FontRenderer getFontRenderer()
     {
         return fontRenderer;

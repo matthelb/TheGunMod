@@ -47,12 +47,14 @@ public class ModelSilverfish extends ModelBase
         field_35399_c = new float[7];
         silverfishBodyParts = new ModelRenderer[7];
         float f = -3.5F;
+
         for (int i = 0; i < silverfishBodyParts.length; i++)
         {
             silverfishBodyParts[i] = new ModelRenderer(this, silverfishTexturePositions[i][0], silverfishTexturePositions[i][1]);
             silverfishBodyParts[i].addBox((float)silverfishBoxLength[i][0] * -0.5F, 0.0F, (float)silverfishBoxLength[i][2] * -0.5F, silverfishBoxLength[i][0], silverfishBoxLength[i][1], silverfishBoxLength[i][2]);
             silverfishBodyParts[i].setRotationPoint(0.0F, 24 - silverfishBoxLength[i][1], f);
             field_35399_c[i] = f;
+
             if (i < silverfishBodyParts.length - 1)
             {
                 f += (float)(silverfishBoxLength[i][2] + silverfishBoxLength[i + 1][2]) * 0.5F;
@@ -71,26 +73,33 @@ public class ModelSilverfish extends ModelBase
         silverfishWings[2].setRotationPoint(0.0F, 19F, field_35399_c[1]);
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles then renders the model.
+     */
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        setRotationAngles(f, f1, f2, f3, f4, f5);
+        setRotationAngles(par2, par3, par4, par5, par6, par7);
+
         for (int i = 0; i < silverfishBodyParts.length; i++)
         {
-            silverfishBodyParts[i].render(f5);
+            silverfishBodyParts[i].render(par7);
         }
 
         for (int j = 0; j < silverfishWings.length; j++)
         {
-            silverfishWings[j].render(f5);
+            silverfishWings[j].render(par7);
         }
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
         for (int i = 0; i < silverfishBodyParts.length; i++)
         {
-            silverfishBodyParts[i].rotateAngleY = MathHelper.cos(f2 * 0.9F + (float)i * 0.15F * 3.141593F) * 3.141593F * 0.05F * (float)(1 + Math.abs(i - 2));
-            silverfishBodyParts[i].rotationPointX = MathHelper.sin(f2 * 0.9F + (float)i * 0.15F * 3.141593F) * 3.141593F * 0.2F * (float)Math.abs(i - 2);
+            silverfishBodyParts[i].rotateAngleY = MathHelper.cos(par3 * 0.9F + (float)i * 0.15F * (float)Math.PI) * (float)Math.PI * 0.05F * (float)(1 + Math.abs(i - 2));
+            silverfishBodyParts[i].rotationPointX = MathHelper.sin(par3 * 0.9F + (float)i * 0.15F * (float)Math.PI) * (float)Math.PI * 0.2F * (float)Math.abs(i - 2);
         }
 
         silverfishWings[0].rotateAngleY = silverfishBodyParts[2].rotateAngleY;

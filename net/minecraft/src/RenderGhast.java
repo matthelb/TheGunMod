@@ -9,23 +9,29 @@ public class RenderGhast extends RenderLiving
         super(new ModelGhast(), 0.5F);
     }
 
-    protected void func_4014_a(EntityGhast entityghast, float f)
+    protected void func_4014_a(EntityGhast par1EntityGhast, float par2)
     {
-        EntityGhast entityghast1 = entityghast;
-        float f1 = ((float)entityghast1.prevAttackCounter + (float)(entityghast1.attackCounter - entityghast1.prevAttackCounter) * f) / 20F;
-        if (f1 < 0.0F)
+        EntityGhast entityghast = par1EntityGhast;
+        float f = ((float)entityghast.prevAttackCounter + (float)(entityghast.attackCounter - entityghast.prevAttackCounter) * par2) / 20F;
+
+        if (f < 0.0F)
         {
-            f1 = 0.0F;
+            f = 0.0F;
         }
-        f1 = 1.0F / (f1 * f1 * f1 * f1 * f1 * 2.0F + 1.0F);
-        float f2 = (8F + f1) / 2.0F;
-        float f3 = (8F + 1.0F / f1) / 2.0F;
-        GL11.glScalef(f3, f2, f3);
+
+        f = 1.0F / (f * f * f * f * f * 2.0F + 1.0F);
+        float f1 = (8F + f) / 2.0F;
+        float f2 = (8F + 1.0F / f) / 2.0F;
+        GL11.glScalef(f2, f1, f2);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    /**
+     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
+     * entityLiving, partialTickTime
+     */
+    protected void preRenderCallback(EntityLiving par1EntityLiving, float par2)
     {
-        func_4014_a((EntityGhast)entityliving, f);
+        func_4014_a((EntityGhast)par1EntityLiving, par2);
     }
 }

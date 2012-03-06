@@ -4,26 +4,29 @@ import java.util.Random;
 
 public class EntityRainFX extends EntityFX
 {
-    public EntityRainFX(World world, double d, double d1, double d2)
+    public EntityRainFX(World par1World, double par2, double par4, double par6)
     {
-        super(world, d, d1, d2, 0.0D, 0.0D, 0.0D);
-        motionX *= 0.30000001192092896D;
+        super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
+        motionX *= 0.3D;
         motionY = (float)Math.random() * 0.2F + 0.1F;
-        motionZ *= 0.30000001192092896D;
+        motionZ *= 0.3D;
         particleRed = 1.0F;
         particleGreen = 1.0F;
         particleBlue = 1.0F;
         setParticleTextureIndex(19 + rand.nextInt(4));
         setSize(0.01F, 0.01F);
         particleGravity = 0.06F;
-        particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
+        particleMaxAge = (int)(8D / (Math.random() * 0.8D + 0.2D));
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
+        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
@@ -31,26 +34,32 @@ public class EntityRainFX extends EntityFX
         prevPosZ = posZ;
         motionY -= particleGravity;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.98000001907348633D;
-        motionY *= 0.98000001907348633D;
-        motionZ *= 0.98000001907348633D;
+        motionX *= 0.98D;
+        motionY *= 0.98D;
+        motionZ *= 0.98D;
+
         if (particleMaxAge-- <= 0)
         {
             setEntityDead();
         }
+
         if (onGround)
         {
             if (Math.random() < 0.5D)
             {
                 setEntityDead();
             }
-            motionX *= 0.69999998807907104D;
-            motionZ *= 0.69999998807907104D;
+
+            motionX *= 0.7D;
+            motionZ *= 0.7D;
         }
+
         Material material = worldObj.getBlockMaterial(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
-        if (material.getIsLiquid() || material.isSolid())
+
+        if (material.isLiquid() || material.isSolid())
         {
             double d = (float)(MathHelper.floor_double(posY) + 1) - BlockFluid.getFluidHeightPercent(worldObj.getBlockMetadata(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)));
+
             if (posY < d)
             {
                 setEntityDead();

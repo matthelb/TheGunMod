@@ -6,172 +6,211 @@ public class BlockChest extends BlockContainer
 {
     private Random random;
 
-    protected BlockChest(int i)
+    protected BlockChest(int par1)
     {
-        super(i, Material.wood);
+        super(par1, Material.wood);
         random = new Random();
         blockIndexInTexture = 26;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 22;
     }
 
-    public void onBlockAdded(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+    public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
-        super.onBlockAdded(world, i, j, k);
-        unifyAdjacentChests(world, i, j, k);
-        int l = world.getBlockId(i, j, k - 1);
-        int i1 = world.getBlockId(i, j, k + 1);
-        int j1 = world.getBlockId(i - 1, j, k);
-        int k1 = world.getBlockId(i + 1, j, k);
+        super.onBlockAdded(par1World, par2, par3, par4);
+        unifyAdjacentChests(par1World, par2, par3, par4);
+        int i = par1World.getBlockId(par2, par3, par4 - 1);
+        int j = par1World.getBlockId(par2, par3, par4 + 1);
+        int k = par1World.getBlockId(par2 - 1, par3, par4);
+        int l = par1World.getBlockId(par2 + 1, par3, par4);
+
+        if (i == blockID)
+        {
+            unifyAdjacentChests(par1World, par2, par3, par4 - 1);
+        }
+
+        if (j == blockID)
+        {
+            unifyAdjacentChests(par1World, par2, par3, par4 + 1);
+        }
+
+        if (k == blockID)
+        {
+            unifyAdjacentChests(par1World, par2 - 1, par3, par4);
+        }
+
         if (l == blockID)
         {
-            unifyAdjacentChests(world, i, j, k - 1);
-        }
-        if (i1 == blockID)
-        {
-            unifyAdjacentChests(world, i, j, k + 1);
-        }
-        if (j1 == blockID)
-        {
-            unifyAdjacentChests(world, i - 1, j, k);
-        }
-        if (k1 == blockID)
-        {
-            unifyAdjacentChests(world, i + 1, j, k);
+            unifyAdjacentChests(par1World, par2 + 1, par3, par4);
         }
     }
 
-    public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving entityliving)
+    /**
+     * Called when a block is placed by using an ItemStack from inventory and passed in who placed it. Args:
+     * x,y,z,entityliving
+     */
+    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
-        int l = world.getBlockId(i, j, k - 1);
-        int i1 = world.getBlockId(i, j, k + 1);
-        int j1 = world.getBlockId(i - 1, j, k);
-        int k1 = world.getBlockId(i + 1, j, k);
+        int i = par1World.getBlockId(par2, par3, par4 - 1);
+        int j = par1World.getBlockId(par2, par3, par4 + 1);
+        int k = par1World.getBlockId(par2 - 1, par3, par4);
+        int l = par1World.getBlockId(par2 + 1, par3, par4);
         byte byte0 = 0;
-        int l1 = MathHelper.floor_double((double)((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-        if (l1 == 0)
+        int i1 = MathHelper.floor_double((double)((par5EntityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+
+        if (i1 == 0)
         {
             byte0 = 2;
         }
-        if (l1 == 1)
+
+        if (i1 == 1)
         {
             byte0 = 5;
         }
-        if (l1 == 2)
+
+        if (i1 == 2)
         {
             byte0 = 3;
         }
-        if (l1 == 3)
+
+        if (i1 == 3)
         {
             byte0 = 4;
         }
-        if (l != blockID && i1 != blockID && j1 != blockID && k1 != blockID)
+
+        if (i != blockID && j != blockID && k != blockID && l != blockID)
         {
-            world.setBlockMetadataWithNotify(i, j, k, byte0);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, byte0);
         }
         else
         {
-            if ((l == blockID || i1 == blockID) && (byte0 == 4 || byte0 == 5))
+            if ((i == blockID || j == blockID) && (byte0 == 4 || byte0 == 5))
             {
-                if (l == blockID)
+                if (i == blockID)
                 {
-                    world.setBlockMetadataWithNotify(i, j, k - 1, byte0);
+                    par1World.setBlockMetadataWithNotify(par2, par3, par4 - 1, byte0);
                 }
                 else
                 {
-                    world.setBlockMetadataWithNotify(i, j, k + 1, byte0);
+                    par1World.setBlockMetadataWithNotify(par2, par3, par4 + 1, byte0);
                 }
-                world.setBlockMetadataWithNotify(i, j, k, byte0);
+
+                par1World.setBlockMetadataWithNotify(par2, par3, par4, byte0);
             }
-            if ((j1 == blockID || k1 == blockID) && (byte0 == 2 || byte0 == 3))
+
+            if ((k == blockID || l == blockID) && (byte0 == 2 || byte0 == 3))
             {
-                if (j1 == blockID)
+                if (k == blockID)
                 {
-                    world.setBlockMetadataWithNotify(i - 1, j, k, byte0);
+                    par1World.setBlockMetadataWithNotify(par2 - 1, par3, par4, byte0);
                 }
                 else
                 {
-                    world.setBlockMetadataWithNotify(i + 1, j, k, byte0);
+                    par1World.setBlockMetadataWithNotify(par2 + 1, par3, par4, byte0);
                 }
-                world.setBlockMetadataWithNotify(i, j, k, byte0);
+
+                par1World.setBlockMetadataWithNotify(par2, par3, par4, byte0);
             }
         }
     }
 
-    public void unifyAdjacentChests(World world, int i, int j, int k)
+    public void unifyAdjacentChests(World par1World, int par2, int par3, int par4)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        int l = world.getBlockId(i, j, k - 1);
-        int i1 = world.getBlockId(i, j, k + 1);
-        int j1 = world.getBlockId(i - 1, j, k);
-        int k1 = world.getBlockId(i + 1, j, k);
+
+        int i = par1World.getBlockId(par2, par3, par4 - 1);
+        int j = par1World.getBlockId(par2, par3, par4 + 1);
+        int k = par1World.getBlockId(par2 - 1, par3, par4);
+        int l = par1World.getBlockId(par2 + 1, par3, par4);
         byte byte0 = 4;
-        if (l == blockID || i1 == blockID)
+
+        if (i == blockID || j == blockID)
         {
-            int l1 = world.getBlockId(i - 1, j, l != blockID ? k + 1 : k - 1);
-            int j2 = world.getBlockId(i + 1, j, l != blockID ? k + 1 : k - 1);
+            int i1 = par1World.getBlockId(par2 - 1, par3, i != blockID ? par4 + 1 : par4 - 1);
+            int k1 = par1World.getBlockId(par2 + 1, par3, i != blockID ? par4 + 1 : par4 - 1);
             byte0 = 5;
-            int l2 = -1;
-            if (l == blockID)
+            int i2 = -1;
+
+            if (i == blockID)
             {
-                l2 = world.getBlockMetadata(i, j, k - 1);
+                i2 = par1World.getBlockMetadata(par2, par3, par4 - 1);
             }
             else
             {
-                l2 = world.getBlockMetadata(i, j, k + 1);
+                i2 = par1World.getBlockMetadata(par2, par3, par4 + 1);
             }
-            if (l2 == 4)
+
+            if (i2 == 4)
             {
                 byte0 = 4;
             }
-            if ((Block.opaqueCubeLookup[j1] || Block.opaqueCubeLookup[l1]) && !Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j2])
+
+            if ((Block.opaqueCubeLookup[k] || Block.opaqueCubeLookup[i1]) && !Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[k1])
             {
                 byte0 = 5;
             }
-            if ((Block.opaqueCubeLookup[k1] || Block.opaqueCubeLookup[j2]) && !Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[l1])
+
+            if ((Block.opaqueCubeLookup[l] || Block.opaqueCubeLookup[k1]) && !Block.opaqueCubeLookup[k] && !Block.opaqueCubeLookup[i1])
             {
                 byte0 = 4;
             }
         }
-        else if (j1 == blockID || k1 == blockID)
+        else if (k == blockID || l == blockID)
         {
-            int i2 = world.getBlockId(j1 != blockID ? i + 1 : i - 1, j, k - 1);
-            int k2 = world.getBlockId(j1 != blockID ? i + 1 : i - 1, j, k + 1);
+            int j1 = par1World.getBlockId(k != blockID ? par2 + 1 : par2 - 1, par3, par4 - 1);
+            int l1 = par1World.getBlockId(k != blockID ? par2 + 1 : par2 - 1, par3, par4 + 1);
             byte0 = 3;
-            int i3 = -1;
-            if (j1 == blockID)
+            int j2 = -1;
+
+            if (k == blockID)
             {
-                i3 = world.getBlockMetadata(i - 1, j, k);
+                j2 = par1World.getBlockMetadata(par2 - 1, par3, par4);
             }
             else
             {
-                i3 = world.getBlockMetadata(i + 1, j, k);
+                j2 = par1World.getBlockMetadata(par2 + 1, par3, par4);
             }
-            if (i3 == 2)
+
+            if (j2 == 2)
             {
                 byte0 = 2;
             }
-            if ((Block.opaqueCubeLookup[l] || Block.opaqueCubeLookup[i2]) && !Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[k2])
+
+            if ((Block.opaqueCubeLookup[i] || Block.opaqueCubeLookup[j1]) && !Block.opaqueCubeLookup[j] && !Block.opaqueCubeLookup[l1])
             {
                 byte0 = 3;
             }
-            if ((Block.opaqueCubeLookup[i1] || Block.opaqueCubeLookup[k2]) && !Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i2])
+
+            if ((Block.opaqueCubeLookup[j] || Block.opaqueCubeLookup[l1]) && !Block.opaqueCubeLookup[i] && !Block.opaqueCubeLookup[j1])
             {
                 byte0 = 2;
             }
@@ -179,127 +218,166 @@ public class BlockChest extends BlockContainer
         else
         {
             byte0 = 3;
-            if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1])
+
+            if (Block.opaqueCubeLookup[i] && !Block.opaqueCubeLookup[j])
             {
                 byte0 = 3;
             }
-            if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l])
+
+            if (Block.opaqueCubeLookup[j] && !Block.opaqueCubeLookup[i])
             {
                 byte0 = 2;
             }
-            if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1])
+
+            if (Block.opaqueCubeLookup[k] && !Block.opaqueCubeLookup[l])
             {
                 byte0 = 5;
             }
-            if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1])
+
+            if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[k])
             {
                 byte0 = 4;
             }
         }
-        world.setBlockMetadataWithNotify(i, j, k, byte0);
+
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, byte0);
     }
 
-    public int getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Retrieves the block texture to use based on the display side. Args: iBlockAccess, x, y, z, side
+     */
+    public int getBlockTexture(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
-        if (l == 1)
+        if (par5 == 1)
         {
             return blockIndexInTexture - 1;
         }
-        if (l == 0)
+
+        if (par5 == 0)
         {
             return blockIndexInTexture - 1;
         }
-        int i1 = iblockaccess.getBlockId(i, j, k - 1);
-        int j1 = iblockaccess.getBlockId(i, j, k + 1);
-        int k1 = iblockaccess.getBlockId(i - 1, j, k);
-        int l1 = iblockaccess.getBlockId(i + 1, j, k);
-        if (i1 == blockID || j1 == blockID)
+
+        int i = par1IBlockAccess.getBlockId(par2, par3, par4 - 1);
+        int j = par1IBlockAccess.getBlockId(par2, par3, par4 + 1);
+        int k = par1IBlockAccess.getBlockId(par2 - 1, par3, par4);
+        int l = par1IBlockAccess.getBlockId(par2 + 1, par3, par4);
+
+        if (i == blockID || j == blockID)
         {
-            if (l == 2 || l == 3)
+            if (par5 == 2 || par5 == 3)
             {
                 return blockIndexInTexture;
             }
-            int i2 = 0;
-            if (i1 == blockID)
+
+            int i1 = 0;
+
+            if (i == blockID)
             {
-                i2 = -1;
+                i1 = -1;
             }
-            int k2 = iblockaccess.getBlockId(i - 1, j, i1 != blockID ? k + 1 : k - 1);
-            int i3 = iblockaccess.getBlockId(i + 1, j, i1 != blockID ? k + 1 : k - 1);
-            if (l == 4)
+
+            int k1 = par1IBlockAccess.getBlockId(par2 - 1, par3, i != blockID ? par4 + 1 : par4 - 1);
+            int i2 = par1IBlockAccess.getBlockId(par2 + 1, par3, i != blockID ? par4 + 1 : par4 - 1);
+
+            if (par5 == 4)
             {
-                i2 = -1 - i2;
+                i1 = -1 - i1;
             }
+
             byte byte1 = 5;
-            if ((Block.opaqueCubeLookup[k1] || Block.opaqueCubeLookup[k2]) && !Block.opaqueCubeLookup[l1] && !Block.opaqueCubeLookup[i3])
+
+            if ((Block.opaqueCubeLookup[k] || Block.opaqueCubeLookup[k1]) && !Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i2])
             {
                 byte1 = 5;
             }
-            if ((Block.opaqueCubeLookup[l1] || Block.opaqueCubeLookup[i3]) && !Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[k2])
+
+            if ((Block.opaqueCubeLookup[l] || Block.opaqueCubeLookup[i2]) && !Block.opaqueCubeLookup[k] && !Block.opaqueCubeLookup[k1])
             {
                 byte1 = 4;
             }
-            return (l != byte1 ? blockIndexInTexture + 32 : blockIndexInTexture + 16) + i2;
+
+            return (par5 != byte1 ? blockIndexInTexture + 32 : blockIndexInTexture + 16) + i1;
         }
-        if (k1 == blockID || l1 == blockID)
+
+        if (k == blockID || l == blockID)
         {
-            if (l == 4 || l == 5)
+            if (par5 == 4 || par5 == 5)
             {
                 return blockIndexInTexture;
             }
-            int j2 = 0;
-            if (k1 == blockID)
+
+            int j1 = 0;
+
+            if (k == blockID)
             {
-                j2 = -1;
+                j1 = -1;
             }
-            int l2 = iblockaccess.getBlockId(k1 != blockID ? i + 1 : i - 1, j, k - 1);
-            int j3 = iblockaccess.getBlockId(k1 != blockID ? i + 1 : i - 1, j, k + 1);
-            if (l == 3)
+
+            int l1 = par1IBlockAccess.getBlockId(k != blockID ? par2 + 1 : par2 - 1, par3, par4 - 1);
+            int j2 = par1IBlockAccess.getBlockId(k != blockID ? par2 + 1 : par2 - 1, par3, par4 + 1);
+
+            if (par5 == 3)
             {
-                j2 = -1 - j2;
+                j1 = -1 - j1;
             }
+
             byte byte2 = 3;
-            if ((Block.opaqueCubeLookup[i1] || Block.opaqueCubeLookup[l2]) && !Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[j3])
+
+            if ((Block.opaqueCubeLookup[i] || Block.opaqueCubeLookup[l1]) && !Block.opaqueCubeLookup[j] && !Block.opaqueCubeLookup[j2])
             {
                 byte2 = 3;
             }
-            if ((Block.opaqueCubeLookup[j1] || Block.opaqueCubeLookup[j3]) && !Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l2])
+
+            if ((Block.opaqueCubeLookup[j] || Block.opaqueCubeLookup[j2]) && !Block.opaqueCubeLookup[i] && !Block.opaqueCubeLookup[l1])
             {
                 byte2 = 2;
             }
-            return (l != byte2 ? blockIndexInTexture + 32 : blockIndexInTexture + 16) + j2;
+
+            return (par5 != byte2 ? blockIndexInTexture + 32 : blockIndexInTexture + 16) + j1;
         }
+
         byte byte0 = 3;
-        if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[j1])
+
+        if (Block.opaqueCubeLookup[i] && !Block.opaqueCubeLookup[j])
         {
             byte0 = 3;
         }
-        if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[i1])
+
+        if (Block.opaqueCubeLookup[j] && !Block.opaqueCubeLookup[i])
         {
             byte0 = 2;
         }
-        if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[l1])
+
+        if (Block.opaqueCubeLookup[k] && !Block.opaqueCubeLookup[l])
         {
             byte0 = 5;
         }
-        if (Block.opaqueCubeLookup[l1] && !Block.opaqueCubeLookup[k1])
+
+        if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[k])
         {
             byte0 = 4;
         }
-        return l != byte0 ? blockIndexInTexture : blockIndexInTexture + 1;
+
+        return par5 != byte0 ? blockIndexInTexture : blockIndexInTexture + 1;
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        if (i == 1)
+        if (par1 == 1)
         {
             return blockIndexInTexture - 1;
         }
-        if (i == 0)
+
+        if (par1 == 0)
         {
             return blockIndexInTexture - 1;
         }
-        if (i == 3)
+
+        if (par1 == 3)
         {
             return blockIndexInTexture + 1;
         }
@@ -309,168 +387,222 @@ public class BlockChest extends BlockContainer
         }
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        int l = 0;
-        if (world.getBlockId(i - 1, j, k) == blockID)
+        int i = 0;
+
+        if (par1World.getBlockId(par2 - 1, par3, par4) == blockID)
         {
-            l++;
+            i++;
         }
-        if (world.getBlockId(i + 1, j, k) == blockID)
+
+        if (par1World.getBlockId(par2 + 1, par3, par4) == blockID)
         {
-            l++;
+            i++;
         }
-        if (world.getBlockId(i, j, k - 1) == blockID)
+
+        if (par1World.getBlockId(par2, par3, par4 - 1) == blockID)
         {
-            l++;
+            i++;
         }
-        if (world.getBlockId(i, j, k + 1) == blockID)
+
+        if (par1World.getBlockId(par2, par3, par4 + 1) == blockID)
         {
-            l++;
+            i++;
         }
-        if (l > 1)
-        {
-            return false;
-        }
-        if (isThereANeighborChest(world, i - 1, j, k))
-        {
-            return false;
-        }
-        if (isThereANeighborChest(world, i + 1, j, k))
+
+        if (i > 1)
         {
             return false;
         }
-        if (isThereANeighborChest(world, i, j, k - 1))
+
+        if (isThereANeighborChest(par1World, par2 - 1, par3, par4))
         {
             return false;
         }
-        return !isThereANeighborChest(world, i, j, k + 1);
+
+        if (isThereANeighborChest(par1World, par2 + 1, par3, par4))
+        {
+            return false;
+        }
+
+        if (isThereANeighborChest(par1World, par2, par3, par4 - 1))
+        {
+            return false;
+        }
+
+        return !isThereANeighborChest(par1World, par2, par3, par4 + 1);
     }
 
-    private boolean isThereANeighborChest(World world, int i, int j, int k)
+    /**
+     * Checks the neighbor blocks to see if there is a chest there. Args: world, x, y, z
+     */
+    private boolean isThereANeighborChest(World par1World, int par2, int par3, int par4)
     {
-        if (world.getBlockId(i, j, k) != blockID)
+        if (par1World.getBlockId(par2, par3, par4) != blockID)
         {
             return false;
         }
-        if (world.getBlockId(i - 1, j, k) == blockID)
+
+        if (par1World.getBlockId(par2 - 1, par3, par4) == blockID)
         {
             return true;
         }
-        if (world.getBlockId(i + 1, j, k) == blockID)
+
+        if (par1World.getBlockId(par2 + 1, par3, par4) == blockID)
         {
             return true;
         }
-        if (world.getBlockId(i, j, k - 1) == blockID)
+
+        if (par1World.getBlockId(par2, par3, par4 - 1) == blockID)
         {
             return true;
         }
-        return world.getBlockId(i, j, k + 1) == blockID;
+
+        return par1World.getBlockId(par2, par3, par4 + 1) == blockID;
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, neighbor blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        super.onNeighborBlockChange(world, i, j, k, l);
-        TileEntityChest tileentitychest = (TileEntityChest)world.getBlockTileEntity(i, j, k);
+        super.onNeighborBlockChange(par1World, par2, par3, par4, par5);
+        TileEntityChest tileentitychest = (TileEntityChest)par1World.getBlockTileEntity(par2, par3, par4);
+
         if (tileentitychest != null)
         {
             tileentitychest.updateContainingBlockInfo();
         }
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
-        TileEntityChest tileentitychest = (TileEntityChest)world.getBlockTileEntity(i, j, k);
+        TileEntityChest tileentitychest = (TileEntityChest)par1World.getBlockTileEntity(par2, par3, par4);
+
         if (tileentitychest != null)
         {
-            for (int l = 0; l < tileentitychest.getSizeInventory(); l++)
+            for (int i = 0; i < tileentitychest.getSizeInventory(); i++)
             {
-                ItemStack itemstack = tileentitychest.getStackInSlot(l);
+                ItemStack itemstack = tileentitychest.getStackInSlot(i);
+
                 if (itemstack == null)
                 {
                     continue;
                 }
+
                 float f = random.nextFloat() * 0.8F + 0.1F;
                 float f1 = random.nextFloat() * 0.8F + 0.1F;
                 float f2 = random.nextFloat() * 0.8F + 0.1F;
+
                 while (itemstack.stackSize > 0)
                 {
-                    int i1 = random.nextInt(21) + 10;
-                    if (i1 > itemstack.stackSize)
+                    int j = random.nextInt(21) + 10;
+
+                    if (j > itemstack.stackSize)
                     {
-                        i1 = itemstack.stackSize;
+                        j = itemstack.stackSize;
                     }
-                    itemstack.stackSize -= i1;
-                    EntityItem entityitem = new EntityItem(world, (float)i + f, (float)j + f1, (float)k + f2, new ItemStack(itemstack.itemID, i1, itemstack.getItemDamage()));
+
+                    itemstack.stackSize -= j;
+                    EntityItem entityitem = new EntityItem(par1World, (float)par2 + f, (float)par3 + f1, (float)par4 + f2, new ItemStack(itemstack.itemID, j, itemstack.getItemDamage()));
                     float f3 = 0.05F;
                     entityitem.motionX = (float)random.nextGaussian() * f3;
                     entityitem.motionY = (float)random.nextGaussian() * f3 + 0.2F;
                     entityitem.motionZ = (float)random.nextGaussian() * f3;
+
                     if (itemstack.hasTagCompound())
                     {
-                        entityitem.item.setTagCompound((NBTTagCompound)itemstack.getTagCompound().cloneTag());
+                        entityitem.item.setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
                     }
-                    world.spawnEntityInWorld(entityitem);
+
+                    par1World.spawnEntityInWorld(entityitem);
                 }
             }
         }
-        super.onBlockRemoval(world, i, j, k);
+
+        super.onBlockRemoval(par1World, par2, par3, par4);
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        Object obj = (TileEntityChest)world.getBlockTileEntity(i, j, k);
+        Object obj = (TileEntityChest)par1World.getBlockTileEntity(par2, par3, par4);
+
         if (obj == null)
         {
             return true;
         }
-        if (world.isBlockNormalCube(i, j + 1, k))
+
+        if (par1World.isBlockNormalCube(par2, par3 + 1, par4))
         {
             return true;
         }
-        if (world.getBlockId(i - 1, j, k) == blockID && world.isBlockNormalCube(i - 1, j + 1, k))
+
+        if (par1World.getBlockId(par2 - 1, par3, par4) == blockID && par1World.isBlockNormalCube(par2 - 1, par3 + 1, par4))
         {
             return true;
         }
-        if (world.getBlockId(i + 1, j, k) == blockID && world.isBlockNormalCube(i + 1, j + 1, k))
+
+        if (par1World.getBlockId(par2 + 1, par3, par4) == blockID && par1World.isBlockNormalCube(par2 + 1, par3 + 1, par4))
         {
             return true;
         }
-        if (world.getBlockId(i, j, k - 1) == blockID && world.isBlockNormalCube(i, j + 1, k - 1))
+
+        if (par1World.getBlockId(par2, par3, par4 - 1) == blockID && par1World.isBlockNormalCube(par2, par3 + 1, par4 - 1))
         {
             return true;
         }
-        if (world.getBlockId(i, j, k + 1) == blockID && world.isBlockNormalCube(i, j + 1, k + 1))
+
+        if (par1World.getBlockId(par2, par3, par4 + 1) == blockID && par1World.isBlockNormalCube(par2, par3 + 1, par4 + 1))
         {
             return true;
         }
-        if (world.getBlockId(i - 1, j, k) == blockID)
+
+        if (par1World.getBlockId(par2 - 1, par3, par4) == blockID)
         {
-            obj = new InventoryLargeChest("Large chest", (TileEntityChest)world.getBlockTileEntity(i - 1, j, k), ((IInventory) (obj)));
+            obj = new InventoryLargeChest("Large chest", (TileEntityChest)par1World.getBlockTileEntity(par2 - 1, par3, par4), ((IInventory)(obj)));
         }
-        if (world.getBlockId(i + 1, j, k) == blockID)
+
+        if (par1World.getBlockId(par2 + 1, par3, par4) == blockID)
         {
-            obj = new InventoryLargeChest("Large chest", ((IInventory) (obj)), (TileEntityChest)world.getBlockTileEntity(i + 1, j, k));
+            obj = new InventoryLargeChest("Large chest", ((IInventory)(obj)), (TileEntityChest)par1World.getBlockTileEntity(par2 + 1, par3, par4));
         }
-        if (world.getBlockId(i, j, k - 1) == blockID)
+
+        if (par1World.getBlockId(par2, par3, par4 - 1) == blockID)
         {
-            obj = new InventoryLargeChest("Large chest", (TileEntityChest)world.getBlockTileEntity(i, j, k - 1), ((IInventory) (obj)));
+            obj = new InventoryLargeChest("Large chest", (TileEntityChest)par1World.getBlockTileEntity(par2, par3, par4 - 1), ((IInventory)(obj)));
         }
-        if (world.getBlockId(i, j, k + 1) == blockID)
+
+        if (par1World.getBlockId(par2, par3, par4 + 1) == blockID)
         {
-            obj = new InventoryLargeChest("Large chest", ((IInventory) (obj)), (TileEntityChest)world.getBlockTileEntity(i, j, k + 1));
+            obj = new InventoryLargeChest("Large chest", ((IInventory)(obj)), (TileEntityChest)par1World.getBlockTileEntity(par2, par3, par4 + 1));
         }
-        if (world.isRemote)
+
+        if (par1World.isRemote)
         {
             return true;
         }
         else
         {
-            entityplayer.displayGUIChest(((IInventory) (obj)));
+            par5EntityPlayer.displayGUIChest(((IInventory)(obj)));
             return true;
         }
     }
 
+    /**
+     * Returns the TileEntity used by this block.
+     */
     public TileEntity getBlockEntity()
     {
         return new TileEntityChest();

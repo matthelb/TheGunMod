@@ -4,38 +4,50 @@ import java.io.*;
 
 public class Packet3Chat extends Packet
 {
+    /** The message being sent. */
     public String message;
 
     public Packet3Chat()
     {
     }
 
-    public Packet3Chat(String s)
+    public Packet3Chat(String par1Str)
     {
-        if (s.length() > 119)
+        if (par1Str.length() > 119)
         {
-            s = s.substring(0, 119);
+            par1Str = par1Str.substring(0, 119);
         }
-        message = s;
+
+        message = par1Str;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        message = readString(datainputstream, 119);
+        message = readString(par1DataInputStream, 119);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        writeString(message, dataoutputstream);
+        writeString(message, par1DataOutputStream);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleChat(this);
+        par1NetHandler.handleChat(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 2 + message.length() * 2;

@@ -4,33 +4,42 @@ import java.util.Random;
 
 public class BlockGrass extends Block
 {
-    protected BlockGrass(int i)
+    protected BlockGrass(int par1)
     {
-        super(i, Material.grass);
+        super(par1, Material.grass);
         blockIndexInTexture = 3;
-        setTickOnLoad(true);
+        setTickRandomly(true);
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (i == 1)
+        if (par1 == 1)
         {
             return 0;
         }
-        return i != 0 ? 3 : 2;
+
+        return par1 != 0 ? 3 : 2;
     }
 
-    public int getBlockTexture(IBlockAccess iblockaccess, int i, int j, int k, int l)
+    /**
+     * Retrieves the block texture to use based on the display side. Args: iBlockAccess, x, y, z, side
+     */
+    public int getBlockTexture(IBlockAccess par1IBlockAccess, int par2, int par3, int par4, int par5)
     {
-        if (l == 1)
+        if (par5 == 1)
         {
             return 0;
         }
-        if (l == 0)
+
+        if (par5 == 0)
         {
             return 2;
         }
-        Material material = iblockaccess.getBlockMaterial(i, j + 1, k);
+
+        Material material = par1IBlockAccess.getBlockMaterial(par2, par3 + 1, par4);
         return material != Material.snow && material != Material.craftedSnow ? 3 : 68;
     }
 
@@ -41,58 +50,74 @@ public class BlockGrass extends Block
         return ColorizerGrass.getGrassColor(d, d1);
     }
 
-    public int getRenderColor(int i)
+    /**
+     * Returns the color this block should be rendered. Used by leaves.
+     */
+    public int getRenderColor(int par1)
     {
         return getBlockColor();
     }
 
-    public int colorMultiplier(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Returns a integer with hex for 0xrrggbb with this color multiplied against the blocks color. Note only called
+     * when first determining what to render.
+     */
+    public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        int l = 0;
-        int i1 = 0;
-        int j1 = 0;
-        for (int k1 = -1; k1 <= 1; k1++)
+        int i = 0;
+        int j = 0;
+        int k = 0;
+
+        for (int l = -1; l <= 1; l++)
         {
-            for (int l1 = -1; l1 <= 1; l1++)
+            for (int i1 = -1; i1 <= 1; i1++)
             {
-                int i2 = iblockaccess.getWorldChunkManager().getBiomeGenAt(i + l1, k + k1).getGrassColorAtCoords(iblockaccess, i + l1, j, k + k1);
-                l += (i2 & 0xff0000) >> 16;
-                i1 += (i2 & 0xff00) >> 8;
-                j1 += i2 & 0xff;
+                int j1 = par1IBlockAccess.func_48454_a(par2 + i1, par4 + l).func_48415_j();
+                i += (j1 & 0xff0000) >> 16;
+                j += (j1 & 0xff00) >> 8;
+                k += j1 & 0xff;
             }
         }
 
-        return (l / 9 & 0xff) << 16 | (i1 / 9 & 0xff) << 8 | j1 / 9 & 0xff;
+        return (i / 9 & 0xff) << 16 | (j / 9 & 0xff) << 8 | k / 9 & 0xff;
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        if (world.getBlockLightValue(i, j + 1, k) < 4 && Block.lightOpacity[world.getBlockId(i, j + 1, k)] > 2)
+
+        if (par1World.getBlockLightValue(par2, par3 + 1, par4) < 4 && Block.lightOpacity[par1World.getBlockId(par2, par3 + 1, par4)] > 2)
         {
-            world.setBlockWithNotify(i, j, k, Block.dirt.blockID);
+            par1World.setBlockWithNotify(par2, par3, par4, Block.dirt.blockID);
         }
-        else if (world.getBlockLightValue(i, j + 1, k) >= 9)
+        else if (par1World.getBlockLightValue(par2, par3 + 1, par4) >= 9)
         {
-            for (int l = 0; l < 4; l++)
+            for (int i = 0; i < 4; i++)
             {
-                int i1 = (i + random.nextInt(3)) - 1;
-                int j1 = (j + random.nextInt(5)) - 3;
-                int k1 = (k + random.nextInt(3)) - 1;
-                int l1 = world.getBlockId(i1, j1 + 1, k1);
-                if (world.getBlockId(i1, j1, k1) == Block.dirt.blockID && world.getBlockLightValue(i1, j1 + 1, k1) >= 4 && Block.lightOpacity[l1] <= 2)
+                int j = (par2 + par5Random.nextInt(3)) - 1;
+                int k = (par3 + par5Random.nextInt(5)) - 3;
+                int l = (par4 + par5Random.nextInt(3)) - 1;
+                int i1 = par1World.getBlockId(j, k + 1, l);
+
+                if (par1World.getBlockId(j, k, l) == Block.dirt.blockID && par1World.getBlockLightValue(j, k + 1, l) >= 4 && Block.lightOpacity[i1] <= 2)
                 {
-                    world.setBlockWithNotify(i1, j1, k1, Block.grass.blockID);
+                    par1World.setBlockWithNotify(j, k, l, Block.grass.blockID);
                 }
             }
         }
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
-        return Block.dirt.idDropped(0, random, j);
+        return Block.dirt.idDropped(0, par2Random, par3);
     }
 }

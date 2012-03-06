@@ -9,8 +9,13 @@ import net.minecraft.src.*;
 
 public class MinecraftApplet extends Applet
 {
+    /** Reference to the applet canvas. */
     private Canvas mcCanvas;
+
+    /** Reference to the Minecraft object. */
     private Minecraft mc;
+
+    /** Reference to the Minecraft main thread. */
     private Thread mcThread;
 
     public MinecraftApplet()
@@ -22,20 +27,25 @@ public class MinecraftApplet extends Applet
     {
         mcCanvas = new CanvasMinecraftApplet(this);
         boolean flag = false;
+
         if (getParameter("fullscreen") != null)
         {
             flag = getParameter("fullscreen").equalsIgnoreCase("true");
         }
+
         mc = new MinecraftAppletImpl(this, this, mcCanvas, this, getWidth(), getHeight(), flag);
         mc.minecraftUri = getDocumentBase().getHost();
-        if (getDocumentBase().getPort() > 0)
+
+        if (!(getDocumentBase().getPort() <= 0))
         {
             mc.minecraftUri += ":" + getDocumentBase().getPort();
         }
+
         if (getParameter("username") != null && getParameter("sessionid") != null)
         {
             mc.session = new Session(getParameter("username"), getParameter("sessionid"));
             System.out.println((new StringBuilder()).append("Setting user: ").append(mc.session.username).append(", ").append(mc.session.sessionId).toString());
+
             if (getParameter("mppass") != null)
             {
                 mc.session.mpPassParameter = getParameter("mppass");
@@ -45,15 +55,19 @@ public class MinecraftApplet extends Applet
         {
             mc.session = new Session("Player", "");
         }
+
         if (getParameter("server") != null && getParameter("port") != null)
         {
             mc.setServer(getParameter("server"), Integer.parseInt(getParameter("port")));
         }
+
         mc.hideQuitButton = true;
+
         if ("true".equals(getParameter("stand-alone")))
         {
             mc.hideQuitButton = false;
         }
+
         setLayout(new BorderLayout());
         add(mcCanvas, "Center");
         mcCanvas.setFocusable(true);
@@ -96,13 +110,18 @@ public class MinecraftApplet extends Applet
         shutdown();
     }
 
+    /**
+     * Called when the applet window is closed.
+     */
     public void shutdown()
     {
         if (mcThread == null)
         {
             return;
         }
+
         mc.shutdown();
+
         try
         {
             mcThread.join(10000L);
@@ -118,14 +137,19 @@ public class MinecraftApplet extends Applet
                 exception.printStackTrace();
             }
         }
+
         mcThread = null;
     }
 
+    /**
+     * Removes all the components from the applet and lays it out again. Called on shutdown.
+     */
     public void clearApplet()
     {
         mcCanvas = null;
         mc = null;
         mcThread = null;
+
         try
         {
             removeAll();

@@ -4,28 +4,37 @@ import java.util.Random;
 
 public class BlockSnowBlock extends Block
 {
-    protected BlockSnowBlock(int i, int j)
+    protected BlockSnowBlock(int par1, int par2)
     {
-        super(i, j, Material.craftedSnow);
-        setTickOnLoad(true);
+        super(par1, par2, Material.craftedSnow);
+        setTickRandomly(true);
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Item.snowball.shiftedIndex;
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 4;
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (world.getSavedLightValue(EnumSkyBlock.Block, i, j, k) > 11)
+        if (par1World.getSavedLightValue(EnumSkyBlock.Block, par2, par3, par4) > 11)
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-            world.setBlockWithNotify(i, j, k, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
         }
     }
 }

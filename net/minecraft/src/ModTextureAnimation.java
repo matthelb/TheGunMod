@@ -27,16 +27,19 @@ public class ModTextureAnimation extends TextureFX
         tickRate = l;
         ticks = l;
         bindImage(ModLoader.getMinecraftInstance().renderEngine);
-        int i1 = GL11.glGetTexLevelParameteri(3553 /*GL_TEXTURE_2D*/, 0, 4096 /*GL_TEXTURE_WIDTH*/) / 16;
-        int j1 = GL11.glGetTexLevelParameteri(3553 /*GL_TEXTURE_2D*/, 0, 4097 /*GL_TEXTURE_HEIGHT*/) / 16;
+        int i1 = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) / 16;
+        int j1 = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) / 16;
         int k1 = bufferedimage.getWidth();
         int l1 = bufferedimage.getHeight();
         int i2 = (int)Math.floor(l1 / k1);
+
         if (i2 <= 0)
         {
             throw new IllegalArgumentException("source has no complete images");
         }
+
         images = new byte[i2][];
+
         if (k1 != i1)
         {
             BufferedImage bufferedimage1 = new BufferedImage(i1, j1 * i2, 6);
@@ -45,11 +48,13 @@ public class ModTextureAnimation extends TextureFX
             graphics2d.dispose();
             bufferedimage = bufferedimage1;
         }
+
         for (int j2 = 0; j2 < i2; j2++)
         {
             int ai[] = new int[i1 * j1];
             bufferedimage.getRGB(0, j1 * j2, i1, j1, ai, 0, i1);
             images[j2] = new byte[i1 * j1 * 4];
+
             for (int k2 = 0; k2 < ai.length; k2++)
             {
                 int l2 = ai[k2] >> 24 & 0xff;
@@ -69,13 +74,16 @@ public class ModTextureAnimation extends TextureFX
         if (ticks >= tickRate)
         {
             index++;
+
             if (index >= images.length)
             {
                 index = 0;
             }
+
             imageData = images[index];
             ticks = 0;
         }
+
         ticks++;
     }
 }

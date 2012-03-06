@@ -8,13 +8,13 @@ public class MapGenMineshaft extends MapGenStructure
     {
     }
 
-    protected boolean canSpawnStructureAtCoords(int i, int j)
+    protected boolean canSpawnStructureAtCoords(int par1, int par2)
     {
-        return rand.nextInt(100) == 0 && rand.nextInt(80) < Math.max(Math.abs(i), Math.abs(j));
+        return rand.nextInt(100) == 0 && rand.nextInt(80) < Math.max(Math.abs(par1), Math.abs(par2));
     }
 
-    protected StructureStart getStructureStart(int i, int j)
+    protected StructureStart getStructureStart(int par1, int par2)
     {
-        return new StructureMineshaftStart(worldObj, rand, i, j);
+        return new StructureMineshaftStart(worldObj, rand, par1, par2);
     }
 }

@@ -2,38 +2,44 @@ package net.minecraft.src;
 
 public class RenderPig extends RenderLiving
 {
-    public RenderPig(ModelBase modelbase, ModelBase modelbase1, float f)
+    public RenderPig(ModelBase par1ModelBase, ModelBase par2ModelBase, float par3)
     {
-        super(modelbase, f);
-        setRenderPassModel(modelbase1);
+        super(par1ModelBase, par3);
+        setRenderPassModel(par2ModelBase);
     }
 
-    protected int renderSaddledPig(EntityPig entitypig, int i, float f)
+    protected int renderSaddledPig(EntityPig par1EntityPig, int par2, float par3)
     {
         loadTexture("/mob/saddle.png");
-        return i != 0 || !entitypig.getSaddled() ? -1 : 1;
+        return par2 != 0 || !par1EntityPig.getSaddled() ? -1 : 1;
     }
 
-    public void func_40286_a(EntityPig entitypig, double d, double d1, double d2,
-            float f, float f1)
+    public void func_40286_a(EntityPig par1EntityPig, double par2, double par4, double par6, float par8, float par9)
     {
-        super.doRenderLiving(entitypig, d, d1, d2, f, f1);
+        super.doRenderLiving(par1EntityPig, par2, par4, par6, par8, par9);
     }
 
-    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    /**
+     * Queries whether should render the specified pass or not.
+     */
+    protected int shouldRenderPass(EntityLiving par1EntityLiving, int par2, float par3)
     {
-        return renderSaddledPig((EntityPig)entityliving, i, f);
+        return renderSaddledPig((EntityPig)par1EntityLiving, par2, par3);
     }
 
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2,
-            float f, float f1)
+    public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
-        func_40286_a((EntityPig)entityliving, d, d1, d2, f, f1);
+        func_40286_a((EntityPig)par1EntityLiving, par2, par4, par6, par8, par9);
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
+     */
+    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        func_40286_a((EntityPig)entity, d, d1, d2, f, f1);
+        func_40286_a((EntityPig)par1Entity, par2, par4, par6, par8, par9);
     }
 }

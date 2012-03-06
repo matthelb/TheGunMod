@@ -4,53 +4,67 @@ public class ItemPickaxe extends ItemTool
 {
     private static Block blocksEffectiveAgainst[];
 
-    protected ItemPickaxe(int i, EnumToolMaterial enumtoolmaterial)
+    protected ItemPickaxe(int par1, EnumToolMaterial par2EnumToolMaterial)
     {
-        super(i, 2, enumtoolmaterial, blocksEffectiveAgainst);
+        super(par1, 2, par2EnumToolMaterial, blocksEffectiveAgainst);
     }
 
-    public boolean canHarvestBlock(Block block)
+    /**
+     * Returns if the item (tool) can harvest results from the block type.
+     */
+    public boolean canHarvestBlock(Block par1Block)
     {
-        if (block == Block.obsidian)
+        if (par1Block == Block.obsidian)
         {
             return toolMaterial.getHarvestLevel() == 3;
         }
-        if (block == Block.blockDiamond || block == Block.oreDiamond)
+
+        if (par1Block == Block.blockDiamond || par1Block == Block.oreDiamond)
         {
             return toolMaterial.getHarvestLevel() >= 2;
         }
-        if (block == Block.blockGold || block == Block.oreGold)
+
+        if (par1Block == Block.blockGold || par1Block == Block.oreGold)
         {
             return toolMaterial.getHarvestLevel() >= 2;
         }
-        if (block == Block.blockSteel || block == Block.oreIron)
+
+        if (par1Block == Block.blockSteel || par1Block == Block.oreIron)
         {
             return toolMaterial.getHarvestLevel() >= 1;
         }
-        if (block == Block.blockLapis || block == Block.oreLapis)
+
+        if (par1Block == Block.blockLapis || par1Block == Block.oreLapis)
         {
             return toolMaterial.getHarvestLevel() >= 1;
         }
-        if (block == Block.oreRedstone || block == Block.oreRedstoneGlowing)
+
+        if (par1Block == Block.oreRedstone || par1Block == Block.oreRedstoneGlowing)
         {
             return toolMaterial.getHarvestLevel() >= 2;
         }
-        if (block.blockMaterial == Material.rock)
+
+        if (par1Block.blockMaterial == Material.rock)
         {
             return true;
         }
-        return block.blockMaterial == Material.iron;
+
+        return par1Block.blockMaterial == Material.iron;
     }
 
-    public float getStrVsBlock(ItemStack itemstack, Block block)
+    /**
+     * Returns the strength of the stack against a given block. 1.0F base, (Quality+1)*2 if correct blocktype, 1.5F if
+     * sword
+     */
+    public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
-        if (block != null && (block.blockMaterial == Material.iron || block.blockMaterial == Material.rock))
+        if (par2Block != null && (par2Block.blockMaterial == Material.iron || par2Block.blockMaterial == Material.rock))
         {
             return efficiencyOnProperMaterial;
         }
         else
         {
-            return super.getStrVsBlock(itemstack, block);
+            return super.getStrVsBlock(par1ItemStack, par2Block);
         }
     }
 

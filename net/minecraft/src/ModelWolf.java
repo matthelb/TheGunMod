@@ -4,13 +4,28 @@ import org.lwjgl.opengl.GL11;
 
 public class ModelWolf extends ModelBase
 {
+    /** main box for the wolf head */
     public ModelRenderer wolfHeadMain;
+
+    /** The wolf's body */
     public ModelRenderer wolfBody;
+
+    /** Wolf'se first leg */
     public ModelRenderer wolfLeg1;
+
+    /** Wolf's second leg */
     public ModelRenderer wolfLeg2;
+
+    /** Wolf's third leg */
     public ModelRenderer wolfLeg3;
+
+    /** Wolf's fourth leg */
     public ModelRenderer wolfLeg4;
+
+    /** The wolf's tail */
     ModelRenderer wolfTail;
+
+    /** The wolf's mane */
     ModelRenderer wolfMane;
 
     public ModelWolf()
@@ -46,65 +61,75 @@ public class ModelWolf extends ModelBase
         wolfHeadMain.setTextureOffset(0, 10).addBox(-1.5F, 0.0F, -5F, 3, 3, 4, f);
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles then renders the model.
+     */
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        super.render(entity, f, f1, f2, f3, f4, f5);
-        setRotationAngles(f, f1, f2, f3, f4, f5);
+        super.render(par1Entity, par2, par3, par4, par5, par6, par7);
+        setRotationAngles(par2, par3, par4, par5, par6, par7);
+
         if (isChild)
         {
-            float f6 = 2.0F;
+            float f = 2.0F;
             GL11.glPushMatrix();
-            GL11.glTranslatef(0.0F, 5F * f5, 2.0F * f5);
-            wolfHeadMain.renderWithRotation(f5);
+            GL11.glTranslatef(0.0F, 5F * par7, 2.0F * par7);
+            wolfHeadMain.renderWithRotation(par7);
             GL11.glPopMatrix();
             GL11.glPushMatrix();
-            GL11.glScalef(1.0F / f6, 1.0F / f6, 1.0F / f6);
-            GL11.glTranslatef(0.0F, 24F * f5, 0.0F);
-            wolfBody.render(f5);
-            wolfLeg1.render(f5);
-            wolfLeg2.render(f5);
-            wolfLeg3.render(f5);
-            wolfLeg4.render(f5);
-            wolfTail.renderWithRotation(f5);
-            wolfMane.render(f5);
+            GL11.glScalef(1.0F / f, 1.0F / f, 1.0F / f);
+            GL11.glTranslatef(0.0F, 24F * par7, 0.0F);
+            wolfBody.render(par7);
+            wolfLeg1.render(par7);
+            wolfLeg2.render(par7);
+            wolfLeg3.render(par7);
+            wolfLeg4.render(par7);
+            wolfTail.renderWithRotation(par7);
+            wolfMane.render(par7);
             GL11.glPopMatrix();
         }
         else
         {
-            wolfHeadMain.renderWithRotation(f5);
-            wolfBody.render(f5);
-            wolfLeg1.render(f5);
-            wolfLeg2.render(f5);
-            wolfLeg3.render(f5);
-            wolfLeg4.render(f5);
-            wolfTail.renderWithRotation(f5);
-            wolfMane.render(f5);
+            wolfHeadMain.renderWithRotation(par7);
+            wolfBody.render(par7);
+            wolfLeg1.render(par7);
+            wolfLeg2.render(par7);
+            wolfLeg3.render(par7);
+            wolfLeg4.render(par7);
+            wolfTail.renderWithRotation(par7);
+            wolfMane.render(par7);
         }
     }
 
-    public void setLivingAnimations(EntityLiving entityliving, float f, float f1, float f2)
+    /**
+     * Used for easily adding entity-dependent animations. The second and third float params here are the same second
+     * and third as in the setRotationAngles method.
+     */
+    public void setLivingAnimations(EntityLiving par1EntityLiving, float par2, float par3, float par4)
     {
-        EntityWolf entitywolf = (EntityWolf)entityliving;
+        EntityWolf entitywolf = (EntityWolf)par1EntityLiving;
+
         if (entitywolf.isAngry())
         {
             wolfTail.rotateAngleY = 0.0F;
         }
         else
         {
-            wolfTail.rotateAngleY = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
+            wolfTail.rotateAngleY = MathHelper.cos(par2 * 0.6662F) * 1.4F * par3;
         }
-        if (entitywolf.isSitting())
+
+        if (entitywolf.func_48141_af())
         {
             wolfMane.setRotationPoint(-1F, 16F, -3F);
-            wolfMane.rotateAngleX = 1.256637F;
+            wolfMane.rotateAngleX = ((float)Math.PI * 2F / 5F);
             wolfMane.rotateAngleY = 0.0F;
             wolfBody.setRotationPoint(0.0F, 18F, 0.0F);
-            wolfBody.rotateAngleX = 0.7853982F;
+            wolfBody.rotateAngleX = ((float)Math.PI / 4F);
             wolfTail.setRotationPoint(-1F, 21F, 6F);
             wolfLeg1.setRotationPoint(-2.5F, 22F, 2.0F);
-            wolfLeg1.rotateAngleX = 4.712389F;
+            wolfLeg1.rotateAngleX = ((float)Math.PI * 3F / 2F);
             wolfLeg2.setRotationPoint(0.5F, 22F, 2.0F);
-            wolfLeg2.rotateAngleX = 4.712389F;
+            wolfLeg2.rotateAngleX = ((float)Math.PI * 3F / 2F);
             wolfLeg3.rotateAngleX = 5.811947F;
             wolfLeg3.setRotationPoint(-2.49F, 17F, -4F);
             wolfLeg4.rotateAngleX = 5.811947F;
@@ -113,7 +138,7 @@ public class ModelWolf extends ModelBase
         else
         {
             wolfBody.setRotationPoint(0.0F, 14F, 2.0F);
-            wolfBody.rotateAngleX = 1.570796F;
+            wolfBody.rotateAngleX = ((float)Math.PI / 2F);
             wolfMane.setRotationPoint(-1F, 14F, -3F);
             wolfMane.rotateAngleX = wolfBody.rotateAngleX;
             wolfTail.setRotationPoint(-1F, 12F, 8F);
@@ -121,28 +146,33 @@ public class ModelWolf extends ModelBase
             wolfLeg2.setRotationPoint(0.5F, 16F, 7F);
             wolfLeg3.setRotationPoint(-2.5F, 16F, -4F);
             wolfLeg4.setRotationPoint(0.5F, 16F, -4F);
-            wolfLeg1.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
-            wolfLeg2.rotateAngleX = MathHelper.cos(f * 0.6662F + 3.141593F) * 1.4F * f1;
-            wolfLeg3.rotateAngleX = MathHelper.cos(f * 0.6662F + 3.141593F) * 1.4F * f1;
-            wolfLeg4.rotateAngleX = MathHelper.cos(f * 0.6662F) * 1.4F * f1;
+            wolfLeg1.rotateAngleX = MathHelper.cos(par2 * 0.6662F) * 1.4F * par3;
+            wolfLeg2.rotateAngleX = MathHelper.cos(par2 * 0.6662F + (float)Math.PI) * 1.4F * par3;
+            wolfLeg3.rotateAngleX = MathHelper.cos(par2 * 0.6662F + (float)Math.PI) * 1.4F * par3;
+            wolfLeg4.rotateAngleX = MathHelper.cos(par2 * 0.6662F) * 1.4F * par3;
         }
-        float f3 = entitywolf.getInterestedAngle(f2) + entitywolf.getShakeAngle(f2, 0.0F);
-        wolfHeadMain.rotateAngleZ = f3;
-        wolfMane.rotateAngleZ = entitywolf.getShakeAngle(f2, -0.08F);
-        wolfBody.rotateAngleZ = entitywolf.getShakeAngle(f2, -0.16F);
-        wolfTail.rotateAngleZ = entitywolf.getShakeAngle(f2, -0.2F);
+
+        float f = entitywolf.getInterestedAngle(par4) + entitywolf.getShakeAngle(par4, 0.0F);
+        wolfHeadMain.rotateAngleZ = f;
+        wolfMane.rotateAngleZ = entitywolf.getShakeAngle(par4, -0.08F);
+        wolfBody.rotateAngleZ = entitywolf.getShakeAngle(par4, -0.16F);
+        wolfTail.rotateAngleZ = entitywolf.getShakeAngle(par4, -0.2F);
+
         if (entitywolf.getWolfShaking())
         {
-            float f4 = entitywolf.getEntityBrightness(f2) * entitywolf.getShadingWhileShaking(f2);
-            GL11.glColor3f(f4, f4, f4);
+            float f1 = entitywolf.getEntityBrightness(par4) * entitywolf.getShadingWhileShaking(par4);
+            GL11.glColor3f(f1, f1, f1);
         }
     }
 
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles.
+     */
+    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5);
-        wolfHeadMain.rotateAngleX = f4 / 57.29578F;
-        wolfHeadMain.rotateAngleY = f3 / 57.29578F;
-        wolfTail.rotateAngleX = f2;
+        super.setRotationAngles(par1, par2, par3, par4, par5, par6);
+        wolfHeadMain.rotateAngleX = par5 / (180F / (float)Math.PI);
+        wolfHeadMain.rotateAngleY = par4 / (180F / (float)Math.PI);
+        wolfTail.rotateAngleX = par3;
     }
 }

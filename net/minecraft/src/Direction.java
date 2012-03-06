@@ -2,11 +2,11 @@ package net.minecraft.src;
 
 public class Direction
 {
-    public static final int field_35871_a[] =
+    public static final int offsetX[] =
     {
         0, -1, 0, 1
     };
-    public static final int field_35870_b[] =
+    public static final int offsetZ[] =
     {
         1, 0, -1, 0
     };
@@ -14,7 +14,7 @@ public class Direction
     {
         3, 4, 2, 5
     };
-    public static final int field_35869_d[] =
+    public static final int vineGrowth[] =
     {
         -1, -1, 2, 0, 1, 3
     };
@@ -22,7 +22,7 @@ public class Direction
     {
         2, 3, 0, 1
     };
-    public static final int field_35867_f[] =
+    public static final int enderEyeMetaToDirection[] =
     {
         1, 2, 3, 0
     };

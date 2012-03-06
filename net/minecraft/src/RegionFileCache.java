@@ -7,51 +7,64 @@ import java.util.*;
 
 public class RegionFileCache
 {
+    /** A map containing Files and keys and RegionFiles as values */
     private static final Map regionsByFilename = new HashMap();
 
     private RegionFileCache()
     {
     }
 
-    public static synchronized RegionFile createOrLoadRegionFile(File file, int i, int j)
+    public static synchronized RegionFile createOrLoadRegionFile(File par0File, int par1, int par2)
     {
-        File file1 = new File(file, "region");
-        File file2 = new File(file1, (new StringBuilder()).append("r.").append(i >> 5).append(".").append(j >> 5).append(".mcr").toString());
-        Reference reference = (Reference)regionsByFilename.get(file2);
+        File file = new File(par0File, "region");
+        File file1 = new File(file, (new StringBuilder()).append("r.").append(par1 >> 5).append(".").append(par2 >> 5).append(".mca").toString());
+        Reference reference = (Reference)regionsByFilename.get(file1);
+
         if (reference != null)
         {
             RegionFile regionfile = (RegionFile)reference.get();
+
             if (regionfile != null)
             {
                 return regionfile;
             }
         }
-        if (!file1.exists())
+
+        if (!file.exists())
         {
-            file1.mkdirs();
+            file.mkdirs();
         }
+
         if (regionsByFilename.size() >= 256)
         {
             clearRegionFileReferences();
         }
-        RegionFile regionfile1 = new RegionFile(file2);
-        regionsByFilename.put(file2, new SoftReference(regionfile1));
+
+        RegionFile regionfile1 = new RegionFile(file1);
+        regionsByFilename.put(file1, new SoftReference(regionfile1));
         return regionfile1;
     }
 
+    /**
+     * Saves the current Chunk Map Cache
+     */
     public static synchronized void clearRegionFileReferences()
     {
         Iterator iterator = regionsByFilename.values().iterator();
+
         do
         {
             if (!iterator.hasNext())
             {
                 break;
             }
+
             Reference reference = (Reference)iterator.next();
+
             try
             {
                 RegionFile regionfile = (RegionFile)reference.get();
+
                 if (regionfile != null)
                 {
                     regionfile.close();
@@ -63,18 +76,25 @@ public class RegionFileCache
             }
         }
         while (true);
+
         regionsByFilename.clear();
     }
 
-    public static DataInputStream getChunkInputStream(File file, int i, int j)
+    /**
+     * Returns an input stream for the specified chunk. Args: worldDir, chunkX, chunkZ
+     */
+    public static DataInputStream getChunkInputStream(File par0File, int par1, int par2)
     {
-        RegionFile regionfile = createOrLoadRegionFile(file, i, j);
-        return regionfile.getChunkDataInputStream(i & 0x1f, j & 0x1f);
+        RegionFile regionfile = createOrLoadRegionFile(par0File, par1, par2);
+        return regionfile.getChunkDataInputStream(par1 & 0x1f, par2 & 0x1f);
     }
 
-    public static DataOutputStream getChunkOutputStream(File file, int i, int j)
+    /**
+     * Returns an output stream for the specified chunk. Args: worldDir, chunkX, chunkZ
+     */
+    public static DataOutputStream getChunkOutputStream(File par0File, int par1, int par2)
     {
-        RegionFile regionfile = createOrLoadRegionFile(file, i, j);
-        return regionfile.getChunkDataOutputStream(i & 0x1f, j & 0x1f);
+        RegionFile regionfile = createOrLoadRegionFile(par0File, par1, par2);
+        return regionfile.getChunkDataOutputStream(par1 & 0x1f, par2 & 0x1f);
     }
 }

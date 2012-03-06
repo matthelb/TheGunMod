@@ -1,9 +1,11 @@
 package net.minecraft.src;
 
-public class SaveFormatComparator
-    implements Comparable
+public class SaveFormatComparator implements Comparable
 {
+    /** the file name of this save */
     private final String fileName;
+
+    /** the displayed name of this save file */
     private final String displayName;
     private final long lastTimePlayed;
     private final long sizeOnDisk;
@@ -11,23 +13,28 @@ public class SaveFormatComparator
     private final int gameType;
     private final boolean hardcore;
 
-    public SaveFormatComparator(String s, String s1, long l, long l1, int i,
-            boolean flag, boolean flag1)
+    public SaveFormatComparator(String par1Str, String par2Str, long par3, long par5, int par7, boolean par8, boolean par9)
     {
-        fileName = s;
-        displayName = s1;
-        lastTimePlayed = l;
-        sizeOnDisk = l1;
-        gameType = i;
-        requiresConversion = flag;
-        hardcore = flag1;
+        fileName = par1Str;
+        displayName = par2Str;
+        lastTimePlayed = par3;
+        sizeOnDisk = par5;
+        gameType = par7;
+        requiresConversion = par8;
+        hardcore = par9;
     }
 
+    /**
+     * return the file name
+     */
     public String getFileName()
     {
         return fileName;
     }
 
+    /**
+     * return the display name of the save
+     */
     public String getDisplayName()
     {
         return displayName;
@@ -43,19 +50,20 @@ public class SaveFormatComparator
         return lastTimePlayed;
     }
 
-    public int compareTo(SaveFormatComparator saveformatcomparator)
+    public int compareTo(SaveFormatComparator par1SaveFormatComparator)
     {
-        if (lastTimePlayed < saveformatcomparator.lastTimePlayed)
+        if (lastTimePlayed < par1SaveFormatComparator.lastTimePlayed)
         {
             return 1;
         }
-        if (lastTimePlayed > saveformatcomparator.lastTimePlayed)
+
+        if (lastTimePlayed > par1SaveFormatComparator.lastTimePlayed)
         {
             return -1;
         }
         else
         {
-            return fileName.compareTo(saveformatcomparator.fileName);
+            return fileName.compareTo(par1SaveFormatComparator.fileName);
         }
     }
 
@@ -69,8 +77,8 @@ public class SaveFormatComparator
         return hardcore;
     }
 
-    public int compareTo(Object obj)
+    public int compareTo(Object par1Obj)
     {
-        return compareTo((SaveFormatComparator)obj);
+        return compareTo((SaveFormatComparator)par1Obj);
     }
 }

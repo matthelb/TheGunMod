@@ -6,120 +6,169 @@ public class BlockRedstoneOre extends Block
 {
     private boolean glowing;
 
-    public BlockRedstoneOre(int i, int j, boolean flag)
+    public BlockRedstoneOre(int par1, int par2, boolean par3)
     {
-        super(i, j, Material.rock);
-        if (flag)
+        super(par1, par2, Material.rock);
+
+        if (par3)
         {
-            setTickOnLoad(true);
+            setTickRandomly(true);
         }
-        glowing = flag;
+
+        glowing = par3;
     }
 
+    /**
+     * How many world ticks before ticking
+     */
     public int tickRate()
     {
         return 30;
     }
 
-    public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called when the block is clicked by a player. Args: x, y, z, entityPlayer
+     */
+    public void onBlockClicked(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        glow(world, i, j, k);
-        super.onBlockClicked(world, i, j, k, entityplayer);
+        glow(par1World, par2, par3, par4);
+        super.onBlockClicked(par1World, par2, par3, par4, par5EntityPlayer);
     }
 
-    public void onEntityWalking(World world, int i, int j, int k, Entity entity)
+    /**
+     * Called whenever an entity is walking on top of this block. Args: world, x, y, z, entity
+     */
+    public void onEntityWalking(World par1World, int par2, int par3, int par4, Entity par5Entity)
     {
-        glow(world, i, j, k);
-        super.onEntityWalking(world, i, j, k, entity);
+        glow(par1World, par2, par3, par4);
+        super.onEntityWalking(par1World, par2, par3, par4, par5Entity);
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        glow(world, i, j, k);
-        return super.blockActivated(world, i, j, k, entityplayer);
+        glow(par1World, par2, par3, par4);
+        return super.blockActivated(par1World, par2, par3, par4, par5EntityPlayer);
     }
 
-    private void glow(World world, int i, int j, int k)
+    /**
+     * The redstone ore glows.
+     */
+    private void glow(World par1World, int par2, int par3, int par4)
     {
-        sparkle(world, i, j, k);
+        sparkle(par1World, par2, par3, par4);
+
         if (blockID == Block.oreRedstone.blockID)
         {
-            world.setBlockWithNotify(i, j, k, Block.oreRedstoneGlowing.blockID);
+            par1World.setBlockWithNotify(par2, par3, par4, Block.oreRedstoneGlowing.blockID);
         }
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
         if (blockID == Block.oreRedstoneGlowing.blockID)
         {
-            world.setBlockWithNotify(i, j, k, Block.oreRedstone.blockID);
+            par1World.setBlockWithNotify(par2, par3, par4, Block.oreRedstone.blockID);
         }
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Item.redstone.shiftedIndex;
     }
 
-    public int quantityDroppedWithBonus(int i, Random random)
+    /**
+     * Returns the usual quantity dropped by the block plus a bonus of 1 to 'i' (inclusive).
+     */
+    public int quantityDroppedWithBonus(int par1, Random par2Random)
     {
-        return quantityDropped(random) + random.nextInt(i + 1);
+        return quantityDropped(par2Random) + par2Random.nextInt(par1 + 1);
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
-        return 4 + random.nextInt(2);
+        return 4 + par1Random.nextInt(2);
     }
 
-    public void randomDisplayTick(World world, int i, int j, int k, Random random)
+    /**
+     * A randomly called display update to be able to add particles or other items for display
+     */
+    public void randomDisplayTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
         if (glowing)
         {
-            sparkle(world, i, j, k);
+            sparkle(par1World, par2, par3, par4);
         }
     }
 
-    private void sparkle(World world, int i, int j, int k)
+    /**
+     * The redstone ore sparkles.
+     */
+    private void sparkle(World par1World, int par2, int par3, int par4)
     {
-        Random random = world.rand;
+        Random random = par1World.rand;
         double d = 0.0625D;
-        for (int l = 0; l < 6; l++)
+
+        for (int i = 0; i < 6; i++)
         {
-            double d1 = (float)i + random.nextFloat();
-            double d2 = (float)j + random.nextFloat();
-            double d3 = (float)k + random.nextFloat();
-            if (l == 0 && !world.isBlockOpaqueCube(i, j + 1, k))
+            double d1 = (float)par2 + random.nextFloat();
+            double d2 = (float)par3 + random.nextFloat();
+            double d3 = (float)par4 + random.nextFloat();
+
+            if (i == 0 && !par1World.isBlockOpaqueCube(par2, par3 + 1, par4))
             {
-                d2 = (double)(j + 1) + d;
+                d2 = (double)(par3 + 1) + d;
             }
-            if (l == 1 && !world.isBlockOpaqueCube(i, j - 1, k))
+
+            if (i == 1 && !par1World.isBlockOpaqueCube(par2, par3 - 1, par4))
             {
-                d2 = (double)(j + 0) - d;
+                d2 = (double)(par3 + 0) - d;
             }
-            if (l == 2 && !world.isBlockOpaqueCube(i, j, k + 1))
+
+            if (i == 2 && !par1World.isBlockOpaqueCube(par2, par3, par4 + 1))
             {
-                d3 = (double)(k + 1) + d;
+                d3 = (double)(par4 + 1) + d;
             }
-            if (l == 3 && !world.isBlockOpaqueCube(i, j, k - 1))
+
+            if (i == 3 && !par1World.isBlockOpaqueCube(par2, par3, par4 - 1))
             {
-                d3 = (double)(k + 0) - d;
+                d3 = (double)(par4 + 0) - d;
             }
-            if (l == 4 && !world.isBlockOpaqueCube(i + 1, j, k))
+
+            if (i == 4 && !par1World.isBlockOpaqueCube(par2 + 1, par3, par4))
             {
-                d1 = (double)(i + 1) + d;
+                d1 = (double)(par2 + 1) + d;
             }
-            if (l == 5 && !world.isBlockOpaqueCube(i - 1, j, k))
+
+            if (i == 5 && !par1World.isBlockOpaqueCube(par2 - 1, par3, par4))
             {
-                d1 = (double)(i + 0) - d;
+                d1 = (double)(par2 + 0) - d;
             }
-            if (d1 < (double)i || d1 > (double)(i + 1) || d2 < 0.0D || d2 > (double)(j + 1) || d3 < (double)k || d3 > (double)(k + 1))
+
+            if (d1 < (double)par2 || d1 > (double)(par2 + 1) || d2 < 0.0D || d2 > (double)(par3 + 1) || d3 < (double)par4 || d3 > (double)(par4 + 1))
             {
-                world.spawnParticle("reddust", d1, d2, d3, 0.0D, 0.0D, 0.0D);
+                par1World.spawnParticle("reddust", d1, d2, d3, 0.0D, 0.0D, 0.0D);
             }
         }
     }
 
-    protected ItemStack createStackedBlock(int i)
+    /**
+     * Returns an item stack containing a single instance of the current block type. 'i' is the block's subtype/damage
+     * and is ignored for blocks which do not support subtypes. Blocks which cannot be harvested should return null.
+     */
+    protected ItemStack createStackedBlock(int par1)
     {
         return new ItemStack(Block.oreRedstone);
     }

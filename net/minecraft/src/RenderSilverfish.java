@@ -7,41 +7,56 @@ public class RenderSilverfish extends RenderLiving
         super(new ModelSilverfish(), 0.3F);
     }
 
-    protected float getSilverfishDeathRotation(EntitySilverfish entitysilverfish)
+    /**
+     * Return the silverfish's maximum death rotation.
+     */
+    protected float getSilverfishDeathRotation(EntitySilverfish par1EntitySilverfish)
     {
         return 180F;
     }
 
-    public void renderSilverfish(EntitySilverfish entitysilverfish, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Renders the silverfish.
+     */
+    public void renderSilverfish(EntitySilverfish par1EntitySilverfish, double par2, double par4, double par6, float par8, float par9)
     {
-        super.doRenderLiving(entitysilverfish, d, d1, d2, f, f1);
+        super.doRenderLiving(par1EntitySilverfish, par2, par4, par6, par8, par9);
     }
 
-    protected int shouldSilverfishRenderPass(EntitySilverfish entitysilverfish, int i, float f)
+    /**
+     * Disallows the silverfish to render the renderPassModel.
+     */
+    protected int shouldSilverfishRenderPass(EntitySilverfish par1EntitySilverfish, int par2, float par3)
     {
         return -1;
     }
 
-    protected float getDeathMaxRotation(EntityLiving entityliving)
+    protected float getDeathMaxRotation(EntityLiving par1EntityLiving)
     {
-        return getSilverfishDeathRotation((EntitySilverfish)entityliving);
+        return getSilverfishDeathRotation((EntitySilverfish)par1EntityLiving);
     }
 
-    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    /**
+     * Queries whether should render the specified pass or not.
+     */
+    protected int shouldRenderPass(EntityLiving par1EntityLiving, int par2, float par3)
     {
-        return shouldSilverfishRenderPass((EntitySilverfish)entityliving, i, f);
+        return shouldSilverfishRenderPass((EntitySilverfish)par1EntityLiving, par2, par3);
     }
 
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2,
-            float f, float f1)
+    public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
-        renderSilverfish((EntitySilverfish)entityliving, d, d1, d2, f, f1);
+        renderSilverfish((EntitySilverfish)par1EntityLiving, par2, par4, par6, par8, par9);
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
+     */
+    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        renderSilverfish((EntitySilverfish)entity, d, d1, d2, f, f1);
+        renderSilverfish((EntitySilverfish)par1Entity, par2, par4, par6, par8, par9);
     }
 }

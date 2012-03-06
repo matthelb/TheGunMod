@@ -10,26 +10,25 @@ public abstract class BaseMod
     {
     }
 
-    public int AddFuel(int i, int j)
+    public int addFuel(int i, int j)
     {
         return 0;
     }
 
-    public void AddRenderer(Map map)
+    public void addRenderer(Map map)
     {
     }
 
-    public boolean DispenseEntity(World world, double d, double d1, double d2,
-            int i, int j, ItemStack itemstack)
+    public boolean dispenseEntity(World world, double d, double d1, double d2, int i, int j, ItemStack itemstack)
     {
         return false;
     }
 
-    public void GenerateNether(World world, Random random, int i, int j)
+    public void generateNether(World world, Random random, int i, int j)
     {
     }
 
-    public void GenerateSurface(World world, Random random, int i, int j)
+    public void generateSurface(World world, Random random, int i, int j)
     {
     }
 
@@ -45,48 +44,48 @@ public abstract class BaseMod
 
     public abstract String getVersion();
 
-    public void KeyboardEvent(KeyBinding keybinding)
+    public void keyboardEvent(KeyBinding keybinding)
     {
     }
 
     public abstract void load();
 
-    public void ModsLoaded()
+    public void modsLoaded()
     {
     }
 
-    public void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
+    public void onItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
     {
     }
 
-    public boolean OnTickInGame(float f, Minecraft minecraft)
-    {
-        return false;
-    }
-
-    public boolean OnTickInGUI(float f, Minecraft minecraft, GuiScreen guiscreen)
+    public boolean onTickInGame(float f, Minecraft minecraft)
     {
         return false;
     }
 
-    public void RegisterAnimation(Minecraft minecraft)
-    {
-    }
-
-    public void RenderInvBlock(RenderBlocks renderblocks, Block block, int i, int j)
-    {
-    }
-
-    public boolean RenderWorldBlock(RenderBlocks renderblocks, IBlockAccess iblockaccess, int i, int j, int k, Block block, int l)
+    public boolean onTickInGUI(float f, Minecraft minecraft, GuiScreen guiscreen)
     {
         return false;
     }
 
-    public void TakenFromCrafting(EntityPlayer entityplayer, ItemStack itemstack, IInventory iinventory)
+    public void registerAnimation(Minecraft minecraft)
     {
     }
 
-    public void TakenFromFurnace(EntityPlayer entityplayer, ItemStack itemstack)
+    public void renderInvBlock(RenderBlocks renderblocks, Block block, int i, int j)
+    {
+    }
+
+    public boolean renderWorldBlock(RenderBlocks renderblocks, IBlockAccess iblockaccess, int i, int j, int k, Block block, int l)
+    {
+        return false;
+    }
+
+    public void takenFromCrafting(EntityPlayer entityplayer, ItemStack itemstack, IInventory iinventory)
+    {
+    }
+
+    public void takenFromFurnace(EntityPlayer entityplayer, ItemStack itemstack)
     {
     }
 

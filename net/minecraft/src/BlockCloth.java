@@ -7,31 +7,43 @@ public class BlockCloth extends Block
         super(35, 64, Material.cloth);
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (j == 0)
+        if (par2 == 0)
         {
             return blockIndexInTexture;
         }
         else
         {
-            j = ~(j & 0xf);
-            return 113 + ((j & 8) >> 3) + (j & 7) * 16;
+            par2 = ~(par2 & 0xf);
+            return 113 + ((par2 & 8) >> 3) + (par2 & 7) * 16;
         }
     }
 
-    protected int damageDropped(int i)
+    /**
+     * Determines the damage on the item the block drops. Used in cloth and wood.
+     */
+    protected int damageDropped(int par1)
     {
-        return i;
+        return par1;
     }
 
-    public static int getBlockFromDye(int i)
+    /**
+     * Takes a dye damage value and returns the block damage value to match
+     */
+    public static int getBlockFromDye(int par0)
     {
-        return ~i & 0xf;
+        return ~par0 & 0xf;
     }
 
-    public static int getDyeFromBlock(int i)
+    /**
+     * Takes a block damage value and returns the dye damage value to match
+     */
+    public static int getDyeFromBlock(int par0)
     {
-        return ~i & 0xf;
+        return ~par0 & 0xf;
     }
 }

@@ -1,33 +1,36 @@
 package net.minecraft.src;
 
 import java.util.HashMap;
+import java.util.Random;
 
 public class ItemMonsterPlacer extends Item
 {
-    public ItemMonsterPlacer(int i)
+    public ItemMonsterPlacer(int par1)
     {
-        super(i);
-        setMaxStackSize(1);
+        super(par1);
         setHasSubtypes(true);
     }
 
-    public String getItemDisplayName(ItemStack itemstack)
+    public String getItemDisplayName(ItemStack par1ItemStack)
     {
         String s = (new StringBuilder()).append("").append(StatCollector.translateToLocal((new StringBuilder()).append(getItemName()).append(".name").toString())).toString().trim();
-        String s1 = EntityList.getStringFromID(itemstack.getItemDamage());
+        String s1 = EntityList.getStringFromID(par1ItemStack.getItemDamage());
+
         if (s1 != null)
         {
             s = (new StringBuilder()).append(s).append(" ").append(StatCollector.translateToLocal((new StringBuilder()).append("entity.").append(s1).append(".name").toString())).toString();
         }
+
         return s;
     }
 
-    public int getColorFromDamage(int i, int j)
+    public int getColorFromDamage(int par1, int par2)
     {
-        EntityEggInfo entityegginfo = (EntityEggInfo)EntityList.entityEggs.get(Integer.valueOf(i));
+        EntityEggInfo entityegginfo = (EntityEggInfo)EntityList.entityEggs.get(Integer.valueOf(par1));
+
         if (entityegginfo != null)
         {
-            if (j == 0)
+            if (par2 == 0)
             {
                 return entityegginfo.primaryColor;
             }
@@ -47,37 +50,64 @@ public class ItemMonsterPlacer extends Item
         return true;
     }
 
-    public int func_46057_a(int i, int j)
+    public int func_46057_a(int par1, int par2)
     {
-        if (j > 0)
+        if (par2 > 0)
         {
-            return super.func_46057_a(i, j) + 16;
+            return super.func_46057_a(par1, par2) + 16;
         }
         else
         {
-            return super.func_46057_a(i, j);
+            return super.func_46057_a(par1, par2);
         }
     }
 
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
+     */
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7)
     {
-        if (world.isRemote)
+        if (par3World.isRemote)
         {
             return true;
         }
-        i += Facing.offsetsXForSide[l];
-        j += Facing.offsetsYForSide[l];
-        k += Facing.offsetsZForSide[l];
-        Entity entity = EntityList.createEntity(itemstack.getItemDamage(), world);
+
+        int i = par3World.getBlockId(par4, par5, par6);
+        par4 += Facing.offsetsXForSide[par7];
+        par5 += Facing.offsetsYForSide[par7];
+        par6 += Facing.offsetsZForSide[par7];
+        double d = 0.0D;
+
+        if (par7 == 1 && i == Block.fence.blockID || i == Block.netherFence.blockID)
+        {
+            d = 0.5D;
+        }
+
+        if (func_48440_a(par3World, par1ItemStack.getItemDamage(), (double)par4 + 0.5D, (double)par5 + d, (double)par6 + 0.5D) && !par2EntityPlayer.capabilities.depleteBuckets)
+        {
+            par1ItemStack.stackSize--;
+        }
+
+        return true;
+    }
+
+    public static boolean func_48440_a(World par0World, int par1, double par2, double par4, double par6)
+    {
+        if (!EntityList.entityEggs.containsKey(Integer.valueOf(par1)))
+        {
+            return false;
+        }
+
+        Entity entity = EntityList.createEntity(par1, par0World);
+
         if (entity != null)
         {
-            if (!entityplayer.capabilities.depleteBuckets)
-            {
-                itemstack.stackSize--;
-            }
-            entity.setLocationAndAngles((double)i + 0.5D, j, (double)k + 0.5D, 0.0F, 0.0F);
-            world.spawnEntityInWorld(entity);
+            entity.setLocationAndAngles(par2, par4, par6, par0World.rand.nextFloat() * 360F, 0.0F);
+            par0World.spawnEntityInWorld(entity);
+            ((EntityLiving)entity).playLivingSound();
         }
-        return true;
+
+        return entity != null;
     }
 }

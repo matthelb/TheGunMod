@@ -2,12 +2,15 @@ package net.minecraft.src;
 
 public class UnexpectedThrowable
 {
+    /** A description of the error that has occurred. */
     public final String description;
+
+    /** The Throwable object that was thrown. */
     public final Throwable exception;
 
-    public UnexpectedThrowable(String s, Throwable throwable)
+    public UnexpectedThrowable(String par1Str, Throwable par2Throwable)
     {
-        description = s;
-        exception = throwable;
+        description = par1Str;
+        exception = par2Throwable;
     }
 }

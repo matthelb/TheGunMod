@@ -4,32 +4,45 @@ import java.io.*;
 
 public class Packet42RemoveEntityEffect extends Packet
 {
+    /** The ID of the entity which an effect is being removed from. */
     public int entityId;
+
+    /** The ID of the effect which is being removed from an entity. */
     public byte effectId;
 
     public Packet42RemoveEntityEffect()
     {
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        effectId = datainputstream.readByte();
+        entityId = par1DataInputStream.readInt();
+        effectId = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        dataoutputstream.writeByte(effectId);
+        par1DataOutputStream.writeInt(entityId);
+        par1DataOutputStream.writeByte(effectId);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleRemoveEntityEffect(this);
+        par1NetHandler.handleRemoveEntityEffect(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 5;

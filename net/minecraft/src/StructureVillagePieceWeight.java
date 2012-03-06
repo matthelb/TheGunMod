@@ -7,14 +7,14 @@ public class StructureVillagePieceWeight
     public int villagePiecesSpawned;
     public int villagePiecesLimit;
 
-    public StructureVillagePieceWeight(Class class1, int i, int j)
+    public StructureVillagePieceWeight(Class par1Class, int par2, int par3)
     {
-        villagePieceClass = class1;
-        villagePieceWeight = i;
-        villagePiecesLimit = j;
+        villagePieceClass = par1Class;
+        villagePieceWeight = par2;
+        villagePiecesLimit = par3;
     }
 
-    public boolean canSpawnMoreVillagePiecesOfType(int i)
+    public boolean canSpawnMoreVillagePiecesOfType(int par1)
     {
         return villagePiecesLimit == 0 || villagePiecesSpawned < villagePiecesLimit;
     }

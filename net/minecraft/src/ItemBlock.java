@@ -2,79 +2,100 @@ package net.minecraft.src;
 
 public class ItemBlock extends Item
 {
+    /** The block ID of the Block associated with this ItemBlock */
     private int blockID;
 
-    public ItemBlock(int i)
+    public ItemBlock(int par1)
     {
-        super(i);
-        blockID = i + 256;
-        setIconIndex(Block.blocksList[i + 256].getBlockTextureFromSide(2));
+        super(par1);
+        blockID = par1 + 256;
+        setIconIndex(Block.blocksList[par1 + 256].getBlockTextureFromSide(2));
     }
 
+    /**
+     * Returns the blockID for this Item
+     */
     public int getBlockID()
     {
         return blockID;
     }
 
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
+     */
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7)
     {
-        int i1 = world.getBlockId(i, j, k);
-        if (i1 == Block.snow.blockID)
+        int i = par3World.getBlockId(par4, par5, par6);
+
+        if (i == Block.snow.blockID)
         {
-            l = 0;
+            par7 = 1;
         }
-        else if (i1 != Block.vine.blockID)
+        else if (i != Block.vine.blockID && i != Block.tallGrass.blockID && i != Block.deadBush.blockID)
         {
-            if (l == 0)
+            if (par7 == 0)
             {
-                j--;
+                par5--;
             }
-            if (l == 1)
+
+            if (par7 == 1)
             {
-                j++;
+                par5++;
             }
-            if (l == 2)
+
+            if (par7 == 2)
             {
-                k--;
+                par6--;
             }
-            if (l == 3)
+
+            if (par7 == 3)
             {
-                k++;
+                par6++;
             }
-            if (l == 4)
+
+            if (par7 == 4)
             {
-                i--;
+                par4--;
             }
-            if (l == 5)
+
+            if (par7 == 5)
             {
-                i++;
+                par4++;
             }
         }
-        if (itemstack.stackSize == 0)
+
+        if (par1ItemStack.stackSize == 0)
         {
             return false;
         }
-        if (!entityplayer.canPlayerEdit(i, j, k))
+
+        if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6))
         {
             return false;
         }
-        if (j == world.worldHeight - 1 && Block.blocksList[blockID].blockMaterial.isSolid())
+
+        if (par5 == 255 && Block.blocksList[blockID].blockMaterial.isSolid())
         {
             return false;
         }
-        if (world.canBlockBePlacedAt(blockID, i, j, k, false, l))
+
+        if (par3World.canBlockBePlacedAt(blockID, par4, par5, par6, false, par7))
         {
             Block block = Block.blocksList[blockID];
-            if (world.setBlockAndMetadataWithNotify(i, j, k, blockID, getMetadata(itemstack.getItemDamage())))
+
+            if (par3World.setBlockAndMetadataWithNotify(par4, par5, par6, blockID, getMetadata(par1ItemStack.getItemDamage())))
             {
-                if (world.getBlockId(i, j, k) == blockID)
+                if (par3World.getBlockId(par4, par5, par6) == blockID)
                 {
-                    Block.blocksList[blockID].onBlockPlaced(world, i, j, k, l);
-                    Block.blocksList[blockID].onBlockPlacedBy(world, i, j, k, entityplayer);
+                    Block.blocksList[blockID].onBlockPlaced(par3World, par4, par5, par6, par7);
+                    Block.blocksList[blockID].onBlockPlacedBy(par3World, par4, par5, par6, par2EntityPlayer);
                 }
-                world.playSoundEffect((float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, block.stepSound.getStepSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
-                itemstack.stackSize--;
+
+                par3World.playSoundEffect((float)par4 + 0.5F, (float)par5 + 0.5F, (float)par6 + 0.5F, block.stepSound.getStepSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+                par1ItemStack.stackSize--;
             }
+
             return true;
         }
         else
@@ -83,7 +104,7 @@ public class ItemBlock extends Item
         }
     }
 
-    public String getItemNameIS(ItemStack itemstack)
+    public String getItemNameIS(ItemStack par1ItemStack)
     {
         return Block.blocksList[blockID].getBlockName();
     }

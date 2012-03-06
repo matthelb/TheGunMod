@@ -10,10 +10,13 @@ public class CompressedStreamTools
     {
     }
 
-    public static NBTTagCompound loadGzippedCompoundFromOutputStream(InputStream inputstream)
-    throws IOException
+    /**
+     * Load the gzipped compound from the inputstream.
+     */
+    public static NBTTagCompound readCompressed(InputStream par0InputStream) throws IOException
     {
-        DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(inputstream)));
+        DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(par0InputStream)));
+
         try
         {
             NBTTagCompound nbttagcompound = read(datainputstream);
@@ -25,13 +28,16 @@ public class CompressedStreamTools
         }
     }
 
-    public static void writeGzippedCompoundToOutputStream(NBTTagCompound nbttagcompound, OutputStream outputstream)
-    throws IOException
+    /**
+     * Write the compound, gzipped, to the outputstream.
+     */
+    public static void writeCompressed(NBTTagCompound par0NBTTagCompound, OutputStream par1OutputStream) throws IOException
     {
-        DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(outputstream));
+        DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(par1OutputStream));
+
         try
         {
-            writeTo(nbttagcompound, dataoutputstream);
+            write(par0NBTTagCompound, dataoutputstream);
         }
         finally
         {
@@ -39,10 +45,10 @@ public class CompressedStreamTools
         }
     }
 
-    public static NBTTagCompound loadMapFromByteArray(byte abyte0[])
-    throws IOException
+    public static NBTTagCompound decompress(byte par0ArrayOfByte[]) throws IOException
     {
-        DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(abyte0))));
+        DataInputStream datainputstream = new DataInputStream(new BufferedInputStream(new GZIPInputStream(new ByteArrayInputStream(par0ArrayOfByte))));
+
         try
         {
             NBTTagCompound nbttagcompound = read(datainputstream);
@@ -54,53 +60,57 @@ public class CompressedStreamTools
         }
     }
 
-    public static byte[] writeMapToByteArray(NBTTagCompound nbttagcompound)
-    throws IOException
+    public static byte[] compress(NBTTagCompound par0NBTTagCompound) throws IOException
     {
         ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
         DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(bytearrayoutputstream));
+
         try
         {
-            writeTo(nbttagcompound, dataoutputstream);
+            write(par0NBTTagCompound, dataoutputstream);
         }
         finally
         {
             dataoutputstream.close();
         }
+
         return bytearrayoutputstream.toByteArray();
     }
 
-    public static void saveMapToFileWithBackup(NBTTagCompound nbttagcompound, File file)
-    throws IOException
+    public static void safeWrite(NBTTagCompound par0NBTTagCompound, File par1File) throws IOException
     {
-        File file1 = new File((new StringBuilder()).append(file.getAbsolutePath()).append("_tmp").toString());
-        if (file1.exists())
-        {
-            file1.delete();
-        }
-        saveMapToFile(nbttagcompound, file1);
+        File file = new File((new StringBuilder()).append(par1File.getAbsolutePath()).append("_tmp").toString());
+
         if (file.exists())
         {
             file.delete();
         }
-        if (file.exists())
+
+        write(par0NBTTagCompound, file);
+
+        if (par1File.exists())
         {
-            throw new IOException((new StringBuilder()).append("Failed to delete ").append(file).toString());
+            par1File.delete();
+        }
+
+        if (par1File.exists())
+        {
+            throw new IOException((new StringBuilder()).append("Failed to delete ").append(par1File).toString());
         }
         else
         {
-            file1.renameTo(file);
+            file.renameTo(par1File);
             return;
         }
     }
 
-    public static void saveMapToFile(NBTTagCompound nbttagcompound, File file)
-    throws IOException
+    public static void write(NBTTagCompound par0NBTTagCompound, File par1File) throws IOException
     {
-        DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(file));
+        DataOutputStream dataoutputstream = new DataOutputStream(new FileOutputStream(par1File));
+
         try
         {
-            writeTo(nbttagcompound, dataoutputstream);
+            write(par0NBTTagCompound, dataoutputstream);
         }
         finally
         {
@@ -108,14 +118,15 @@ public class CompressedStreamTools
         }
     }
 
-    public static NBTTagCompound writeMapToFileUncompressed(File file)
-    throws IOException
+    public static NBTTagCompound read(File par0File) throws IOException
     {
-        if (!file.exists())
+        if (!par0File.exists())
         {
             return null;
         }
-        DataInputStream datainputstream = new DataInputStream(new FileInputStream(file));
+
+        DataInputStream datainputstream = new DataInputStream(new FileInputStream(par0File));
+
         try
         {
             NBTTagCompound nbttagcompound = read(datainputstream);
@@ -127,10 +138,13 @@ public class CompressedStreamTools
         }
     }
 
-    public static NBTTagCompound read(DataInput datainput)
-    throws IOException
+    /**
+     * Reads from a CompressedStream.
+     */
+    public static NBTTagCompound read(DataInput par0DataInput) throws IOException
     {
-        NBTBase nbtbase = NBTBase.readTag(datainput);
+        NBTBase nbtbase = NBTBase.readNamedTag(par0DataInput);
+
         if (nbtbase instanceof NBTTagCompound)
         {
             return (NBTTagCompound)nbtbase;
@@ -141,9 +155,8 @@ public class CompressedStreamTools
         }
     }
 
-    public static void writeTo(NBTTagCompound nbttagcompound, DataOutput dataoutput)
-    throws IOException
+    public static void write(NBTTagCompound par0NBTTagCompound, DataOutput par1DataOutput) throws IOException
     {
-        NBTBase.writeTag(nbttagcompound, dataoutput);
+        NBTBase.writeNamedTag(par0NBTTagCompound, par1DataOutput);
     }
 }

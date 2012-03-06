@@ -126,19 +126,19 @@ public class ContainerCraftGuns extends Container {
                     }
                 } else {
                     ItemStack stack = getSlot(slot.slotNumber).getStack();
-                    Util.getMinecraft((EntityPlayerSP) player).playerController.func_35637_a(stack, (slot.slotNumber - inventorySlots.size()) + ContainerCraftGuns.COLUMNS + 36);
+                    Util.getMinecraft((EntityPlayerSP) player).playerController.sendSlotPacket(stack, (slot.slotNumber - inventorySlots.size()) + ContainerCraftGuns.COLUMNS + 36);
                     return super.slotClick(slot.slotNumber, mouseButton, shiftHeld, player);
                 }
             } else {
                 if (inventoryPlayer.getItemStack() != null) {
                     if (mouseButton == 0) {
-                        player.dropPlayerItem(inventoryPlayer.getItemStack());
+                        player.func_48153_a(inventoryPlayer.getItemStack());
                         Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(inventoryPlayer.getItemStack());
                         inventoryPlayer.setItemStack(null);
                     }
                     if (mouseButton == 1) {
                         ItemStack tempStack = inventoryPlayer.getItemStack().splitStack(1);
-                        player.dropPlayerItem(tempStack);
+                        player.func_48153_a(tempStack);
                         Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(tempStack);
                         if (inventoryPlayer.getItemStack().stackSize == 0) {
                             inventoryPlayer.setItemStack(null);

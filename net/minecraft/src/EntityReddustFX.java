@@ -4,73 +4,84 @@ public class EntityReddustFX extends EntityFX
 {
     float reddustParticleScale;
 
-    public EntityReddustFX(World world, double d, double d1, double d2,
-            float f, float f1, float f2)
+    public EntityReddustFX(World par1World, double par2, double par4, double par6, float par8, float par9, float par10)
     {
-        this(world, d, d1, d2, 1.0F, f, f1, f2);
+        this(par1World, par2, par4, par6, 1.0F, par8, par9, par10);
     }
 
-    public EntityReddustFX(World world, double d, double d1, double d2,
-            float f, float f1, float f2, float f3)
+    public EntityReddustFX(World par1World, double par2, double par4, double par6, float par8, float par9, float par10, float par11)
     {
-        super(world, d, d1, d2, 0.0D, 0.0D, 0.0D);
-        motionX *= 0.10000000149011612D;
-        motionY *= 0.10000000149011612D;
-        motionZ *= 0.10000000149011612D;
-        if (f1 == 0.0F)
+        super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
+        motionX *= 0.1D;
+        motionY *= 0.1D;
+        motionZ *= 0.1D;
+
+        if (par9 == 0.0F)
         {
-            f1 = 1.0F;
+            par9 = 1.0F;
         }
-        float f4 = (float)Math.random() * 0.4F + 0.6F;
-        particleRed = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * f1 * f4;
-        particleGreen = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * f2 * f4;
-        particleBlue = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * f3 * f4;
+
+        float f = (float)Math.random() * 0.4F + 0.6F;
+        particleRed = ((float)(Math.random() * 0.2D) + 0.8F) * par9 * f;
+        particleGreen = ((float)(Math.random() * 0.2D) + 0.8F) * par10 * f;
+        particleBlue = ((float)(Math.random() * 0.2D) + 0.8F) * par11 * f;
         particleScale *= 0.75F;
-        particleScale *= f;
+        particleScale *= par8;
         reddustParticleScale = particleScale;
-        particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
-        particleMaxAge *= f;
+        particleMaxAge = (int)(8D / (Math.random() * 0.8D + 0.2D));
+        particleMaxAge *= par8;
         noClip = false;
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        float f6 = (((float)particleAge + f) / (float)particleMaxAge) * 32F;
-        if (f6 < 0.0F)
+        float f = (((float)particleAge + par2) / (float)particleMaxAge) * 32F;
+
+        if (f < 0.0F)
         {
-            f6 = 0.0F;
+            f = 0.0F;
         }
-        if (f6 > 1.0F)
+
+        if (f > 1.0F)
         {
-            f6 = 1.0F;
+            f = 1.0F;
         }
-        particleScale = reddustParticleScale * f6;
-        super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
+
+        particleScale = reddustParticleScale * f;
+        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
+
         if (particleAge++ >= particleMaxAge)
         {
             setEntityDead();
         }
+
         setParticleTextureIndex(7 - (particleAge * 8) / particleMaxAge);
         moveEntity(motionX, motionY, motionZ);
+
         if (posY == prevPosY)
         {
-            motionX *= 1.1000000000000001D;
-            motionZ *= 1.1000000000000001D;
+            motionX *= 1.1D;
+            motionZ *= 1.1D;
         }
-        motionX *= 0.95999997854232788D;
-        motionY *= 0.95999997854232788D;
-        motionZ *= 0.95999997854232788D;
+
+        motionX *= 0.96D;
+        motionY *= 0.96D;
+        motionZ *= 0.96D;
+
         if (onGround)
         {
-            motionX *= 0.69999998807907104D;
-            motionZ *= 0.69999998807907104D;
+            motionX *= 0.7D;
+            motionZ *= 0.7D;
         }
     }
 }

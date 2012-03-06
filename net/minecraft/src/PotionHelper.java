@@ -30,42 +30,55 @@ public class PotionHelper
     {
     }
 
-    public static boolean checkFlag(int i, int j)
+    /**
+     * Is the bit given set to 1?
+     */
+    public static boolean checkFlag(int par0, int par1)
     {
-        return (i & 1 << j) != 0;
+        return (par0 & 1 << par1) != 0;
     }
 
-    private static int isFlagSet(int i, int j)
+    /**
+     * Returns 1 if the flag is set, 0 if it is not set.
+     */
+    private static int isFlagSet(int par0, int par1)
     {
-        return checkFlag(i, j) ? 1 : 0;
+        return checkFlag(par0, par1) ? 1 : 0;
     }
 
-    private static int isFlagUnset(int i, int j)
+    /**
+     * Returns 0 if the flag is set, 1 if it is not set.
+     */
+    private static int isFlagUnset(int par0, int par1)
     {
-        return checkFlag(i, j) ? 0 : 1;
+        return checkFlag(par0, par1) ? 0 : 1;
     }
 
-    public static int func_40352_a(int i)
+    public static int func_40352_a(int par0)
     {
-        return func_40351_a(i, 5, 4, 3, 2, 1);
+        return func_40351_a(par0, 5, 4, 3, 2, 1);
     }
 
-    public static int func_40354_a(Collection collection)
+    public static int func_40354_a(Collection par0Collection)
     {
         int i = 0x385dc6;
-        if (collection == null || collection.isEmpty())
+
+        if (par0Collection == null || par0Collection.isEmpty())
         {
             return i;
         }
+
         float f = 0.0F;
         float f1 = 0.0F;
         float f2 = 0.0F;
         float f3 = 0.0F;
-        for (Iterator iterator = collection.iterator(); iterator.hasNext();)
+
+        for (Iterator iterator = par0Collection.iterator(); iterator.hasNext();)
         {
             PotionEffect potioneffect = (PotionEffect)iterator.next();
             int j = Potion.potionTypes[potioneffect.getPotionID()].getLiquidColor();
             int k = 0;
+
             while (k <= potioneffect.getAmplifier())
             {
                 f += (float)(j >> 16 & 0xff) / 255F;
@@ -82,385 +95,458 @@ public class PotionHelper
         return (int)f << 16 | (int)f1 << 8 | (int)f2;
     }
 
-    public static int func_40358_a(int i, boolean flag)
+    public static int func_40358_a(int par0, boolean par1)
     {
-        if (!flag)
+        if (!par1)
         {
-            if (field_40368_n.containsKey(Integer.valueOf(i)))
+            if (field_40368_n.containsKey(Integer.valueOf(par0)))
             {
-                return ((Integer)field_40368_n.get(Integer.valueOf(i))).intValue();
+                return ((Integer)field_40368_n.get(Integer.valueOf(par0))).intValue();
             }
             else
             {
-                int j = func_40354_a(getPotionEffects(i, false));
-                field_40368_n.put(Integer.valueOf(i), Integer.valueOf(j));
-                return j;
+                int i = func_40354_a(getPotionEffects(par0, false));
+                field_40368_n.put(Integer.valueOf(par0), Integer.valueOf(i));
+                return i;
             }
         }
         else
         {
-            return func_40354_a(getPotionEffects(i, flag));
+            return func_40354_a(getPotionEffects(par0, par1));
         }
     }
 
-    public static String func_40359_b(int i)
+    public static String func_40359_b(int par0)
     {
-        int j = func_40352_a(i);
-        return potionPrefixes[j];
+        int i = func_40352_a(par0);
+        return potionPrefixes[i];
     }
 
-    private static int func_40347_a(boolean flag, boolean flag1, boolean flag2, int i, int j, int k, int l)
+    private static int func_40347_a(boolean par0, boolean par1, boolean par2, int par3, int par4, int par5, int par6)
     {
-        int i1 = 0;
-        if (flag)
+        int i = 0;
+
+        if (par0)
         {
-            i1 = isFlagUnset(l, j);
+            i = isFlagUnset(par6, par4);
         }
-        else if (i != -1)
+        else if (par3 != -1)
         {
-            if (i == 0 && countSetFlags(l) == j)
+            if (par3 == 0 && countSetFlags(par6) == par4)
             {
-                i1 = 1;
+                i = 1;
             }
-            else if (i == 1 && countSetFlags(l) > j)
+            else if (par3 == 1 && countSetFlags(par6) > par4)
             {
-                i1 = 1;
+                i = 1;
             }
-            else if (i == 2 && countSetFlags(l) < j)
+            else if (par3 == 2 && countSetFlags(par6) < par4)
             {
-                i1 = 1;
+                i = 1;
             }
         }
         else
         {
-            i1 = isFlagSet(l, j);
+            i = isFlagSet(par6, par4);
         }
-        if (flag1)
+
+        if (par1)
         {
-            i1 *= k;
+            i *= par5;
         }
-        if (flag2)
+
+        if (par2)
         {
-            i1 *= -1;
+            i *= -1;
         }
-        return i1;
+
+        return i;
     }
 
-    private static int countSetFlags(int i)
+    /**
+     * Count the number of bits in an integer set to ON.
+     */
+    private static int countSetFlags(int par0)
     {
-        int j;
-        for (j = 0; i > 0; j++)
+        int i;
+
+        for (i = 0; par0 > 0; i++)
         {
-            i &= i - 1;
+            par0 &= par0 - 1;
         }
 
-        return j;
+        return i;
     }
 
-    private static int func_40355_a(String s, int i, int j, int k)
+    private static int func_40355_a(String par0Str, int par1, int par2, int par3)
     {
-        if (i >= s.length() || j < 0 || i >= j)
+        if (par1 >= par0Str.length() || par2 < 0 || par1 >= par2)
         {
             return 0;
         }
-        int l = s.indexOf('|', i);
-        if (l >= 0 && l < j)
+
+        int i = par0Str.indexOf('|', par1);
+
+        if (i >= 0 && i < par2)
         {
-            int i1 = func_40355_a(s, i, l - 1, k);
-            if (i1 > 0)
+            int j = func_40355_a(par0Str, par1, i - 1, par3);
+
+            if (j > 0)
+            {
+                return j;
+            }
+
+            int l = func_40355_a(par0Str, i + 1, par2, par3);
+
+            if (l > 0)
+            {
+                return l;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        int k = par0Str.indexOf('&', par1);
+
+        if (k >= 0 && k < par2)
+        {
+            int i1 = func_40355_a(par0Str, par1, k - 1, par3);
+
+            if (i1 <= 0)
+            {
+                return 0;
+            }
+
+            int j1 = func_40355_a(par0Str, k + 1, par2, par3);
+
+            if (j1 <= 0)
+            {
+                return 0;
+            }
+
+            if (i1 > j1)
             {
                 return i1;
             }
-            int k1 = func_40355_a(s, l + 1, j, k);
-            if (k1 > 0)
-            {
-                return k1;
-            }
             else
             {
-                return 0;
+                return j1;
             }
         }
-        int j1 = s.indexOf('&', i);
-        if (j1 >= 0 && j1 < j)
-        {
-            int l1 = func_40355_a(s, i, j1 - 1, k);
-            if (l1 <= 0)
-            {
-                return 0;
-            }
-            int i2 = func_40355_a(s, j1 + 1, j, k);
-            if (i2 <= 0)
-            {
-                return 0;
-            }
-            if (l1 > i2)
-            {
-                return l1;
-            }
-            else
-            {
-                return i2;
-            }
-        }
+
         boolean flag = false;
         boolean flag1 = false;
         boolean flag2 = false;
         boolean flag3 = false;
         boolean flag4 = false;
         byte byte0 = -1;
-        int j2 = 0;
-        int k2 = 0;
-        int l2 = 0;
-        for (int i3 = i; i3 < j; i3++)
+        int k1 = 0;
+        int l1 = 0;
+        int i2 = 0;
+
+        for (int j2 = par1; j2 < par2; j2++)
         {
-            char c = s.charAt(i3);
+            char c = par0Str.charAt(j2);
+
             if (c >= '0' && c <= '9')
             {
                 if (flag)
                 {
-                    k2 = c - 48;
+                    l1 = c - 48;
                     flag1 = true;
                 }
                 else
                 {
-                    j2 *= 10;
-                    j2 += c - 48;
+                    k1 *= 10;
+                    k1 += c - 48;
                     flag2 = true;
                 }
+
                 continue;
             }
+
             if (c == '*')
             {
                 flag = true;
                 continue;
             }
+
             if (c == '!')
             {
                 if (flag2)
                 {
-                    l2 += func_40347_a(flag3, flag1, flag4, byte0, j2, k2, k);
+                    i2 += func_40347_a(flag3, flag1, flag4, byte0, k1, l1, par3);
                     flag2 = flag1 = flag = flag4 = flag3 = false;
-                    j2 = k2 = 0;
+                    k1 = l1 = 0;
                     byte0 = -1;
                 }
+
                 flag3 = true;
                 continue;
             }
+
             if (c == '-')
             {
                 if (flag2)
                 {
-                    l2 += func_40347_a(flag3, flag1, flag4, byte0, j2, k2, k);
+                    i2 += func_40347_a(flag3, flag1, flag4, byte0, k1, l1, par3);
                     flag2 = flag1 = flag = flag4 = flag3 = false;
-                    j2 = k2 = 0;
+                    k1 = l1 = 0;
                     byte0 = -1;
                 }
+
                 flag4 = true;
                 continue;
             }
+
             if (c == '=' || c == '<' || c == '>')
             {
                 if (flag2)
                 {
-                    l2 += func_40347_a(flag3, flag1, flag4, byte0, j2, k2, k);
+                    i2 += func_40347_a(flag3, flag1, flag4, byte0, k1, l1, par3);
                     flag2 = flag1 = flag = flag4 = flag3 = false;
-                    j2 = k2 = 0;
+                    k1 = l1 = 0;
                     byte0 = -1;
                 }
+
                 if (c == '=')
                 {
                     byte0 = 0;
                     continue;
                 }
+
                 if (c == '<')
                 {
                     byte0 = 2;
                     continue;
                 }
+
                 if (c == '>')
                 {
                     byte0 = 1;
                 }
+
                 continue;
             }
+
             if (c == '+' && flag2)
             {
-                l2 += func_40347_a(flag3, flag1, flag4, byte0, j2, k2, k);
+                i2 += func_40347_a(flag3, flag1, flag4, byte0, k1, l1, par3);
                 flag2 = flag1 = flag = flag4 = flag3 = false;
-                j2 = k2 = 0;
+                k1 = l1 = 0;
                 byte0 = -1;
             }
         }
 
         if (flag2)
         {
-            l2 += func_40347_a(flag3, flag1, flag4, byte0, j2, k2, k);
+            i2 += func_40347_a(flag3, flag1, flag4, byte0, k1, l1, par3);
         }
-        return l2;
+
+        return i2;
     }
 
-    public static List getPotionEffects(int i, boolean flag)
+    /**
+     * Returns a list of effects for the specified potion damage value.
+     */
+    public static List getPotionEffects(int par0, boolean par1)
     {
         ArrayList arraylist = null;
         Potion apotion[] = Potion.potionTypes;
-        int j = apotion.length;
-        for (int k = 0; k < j; k++)
+        int i = apotion.length;
+
+        for (int j = 0; j < i; j++)
         {
-            Potion potion = apotion[k];
-            if (potion == null || potion.func_40612_i() && !flag)
+            Potion potion = apotion[j];
+
+            if (potion == null || potion.isUsable() && !par1)
             {
                 continue;
             }
+
             String s = (String)potionRequirements.get(Integer.valueOf(potion.getId()));
+
             if (s == null)
             {
                 continue;
             }
-            int l = func_40355_a(s, 0, s.length(), i);
-            if (l <= 0)
+
+            int k = func_40355_a(s, 0, s.length(), par0);
+
+            if (k <= 0)
             {
                 continue;
             }
-            int i1 = 0;
+
+            int l = 0;
             String s1 = (String)field_40371_m.get(Integer.valueOf(potion.getId()));
+
             if (s1 != null)
             {
-                i1 = func_40355_a(s1, 0, s1.length(), i);
-                if (i1 < 0)
+                l = func_40355_a(s1, 0, s1.length(), par0);
+
+                if (l < 0)
                 {
-                    i1 = 0;
+                    l = 0;
                 }
             }
+
             if (potion.isInstant())
             {
-                l = 1;
+                k = 1;
             }
             else
             {
-                l = 1200 * (l * 3 + (l - 1) * 2);
-                l >>= i1;
-                l = (int)Math.round((double)l * potion.func_40610_g());
-                if ((i & 0x4000) != 0)
+                k = 1200 * (k * 3 + (k - 1) * 2);
+                k >>= l;
+                k = (int)Math.round((double)k * potion.getEffectiveness());
+
+                if ((par0 & 0x4000) != 0)
                 {
-                    l = (int)Math.round((double)l * 0.75D + 0.5D);
+                    k = (int)Math.round((double)k * 0.75D + 0.5D);
                 }
             }
+
             if (arraylist == null)
             {
                 arraylist = new ArrayList();
             }
-            arraylist.add(new PotionEffect(potion.getId(), l, i1));
+
+            arraylist.add(new PotionEffect(potion.getId(), k, l));
         }
 
         return arraylist;
     }
 
-    private static int brewBitOperations(int i, int j, boolean flag, boolean flag1, boolean flag2)
+    /**
+     * Does bit operations for brewPotionData, given data, the index of the bit being operated upon, whether the bit
+     * will be removed, whether the bit will be toggled (NOT), or whether the data field will be set to 0 if the bit is
+     * not present.
+     */
+    private static int brewBitOperations(int par0, int par1, boolean par2, boolean par3, boolean par4)
     {
-        if (flag2)
+        if (par4)
         {
-            if (!checkFlag(i, j))
+            if (!checkFlag(par0, par1))
             {
                 return 0;
             }
         }
-        else if (flag)
+        else if (par2)
         {
-            i &= ~(1 << j);
+            par0 &= ~(1 << par1);
         }
-        else if (flag1)
+        else if (par3)
         {
-            if ((i & 1 << j) != 0)
+            if ((par0 & 1 << par1) != 0)
             {
-                i &= ~(1 << j);
+                par0 &= ~(1 << par1);
             }
             else
             {
-                i |= 1 << j;
+                par0 |= 1 << par1;
             }
         }
         else
         {
-            i |= 1 << j;
+            par0 |= 1 << par1;
         }
-        return i;
+
+        return par0;
     }
 
-    public static int applyIngredient(int i, String s)
+    /**
+     * Generate a data value for a potion, given its previous data value and the encoded string of new effects it will
+     * receive
+     */
+    public static int applyIngredient(int par0, String par1Str)
     {
         boolean flag = false;
-        int j = s.length();
+        int i = par1Str.length();
         boolean flag1 = false;
         boolean flag2 = false;
         boolean flag3 = false;
         boolean flag4 = false;
-        int k = 0;
-        for (int l = ((flag) ? 1 : 0); l < j; l++)
+        int j = 0;
+
+        for (int k = ((flag) ? 1 : 0); k < i; k++)
         {
-            char c = s.charAt(l);
+            char c = par1Str.charAt(k);
+
             if (c >= '0' && c <= '9')
             {
-                k *= 10;
-                k += c - 48;
+                j *= 10;
+                j += c - 48;
                 flag1 = true;
                 continue;
             }
+
             if (c == '!')
             {
                 if (flag1)
                 {
-                    i = brewBitOperations(i, k, flag3, flag2, flag4);
+                    par0 = brewBitOperations(par0, j, flag3, flag2, flag4);
                     flag1 = flag3 = flag2 = flag4 = false;
-                    k = 0;
+                    j = 0;
                 }
+
                 flag2 = true;
                 continue;
             }
+
             if (c == '-')
             {
                 if (flag1)
                 {
-                    i = brewBitOperations(i, k, flag3, flag2, flag4);
+                    par0 = brewBitOperations(par0, j, flag3, flag2, flag4);
                     flag1 = flag3 = flag2 = flag4 = false;
-                    k = 0;
+                    j = 0;
                 }
+
                 flag3 = true;
                 continue;
             }
+
             if (c == '+')
             {
                 if (flag1)
                 {
-                    i = brewBitOperations(i, k, flag3, flag2, flag4);
+                    par0 = brewBitOperations(par0, j, flag3, flag2, flag4);
                     flag1 = flag3 = flag2 = flag4 = false;
-                    k = 0;
+                    j = 0;
                 }
+
                 continue;
             }
+
             if (c != '&')
             {
                 continue;
             }
+
             if (flag1)
             {
-                i = brewBitOperations(i, k, flag3, flag2, flag4);
+                par0 = brewBitOperations(par0, j, flag3, flag2, flag4);
                 flag1 = flag3 = flag2 = flag4 = false;
-                k = 0;
+                j = 0;
             }
+
             flag4 = true;
         }
 
         if (flag1)
         {
-            i = brewBitOperations(i, k, flag3, flag2, flag4);
+            par0 = brewBitOperations(par0, j, flag3, flag2, flag4);
         }
-        return i & 0x7fff;
+
+        return par0 & 0x7fff;
     }
 
-    public static int func_40351_a(int i, int j, int k, int l, int i1, int j1)
+    public static int func_40351_a(int par0, int par1, int par2, int par3, int par4, int par5)
     {
-        return (checkFlag(i, j) ? 0x10 : 0) | (checkFlag(i, k) ? 8 : 0) | (checkFlag(i, l) ? 4 : 0) | (checkFlag(i, i1) ? 2 : 0) | (checkFlag(i, j1) ? 1 : 0);
+        return (checkFlag(par0, par1) ? 0x10 : 0) | (checkFlag(par0, par2) ? 8 : 0) | (checkFlag(par0, par3) ? 4 : 0) | (checkFlag(par0, par4) ? 2 : 0) | (checkFlag(par0, par5) ? 1 : 0);
     }
 
     static

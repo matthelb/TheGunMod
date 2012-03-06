@@ -5,25 +5,31 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiButtonLanguage extends GuiButton
 {
-    public GuiButtonLanguage(int i, int j, int k)
+    public GuiButtonLanguage(int par1, int par2, int par3)
     {
-        super(i, j, k, 20, 20, "");
+        super(par1, par2, par3, 20, 20, "");
     }
 
-    public void drawButton(Minecraft minecraft, int i, int j)
+    /**
+     * Draws this button to the screen.
+     */
+    public void drawButton(Minecraft par1Minecraft, int par2, int par3)
     {
         if (!drawButton)
         {
             return;
         }
-        GL11.glBindTexture(3553 /*GL_TEXTURE_2D*/, minecraft.renderEngine.getTexture("/gui/gui.png"));
+
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, par1Minecraft.renderEngine.getTexture("/gui/gui.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        boolean flag = i >= xPosition && j >= yPosition && i < xPosition + width && j < yPosition + height;
-        int k = 106;
+        boolean flag = par2 >= xPosition && par3 >= yPosition && par2 < xPosition + width && par3 < yPosition + height;
+        int i = 106;
+
         if (flag)
         {
-            k += height;
+            i += height;
         }
-        drawTexturedModalRect(xPosition, yPosition, 0, k, width, height);
+
+        drawTexturedModalRect(xPosition, yPosition, 0, i, width, height);
     }
 }

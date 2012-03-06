@@ -8,30 +8,35 @@ public class KeyBinding
     public static IntHashMap hash = new IntHashMap();
     public String keyDescription;
     public int keyCode;
+
+    /** because _303 wanted me to call it that(Caironater) */
     public boolean pressed;
     public int pressTime;
 
-    public static void onTick(int i)
+    public static void onTick(int par0)
     {
-        KeyBinding keybinding = (KeyBinding)hash.lookup(i);
+        KeyBinding keybinding = (KeyBinding)hash.lookup(par0);
+
         if (keybinding != null)
         {
             keybinding.pressTime++;
         }
     }
 
-    public static void setKeyBindState(int i, boolean flag)
+    public static void setKeyBindState(int par0, boolean par1)
     {
-        KeyBinding keybinding = (KeyBinding)hash.lookup(i);
+        KeyBinding keybinding = (KeyBinding)hash.lookup(par0);
+
         if (keybinding != null)
         {
-            keybinding.pressed = flag;
+            keybinding.pressed = par1;
         }
     }
 
     public static void unPressAllKeys()
     {
         KeyBinding keybinding;
+
         for (Iterator iterator = keybindArray.iterator(); iterator.hasNext(); keybinding.unpressKey())
         {
             keybinding = (KeyBinding)iterator.next();
@@ -42,19 +47,20 @@ public class KeyBinding
     {
         hash.clearMap();
         KeyBinding keybinding;
+
         for (Iterator iterator = keybindArray.iterator(); iterator.hasNext(); hash.addKey(keybinding.keyCode, keybinding))
         {
             keybinding = (KeyBinding)iterator.next();
         }
     }
 
-    public KeyBinding(String s, int i)
+    public KeyBinding(String par1Str, int par2)
     {
         pressTime = 0;
-        keyDescription = s;
-        keyCode = i;
+        keyDescription = par1Str;
+        keyCode = par2;
         keybindArray.add(this);
-        hash.addKey(i, this);
+        hash.addKey(par2, this);
     }
 
     public boolean isPressed()

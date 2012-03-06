@@ -6,9 +6,22 @@ import net.minecraft.client.Minecraft;
 
 public abstract class TexturePackBase
 {
+    /**
+     * The file name of the texture pack, or Default if not from a custom texture pack.
+     */
     public String texturePackFileName;
+
+    /**
+     * The first line of the texture pack description (read from the pack.txt file)
+     */
     public String firstDescriptionLine;
+
+    /**
+     * The second line of the texture pack description (read from the pack.txt file)
+     */
     public String secondDescriptionLine;
+
+    /** Texture pack ID */
     public String texturePackID;
 
     public TexturePackBase()
@@ -19,25 +32,36 @@ public abstract class TexturePackBase
     {
     }
 
+    /**
+     * Closes the zipfile associated to this texture pack. Does nothing for the default texture pack.
+     */
     public void closeTexturePackFile()
     {
     }
 
-    public void func_6485_a(Minecraft minecraft)
-    throws IOException
+    public void func_6485_a(Minecraft minecraft) throws IOException
     {
     }
 
-    public void func_6484_b(Minecraft minecraft)
+    /**
+     * Unbinds the thumbnail texture for texture pack screen
+     */
+    public void unbindThumbnailTexture(Minecraft minecraft)
     {
     }
 
+    /**
+     * binds the texture corresponding to the pack's thumbnail image
+     */
     public void bindThumbnailTexture(Minecraft minecraft)
     {
     }
 
-    public InputStream getResourceAsStream(String s)
+    /**
+     * Gives a texture resource as InputStream.
+     */
+    public InputStream getResourceAsStream(String par1Str)
     {
-        return (net.minecraft.src.TexturePackBase.class).getResourceAsStream(s);
+        return (net.minecraft.src.TexturePackBase.class).getResourceAsStream(par1Str);
     }
 }

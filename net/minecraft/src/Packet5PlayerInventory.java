@@ -5,37 +5,51 @@ import java.io.*;
 public class Packet5PlayerInventory extends Packet
 {
     public int entityID;
+
+    /** Equipment slot: 0=held, 1-4=armor slot */
     public int slot;
     public int itemID;
+
+    /** The health of the item. */
     public int itemDamage;
 
     public Packet5PlayerInventory()
     {
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityID = datainputstream.readInt();
-        slot = datainputstream.readShort();
-        itemID = datainputstream.readShort();
-        itemDamage = datainputstream.readShort();
+        entityID = par1DataInputStream.readInt();
+        slot = par1DataInputStream.readShort();
+        itemID = par1DataInputStream.readShort();
+        itemDamage = par1DataInputStream.readShort();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityID);
-        dataoutputstream.writeShort(slot);
-        dataoutputstream.writeShort(itemID);
-        dataoutputstream.writeShort(itemDamage);
+        par1DataOutputStream.writeInt(entityID);
+        par1DataOutputStream.writeShort(slot);
+        par1DataOutputStream.writeShort(itemID);
+        par1DataOutputStream.writeShort(itemDamage);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handlePlayerInventory(this);
+        par1NetHandler.handlePlayerInventory(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 8;

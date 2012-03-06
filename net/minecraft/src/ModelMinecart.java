@@ -29,22 +29,29 @@ public class ModelMinecart extends ModelBase
         sideModels[3].setRotationPoint(0.0F, 0 + byte3, -byte2 / 2 + 1);
         sideModels[4].addBox(-byte0 / 2 + 2, -byte1 - 1, -1F, byte0 - 4, byte1, 2, 0.0F);
         sideModels[4].setRotationPoint(0.0F, 0 + byte3, byte2 / 2 - 1);
-        sideModels[0].rotateAngleX = 1.570796F;
-        sideModels[1].rotateAngleY = 4.712389F;
-        sideModels[2].rotateAngleY = 1.570796F;
-        sideModels[3].rotateAngleY = 3.141593F;
-        sideModels[5].rotateAngleX = -1.570796F;
+        sideModels[0].rotateAngleX = ((float)Math.PI / 2F);
+        sideModels[1].rotateAngleY = ((float)Math.PI * 3F / 2F);
+        sideModels[2].rotateAngleY = ((float)Math.PI / 2F);
+        sideModels[3].rotateAngleY = (float)Math.PI;
+        sideModels[5].rotateAngleX = -((float)Math.PI / 2F);
     }
 
-    public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5)
+    /**
+     * Sets the models various rotation angles then renders the model.
+     */
+    public void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        sideModels[5].rotationPointY = 4F - f2;
+        sideModels[5].rotationPointY = 4F - par4;
+
         for (int i = 0; i < 6; i++)
         {
-            sideModels[i].render(f5);
+            sideModels[i].render(par7);
         }
     }
 
+    /**
+     * Sets the models various rotation angles.
+     */
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5)
     {
     }

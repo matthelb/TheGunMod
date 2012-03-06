@@ -15,36 +15,39 @@ import org.lwjgl.opengl.GL11;
 
 public class PanelCrashReport extends Panel
 {
-    public PanelCrashReport(UnexpectedThrowable unexpectedthrowable)
+    public PanelCrashReport(UnexpectedThrowable par1UnexpectedThrowable)
     {
         setBackground(new Color(0x2e3444));
         setLayout(new BorderLayout());
         StringWriter stringwriter = new StringWriter();
-        unexpectedthrowable.exception.printStackTrace(new PrintWriter(stringwriter));
+        par1UnexpectedThrowable.exception.printStackTrace(new PrintWriter(stringwriter));
         String s = stringwriter.toString();
         String s1 = "";
         String s2 = "";
+
         try
         {
             s2 = (new StringBuilder(String.valueOf(s2))).append("Generated ").append((new SimpleDateFormat()).format(new Date())).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("\n").toString();
-            s2 = (new StringBuilder(String.valueOf(s2))).append("Minecraft: Minecraft 1.1\n").toString();
+            s2 = (new StringBuilder(String.valueOf(s2))).append("Minecraft: Minecraft 1.2.3\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("OS: ").append(System.getProperty("os.name")).append(" (").append(System.getProperty("os.arch")).append(") version ").append(System.getProperty("os.version")).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("Java: ").append(System.getProperty("java.version")).append(", ").append(System.getProperty("java.vendor")).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("VM: ").append(System.getProperty("java.vm.name")).append(" (").append(System.getProperty("java.vm.info")).append("), ").append(System.getProperty("java.vm.vendor")).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("LWJGL: ").append(Sys.getVersion()).append("\n").toString();
-            s1 = GL11.glGetString(7936 /*GL_VENDOR*/);
-            s2 = (new StringBuilder(String.valueOf(s2))).append("OpenGL: ").append(GL11.glGetString(7937 /*GL_RENDERER*/)).append(" version ").append(GL11.glGetString(7938 /*GL_VERSION*/)).append(", ").append(GL11.glGetString(7936 /*GL_VENDOR*/)).append("\n").toString();
+            s1 = GL11.glGetString(GL11.GL_VENDOR);
+            s2 = (new StringBuilder(String.valueOf(s2))).append("OpenGL: ").append(GL11.glGetString(GL11.GL_RENDERER)).append(" version ").append(GL11.glGetString(GL11.GL_VERSION)).append(", ").append(GL11.glGetString(GL11.GL_VENDOR)).append("\n").toString();
         }
         catch (Throwable throwable)
         {
             s2 = (new StringBuilder(String.valueOf(s2))).append("[failed to get system properties (").append(throwable).append(")]\n").toString();
         }
+
         s2 = (new StringBuilder(String.valueOf(s2))).append("\n").toString();
         s2 = (new StringBuilder(String.valueOf(s2))).append(s).toString();
         String s3 = "";
         s3 = (new StringBuilder(String.valueOf(s3))).append("Mods loaded: ").append(ModLoader.getLoadedMods().size() + 1).append("\n").toString();
-        s3 = (new StringBuilder(String.valueOf(s3))).append("ModLoader 1.1").append("\n").toString();
+        s3 = (new StringBuilder(String.valueOf(s3))).append("ModLoader 1.2.3").append("\n").toString();
+
         for (Iterator iterator = ModLoader.getLoadedMods().iterator(); iterator.hasNext();)
         {
             BaseMod basemod = (BaseMod)iterator.next();
@@ -52,6 +55,7 @@ public class PanelCrashReport extends Panel
         }
 
         s3 = (new StringBuilder(String.valueOf(s3))).append("\n").toString();
+
         if (s.contains("Pixel format not accelerated"))
         {
             s3 = (new StringBuilder(String.valueOf(s3))).append("      Bad video card drivers!      \n").toString();
@@ -59,6 +63,7 @@ public class PanelCrashReport extends Panel
             s3 = (new StringBuilder(String.valueOf(s3))).append("\n").toString();
             s3 = (new StringBuilder(String.valueOf(s3))).append("Minecraft was unable to start because it failed to find an accelerated OpenGL mode.\n").toString();
             s3 = (new StringBuilder(String.valueOf(s3))).append("This can usually be fixed by updating the video card drivers.\n").toString();
+
             if (s1.toLowerCase().contains("nvidia"))
             {
                 s3 = (new StringBuilder(String.valueOf(s3))).append("\n").toString();
@@ -79,9 +84,8 @@ public class PanelCrashReport extends Panel
             s3 = (new StringBuilder(String.valueOf(s3))).append("\n").toString();
             s3 = (new StringBuilder(String.valueOf(s3))).append("Minecraft has stopped running because it encountered a problem.\n").toString();
             s3 = (new StringBuilder(String.valueOf(s3))).append("\n").toString();
-            s3 = (new StringBuilder(String.valueOf(s3))).append("If you wish to report this, please copy this entire text and email it to support@mojang.com.\n").toString();
-            s3 = (new StringBuilder(String.valueOf(s3))).append("Please include a description of what you did when the error occured.\n").toString();
         }
+
         s3 = (new StringBuilder(String.valueOf(s3))).append("\n").toString();
         s3 = (new StringBuilder(String.valueOf(s3))).append("\n").toString();
         s3 = (new StringBuilder(String.valueOf(s3))).append("\n").toString();

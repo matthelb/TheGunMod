@@ -6,19 +6,23 @@ import net.minecraft.client.MinecraftApplet;
 
 public class MinecraftAppletImpl extends Minecraft
 {
+    /** Reference to the main frame, in this case, the applet window itself. */
     final MinecraftApplet mainFrame;
 
-    public MinecraftAppletImpl(MinecraftApplet minecraftapplet, Component component, Canvas canvas, MinecraftApplet minecraftapplet1, int i, int j, boolean flag)
+    public MinecraftAppletImpl(MinecraftApplet par1MinecraftApplet, Component par2Component, Canvas par3Canvas, MinecraftApplet par4MinecraftApplet, int par5, int par6, boolean par7)
     {
-        super(component, canvas, minecraftapplet1, i, j, flag);
-        mainFrame = minecraftapplet;
+        super(par2Component, par3Canvas, par4MinecraftApplet, par5, par6, par7);
+        mainFrame = par1MinecraftApplet;
     }
 
-    public void displayUnexpectedThrowable(UnexpectedThrowable unexpectedthrowable)
+    /**
+     * Displays an unexpected error that has come up during the game.
+     */
+    public void displayUnexpectedThrowable(UnexpectedThrowable par1UnexpectedThrowable)
     {
         mainFrame.removeAll();
         mainFrame.setLayout(new BorderLayout());
-        mainFrame.add(new PanelCrashReport(unexpectedthrowable), "Center");
+        mainFrame.add(new PanelCrashReport(par1UnexpectedThrowable), "Center");
         mainFrame.validate();
     }
 }

@@ -5,12 +5,12 @@ public class EntityDropParticleFX extends EntityFX
     private Material field_40103_a;
     private int field_40104_aw;
 
-    public EntityDropParticleFX(World world, double d, double d1, double d2,
-            Material material)
+    public EntityDropParticleFX(World par1World, double par2, double par4, double par6, Material par8Material)
     {
-        super(world, d, d1, d2, 0.0D, 0.0D, 0.0D);
+        super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
         motionX = motionY = motionZ = 0.0D;
-        if (material == Material.water)
+
+        if (par8Material == Material.water)
         {
             particleRed = 0.0F;
             particleGreen = 0.0F;
@@ -22,25 +22,26 @@ public class EntityDropParticleFX extends EntityFX
             particleGreen = 0.0F;
             particleBlue = 0.0F;
         }
+
         setParticleTextureIndex(113);
         setSize(0.01F, 0.01F);
         particleGravity = 0.06F;
-        field_40103_a = material;
+        field_40103_a = par8Material;
         field_40104_aw = 40;
-        particleMaxAge = (int)(64D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
+        particleMaxAge = (int)(64D / (Math.random() * 0.8D + 0.2D));
         motionX = motionY = motionZ = 0.0D;
     }
 
-    public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
+    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        super.renderParticle(tessellator, f, f1, f2, f3, f4, f5);
+        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
-    public int getEntityBrightnessForRender(float f)
+    public int getEntityBrightnessForRender(float par1)
     {
         if (field_40103_a == Material.water)
         {
-            return super.getEntityBrightnessForRender(f);
+            return super.getEntityBrightnessForRender(par1);
         }
         else
         {
@@ -48,11 +49,14 @@ public class EntityDropParticleFX extends EntityFX
         }
     }
 
-    public float getEntityBrightness(float f)
+    /**
+     * Gets how bright this entity is.
+     */
+    public float getEntityBrightness(float par1)
     {
         if (field_40103_a == Material.water)
         {
-            return super.getEntityBrightness(f);
+            return super.getEntityBrightness(par1);
         }
         else
         {
@@ -60,11 +64,15 @@ public class EntityDropParticleFX extends EntityFX
         }
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
+
         if (field_40103_a == Material.water)
         {
             particleRed = 0.2F;
@@ -77,7 +85,9 @@ public class EntityDropParticleFX extends EntityFX
             particleGreen = 16F / (float)((40 - field_40104_aw) + 16);
             particleBlue = 4F / (float)((40 - field_40104_aw) + 8);
         }
+
         motionY -= particleGravity;
+
         if (field_40104_aw-- > 0)
         {
             motionX *= 0.02D;
@@ -89,14 +99,17 @@ public class EntityDropParticleFX extends EntityFX
         {
             setParticleTextureIndex(112);
         }
+
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.98000001907348633D;
-        motionY *= 0.98000001907348633D;
-        motionZ *= 0.98000001907348633D;
+        motionX *= 0.98D;
+        motionY *= 0.98D;
+        motionZ *= 0.98D;
+
         if (particleMaxAge-- <= 0)
         {
             setEntityDead();
         }
+
         if (onGround)
         {
             if (field_40103_a == Material.water)
@@ -108,13 +121,17 @@ public class EntityDropParticleFX extends EntityFX
             {
                 setParticleTextureIndex(114);
             }
-            motionX *= 0.69999998807907104D;
-            motionZ *= 0.69999998807907104D;
+
+            motionX *= 0.7D;
+            motionZ *= 0.7D;
         }
+
         Material material = worldObj.getBlockMaterial(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
-        if (material.getIsLiquid() || material.isSolid())
+
+        if (material.isLiquid() || material.isSolid())
         {
             double d = (float)(MathHelper.floor_double(posY) + 1) - BlockFluid.getFluidHeightPercent(worldObj.getBlockMetadata(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)));
+
             if (posY < d)
             {
                 setEntityDead();

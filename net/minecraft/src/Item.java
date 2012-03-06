@@ -8,6 +8,7 @@ import java.util.Random;
 
 public class Item
 {
+    /** The RNG used by the Item subclasses. */
     protected static Random itemRand = new Random();
     public static Item itemsList[] = new Item[32000];
     public static Item shovelSteel;
@@ -109,10 +110,22 @@ public class Item
     public static Item bone = (new Item(96)).setIconCoord(12, 1).setItemName("bone").setFull3D();
     public static Item sugar;
     public static Item cake;
+
+    /** Is the bed as item on the inventory. */
     public static Item bed = (new ItemBed(99)).setMaxStackSize(1).setIconCoord(13, 2).setItemName("bed");
+
+    /** Is the redstone repeater (diode) in item form. */
     public static Item redstoneRepeater;
+
+    /** The cookie inventory item. */
     public static Item cookie = (new ItemFood(101, 1, 0.1F, false)).setIconCoord(12, 5).setItemName("cookie");
+
+    /** ItemMap */
     public static ItemMap map = (ItemMap)(new ItemMap(102)).setIconCoord(12, 3).setItemName("map");
+
+    /**
+     * Item introduced on 1.7 version, is a shear to cut leaves (you can keep the block) or get wool from sheeps.
+     */
     public static ItemShears shears = (ItemShears)(new ItemShears(103)).setIconCoord(13, 5).setItemName("shears");
     public static Item melon = (new ItemFood(104, 2, 0.3F, false)).setIconCoord(13, 6).setItemName("melon");
     public static Item pumpkinSeeds;
@@ -138,6 +151,8 @@ public class Item
     public static Item eyeOfEnder = (new ItemEnderEye(125)).setIconCoord(11, 9).setItemName("eyeOfEnder");
     public static Item speckledMelon;
     public static Item monsterPlacer = (new ItemMonsterPlacer(127)).setIconCoord(9, 9).setItemName("monsterPlacer");
+    public static Item field_48438_bD = (new ItemExpBottle(128)).setIconCoord(11, 10).setItemName("expBottle");
+    public static Item field_48439_bE = (new ItemFireball(129)).setIconCoord(14, 2).setItemName("fireball");
     public static Item record13 = (new ItemRecord(2000, "13")).setIconCoord(0, 15).setItemName("record");
     public static Item recordCat = (new ItemRecord(2001, "cat")).setIconCoord(1, 15).setItemName("record");
     public static Item recordBlocks = (new ItemRecord(2002, "blocks")).setIconCoord(2, 15).setItemName("record");
@@ -149,17 +164,33 @@ public class Item
     public static Item recordStrad = (new ItemRecord(2008, "strad")).setIconCoord(8, 15).setItemName("record");
     public static Item recordWard = (new ItemRecord(2009, "ward")).setIconCoord(9, 15).setItemName("record");
     public static Item record11 = (new ItemRecord(2010, "11")).setIconCoord(10, 15).setItemName("record");
+
+    /** Item index + 256 */
     public final int shiftedIndex;
+
+    /** Maximum size of the stack. */
     protected int maxStackSize;
+
+    /** Maximum damage an item can handle. */
     private int maxDamage;
+
+    /** Icon index in the icons table. */
     protected int iconIndex;
+
+    /** If true, render the object in full 3D, like weapons and tools. */
     protected boolean bFull3D;
+
+    /**
+     * Some items (like dyes) have multiple subtypes on same item, this is field define this behavior
+     */
     protected boolean hasSubtypes;
     private Item containerItem;
     private String potionEffect;
+
+    /** full name of item from language file */
     private String itemName;
 
-    protected Item(int i)
+    protected Item(int par1)
     {
         maxStackSize = 64;
         maxDamage = 0;
@@ -167,68 +198,96 @@ public class Item
         hasSubtypes = false;
         containerItem = null;
         potionEffect = null;
-        shiftedIndex = 256 + i;
-        if (itemsList[256 + i] != null)
+        shiftedIndex = 256 + par1;
+
+        if (itemsList[256 + par1] != null)
         {
-            System.out.println((new StringBuilder()).append("CONFLICT @ ").append(i).toString());
+            System.out.println((new StringBuilder()).append("CONFLICT @ ").append(par1).toString());
         }
-        itemsList[256 + i] = this;
+
+        itemsList[256 + par1] = this;
     }
 
-    public Item setIconIndex(int i)
+    /**
+     * Sets the icon index for this item. Returns the item.
+     */
+    public Item setIconIndex(int par1)
     {
-        iconIndex = i;
+        iconIndex = par1;
         return this;
     }
 
-    public Item setMaxStackSize(int i)
+    public Item setMaxStackSize(int par1)
     {
-        maxStackSize = i;
+        maxStackSize = par1;
         return this;
     }
 
-    public Item setIconCoord(int i, int j)
+    public Item setIconCoord(int par1, int par2)
     {
-        iconIndex = i + j * 16;
+        iconIndex = par1 + par2 * 16;
         return this;
     }
 
-    public int getIconFromDamage(int i)
+    /**
+     * Gets an icon index based on an item's damage value
+     */
+    public int getIconFromDamage(int par1)
     {
         return iconIndex;
     }
 
-    public final int getIconIndex(ItemStack itemstack)
+    /**
+     * Returns the icon index of the stack given as argument.
+     */
+    public final int getIconIndex(ItemStack par1ItemStack)
     {
-        return getIconFromDamage(itemstack.getItemDamage());
+        return getIconFromDamage(par1ItemStack.getItemDamage());
     }
 
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
+     */
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int i, int j, int k, int l)
     {
         return false;
     }
 
-    public float getStrVsBlock(ItemStack itemstack, Block block)
+    /**
+     * Returns the strength of the stack against a given block. 1.0F base, (Quality+1)*2 if correct blocktype, 1.5F if
+     * sword
+     */
+    public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
         return 1.0F;
     }
 
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    /**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        return itemstack;
+        return par1ItemStack;
     }
 
-    public ItemStack onFoodEaten(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    public ItemStack onFoodEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        return itemstack;
+        return par1ItemStack;
     }
 
+    /**
+     * Returns the maximum size of the stack for a specific item. *Isn't this more a Set than a Get?*
+     */
     public int getItemStackLimit()
     {
         return maxStackSize;
     }
 
-    public int getMetadata(int i)
+    /**
+     * Returns the metadata of the block which this Item (ItemBlock) can place
+     */
+    public int getMetadata(int par1)
     {
         return 0;
     }
@@ -238,20 +297,26 @@ public class Item
         return hasSubtypes;
     }
 
-    protected Item setHasSubtypes(boolean flag)
+    protected Item setHasSubtypes(boolean par1)
     {
-        hasSubtypes = flag;
+        hasSubtypes = par1;
         return this;
     }
 
+    /**
+     * Returns the maximum damage an item can take.
+     */
     public int getMaxDamage()
     {
         return maxDamage;
     }
 
-    protected Item setMaxDamage(int i)
+    /**
+     * set max damage of an Item
+     */
+    protected Item setMaxDamage(int par1)
     {
-        maxDamage = i;
+        maxDamage = par1;
         return this;
     }
 
@@ -260,55 +325,82 @@ public class Item
         return maxDamage > 0 && !hasSubtypes;
     }
 
-    public boolean hitEntity(ItemStack itemstack, EntityLiving entityliving, EntityLiving entityliving1)
+    /**
+     * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
+     * the damage on the stack.
+     */
+    public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
     {
         return false;
     }
 
-    public boolean onBlockDestroyed(ItemStack itemstack, int i, int j, int k, int l, EntityLiving entityliving)
+    public boolean onBlockDestroyed(ItemStack par1ItemStack, int par2, int par3, int i, int j, EntityLiving entityliving)
     {
         return false;
     }
 
-    public int getDamageVsEntity(Entity entity)
+    /**
+     * Returns the damage against a given entity.
+     */
+    public int getDamageVsEntity(Entity par1Entity)
     {
         return 1;
     }
 
-    public boolean canHarvestBlock(Block block)
+    /**
+     * Returns if the item (tool) can harvest results from the block type.
+     */
+    public boolean canHarvestBlock(Block par1Block)
     {
         return false;
     }
 
+    /**
+     * Called from ItemStack.useItemOnEntity
+     */
     public void useItemOnEntity(ItemStack itemstack, EntityLiving entityliving)
     {
     }
 
+    /**
+     * Sets bFull3D to True and return the object.
+     */
     public Item setFull3D()
     {
         bFull3D = true;
         return this;
     }
 
+    /**
+     * Returns True is the item is renderer in full 3D when hold.
+     */
     public boolean isFull3D()
     {
         return bFull3D;
     }
 
+    /**
+     * Returns true if this item should be rotated by 180 degrees around the Y axis when being held in an entities
+     * hands.
+     */
     public boolean shouldRotateAroundWhenRendering()
     {
         return false;
     }
 
-    public Item setItemName(String s)
+    /**
+     * set name of item from language file
+     */
+    public Item setItemName(String par1Str)
     {
-        itemName = (new StringBuilder()).append("item.").append(s).toString();
+        itemName = (new StringBuilder()).append("item.").append(par1Str).toString();
         return this;
     }
 
-    public String getLocalItemName(ItemStack itemstack)
+    public String getLocalItemName(ItemStack par1ItemStack)
     {
-        String s = getItemNameIS(itemstack);
+        String s = getItemNameIS(par1ItemStack);
+
         if (s == null)
         {
             return "";
@@ -324,18 +416,22 @@ public class Item
         return itemName;
     }
 
-    public String getItemNameIS(ItemStack itemstack)
+    public String getItemNameIS(ItemStack par1ItemStack)
     {
         return itemName;
     }
 
-    public Item setContainerItem(Item item)
+    public Item setContainerItem(Item par1Item)
     {
-        containerItem = item;
+        containerItem = par1Item;
         return this;
     }
 
-    public boolean func_46059_i(ItemStack itemstack)
+    /**
+     * If this returns true, after a recipe involving this item is crafted the container item will be added to the
+     * player's inventory instead of remaining in the crafting grid.
+     */
+    public boolean doesContainerItemLeaveCraftingGrid(ItemStack par1ItemStack)
     {
         return true;
     }
@@ -350,6 +446,9 @@ public class Item
         return containerItem;
     }
 
+    /**
+     * True if this Item has a container item (a.k.a. crafting result)
+     */
     public boolean hasContainerItem()
     {
         return containerItem != null;
@@ -360,36 +459,49 @@ public class Item
         return StatCollector.translateToLocal((new StringBuilder()).append(getItemName()).append(".name").toString());
     }
 
-    public int getColorFromDamage(int i, int j)
+    public int getColorFromDamage(int par1, int par2)
     {
         return 0xffffff;
     }
 
+    /**
+     * Called each tick as long the item is on a player inventory. Uses by maps to check if is on a player hand and
+     * update it's contents.
+     */
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag)
     {
     }
 
+    /**
+     * Called when item is crafted/smelted. Used only by maps so far.
+     */
     public void onCreated(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
     }
 
-    public EnumAction getItemUseAction(ItemStack itemstack)
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.none;
     }
 
-    public int getMaxItemUseDuration(ItemStack itemstack)
+    public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
         return 0;
     }
 
+    /**
+     * called when the player releases the use item button. Args: itemstack, world, entityplayer, itemInUseCount
+     */
     public void onPlayerStoppedUsing(ItemStack itemstack, World world, EntityPlayer entityplayer, int i)
     {
     }
 
-    protected Item setPotionEffect(String s)
+    /**
+     * gives this item the effects represented by the string for use in potion recipies
+     */
+    protected Item setPotionEffect(String par1Str)
     {
-        potionEffect = s;
+        potionEffect = par1Str;
         return this;
     }
 
@@ -398,29 +510,38 @@ public class Item
         return potionEffect;
     }
 
+    /**
+     * Returns true if this item serves as a potion ingredient (its ingredient information is not null).
+     */
     public boolean isPotionIngredient()
     {
         return potionEffect != null;
     }
 
+    /**
+     * allows items to add custom lines of information to the mouseover description
+     */
     public void addInformation(ItemStack itemstack, List list)
     {
     }
 
-    public String getItemDisplayName(ItemStack itemstack)
+    public String getItemDisplayName(ItemStack par1ItemStack)
     {
-        String s = (new StringBuilder()).append("").append(StringTranslate.getInstance().translateNamedKey(getLocalItemName(itemstack))).toString().trim();
+        String s = (new StringBuilder()).append("").append(StringTranslate.getInstance().translateNamedKey(getLocalItemName(par1ItemStack))).toString().trim();
         return s;
     }
 
-    public boolean hasEffect(ItemStack itemstack)
+    public boolean hasEffect(ItemStack par1ItemStack)
     {
-        return itemstack.isItemEnchanted();
+        return par1ItemStack.isItemEnchanted();
     }
 
-    public EnumRarity getRarity(ItemStack itemstack)
+    /**
+     * Return an item rarity from EnumRarity
+     */
+    public EnumRarity getRarity(ItemStack par1ItemStack)
     {
-        if (itemstack.isItemEnchanted())
+        if (par1ItemStack.isItemEnchanted())
         {
             return EnumRarity.rare;
         }
@@ -430,22 +551,25 @@ public class Item
         }
     }
 
-    public boolean isItemTool(ItemStack itemstack)
+    /**
+     * Checks isDamagable and if it cannot be stacked
+     */
+    public boolean isItemTool(ItemStack par1ItemStack)
     {
         return getItemStackLimit() == 1 && isDamageable();
     }
 
-    protected MovingObjectPosition getMovingObjectPositionFromPlayer(World world, EntityPlayer entityplayer, boolean flag)
+    protected MovingObjectPosition getMovingObjectPositionFromPlayer(World par1World, EntityPlayer par2EntityPlayer, boolean par3)
     {
         float f = 1.0F;
-        float f1 = entityplayer.prevRotationPitch + (entityplayer.rotationPitch - entityplayer.prevRotationPitch) * f;
-        float f2 = entityplayer.prevRotationYaw + (entityplayer.rotationYaw - entityplayer.prevRotationYaw) * f;
-        double d = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double)f;
-        double d1 = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double)f + 1.6200000000000001D) - (double)entityplayer.yOffset;
-        double d2 = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double)f;
+        float f1 = par2EntityPlayer.prevRotationPitch + (par2EntityPlayer.rotationPitch - par2EntityPlayer.prevRotationPitch) * f;
+        float f2 = par2EntityPlayer.prevRotationYaw + (par2EntityPlayer.rotationYaw - par2EntityPlayer.prevRotationYaw) * f;
+        double d = par2EntityPlayer.prevPosX + (par2EntityPlayer.posX - par2EntityPlayer.prevPosX) * (double)f;
+        double d1 = (par2EntityPlayer.prevPosY + (par2EntityPlayer.posY - par2EntityPlayer.prevPosY) * (double)f + 1.62D) - (double)par2EntityPlayer.yOffset;
+        double d2 = par2EntityPlayer.prevPosZ + (par2EntityPlayer.posZ - par2EntityPlayer.prevPosZ) * (double)f;
         Vec3D vec3d = Vec3D.createVector(d, d1, d2);
-        float f3 = MathHelper.cos(-f2 * 0.01745329F - 3.141593F);
-        float f4 = MathHelper.sin(-f2 * 0.01745329F - 3.141593F);
+        float f3 = MathHelper.cos(-f2 * 0.01745329F - (float)Math.PI);
+        float f4 = MathHelper.sin(-f2 * 0.01745329F - (float)Math.PI);
         float f5 = -MathHelper.cos(-f1 * 0.01745329F);
         float f6 = MathHelper.sin(-f1 * 0.01745329F);
         float f7 = f4 * f5;
@@ -453,10 +577,13 @@ public class Item
         float f9 = f3 * f5;
         double d3 = 5D;
         Vec3D vec3d1 = vec3d.addVector((double)f7 * d3, (double)f8 * d3, (double)f9 * d3);
-        MovingObjectPosition movingobjectposition = world.rayTraceBlocks_do_do(vec3d, vec3d1, flag, !flag);
+        MovingObjectPosition movingobjectposition = par1World.rayTraceBlocks_do_do(vec3d, vec3d1, par3, !par3);
         return movingobjectposition;
     }
 
+    /**
+     * Return the enchantability factor of the item, most of the time is based on material.
+     */
     public int getItemEnchantability()
     {
         return 0;
@@ -467,9 +594,9 @@ public class Item
         return false;
     }
 
-    public int func_46057_a(int i, int j)
+    public int func_46057_a(int par1, int par2)
     {
-        return getIconFromDamage(i);
+        return getIconFromDamage(par1);
     }
 
     static

@@ -12,9 +12,9 @@ public class PlayerControllerSP extends PlayerController
     private float blockDestroySoundCounter;
     private int blockHitWait;
 
-    public PlayerControllerSP(Minecraft minecraft)
+    public PlayerControllerSP(Minecraft par1Minecraft)
     {
-        super(minecraft);
+        super(par1Minecraft);
         curBlockX = -1;
         curBlockY = -1;
         curBlockZ = -1;
@@ -24,9 +24,12 @@ public class PlayerControllerSP extends PlayerController
         blockHitWait = 0;
     }
 
-    public void flipPlayer(EntityPlayer entityplayer)
+    /**
+     * Flips the player around. Args: player
+     */
+    public void flipPlayer(EntityPlayer par1EntityPlayer)
     {
-        entityplayer.rotationYaw = -180F;
+        par1EntityPlayer.rotationYaw = -180F;
     }
 
     public boolean shouldDrawHUD()
@@ -34,81 +37,107 @@ public class PlayerControllerSP extends PlayerController
         return true;
     }
 
-    public boolean onPlayerDestroyBlock(int i, int j, int k, int l)
+    /**
+     * Called when a player completes the destruction of a block
+     */
+    public boolean onPlayerDestroyBlock(int par1, int par2, int par3, int par4)
     {
-        int i1 = mc.theWorld.getBlockId(i, j, k);
-        int j1 = mc.theWorld.getBlockMetadata(i, j, k);
-        boolean flag = super.onPlayerDestroyBlock(i, j, k, l);
+        int i = mc.theWorld.getBlockId(par1, par2, par3);
+        int j = mc.theWorld.getBlockMetadata(par1, par2, par3);
+        boolean flag = super.onPlayerDestroyBlock(par1, par2, par3, par4);
         ItemStack itemstack = mc.thePlayer.getCurrentEquippedItem();
-        boolean flag1 = mc.thePlayer.canHarvestBlock(Block.blocksList[i1]);
+        boolean flag1 = mc.thePlayer.canHarvestBlock(Block.blocksList[i]);
+
         if (itemstack != null)
         {
-            itemstack.onDestroyBlock(i1, i, j, k, mc.thePlayer);
+            itemstack.onDestroyBlock(i, par1, par2, par3, mc.thePlayer);
+
             if (itemstack.stackSize == 0)
             {
                 itemstack.onItemDestroyedByUse(mc.thePlayer);
                 mc.thePlayer.destroyCurrentEquippedItem();
             }
         }
+
         if (flag && flag1)
         {
-            Block.blocksList[i1].harvestBlock(mc.theWorld, mc.thePlayer, i, j, k, j1);
+            Block.blocksList[i].harvestBlock(mc.theWorld, mc.thePlayer, par1, par2, par3, j);
         }
+
         return flag;
     }
 
-    public void clickBlock(int i, int j, int k, int l)
+    /**
+     * Called by Minecraft class when the player is hitting a block with an item. Args: x, y, z, side
+     */
+    public void clickBlock(int par1, int par2, int par3, int par4)
     {
-        if (!mc.thePlayer.canPlayerEdit(i, j, k))
+        if (!mc.thePlayer.canPlayerEdit(par1, par2, par3))
         {
             return;
         }
-        mc.theWorld.onBlockHit(mc.thePlayer, i, j, k, l);
-        int i1 = mc.theWorld.getBlockId(i, j, k);
-        if (i1 > 0 && curBlockDamage == 0.0F)
+
+        mc.theWorld.func_48457_a(mc.thePlayer, par1, par2, par3, par4);
+        int i = mc.theWorld.getBlockId(par1, par2, par3);
+
+        if (i > 0 && curBlockDamage == 0.0F)
         {
-            Block.blocksList[i1].onBlockClicked(mc.theWorld, i, j, k, mc.thePlayer);
+            Block.blocksList[i].onBlockClicked(mc.theWorld, par1, par2, par3, mc.thePlayer);
         }
-        if (i1 > 0 && Block.blocksList[i1].blockStrength(mc.thePlayer) >= 1.0F)
+
+        if (i > 0 && Block.blocksList[i].blockStrength(mc.thePlayer) >= 1.0F)
         {
-            onPlayerDestroyBlock(i, j, k, l);
+            onPlayerDestroyBlock(par1, par2, par3, par4);
         }
     }
 
+    /**
+     * Resets current block damage and isHittingBlock
+     */
     public void resetBlockRemoving()
     {
         curBlockDamage = 0.0F;
         blockHitWait = 0;
     }
 
-    public void onPlayerDamageBlock(int i, int j, int k, int l)
+    /**
+     * Called when a player damages a block and updates damage counters
+     */
+    public void onPlayerDamageBlock(int par1, int par2, int par3, int par4)
     {
         if (blockHitWait > 0)
         {
             blockHitWait--;
             return;
         }
-        if (i == curBlockX && j == curBlockY && k == curBlockZ)
+
+        if (par1 == curBlockX && par2 == curBlockY && par3 == curBlockZ)
         {
-            int i1 = mc.theWorld.getBlockId(i, j, k);
-            if (!mc.thePlayer.canPlayerEdit(i, j, k))
+            int i = mc.theWorld.getBlockId(par1, par2, par3);
+
+            if (!mc.thePlayer.canPlayerEdit(par1, par2, par3))
             {
                 return;
             }
-            if (i1 == 0)
+
+            if (i == 0)
             {
                 return;
             }
-            Block block = Block.blocksList[i1];
+
+            Block block = Block.blocksList[i];
             curBlockDamage += block.blockStrength(mc.thePlayer);
+
             if (blockDestroySoundCounter % 4F == 0.0F && block != null)
             {
-                mc.sndManager.playSound(block.stepSound.getStepSound(), (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, (block.stepSound.getVolume() + 1.0F) / 8F, block.stepSound.getPitch() * 0.5F);
+                mc.sndManager.playSound(block.stepSound.getStepSound(), (float)par1 + 0.5F, (float)par2 + 0.5F, (float)par3 + 0.5F, (block.stepSound.getVolume() + 1.0F) / 8F, block.stepSound.getPitch() * 0.5F);
             }
+
             blockDestroySoundCounter++;
+
             if (curBlockDamage >= 1.0F)
             {
-                onPlayerDestroyBlock(i, j, k, l);
+                onPlayerDestroyBlock(par1, par2, par3, par4);
                 curBlockDamage = 0.0F;
                 prevBlockDamage = 0.0F;
                 blockDestroySoundCounter = 0.0F;
@@ -120,13 +149,13 @@ public class PlayerControllerSP extends PlayerController
             curBlockDamage = 0.0F;
             prevBlockDamage = 0.0F;
             blockDestroySoundCounter = 0.0F;
-            curBlockX = i;
-            curBlockY = j;
-            curBlockZ = k;
+            curBlockX = par1;
+            curBlockY = par2;
+            curBlockZ = par3;
         }
     }
 
-    public void setPartialTime(float f)
+    public void setPartialTime(float par1)
     {
         if (curBlockDamage <= 0.0F)
         {
@@ -135,25 +164,31 @@ public class PlayerControllerSP extends PlayerController
         }
         else
         {
-            float f1 = prevBlockDamage + (curBlockDamage - prevBlockDamage) * f;
-            mc.ingameGUI.damageGuiPartialTime = f1;
-            mc.renderGlobal.damagePartialTime = f1;
+            float f = prevBlockDamage + (curBlockDamage - prevBlockDamage) * par1;
+            mc.ingameGUI.damageGuiPartialTime = f;
+            mc.renderGlobal.damagePartialTime = f;
         }
     }
 
+    /**
+     * player reach distance = 4F
+     */
     public float getBlockReachDistance()
     {
         return 4F;
     }
 
-    public void onWorldChange(World world)
+    /**
+     * Called on world change with the new World as the only parameter.
+     */
+    public void onWorldChange(World par1World)
     {
-        super.onWorldChange(world);
+        super.onWorldChange(par1World);
     }
 
-    public EntityPlayer createPlayer(World world)
+    public EntityPlayer createPlayer(World par1World)
     {
-        EntityPlayer entityplayer = super.createPlayer(world);
+        EntityPlayer entityplayer = super.createPlayer(par1World);
         return entityplayer;
     }
 
@@ -163,20 +198,25 @@ public class PlayerControllerSP extends PlayerController
         mc.sndManager.playRandomMusicIfReady();
     }
 
-    public boolean onPlayerRightClick(EntityPlayer entityplayer, World world, ItemStack itemstack, int i, int j, int k, int l)
+    /**
+     * Handles a players right click
+     */
+    public boolean onPlayerRightClick(EntityPlayer par1EntityPlayer, World par2World, ItemStack par3ItemStack, int par4, int par5, int par6, int par7)
     {
-        int i1 = world.getBlockId(i, j, k);
-        if (i1 > 0 && Block.blocksList[i1].blockActivated(world, i, j, k, entityplayer))
+        int i = par2World.getBlockId(par4, par5, par6);
+
+        if (i > 0 && Block.blocksList[i].blockActivated(par2World, par4, par5, par6, par1EntityPlayer))
         {
             return true;
         }
-        if (itemstack == null)
+
+        if (par3ItemStack == null)
         {
             return false;
         }
         else
         {
-            return itemstack.useItem(entityplayer, world, i, j, k, l);
+            return par3ItemStack.useItem(par1EntityPlayer, par2World, par4, par5, par6, par7);
         }
     }
 

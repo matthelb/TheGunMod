@@ -7,9 +7,9 @@ public class SoundPoolEntry
     public String soundName;
     public URL soundUrl;
 
-    public SoundPoolEntry(String s, URL url)
+    public SoundPoolEntry(String par1Str, URL par2URL)
     {
-        soundName = s;
-        soundUrl = url;
+        soundName = par1Str;
+        soundUrl = par2URL;
     }
 }

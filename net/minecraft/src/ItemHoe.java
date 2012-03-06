@@ -2,33 +2,40 @@ package net.minecraft.src;
 
 public class ItemHoe extends Item
 {
-    public ItemHoe(int i, EnumToolMaterial enumtoolmaterial)
+    public ItemHoe(int par1, EnumToolMaterial par2EnumToolMaterial)
     {
-        super(i);
+        super(par1);
         maxStackSize = 1;
-        setMaxDamage(enumtoolmaterial.getMaxUses());
+        setMaxDamage(par2EnumToolMaterial.getMaxUses());
     }
 
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
+     */
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7)
     {
-        if (!entityplayer.canPlayerEdit(i, j, k))
+        if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6))
         {
             return false;
         }
-        int i1 = world.getBlockId(i, j, k);
-        int j1 = world.getBlockId(i, j + 1, k);
-        if (l != 0 && j1 == 0 && i1 == Block.grass.blockID || i1 == Block.dirt.blockID)
+
+        int i = par3World.getBlockId(par4, par5, par6);
+        int j = par3World.getBlockId(par4, par5 + 1, par6);
+
+        if (par7 != 0 && j == 0 && i == Block.grass.blockID || i == Block.dirt.blockID)
         {
             Block block = Block.tilledField;
-            world.playSoundEffect((float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F, block.stepSound.getStepSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
-            if (world.isRemote)
+            par3World.playSoundEffect((float)par4 + 0.5F, (float)par5 + 0.5F, (float)par6 + 0.5F, block.stepSound.getStepSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+
+            if (par3World.isRemote)
             {
                 return true;
             }
             else
             {
-                world.setBlockWithNotify(i, j, k, block.blockID);
-                itemstack.damageItem(1, entityplayer);
+                par3World.setBlockWithNotify(par4, par5, par6, block.blockID);
+                par1ItemStack.damageItem(1, par2EntityPlayer);
                 return true;
             }
         }
@@ -38,6 +45,9 @@ public class ItemHoe extends Item
         }
     }
 
+    /**
+     * Returns True is the item is renderer in full 3D when hold.
+     */
     public boolean isFull3D()
     {
         return true;

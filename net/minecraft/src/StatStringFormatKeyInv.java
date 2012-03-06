@@ -2,21 +2,24 @@ package net.minecraft.src;
 
 import net.minecraft.client.Minecraft;
 
-public class StatStringFormatKeyInv
-    implements IStatStringFormat
+public class StatStringFormatKeyInv implements IStatStringFormat
 {
+    /** Minecraft instance */
     final Minecraft mc;
 
-    public StatStringFormatKeyInv(Minecraft minecraft)
+    public StatStringFormatKeyInv(Minecraft par1Minecraft)
     {
-        mc = minecraft;
+        mc = par1Minecraft;
     }
 
-    public String formatString(String s)
+    /**
+     * Formats the strings based on 'IStatStringFormat' interface.
+     */
+    public String formatString(String par1Str)
     {
         try
         {
-            return String.format(s, new Object[]
+            return String.format(par1Str, new Object[]
                     {
                         GameSettings.getKeyDisplayString(mc.gameSettings.keyBindInventory.keyCode)
                     });

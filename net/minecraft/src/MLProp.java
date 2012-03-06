@@ -2,8 +2,7 @@ package net.minecraft.src;
 
 import java.lang.annotation.Annotation;
 
-public interface MLProp
-    extends Annotation
+public @interface MLProp
 {
     public abstract String name();
 

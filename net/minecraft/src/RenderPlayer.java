@@ -21,39 +21,46 @@ public class RenderPlayer extends RenderLiving
         modelArmor = new ModelBiped(0.5F);
     }
 
-    protected int setArmorModel(EntityPlayer entityplayer, int i, float f)
+    /**
+     * Set the specified armor model as the player model. Args: player, armorSlot, partialTick
+     */
+    protected int setArmorModel(EntityPlayer par1EntityPlayer, int par2, float par3)
     {
-        ItemStack itemstack = entityplayer.inventory.armorItemInSlot(3 - i);
+        ItemStack itemstack = par1EntityPlayer.inventory.armorItemInSlot(3 - par2);
+
         if (itemstack != null)
         {
             Item item = itemstack.getItem();
+
             if (item instanceof ItemArmor)
             {
                 ItemArmor itemarmor = (ItemArmor)item;
-                loadTexture((new StringBuilder()).append("/armor/").append(armorFilenamePrefix[itemarmor.renderIndex]).append("_").append(i != 2 ? 1 : 2).append(".png").toString());
-                ModelBiped modelbiped = i != 2 ? modelArmorChestplate : modelArmor;
-                modelbiped.bipedHead.showModel = i == 0;
-                modelbiped.bipedHeadwear.showModel = i == 0;
-                modelbiped.bipedBody.showModel = i == 1 || i == 2;
-                modelbiped.bipedRightArm.showModel = i == 1;
-                modelbiped.bipedLeftArm.showModel = i == 1;
-                modelbiped.bipedRightLeg.showModel = i == 2 || i == 3;
-                modelbiped.bipedLeftLeg.showModel = i == 2 || i == 3;
+                loadTexture((new StringBuilder()).append("/armor/").append(armorFilenamePrefix[itemarmor.renderIndex]).append("_").append(par2 != 2 ? 1 : 2).append(".png").toString());
+                ModelBiped modelbiped = par2 != 2 ? modelArmorChestplate : modelArmor;
+                modelbiped.bipedHead.showModel = par2 == 0;
+                modelbiped.bipedHeadwear.showModel = par2 == 0;
+                modelbiped.bipedBody.showModel = par2 == 1 || par2 == 2;
+                modelbiped.bipedRightArm.showModel = par2 == 1;
+                modelbiped.bipedLeftArm.showModel = par2 == 1;
+                modelbiped.bipedRightLeg.showModel = par2 == 2 || par2 == 3;
+                modelbiped.bipedLeftLeg.showModel = par2 == 2 || par2 == 3;
                 setRenderPassModel(modelbiped);
                 return !itemstack.isItemEnchanted() ? 1 : 15;
             }
         }
+
         return -1;
     }
 
-    public void renderPlayer(EntityPlayer entityplayer, double d, double d1, double d2,
-            float f, float f1)
+    public void renderPlayer(EntityPlayer par1EntityPlayer, double par2, double par4, double par6, float par8, float par9)
     {
-        ItemStack itemstack = entityplayer.inventory.getCurrentItem();
+        ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
         modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = modelBipedMain.heldItemRight = itemstack == null ? 0 : 1;
-        if (itemstack != null && entityplayer.func_35205_Y() > 0)
+
+        if (itemstack != null && par1EntityPlayer.getItemInUseCount() > 0)
         {
             EnumAction enumaction = itemstack.getItemUseAction();
+
             if (enumaction == EnumAction.block)
             {
                 modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = modelBipedMain.heldItemRight = 3;
@@ -63,56 +70,64 @@ public class RenderPlayer extends RenderLiving
                 modelArmorChestplate.aimedBow = modelArmor.aimedBow = modelBipedMain.aimedBow = true;
             }
         }
-        modelArmorChestplate.isSneak = modelArmor.isSneak = modelBipedMain.isSneak = entityplayer.isSneaking();
-        double d3 = d1 - (double)entityplayer.yOffset;
-        if (entityplayer.isSneaking() && !(entityplayer instanceof EntityPlayerSP))
+
+        modelArmorChestplate.isSneak = modelArmor.isSneak = modelBipedMain.isSneak = par1EntityPlayer.isSneaking();
+        double d = par4 - (double)par1EntityPlayer.yOffset;
+
+        if (par1EntityPlayer.isSneaking() && !(par1EntityPlayer instanceof EntityPlayerSP))
         {
-            d3 -= 0.125D;
+            d -= 0.125D;
         }
-        super.doRenderLiving(entityplayer, d, d3, d2, f, f1);
+
+        super.doRenderLiving(par1EntityPlayer, par2, d, par6, par8, par9);
         modelArmorChestplate.aimedBow = modelArmor.aimedBow = modelBipedMain.aimedBow = false;
         modelArmorChestplate.isSneak = modelArmor.isSneak = modelBipedMain.isSneak = false;
         modelArmorChestplate.heldItemRight = modelArmor.heldItemRight = modelBipedMain.heldItemRight = 0;
     }
 
-    protected void renderName(EntityPlayer entityplayer, double d, double d1, double d2)
+    /**
+     * Used to render a player's name above their head
+     */
+    protected void renderName(EntityPlayer par1EntityPlayer, double par2, double par4, double par6)
     {
-        if (Minecraft.isGuiEnabled() && entityplayer != renderManager.livingPlayer)
+        if (Minecraft.isGuiEnabled() && par1EntityPlayer != renderManager.livingPlayer)
         {
             float f = 1.6F;
             float f1 = 0.01666667F * f;
-            float f2 = entityplayer.getDistanceToEntity(renderManager.livingPlayer);
-            float f3 = entityplayer.isSneaking() ? 32F : 64F;
+            float f2 = par1EntityPlayer.getDistanceToEntity(renderManager.livingPlayer);
+            float f3 = par1EntityPlayer.isSneaking() ? 32F : 64F;
+
             if (f2 < f3)
             {
-                String s = entityplayer.username;
-                if (!entityplayer.isSneaking())
+                String s = par1EntityPlayer.username;
+
+                if (!par1EntityPlayer.isSneaking())
                 {
-                    if (entityplayer.isPlayerSleeping())
+                    if (par1EntityPlayer.isPlayerSleeping())
                     {
-                        renderLivingLabel(entityplayer, s, d, d1 - 1.5D, d2, 64);
+                        renderLivingLabel(par1EntityPlayer, s, par2, par4 - 1.5D, par6, 64);
                     }
                     else
                     {
-                        renderLivingLabel(entityplayer, s, d, d1, d2, 64);
+                        renderLivingLabel(par1EntityPlayer, s, par2, par4, par6, 64);
                     }
                 }
                 else
                 {
                     FontRenderer fontrenderer = getFontRendererFromRenderManager();
                     GL11.glPushMatrix();
-                    GL11.glTranslatef((float)d + 0.0F, (float)d1 + 2.3F, (float)d2);
+                    GL11.glTranslatef((float)par2 + 0.0F, (float)par4 + 2.3F, (float)par6);
                     GL11.glNormal3f(0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(-renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
                     GL11.glScalef(-f1, -f1, f1);
-                    GL11.glDisable(2896 /*GL_LIGHTING*/);
+                    GL11.glDisable(GL11.GL_LIGHTING);
                     GL11.glTranslatef(0.0F, 0.25F / f1, 0.0F);
                     GL11.glDepthMask(false);
-                    GL11.glEnable(3042 /*GL_BLEND*/);
-                    GL11.glBlendFunc(770, 771);
+                    GL11.glEnable(GL11.GL_BLEND);
+                    GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
                     Tessellator tessellator = Tessellator.instance;
-                    GL11.glDisable(3553 /*GL_TEXTURE_2D*/);
+                    GL11.glDisable(GL11.GL_TEXTURE_2D);
                     tessellator.startDrawingQuads();
                     int i = fontrenderer.getStringWidth(s) / 2;
                     tessellator.setColorRGBA_F(0.0F, 0.0F, 0.0F, 0.25F);
@@ -121,11 +136,11 @@ public class RenderPlayer extends RenderLiving
                     tessellator.addVertex(i + 1, 8D, 0.0D);
                     tessellator.addVertex(i + 1, -1D, 0.0D);
                     tessellator.draw();
-                    GL11.glEnable(3553 /*GL_TEXTURE_2D*/);
+                    GL11.glEnable(GL11.GL_TEXTURE_2D);
                     GL11.glDepthMask(true);
                     fontrenderer.drawString(s, -fontrenderer.getStringWidth(s) / 2, 0, 0x20ffffff);
-                    GL11.glEnable(2896 /*GL_LIGHTING*/);
-                    GL11.glDisable(3042 /*GL_BLEND*/);
+                    GL11.glEnable(GL11.GL_LIGHTING);
+                    GL11.glDisable(GL11.GL_BLEND);
                     GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
                     GL11.glPopMatrix();
                 }
@@ -133,167 +148,193 @@ public class RenderPlayer extends RenderLiving
         }
     }
 
-    protected void renderSpecials(EntityPlayer entityplayer, float f)
+    /**
+     * Method for adding special render rules
+     */
+    protected void renderSpecials(EntityPlayer par1EntityPlayer, float par2)
     {
-        super.renderEquippedItems(entityplayer, f);
-        ItemStack itemstack = entityplayer.inventory.armorItemInSlot(3);
+        super.renderEquippedItems(par1EntityPlayer, par2);
+        ItemStack itemstack = par1EntityPlayer.inventory.armorItemInSlot(3);
+
         if (itemstack != null && itemstack.getItem().shiftedIndex < 256)
         {
             GL11.glPushMatrix();
             modelBipedMain.bipedHead.postRender(0.0625F);
+
             if (RenderBlocks.renderItemIn3d(Block.blocksList[itemstack.itemID].getRenderType()))
             {
-                float f1 = 0.625F;
+                float f = 0.625F;
                 GL11.glTranslatef(0.0F, -0.25F, 0.0F);
                 GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
-                GL11.glScalef(f1, -f1, f1);
+                GL11.glScalef(f, -f, f);
             }
-            renderManager.itemRenderer.renderItem(entityplayer, itemstack, 0);
+
+            renderManager.itemRenderer.renderItem(par1EntityPlayer, itemstack, 0);
             GL11.glPopMatrix();
         }
-        if (entityplayer.username.equals("deadmau5") && loadDownloadableImageTexture(entityplayer.skinUrl, null))
+
+        if (par1EntityPlayer.username.equals("deadmau5") && loadDownloadableImageTexture(par1EntityPlayer.skinUrl, null))
         {
             for (int i = 0; i < 2; i++)
             {
-                float f2 = (entityplayer.prevRotationYaw + (entityplayer.rotationYaw - entityplayer.prevRotationYaw) * f) - (entityplayer.prevRenderYawOffset + (entityplayer.renderYawOffset - entityplayer.prevRenderYawOffset) * f);
-                float f3 = entityplayer.prevRotationPitch + (entityplayer.rotationPitch - entityplayer.prevRotationPitch) * f;
+                float f1 = (par1EntityPlayer.prevRotationYaw + (par1EntityPlayer.rotationYaw - par1EntityPlayer.prevRotationYaw) * par2) - (par1EntityPlayer.prevRenderYawOffset + (par1EntityPlayer.renderYawOffset - par1EntityPlayer.prevRenderYawOffset) * par2);
+                float f2 = par1EntityPlayer.prevRotationPitch + (par1EntityPlayer.rotationPitch - par1EntityPlayer.prevRotationPitch) * par2;
                 GL11.glPushMatrix();
-                GL11.glRotatef(f2, 0.0F, 1.0F, 0.0F);
-                GL11.glRotatef(f3, 1.0F, 0.0F, 0.0F);
+                GL11.glRotatef(f1, 0.0F, 1.0F, 0.0F);
+                GL11.glRotatef(f2, 1.0F, 0.0F, 0.0F);
                 GL11.glTranslatef(0.375F * (float)(i * 2 - 1), 0.0F, 0.0F);
                 GL11.glTranslatef(0.0F, -0.375F, 0.0F);
-                GL11.glRotatef(-f3, 1.0F, 0.0F, 0.0F);
-                GL11.glRotatef(-f2, 0.0F, 1.0F, 0.0F);
-                float f8 = 1.333333F;
-                GL11.glScalef(f8, f8, f8);
+                GL11.glRotatef(-f2, 1.0F, 0.0F, 0.0F);
+                GL11.glRotatef(-f1, 0.0F, 1.0F, 0.0F);
+                float f7 = 1.333333F;
+                GL11.glScalef(f7, f7, f7);
                 modelBipedMain.renderEars(0.0625F);
                 GL11.glPopMatrix();
             }
         }
-        if (loadDownloadableImageTexture(entityplayer.playerCloakUrl, null))
+
+        if (loadDownloadableImageTexture(par1EntityPlayer.playerCloakUrl, null))
         {
             GL11.glPushMatrix();
             GL11.glTranslatef(0.0F, 0.0F, 0.125F);
-            double d = (entityplayer.field_20066_r + (entityplayer.field_20063_u - entityplayer.field_20066_r) * (double)f) - (entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double)f);
-            double d1 = (entityplayer.field_20065_s + (entityplayer.field_20062_v - entityplayer.field_20065_s) * (double)f) - (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double)f);
-            double d2 = (entityplayer.field_20064_t + (entityplayer.field_20061_w - entityplayer.field_20064_t) * (double)f) - (entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double)f);
-            float f11 = entityplayer.prevRenderYawOffset + (entityplayer.renderYawOffset - entityplayer.prevRenderYawOffset) * f;
-            double d3 = MathHelper.sin((f11 * 3.141593F) / 180F);
-            double d4 = -MathHelper.cos((f11 * 3.141593F) / 180F);
-            float f13 = (float)d1 * 10F;
-            if (f13 < -6F)
+            double d = (par1EntityPlayer.field_20066_r + (par1EntityPlayer.field_20063_u - par1EntityPlayer.field_20066_r) * (double)par2) - (par1EntityPlayer.prevPosX + (par1EntityPlayer.posX - par1EntityPlayer.prevPosX) * (double)par2);
+            double d1 = (par1EntityPlayer.field_20065_s + (par1EntityPlayer.field_20062_v - par1EntityPlayer.field_20065_s) * (double)par2) - (par1EntityPlayer.prevPosY + (par1EntityPlayer.posY - par1EntityPlayer.prevPosY) * (double)par2);
+            double d2 = (par1EntityPlayer.field_20064_t + (par1EntityPlayer.field_20061_w - par1EntityPlayer.field_20064_t) * (double)par2) - (par1EntityPlayer.prevPosZ + (par1EntityPlayer.posZ - par1EntityPlayer.prevPosZ) * (double)par2);
+            float f10 = par1EntityPlayer.prevRenderYawOffset + (par1EntityPlayer.renderYawOffset - par1EntityPlayer.prevRenderYawOffset) * par2;
+            double d3 = MathHelper.sin((f10 * (float)Math.PI) / 180F);
+            double d4 = -MathHelper.cos((f10 * (float)Math.PI) / 180F);
+            float f12 = (float)d1 * 10F;
+
+            if (f12 < -6F)
             {
-                f13 = -6F;
+                f12 = -6F;
             }
-            if (f13 > 32F)
+
+            if (f12 > 32F)
             {
-                f13 = 32F;
+                f12 = 32F;
             }
-            float f14 = (float)(d * d3 + d2 * d4) * 100F;
-            float f15 = (float)(d * d4 - d2 * d3) * 100F;
-            if (f14 < 0.0F)
+
+            float f13 = (float)(d * d3 + d2 * d4) * 100F;
+            float f14 = (float)(d * d4 - d2 * d3) * 100F;
+
+            if (f13 < 0.0F)
             {
-                f14 = 0.0F;
+                f13 = 0.0F;
             }
-            float f16 = entityplayer.prevCameraYaw + (entityplayer.cameraYaw - entityplayer.prevCameraYaw) * f;
-            f13 += MathHelper.sin((entityplayer.prevDistanceWalkedModified + (entityplayer.distanceWalkedModified - entityplayer.prevDistanceWalkedModified) * f) * 6F) * 32F * f16;
-            if (entityplayer.isSneaking())
+
+            float f15 = par1EntityPlayer.prevCameraYaw + (par1EntityPlayer.cameraYaw - par1EntityPlayer.prevCameraYaw) * par2;
+            f12 += MathHelper.sin((par1EntityPlayer.prevDistanceWalkedModified + (par1EntityPlayer.distanceWalkedModified - par1EntityPlayer.prevDistanceWalkedModified) * par2) * 6F) * 32F * f15;
+
+            if (par1EntityPlayer.isSneaking())
             {
-                f13 += 25F;
+                f12 += 25F;
             }
-            GL11.glRotatef(6F + f14 / 2.0F + f13, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(f15 / 2.0F, 0.0F, 0.0F, 1.0F);
-            GL11.glRotatef(-f15 / 2.0F, 0.0F, 1.0F, 0.0F);
+
+            GL11.glRotatef(6F + f13 / 2.0F + f12, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(f14 / 2.0F, 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(-f14 / 2.0F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
             modelBipedMain.renderCloak(0.0625F);
             GL11.glPopMatrix();
         }
-        ItemStack itemstack1 = entityplayer.inventory.getCurrentItem();
+
+        ItemStack itemstack1 = par1EntityPlayer.inventory.getCurrentItem();
+
         if (itemstack1 != null)
         {
             GL11.glPushMatrix();
             modelBipedMain.bipedRightArm.postRender(0.0625F);
             GL11.glTranslatef(-0.0625F, 0.4375F, 0.0625F);
-            if (entityplayer.fishEntity != null)
+
+            if (par1EntityPlayer.fishEntity != null)
             {
                 itemstack1 = new ItemStack(Item.stick);
             }
+
             EnumAction enumaction = null;
-            if (entityplayer.func_35205_Y() > 0)
+
+            if (par1EntityPlayer.getItemInUseCount() > 0)
             {
                 enumaction = itemstack1.getItemUseAction();
             }
+
             if (itemstack1.itemID < 256 && RenderBlocks.renderItemIn3d(Block.blocksList[itemstack1.itemID].getRenderType()))
             {
-                float f4 = 0.5F;
+                float f3 = 0.5F;
                 GL11.glTranslatef(0.0F, 0.1875F, -0.3125F);
-                f4 *= 0.75F;
+                f3 *= 0.75F;
                 GL11.glRotatef(20F, 1.0F, 0.0F, 0.0F);
                 GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
-                GL11.glScalef(f4, -f4, f4);
+                GL11.glScalef(f3, -f3, f3);
             }
             else if (itemstack1.itemID == Item.bow.shiftedIndex)
             {
-                float f5 = 0.625F;
+                float f4 = 0.625F;
                 GL11.glTranslatef(0.0F, 0.125F, 0.3125F);
                 GL11.glRotatef(-20F, 0.0F, 1.0F, 0.0F);
-                GL11.glScalef(f5, -f5, f5);
+                GL11.glScalef(f4, -f4, f4);
                 GL11.glRotatef(-100F, 1.0F, 0.0F, 0.0F);
                 GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
             }
             else if (Item.itemsList[itemstack1.itemID].isFull3D())
             {
-                float f6 = 0.625F;
+                float f5 = 0.625F;
+
                 if (Item.itemsList[itemstack1.itemID].shouldRotateAroundWhenRendering())
                 {
                     GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
                     GL11.glTranslatef(0.0F, -0.125F, 0.0F);
                 }
-                if (entityplayer.func_35205_Y() > 0 && enumaction == EnumAction.block)
+
+                if (par1EntityPlayer.getItemInUseCount() > 0 && enumaction == EnumAction.block)
                 {
                     GL11.glTranslatef(0.05F, 0.0F, -0.1F);
                     GL11.glRotatef(-50F, 0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(-10F, 1.0F, 0.0F, 0.0F);
                     GL11.glRotatef(-60F, 0.0F, 0.0F, 1.0F);
                 }
+
                 GL11.glTranslatef(0.0F, 0.1875F, 0.0F);
-                GL11.glScalef(f6, -f6, f6);
+                GL11.glScalef(f5, -f5, f5);
                 GL11.glRotatef(-100F, 1.0F, 0.0F, 0.0F);
                 GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
             }
             else
             {
-                float f7 = 0.375F;
+                float f6 = 0.375F;
                 GL11.glTranslatef(0.25F, 0.1875F, -0.1875F);
-                GL11.glScalef(f7, f7, f7);
+                GL11.glScalef(f6, f6, f6);
                 GL11.glRotatef(60F, 0.0F, 0.0F, 1.0F);
                 GL11.glRotatef(-90F, 1.0F, 0.0F, 0.0F);
                 GL11.glRotatef(20F, 0.0F, 0.0F, 1.0F);
             }
+
             if (itemstack1.getItem().func_46058_c())
             {
                 for (int j = 0; j <= 1; j++)
                 {
                     int k = itemstack1.getItem().getColorFromDamage(itemstack1.getItemDamage(), j);
-                    float f9 = (float)(k >> 16 & 0xff) / 255F;
-                    float f10 = (float)(k >> 8 & 0xff) / 255F;
-                    float f12 = (float)(k & 0xff) / 255F;
-                    GL11.glColor4f(f9, f10, f12, 1.0F);
-                    renderManager.itemRenderer.renderItem(entityplayer, itemstack1, j);
+                    float f8 = (float)(k >> 16 & 0xff) / 255F;
+                    float f9 = (float)(k >> 8 & 0xff) / 255F;
+                    float f11 = (float)(k & 0xff) / 255F;
+                    GL11.glColor4f(f8, f9, f11, 1.0F);
+                    renderManager.itemRenderer.renderItem(par1EntityPlayer, itemstack1, j);
                 }
             }
             else
             {
-                renderManager.itemRenderer.renderItem(entityplayer, itemstack1, 0);
+                renderManager.itemRenderer.renderItem(par1EntityPlayer, itemstack1, 0);
             }
+
             GL11.glPopMatrix();
         }
     }
 
-    protected void renderPlayerScale(EntityPlayer entityplayer, float f)
+    protected void renderPlayerScale(EntityPlayer par1EntityPlayer, float par2)
     {
-        float f1 = 0.9375F;
-        GL11.glScalef(f1, f1, f1);
+        float f = 0.9375F;
+        GL11.glScalef(f, f, f);
     }
 
     public void drawFirstPersonHand()
@@ -303,71 +344,94 @@ public class RenderPlayer extends RenderLiving
         modelBipedMain.bipedRightArm.render(0.0625F);
     }
 
-    protected void renderPlayerSleep(EntityPlayer entityplayer, double d, double d1, double d2)
+    /**
+     * Renders player with sleeping offset if sleeping
+     */
+    protected void renderPlayerSleep(EntityPlayer par1EntityPlayer, double par2, double par4, double par6)
     {
-        if (entityplayer.isEntityAlive() && entityplayer.isPlayerSleeping())
+        if (par1EntityPlayer.isEntityAlive() && par1EntityPlayer.isPlayerSleeping())
         {
-            super.renderLivingAt(entityplayer, d + (double)entityplayer.field_22063_x, d1 + (double)entityplayer.field_22062_y, d2 + (double)entityplayer.field_22061_z);
+            super.renderLivingAt(par1EntityPlayer, par2 + (double)par1EntityPlayer.field_22063_x, par4 + (double)par1EntityPlayer.field_22062_y, par6 + (double)par1EntityPlayer.field_22061_z);
         }
         else
         {
-            super.renderLivingAt(entityplayer, d, d1, d2);
+            super.renderLivingAt(par1EntityPlayer, par2, par4, par6);
         }
     }
 
-    protected void rotatePlayer(EntityPlayer entityplayer, float f, float f1, float f2)
+    /**
+     * Rotates the player if the player is sleeping. This method is called in rotateCorpse.
+     */
+    protected void rotatePlayer(EntityPlayer par1EntityPlayer, float par2, float par3, float par4)
     {
-        if (entityplayer.isEntityAlive() && entityplayer.isPlayerSleeping())
+        if (par1EntityPlayer.isEntityAlive() && par1EntityPlayer.isPlayerSleeping())
         {
-            GL11.glRotatef(entityplayer.getBedOrientationInDegrees(), 0.0F, 1.0F, 0.0F);
-            GL11.glRotatef(getDeathMaxRotation(entityplayer), 0.0F, 0.0F, 1.0F);
+            GL11.glRotatef(par1EntityPlayer.getBedOrientationInDegrees(), 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(getDeathMaxRotation(par1EntityPlayer), 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(270F, 0.0F, 1.0F, 0.0F);
         }
         else
         {
-            super.rotateCorpse(entityplayer, f, f1, f2);
+            super.rotateCorpse(par1EntityPlayer, par2, par3, par4);
         }
     }
 
-    protected void passSpecialRender(EntityLiving entityliving, double d, double d1, double d2)
+    /**
+     * Passes the specialRender and renders it
+     */
+    protected void passSpecialRender(EntityLiving par1EntityLiving, double par2, double par4, double par6)
     {
-        renderName((EntityPlayer)entityliving, d, d1, d2);
+        renderName((EntityPlayer)par1EntityLiving, par2, par4, par6);
     }
 
-    protected void preRenderCallback(EntityLiving entityliving, float f)
+    /**
+     * Allows the render to do any OpenGL state modifications necessary before the model is rendered. Args:
+     * entityLiving, partialTickTime
+     */
+    protected void preRenderCallback(EntityLiving par1EntityLiving, float par2)
     {
-        renderPlayerScale((EntityPlayer)entityliving, f);
+        renderPlayerScale((EntityPlayer)par1EntityLiving, par2);
     }
 
-    protected int shouldRenderPass(EntityLiving entityliving, int i, float f)
+    /**
+     * Queries whether should render the specified pass or not.
+     */
+    protected int shouldRenderPass(EntityLiving par1EntityLiving, int par2, float par3)
     {
-        return setArmorModel((EntityPlayer)entityliving, i, f);
+        return setArmorModel((EntityPlayer)par1EntityLiving, par2, par3);
     }
 
-    protected void renderEquippedItems(EntityLiving entityliving, float f)
+    protected void renderEquippedItems(EntityLiving par1EntityLiving, float par2)
     {
-        renderSpecials((EntityPlayer)entityliving, f);
+        renderSpecials((EntityPlayer)par1EntityLiving, par2);
     }
 
-    protected void rotateCorpse(EntityLiving entityliving, float f, float f1, float f2)
+    protected void rotateCorpse(EntityLiving par1EntityLiving, float par2, float par3, float par4)
     {
-        rotatePlayer((EntityPlayer)entityliving, f, f1, f2);
+        rotatePlayer((EntityPlayer)par1EntityLiving, par2, par3, par4);
     }
 
-    protected void renderLivingAt(EntityLiving entityliving, double d, double d1, double d2)
+    /**
+     * Sets a simple glTranslate on a LivingEntity.
+     */
+    protected void renderLivingAt(EntityLiving par1EntityLiving, double par2, double par4, double par6)
     {
-        renderPlayerSleep((EntityPlayer)entityliving, d, d1, d2);
+        renderPlayerSleep((EntityPlayer)par1EntityLiving, par2, par4, par6);
     }
 
-    public void doRenderLiving(EntityLiving entityliving, double d, double d1, double d2,
-            float f, float f1)
+    public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
-        renderPlayer((EntityPlayer)entityliving, d, d1, d2, f, f1);
+        renderPlayer((EntityPlayer)par1EntityLiving, par2, par4, par6, par8, par9);
     }
 
-    public void doRender(Entity entity, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
+     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
+     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
+     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
+     */
+    public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        renderPlayer((EntityPlayer)entity, d, d1, d2, f, f1);
+        renderPlayer((EntityPlayer)par1Entity, par2, par4, par6, par8, par9);
     }
 }
