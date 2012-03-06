@@ -1,7 +1,6 @@
 package com.heuristix;
 
 import net.minecraft.src.Config;
-import net.minecraft.src.TexturePackBase;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

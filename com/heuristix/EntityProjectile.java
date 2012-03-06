@@ -15,9 +15,9 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
     static {
-        ReflectionFacade.getInstance().putField(Entity.class, "heartsLife", "Y" /*"bW"*/);
-        ReflectionFacade.getInstance().putField(EntityLiving.class, "heartsHalvesLife", "ba" /*"S"*/);
-        ReflectionFacade.getInstance().putField(EntityLiving.class, "naturalArmorRating", "cc"/*"aU"*/);
+        ReflectionFacade.getInstance().putField(Entity.class, "heartsLife", "Y");
+        ReflectionFacade.getInstance().putField(EntityLiving.class, "heartsHalvesLife", "ba");
+        ReflectionFacade.getInstance().putField(EntityLiving.class, "naturalArmorRating", "cc");
     }
 
     public EntityLiving owner;
@@ -149,7 +149,7 @@ public abstract class EntityProjectile extends Entity {
     }
 
     public boolean onEntityHit(Entity hit) {
-        if (hit != null && (hit instanceof EntityLiving || hit instanceof DragonPart)) {
+        if (hit != null && (hit instanceof EntityLiving || hit instanceof EntityDragonPart)) {
             return damageEntityWithoutDelay(hit, Math.round(getDamage() * getDamageModifier()));
                 //ReflectionFacade.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
         }

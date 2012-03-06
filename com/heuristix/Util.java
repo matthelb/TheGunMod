@@ -436,7 +436,6 @@ public class Util {
         names.putField(SoundManager.class, "soundPoolSounds", "b");
         names.putField(SoundManager.class, "soundPoolStreaming", "c");
         names.putField(EntityPlayerSP.class, "mc", "b");
-        names.putField(Packet.class, "addIdClassMapping", "a");
         names.putField(RenderItem.class, "renderBlocks", "c");
         names.putField(RenderPlayer.class, "modelBiped", "c");
         names.putMethod(Packet.class, "addIdClassMapping", "a", int.class, boolean.class, boolean.class, Class.class);

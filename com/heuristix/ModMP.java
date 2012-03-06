@@ -20,7 +20,7 @@ import java.util.*;
  */
 public abstract class ModMP extends BaseModMp implements Mod {
 
-    public static final String CURRENT_VERSION = "1.1.0";
+    public static final String CURRENT_VERSION = "1.2.3";
 
     public static final float PIXELS_PER_ICON = 16;
 
@@ -50,13 +50,13 @@ public abstract class ModMP extends BaseModMp implements Mod {
         if (item.getItemName() == null) {
             item.setItemName(item.getName());
         }
-        ModLoader.AddName(item, item.getName());
+        ModLoader.addName(item, item.getName());
         if (item.hasWorkbenchRecipe() && item.getCraftingRecipe() != null && item.getCraftingRecipe().length > 0) {
             ItemStack stack = new ItemStack(item, item.getCraftingAmount());
             if(item.isShapelessRecipe()) {
-                ModLoader.AddShapelessRecipe(stack, item.getCraftingRecipe());
+                ModLoader.addShapelessRecipe(stack, item.getCraftingRecipe());
             } else {
-                ModLoader.AddRecipe(stack, item.getCraftingRecipe());
+                ModLoader.addRecipe(stack, item.getCraftingRecipe());
             }
         }
     }
@@ -73,19 +73,19 @@ public abstract class ModMP extends BaseModMp implements Mod {
              textureIndex = ModLoader.addOverride("/terrain.png", block.getIconPath());
         }
         block.blockIndexInTexture = textureIndex;
-        ModLoader.AddName(block, block.getName());
+        ModLoader.addName(block, block.getName());
         if(block.getCraftingRecipe() != null && block.getCraftingRecipe().length > 0) {
             ItemStack stack = new ItemStack(block, block.getCraftingAmount());
             if(block.isShapelessRecipe()) {
-                ModLoader.AddShapelessRecipe(stack, block.getCraftingRecipe());
+                ModLoader.addShapelessRecipe(stack, block.getCraftingRecipe());
             } else {
-                ModLoader.AddRecipe(stack, block.getCraftingRecipe());
+                ModLoader.addRecipe(stack, block.getCraftingRecipe());
             }
         }
         Item.itemsList[block.blockID] = new ItemBlock(block.blockID - 256);
     }
 
-    public final boolean OnTickInGame(float tick, Minecraft minecraft) {
+    public final boolean onTickInGame(float tick, Minecraft minecraft) {
         if (!texturesRegistered && minecraft.renderEngine != null) {
             for (TextureFX texture : textures) {
                 if(texture instanceof TextureDefaultMultipleFX) {
@@ -98,10 +98,10 @@ public abstract class ModMP extends BaseModMp implements Mod {
         if (!soundsRegistered) {
             registerAllSounds(minecraft);
         }
-        return OnTick(tick, minecraft);
+        return onTick(tick, minecraft);
     }
 
-    public boolean OnTick(float tick, Minecraft minecraft) {
+    public boolean onTick(float tick, Minecraft minecraft) {
         return true;
     }
 

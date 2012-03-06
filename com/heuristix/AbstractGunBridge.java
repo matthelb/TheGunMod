@@ -36,6 +36,7 @@ public abstract class AbstractGunBridge implements GunBridge {
         OBFUSCATED_CLASS_NAMES.add(new Pair("vq", "aar"));
         OBFUSCATED_CLASS_NAMES.add(new Pair("ry", "nq"));
         OBFUSCATED_CLASS_NAMES.add(new Pair("rv", "wd"));
+        OBFUSCATED_CLASS_NAMES.add(new Pair("wz", "acl"));
     }
 
     public void read(Gun gun, boolean deobfuscate) {

@@ -292,10 +292,10 @@ public class GunItemRenderer extends ItemRenderer {
         else if (itemstack != null) {
             GL11.glPushMatrix();
             float f7 = 0.8F;
-            if (entityplayersp.func_35205_Y() > 0) {
+            if (entityplayersp.getItemInUseCount() > 0) {
                 EnumAction enumaction = itemstack.getItemUseAction();
                 if (enumaction == EnumAction.eat || enumaction == EnumAction.drink) {
-                    float f16 = ((float)entityplayersp.func_35205_Y() - f) + 1.0F;
+                    float f16 = ((float)entityplayersp.getItemInUseCount() - f) + 1.0F;
                     float f22 = 1.0F - f16 / (float)itemstack.getMaxItemUseDuration();
                     float f29 = f22;
                     float f32 = 1.0F - f29;
@@ -327,7 +327,7 @@ public class GunItemRenderer extends ItemRenderer {
             GL11.glRotatef(-f24 * 80F, 1.0F, 0.0F, 0.0F);
             swingProgress = 0.4F;
             GL11.glScalef(swingProgress, swingProgress, swingProgress);
-            if (entityplayersp.func_35205_Y() > 0) {
+            if (entityplayersp.getItemInUseCount() > 0) {
                 EnumAction enumaction1 = itemstack.getItemUseAction();
                 if (enumaction1 == EnumAction.block) {
                     GL11.glTranslatef(-0.5F, 0.2F, 0.0F);
@@ -340,7 +340,7 @@ public class GunItemRenderer extends ItemRenderer {
                     GL11.glRotatef(-12F, 0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(-8F, 1.0F, 0.0F, 0.0F);
                     GL11.glTranslatef(-0.9F, 0.2F, 0.0F);
-                    float f25 = (float)itemstack.getMaxItemUseDuration() - (((float)entityplayersp.func_35205_Y() - f) + 1.0F);
+                    float f25 = (float)itemstack.getMaxItemUseDuration() - (((float)entityplayersp.getItemInUseCount() - f) + 1.0F);
                     float f30 = f25 / 20F;
                     f30 = (f30 * f30 + f30 * 2.0F) / 3F;
                     if (f30 > 1.0F) {

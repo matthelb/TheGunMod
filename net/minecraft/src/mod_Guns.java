@@ -73,7 +73,7 @@ public class mod_Guns extends ModMP {
     }
 
     public String getModVersion() {
-        return "0.9.83";
+        return "0.9.9";
     }
 
     @Override
@@ -116,13 +116,13 @@ public class mod_Guns extends ModMP {
         } else {
             Log.fine("Missing block textures file blocks.png in minecraft.jar/heuristix/", getClass());
         }
-        ModLoader.RegisterKey(this, reloadKeybinding, false);
-        ModLoader.RegisterKey(this, zoomKeybinding, false);
-        ModLoader.AddLocalization("key.reload", "Reload");
-        ModLoader.AddLocalization("key.zoom", "Zoom");
-        ModLoader.SetInGameHook(this, true, false);
+        ModLoader.registerKey(this, reloadKeybinding, false);
+        ModLoader.registerKey(this, zoomKeybinding, false);
+        ModLoader.addLocalization("key.reload", "Reload");
+        ModLoader.addLocalization("key.zoom", "Zoom");
+        ModLoader.setInGameHook(this, true, false);
         Util.setPacketId(PacketOpenCraftGuns.class, PacketOpenCraftGuns.PACKET_ID, true, true);
-        ModLoaderMp.RegisterGUI(this, PacketOpenCraftGuns.INVENTORY_TYPE);
+        ModLoaderMp.registerGUI(this, PacketOpenCraftGuns.INVENTORY_TYPE);
     }
 
     public Properties getConfig() throws IOException {
@@ -209,7 +209,7 @@ public class mod_Guns extends ModMP {
             }
             entityBulletClass = Util.defineClass(entityBulletClassBytes, null/*gunClasses.get(0).getFirst()*/, EntityProjectile.class.getClassLoader());
             classes.put(entityBulletClass.getName(), entityBulletClass);
-            ModLoaderMp.RegisterNetClientHandlerEntity(entityBulletClass, true, getUniqueEntityProjectileId());
+            ModLoaderMp.registerNetClientHandlerEntity(entityBulletClass, true, getUniqueEntityProjectileId());
         }
         ItemProjectile itemProjectile = projectiles.get(gunClasses.get(1).getFirst());
         if (itemProjectile == null) {
@@ -299,7 +299,7 @@ public class mod_Guns extends ModMP {
     }
 
     @Override
-    public boolean OnTick(float tick, Minecraft minecraft) {
+    public boolean onTick(float tick, Minecraft minecraft) {
         if (!reflectionInit) {
             reflectionInit = initReflection(minecraft);
         }
@@ -344,7 +344,7 @@ public class mod_Guns extends ModMP {
     }
 
     @Override
-    public void AddRenderer(Map map) {
+    public void addRenderer(Map map) {
         map.put(EntityBullet.class, new RenderBullet());
         map.put(EntityFlame.class, new RenderFlame());
         map.put(EntityGrenade.class, new RenderGrenade());
@@ -352,7 +352,7 @@ public class mod_Guns extends ModMP {
     }
 
     @Override
-    public GuiScreen HandleGUI(int type) {
+    public GuiScreen handleGUI(int type) {
         switch(type) {
             case PacketOpenCraftGuns.INVENTORY_TYPE:
                 Minecraft mc = ModLoader.getMinecraftInstance();
