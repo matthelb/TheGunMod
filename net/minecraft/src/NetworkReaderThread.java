@@ -2,12 +2,13 @@ package net.minecraft.src;
 
 class NetworkReaderThread extends Thread
 {
+    /** Reference to the NetworkManager object. */
     final NetworkManager netManager;
 
-    NetworkReaderThread(NetworkManager networkmanager, String s)
+    NetworkReaderThread(NetworkManager par1NetworkManager, String par2Str)
     {
-        super(s);
-        netManager = networkmanager;
+        super(par2Str);
+        netManager = par1NetworkManager;
     }
 
     public void run()
@@ -16,11 +17,13 @@ class NetworkReaderThread extends Thread
         {
             NetworkManager.numReadThreads++;
         }
+
         try
         {
             while (NetworkManager.isRunning(netManager) && !NetworkManager.isServerTerminating(netManager))
             {
                 while (NetworkManager.readNetworkPacket(netManager)) ;
+
                 try
                 {
                     sleep(2L);

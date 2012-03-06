@@ -4,9 +4,9 @@ import net.minecraft.server.MinecraftServer;
 
 public class WorldServerMulti extends WorldServer
 {
-    public WorldServerMulti(MinecraftServer minecraftserver, ISaveHandler isavehandler, String s, int i, WorldSettings worldsettings, WorldServer worldserver)
+    public WorldServerMulti(MinecraftServer par1MinecraftServer, ISaveHandler par2ISaveHandler, String par3Str, int par4, WorldSettings par5WorldSettings, WorldServer par6WorldServer)
     {
-        super(minecraftserver, isavehandler, s, i, worldsettings);
-        mapStorage = worldserver.mapStorage;
+        super(par1MinecraftServer, par2ISaveHandler, par3Str, par4, par5WorldSettings);
+        mapStorage = par6WorldServer.mapStorage;
     }
 }

@@ -4,65 +4,106 @@ import java.util.Random;
 
 public class BlockStationary extends BlockFluid
 {
-    protected BlockStationary(int i, Material material)
+    protected BlockStationary(int par1, Material par2Material)
     {
-        super(i, material);
-        setTickOnLoad(false);
-        if (material == Material.lava)
+        super(par1, par2Material);
+        setTickRandomly(false);
+
+        if (par2Material == Material.lava)
         {
-            setTickOnLoad(true);
+            setTickRandomly(true);
         }
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    public boolean func_48127_b(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        super.onNeighborBlockChange(world, i, j, k, l);
-        if (world.getBlockId(i, j, k) == blockID)
+        return blockMaterial != Material.lava;
+    }
+
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
+    {
+        super.onNeighborBlockChange(par1World, par2, par3, par4, par5);
+
+        if (par1World.getBlockId(par2, par3, par4) == blockID)
         {
-            setNotStationary(world, i, j, k);
+            setNotStationary(par1World, par2, par3, par4);
         }
     }
 
-    private void setNotStationary(World world, int i, int j, int k)
+    /**
+     * Changes the block ID to that of an updating fluid.
+     */
+    private void setNotStationary(World par1World, int par2, int par3, int par4)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        world.editingBlocks = true;
-        world.setBlockAndMetadata(i, j, k, blockID - 1, l);
-        world.markBlocksDirty(i, j, k, i, j, k);
-        world.scheduleBlockUpdate(i, j, k, blockID - 1, tickRate());
-        world.editingBlocks = false;
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        par1World.editingBlocks = true;
+        par1World.setBlockAndMetadata(par2, par3, par4, blockID - 1, i);
+        par1World.markBlocksDirty(par2, par3, par4, par2, par3, par4);
+        par1World.scheduleBlockUpdate(par2, par3, par4, blockID - 1, tickRate());
+        par1World.editingBlocks = false;
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
         if (blockMaterial == Material.lava)
         {
-            int l = random.nextInt(3);
-            for (int i1 = 0; i1 < l; i1++)
+            int i = par5Random.nextInt(3);
+
+            for (int j = 0; j < i; j++)
             {
-                i += random.nextInt(3) - 1;
-                j++;
-                k += random.nextInt(3) - 1;
-                int j1 = world.getBlockId(i, j, k);
-                if (j1 == 0)
+                par2 += par5Random.nextInt(3) - 1;
+                par3++;
+                par4 += par5Random.nextInt(3) - 1;
+                int l = par1World.getBlockId(par2, par3, par4);
+
+                if (l == 0)
                 {
-                    if (isFlammable(world, i - 1, j, k) || isFlammable(world, i + 1, j, k) || isFlammable(world, i, j, k - 1) || isFlammable(world, i, j, k + 1) || isFlammable(world, i, j - 1, k) || isFlammable(world, i, j + 1, k))
+                    if (isFlammable(par1World, par2 - 1, par3, par4) || isFlammable(par1World, par2 + 1, par3, par4) || isFlammable(par1World, par2, par3, par4 - 1) || isFlammable(par1World, par2, par3, par4 + 1) || isFlammable(par1World, par2, par3 - 1, par4) || isFlammable(par1World, par2, par3 + 1, par4))
                     {
-                        world.setBlockWithNotify(i, j, k, Block.fire.blockID);
+                        par1World.setBlockWithNotify(par2, par3, par4, Block.fire.blockID);
                         return;
                     }
+
                     continue;
                 }
-                if (Block.blocksList[j1].blockMaterial.getIsSolid())
+
+                if (Block.blocksList[l].blockMaterial.blocksMovement())
                 {
                     return;
+                }
+            }
+
+            if (i == 0)
+            {
+                int k = par2;
+                int i1 = par4;
+
+                for (int j1 = 0; j1 < 3; j1++)
+                {
+                    par2 = (k + par5Random.nextInt(3)) - 1;
+                    par4 = (i1 + par5Random.nextInt(3)) - 1;
+
+                    if (par1World.isAirBlock(par2, par3 + 1, par4) && isFlammable(par1World, par2, par3, par4))
+                    {
+                        par1World.setBlockWithNotify(par2, par3 + 1, par4, Block.fire.blockID);
+                    }
                 }
             }
         }
     }
 
-    private boolean isFlammable(World world, int i, int j, int k)
+    /**
+     * Checks to see if the block is flammable.
+     */
+    private boolean isFlammable(World par1World, int par2, int par3, int par4)
     {
-        return world.getBlockMaterial(i, j, k).getCanBurn();
+        return par1World.getBlockMaterial(par2, par3, par4).getCanBurn();
     }
 }

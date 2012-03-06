@@ -4,19 +4,39 @@ import java.util.*;
 
 public abstract class EntityPlayer extends EntityLiving
 {
+    /** Inventory of the player */
     public InventoryPlayer inventory;
+
+    /** the crafting inventory in you get when opening your inventory */
     public Container inventorySlots;
+
+    /** the crafting inventory you are currently using */
     public Container craftingInventory;
+
+    /** The food object of the player, the general hunger logic. */
     protected FoodStats foodStats;
+
+    /**
+     * Used to tell if the player pressed jump twice. If this is at 0 and it's pressed (And they are allowed to fly, as
+     * defined in the player's movementInput) it sets this to 7. If it's pressed and it's greater than 0 enable fly.
+     */
     protected int flyToggleTimer;
-    public byte unusedByte;
+    public byte field_9152_am;
     public int score;
     public float prevCameraYaw;
     public float cameraYaw;
+
+    /** Whether the player is swinging the current item in their hand. */
     public boolean isSwinging;
     public int swingProgressInt;
     public String username;
+
+    /** Which dimension the player is in (-1 = the Nether, 0 = normal world) */
     public int dimension;
+
+    /**
+     * Used by EntityPlayer to prevent too many xp orbs from getting absorbed at once.
+     */
     public int xpCooldown;
     public double field_20047_ay;
     public double field_20046_az;
@@ -25,32 +45,50 @@ public abstract class EntityPlayer extends EntityLiving
     public double field_20049_aC;
     public double field_20048_aD;
     protected boolean sleeping;
+
+    /** the current location of the player */
     public ChunkCoordinates playerLocation;
     private int sleepTimer;
     public float field_22066_z;
     public float field_22067_A;
+
+    /** holds the spawn chunk of the player */
     private ChunkCoordinates spawnChunk;
     private ChunkCoordinates startMinecartRidingCoordinate;
     public int timeUntilPortal;
     protected boolean inPortal;
     public float timeInPortal;
     public PlayerCapabilities capabilities;
+
+    /** The player's experience level. */
     public int experienceLevel;
+
+    /** The player's experience total score. */
     public int experienceTotal;
+
+    /** The player's experience score. */
     public float experience;
+
+    /**
+     * This is the item that is in use when the player is holding down the useItemButton (e.g., bow, food, sword)
+     */
     private ItemStack itemInUse;
+
+    /**
+     * This field starts off equal to getMaxItemUseDuration and is decremented on each tick
+     */
     private int itemInUseCount;
     protected float speedOnGround;
     protected float speedInAir;
     public EntityFishHook fishEntity;
 
-    public EntityPlayer(World world)
+    public EntityPlayer(World par1World)
     {
-        super(world);
+        super(par1World);
         inventory = new InventoryPlayer(this);
         foodStats = new FoodStats();
         flyToggleTimer = 0;
-        unusedByte = 0;
+        field_9152_am = 0;
         score = 0;
         isSwinging = false;
         swingProgressInt = 0;
@@ -61,10 +99,10 @@ public abstract class EntityPlayer extends EntityLiving
         speedOnGround = 0.1F;
         speedInAir = 0.02F;
         fishEntity = null;
-        inventorySlots = new ContainerPlayer(inventory, !world.isRemote);
+        inventorySlots = new ContainerPlayer(inventory, !par1World.isRemote);
         craftingInventory = inventorySlots;
         yOffset = 1.62F;
-        ChunkCoordinates chunkcoordinates = world.getSpawnPoint();
+        ChunkCoordinates chunkcoordinates = par1World.getSpawnPoint();
         setLocationAndAngles((double)chunkcoordinates.posX + 0.5D, chunkcoordinates.posY + 1, (double)chunkcoordinates.posZ + 0.5D, 0.0F, 0.0F);
         entityType = "humanoid";
         field_9117_aI = 180F;
@@ -84,6 +122,9 @@ public abstract class EntityPlayer extends EntityLiving
         dataWatcher.addObject(17, Byte.valueOf((byte)0));
     }
 
+    /**
+     * checks if the entity is currently using an item (e.g., bow, food, sword) by holding down the useItemButton
+     */
     public boolean isUsingItem()
     {
         return itemInUse != null;
@@ -95,6 +136,7 @@ public abstract class EntityPlayer extends EntityLiving
         {
             itemInUse.onPlayerStoppedUsing(worldObj, this, itemInUseCount);
         }
+
         clearItemInUse();
     }
 
@@ -102,6 +144,7 @@ public abstract class EntityPlayer extends EntityLiving
     {
         itemInUse = null;
         itemInUseCount = 0;
+
         if (!worldObj.isRemote)
         {
             setEating(false);
@@ -113,11 +156,15 @@ public abstract class EntityPlayer extends EntityLiving
         return isUsingItem() && Item.itemsList[itemInUse.itemID].getItemUseAction(itemInUse) == EnumAction.block;
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         if (itemInUse != null)
         {
             ItemStack itemstack = inventory.getCurrentItem();
+
             if (itemstack != itemInUse)
             {
                 clearItemInUse();
@@ -128,23 +175,28 @@ public abstract class EntityPlayer extends EntityLiving
                 {
                     func_35208_b(itemstack, 5);
                 }
+
                 if (--itemInUseCount == 0 && !worldObj.isRemote)
                 {
                     func_35199_C();
                 }
             }
         }
+
         if (xpCooldown > 0)
         {
             xpCooldown--;
         }
+
         if (isPlayerSleeping())
         {
             sleepTimer++;
+
             if (sleepTimer > 100)
             {
                 sleepTimer = 100;
             }
+
             if (!worldObj.isRemote)
             {
                 if (!isInBed())
@@ -160,25 +212,31 @@ public abstract class EntityPlayer extends EntityLiving
         else if (sleepTimer > 0)
         {
             sleepTimer++;
+
             if (sleepTimer >= 110)
             {
                 sleepTimer = 0;
             }
         }
+
         super.onUpdate();
+
         if (!worldObj.isRemote && craftingInventory != null && !craftingInventory.canInteractWith(this))
         {
             closeScreen();
             craftingInventory = inventorySlots;
         }
+
         if (capabilities.isFlying)
         {
             for (int i = 0; i < 8; i++) { }
         }
+
         if (isBurning() && capabilities.disableDamage)
         {
             extinguish();
         }
+
         field_20047_ay = field_20050_aB;
         field_20046_az = field_20049_aC;
         field_20051_aA = field_20048_aD;
@@ -186,62 +244,72 @@ public abstract class EntityPlayer extends EntityLiving
         double d1 = posY - field_20049_aC;
         double d2 = posZ - field_20048_aD;
         double d3 = 10D;
+
         if (d > d3)
         {
             field_20047_ay = field_20050_aB = posX;
         }
+
         if (d2 > d3)
         {
             field_20051_aA = field_20048_aD = posZ;
         }
+
         if (d1 > d3)
         {
             field_20046_az = field_20049_aC = posY;
         }
+
         if (d < -d3)
         {
             field_20047_ay = field_20050_aB = posX;
         }
+
         if (d2 < -d3)
         {
             field_20051_aA = field_20048_aD = posZ;
         }
+
         if (d1 < -d3)
         {
             field_20046_az = field_20049_aC = posY;
         }
+
         field_20050_aB += d * 0.25D;
         field_20048_aD += d2 * 0.25D;
         field_20049_aC += d1 * 0.25D;
         addStat(StatList.minutesPlayedStat, 1);
+
         if (ridingEntity == null)
         {
             startMinecartRidingCoordinate = null;
         }
+
         if (!worldObj.isRemote)
         {
             foodStats.onUpdate(this);
         }
     }
 
-    protected void func_35208_b(ItemStack itemstack, int i)
+    protected void func_35208_b(ItemStack par1ItemStack, int par2)
     {
-        if (itemstack.getItemUseAction() == EnumAction.drink)
+        if (par1ItemStack.getItemUseAction() == EnumAction.drink)
         {
             worldObj.playSoundAtEntity(this, "random.drink", 0.5F, worldObj.rand.nextFloat() * 0.1F + 0.9F);
         }
-        if (itemstack.getItemUseAction() == EnumAction.eat)
+
+        if (par1ItemStack.getItemUseAction() == EnumAction.eat)
         {
-            for (int j = 0; j < i; j++)
+            for (int i = 0; i < par2; i++)
             {
-                Vec3D vec3d = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.10000000000000001D, Math.random() * 0.10000000000000001D + 0.10000000000000001D, 0.0D);
-                vec3d.rotateAroundX((-rotationPitch * 3.141593F) / 180F);
-                vec3d.rotateAroundY((-rotationYaw * 3.141593F) / 180F);
-                Vec3D vec3d1 = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.29999999999999999D, (double)(-rand.nextFloat()) * 0.59999999999999998D - 0.29999999999999999D, 0.59999999999999998D);
-                vec3d1.rotateAroundX((-rotationPitch * 3.141593F) / 180F);
-                vec3d1.rotateAroundY((-rotationYaw * 3.141593F) / 180F);
+                Vec3D vec3d = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+                vec3d.rotateAroundX((-rotationPitch * (float)Math.PI) / 180F);
+                vec3d.rotateAroundY((-rotationYaw * (float)Math.PI) / 180F);
+                Vec3D vec3d1 = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.3D, (double)(-rand.nextFloat()) * 0.6D - 0.3D, 0.6D);
+                vec3d1.rotateAroundX((-rotationPitch * (float)Math.PI) / 180F);
+                vec3d1.rotateAroundY((-rotationYaw * (float)Math.PI) / 180F);
                 vec3d1 = vec3d1.addVector(posX, posY + (double)getEyeHeight(), posZ);
-                worldObj.spawnParticle((new StringBuilder()).append("iconcrack_").append(itemstack.getItem().shiftedIndex).toString(), vec3d1.xCoord, vec3d1.yCoord, vec3d1.zCoord, vec3d.xCoord, vec3d.yCoord + 0.050000000000000003D, vec3d.zCoord);
+                worldObj.spawnParticle((new StringBuilder()).append("iconcrack_").append(par1ItemStack.getItem().shiftedIndex).toString(), vec3d1.xCoord, vec3d1.yCoord, vec3d1.zCoord, vec3d.xCoord, vec3d.yCoord + 0.05D, vec3d.zCoord);
             }
 
             worldObj.playSoundAtEntity(this, "random.eat", 0.5F + 0.5F * (float)rand.nextInt(2), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
@@ -255,28 +323,40 @@ public abstract class EntityPlayer extends EntityLiving
             func_35208_b(itemInUse, 16);
             int i = itemInUse.stackSize;
             ItemStack itemstack = itemInUse.onFoodEaten(worldObj, this);
+
             if (itemstack != itemInUse || itemstack != null && itemstack.stackSize != i)
             {
                 inventory.mainInventory[inventory.currentItem] = itemstack;
+
                 if (itemstack.stackSize == 0)
                 {
                     inventory.mainInventory[inventory.currentItem] = null;
                 }
             }
+
             clearItemInUse();
         }
     }
 
+    /**
+     * Dead and sleeping entities cannot move
+     */
     protected boolean isMovementBlocked()
     {
         return getEntityHealth() <= 0 || isPlayerSleeping();
     }
 
+    /**
+     * set current crafting inventory back to the 2x2 square
+     */
     protected void closeScreen()
     {
         craftingInventory = inventorySlots;
     }
 
+    /**
+     * Handles updating while being ridden by an entity
+     */
     public void updateRidden()
     {
         double d = posX;
@@ -288,12 +368,13 @@ public abstract class EntityPlayer extends EntityLiving
         addMountedMovementStat(posX - d, posY - d1, posZ - d2);
     }
 
-    private int func_35204_o()
+    private int getSwingSpeedModifier()
     {
         if (isPotionActive(Potion.digSpeed))
         {
             return 6 - (1 + getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1;
         }
+
         if (isPotionActive(Potion.digSlowdown))
         {
             return 6 + (1 + getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2;
@@ -306,10 +387,12 @@ public abstract class EntityPlayer extends EntityLiving
 
     protected void updateEntityActionState()
     {
-        int i = func_35204_o();
+        int i = getSwingSpeedModifier();
+
         if (isSwinging)
         {
             swingProgressInt++;
+
             if (swingProgressInt >= i)
             {
                 swingProgressInt = 0;
@@ -320,53 +403,69 @@ public abstract class EntityPlayer extends EntityLiving
         {
             swingProgressInt = 0;
         }
+
         swingProgress = (float)swingProgressInt / (float)i;
     }
 
+    /**
+     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+     * use this to react to sunlight and start to burn.
+     */
     public void onLivingUpdate()
     {
         if (flyToggleTimer > 0)
         {
             flyToggleTimer--;
         }
+
         if (worldObj.difficultySetting == 0 && getEntityHealth() < getMaxHealth() && (ticksExisted % 20) * 12 == 0)
         {
             heal(1);
         }
+
         inventory.decrementAnimations();
         prevCameraYaw = cameraYaw;
         super.onLivingUpdate();
         landMovementFactor = speedOnGround;
         jumpMovementFactor = speedInAir;
+
         if (isSprinting())
         {
-            landMovementFactor += (double)speedOnGround * 0.29999999999999999D;
-            jumpMovementFactor += (double)speedInAir * 0.29999999999999999D;
+            landMovementFactor += (double)speedOnGround * 0.3D;
+            jumpMovementFactor += (double)speedInAir * 0.3D;
         }
+
         float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
-        float f1 = (float)Math.atan(-motionY * 0.20000000298023224D) * 15F;
+        float f1 = (float)Math.atan(-motionY * 0.2D) * 15F;
+
         if (f > 0.1F)
         {
             f = 0.1F;
         }
+
         if (!onGround || getEntityHealth() <= 0)
         {
             f = 0.0F;
         }
+
         if (onGround || getEntityHealth() <= 0)
         {
             f1 = 0.0F;
         }
+
         cameraYaw += (f - cameraYaw) * 0.4F;
         cameraPitch += (f1 - cameraPitch) * 0.8F;
+
         if (getEntityHealth() > 0)
         {
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(1.0D, 0.0D, 1.0D));
+
             if (list != null)
             {
                 for (int i = 0; i < list.size(); i++)
                 {
                     Entity entity = (Entity)list.get(i);
+
                     if (!entity.isDead)
                     {
                         collideWithPlayer(entity);
@@ -376,39 +475,47 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    private void collideWithPlayer(Entity entity)
+    private void collideWithPlayer(Entity par1Entity)
     {
-        entity.onCollideWithPlayer(this);
+        par1Entity.onCollideWithPlayer(this);
     }
 
-    public void onDeath(DamageSource damagesource)
+    /**
+     * Called when the mob's health reaches 0.
+     */
+    public void onDeath(DamageSource par1DamageSource)
     {
-        super.onDeath(damagesource);
+        super.onDeath(par1DamageSource);
         setSize(0.2F, 0.2F);
         setPosition(posX, posY, posZ);
-        motionY = 0.10000000149011612D;
+        motionY = 0.1D;
+
         if (username.equals("Notch"))
         {
-            dropPlayerItemWithRandomChoice(new ItemStack(Item.appleRed, 1), true);
+            func_48349_a(new ItemStack(Item.appleRed, 1), true);
         }
+
         inventory.dropAllItems();
-        if (damagesource != null)
+
+        if (par1DamageSource != null)
         {
-            motionX = -MathHelper.cos(((attackedAtYaw + rotationYaw) * 3.141593F) / 180F) * 0.1F;
-            motionZ = -MathHelper.sin(((attackedAtYaw + rotationYaw) * 3.141593F) / 180F) * 0.1F;
+            motionX = -MathHelper.cos(((attackedAtYaw + rotationYaw) * (float)Math.PI) / 180F) * 0.1F;
+            motionZ = -MathHelper.sin(((attackedAtYaw + rotationYaw) * (float)Math.PI) / 180F) * 0.1F;
         }
         else
         {
             motionX = motionZ = 0.0D;
         }
+
         yOffset = 0.1F;
         addStat(StatList.deathsStat, 1);
     }
 
-    public void addToPlayerScore(Entity entity, int i)
+    public void addToPlayerScore(Entity par1Entity, int par2)
     {
-        score += i;
-        if (entity instanceof EntityPlayer)
+        score += par2;
+
+        if (par1Entity instanceof EntityPlayer)
         {
             addStat(StatList.playerKillsStat, 1);
         }
@@ -418,145 +525,182 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    protected int decreaseAirSupply(int i)
+    /**
+     * Decrements the entity's air supply when underwater
+     */
+    protected int decreaseAirSupply(int par1)
     {
-        int j = EnchantmentHelper.getRespiration(inventory);
-        if (j > 0 && rand.nextInt(j + 1) > 0)
+        int i = EnchantmentHelper.getRespiration(inventory);
+
+        if (i > 0 && rand.nextInt(i + 1) > 0)
         {
-            return i;
+            return par1;
         }
         else
         {
-            return super.decreaseAirSupply(i);
+            return super.decreaseAirSupply(par1);
         }
     }
 
-    public void dropCurrentItem()
+    public EntityItem func_48347_R()
     {
-        dropPlayerItemWithRandomChoice(inventory.decrStackSize(inventory.currentItem, 1), false);
+        return func_48349_a(inventory.decrStackSize(inventory.currentItem, 1), false);
     }
 
-    public void dropPlayerItem(ItemStack itemstack)
+    public EntityItem func_48348_b(ItemStack par1ItemStack)
     {
-        dropPlayerItemWithRandomChoice(itemstack, false);
+        return func_48349_a(par1ItemStack, false);
     }
 
-    public void dropPlayerItemWithRandomChoice(ItemStack itemstack, boolean flag)
+    public EntityItem func_48349_a(ItemStack par1ItemStack, boolean par2)
     {
-        if (itemstack == null)
+        if (par1ItemStack == null)
         {
-            return;
+            return null;
         }
-        EntityItem entityitem = new EntityItem(worldObj, posX, (posY - 0.30000001192092896D) + (double)getEyeHeight(), posZ, itemstack);
+
+        EntityItem entityitem = new EntityItem(worldObj, posX, (posY - 0.3D) + (double)getEyeHeight(), posZ, par1ItemStack);
         entityitem.delayBeforeCanPickup = 40;
         float f = 0.1F;
-        if (flag)
+
+        if (par2)
         {
             float f2 = rand.nextFloat() * 0.5F;
-            float f4 = rand.nextFloat() * 3.141593F * 2.0F;
+            float f4 = rand.nextFloat() * (float)Math.PI * 2.0F;
             entityitem.motionX = -MathHelper.sin(f4) * f2;
             entityitem.motionZ = MathHelper.cos(f4) * f2;
-            entityitem.motionY = 0.20000000298023224D;
+            entityitem.motionY = 0.2D;
         }
         else
         {
             float f1 = 0.3F;
-            entityitem.motionX = -MathHelper.sin((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F) * f1;
-            entityitem.motionZ = MathHelper.cos((rotationYaw / 180F) * 3.141593F) * MathHelper.cos((rotationPitch / 180F) * 3.141593F) * f1;
-            entityitem.motionY = -MathHelper.sin((rotationPitch / 180F) * 3.141593F) * f1 + 0.1F;
+            entityitem.motionX = -MathHelper.sin((rotationYaw / 180F) * (float)Math.PI) * MathHelper.cos((rotationPitch / 180F) * (float)Math.PI) * f1;
+            entityitem.motionZ = MathHelper.cos((rotationYaw / 180F) * (float)Math.PI) * MathHelper.cos((rotationPitch / 180F) * (float)Math.PI) * f1;
+            entityitem.motionY = -MathHelper.sin((rotationPitch / 180F) * (float)Math.PI) * f1 + 0.1F;
             f1 = 0.02F;
-            float f3 = rand.nextFloat() * 3.141593F * 2.0F;
+            float f3 = rand.nextFloat() * (float)Math.PI * 2.0F;
             f1 *= rand.nextFloat();
             entityitem.motionX += Math.cos(f3) * (double)f1;
             entityitem.motionY += (rand.nextFloat() - rand.nextFloat()) * 0.1F;
             entityitem.motionZ += Math.sin(f3) * (double)f1;
         }
+
         joinEntityItemWithWorld(entityitem);
         addStat(StatList.dropStat, 1);
+        return entityitem;
     }
 
-    protected void joinEntityItemWithWorld(EntityItem entityitem)
+    /**
+     * Joins the passed in entity item with the world. Args: entityItem
+     */
+    protected void joinEntityItemWithWorld(EntityItem par1EntityItem)
     {
-        worldObj.spawnEntityInWorld(entityitem);
+        worldObj.spawnEntityInWorld(par1EntityItem);
     }
 
-    public float getCurrentPlayerStrVsBlock(Block block)
+    /**
+     * Returns how strong the player is against the specified block at this moment
+     */
+    public float getCurrentPlayerStrVsBlock(Block par1Block)
     {
-        float f = inventory.getStrVsBlock(block);
+        float f = inventory.getStrVsBlock(par1Block);
         float f1 = f;
         int i = EnchantmentHelper.getEfficiencyModifier(inventory);
-        if (i > 0 && inventory.canHarvestBlock(block))
+
+        if (i > 0 && inventory.canHarvestBlock(par1Block))
         {
             f1 += i * i + 1;
         }
+
         if (isPotionActive(Potion.digSpeed))
         {
             f1 *= 1.0F + (float)(getActivePotionEffect(Potion.digSpeed).getAmplifier() + 1) * 0.2F;
         }
+
         if (isPotionActive(Potion.digSlowdown))
         {
             f1 *= 1.0F - (float)(getActivePotionEffect(Potion.digSlowdown).getAmplifier() + 1) * 0.2F;
         }
+
         if (isInsideOfMaterial(Material.water) && !EnchantmentHelper.getAquaAffinityModifier(inventory))
         {
             f1 /= 5F;
         }
+
         if (!onGround)
         {
             f1 /= 5F;
         }
+
         return f1;
     }
 
-    public boolean canHarvestBlock(Block block)
+    /**
+     * Checks if the player has the ability to harvest a block (checks current inventory item for a tool if necessary)
+     */
+    public boolean canHarvestBlock(Block par1Block)
     {
-        return inventory.canHarvestBlock(block);
+        return inventory.canHarvestBlock(par1Block);
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readEntityFromNBT(nbttagcompound);
-        NBTTagList nbttaglist = nbttagcompound.getTagList("Inventory");
+        super.readEntityFromNBT(par1NBTTagCompound);
+        NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Inventory");
         inventory.readFromNBT(nbttaglist);
-        dimension = nbttagcompound.getInteger("Dimension");
-        sleeping = nbttagcompound.getBoolean("Sleeping");
-        sleepTimer = nbttagcompound.getShort("SleepTimer");
-        experience = nbttagcompound.getFloat("XpP");
-        experienceLevel = nbttagcompound.getInteger("XpLevel");
-        experienceTotal = nbttagcompound.getInteger("XpTotal");
+        dimension = par1NBTTagCompound.getInteger("Dimension");
+        sleeping = par1NBTTagCompound.getBoolean("Sleeping");
+        sleepTimer = par1NBTTagCompound.getShort("SleepTimer");
+        experience = par1NBTTagCompound.getFloat("XpP");
+        experienceLevel = par1NBTTagCompound.getInteger("XpLevel");
+        experienceTotal = par1NBTTagCompound.getInteger("XpTotal");
+
         if (sleeping)
         {
             playerLocation = new ChunkCoordinates(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
             wakeUpPlayer(true, true, false);
         }
-        if (nbttagcompound.hasKey("SpawnX") && nbttagcompound.hasKey("SpawnY") && nbttagcompound.hasKey("SpawnZ"))
+
+        if (par1NBTTagCompound.hasKey("SpawnX") && par1NBTTagCompound.hasKey("SpawnY") && par1NBTTagCompound.hasKey("SpawnZ"))
         {
-            spawnChunk = new ChunkCoordinates(nbttagcompound.getInteger("SpawnX"), nbttagcompound.getInteger("SpawnY"), nbttagcompound.getInteger("SpawnZ"));
+            spawnChunk = new ChunkCoordinates(par1NBTTagCompound.getInteger("SpawnX"), par1NBTTagCompound.getInteger("SpawnY"), par1NBTTagCompound.getInteger("SpawnZ"));
         }
-        foodStats.readNBT(nbttagcompound);
-        capabilities.readCapabilitiesFromNBT(nbttagcompound);
+
+        foodStats.readNBT(par1NBTTagCompound);
+        capabilities.readCapabilitiesFromNBT(par1NBTTagCompound);
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeEntityToNBT(nbttagcompound);
-        nbttagcompound.setTag("Inventory", inventory.writeToNBT(new NBTTagList()));
-        nbttagcompound.setInteger("Dimension", dimension);
-        nbttagcompound.setBoolean("Sleeping", sleeping);
-        nbttagcompound.setShort("SleepTimer", (short)sleepTimer);
-        nbttagcompound.setFloat("XpP", experience);
-        nbttagcompound.setInteger("XpLevel", experienceLevel);
-        nbttagcompound.setInteger("XpTotal", experienceTotal);
+        super.writeEntityToNBT(par1NBTTagCompound);
+        par1NBTTagCompound.setTag("Inventory", inventory.writeToNBT(new NBTTagList()));
+        par1NBTTagCompound.setInteger("Dimension", dimension);
+        par1NBTTagCompound.setBoolean("Sleeping", sleeping);
+        par1NBTTagCompound.setShort("SleepTimer", (short)sleepTimer);
+        par1NBTTagCompound.setFloat("XpP", experience);
+        par1NBTTagCompound.setInteger("XpLevel", experienceLevel);
+        par1NBTTagCompound.setInteger("XpTotal", experienceTotal);
+
         if (spawnChunk != null)
         {
-            nbttagcompound.setInteger("SpawnX", spawnChunk.posX);
-            nbttagcompound.setInteger("SpawnY", spawnChunk.posY);
-            nbttagcompound.setInteger("SpawnZ", spawnChunk.posZ);
+            par1NBTTagCompound.setInteger("SpawnX", spawnChunk.posX);
+            par1NBTTagCompound.setInteger("SpawnY", spawnChunk.posY);
+            par1NBTTagCompound.setInteger("SpawnZ", spawnChunk.posZ);
         }
-        foodStats.writeNBT(nbttagcompound);
-        capabilities.writeCapabilitiesToNBT(nbttagcompound);
+
+        foodStats.writeNBT(par1NBTTagCompound);
+        capabilities.writeCapabilitiesToNBT(par1NBTTagCompound);
     }
 
+    /**
+     * Displays the GUI for interacting with a chest inventory. Args: chestInventory
+     */
     public void displayGUIChest(IInventory iinventory)
     {
     }
@@ -565,10 +709,16 @@ public abstract class EntityPlayer extends EntityLiving
     {
     }
 
+    /**
+     * Displays the crafting GUI for a workbench.
+     */
     public void displayWorkbenchGUI(int i, int j, int k)
     {
     }
 
+    /**
+     * Called whenever an item is picked up from walking over it. Args: pickedUpEntity, stackSize
+     */
     public void onItemPickup(Entity entity, int i)
     {
     }
@@ -578,153 +728,206 @@ public abstract class EntityPlayer extends EntityLiving
         return 0.12F;
     }
 
+    /**
+     * sets the players height back to normal after doing things like sleeping and dieing
+     */
     protected void resetHeight()
     {
         yOffset = 1.62F;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
-        if (capabilities.disableDamage && !damagesource.canHarmInCreative())
+        if (capabilities.disableDamage && !par1DamageSource.canHarmInCreative())
         {
             return false;
         }
+
         entityAge = 0;
+
         if (getEntityHealth() <= 0)
         {
             return false;
         }
+
         if (isPlayerSleeping() && !worldObj.isRemote)
         {
             wakeUpPlayer(true, true, false);
         }
-        Entity entity = damagesource.getEntity();
+
+        Entity entity = par1DamageSource.getEntity();
+
         if ((entity instanceof EntityMob) || (entity instanceof EntityArrow))
         {
             if (worldObj.difficultySetting == 0)
             {
-                i = 0;
+                par2 = 0;
             }
+
             if (worldObj.difficultySetting == 1)
             {
-                i = i / 2 + 1;
+                par2 = par2 / 2 + 1;
             }
+
             if (worldObj.difficultySetting == 3)
             {
-                i = (i * 3) / 2;
+                par2 = (par2 * 3) / 2;
             }
         }
-        if (i == 0)
+
+        if (par2 == 0)
         {
             return false;
         }
+
         Entity entity1 = entity;
+
         if ((entity1 instanceof EntityArrow) && ((EntityArrow)entity1).shootingEntity != null)
         {
             entity1 = ((EntityArrow)entity1).shootingEntity;
         }
+
         if (entity1 instanceof EntityLiving)
         {
             alertWolves((EntityLiving)entity1, false);
         }
-        addStat(StatList.damageTakenStat, i);
-        return super.attackEntityFrom(damagesource, i);
+
+        addStat(StatList.damageTakenStat, par2);
+        return super.attackEntityFrom(par1DamageSource, par2);
     }
 
-    protected int applyPotionDamageCalculations(DamageSource damagesource, int i)
+    /**
+     * Reduces damage, depending on potions
+     */
+    protected int applyPotionDamageCalculations(DamageSource par1DamageSource, int par2)
     {
-        int j = super.applyPotionDamageCalculations(damagesource, i);
-        if (j <= 0)
+        int i = super.applyPotionDamageCalculations(par1DamageSource, par2);
+
+        if (i <= 0)
         {
             return 0;
         }
-        int k = EnchantmentHelper.getEnchantmentModifierDamage(inventory, damagesource);
-        if (k > 20)
+
+        int j = EnchantmentHelper.getEnchantmentModifierDamage(inventory, par1DamageSource);
+
+        if (j > 20)
         {
-            k = 20;
+            j = 20;
         }
-        if (k > 0 && k <= 20)
+
+        if (j > 0 && j <= 20)
         {
-            int l = 25 - k;
-            int i1 = j * l + carryoverDamage;
-            j = i1 / 25;
-            carryoverDamage = i1 % 25;
+            int k = 25 - j;
+            int l = i * k + carryoverDamage;
+            i = l / 25;
+            carryoverDamage = l % 25;
         }
-        return j;
+
+        return i;
     }
 
+    /**
+     * returns if pvp is enabled or not
+     */
     protected boolean isPVPEnabled()
     {
         return false;
     }
 
-    protected void alertWolves(EntityLiving entityliving, boolean flag)
+    protected void alertWolves(EntityLiving par1EntityLiving, boolean par2)
     {
-        if ((entityliving instanceof EntityCreeper) || (entityliving instanceof EntityGhast))
+        if ((par1EntityLiving instanceof EntityCreeper) || (par1EntityLiving instanceof EntityGhast))
         {
             return;
         }
-        if (entityliving instanceof EntityWolf)
+
+        if (par1EntityLiving instanceof EntityWolf)
         {
-            EntityWolf entitywolf = (EntityWolf)entityliving;
-            if (entitywolf.isTamed() && username.equals(entitywolf.getOwner()))
+            EntityWolf entitywolf = (EntityWolf)par1EntityLiving;
+
+            if (entitywolf.func_48373_u_() && username.equals(entitywolf.func_48367_A()))
             {
                 return;
             }
         }
-        if ((entityliving instanceof EntityPlayer) && !isPVPEnabled())
+
+        if ((par1EntityLiving instanceof EntityPlayer) && !isPVPEnabled())
         {
             return;
         }
+
         List list = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityWolf.class, AxisAlignedBB.getBoundingBoxFromPool(posX, posY, posZ, posX + 1.0D, posY + 1.0D, posZ + 1.0D).expand(16D, 4D, 16D));
         Iterator iterator = list.iterator();
+
         do
         {
             if (!iterator.hasNext())
             {
                 break;
             }
+
             Entity entity = (Entity)iterator.next();
             EntityWolf entitywolf1 = (EntityWolf)entity;
-            if (entitywolf1.isTamed() && entitywolf1.getEntityToAttack() == null && username.equals(entitywolf1.getOwner()) && (!flag || !entitywolf1.isSitting()))
+
+            if (entitywolf1.func_48373_u_() && entitywolf1.getEntityToAttack() == null && username.equals(entitywolf1.func_48367_A()) && (!par2 || !entitywolf1.func_48371_v_()))
             {
-                entitywolf1.setIsSitting(false);
-                entitywolf1.setTarget(entityliving);
+                entitywolf1.func_48369_c(false);
+                entitywolf1.setTarget(par1EntityLiving);
             }
         }
         while (true);
     }
 
-    protected void func_40101_g(int i)
+    protected void damageArmor(int par1)
     {
-        inventory.damageArmor(i);
+        inventory.damageArmor(par1);
     }
 
+    /**
+     * Returns the current armor value as determined by a call to InventoryPlayer.getTotalArmorValue
+     */
     public int getTotalArmorValue()
     {
         return inventory.getTotalArmorValue();
     }
 
-    protected void damageEntity(DamageSource damagesource, int i)
+    /**
+     * Deals damage to the entity. If its a EntityPlayer then will take damage from the armor first and then health
+     * second with the reduced value. Args: damageAmount
+     */
+    protected void damageEntity(DamageSource par1DamageSource, int par2)
     {
-        if (!damagesource.isUnblockable() && isBlocking())
+        if (!par1DamageSource.isUnblockable() && isBlocking())
         {
-            i = 1 + i >> 1;
+            par2 = 1 + par2 >> 1;
         }
-        i = applyArmorCalculations(damagesource, i);
-        i = applyPotionDamageCalculations(damagesource, i);
-        addExhaustion(damagesource.getHungerDamage());
-        health -= i;
+
+        par2 = applyArmorCalculations(par1DamageSource, par2);
+        par2 = applyPotionDamageCalculations(par1DamageSource, par2);
+        addExhaustion(par1DamageSource.getHungerDamage());
+        health -= par2;
     }
 
+    /**
+     * Displays the furnace GUI for the passed in furnace entity. Args: tileEntityFurnace
+     */
     public void displayGUIFurnace(TileEntityFurnace tileentityfurnace)
     {
     }
 
+    /**
+     * Displays the dipsenser GUI for the passed in dispenser entity. Args: TileEntityDispenser
+     */
     public void displayGUIDispenser(TileEntityDispenser tileentitydispenser)
     {
     }
 
+    /**
+     * Displays the GUI for editing a sign. Args: tileEntitySign
+     */
     public void displayGUIEditSign(TileEntitySign tileentitysign)
     {
     }
@@ -733,16 +936,22 @@ public abstract class EntityPlayer extends EntityLiving
     {
     }
 
-    public void useCurrentItemOnEntity(Entity entity)
+    /**
+     * Uses the currently equipped item on the specified entity. Args: entity
+     */
+    public void useCurrentItemOnEntity(Entity par1Entity)
     {
-        if (entity.interact(this))
+        if (par1Entity.interact(this))
         {
             return;
         }
+
         ItemStack itemstack = getCurrentEquippedItem();
-        if (itemstack != null && (entity instanceof EntityLiving))
+
+        if (itemstack != null && (par1Entity instanceof EntityLiving))
         {
-            itemstack.useItemOnEntity((EntityLiving)entity);
+            itemstack.useItemOnEntity((EntityLiving)par1Entity);
+
             if (itemstack.stackSize <= 0)
             {
                 itemstack.onItemDestroyedByUse(this);
@@ -751,115 +960,160 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
+    /**
+     * Returns the currently being used item by the player.
+     */
     public ItemStack getCurrentEquippedItem()
     {
         return inventory.getCurrentItem();
     }
 
+    /**
+     * Destroys the currently equipped item from the player's inventory.
+     */
     public void destroyCurrentEquippedItem()
     {
         inventory.setInventorySlotContents(inventory.currentItem, null);
     }
 
+    /**
+     * Returns the Y Offset of this entity.
+     */
     public double getYOffset()
     {
         return (double)(yOffset - 0.5F);
     }
 
+    /**
+     * Swings the item the player is holding.
+     */
     public void swingItem()
     {
-        if (!isSwinging || swingProgressInt >= func_35204_o() / 2 || swingProgressInt < 0)
+        if (!isSwinging || swingProgressInt >= getSwingSpeedModifier() / 2 || swingProgressInt < 0)
         {
             swingProgressInt = -1;
             isSwinging = true;
         }
     }
 
-    public void attackTargetEntityWithCurrentItem(Entity entity)
+    /**
+     * Attacks for the player the targeted entity with the currently equipped item.  The equipped item has hitEntity
+     * called on it. Args: targetEntity
+     */
+    public void attackTargetEntityWithCurrentItem(Entity par1Entity)
     {
-        int i = inventory.getDamageVsEntity(entity);
+        if (!par1Entity.func_48313_k_())
+        {
+            return;
+        }
+
+        int i = inventory.getDamageVsEntity(par1Entity);
+
         if (isPotionActive(Potion.damageBoost))
         {
             i += 3 << getActivePotionEffect(Potion.damageBoost).getAmplifier();
         }
+
         if (isPotionActive(Potion.weakness))
         {
             i -= 2 << getActivePotionEffect(Potion.weakness).getAmplifier();
         }
+
         int j = 0;
         int k = 0;
-        if (entity instanceof EntityLiving)
+
+        if (par1Entity instanceof EntityLiving)
         {
-            k = EnchantmentHelper.getEnchantmentModifierLiving(inventory, (EntityLiving)entity);
-            j += EnchantmentHelper.getKnockbackModifier(inventory, (EntityLiving)entity);
+            k = EnchantmentHelper.getEnchantmentModifierLiving(inventory, (EntityLiving)par1Entity);
+            j += EnchantmentHelper.getKnockbackModifier(inventory, (EntityLiving)par1Entity);
         }
+
         if (isSprinting())
         {
             j++;
         }
+
         if (i > 0 || k > 0)
         {
-            boolean flag = fallDistance > 0.0F && !onGround && !isOnLadder() && !isInWater() && !isPotionActive(Potion.blindness) && ridingEntity == null && (entity instanceof EntityLiving);
+            boolean flag = fallDistance > 0.0F && !onGround && !isOnLadder() && !isInWater() && !isPotionActive(Potion.blindness) && ridingEntity == null && (par1Entity instanceof EntityLiving);
+
             if (flag)
             {
                 i += rand.nextInt(i / 2 + 2);
             }
+
             i += k;
-            boolean flag1 = entity.attackEntityFrom(DamageSource.causePlayerDamage(this), i);
+            boolean flag1 = par1Entity.attackEntityFrom(DamageSource.causePlayerDamage(this), i);
+
             if (flag1)
             {
                 if (j > 0)
                 {
-                    entity.addVelocity(-MathHelper.sin((rotationYaw * 3.141593F) / 180F) * (float)j * 0.5F, 0.10000000000000001D, MathHelper.cos((rotationYaw * 3.141593F) / 180F) * (float)j * 0.5F);
-                    motionX *= 0.59999999999999998D;
-                    motionZ *= 0.59999999999999998D;
+                    par1Entity.addVelocity(-MathHelper.sin((rotationYaw * (float)Math.PI) / 180F) * (float)j * 0.5F, 0.1D, MathHelper.cos((rotationYaw * (float)Math.PI) / 180F) * (float)j * 0.5F);
+                    motionX *= 0.6D;
+                    motionZ *= 0.6D;
                     setSprinting(false);
                 }
+
                 if (flag)
                 {
-                    onCriticalHit(entity);
+                    onCriticalHit(par1Entity);
                 }
+
                 if (k > 0)
                 {
-                    func_40109_c(entity);
+                    onEnchantmentCritical(par1Entity);
                 }
+
                 if (i >= 18)
                 {
                     triggerAchievement(AchievementList.overkill);
                 }
+
+                func_48335_g(par1Entity);
             }
+
             ItemStack itemstack = getCurrentEquippedItem();
-            if (itemstack != null && (entity instanceof EntityLiving))
+
+            if (itemstack != null && (par1Entity instanceof EntityLiving))
             {
-                itemstack.hitEntity((EntityLiving)entity, this);
+                itemstack.hitEntity((EntityLiving)par1Entity, this);
+
                 if (itemstack.stackSize <= 0)
                 {
                     itemstack.onItemDestroyedByUse(this);
                     destroyCurrentEquippedItem();
                 }
             }
-            if (entity instanceof EntityLiving)
+
+            if (par1Entity instanceof EntityLiving)
             {
-                if (entity.isEntityAlive())
+                if (par1Entity.isEntityAlive())
                 {
-                    alertWolves((EntityLiving)entity, true);
+                    alertWolves((EntityLiving)par1Entity, true);
                 }
+
                 addStat(StatList.damageDealtStat, i);
-                int l = EnchantmentHelper.getFireAspectModifier(inventory, (EntityLiving)entity);
+                int l = EnchantmentHelper.getFireAspectModifier(inventory, (EntityLiving)par1Entity);
+
                 if (l > 0)
                 {
-                    entity.setFire(l * 4);
+                    par1Entity.setFire(l * 4);
                 }
             }
+
             addExhaustion(0.3F);
         }
     }
 
+    /**
+     * Called when the player performs a critical hit on the Entity. Args: entity that was hit critically
+     */
     public void onCriticalHit(Entity entity)
     {
     }
 
-    public void func_40109_c(Entity entity)
+    public void onEnchantmentCritical(Entity entity)
     {
     }
 
@@ -867,22 +1121,32 @@ public abstract class EntityPlayer extends EntityLiving
     {
     }
 
+    /**
+     * Will get destroyed next tick
+     */
     public void setEntityDead()
     {
         super.setEntityDead();
         inventorySlots.onCraftGuiClosed(this);
+
         if (craftingInventory != null)
         {
             craftingInventory.onCraftGuiClosed(this);
         }
     }
 
+    /**
+     * Checks if this entity is inside of an opaque block
+     */
     public boolean isEntityInsideOpaqueBlock()
     {
         return !sleeping && super.isEntityInsideOpaqueBlock();
     }
 
-    public EnumStatus sleepInBedAt(int i, int j, int k)
+    /**
+     * puts player to sleep on specified bed if possible
+     */
+    public EnumStatus sleepInBedAt(int par1, int par2, int par3)
     {
         if (!worldObj.isRemote)
         {
@@ -890,35 +1154,43 @@ public abstract class EntityPlayer extends EntityLiving
             {
                 return EnumStatus.OTHER_PROBLEM;
             }
-            if (worldObj.worldProvider.isAlternateDimension)
+
+            if (!worldObj.worldProvider.func_48567_d())
             {
                 return EnumStatus.NOT_POSSIBLE_HERE;
             }
+
             if (worldObj.isDaytime())
             {
                 return EnumStatus.NOT_POSSIBLE_NOW;
             }
-            if (Math.abs(posX - (double)i) > 3D || Math.abs(posY - (double)j) > 2D || Math.abs(posZ - (double)k) > 3D)
+
+            if (Math.abs(posX - (double)par1) > 3D || Math.abs(posY - (double)par2) > 2D || Math.abs(posZ - (double)par3) > 3D)
             {
                 return EnumStatus.TOO_FAR_AWAY;
             }
+
             double d = 8D;
             double d1 = 5D;
-            List list = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityMob.class, AxisAlignedBB.getBoundingBoxFromPool((double)i - d, (double)j - d1, (double)k - d, (double)i + d, (double)j + d1, (double)k + d));
+            List list = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityMob.class, AxisAlignedBB.getBoundingBoxFromPool((double)par1 - d, (double)par2 - d1, (double)par3 - d, (double)par1 + d, (double)par2 + d1, (double)par3 + d));
+
             if (!list.isEmpty())
             {
                 return EnumStatus.NOT_SAFE;
             }
         }
+
         setSize(0.2F, 0.2F);
         yOffset = 0.2F;
-        if (worldObj.blockExists(i, j, k))
+
+        if (worldObj.blockExists(par1, par2, par3))
         {
-            int l = worldObj.getBlockMetadata(i, j, k);
-            int i1 = BlockBed.getDirectionFromMetadata(l);
+            int i = worldObj.getBlockMetadata(par1, par2, par3);
+            int j = BlockBed.func_48132_b(i);
             float f = 0.5F;
             float f1 = 0.5F;
-            switch (i1)
+
+            switch (j)
             {
                 case 0:
                     f1 = 0.9F;
@@ -936,29 +1208,34 @@ public abstract class EntityPlayer extends EntityLiving
                     f = 0.9F;
                     break;
             }
-            func_22059_e(i1);
-            setPosition((float)i + f, (float)j + 0.9375F, (float)k + f1);
+
+            func_22059_e(j);
+            setPosition((float)par1 + f, (float)par2 + 0.9375F, (float)par3 + f1);
         }
         else
         {
-            setPosition((float)i + 0.5F, (float)j + 0.9375F, (float)k + 0.5F);
+            setPosition((float)par1 + 0.5F, (float)par2 + 0.9375F, (float)par3 + 0.5F);
         }
+
         sleeping = true;
         sleepTimer = 0;
-        playerLocation = new ChunkCoordinates(i, j, k);
+        playerLocation = new ChunkCoordinates(par1, par2, par3);
         motionX = motionZ = motionY = 0.0D;
+
         if (!worldObj.isRemote)
         {
             worldObj.updateAllPlayersSleepingFlag();
         }
+
         return EnumStatus.OK;
     }
 
-    private void func_22059_e(int i)
+    private void func_22059_e(int par1)
     {
         field_22066_z = 0.0F;
         field_22067_A = 0.0F;
-        switch (i)
+
+        switch (par1)
         {
             case 0:
                 field_22067_A = -1.8F;
@@ -978,28 +1255,34 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    public void wakeUpPlayer(boolean flag, boolean flag1, boolean flag2)
+    public void wakeUpPlayer(boolean par1, boolean par2, boolean par3)
     {
         setSize(0.6F, 1.8F);
         resetHeight();
         ChunkCoordinates chunkcoordinates = playerLocation;
         ChunkCoordinates chunkcoordinates1 = playerLocation;
+
         if (chunkcoordinates != null && worldObj.getBlockId(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ) == Block.bed.blockID)
         {
             BlockBed.setBedOccupied(worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, false);
             ChunkCoordinates chunkcoordinates2 = BlockBed.getNearestEmptyChunkCoordinates(worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, 0);
+
             if (chunkcoordinates2 == null)
             {
                 chunkcoordinates2 = new ChunkCoordinates(chunkcoordinates.posX, chunkcoordinates.posY + 1, chunkcoordinates.posZ);
             }
+
             setPosition((float)chunkcoordinates2.posX + 0.5F, (float)chunkcoordinates2.posY + yOffset + 0.1F, (float)chunkcoordinates2.posZ + 0.5F);
         }
+
         sleeping = false;
-        if (!worldObj.isRemote && flag1)
+
+        if (!worldObj.isRemote && par2)
         {
             worldObj.updateAllPlayersSleepingFlag();
         }
-        if (flag)
+
+        if (par1)
         {
             sleepTimer = 0;
         }
@@ -1007,32 +1290,41 @@ public abstract class EntityPlayer extends EntityLiving
         {
             sleepTimer = 100;
         }
-        if (flag2)
+
+        if (par3)
         {
             setSpawnChunk(playerLocation);
         }
     }
 
+    /**
+     * Checks if the player is currently in a bed
+     */
     private boolean isInBed()
     {
         return worldObj.getBlockId(playerLocation.posX, playerLocation.posY, playerLocation.posZ) == Block.bed.blockID;
     }
 
-    public static ChunkCoordinates verifyRespawnCoordinates(World world, ChunkCoordinates chunkcoordinates)
+    /**
+     * Ensure that a block enabling respawning exists at the specified coordinates and find an empty space nearby to
+     * spawn.
+     */
+    public static ChunkCoordinates verifyRespawnCoordinates(World par0World, ChunkCoordinates par1ChunkCoordinates)
     {
-        IChunkProvider ichunkprovider = world.getChunkProvider();
-        ichunkprovider.loadChunk(chunkcoordinates.posX - 3 >> 4, chunkcoordinates.posZ - 3 >> 4);
-        ichunkprovider.loadChunk(chunkcoordinates.posX + 3 >> 4, chunkcoordinates.posZ - 3 >> 4);
-        ichunkprovider.loadChunk(chunkcoordinates.posX - 3 >> 4, chunkcoordinates.posZ + 3 >> 4);
-        ichunkprovider.loadChunk(chunkcoordinates.posX + 3 >> 4, chunkcoordinates.posZ + 3 >> 4);
-        if (world.getBlockId(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ) != Block.bed.blockID)
+        IChunkProvider ichunkprovider = par0World.getChunkProvider();
+        ichunkprovider.loadChunk(par1ChunkCoordinates.posX - 3 >> 4, par1ChunkCoordinates.posZ - 3 >> 4);
+        ichunkprovider.loadChunk(par1ChunkCoordinates.posX + 3 >> 4, par1ChunkCoordinates.posZ - 3 >> 4);
+        ichunkprovider.loadChunk(par1ChunkCoordinates.posX - 3 >> 4, par1ChunkCoordinates.posZ + 3 >> 4);
+        ichunkprovider.loadChunk(par1ChunkCoordinates.posX + 3 >> 4, par1ChunkCoordinates.posZ + 3 >> 4);
+
+        if (par0World.getBlockId(par1ChunkCoordinates.posX, par1ChunkCoordinates.posY, par1ChunkCoordinates.posZ) != Block.bed.blockID)
         {
             return null;
         }
         else
         {
-            ChunkCoordinates chunkcoordinates1 = BlockBed.getNearestEmptyChunkCoordinates(world, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, 0);
-            return chunkcoordinates1;
+            ChunkCoordinates chunkcoordinates = BlockBed.getNearestEmptyChunkCoordinates(par0World, par1ChunkCoordinates.posX, par1ChunkCoordinates.posY, par1ChunkCoordinates.posZ, 0);
+            return chunkcoordinates;
         }
     }
 
@@ -1050,16 +1342,22 @@ public abstract class EntityPlayer extends EntityLiving
     {
     }
 
+    /**
+     * gets the players spawn chunk
+     */
     public ChunkCoordinates getSpawnChunk()
     {
         return spawnChunk;
     }
 
-    public void setSpawnChunk(ChunkCoordinates chunkcoordinates)
+    /**
+     * sets the players spawn chunk
+     */
+    public void setSpawnChunk(ChunkCoordinates par1ChunkCoordinates)
     {
-        if (chunkcoordinates != null)
+        if (par1ChunkCoordinates != null)
         {
-            spawnChunk = new ChunkCoordinates(chunkcoordinates);
+            spawnChunk = new ChunkCoordinates(par1ChunkCoordinates);
         }
         else
         {
@@ -1067,19 +1365,26 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    public void triggerAchievement(StatBase statbase)
+    public void triggerAchievement(StatBase par1StatBase)
     {
-        addStat(statbase, 1);
+        addStat(par1StatBase, 1);
     }
 
+    /**
+     * Adds a value to a statistic field.
+     */
     public void addStat(StatBase statbase, int i)
     {
     }
 
+    /**
+     * causes this entity to jump (or at least move upwards)
+     */
     protected void jump()
     {
         super.jump();
         addStat(StatList.jumpStat, 1);
+
         if (isSprinting())
         {
             addExhaustion(0.8F);
@@ -1090,36 +1395,43 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    public void moveEntityWithHeading(float f, float f1)
+    /**
+     * Moves the entity based on the specified heading.  Args: strafe, forward
+     */
+    public void moveEntityWithHeading(float par1, float par2)
     {
         double d = posX;
         double d1 = posY;
         double d2 = posZ;
+
         if (capabilities.isFlying)
         {
             double d3 = motionY;
-            float f2 = jumpMovementFactor;
+            float f = jumpMovementFactor;
             jumpMovementFactor = 0.05F;
-            super.moveEntityWithHeading(f, f1);
-            motionY = d3 * 0.59999999999999998D;
-            jumpMovementFactor = f2;
+            super.moveEntityWithHeading(par1, par2);
+            motionY = d3 * 0.6D;
+            jumpMovementFactor = f;
         }
         else
         {
-            super.moveEntityWithHeading(f, f1);
+            super.moveEntityWithHeading(par1, par2);
         }
+
         addMovementStat(posX - d, posY - d1, posZ - d2);
     }
 
-    public void addMovementStat(double d, double d1, double d2)
+    public void addMovementStat(double par1, double par3, double par5)
     {
         if (ridingEntity != null)
         {
             return;
         }
+
         if (isInsideOfMaterial(Material.water))
         {
-            int i = Math.round(MathHelper.sqrt_double(d * d + d1 * d1 + d2 * d2) * 100F);
+            int i = Math.round(MathHelper.sqrt_double(par1 * par1 + par3 * par3 + par5 * par5) * 100F);
+
             if (i > 0)
             {
                 addStat(StatList.distanceDoveStat, i);
@@ -1128,7 +1440,8 @@ public abstract class EntityPlayer extends EntityLiving
         }
         else if (isInWater())
         {
-            int j = Math.round(MathHelper.sqrt_double(d * d + d2 * d2) * 100F);
+            int j = Math.round(MathHelper.sqrt_double(par1 * par1 + par5 * par5) * 100F);
+
             if (j > 0)
             {
                 addStat(StatList.distanceSwumStat, j);
@@ -1137,20 +1450,22 @@ public abstract class EntityPlayer extends EntityLiving
         }
         else if (isOnLadder())
         {
-            if (d1 > 0.0D)
+            if (par3 > 0.0D)
             {
-                addStat(StatList.distanceClimbedStat, (int)Math.round(d1 * 100D));
+                addStat(StatList.distanceClimbedStat, (int)Math.round(par3 * 100D));
             }
         }
         else if (onGround)
         {
-            int k = Math.round(MathHelper.sqrt_double(d * d + d2 * d2) * 100F);
+            int k = Math.round(MathHelper.sqrt_double(par1 * par1 + par5 * par5) * 100F);
+
             if (k > 0)
             {
                 addStat(StatList.distanceWalkedStat, k);
+
                 if (isSprinting())
                 {
-                    addExhaustion(0.09999999F * (float)k * 0.01F);
+                    addExhaustion(0.1F * (float)k * 0.01F);
                 }
                 else
                 {
@@ -1160,7 +1475,8 @@ public abstract class EntityPlayer extends EntityLiving
         }
         else
         {
-            int l = Math.round(MathHelper.sqrt_double(d * d + d2 * d2) * 100F);
+            int l = Math.round(MathHelper.sqrt_double(par1 * par1 + par5 * par5) * 100F);
+
             if (l > 25)
             {
                 addStat(StatList.distanceFlownStat, l);
@@ -1168,16 +1484,18 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    private void addMountedMovementStat(double d, double d1, double d2)
+    private void addMountedMovementStat(double par1, double par3, double par5)
     {
         if (ridingEntity != null)
         {
-            int i = Math.round(MathHelper.sqrt_double(d * d + d1 * d1 + d2 * d2) * 100F);
+            int i = Math.round(MathHelper.sqrt_double(par1 * par1 + par3 * par3 + par5 * par5) * 100F);
+
             if (i > 0)
             {
                 if (ridingEntity instanceof EntityMinecart)
                 {
                     addStat(StatList.distanceByMinecartStat, i);
+
                     if (startMinecartRidingCoordinate == null)
                     {
                         startMinecartRidingCoordinate = new ChunkCoordinates(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
@@ -1199,27 +1517,35 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    protected void fall(float f)
+    /**
+     * Called when the mob is falling. Calculates and applies fall damage.
+     */
+    protected void fall(float par1)
     {
         if (capabilities.allowFlying)
         {
             return;
         }
-        if (f >= 2.0F)
+
+        if (par1 >= 2.0F)
         {
-            addStat(StatList.distanceFallenStat, (int)Math.round((double)f * 100D));
+            addStat(StatList.distanceFallenStat, (int)Math.round((double)par1 * 100D));
         }
-        super.fall(f);
+
+        super.fall(par1);
     }
 
-    public void onKillEntity(EntityLiving entityliving)
+    public void onKillEntity(EntityLiving par1EntityLiving)
     {
-        if (entityliving instanceof EntityMob)
+        if (par1EntityLiving instanceof EntityMob)
         {
             triggerAchievement(AchievementList.killEnemy);
         }
     }
 
+    /**
+     * Called by portal blocks when an entity is within it.
+     */
     public void setInPortal()
     {
         if (timeUntilPortal > 0)
@@ -1234,16 +1560,22 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    public void addExperience(int i)
+    /**
+     * Add experience points to player.
+     */
+    public void addExperience(int par1)
     {
-        score += i;
-        int j = 0x7fffffff - experienceTotal;
-        if (i > j)
+        score += par1;
+        int i = 0x7fffffff - experienceTotal;
+
+        if (par1 > i)
         {
-            i = j;
+            par1 = i;
         }
-        experience += (float)i / (float)xpBarCap();
-        experienceTotal += i;
+
+        experience += (float)par1 / (float)xpBarCap();
+        experienceTotal += par1;
+
         for (; experience >= 1.0F; experience = experience / (float)xpBarCap())
         {
             experience = (experience - 1.0F) * (float)xpBarCap();
@@ -1251,74 +1583,101 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    public void removeExperience(int i)
+    /**
+     * Removes i number of levels
+     */
+    public void removeExperience(int par1)
     {
-        experienceLevel -= i;
+        experienceLevel -= par1;
+
         if (experienceLevel < 0)
         {
             experienceLevel = 0;
         }
     }
 
+    /**
+     * This method returns the cap amount of experience that the experience bar can hold. With each level, the
+     * experience cap on the player's experience bar is raised by 10.
+     */
     public int xpBarCap()
     {
         return 7 + (experienceLevel * 7 >> 1);
     }
 
+    /**
+     * This method increases the player's experience level by one.
+     */
     private void increaseLevel()
     {
         experienceLevel++;
     }
 
-    public void addExhaustion(float f)
+    public void addExhaustion(float par1)
     {
         if (capabilities.disableDamage)
         {
             return;
         }
+
         if (!worldObj.isRemote)
         {
-            foodStats.addExhaustion(f);
+            foodStats.addExhaustion(par1);
         }
     }
 
+    /**
+     * Returns the player's FoodStats object.
+     */
     public FoodStats getFoodStats()
     {
         return foodStats;
     }
 
-    public boolean canEat(boolean flag)
+    public boolean canEat(boolean par1)
     {
-        return (flag || foodStats.needFood()) && !capabilities.disableDamage;
+        return (par1 || foodStats.needFood()) && !capabilities.disableDamage;
     }
 
+    /**
+     * Checks if the player's health is not full and not zero.
+     */
     public boolean shouldHeal()
     {
         return getEntityHealth() > 0 && getEntityHealth() < getMaxHealth();
     }
 
-    public void setItemInUse(ItemStack itemstack, int i)
+    /**
+     * sets the itemInUse when the use item button is clicked. Args: itemstack, int maxItemUseDuration
+     */
+    public void setItemInUse(ItemStack par1ItemStack, int par2)
     {
-        if (itemstack == itemInUse)
+        if (par1ItemStack == itemInUse)
         {
             return;
         }
-        itemInUse = itemstack;
-        itemInUseCount = i;
+
+        itemInUse = par1ItemStack;
+        itemInUseCount = par2;
+
         if (!worldObj.isRemote)
         {
             setEating(true);
         }
     }
 
-    public boolean canPlayerEdit(int i, int j, int k)
+    public boolean canPlayerEdit(int par1, int par2, int par3)
     {
         return true;
     }
 
-    protected int getExperiencePoints(EntityPlayer entityplayer)
+    /**
+     * Get the experience points the entity currently has.
+     */
+    protected int getExperiencePoints(EntityPlayer par1EntityPlayer)
     {
         int i = experienceLevel * 7;
+
         if (i > 100)
         {
             return 100;
@@ -1329,28 +1688,39 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
+    /**
+     * Only use is to identify if class is an instance of player for experience dropping
+     */
     protected boolean isPlayer()
     {
         return true;
     }
 
-    public String func_35150_Y()
+    public String getUsername()
     {
         return username;
     }
 
-    public void func_40107_e(int i)
+    public void travelToTheEnd(int i)
     {
     }
 
-    public void copyPlayer(EntityPlayer entityplayer)
+    /**
+     * Copy the inventory and various stats from another EntityPlayer
+     */
+    public void copyPlayer(EntityPlayer par1EntityPlayer)
     {
-        inventory.copyInventory(entityplayer.inventory);
-        health = entityplayer.health;
-        foodStats = entityplayer.foodStats;
-        experienceLevel = entityplayer.experienceLevel;
-        experienceTotal = entityplayer.experienceTotal;
-        experience = entityplayer.experience;
-        score = entityplayer.score;
+        inventory.copyInventory(par1EntityPlayer.inventory);
+        health = par1EntityPlayer.health;
+        foodStats = par1EntityPlayer.foodStats;
+        experienceLevel = par1EntityPlayer.experienceLevel;
+        experienceTotal = par1EntityPlayer.experienceTotal;
+        experience = par1EntityPlayer.experience;
+        score = par1EntityPlayer.score;
+    }
+
+    protected boolean canTriggerWalking()
+    {
+        return !capabilities.isFlying;
     }
 }

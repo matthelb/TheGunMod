@@ -4,20 +4,24 @@ public class ItemAxe extends ItemTool
 {
     private static Block blocksEffectiveAgainst[];
 
-    protected ItemAxe(int i, EnumToolMaterial enumtoolmaterial)
+    protected ItemAxe(int par1, EnumToolMaterial par2EnumToolMaterial)
     {
-        super(i, 3, enumtoolmaterial, blocksEffectiveAgainst);
+        super(par1, 3, par2EnumToolMaterial, blocksEffectiveAgainst);
     }
 
-    public float getStrVsBlock(ItemStack itemstack, Block block)
+    /**
+     * Returns the strength of the stack against a given block. 1.0F base, (Quality+1)*2 if correct blocktype, 1.5F if
+     * sword
+     */
+    public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
-        if (block != null && block.blockMaterial == Material.wood)
+        if (par2Block != null && par2Block.blockMaterial == Material.wood)
         {
             return efficiencyOnProperMaterial;
         }
         else
         {
-            return super.getStrVsBlock(itemstack, block);
+            return super.getStrVsBlock(par1ItemStack, par2Block);
         }
     }
 

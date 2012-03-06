@@ -4,52 +4,63 @@ import java.io.*;
 
 public class NBTTagLong extends NBTBase
 {
-    public long longValue;
+    /** The long value for the tag. */
+    public long data;
 
-    public NBTTagLong(String s)
+    public NBTTagLong(String par1Str)
     {
-        super(s);
+        super(par1Str);
     }
 
-    public NBTTagLong(String s, long l)
+    public NBTTagLong(String par1Str, long par2)
     {
-        super(s);
-        longValue = l;
+        super(par1Str);
+        data = par2;
     }
 
-    void writeTagContents(DataOutput dataoutput)
-    throws IOException
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput par1DataOutput) throws IOException
     {
-        dataoutput.writeLong(longValue);
+        par1DataOutput.writeLong(data);
     }
 
-    void readTagContents(DataInput datainput)
-    throws IOException
+    /**
+     * Read the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void load(DataInput par1DataInput) throws IOException
     {
-        longValue = datainput.readLong();
+        data = par1DataInput.readLong();
     }
 
-    public byte getType()
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
     {
         return 4;
     }
 
     public String toString()
     {
-        return (new StringBuilder()).append("").append(longValue).toString();
+        return (new StringBuilder()).append("").append(data).toString();
     }
 
-    public NBTBase cloneTag()
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
     {
-        return new NBTTagLong(getKey(), longValue);
+        return new NBTTagLong(getName(), data);
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (super.equals(obj))
+        if (super.equals(par1Obj))
         {
-            NBTTagLong nbttaglong = (NBTTagLong)obj;
-            return longValue == nbttaglong.longValue;
+            NBTTagLong nbttaglong = (NBTTagLong)par1Obj;
+            return data == nbttaglong.data;
         }
         else
         {

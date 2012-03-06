@@ -6,16 +6,18 @@ import net.minecraft.server.MinecraftServer;
 
 final class ServerWindowAdapter extends WindowAdapter
 {
+    /** Reference to the MinecraftServer object. */
     final MinecraftServer mcServer;
 
-    ServerWindowAdapter(MinecraftServer minecraftserver)
+    ServerWindowAdapter(MinecraftServer par1MinecraftServer)
     {
-        mcServer = minecraftserver;
+        mcServer = par1MinecraftServer;
     }
 
-    public void windowClosing(WindowEvent windowevent)
+    public void windowClosing(WindowEvent par1WindowEvent)
     {
         mcServer.initiateShutdown();
+
         while (!mcServer.serverStopped)
         {
             try
@@ -27,6 +29,7 @@ final class ServerWindowAdapter extends WindowAdapter
                 interruptedexception.printStackTrace();
             }
         }
+
         System.exit(0);
     }
 }

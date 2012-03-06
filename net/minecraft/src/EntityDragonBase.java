@@ -2,11 +2,12 @@ package net.minecraft.src;
 
 public class EntityDragonBase extends EntityLiving
 {
+    /** The maximum health of the Entity. */
     protected int maxHealth;
 
-    public EntityDragonBase(World world)
+    public EntityDragonBase(World par1World)
     {
-        super(world);
+        super(par1World);
         maxHealth = 100;
     }
 
@@ -15,18 +16,24 @@ public class EntityDragonBase extends EntityLiving
         return maxHealth;
     }
 
-    public boolean attackEntityFromPart(DragonPart dragonpart, DamageSource damagesource, int i)
+    public boolean attackEntityFromPart(EntityDragonPart par1EntityDragonPart, DamageSource par2DamageSource, int par3)
     {
-        return attackEntityFrom(damagesource, i);
+        return attackEntityFrom(par2DamageSource, par3);
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         return false;
     }
 
-    protected boolean superAttackFrom(DamageSource damagesource, int i)
+    /**
+     * Returns a super of attackEntityFrom in EntityDragonBase, because the normal attackEntityFrom is overriden
+     */
+    protected boolean superAttackFrom(DamageSource par1DamageSource, int par2)
     {
-        return super.attackEntityFrom(damagesource, i);
+        return super.attackEntityFrom(par1DamageSource, par2);
     }
 }

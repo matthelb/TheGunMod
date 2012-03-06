@@ -2,11 +2,14 @@ package net.minecraft.src;
 
 class ThreadMonitorConnection extends Thread
 {
+    /**
+     * This was actually an inner class of NetworkManager, so this field is the reference to 'this' NetworkManager.
+     */
     final NetworkManager netManager;
 
-    ThreadMonitorConnection(NetworkManager networkmanager)
+    ThreadMonitorConnection(NetworkManager par1NetworkManager)
     {
-        netManager = networkmanager;
+        netManager = par1NetworkManager;
     }
 
     public void run()
@@ -14,6 +17,7 @@ class ThreadMonitorConnection extends Thread
         try
         {
             Thread.sleep(2000L);
+
             if (NetworkManager.isRunning(netManager))
             {
                 NetworkManager.getWriteThread(netManager).interrupt();

@@ -2,18 +2,18 @@ package net.minecraft.src;
 
 public class EnchantmentArrowFire extends Enchantment
 {
-    public EnchantmentArrowFire(int i, int j)
+    public EnchantmentArrowFire(int par1, int par2)
     {
-        super(i, j, EnumEnchantmentType.bow);
+        super(par1, par2, EnumEnchantmentType.bow);
         setName("arrowFire");
     }
 
-    public int getMinEnchantability(int i)
+    public int getMinEnchantability(int par1)
     {
         return 20;
     }
 
-    public int getMaxEnchantability(int i)
+    public int getMaxEnchantability(int par1)
     {
         return 50;
     }

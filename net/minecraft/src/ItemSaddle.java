@@ -2,28 +2,32 @@ package net.minecraft.src;
 
 public class ItemSaddle extends Item
 {
-    public ItemSaddle(int i)
+    public ItemSaddle(int par1)
     {
-        super(i);
+        super(par1);
         maxStackSize = 1;
     }
 
-    public void useItemOnEntity(ItemStack itemstack, EntityLiving entityliving)
+    /**
+     * Called when a player right clicks a entity with a item.
+     */
+    public void useItemOnEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving)
     {
-        if (entityliving instanceof EntityPig)
+        if (par2EntityLiving instanceof EntityPig)
         {
-            EntityPig entitypig = (EntityPig)entityliving;
+            EntityPig entitypig = (EntityPig)par2EntityLiving;
+
             if (!entitypig.getSaddled())
             {
                 entitypig.setSaddled(true);
-                itemstack.stackSize--;
+                par1ItemStack.stackSize--;
             }
         }
     }
 
-    public boolean hitEntity(ItemStack itemstack, EntityLiving entityliving, EntityLiving entityliving1)
+    public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
     {
-        useItemOnEntity(itemstack, entityliving);
+        useItemOnEntity(par1ItemStack, par2EntityLiving);
         return true;
     }
 }

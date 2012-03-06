@@ -4,18 +4,22 @@ public class ItemSpade extends ItemTool
 {
     private static Block blocksEffectiveAgainst[];
 
-    public ItemSpade(int i, EnumToolMaterial enumtoolmaterial)
+    public ItemSpade(int par1, EnumToolMaterial par2EnumToolMaterial)
     {
-        super(i, 1, enumtoolmaterial, blocksEffectiveAgainst);
+        super(par1, 1, par2EnumToolMaterial, blocksEffectiveAgainst);
     }
 
-    public boolean canHarvestBlock(Block block)
+    /**
+     * Returns if the item (tool) can harvest results from the block type.
+     */
+    public boolean canHarvestBlock(Block par1Block)
     {
-        if (block == Block.snow)
+        if (par1Block == Block.snow)
         {
             return true;
         }
-        return block == Block.blockSnow;
+
+        return par1Block == Block.blockSnow;
     }
 
     static

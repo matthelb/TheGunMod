@@ -4,39 +4,56 @@ import java.util.Random;
 
 public class BlockMelon extends Block
 {
-    protected BlockMelon(int i)
+    protected BlockMelon(int par1)
     {
-        super(i, Material.pumpkin);
+        super(par1, Material.pumpkin);
         blockIndexInTexture = 136;
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        return i != 1 && i != 0 ? 136 : 137;
+        return par1 != 1 && par1 != 0 ? 136 : 137;
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        return i != 1 && i != 0 ? 136 : 137;
+        return par1 != 1 && par1 != 0 ? 136 : 137;
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Item.melon.shiftedIndex;
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
-        return 3 + random.nextInt(5);
+        return 3 + par1Random.nextInt(5);
     }
 
-    public int quantityDroppedWithBonus(int i, Random random)
+    /**
+     * Returns the usual quantity dropped by the block plus a bonus of 1 to 'i' (inclusive).
+     */
+    public int quantityDroppedWithBonus(int par1, Random par2Random)
     {
-        int j = quantityDropped(random) + random.nextInt(1 + i);
-        if (j > 9)
+        int i = quantityDropped(par2Random) + par2Random.nextInt(1 + par1);
+
+        if (i > 9)
         {
-            j = 9;
+            i = 9;
         }
-        return j;
+
+        return i;
     }
 }

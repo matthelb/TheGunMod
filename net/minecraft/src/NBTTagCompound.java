@@ -5,6 +5,9 @@ import java.util.*;
 
 public class NBTTagCompound extends NBTBase
 {
+    /**
+     * The key-value pairs for the tag. Each key is a UTF string, each value is a tag.
+     */
     private Map tagMap;
 
     public NBTTagCompound()
@@ -13,230 +16,333 @@ public class NBTTagCompound extends NBTBase
         tagMap = new HashMap();
     }
 
-    public NBTTagCompound(String s)
+    public NBTTagCompound(String par1Str)
     {
-        super(s);
+        super(par1Str);
         tagMap = new HashMap();
     }
 
-    void writeTagContents(DataOutput dataoutput)
-    throws IOException
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput par1DataOutput) throws IOException
     {
         NBTBase nbtbase;
-        for (Iterator iterator = tagMap.values().iterator(); iterator.hasNext(); NBTBase.writeTag(nbtbase, dataoutput))
+
+        for (Iterator iterator = tagMap.values().iterator(); iterator.hasNext(); NBTBase.writeNamedTag(nbtbase, par1DataOutput))
         {
             nbtbase = (NBTBase)iterator.next();
         }
 
-        dataoutput.writeByte(0);
+        par1DataOutput.writeByte(0);
     }
 
-    void readTagContents(DataInput datainput)
-    throws IOException
+    /**
+     * Read the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void load(DataInput par1DataInput) throws IOException
     {
         tagMap.clear();
         NBTBase nbtbase;
-        for (; (nbtbase = NBTBase.readTag(datainput)).getType() != 0; tagMap.put(nbtbase.getKey(), nbtbase)) { }
+
+        for (; (nbtbase = NBTBase.readNamedTag(par1DataInput)).getId() != 0; tagMap.put(nbtbase.getName(), nbtbase)) { }
     }
 
+    /**
+     * Returns all the values in the tagMap HashMap.
+     */
     public Collection getTags()
     {
         return tagMap.values();
     }
 
-    public byte getType()
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
     {
         return 10;
     }
 
-    public void setTag(String s, NBTBase nbtbase)
+    /**
+     * Stores the given tag into the map with the given string key. This is mostly used to store tag lists.
+     */
+    public void setTag(String par1Str, NBTBase par2NBTBase)
     {
-        tagMap.put(s, nbtbase.setKey(s));
+        tagMap.put(par1Str, par2NBTBase.setName(par1Str));
     }
 
-    public void setByte(String s, byte byte0)
+    /**
+     * Stores a new NBTTagByte with the given byte value into the map with the given string key.
+     */
+    public void setByte(String par1Str, byte par2)
     {
-        tagMap.put(s, new NBTTagByte(s, byte0));
+        tagMap.put(par1Str, new NBTTagByte(par1Str, par2));
     }
 
-    public void setShort(String s, short word0)
+    /**
+     * Stores a new NBTTagShort with the given short value into the map with the given string key.
+     */
+    public void setShort(String par1Str, short par2)
     {
-        tagMap.put(s, new NBTTagShort(s, word0));
+        tagMap.put(par1Str, new NBTTagShort(par1Str, par2));
     }
 
-    public void setInteger(String s, int i)
+    /**
+     * Stores a new NBTTagInt with the given integer value into the map with the given string key.
+     */
+    public void setInteger(String par1Str, int par2)
     {
-        tagMap.put(s, new NBTTagInt(s, i));
+        tagMap.put(par1Str, new NBTTagInt(par1Str, par2));
     }
 
-    public void setLong(String s, long l)
+    /**
+     * Stores a new NBTTagLong with the given long value into the map with the given string key.
+     */
+    public void setLong(String par1Str, long par2)
     {
-        tagMap.put(s, new NBTTagLong(s, l));
+        tagMap.put(par1Str, new NBTTagLong(par1Str, par2));
     }
 
-    public void setFloat(String s, float f)
+    /**
+     * Stores a new NBTTagFloat with the given float value into the map with the given string key.
+     */
+    public void setFloat(String par1Str, float par2)
     {
-        tagMap.put(s, new NBTTagFloat(s, f));
+        tagMap.put(par1Str, new NBTTagFloat(par1Str, par2));
     }
 
-    public void setDouble(String s, double d)
+    /**
+     * Stores a new NBTTagDouble with the given double value into the map with the given string key.
+     */
+    public void setDouble(String par1Str, double par2)
     {
-        tagMap.put(s, new NBTTagDouble(s, d));
+        tagMap.put(par1Str, new NBTTagDouble(par1Str, par2));
     }
 
-    public void setString(String s, String s1)
+    /**
+     * Stores a new NBTTagString with the given string value into the map with the given string key.
+     */
+    public void setString(String par1Str, String par2Str)
     {
-        tagMap.put(s, new NBTTagString(s, s1));
+        tagMap.put(par1Str, new NBTTagString(par1Str, par2Str));
     }
 
-    public void setByteArray(String s, byte abyte0[])
+    /**
+     * Stores a new NBTTagByteArray with the given array as data into the map with the given string key.
+     */
+    public void setByteArray(String par1Str, byte par2ArrayOfByte[])
     {
-        tagMap.put(s, new NBTTagByteArray(s, abyte0));
+        tagMap.put(par1Str, new NBTTagByteArray(par1Str, par2ArrayOfByte));
     }
 
-    public void setCompoundTag(String s, NBTTagCompound nbttagcompound)
+    public void func_48446_a(String par1Str, int par2ArrayOfInteger[])
     {
-        tagMap.put(s, nbttagcompound.setKey(s));
+        tagMap.put(par1Str, new NBTTagIntArray(par1Str, par2ArrayOfInteger));
     }
 
-    public void setBoolean(String s, boolean flag)
+    /**
+     * Stores the given NBTTagCompound into the map with the given string key.
+     */
+    public void setCompoundTag(String par1Str, NBTTagCompound par2NBTTagCompound)
     {
-        setByte(s, ((byte)(flag ? 1 : 0)));
+        tagMap.put(par1Str, par2NBTTagCompound.setName(par1Str));
     }
 
-    public NBTBase getTag(String s)
+    /**
+     * Stores the given boolean value as a NBTTagByte, storing 1 for true and 0 for false, using the given string key.
+     */
+    public void setBoolean(String par1Str, boolean par2)
     {
-        return (NBTBase)tagMap.get(s);
+        setByte(par1Str, ((byte)(par2 ? 1 : 0)));
     }
 
-    public boolean hasKey(String s)
+    /**
+     * gets a generic tag with the specified name
+     */
+    public NBTBase getTag(String par1Str)
     {
-        return tagMap.containsKey(s);
+        return (NBTBase)tagMap.get(par1Str);
     }
 
-    public byte getByte(String s)
+    /**
+     * Returns whether the given string has been previously stored as a key in the map.
+     */
+    public boolean hasKey(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        return tagMap.containsKey(par1Str);
+    }
+
+    /**
+     * Retrieves a byte value using the specified key, or 0 if no such key was stored.
+     */
+    public byte getByte(String par1Str)
+    {
+        if (!tagMap.containsKey(par1Str))
         {
             return 0;
         }
         else
         {
-            return ((NBTTagByte)tagMap.get(s)).byteValue;
+            return ((NBTTagByte)tagMap.get(par1Str)).data;
         }
     }
 
-    public short getShort(String s)
+    /**
+     * Retrieves a short value using the specified key, or 0 if no such key was stored.
+     */
+    public short getShort(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        if (!tagMap.containsKey(par1Str))
         {
             return 0;
         }
         else
         {
-            return ((NBTTagShort)tagMap.get(s)).shortValue;
+            return ((NBTTagShort)tagMap.get(par1Str)).data;
         }
     }
 
-    public int getInteger(String s)
+    /**
+     * Retrieves an integer value using the specified key, or 0 if no such key was stored.
+     */
+    public int getInteger(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        if (!tagMap.containsKey(par1Str))
         {
             return 0;
         }
         else
         {
-            return ((NBTTagInt)tagMap.get(s)).intValue;
+            return ((NBTTagInt)tagMap.get(par1Str)).data;
         }
     }
 
-    public long getLong(String s)
+    /**
+     * Retrieves a long value using the specified key, or 0 if no such key was stored.
+     */
+    public long getLong(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        if (!tagMap.containsKey(par1Str))
         {
             return 0L;
         }
         else
         {
-            return ((NBTTagLong)tagMap.get(s)).longValue;
+            return ((NBTTagLong)tagMap.get(par1Str)).data;
         }
     }
 
-    public float getFloat(String s)
+    /**
+     * Retrieves a float value using the specified key, or 0 if no such key was stored.
+     */
+    public float getFloat(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        if (!tagMap.containsKey(par1Str))
         {
             return 0.0F;
         }
         else
         {
-            return ((NBTTagFloat)tagMap.get(s)).floatValue;
+            return ((NBTTagFloat)tagMap.get(par1Str)).data;
         }
     }
 
-    public double getDouble(String s)
+    /**
+     * Retrieves a double value using the specified key, or 0 if no such key was stored.
+     */
+    public double getDouble(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        if (!tagMap.containsKey(par1Str))
         {
             return 0.0D;
         }
         else
         {
-            return ((NBTTagDouble)tagMap.get(s)).doubleValue;
+            return ((NBTTagDouble)tagMap.get(par1Str)).data;
         }
     }
 
-    public String getString(String s)
+    /**
+     * Retrieves a string value using the specified key, or an empty string if no such key was stored.
+     */
+    public String getString(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        if (!tagMap.containsKey(par1Str))
         {
             return "";
         }
         else
         {
-            return ((NBTTagString)tagMap.get(s)).stringValue;
+            return ((NBTTagString)tagMap.get(par1Str)).data;
         }
     }
 
-    public byte[] getByteArray(String s)
+    /**
+     * Retrieves a byte array using the specified key, or a zero-length array if no such key was stored.
+     */
+    public byte[] getByteArray(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        if (!tagMap.containsKey(par1Str))
         {
             return new byte[0];
         }
         else
         {
-            return ((NBTTagByteArray)tagMap.get(s)).byteArray;
+            return ((NBTTagByteArray)tagMap.get(par1Str)).byteArray;
         }
     }
 
-    public NBTTagCompound getCompoundTag(String s)
+    public int[] func_48445_l(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        if (!tagMap.containsKey(par1Str))
         {
-            return new NBTTagCompound(s);
+            return new int[0];
         }
         else
         {
-            return (NBTTagCompound)tagMap.get(s);
+            return ((NBTTagIntArray)tagMap.get(par1Str)).field_48447_a;
         }
     }
 
-    public NBTTagList getTagList(String s)
+    /**
+     * Retrieves a NBTTagCompound subtag matching the specified key, or a new empty NBTTagCompound if no such key was
+     * stored.
+     */
+    public NBTTagCompound getCompoundTag(String par1Str)
     {
-        if (!tagMap.containsKey(s))
+        if (!tagMap.containsKey(par1Str))
         {
-            return new NBTTagList(s);
+            return new NBTTagCompound(par1Str);
         }
         else
         {
-            return (NBTTagList)tagMap.get(s);
+            return (NBTTagCompound)tagMap.get(par1Str);
         }
     }
 
-    public boolean getBoolean(String s)
+    /**
+     * Retrieves a NBTTagList subtag matching the specified key, or a new empty NBTTagList if no such key was stored.
+     */
+    public NBTTagList getTagList(String par1Str)
     {
-        return getByte(s) != 0;
+        if (!tagMap.containsKey(par1Str))
+        {
+            return new NBTTagList(par1Str);
+        }
+        else
+        {
+            return (NBTTagList)tagMap.get(par1Str);
+        }
+    }
+
+    /**
+     * Retrieves a boolean value using the specified key, or false if no such key was stored. This uses the getByte
+     * method.
+     */
+    public boolean getBoolean(String par1Str)
+    {
+        return getByte(par1Str) != 0;
     }
 
     public String toString()
@@ -244,11 +350,15 @@ public class NBTTagCompound extends NBTBase
         return (new StringBuilder()).append("").append(tagMap.size()).append(" entries").toString();
     }
 
-    public NBTBase cloneTag()
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
     {
-        NBTTagCompound nbttagcompound = new NBTTagCompound(getKey());
+        NBTTagCompound nbttagcompound = new NBTTagCompound(getName());
         String s;
-        for (Iterator iterator = tagMap.keySet().iterator(); iterator.hasNext(); nbttagcompound.setTag(s, ((NBTBase)tagMap.get(s)).cloneTag()))
+
+        for (Iterator iterator = tagMap.keySet().iterator(); iterator.hasNext(); nbttagcompound.setTag(s, ((NBTBase)tagMap.get(s)).copy()))
         {
             s = (String)iterator.next();
         }
@@ -256,11 +366,11 @@ public class NBTTagCompound extends NBTBase
         return nbttagcompound;
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (super.equals(obj))
+        if (super.equals(par1Obj))
         {
-            NBTTagCompound nbttagcompound = (NBTTagCompound)obj;
+            NBTTagCompound nbttagcompound = (NBTTagCompound)par1Obj;
             return tagMap.entrySet().equals(nbttagcompound.tagMap.entrySet());
         }
         else

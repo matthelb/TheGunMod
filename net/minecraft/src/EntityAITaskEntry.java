@@ -2,15 +2,19 @@ package net.minecraft.src;
 
 class EntityAITaskEntry
 {
-    public EntityAIBase field_46132_a;
-    public int field_46130_b;
-    final EntityAITasks field_46131_c;
+    /** The EntityAIBase object. */
+    public EntityAIBase action;
 
-    public EntityAITaskEntry(EntityAITasks entityaitasks, int i, EntityAIBase entityaibase)
+    /** Priority of the EntityAIBase */
+    public int priority;
+
+    /** The EntityAITasks object of which this is an entry. */
+    final EntityAITasks tasks;
+
+    public EntityAITaskEntry(EntityAITasks par1EntityAITasks, int par2, EntityAIBase par3EntityAIBase)
     {
-        field_46131_c = entityaitasks;
-
-        field_46130_b = i;
-        field_46132_a = entityaibase;
+        tasks = par1EntityAITasks;
+        priority = par2;
+        action = par3EntityAIBase;
     }
 }

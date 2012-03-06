@@ -4,41 +4,46 @@ import java.util.Random;
 
 public class WorldGenTaiga2 extends WorldGenerator
 {
-    public WorldGenTaiga2(boolean flag)
+    public WorldGenTaiga2(boolean par1)
     {
-        super(flag);
+        super(par1);
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        int l = random.nextInt(4) + 6;
-        int i1 = 1 + random.nextInt(2);
-        int j1 = l - i1;
-        int k1 = 2 + random.nextInt(2);
+        int i = par2Random.nextInt(4) + 6;
+        int j = 1 + par2Random.nextInt(2);
+        int k = i - j;
+        int l = 2 + par2Random.nextInt(2);
         boolean flag = true;
-        if (j < 1 || j + l + 1 > world.worldHeight)
+
+        if (par4 < 1 || par4 + i + 1 > 256)
         {
             return false;
         }
-        for (int l1 = j; l1 <= j + 1 + l && flag; l1++)
+
+        for (int i1 = par4; i1 <= par4 + 1 + i && flag; i1++)
         {
-            int j2 = 1;
-            if (l1 - j < i1)
+            int k1 = 1;
+
+            if (i1 - par4 < j)
             {
-                j2 = 0;
+                k1 = 0;
             }
             else
             {
-                j2 = k1;
+                k1 = l;
             }
-            for (int l2 = i - j2; l2 <= i + j2 && flag; l2++)
+
+            for (int i2 = par3 - k1; i2 <= par3 + k1 && flag; i2++)
             {
-                for (int j3 = k - j2; j3 <= k + j2 && flag; j3++)
+                for (int k2 = par5 - k1; k2 <= par5 + k1 && flag; k2++)
                 {
-                    if (l1 >= 0 && l1 < world.worldHeight)
+                    if (i1 >= 0 && i1 < 256)
                     {
-                        int k3 = world.getBlockId(l2, l1, j3);
-                        if (k3 != 0 && k3 != Block.leaves.blockID)
+                        int l2 = par1World.getBlockId(i2, i1, k2);
+
+                        if (l2 != 0 && l2 != Block.leaves.blockID)
                         {
                             flag = false;
                         }
@@ -55,53 +60,63 @@ public class WorldGenTaiga2 extends WorldGenerator
         {
             return false;
         }
-        int i2 = world.getBlockId(i, j - 1, k);
-        if (i2 != Block.grass.blockID && i2 != Block.dirt.blockID || j >= world.worldHeight - l - 1)
+
+        int j1 = par1World.getBlockId(par3, par4 - 1, par5);
+
+        if (j1 != Block.grass.blockID && j1 != Block.dirt.blockID || par4 >= 256 - i - 1)
         {
             return false;
         }
-        world.setBlock(i, j - 1, k, Block.dirt.blockID);
-        int k2 = random.nextInt(2);
-        int i3 = 1;
+
+        par1World.setBlock(par3, par4 - 1, par5, Block.dirt.blockID);
+        int l1 = par2Random.nextInt(2);
+        int j2 = 1;
         boolean flag1 = false;
-        for (int l3 = 0; l3 <= j1; l3++)
+
+        for (int i3 = 0; i3 <= k; i3++)
         {
-            int j4 = (j + l) - l3;
-            for (int l4 = i - k2; l4 <= i + k2; l4++)
+            int k3 = (par4 + i) - i3;
+
+            for (int i4 = par3 - l1; i4 <= par3 + l1; i4++)
             {
-                int j5 = l4 - i;
-                for (int k5 = k - k2; k5 <= k + k2; k5++)
+                int k4 = i4 - par3;
+
+                for (int l4 = par5 - l1; l4 <= par5 + l1; l4++)
                 {
-                    int l5 = k5 - k;
-                    if ((Math.abs(j5) != k2 || Math.abs(l5) != k2 || k2 <= 0) && !Block.opaqueCubeLookup[world.getBlockId(l4, j4, k5)])
+                    int i5 = l4 - par5;
+
+                    if ((Math.abs(k4) != l1 || Math.abs(i5) != l1 || l1 <= 0) && !Block.opaqueCubeLookup[par1World.getBlockId(i4, k3, l4)])
                     {
-                        setBlockAndMetadata(world, l4, j4, k5, Block.leaves.blockID, 1);
+                        setBlockAndMetadata(par1World, i4, k3, l4, Block.leaves.blockID, 1);
                     }
                 }
             }
 
-            if (k2 >= i3)
+            if (l1 >= j2)
             {
-                k2 = ((flag1) ? 1 : 0);
+                l1 = ((flag1) ? 1 : 0);
                 flag1 = true;
-                if (++i3 > k1)
+
+                if (++j2 > l)
                 {
-                    i3 = k1;
+                    j2 = l;
                 }
             }
             else
             {
-                k2++;
+                l1++;
             }
         }
 
-        int i4 = random.nextInt(3);
-        for (int k4 = 0; k4 < l - i4; k4++)
+        int j3 = par2Random.nextInt(3);
+
+        for (int l3 = 0; l3 < i - j3; l3++)
         {
-            int i5 = world.getBlockId(i, j + k4, k);
-            if (i5 == 0 || i5 == Block.leaves.blockID)
+            int j4 = par1World.getBlockId(par3, par4 + l3, par5);
+
+            if (j4 == 0 || j4 == Block.leaves.blockID)
             {
-                setBlockAndMetadata(world, i, j + k4, k, Block.wood.blockID, 1);
+                setBlockAndMetadata(par1World, par3, par4 + l3, par5, Block.wood.blockID, 1);
             }
         }
 

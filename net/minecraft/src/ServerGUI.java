@@ -8,33 +8,40 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.border.TitledBorder;
 import net.minecraft.server.MinecraftServer;
 
-public class ServerGUI extends JComponent
-    implements ICommandListener
+public class ServerGUI extends JComponent implements ICommandListener
 {
+    /** Reference to the logger. */
     public static Logger logger = Logger.getLogger("Minecraft");
+
+    /** Reference to the MinecraftServer object. */
     private MinecraftServer mcServer;
 
-    public static void initGui(MinecraftServer minecraftserver)
+    /**
+     * Initialises the GUI components.
+     */
+    public static void initGui(MinecraftServer par0MinecraftServer)
     {
         try
         {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         }
         catch (Exception exception) { }
-        ServerGUI servergui = new ServerGUI(minecraftserver);
+
+        ServerGUI servergui = new ServerGUI(par0MinecraftServer);
         JFrame jframe = new JFrame("Minecraft server");
         jframe.add(servergui);
         jframe.pack();
         jframe.setLocationRelativeTo(null);
         jframe.setVisible(true);
-        jframe.addWindowListener(new ServerWindowAdapter(minecraftserver));
+        jframe.addWindowListener(new ServerWindowAdapter(par0MinecraftServer));
     }
 
-    public ServerGUI(MinecraftServer minecraftserver)
+    public ServerGUI(MinecraftServer par1MinecraftServer)
     {
-        mcServer = minecraftserver;
+        mcServer = par1MinecraftServer;
         setPreferredSize(new Dimension(854, 480));
         setLayout(new BorderLayout());
+
         try
         {
             add(getLogComponent(), "Center");
@@ -46,6 +53,9 @@ public class ServerGUI extends JComponent
         }
     }
 
+    /**
+     * Returns a new JPanel with a new GuiStatsComponent inside.
+     */
     private JComponent getStatsComponent()
     {
         JPanel jpanel = new JPanel(new BorderLayout());
@@ -55,6 +65,9 @@ public class ServerGUI extends JComponent
         return jpanel;
     }
 
+    /**
+     * Returns a new JScrollPane with a new PlayerListBox inside.
+     */
     private JComponent getPlayerListComponent()
     {
         PlayerListBox playerlistbox = new PlayerListBox(mcServer);
@@ -63,6 +76,9 @@ public class ServerGUI extends JComponent
         return jscrollpane;
     }
 
+    /**
+     * Returns a new JPanel with a new GuiStatsComponent inside.
+     */
     private JComponent getLogComponent()
     {
         JPanel jpanel = new JPanel(new BorderLayout());
@@ -79,18 +95,27 @@ public class ServerGUI extends JComponent
         return jpanel;
     }
 
-    public void log(String s)
+    /**
+     * Logs the message with a level of INFO.
+     */
+    public void log(String par1Str)
     {
-        logger.info(s);
+        logger.info(par1Str);
     }
 
+    /**
+     * Gets the players username.
+     */
     public String getUsername()
     {
         return "CONSOLE";
     }
 
-    static MinecraftServer getMinecraftServer(ServerGUI servergui)
+    /**
+     * Returns the MinecraftServer associated with the ServerGui.
+     */
+    static MinecraftServer getMinecraftServer(ServerGUI par0ServerGUI)
     {
-        return servergui.mcServer;
+        return par0ServerGUI.mcServer;
     }
 }

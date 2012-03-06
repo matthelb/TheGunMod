@@ -3,55 +3,66 @@ package net.minecraft.src;
 public class NibbleArray
 {
     public final byte data[];
-    private final int chunkSizeYShift;
-    private final int chunkSizeYZShift;
 
-    public NibbleArray(int i, int j)
+    /**
+     * Log base 2 of the chunk height (128); applied as a shift on Z coordinate
+     */
+    private final int depthBits;
+
+    /**
+     * Log base 2 of the chunk height (128) * width (16); applied as a shift on X coordinate
+     */
+    private final int depthBitsPlusFour;
+
+    public NibbleArray(int par1, int par2)
     {
-        data = new byte[i >> 1];
-        chunkSizeYShift = j;
-        chunkSizeYZShift = j + 4;
+        data = new byte[par1 >> 1];
+        depthBits = par2;
+        depthBitsPlusFour = par2 + 4;
     }
 
-    public NibbleArray(byte abyte0[], int i)
+    public NibbleArray(byte par1ArrayOfByte[], int par2)
     {
-        data = abyte0;
-        chunkSizeYShift = i;
-        chunkSizeYZShift = i + 4;
+        data = par1ArrayOfByte;
+        depthBits = par2;
+        depthBitsPlusFour = par2 + 4;
     }
 
-    public int getNibble(int i, int j, int k)
+    /**
+     * Returns the nibble of data corresponding to the passed in x, y, z. y is at most 6 bits, z is at most 4.
+     */
+    public int get(int par1, int par2, int par3)
     {
-        int l = i << chunkSizeYZShift | k << chunkSizeYShift | j;
-        int i1 = l >> 1;
-        int j1 = l & 1;
-        if (j1 == 0)
+        int i = par2 << depthBitsPlusFour | par3 << depthBits | par1;
+        int j = i >> 1;
+        int k = i & 1;
+
+        if (k == 0)
         {
-            return data[i1] & 0xf;
+            return data[j] & 0xf;
         }
         else
         {
-            return data[i1] >> 4 & 0xf;
+            return data[j] >> 4 & 0xf;
         }
     }
 
-    public void setNibble(int i, int j, int k, int l)
+    /**
+     * Arguments are x, y, z, val. Sets the nibble of data at x << 11 | z << 7 | y to val.
+     */
+    public void set(int par1, int par2, int par3, int par4)
     {
-        int i1 = i << chunkSizeYZShift | k << chunkSizeYShift | j;
-        int j1 = i1 >> 1;
-        int k1 = i1 & 1;
-        if (k1 == 0)
+        int i = par2 << depthBitsPlusFour | par3 << depthBits | par1;
+        int j = i >> 1;
+        int k = i & 1;
+
+        if (k == 0)
         {
-            data[j1] = (byte)(data[j1] & 0xf0 | l & 0xf);
+            data[j] = (byte)(data[j] & 0xf0 | par4 & 0xf);
         }
         else
         {
-            data[j1] = (byte)(data[j1] & 0xf | (l & 0xf) << 4);
+            data[j] = (byte)(data[j] & 0xf | (par4 & 0xf) << 4);
         }
-    }
-
-    public boolean isValid()
-    {
-        return data != null;
     }
 }

@@ -1,39 +1,42 @@
 package net.minecraft.src;
 
-public class ChunkCoordinates
-    implements Comparable
+public class ChunkCoordinates implements Comparable
 {
     public int posX;
+
+    /** the y coordinate */
     public int posY;
+
+    /** the z coordinate */
     public int posZ;
 
     public ChunkCoordinates()
     {
     }
 
-    public ChunkCoordinates(int i, int j, int k)
+    public ChunkCoordinates(int par1, int par2, int par3)
     {
-        posX = i;
-        posY = j;
-        posZ = k;
+        posX = par1;
+        posY = par2;
+        posZ = par3;
     }
 
-    public ChunkCoordinates(ChunkCoordinates chunkcoordinates)
+    public ChunkCoordinates(ChunkCoordinates par1ChunkCoordinates)
     {
-        posX = chunkcoordinates.posX;
-        posY = chunkcoordinates.posY;
-        posZ = chunkcoordinates.posZ;
+        posX = par1ChunkCoordinates.posX;
+        posY = par1ChunkCoordinates.posY;
+        posZ = par1ChunkCoordinates.posZ;
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (!(obj instanceof ChunkCoordinates))
+        if (!(par1Obj instanceof ChunkCoordinates))
         {
             return false;
         }
         else
         {
-            ChunkCoordinates chunkcoordinates = (ChunkCoordinates)obj;
+            ChunkCoordinates chunkcoordinates = (ChunkCoordinates)par1Obj;
             return posX == chunkcoordinates.posX && posY == chunkcoordinates.posY && posZ == chunkcoordinates.posZ;
         }
     }
@@ -43,35 +46,56 @@ public class ChunkCoordinates
         return posX + posZ << 8 + posY << 16;
     }
 
-    public int compareChunkCoordinate(ChunkCoordinates chunkcoordinates)
+    /**
+     * Compare the coordinate with another coordinate
+     */
+    public int compareChunkCoordinate(ChunkCoordinates par1ChunkCoordinates)
     {
-        if (posY == chunkcoordinates.posY)
+        if (posY == par1ChunkCoordinates.posY)
         {
-            if (posZ == chunkcoordinates.posZ)
+            if (posZ == par1ChunkCoordinates.posZ)
             {
-                return posX - chunkcoordinates.posX;
+                return posX - par1ChunkCoordinates.posX;
             }
             else
             {
-                return posZ - chunkcoordinates.posZ;
+                return posZ - par1ChunkCoordinates.posZ;
             }
         }
         else
         {
-            return posY - chunkcoordinates.posY;
+            return posY - par1ChunkCoordinates.posY;
         }
     }
 
-    public double getSqDistanceTo(int i, int j, int k)
+    public void func_48474_a(int par1, int par2, int par3)
     {
-        int l = posX - i;
-        int i1 = posY - j;
-        int j1 = posZ - k;
-        return Math.sqrt(l * l + i1 * i1 + j1 * j1);
+        posX = par1;
+        posY = par2;
+        posZ = par3;
     }
 
-    public int compareTo(Object obj)
+    /**
+     * Returns the Square distance of the chunk coordinate to the x, y, z parameters passed.
+     */
+    public double getSqDistanceTo(int par1, int par2, int par3)
     {
-        return compareChunkCoordinate((ChunkCoordinates)obj);
+        int i = posX - par1;
+        int j = posY - par2;
+        int k = posZ - par3;
+        return Math.sqrt(i * i + j * j + k * k);
+    }
+
+    public float func_48473_c(int par1, int par2, int par3)
+    {
+        int i = posX - par1;
+        int j = posY - par2;
+        int k = posZ - par3;
+        return (float)(i * i + j * j + k * k);
+    }
+
+    public int compareTo(Object par1Obj)
+    {
+        return compareChunkCoordinate((ChunkCoordinates)par1Obj);
     }
 }

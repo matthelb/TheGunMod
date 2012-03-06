@@ -2,35 +2,37 @@ package net.minecraft.src;
 
 import java.util.Comparator;
 
-class RecipeSorter
-    implements Comparator
+class RecipeSorter implements Comparator
 {
     final CraftingManager craftingManager;
 
-    RecipeSorter(CraftingManager craftingmanager)
+    RecipeSorter(CraftingManager par1CraftingManager)
     {
-        craftingManager = craftingmanager;
+        craftingManager = par1CraftingManager;
     }
 
-    public int compareRecipes(IRecipe irecipe, IRecipe irecipe1)
+    public int compareRecipes(IRecipe par1IRecipe, IRecipe par2IRecipe)
     {
-        if ((irecipe instanceof ShapelessRecipes) && (irecipe1 instanceof ShapedRecipes))
+        if ((par1IRecipe instanceof ShapelessRecipes) && (par2IRecipe instanceof ShapedRecipes))
         {
             return 1;
         }
-        if ((irecipe1 instanceof ShapelessRecipes) && (irecipe instanceof ShapedRecipes))
+
+        if ((par2IRecipe instanceof ShapelessRecipes) && (par1IRecipe instanceof ShapedRecipes))
         {
             return -1;
         }
-        if (irecipe1.getRecipeSize() < irecipe.getRecipeSize())
+
+        if (par2IRecipe.getRecipeSize() < par1IRecipe.getRecipeSize())
         {
             return -1;
         }
-        return irecipe1.getRecipeSize() <= irecipe.getRecipeSize() ? 0 : 1;
+
+        return par2IRecipe.getRecipeSize() <= par1IRecipe.getRecipeSize() ? 0 : 1;
     }
 
-    public int compare(Object obj, Object obj1)
+    public int compare(Object par1Obj, Object par2Obj)
     {
-        return compareRecipes((IRecipe)obj, (IRecipe)obj1);
+        return compareRecipes((IRecipe)par1Obj, (IRecipe)par2Obj);
     }
 }

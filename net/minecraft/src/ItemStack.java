@@ -4,54 +4,63 @@ import java.util.Random;
 
 public final class ItemStack
 {
+    /** Size of the stack. */
     public int stackSize;
+
+    /**
+     * Number of animation frames to go when receiving an item (by walking into it, for example).
+     */
     public int animationsToGo;
+
+    /** ID of the item. */
     public int itemID;
     public NBTTagCompound stackTagCompound;
+
+    /** Damage dealt to the item or number of use. Raise when using items. */
     private int itemDamage;
 
-    public ItemStack(Block block)
+    public ItemStack(Block par1Block)
     {
-        this(block, 1);
+        this(par1Block, 1);
     }
 
-    public ItemStack(Block block, int i)
+    public ItemStack(Block par1Block, int par2)
     {
-        this(block.blockID, i, 0);
+        this(par1Block.blockID, par2, 0);
     }
 
-    public ItemStack(Block block, int i, int j)
+    public ItemStack(Block par1Block, int par2, int par3)
     {
-        this(block.blockID, i, j);
+        this(par1Block.blockID, par2, par3);
     }
 
-    public ItemStack(Item item)
+    public ItemStack(Item par1Item)
     {
-        this(item.shiftedIndex, 1, 0);
+        this(par1Item.shiftedIndex, 1, 0);
     }
 
-    public ItemStack(Item item, int i)
+    public ItemStack(Item par1Item, int par2)
     {
-        this(item.shiftedIndex, i, 0);
+        this(par1Item.shiftedIndex, par2, 0);
     }
 
-    public ItemStack(Item item, int i, int j)
+    public ItemStack(Item par1Item, int par2, int par3)
     {
-        this(item.shiftedIndex, i, j);
+        this(par1Item.shiftedIndex, par2, par3);
     }
 
-    public ItemStack(int i, int j, int k)
+    public ItemStack(int par1, int par2, int par3)
     {
         stackSize = 0;
-        itemID = i;
-        stackSize = j;
-        itemDamage = k;
+        itemID = par1;
+        stackSize = par2;
+        itemDamage = par3;
     }
 
-    public static ItemStack loadItemStackFromNBT(NBTTagCompound nbttagcompound)
+    public static ItemStack loadItemStackFromNBT(NBTTagCompound par0NBTTagCompound)
     {
         ItemStack itemstack = new ItemStack();
-        itemstack.readFromNBT(nbttagcompound);
+        itemstack.readFromNBT(par0NBTTagCompound);
         return itemstack.getItem() == null ? null : itemstack;
     }
 
@@ -60,70 +69,103 @@ public final class ItemStack
         stackSize = 0;
     }
 
-    public ItemStack splitStack(int i)
+    /**
+     * Remove the argument from the stack size. Return a new stack object with argument size.
+     */
+    public ItemStack splitStack(int par1)
     {
-        ItemStack itemstack = new ItemStack(itemID, i, itemDamage);
+        ItemStack itemstack = new ItemStack(itemID, par1, itemDamage);
+
         if (stackTagCompound != null)
         {
-            itemstack.stackTagCompound = (NBTTagCompound)stackTagCompound.cloneTag();
+            itemstack.stackTagCompound = (NBTTagCompound)stackTagCompound.copy();
         }
-        stackSize -= i;
+
+        stackSize -= par1;
         return itemstack;
     }
 
+    /**
+     * Returns the object corresponding to the stack.
+     */
     public Item getItem()
     {
         return Item.itemsList[itemID];
     }
 
-    public boolean useItem(EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Uses the item stack by the player. Gives the coordinates of the block its being used against and the side. Args:
+     * player, world, x, y, z, side
+     */
+    public boolean useItem(EntityPlayer par1EntityPlayer, World par2World, int par3, int par4, int par5, int par6)
     {
-        boolean flag = getItem().onItemUse(this, entityplayer, world, i, j, k, l);
+        boolean flag = getItem().onItemUse(this, par1EntityPlayer, par2World, par3, par4, par5, par6);
+
         if (flag)
         {
-            entityplayer.addStat(StatList.objectUseStats[itemID], 1);
+            par1EntityPlayer.addStat(StatList.objectUseStats[itemID], 1);
         }
+
         return flag;
     }
 
-    public float getStrVsBlock(Block block)
+    /**
+     * Returns the strength of the stack against a given block.
+     */
+    public float getStrVsBlock(Block par1Block)
     {
-        return getItem().getStrVsBlock(this, block);
+        return getItem().getStrVsBlock(this, par1Block);
     }
 
-    public ItemStack useItemRightClick(World world, EntityPlayer entityplayer)
+    /**
+     * Called whenever this item stack is equipped and right clicked. Returns the new item stack to put in the position
+     * where this item is. Args: world, player
+     */
+    public ItemStack useItemRightClick(World par1World, EntityPlayer par2EntityPlayer)
     {
-        return getItem().onItemRightClick(this, world, entityplayer);
+        return getItem().onItemRightClick(this, par1World, par2EntityPlayer);
     }
 
-    public ItemStack onFoodEaten(World world, EntityPlayer entityplayer)
+    public ItemStack onFoodEaten(World par1World, EntityPlayer par2EntityPlayer)
     {
-        return getItem().onFoodEaten(this, world, entityplayer);
+        return getItem().onFoodEaten(this, par1World, par2EntityPlayer);
     }
 
-    public NBTTagCompound writeToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Write the stack fields to a NBT object. Return the new NBT object.
+     */
+    public NBTTagCompound writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        nbttagcompound.setShort("id", (short)itemID);
-        nbttagcompound.setByte("Count", (byte)stackSize);
-        nbttagcompound.setShort("Damage", (short)itemDamage);
+        par1NBTTagCompound.setShort("id", (short)itemID);
+        par1NBTTagCompound.setByte("Count", (byte)stackSize);
+        par1NBTTagCompound.setShort("Damage", (short)itemDamage);
+
         if (stackTagCompound != null)
         {
-            nbttagcompound.setTag("tag", stackTagCompound);
+            par1NBTTagCompound.setTag("tag", stackTagCompound);
         }
-        return nbttagcompound;
+
+        return par1NBTTagCompound;
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Read the stack fields from a NBT object.
+     */
+    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        itemID = nbttagcompound.getShort("id");
-        stackSize = nbttagcompound.getByte("Count");
-        itemDamage = nbttagcompound.getShort("Damage");
-        if (nbttagcompound.hasKey("tag"))
+        itemID = par1NBTTagCompound.getShort("id");
+        stackSize = par1NBTTagCompound.getByte("Count");
+        itemDamage = par1NBTTagCompound.getShort("Damage");
+
+        if (par1NBTTagCompound.hasKey("tag"))
         {
-            stackTagCompound = nbttagcompound.getCompoundTag("tag");
+            stackTagCompound = par1NBTTagCompound.getCompoundTag("tag");
         }
     }
 
+    /**
+     * Returns maximum size of the stack.
+     */
     public int getMaxStackSize()
     {
         return getItem().getItemStackLimit();
@@ -134,6 +176,9 @@ public final class ItemStack
         return getMaxStackSize() > 1 && (!isItemStackDamageable() || !isItemDamaged());
     }
 
+    /**
+     * true if this itemStack is damageable
+     */
     public boolean isItemStackDamageable()
     {
         return Item.itemsList[itemID].getMaxDamage() > 0;
@@ -144,11 +189,17 @@ public final class ItemStack
         return Item.itemsList[itemID].getHasSubtypes();
     }
 
+    /**
+     * returns true when a damageable item is damaged
+     */
     public boolean isItemDamaged()
     {
         return isItemStackDamageable() && itemDamage > 0;
     }
 
+    /**
+     * gets the damage of an itemstack, for displaying purposes
+     */
     public int getItemDamageForDisplay()
     {
         return itemDamage;
@@ -159,165 +210,208 @@ public final class ItemStack
         return itemDamage;
     }
 
-    public void setItemDamage(int i)
+    public void setItemDamage(int par1)
     {
-        itemDamage = i;
+        itemDamage = par1;
     }
 
+    /**
+     * Returns the max damage an item in the stack can take.
+     */
     public int getMaxDamage()
     {
         return Item.itemsList[itemID].getMaxDamage();
     }
 
-    public void damageItem(int i, EntityLiving entityliving)
+    /**
+     * damages the item in an itemstack.
+     */
+    public void damageItem(int par1, EntityLiving par2EntityLiving)
     {
         if (!isItemStackDamageable())
         {
             return;
         }
-        if (i > 0 && (entityliving instanceof EntityPlayer))
+
+        if (par1 > 0 && (par2EntityLiving instanceof EntityPlayer))
         {
-            int j = EnchantmentHelper.getUnbreakingModifier(((EntityPlayer)entityliving).inventory);
-            if (j > 0 && entityliving.worldObj.rand.nextInt(j + 1) > 0)
+            int i = EnchantmentHelper.getUnbreakingModifier(((EntityPlayer)par2EntityLiving).inventory);
+
+            if (i > 0 && par2EntityLiving.worldObj.rand.nextInt(i + 1) > 0)
             {
                 return;
             }
         }
-        itemDamage += i;
+
+        itemDamage += par1;
+
         if (itemDamage > getMaxDamage())
         {
-            entityliving.func_41030_c(this);
-            if (entityliving instanceof EntityPlayer)
+            par2EntityLiving.renderBrokenItemStack(this);
+
+            if (par2EntityLiving instanceof EntityPlayer)
             {
-                ((EntityPlayer)entityliving).addStat(StatList.objectBreakStats[itemID], 1);
+                ((EntityPlayer)par2EntityLiving).addStat(StatList.objectBreakStats[itemID], 1);
             }
+
             stackSize--;
+
             if (stackSize < 0)
             {
                 stackSize = 0;
             }
+
             itemDamage = 0;
         }
     }
 
-    public void hitEntity(EntityLiving entityliving, EntityPlayer entityplayer)
+    public void hitEntity(EntityLiving par1EntityLiving, EntityPlayer par2EntityPlayer)
     {
-        boolean flag = Item.itemsList[itemID].hitEntity(this, entityliving, entityplayer);
+        boolean flag = Item.itemsList[itemID].hitEntity(this, par1EntityLiving, par2EntityPlayer);
+
         if (flag)
         {
-            entityplayer.addStat(StatList.objectUseStats[itemID], 1);
+            par2EntityPlayer.addStat(StatList.objectUseStats[itemID], 1);
         }
     }
 
-    public void onDestroyBlock(int i, int j, int k, int l, EntityPlayer entityplayer)
+    public void onDestroyBlock(int par1, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        boolean flag = Item.itemsList[itemID].onBlockDestroyed(this, i, j, k, l, entityplayer);
+        boolean flag = Item.itemsList[itemID].onBlockDestroyed(this, par1, par2, par3, par4, par5EntityPlayer);
+
         if (flag)
         {
-            entityplayer.addStat(StatList.objectUseStats[itemID], 1);
+            par5EntityPlayer.addStat(StatList.objectUseStats[itemID], 1);
         }
     }
 
-    public int getDamageVsEntity(Entity entity)
+    public int getDamageVsEntity(Entity par1Entity)
     {
-        return Item.itemsList[itemID].getDamageVsEntity(entity);
+        return Item.itemsList[itemID].getDamageVsEntity(par1Entity);
     }
 
-    public boolean canHarvestBlock(Block block)
+    public boolean canHarvestBlock(Block par1Block)
     {
-        return Item.itemsList[itemID].canHarvestBlock(block);
+        return Item.itemsList[itemID].canHarvestBlock(par1Block);
     }
 
     public void onItemDestroyedByUse(EntityPlayer entityplayer)
     {
     }
 
-    public void useItemOnEntity(EntityLiving entityliving)
+    /**
+     * Uses the stack on the entity.
+     */
+    public void useItemOnEntity(EntityLiving par1EntityLiving)
     {
-        Item.itemsList[itemID].useItemOnEntity(this, entityliving);
+        Item.itemsList[itemID].useItemOnEntity(this, par1EntityLiving);
     }
 
+    /**
+     * Returns a new stack with the same properties.
+     */
     public ItemStack copy()
     {
         ItemStack itemstack = new ItemStack(itemID, stackSize, itemDamage);
+
         if (stackTagCompound != null)
         {
-            itemstack.stackTagCompound = (NBTTagCompound)stackTagCompound.cloneTag();
+            itemstack.stackTagCompound = (NBTTagCompound)stackTagCompound.copy();
+
             if (!itemstack.stackTagCompound.equals(stackTagCompound))
             {
                 return itemstack;
             }
         }
+
         return itemstack;
     }
 
-    public static boolean func_46124_a(ItemStack itemstack, ItemStack itemstack1)
+    public static boolean func_46124_a(ItemStack par0ItemStack, ItemStack par1ItemStack)
     {
-        if (itemstack == null && itemstack1 == null)
+        if (par0ItemStack == null && par1ItemStack == null)
         {
             return true;
         }
-        if (itemstack == null || itemstack1 == null)
+
+        if (par0ItemStack == null || par1ItemStack == null)
         {
             return false;
         }
-        if (itemstack.stackTagCompound == null && itemstack1.stackTagCompound != null)
+
+        if (par0ItemStack.stackTagCompound == null && par1ItemStack.stackTagCompound != null)
         {
             return false;
         }
-        return itemstack.stackTagCompound == null || itemstack.stackTagCompound.equals(itemstack1.stackTagCompound);
+
+        return par0ItemStack.stackTagCompound == null || par0ItemStack.stackTagCompound.equals(par1ItemStack.stackTagCompound);
     }
 
-    public static boolean areItemStacksEqual(ItemStack itemstack, ItemStack itemstack1)
+    /**
+     * compares ItemStack argument1 with ItemStack argument2; returns true if both ItemStacks are equal
+     */
+    public static boolean areItemStacksEqual(ItemStack par0ItemStack, ItemStack par1ItemStack)
     {
-        if (itemstack == null && itemstack1 == null)
+        if (par0ItemStack == null && par1ItemStack == null)
         {
             return true;
         }
-        if (itemstack == null || itemstack1 == null)
+
+        if (par0ItemStack == null || par1ItemStack == null)
         {
             return false;
         }
         else
         {
-            return itemstack.isItemStackEqual(itemstack1);
+            return par0ItemStack.isItemStackEqual(par1ItemStack);
         }
     }
 
-    private boolean isItemStackEqual(ItemStack itemstack)
+    /**
+     * compares ItemStack argument to the instance ItemStack; returns true if both ItemStacks are equal
+     */
+    private boolean isItemStackEqual(ItemStack par1ItemStack)
     {
-        if (stackSize != itemstack.stackSize)
+        if (stackSize != par1ItemStack.stackSize)
         {
             return false;
         }
-        if (itemID != itemstack.itemID)
+
+        if (itemID != par1ItemStack.itemID)
         {
             return false;
         }
-        if (itemDamage != itemstack.itemDamage)
+
+        if (itemDamage != par1ItemStack.itemDamage)
         {
             return false;
         }
-        if (stackTagCompound == null && itemstack.stackTagCompound != null)
+
+        if (stackTagCompound == null && par1ItemStack.stackTagCompound != null)
         {
             return false;
         }
-        return stackTagCompound == null || stackTagCompound.equals(itemstack.stackTagCompound);
+
+        return stackTagCompound == null || stackTagCompound.equals(par1ItemStack.stackTagCompound);
     }
 
-    public boolean isItemEqual(ItemStack itemstack)
+    /**
+     * compares ItemStack argument to the instance ItemStack; returns true if the Items contained in both ItemStacks are
+     * equal
+     */
+    public boolean isItemEqual(ItemStack par1ItemStack)
     {
-        return itemID == itemstack.itemID && itemDamage == itemstack.itemDamage;
+        return itemID == par1ItemStack.itemID && itemDamage == par1ItemStack.itemDamage;
     }
 
-    public String func_35616_k()
+    public String getItemName()
     {
         return Item.itemsList[itemID].getItemNameIS(this);
     }
 
-    public static ItemStack copyItemStack(ItemStack itemstack)
+    public static ItemStack copyItemStack(ItemStack par0ItemStack)
     {
-        return itemstack != null ? itemstack.copy() : null;
+        return par0ItemStack != null ? par0ItemStack.copy() : null;
     }
 
     public String toString()
@@ -325,24 +419,25 @@ public final class ItemStack
         return (new StringBuilder()).append(stackSize).append("x").append(Item.itemsList[itemID].getItemName()).append("@").append(itemDamage).toString();
     }
 
-    public void updateAnimation(World world, Entity entity, int i, boolean flag)
+    public void updateAnimation(World par1World, Entity par2Entity, int par3, boolean par4)
     {
         if (animationsToGo > 0)
         {
             animationsToGo--;
         }
-        Item.itemsList[itemID].onUpdate(this, world, entity, i, flag);
+
+        Item.itemsList[itemID].onUpdate(this, par1World, par2Entity, par3, par4);
     }
 
-    public void onCrafting(World world, EntityPlayer entityplayer)
+    public void func_48584_a(World par1World, EntityPlayer par2EntityPlayer, int par3)
     {
-        entityplayer.addStat(StatList.objectCraftStats[itemID], stackSize);
-        Item.itemsList[itemID].onCreated(this, world, entityplayer);
+        par2EntityPlayer.addStat(StatList.objectCraftStats[itemID], par3);
+        Item.itemsList[itemID].onCreated(this, par1World, par2EntityPlayer);
     }
 
-    public boolean isStackEqual(ItemStack itemstack)
+    public boolean isStackEqual(ItemStack par1ItemStack)
     {
-        return itemID == itemstack.itemID && stackSize == itemstack.stackSize && itemDamage == itemstack.itemDamage;
+        return itemID == par1ItemStack.itemID && stackSize == par1ItemStack.stackSize && itemDamage == par1ItemStack.itemDamage;
     }
 
     public int getMaxItemUseDuration()
@@ -355,16 +450,25 @@ public final class ItemStack
         return getItem().getItemUseAction(this);
     }
 
-    public void onPlayerStoppedUsing(World world, EntityPlayer entityplayer, int i)
+    /**
+     * Called when the player releases the use item button. Args: world, entityplayer, itemInUseCount
+     */
+    public void onPlayerStoppedUsing(World par1World, EntityPlayer par2EntityPlayer, int par3)
     {
-        getItem().onPlayerStoppedUsing(this, world, entityplayer, i);
+        getItem().onPlayerStoppedUsing(this, par1World, par2EntityPlayer, par3);
     }
 
+    /**
+     * Returns true if the ItemStack has an NBTTagCompound. Currently used to store enchantments.
+     */
     public boolean hasTagCompound()
     {
         return stackTagCompound != null;
     }
 
+    /**
+     * Returns the NBTTagCompound of the ItemStack.
+     */
     public NBTTagCompound getTagCompound()
     {
         return stackTagCompound;
@@ -382,37 +486,52 @@ public final class ItemStack
         }
     }
 
-    public void setTagCompound(NBTTagCompound nbttagcompound)
+    /**
+     * Assigns a NBTTagCompound to the ItemStack, minecraft validates that only non-stackable items can have it.
+     */
+    public void setTagCompound(NBTTagCompound par1NBTTagCompound)
     {
-        stackTagCompound = nbttagcompound;
+        stackTagCompound = par1NBTTagCompound;
     }
 
+    /**
+     * True if it is a tool and has no enchantments to begin with
+     */
     public boolean isItemEnchantable()
     {
         if (!getItem().isItemTool(this))
         {
             return false;
         }
+
         return !isItemEnchanted();
     }
 
-    public void addEnchantment(Enchantment enchantment, int i)
+    /**
+     * Adds an enchantment with a desired level on the ItemStack.
+     */
+    public void addEnchantment(Enchantment par1Enchantment, int par2)
     {
         if (stackTagCompound == null)
         {
             setTagCompound(new NBTTagCompound());
         }
+
         if (!stackTagCompound.hasKey("ench"))
         {
             stackTagCompound.setTag("ench", new NBTTagList("ench"));
         }
+
         NBTTagList nbttaglist = (NBTTagList)stackTagCompound.getTag("ench");
         NBTTagCompound nbttagcompound = new NBTTagCompound();
-        nbttagcompound.setShort("id", (short)enchantment.effectId);
-        nbttagcompound.setShort("lvl", (byte)i);
-        nbttaglist.setTag(nbttagcompound);
+        nbttagcompound.setShort("id", (short)par1Enchantment.effectId);
+        nbttagcompound.setShort("lvl", (byte)par2);
+        nbttaglist.appendTag(nbttagcompound);
     }
 
+    /**
+     * True if the item has enchantment data
+     */
     public boolean isItemEnchanted()
     {
         return stackTagCompound != null && stackTagCompound.hasKey("ench");

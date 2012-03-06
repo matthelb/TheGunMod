@@ -4,6 +4,7 @@ import java.io.*;
 
 public class Packet18Animation extends Packet
 {
+    /** The entity ID, in this case it's the player ID. */
     public int entityId;
     public int animate;
 
@@ -11,31 +12,41 @@ public class Packet18Animation extends Packet
     {
     }
 
-    public Packet18Animation(Entity entity, int i)
+    public Packet18Animation(Entity par1Entity, int par2)
     {
-        entityId = entity.entityId;
-        animate = i;
+        entityId = par1Entity.entityId;
+        animate = par2;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        animate = datainputstream.readByte();
+        entityId = par1DataInputStream.readInt();
+        animate = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        dataoutputstream.writeByte(animate);
+        par1DataOutputStream.writeInt(entityId);
+        par1DataOutputStream.writeByte(animate);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleAnimation(this);
+        par1NetHandler.handleAnimation(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 5;

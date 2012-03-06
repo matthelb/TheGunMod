@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
-final class StatTypeDistance
-    implements IStatType
+final class StatTypeDistance implements IStatType
 {
     StatTypeDistance()
     {

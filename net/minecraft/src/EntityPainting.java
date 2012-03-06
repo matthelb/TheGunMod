@@ -5,35 +5,39 @@ import java.util.*;
 public class EntityPainting extends Entity
 {
     private int tickCounter1;
+
+    /** the direction the painting faces */
     public int direction;
     public int xPosition;
     public int yPosition;
     public int zPosition;
     public EnumArt art;
 
-    public EntityPainting(World world)
+    public EntityPainting(World par1World)
     {
-        super(world);
+        super(par1World);
         tickCounter1 = 0;
         direction = 0;
         yOffset = 0.0F;
         setSize(0.5F, 0.5F);
     }
 
-    public EntityPainting(World world, int i, int j, int k, int l)
+    public EntityPainting(World par1World, int par2, int par3, int par4, int par5)
     {
-        this(world);
-        xPosition = i;
-        yPosition = j;
-        zPosition = k;
+        this(par1World);
+        xPosition = par2;
+        yPosition = par3;
+        zPosition = par4;
         ArrayList arraylist = new ArrayList();
         EnumArt aenumart[] = EnumArt.values();
-        int i1 = aenumart.length;
-        for (int j1 = 0; j1 < i1; j1++)
+        int i = aenumart.length;
+
+        for (int j = 0; j < i; j++)
         {
-            EnumArt enumart = aenumart[j1];
+            EnumArt enumart = aenumart[j];
             art = enumart;
-            func_179_a(l);
+            func_179_a(par5);
+
             if (onValidSurface())
             {
                 arraylist.add(enumart);
@@ -44,21 +48,23 @@ public class EntityPainting extends Entity
         {
             art = (EnumArt)arraylist.get(rand.nextInt(arraylist.size()));
         }
-        func_179_a(l);
+
+        func_179_a(par5);
     }
 
     protected void entityInit()
     {
     }
 
-    public void func_179_a(int i)
+    public void func_179_a(int par1)
     {
-        direction = i;
-        prevRotationYaw = rotationYaw = i * 90;
+        direction = par1;
+        prevRotationYaw = rotationYaw = par1 * 90;
         float f = art.sizeX;
         float f1 = art.sizeY;
         float f2 = art.sizeX;
-        if (i == 0 || i == 2)
+
+        if (par1 == 0 || par1 == 2)
         {
             f2 = 0.5F;
         }
@@ -66,6 +72,7 @@ public class EntityPainting extends Entity
         {
             f = 0.5F;
         }
+
         f /= 32F;
         f1 /= 32F;
         f2 /= 32F;
@@ -73,58 +80,72 @@ public class EntityPainting extends Entity
         float f4 = (float)yPosition + 0.5F;
         float f5 = (float)zPosition + 0.5F;
         float f6 = 0.5625F;
-        if (i == 0)
+
+        if (par1 == 0)
         {
             f5 -= f6;
         }
-        if (i == 1)
+
+        if (par1 == 1)
         {
             f3 -= f6;
         }
-        if (i == 2)
+
+        if (par1 == 2)
         {
             f5 += f6;
         }
-        if (i == 3)
+
+        if (par1 == 3)
         {
             f3 += f6;
         }
-        if (i == 0)
+
+        if (par1 == 0)
         {
             f3 -= func_180_c(art.sizeX);
         }
-        if (i == 1)
+
+        if (par1 == 1)
         {
             f5 += func_180_c(art.sizeX);
         }
-        if (i == 2)
+
+        if (par1 == 2)
         {
             f3 += func_180_c(art.sizeX);
         }
-        if (i == 3)
+
+        if (par1 == 3)
         {
             f5 -= func_180_c(art.sizeX);
         }
+
         f4 += func_180_c(art.sizeY);
         setPosition(f3, f4, f5);
         float f7 = -0.00625F;
         boundingBox.setBounds(f3 - f - f7, f4 - f1 - f7, f5 - f2 - f7, f3 + f + f7, f4 + f1 + f7, f5 + f2 + f7);
     }
 
-    private float func_180_c(int i)
+    private float func_180_c(int par1)
     {
-        if (i == 32)
+        if (par1 == 32)
         {
             return 0.5F;
         }
-        return i != 64 ? 0.0F : 0.5F;
+
+        return par1 != 64 ? 0.0F : 0.5F;
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         if (tickCounter1++ == 100 && !worldObj.isRemote)
         {
             tickCounter1 = 0;
+
             if (!onValidSurface())
             {
                 setEntityDead();
@@ -133,39 +154,50 @@ public class EntityPainting extends Entity
         }
     }
 
+    /**
+     * checks to make sure painting can be placed there
+     */
     public boolean onValidSurface()
     {
         if (worldObj.getCollidingBoundingBoxes(this, boundingBox).size() > 0)
         {
             return false;
         }
+
         int i = art.sizeX / 16;
         int j = art.sizeY / 16;
         int k = xPosition;
         int l = yPosition;
         int i1 = zPosition;
+
         if (direction == 0)
         {
             k = MathHelper.floor_double(posX - (double)((float)art.sizeX / 32F));
         }
+
         if (direction == 1)
         {
             i1 = MathHelper.floor_double(posZ - (double)((float)art.sizeX / 32F));
         }
+
         if (direction == 2)
         {
             k = MathHelper.floor_double(posX - (double)((float)art.sizeX / 32F));
         }
+
         if (direction == 3)
         {
             i1 = MathHelper.floor_double(posZ - (double)((float)art.sizeX / 32F));
         }
+
         l = MathHelper.floor_double(posY - (double)((float)art.sizeY / 32F));
+
         for (int j1 = 0; j1 < i; j1++)
         {
             for (int k1 = 0; k1 < j; k1++)
             {
                 Material material;
+
                 if (direction == 0 || direction == 2)
                 {
                     material = worldObj.getBlockMaterial(k + j1, l + k1, zPosition);
@@ -174,6 +206,7 @@ public class EntityPainting extends Entity
                 {
                     material = worldObj.getBlockMaterial(xPosition, l + k1, i1 + j1);
                 }
+
                 if (!material.isSolid())
                 {
                     return false;
@@ -182,6 +215,7 @@ public class EntityPainting extends Entity
         }
 
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox);
+
         for (int l1 = 0; l1 < list.size(); l1++)
         {
             if (list.get(l1) instanceof EntityPainting)
@@ -198,7 +232,10 @@ public class EntityPainting extends Entity
         return true;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         if (!isDead && !worldObj.isRemote)
         {
@@ -206,30 +243,39 @@ public class EntityPainting extends Entity
             setBeenAttacked();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
         }
+
         return true;
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        nbttagcompound.setByte("Dir", (byte)direction);
-        nbttagcompound.setString("Motive", art.title);
-        nbttagcompound.setInteger("TileX", xPosition);
-        nbttagcompound.setInteger("TileY", yPosition);
-        nbttagcompound.setInteger("TileZ", zPosition);
+        par1NBTTagCompound.setByte("Dir", (byte)direction);
+        par1NBTTagCompound.setString("Motive", art.title);
+        par1NBTTagCompound.setInteger("TileX", xPosition);
+        par1NBTTagCompound.setInteger("TileY", yPosition);
+        par1NBTTagCompound.setInteger("TileZ", zPosition);
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        direction = nbttagcompound.getByte("Dir");
-        xPosition = nbttagcompound.getInteger("TileX");
-        yPosition = nbttagcompound.getInteger("TileY");
-        zPosition = nbttagcompound.getInteger("TileZ");
-        String s = nbttagcompound.getString("Motive");
+        direction = par1NBTTagCompound.getByte("Dir");
+        xPosition = par1NBTTagCompound.getInteger("TileX");
+        yPosition = par1NBTTagCompound.getInteger("TileY");
+        zPosition = par1NBTTagCompound.getInteger("TileZ");
+        String s = par1NBTTagCompound.getString("Motive");
         EnumArt aenumart[] = EnumArt.values();
         int i = aenumart.length;
+
         for (int j = 0; j < i; j++)
         {
             EnumArt enumart = aenumart[j];
+
             if (enumart.title.equals(s))
             {
                 art = enumart;
@@ -240,21 +286,28 @@ public class EntityPainting extends Entity
         {
             art = EnumArt.Kebab;
         }
+
         func_179_a(direction);
     }
 
-    public void moveEntity(double d, double d1, double d2)
+    /**
+     * Tries to moves the entity by the passed in displacement. Args: x, y, z
+     */
+    public void moveEntity(double par1, double par3, double par5)
     {
-        if (!worldObj.isRemote && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if (!worldObj.isRemote && par1 * par1 + par3 * par3 + par5 * par5 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
         }
     }
 
-    public void addVelocity(double d, double d1, double d2)
+    /**
+     * Adds to the current velocity of the entity. Args: x, y, z
+     */
+    public void addVelocity(double par1, double par3, double par5)
     {
-        if (!worldObj.isRemote && d * d + d1 * d1 + d2 * d2 > 0.0D)
+        if (!worldObj.isRemote && par1 * par1 + par3 * par3 + par5 * par5 > 0.0D)
         {
             setEntityDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));

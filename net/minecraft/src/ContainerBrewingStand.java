@@ -7,40 +7,46 @@ public class ContainerBrewingStand extends Container
     private TileEntityBrewingStand tileBrewingStand;
     private int brewTime;
 
-    public ContainerBrewingStand(InventoryPlayer inventoryplayer, TileEntityBrewingStand tileentitybrewingstand)
+    public ContainerBrewingStand(InventoryPlayer par1InventoryPlayer, TileEntityBrewingStand par2TileEntityBrewingStand)
     {
         brewTime = 0;
-        tileBrewingStand = tileentitybrewingstand;
-        addSlot(new SlotBrewingStandPotion(this, inventoryplayer.player, tileentitybrewingstand, 0, 56, 46));
-        addSlot(new SlotBrewingStandPotion(this, inventoryplayer.player, tileentitybrewingstand, 1, 79, 53));
-        addSlot(new SlotBrewingStandPotion(this, inventoryplayer.player, tileentitybrewingstand, 2, 102, 46));
-        addSlot(new SlotBrewingStandIngredient(this, tileentitybrewingstand, 3, 79, 17));
+        tileBrewingStand = par2TileEntityBrewingStand;
+        addSlot(new SlotBrewingStandPotion(this, par1InventoryPlayer.player, par2TileEntityBrewingStand, 0, 56, 46));
+        addSlot(new SlotBrewingStandPotion(this, par1InventoryPlayer.player, par2TileEntityBrewingStand, 1, 79, 53));
+        addSlot(new SlotBrewingStandPotion(this, par1InventoryPlayer.player, par2TileEntityBrewingStand, 2, 102, 46));
+        addSlot(new SlotBrewingStandIngredient(this, par2TileEntityBrewingStand, 3, 79, 17));
+
         for (int i = 0; i < 3; i++)
         {
             for (int k = 0; k < 9; k++)
             {
-                addSlot(new Slot(inventoryplayer, k + i * 9 + 9, 8 + k * 18, 84 + i * 18));
+                addSlot(new Slot(par1InventoryPlayer, k + i * 9 + 9, 8 + k * 18, 84 + i * 18));
             }
         }
 
         for (int j = 0; j < 9; j++)
         {
-            addSlot(new Slot(inventoryplayer, j, 8 + j * 18, 142));
+            addSlot(new Slot(par1InventoryPlayer, j, 8 + j * 18, 142));
         }
     }
 
-    public void onCraftGuiOpened(ICrafting icrafting)
+    public void onCraftGuiOpened(ICrafting par1ICrafting)
     {
-        super.onCraftGuiOpened(icrafting);
-        icrafting.updateCraftingInventoryInfo(this, 0, tileBrewingStand.getBrewTime());
+        super.onCraftGuiOpened(par1ICrafting);
+        par1ICrafting.updateCraftingInventoryInfo(this, 0, tileBrewingStand.getBrewTime());
     }
 
+    /**
+     * update the crafting matrix
+     */
     public void updateCraftingResults()
     {
         super.updateCraftingResults();
+
         for (int i = 0; i < crafters.size(); i++)
         {
             ICrafting icrafting = (ICrafting)crafters.get(i);
+
             if (brewTime != tileBrewingStand.getBrewTime())
             {
                 icrafting.updateCraftingInventoryInfo(this, 0, tileBrewingStand.getBrewTime());
@@ -50,34 +56,41 @@ public class ContainerBrewingStand extends Container
         brewTime = tileBrewingStand.getBrewTime();
     }
 
-    public boolean canInteractWith(EntityPlayer entityplayer)
+    public boolean canInteractWith(EntityPlayer par1EntityPlayer)
     {
-        return tileBrewingStand.isUseableByPlayer(entityplayer);
+        return tileBrewingStand.isUseableByPlayer(par1EntityPlayer);
     }
 
-    public ItemStack transferStackInSlot(int i)
+    /**
+     * Called to transfer a stack from one inventory to the other eg. when shift clicking.
+     */
+    public ItemStack transferStackInSlot(int par1)
     {
         ItemStack itemstack = null;
-        Slot slot = (Slot)inventorySlots.get(i);
+        Slot slot = (Slot)inventorySlots.get(par1);
+
         if (slot != null && slot.getHasStack())
         {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if (i >= 0 && i <= 2 || i == 3)
+
+            if (par1 >= 0 && par1 <= 2 || par1 == 3)
             {
                 if (!mergeItemStack(itemstack1, 4, 40, true))
                 {
                     return null;
                 }
+
+                slot.func_48417_a(itemstack1, itemstack);
             }
-            else if (i >= 4 && i < 31)
+            else if (par1 >= 4 && par1 < 31)
             {
                 if (!mergeItemStack(itemstack1, 31, 40, false))
                 {
                     return null;
                 }
             }
-            else if (i >= 31 && i < 40)
+            else if (par1 >= 31 && par1 < 40)
             {
                 if (!mergeItemStack(itemstack1, 4, 31, false))
                 {
@@ -88,6 +101,7 @@ public class ContainerBrewingStand extends Container
             {
                 return null;
             }
+
             if (itemstack1.stackSize == 0)
             {
                 slot.putStack(null);
@@ -96,6 +110,7 @@ public class ContainerBrewingStand extends Container
             {
                 slot.onSlotChanged();
             }
+
             if (itemstack1.stackSize != itemstack.stackSize)
             {
                 slot.onPickupFromSlot(itemstack1);
@@ -105,6 +120,7 @@ public class ContainerBrewingStand extends Container
                 return null;
             }
         }
+
         return itemstack;
     }
 }

@@ -10,101 +10,123 @@ public class MathHelper
     {
     }
 
-    public static final float sin(float f)
+    /**
+     * sin looked up in a table
+     */
+    public static final float sin(float par0)
     {
-        return SIN_TABLE[(int)(f * 10430.38F) & 0xffff];
+        return SIN_TABLE[(int)(par0 * 10430.38F) & 0xffff];
     }
 
-    public static final float cos(float f)
+    /**
+     * cos looked up in the sin table with the appropriate offset
+     */
+    public static final float cos(float par0)
     {
-        return SIN_TABLE[(int)(f * 10430.38F + 16384F) & 0xffff];
+        return SIN_TABLE[(int)(par0 * 10430.38F + 16384F) & 0xffff];
     }
 
-    public static final float sqrt_float(float f)
+    public static final float sqrt_float(float par0)
     {
-        return (float)Math.sqrt(f);
+        return (float)Math.sqrt(par0);
     }
 
-    public static final float sqrt_double(double d)
+    public static final float sqrt_double(double par0)
     {
-        return (float)Math.sqrt(d);
+        return (float)Math.sqrt(par0);
     }
 
-    public static int floor_float(float f)
+    /**
+     * Returns the greatest integer less than or equal to the float argument
+     */
+    public static int floor_float(float par0)
     {
-        int i = (int)f;
-        return f >= (float)i ? i : i - 1;
+        int i = (int)par0;
+        return par0 >= (float)i ? i : i - 1;
     }
 
-    public static int floor_double(double d)
+    /**
+     * Returns the greatest integer less than or equal to the double argument
+     */
+    public static int floor_double(double par0)
     {
-        int i = (int)d;
-        return d >= (double)i ? i : i - 1;
+        int i = (int)par0;
+        return par0 >= (double)i ? i : i - 1;
     }
 
-    public static long floor_double_long(double d)
+    public static long floor_double_long(double par0)
     {
-        long l = (long)d;
-        return d >= (double)l ? l : l - 1L;
+        long l = (long)par0;
+        return par0 >= (double)l ? l : l - 1L;
     }
 
-    public static float abs(float f)
+    public static float abs(float par0)
     {
-        return f < 0.0F ? -f : f;
+        return par0 < 0.0F ? -par0 : par0;
     }
 
-    public static int abs(int i)
+    /**
+     * Returns the unsigned value of an int.
+     */
+    public static int abs(int par0)
     {
-        return i < 0 ? -i : i;
+        return par0 < 0 ? -par0 : par0;
     }
 
-    public static int clamp_int(int i, int j, int k)
+    public static int clamp_int(int par0, int par1, int par2)
     {
-        if (i < j)
+        if (par0 < par1)
         {
-            return j;
+            return par1;
         }
-        if (i > k)
-        {
-            return k;
-        }
-        else
-        {
-            return i;
-        }
-    }
 
-    public static double abs_max(double d, double d1)
-    {
-        if (d < 0.0D)
+        if (par0 > par2)
         {
-            d = -d;
-        }
-        if (d1 < 0.0D)
-        {
-            d1 = -d1;
-        }
-        return d <= d1 ? d1 : d;
-    }
-
-    public static int getRandomIntegerInRange(Random random, int i, int j)
-    {
-        if (i >= j)
-        {
-            return i;
+            return par2;
         }
         else
         {
-            return random.nextInt((j - i) + 1) + i;
+            return par0;
+        }
+    }
+
+    /**
+     * Maximum of the absolute value of two numbers.
+     */
+    public static double abs_max(double par0, double par2)
+    {
+        if (par0 < 0.0D)
+        {
+            par0 = -par0;
+        }
+
+        if (par2 < 0.0D)
+        {
+            par2 = -par2;
+        }
+
+        return par0 <= par2 ? par2 : par0;
+    }
+
+    public static int getRandomIntegerInRange(Random par0Random, int par1, int par2)
+    {
+        if (par1 >= par2)
+        {
+            return par1;
+        }
+        else
+        {
+            return par0Random.nextInt((par2 - par1) + 1) + par1;
         }
     }
 
     static
     {
         SIN_TABLE = new float[0x10000];
+
         for (int i = 0; i < 0x10000; i++)
         {
-            SIN_TABLE[i] = (float)Math.sin(((double)i * 3.1415926535897931D * 2D) / 65536D);
+            SIN_TABLE[i] = (float)Math.sin(((double)i * Math.PI * 2D) / 65536D);
         }
     }
 }

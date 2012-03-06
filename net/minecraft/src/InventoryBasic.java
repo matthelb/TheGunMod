@@ -2,42 +2,51 @@ package net.minecraft.src;
 
 import java.util.List;
 
-public class InventoryBasic
-    implements IInventory
+public class InventoryBasic implements IInventory
 {
     private String inventoryTitle;
     private int slotsCount;
     private ItemStack inventoryContents[];
     private List field_40084_d;
 
-    public InventoryBasic(String s, int i)
+    public InventoryBasic(String par1Str, int par2)
     {
-        inventoryTitle = s;
-        slotsCount = i;
-        inventoryContents = new ItemStack[i];
+        inventoryTitle = par1Str;
+        slotsCount = par2;
+        inventoryContents = new ItemStack[par2];
     }
 
-    public ItemStack getStackInSlot(int i)
+    /**
+     * Returns the stack in slot i
+     */
+    public ItemStack getStackInSlot(int par1)
     {
-        return inventoryContents[i];
+        return inventoryContents[par1];
     }
 
-    public ItemStack decrStackSize(int i, int j)
+    /**
+     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
+     * stack.
+     */
+    public ItemStack decrStackSize(int par1, int par2)
     {
-        if (inventoryContents[i] != null)
+        if (inventoryContents[par1] != null)
         {
-            if (inventoryContents[i].stackSize <= j)
+            if (inventoryContents[par1].stackSize <= par2)
             {
-                ItemStack itemstack = inventoryContents[i];
-                inventoryContents[i] = null;
+                ItemStack itemstack = inventoryContents[par1];
+                inventoryContents[par1] = null;
                 onInventoryChanged();
                 return itemstack;
             }
-            ItemStack itemstack1 = inventoryContents[i].splitStack(j);
-            if (inventoryContents[i].stackSize == 0)
+
+            ItemStack itemstack1 = inventoryContents[par1].splitStack(par2);
+
+            if (inventoryContents[par1].stackSize == 0)
             {
-                inventoryContents[i] = null;
+                inventoryContents[par1] = null;
             }
+
             onInventoryChanged();
             return itemstack1;
         }
@@ -47,13 +56,32 @@ public class InventoryBasic
         }
     }
 
-    public void setInventorySlotContents(int i, ItemStack itemstack)
+    public ItemStack func_48315_b(int par1)
     {
-        inventoryContents[i] = itemstack;
-        if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+        if (inventoryContents[par1] != null)
         {
-            itemstack.stackSize = getInventoryStackLimit();
+            ItemStack itemstack = inventoryContents[par1];
+            inventoryContents[par1] = null;
+            return itemstack;
         }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
+    {
+        inventoryContents[par1] = par2ItemStack;
+
+        if (par2ItemStack != null && par2ItemStack.stackSize > getInventoryStackLimit())
+        {
+            par2ItemStack.stackSize = getInventoryStackLimit();
+        }
+
         onInventoryChanged();
     }
 
@@ -62,16 +90,26 @@ public class InventoryBasic
         return slotsCount;
     }
 
+    /**
+     * Returns the name of the inventory.
+     */
     public String getInvName()
     {
         return inventoryTitle;
     }
 
+    /**
+     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended. *Isn't
+     * this more of a set than a get?*
+     */
     public int getInventoryStackLimit()
     {
         return 64;
     }
 
+    /**
+     * Called when an the contents of an Inventory change, usually
+     */
     public void onInventoryChanged()
     {
         if (field_40084_d != null)
@@ -83,7 +121,10 @@ public class InventoryBasic
         }
     }
 
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    /**
+     * Do not make give this method the name canInteractWith because it clashes with Container
+     */
+    public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
     {
         return true;
     }

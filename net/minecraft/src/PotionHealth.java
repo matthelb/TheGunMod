@@ -2,18 +2,21 @@ package net.minecraft.src;
 
 public class PotionHealth extends Potion
 {
-    public PotionHealth(int i, boolean flag, int j)
+    public PotionHealth(int par1, boolean par2, int par3)
     {
-        super(i, flag, j);
+        super(par1, par2, par3);
     }
 
+    /**
+     * Returns true if the potion has an instant effect instead of a continuous one (eg Harming)
+     */
     public boolean isInstant()
     {
         return true;
     }
 
-    public boolean isReady(int i, int j)
+    public boolean isReady(int par1, int par2)
     {
-        return i >= 1;
+        return par1 >= 1;
     }
 }

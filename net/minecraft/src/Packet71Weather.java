@@ -14,43 +14,54 @@ public class Packet71Weather extends Packet
     {
     }
 
-    public Packet71Weather(Entity entity)
+    public Packet71Weather(Entity par1Entity)
     {
-        entityID = entity.entityId;
-        posX = MathHelper.floor_double(entity.posX * 32D);
-        posY = MathHelper.floor_double(entity.posY * 32D);
-        posZ = MathHelper.floor_double(entity.posZ * 32D);
-        if (entity instanceof EntityLightningBolt)
+        entityID = par1Entity.entityId;
+        posX = MathHelper.floor_double(par1Entity.posX * 32D);
+        posY = MathHelper.floor_double(par1Entity.posY * 32D);
+        posZ = MathHelper.floor_double(par1Entity.posZ * 32D);
+
+        if (par1Entity instanceof EntityLightningBolt)
         {
             isLightningBolt = 1;
         }
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityID = datainputstream.readInt();
-        isLightningBolt = datainputstream.readByte();
-        posX = datainputstream.readInt();
-        posY = datainputstream.readInt();
-        posZ = datainputstream.readInt();
+        entityID = par1DataInputStream.readInt();
+        isLightningBolt = par1DataInputStream.readByte();
+        posX = par1DataInputStream.readInt();
+        posY = par1DataInputStream.readInt();
+        posZ = par1DataInputStream.readInt();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityID);
-        dataoutputstream.writeByte(isLightningBolt);
-        dataoutputstream.writeInt(posX);
-        dataoutputstream.writeInt(posY);
-        dataoutputstream.writeInt(posZ);
+        par1DataOutputStream.writeInt(entityID);
+        par1DataOutputStream.writeByte(isLightningBolt);
+        par1DataOutputStream.writeInt(posX);
+        par1DataOutputStream.writeInt(posY);
+        par1DataOutputStream.writeInt(posZ);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleWeather(this);
+        par1NetHandler.handleWeather(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 17;

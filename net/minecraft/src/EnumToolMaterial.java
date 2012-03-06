@@ -2,45 +2,67 @@ package net.minecraft.src;
 
 public enum EnumToolMaterial
 {
-    WOOD("WOOD", 0, 0, 59, 2.0F, 0, 15),
-    STONE("STONE", 1, 1, 131, 4F, 1, 5),
-    IRON("IRON", 2, 2, 250, 6F, 2, 14),
-    EMERALD("EMERALD", 3, 3, 1561, 8F, 3, 10),
-    GOLD("GOLD", 4, 0, 32, 12F, 0, 22);
+    WOOD(0, 59, 2.0F, 0, 15),
+    STONE(1, 131, 4F, 1, 5),
+    IRON(2, 250, 6F, 2, 14),
+    EMERALD(3, 1561, 8F, 3, 10),
+    GOLD(0, 32, 12F, 0, 22);
 
+    /**
+     * The level of material this tool can harvest (3 = DIAMOND, 2 = IRON, 1 = STONE, 0 = IRON/GOLD)
+     */
     private final int harvestLevel;
+
+    /**
+     * The number of uses this material allows. (wood = 59, stone = 131, iron = 250, diamond = 1561, gold = 32)
+     */
     private final int maxUses;
+
+    /**
+     * The strength of this tool material against blocks which it is effective against.
+     */
     private final float efficiencyOnProperMaterial;
+
+    /** Damage versus entities. */
     private final int damageVsEntity;
     private final int enchantability;
-    private static final EnumToolMaterial allToolMaterials[] = (new EnumToolMaterial[] {
-        WOOD, STONE, IRON, EMERALD, GOLD
-    });
 
-    private EnumToolMaterial(String s, int i, int j, int k, float f, int l, int i1)
+    private EnumToolMaterial(int par3, int par4, float par5, int par6, int par7)
     {
-        harvestLevel = j;
-        maxUses = k;
-        efficiencyOnProperMaterial = f;
-        damageVsEntity = l;
-        enchantability = i1;
+        harvestLevel = par3;
+        maxUses = par4;
+        efficiencyOnProperMaterial = par5;
+        damageVsEntity = par6;
+        enchantability = par7;
     }
 
+    /**
+     * The number of uses this material allows. (wood = 59, stone = 131, iron = 250, diamond = 1561, gold = 32)
+     */
     public int getMaxUses()
     {
         return maxUses;
     }
 
+    /**
+     * The strength of this tool material against blocks which it is effective against.
+     */
     public float getEfficiencyOnProperMaterial()
     {
         return efficiencyOnProperMaterial;
     }
 
+    /**
+     * Returns the damage against a given entity.
+     */
     public int getDamageVsEntity()
     {
         return damageVsEntity;
     }
 
+    /**
+     * The level of material this tool can harvest (3 = DIAMOND, 2 = IRON, 1 = STONE, 0 = IRON/GOLD)
+     */
     public int getHarvestLevel()
     {
         return harvestLevel;

@@ -5,7 +5,12 @@ import java.util.*;
 
 public class NBTTagList extends NBTBase
 {
+    /** The array list containing the tags encapsulated in this list. */
     private List tagList;
+
+    /**
+     * The type byte for the tags in the list - they must all be of the same type.
+     */
     private byte tagType;
 
     public NBTTagList()
@@ -14,46 +19,56 @@ public class NBTTagList extends NBTBase
         tagList = new ArrayList();
     }
 
-    public NBTTagList(String s)
+    public NBTTagList(String par1Str)
     {
-        super(s);
+        super(par1Str);
         tagList = new ArrayList();
     }
 
-    void writeTagContents(DataOutput dataoutput)
-    throws IOException
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput par1DataOutput) throws IOException
     {
         if (tagList.size() > 0)
         {
-            tagType = ((NBTBase)tagList.get(0)).getType();
+            tagType = ((NBTBase)tagList.get(0)).getId();
         }
         else
         {
             tagType = 1;
         }
-        dataoutput.writeByte(tagType);
-        dataoutput.writeInt(tagList.size());
+
+        par1DataOutput.writeByte(tagType);
+        par1DataOutput.writeInt(tagList.size());
+
         for (int i = 0; i < tagList.size(); i++)
         {
-            ((NBTBase)tagList.get(i)).writeTagContents(dataoutput);
+            ((NBTBase)tagList.get(i)).write(par1DataOutput);
         }
     }
 
-    void readTagContents(DataInput datainput)
-    throws IOException
+    /**
+     * Read the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void load(DataInput par1DataInput) throws IOException
     {
-        tagType = datainput.readByte();
-        int i = datainput.readInt();
+        tagType = par1DataInput.readByte();
+        int i = par1DataInput.readInt();
         tagList = new ArrayList();
+
         for (int j = 0; j < i; j++)
         {
-            NBTBase nbtbase = NBTBase.createTagOfType(tagType, null);
-            nbtbase.readTagContents(datainput);
+            NBTBase nbtbase = NBTBase.newTag(tagType, null);
+            nbtbase.load(par1DataInput);
             tagList.add(nbtbase);
         }
     }
 
-    public byte getType()
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
     {
         return 9;
     }
@@ -63,46 +78,62 @@ public class NBTTagList extends NBTBase
         return (new StringBuilder()).append("").append(tagList.size()).append(" entries of type ").append(NBTBase.getTagName(tagType)).toString();
     }
 
-    public void setTag(NBTBase nbtbase)
+    /**
+     * Adds the provided tag to the end of the list. There is no check to verify this tag is of the same type as any
+     * previous tag.
+     */
+    public void appendTag(NBTBase par1NBTBase)
     {
-        tagType = nbtbase.getType();
-        tagList.add(nbtbase);
+        tagType = par1NBTBase.getId();
+        tagList.add(par1NBTBase);
     }
 
-    public NBTBase tagAt(int i)
+    /**
+     * Retrieves the tag at the specified index from the list.
+     */
+    public NBTBase tagAt(int par1)
     {
-        return (NBTBase)tagList.get(i);
+        return (NBTBase)tagList.get(par1);
     }
 
+    /**
+     * Returns the number of tags in the list.
+     */
     public int tagCount()
     {
         return tagList.size();
     }
 
-    public NBTBase cloneTag()
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
     {
-        NBTTagList nbttaglist = new NBTTagList(getKey());
+        NBTTagList nbttaglist = new NBTTagList(getName());
         nbttaglist.tagType = tagType;
         NBTBase nbtbase1;
+
         for (Iterator iterator = tagList.iterator(); iterator.hasNext(); nbttaglist.tagList.add(nbtbase1))
         {
             NBTBase nbtbase = (NBTBase)iterator.next();
-            nbtbase1 = nbtbase.cloneTag();
+            nbtbase1 = nbtbase.copy();
         }
 
         return nbttaglist;
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (super.equals(obj))
+        if (super.equals(par1Obj))
         {
-            NBTTagList nbttaglist = (NBTTagList)obj;
+            NBTTagList nbttaglist = (NBTTagList)par1Obj;
+
             if (tagType == nbttaglist.tagType)
             {
                 return tagList.equals(nbttaglist.tagList);
             }
         }
+
         return false;
     }
 }

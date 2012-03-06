@@ -3,30 +3,31 @@ package net.minecraft.src;
 public class EntityFallingSand extends Entity
 {
     public int blockID;
+
+    /** How long the block has been falling for. */
     public int fallTime;
 
-    public EntityFallingSand(World world)
+    public EntityFallingSand(World par1World)
     {
-        super(world);
+        super(par1World);
         fallTime = 0;
     }
 
-    public EntityFallingSand(World world, double d, double d1, double d2,
-            int i)
+    public EntityFallingSand(World par1World, double par2, double par4, double par6, int par8)
     {
-        super(world);
+        super(par1World);
         fallTime = 0;
-        blockID = i;
+        blockID = par8;
         preventEntitySpawning = true;
         setSize(0.98F, 0.98F);
         yOffset = height / 2.0F;
-        setPosition(d, d1, d2);
+        setPosition(par2, par4, par6);
         motionX = 0.0D;
         motionY = 0.0D;
         motionZ = 0.0D;
-        prevPosX = d;
-        prevPosY = d1;
-        prevPosZ = d2;
+        prevPosX = par2;
+        prevPosY = par4;
+        prevPosZ = par6;
     }
 
     protected boolean canTriggerWalking()
@@ -43,6 +44,9 @@ public class EntityFallingSand extends Entity
         return !isDead;
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         if (blockID == 0)
@@ -50,18 +54,20 @@ public class EntityFallingSand extends Entity
             setEntityDead();
             return;
         }
+
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
         fallTime++;
-        motionY -= 0.039999999105930328D;
+        motionY -= 0.04D;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.98000001907348633D;
-        motionY *= 0.98000001907348633D;
-        motionZ *= 0.98000001907348633D;
+        motionX *= 0.98D;
+        motionY *= 0.98D;
+        motionZ *= 0.98D;
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posY);
         int k = MathHelper.floor_double(posZ);
+
         if (fallTime == 1 && worldObj.getBlockId(i, j, k) == blockID)
         {
             worldObj.setBlockWithNotify(i, j, k, 0);
@@ -70,34 +76,43 @@ public class EntityFallingSand extends Entity
         {
             setEntityDead();
         }
+
         if (onGround)
         {
-            motionX *= 0.69999998807907104D;
-            motionZ *= 0.69999998807907104D;
+            motionX *= 0.7D;
+            motionZ *= 0.7D;
             motionY *= -0.5D;
+
             if (worldObj.getBlockId(i, j, k) != Block.pistonMoving.blockID)
             {
                 setEntityDead();
+
                 if ((!worldObj.canBlockBePlacedAt(blockID, i, j, k, true, 1) || BlockSand.canFallBelow(worldObj, i, j - 1, k) || !worldObj.setBlockWithNotify(i, j, k, blockID)) && !worldObj.isRemote)
                 {
                     dropItem(blockID, 1);
                 }
             }
         }
-        else if (fallTime > 100 && !worldObj.isRemote)
+        else if (fallTime > 100 && !worldObj.isRemote && (j < 1 || j > 256) || fallTime > 600)
         {
             dropItem(blockID, 1);
             setEntityDead();
         }
     }
 
-    protected void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    protected void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        nbttagcompound.setByte("Tile", (byte)blockID);
+        par1NBTTagCompound.setByte("Tile", (byte)blockID);
     }
 
-    protected void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    protected void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        blockID = nbttagcompound.getByte("Tile") & 0xff;
+        blockID = par1NBTTagCompound.getByte("Tile") & 0xff;
     }
 }

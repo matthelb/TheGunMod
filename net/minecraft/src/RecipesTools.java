@@ -34,24 +34,28 @@ public class RecipesTools
                 });
     }
 
-    public void addRecipes(CraftingManager craftingmanager)
+    /**
+     * Adds tool recipes to the CraftingManager.
+     */
+    public void addRecipes(CraftingManager par1CraftingManager)
     {
         for (int i = 0; i < recipeItems[0].length; i++)
         {
             Object obj = recipeItems[0][i];
+
             for (int j = 0; j < recipeItems.length - 1; j++)
             {
                 Item item = (Item)recipeItems[j + 1][i];
-                craftingmanager.addRecipe(new ItemStack(item), new Object[]
+                par1CraftingManager.addRecipe(new ItemStack(item), new Object[]
                         {
-                            recipePatterns[j], Character.valueOf('#'), Item.stick, Character.valueOf('X'), obj
+                            recipePatterns[j], '#', Item.stick, 'X', obj
                         });
             }
         }
 
-        craftingmanager.addRecipe(new ItemStack(Item.shears), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Item.shears), new Object[]
                 {
-                    " #", "# ", Character.valueOf('#'), Item.ingotIron
+                    " #", "# ", '#', Item.ingotIron
                 });
     }
 }

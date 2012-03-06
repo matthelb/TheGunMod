@@ -8,20 +8,20 @@ class StructureNetherBridgePieceWeight
     public int field_40651_d;
     public boolean field_40652_e;
 
-    public StructureNetherBridgePieceWeight(Class class1, int i, int j, boolean flag)
+    public StructureNetherBridgePieceWeight(Class par1Class, int par2, int par3, boolean par4)
     {
-        field_40655_a = class1;
-        field_40653_b = i;
-        field_40651_d = j;
-        field_40652_e = flag;
+        field_40655_a = par1Class;
+        field_40653_b = par2;
+        field_40651_d = par3;
+        field_40652_e = par4;
     }
 
-    public StructureNetherBridgePieceWeight(Class class1, int i, int j)
+    public StructureNetherBridgePieceWeight(Class par1Class, int par2, int par3)
     {
-        this(class1, i, j, false);
+        this(par1Class, par2, par3, false);
     }
 
-    public boolean func_40649_a(int i)
+    public boolean func_40649_a(int par1)
     {
         return field_40651_d == 0 || field_40654_c < field_40651_d;
     }

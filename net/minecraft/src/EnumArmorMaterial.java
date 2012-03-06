@@ -2,46 +2,59 @@ package net.minecraft.src;
 
 public enum EnumArmorMaterial
 {
-    CLOTH("CLOTH", 0, 5, new int[] {
+    CLOTH(5, new int[] {
         1, 3, 2, 1
     }, 15),
-    CHAIN("CHAIN", 1, 15, new int[] {
+    CHAIN(15, new int[] {
         2, 5, 4, 1
     }, 12),
-    IRON("IRON", 2, 15, new int[] {
+    IRON(15, new int[] {
         2, 6, 5, 2
     }, 9),
-    GOLD("GOLD", 3, 7, new int[] {
+    GOLD(7, new int[] {
         2, 5, 3, 1
     }, 25),
-    DIAMOND("DIAMOND", 4, 33, new int[] {
+    DIAMOND(33, new int[] {
         3, 8, 6, 3
     }, 10);
 
+    /**
+     * Holds the maximum damage factor (each piece multiply this by it's own value) of the material, this is the item
+     * damage (how much can absorb before breaks)
+     */
     private int maxDamageFactor;
     private int damageReductionAmountArray[];
+
+    /** Return the enchantability factor of the material */
     private int enchantability;
-    private static final EnumArmorMaterial allArmorMaterials[] = (new EnumArmorMaterial[] {
-        CLOTH, CHAIN, IRON, GOLD, DIAMOND
-    });
 
-    private EnumArmorMaterial(String s, int i, int j, int ai[], int k)
+    private EnumArmorMaterial(int par3, int par4ArrayOfInteger[], int par5)
     {
-        maxDamageFactor = j;
-        damageReductionAmountArray = ai;
-        enchantability = k;
+        maxDamageFactor = par3;
+        damageReductionAmountArray = par4ArrayOfInteger;
+        enchantability = par5;
     }
 
-    public int getDurability(int i)
+    /**
+     * Returns the durability for a armor slot of for this type.
+     */
+    public int getDurability(int par1)
     {
-        return ItemArmor.getMaxDamageArray()[i] * maxDamageFactor;
+        return ItemArmor.getMaxDamageArray()[par1] * maxDamageFactor;
     }
 
-    public int getDamageReductionAmount(int i)
+    /**
+     * Return the damage reduction (each 1 point is a half a shield on gui) of the piece index passed (0 = helmet, 1 =
+     * plate, 2 = legs and 3 = boots)
+     */
+    public int getDamageReductionAmount(int par1)
     {
-        return damageReductionAmountArray[i];
+        return damageReductionAmountArray[par1];
     }
 
+    /**
+     * Return the enchantability factor of the material
+     */
     public int getEnchantability()
     {
         return enchantability;

@@ -4,9 +4,9 @@ public class StatCrafting extends StatBase
 {
     private final int itemID;
 
-    public StatCrafting(int i, String s, int j)
+    public StatCrafting(int par1, String par2Str, int par3)
     {
-        super(i, s);
-        itemID = j;
+        super(par1, par2Str);
+        itemID = par3;
     }
 }

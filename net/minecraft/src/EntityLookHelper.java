@@ -10,75 +10,100 @@ public class EntityLookHelper
     private double posY;
     private double posZ;
 
-    public EntityLookHelper(EntityLiving entityliving)
+    public EntityLookHelper(EntityLiving par1EntityLiving)
     {
         field_46064_d = false;
-        entity = entityliving;
+        entity = par1EntityLiving;
     }
 
-    public void func_46058_a(Entity entity, float f, float f1)
+    public void setLookPositionWithEntity(Entity par1Entity, float par2, float par3)
     {
-        posX = entity.posX;
-        if (entity instanceof EntityLiving)
+        posX = par1Entity.posX;
+
+        if (par1Entity instanceof EntityLiving)
         {
-            posY = entity.posY + (double)((EntityLiving)entity).getEyeHeight();
+            posY = par1Entity.posY + (double)((EntityLiving)par1Entity).getEyeHeight();
         }
         else
         {
-            posY = (entity.boundingBox.minY + entity.boundingBox.maxY) / 2D;
+            posY = (par1Entity.boundingBox.minY + par1Entity.boundingBox.maxY) / 2D;
         }
-        posZ = entity.posZ;
-        field_46066_b = f;
-        field_46067_c = f1;
+
+        posZ = par1Entity.posZ;
+        field_46066_b = par2;
+        field_46067_c = par3;
         field_46064_d = true;
     }
 
-    public void func_46060_a(double d, double d1, double d2, float f,
-            float f1)
+    public void setLookPosition(double par1, double par3, double par5, float par7, float par8)
     {
-        posX = d;
-        posY = d1;
-        posZ = d2;
-        field_46066_b = f;
-        field_46067_c = f1;
+        posX = par1;
+        posY = par3;
+        posZ = par5;
+        field_46066_b = par7;
+        field_46067_c = par8;
         field_46064_d = true;
     }
 
-    public void func_46059_a()
+    public void onUpdateLook()
     {
         entity.rotationPitch = 0.0F;
-        if (!field_46064_d)
-        {
-            return;
-        }
-        else
+
+        if (field_46064_d)
         {
             field_46064_d = false;
             double d = posX - entity.posX;
             double d1 = posY - (entity.posY + (double)entity.getEyeHeight());
             double d2 = posZ - entity.posZ;
             double d3 = MathHelper.sqrt_double(d * d + d2 * d2);
-            float f = (float)((Math.atan2(d2, d) * 180D) / 3.1415927410125732D) - 90F;
-            float f1 = (float)(-((Math.atan2(d1, d3) * 180D) / 3.1415927410125732D));
-            entity.rotationPitch = func_46061_a(entity.rotationPitch, f1, field_46067_c);
-            entity.rotationYaw = func_46061_a(entity.rotationYaw, f, field_46066_b);
-            return;
+            float f1 = (float)((Math.atan2(d2, d) * 180D) / Math.PI) - 90F;
+            float f2 = (float)(-((Math.atan2(d1, d3) * 180D) / Math.PI));
+            entity.rotationPitch = func_46061_a(entity.rotationPitch, f2, field_46067_c);
+            entity.prevRotationYaw2 = func_46061_a(entity.prevRotationYaw2, f1, field_46066_b);
+        }
+        else
+        {
+            entity.prevRotationYaw2 = func_46061_a(entity.prevRotationYaw2, entity.renderYawOffset, 10F);
+        }
+
+        float f;
+
+        for (f = entity.prevRotationYaw2 - entity.renderYawOffset; f < -180F; f += 360F) { }
+
+        for (; f >= 180F; f -= 360F) { }
+
+        if (!entity.func_48333_ak().func_46034_b())
+        {
+            if (f < -75F)
+            {
+                entity.prevRotationYaw2 = entity.renderYawOffset - 75F;
+            }
+
+            if (f > 75F)
+            {
+                entity.prevRotationYaw2 = entity.renderYawOffset + 75F;
+            }
         }
     }
 
-    private float func_46061_a(float f, float f1, float f2)
+    private float func_46061_a(float par1, float par2, float par3)
     {
-        float f3;
-        for (f3 = f1 - f; f3 < -180F; f3 += 360F) { }
-        for (; f3 >= 180F; f3 -= 360F) { }
-        if (f3 > f2)
+        float f;
+
+        for (f = par2 - par1; f < -180F; f += 360F) { }
+
+        for (; f >= 180F; f -= 360F) { }
+
+        if (f > par3)
         {
-            f3 = f2;
+            f = par3;
         }
-        if (f3 < -f2)
+
+        if (f < -par3)
         {
-            f3 = -f2;
+            f = -par3;
         }
-        return f + f3;
+
+        return par1 + f;
     }
 }

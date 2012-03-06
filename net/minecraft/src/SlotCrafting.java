@@ -2,89 +2,132 @@ package net.minecraft.src;
 
 public class SlotCrafting extends Slot
 {
+    /** The craft matrix inventory linked to this result slot. */
     private final IInventory craftMatrix;
     private EntityPlayer thePlayer;
+    private int field_48418_g;
 
-    public SlotCrafting(EntityPlayer entityplayer, IInventory iinventory, IInventory iinventory1, int i, int j, int k)
+    public SlotCrafting(EntityPlayer par1EntityPlayer, IInventory par2IInventory, IInventory par3IInventory, int par4, int par5, int par6)
     {
-        super(iinventory1, i, j, k);
-        thePlayer = entityplayer;
-        craftMatrix = iinventory;
+        super(par3IInventory, par4, par5, par6);
+        thePlayer = par1EntityPlayer;
+        craftMatrix = par2IInventory;
     }
 
-    public boolean isItemValid(ItemStack itemstack)
+    /**
+     * Check if the stack is a valid item for this slot.
+     */
+    public boolean isItemValid(ItemStack par1ItemStack)
     {
         return false;
     }
 
-    public void onPickupFromSlot(ItemStack itemstack)
+    /**
+     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
+     * stack.
+     */
+    public ItemStack decrStackSize(int par1)
     {
-        itemstack.onCrafting(thePlayer.worldObj, thePlayer);
-        if (itemstack.itemID == Block.workbench.blockID)
+        if (getHasStack())
+        {
+            field_48418_g += Math.min(par1, getStack().stackSize);
+        }
+
+        return super.decrStackSize(par1);
+    }
+
+    protected void func_48415_a(ItemStack par1ItemStack, int par2)
+    {
+        field_48418_g += par2;
+        func_48416_b(par1ItemStack);
+    }
+
+    protected void func_48416_b(ItemStack par1ItemStack)
+    {
+        par1ItemStack.func_48584_a(thePlayer.worldObj, thePlayer, field_48418_g);
+        field_48418_g = 0;
+
+        if (par1ItemStack.itemID == Block.workbench.blockID)
         {
             thePlayer.addStat(AchievementList.buildWorkBench, 1);
         }
-        else if (itemstack.itemID == Item.pickaxeWood.shiftedIndex)
+        else if (par1ItemStack.itemID == Item.pickaxeWood.shiftedIndex)
         {
             thePlayer.addStat(AchievementList.buildPickaxe, 1);
         }
-        else if (itemstack.itemID == Block.stoneOvenIdle.blockID)
+        else if (par1ItemStack.itemID == Block.stoneOvenIdle.blockID)
         {
             thePlayer.addStat(AchievementList.buildFurnace, 1);
         }
-        else if (itemstack.itemID == Item.hoeWood.shiftedIndex)
+        else if (par1ItemStack.itemID == Item.hoeWood.shiftedIndex)
         {
             thePlayer.addStat(AchievementList.buildHoe, 1);
         }
-        else if (itemstack.itemID == Item.bread.shiftedIndex)
+        else if (par1ItemStack.itemID == Item.bread.shiftedIndex)
         {
             thePlayer.addStat(AchievementList.makeBread, 1);
         }
-        else if (itemstack.itemID == Item.cake.shiftedIndex)
+        else if (par1ItemStack.itemID == Item.cake.shiftedIndex)
         {
             thePlayer.addStat(AchievementList.bakeCake, 1);
         }
-        else if (itemstack.itemID == Item.pickaxeStone.shiftedIndex)
+        else if (par1ItemStack.itemID == Item.pickaxeStone.shiftedIndex)
         {
             thePlayer.addStat(AchievementList.buildBetterPickaxe, 1);
         }
-        else if (itemstack.itemID == Item.swordWood.shiftedIndex)
+        else if (par1ItemStack.itemID == Item.swordWood.shiftedIndex)
         {
             thePlayer.addStat(AchievementList.buildSword, 1);
         }
-        else if (itemstack.itemID == Block.enchantmentTable.blockID)
+        else if (par1ItemStack.itemID == Block.enchantmentTable.blockID)
         {
             thePlayer.addStat(AchievementList.enchantments, 1);
         }
-        else if (itemstack.itemID == Block.bookShelf.blockID)
+        else if (par1ItemStack.itemID == Block.bookShelf.blockID)
         {
             thePlayer.addStat(AchievementList.bookcase, 1);
         }
-        ModLoader.TakenFromCrafting(thePlayer, itemstack);
+
+        ModLoader.takenFromCrafting(thePlayer, par1ItemStack, craftMatrix);
+    }
+
+    /**
+     * Called when the player picks up an item from an inventory slot
+     */
+    public void onPickupFromSlot(ItemStack par1ItemStack)
+    {
+        func_48416_b(par1ItemStack);
+
         for (int i = 0; i < craftMatrix.getSizeInventory(); i++)
         {
-            ItemStack itemstack1 = craftMatrix.getStackInSlot(i);
-            if (itemstack1 == null)
+            ItemStack itemstack = craftMatrix.getStackInSlot(i);
+
+            if (itemstack == null)
             {
                 continue;
             }
+
             craftMatrix.decrStackSize(i, 1);
-            if (!itemstack1.getItem().hasContainerItem())
+
+            if (!itemstack.getItem().hasContainerItem())
             {
                 continue;
             }
-            ItemStack itemstack2 = new ItemStack(itemstack1.getItem().getContainerItem());
-            if (itemstack1.getItem().func_46004_e(itemstack1) && thePlayer.inventory.addItemStackToInventory(itemstack2))
+
+            ItemStack itemstack1 = new ItemStack(itemstack.getItem().getContainerItem());
+
+            if (itemstack.getItem().doesContainerItemLeaveCraftingGrid(itemstack) && thePlayer.inventory.addItemStackToInventory(itemstack1))
             {
                 continue;
             }
+
             if (craftMatrix.getStackInSlot(i) == null)
             {
-                craftMatrix.setInventorySlotContents(i, itemstack2);
+                craftMatrix.setInventorySlotContents(i, itemstack1);
             }
             else
             {
-                thePlayer.dropPlayerItem(itemstack2);
+                thePlayer.func_48348_b(itemstack1);
             }
         }
     }

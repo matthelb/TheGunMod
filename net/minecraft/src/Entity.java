@@ -8,6 +8,11 @@ public abstract class Entity
     private static int nextEntityID = 0;
     public int entityId;
     public double renderDistanceWeight;
+
+    /**
+     * Blocks entities from spawning when they do their AABB check to make sure the spot is clear of entities that can
+     * prevent spawning.
+     */
     public boolean preventEntitySpawning;
     public Entity riddenByEntity;
     public Entity ridingEntity;
@@ -15,50 +20,119 @@ public abstract class Entity
     public double prevPosX;
     public double prevPosY;
     public double prevPosZ;
+
+    /** Entity position X */
     public double posX;
+
+    /** Entity position Y */
     public double posY;
+
+    /** Entity position Z */
     public double posZ;
+
+    /** Entity motion X */
     public double motionX;
+
+    /** Entity motion Y */
     public double motionY;
+
+    /** Entity motion Z */
     public double motionZ;
+
+    /** Entity rotation Yaw */
     public float rotationYaw;
+
+    /** Entity rotation Pitch */
     public float rotationPitch;
     public float prevRotationYaw;
     public float prevRotationPitch;
+
+    /** Axis aligned bounding box. */
     public final AxisAlignedBB boundingBox = AxisAlignedBB.getBoundingBox(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
     public boolean onGround;
     public boolean isCollidedHorizontally;
+
+    /**
+     * True if after a move this entity has collided with something on Y-axis
+     */
     public boolean isCollidedVertically;
+
+    /**
+     * True if after a move this entity has collided with something either vertically or horizontally
+     */
     public boolean isCollided;
+
+    /** EntityTrackerEntity sends Packet28EntityVelocity if set */
     public boolean velocityChanged;
     protected boolean isInWeb;
     public boolean field_9077_F;
     public boolean isDead;
     public float yOffset;
+
+    /** How wide this entity is considered to be */
     public float width;
+
+    /** How high this entity is considered to be */
     public float height;
+
+    /** The previous ticks distance walked multiplied by 0.6 */
     public float prevDistanceWalkedModified;
+
+    /** The distance walked multiplied by 0.6 */
     public float distanceWalkedModified;
     public float fallDistance;
+
+    /**
+     * The distance that has to be exceeded in order to triger a new step sound and an onEntityWalking event on a block
+     */
     private int nextStepDistance;
     public double lastTickPosX;
     public double lastTickPosY;
     public double lastTickPosZ;
     public float ySize;
+
+    /**
+     * How high this entity can step up when running into a block to try to get over it (currently make note the entity
+     * will always step up this amount and not just the amount needed)
+     */
     public float stepHeight;
+
+    /**
+     * Whether this entity won't clip with collision or not (make note it won't disable gravity)
+     */
     public boolean noClip;
+
+    /**
+     * Reduces the velocity applied by entity collisions by the specified percent.
+     */
     public float entityCollisionReduction;
     protected Random rand;
+
+    /** How many ticks has this entity had ran since being alive */
     public int ticksExisted;
+
+    /**
+     * The amount of ticks you have to stand inside of fire before be set on fire
+     */
     public int fireResistance;
     private int fire;
+
+    /**
+     * Whether this entity is currently inside of water (if it handles water movement that is)
+     */
     protected boolean inWater;
     public int heartsLife;
+
+    /**
+     * this is true during the first update after this entity has spawned and false forever after that time
+     */
     private boolean firstUpdate;
     protected boolean isImmuneToFire;
     protected DataWatcher dataWatcher;
     private double entityRiderPitchDelta;
     private double entityRiderYawDelta;
+
+    /** Has this entity been added to the chunk its within */
     public boolean addedToChunk;
     public int chunkCoordX;
     public int chunkCoordY;
@@ -66,7 +140,7 @@ public abstract class Entity
     public boolean ignoreFrustrumCheck;
     public boolean isAirBorne;
 
-    public Entity(World world)
+    public Entity(World par1World)
     {
         entityId = nextEntityID++;
         renderDistanceWeight = 1.0D;
@@ -97,7 +171,7 @@ public abstract class Entity
         isImmuneToFire = false;
         dataWatcher = new DataWatcher();
         addedToChunk = false;
-        worldObj = world;
+        worldObj = par1World;
         setPosition(0.0D, 0.0D, 0.0D);
         dataWatcher.addObject(0, Byte.valueOf((byte)0));
         dataWatcher.addObject(1, Short.valueOf((short)300));
@@ -111,11 +185,11 @@ public abstract class Entity
         return dataWatcher;
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (obj instanceof Entity)
+        if (par1Obj instanceof Entity)
         {
-            return ((Entity)obj).entityId == entityId;
+            return ((Entity)par1Obj).entityId == entityId;
         }
         else
         {
@@ -128,45 +202,65 @@ public abstract class Entity
         return entityId;
     }
 
+    /**
+     * Will get destroyed next tick
+     */
     public void setEntityDead()
     {
         isDead = true;
     }
 
-    protected void setSize(float f, float f1)
+    /**
+     * Sets the width and height of the entity. Args: width, height
+     */
+    protected void setSize(float par1, float par2)
     {
-        width = f;
-        height = f1;
+        width = par1;
+        height = par2;
     }
 
-    protected void setRotation(float f, float f1)
+    /**
+     * Sets the rotation of the entity
+     */
+    protected void setRotation(float par1, float par2)
     {
-        rotationYaw = f % 360F;
-        rotationPitch = f1 % 360F;
+        rotationYaw = par1 % 360F;
+        rotationPitch = par2 % 360F;
     }
 
-    public void setPosition(double d, double d1, double d2)
+    /**
+     * Sets the x,y,z of the entity from the given parameters. Also seems to set up a bounding box.
+     */
+    public void setPosition(double par1, double par3, double par5)
     {
-        posX = d;
-        posY = d1;
-        posZ = d2;
+        posX = par1;
+        posY = par3;
+        posZ = par5;
         float f = width / 2.0F;
         float f1 = height;
-        boundingBox.setBounds(d - (double)f, (d1 - (double)yOffset) + (double)ySize, d2 - (double)f, d + (double)f, (d1 - (double)yOffset) + (double)ySize + (double)f1, d2 + (double)f);
+        boundingBox.setBounds(par1 - (double)f, (par3 - (double)yOffset) + (double)ySize, par5 - (double)f, par1 + (double)f, (par3 - (double)yOffset) + (double)ySize + (double)f1, par5 + (double)f);
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         onEntityUpdate();
     }
 
+    /**
+     * Gets called every tick from main Entity class
+     */
     public void onEntityUpdate()
     {
         Profiler.startSection("entityBaseTick");
+
         if (ridingEntity != null && ridingEntity.isDead)
         {
             ridingEntity = null;
         }
+
         ticksExisted++;
         prevDistanceWalkedModified = distanceWalkedModified;
         prevPosX = posX;
@@ -174,28 +268,34 @@ public abstract class Entity
         prevPosZ = posZ;
         prevRotationPitch = rotationPitch;
         prevRotationYaw = rotationYaw;
-        if (isSprinting())
+
+        if (isSprinting() && !isInWater())
         {
             int i = MathHelper.floor_double(posX);
-            int j = MathHelper.floor_double(posY - 0.20000000298023224D - (double)yOffset);
+            int j = MathHelper.floor_double(posY - 0.2D - (double)yOffset);
             int k = MathHelper.floor_double(posZ);
             int j1 = worldObj.getBlockId(i, j, k);
+
             if (j1 > 0)
             {
-                worldObj.spawnParticle((new StringBuilder()).append("tilecrack_").append(j1).toString(), posX + ((double)rand.nextFloat() - 0.5D) * (double)width, boundingBox.minY + 0.10000000000000001D, posZ + ((double)rand.nextFloat() - 0.5D) * (double)width, -motionX * 4D, 1.5D, -motionZ * 4D);
+                worldObj.spawnParticle((new StringBuilder()).append("tilecrack_").append(j1).toString(), posX + ((double)rand.nextFloat() - 0.5D) * (double)width, boundingBox.minY + 0.1D, posZ + ((double)rand.nextFloat() - 0.5D) * (double)width, -motionX * 4D, 1.5D, -motionZ * 4D);
             }
         }
+
         if (handleWaterMovement())
         {
             if (!inWater && !firstUpdate)
             {
-                float f = MathHelper.sqrt_double(motionX * motionX * 0.20000000298023224D + motionY * motionY + motionZ * motionZ * 0.20000000298023224D) * 0.2F;
+                float f = MathHelper.sqrt_double(motionX * motionX * 0.2D + motionY * motionY + motionZ * motionZ * 0.2D) * 0.2F;
+
                 if (f > 1.0F)
                 {
                     f = 1.0F;
                 }
+
                 worldObj.playSoundAtEntity(this, "random.splash", f, 1.0F + (rand.nextFloat() - rand.nextFloat()) * 0.4F);
                 float f1 = MathHelper.floor_double(boundingBox.minY);
+
                 for (int l = 0; (float)l < 1.0F + width * 20F; l++)
                 {
                     float f2 = (rand.nextFloat() * 2.0F - 1.0F) * width;
@@ -210,6 +310,7 @@ public abstract class Entity
                     worldObj.spawnParticle("splash", posX + (double)f3, f1 + 1.0F, posZ + (double)f5, motionX, motionY, motionZ);
                 }
             }
+
             fallDistance = 0.0F;
             inWater = true;
             fire = 0;
@@ -218,6 +319,7 @@ public abstract class Entity
         {
             inWater = false;
         }
+
         if (worldObj.isRemote)
         {
             fire = 0;
@@ -227,6 +329,7 @@ public abstract class Entity
             if (isImmuneToFire)
             {
                 fire -= 4;
+
                 if (fire < 0)
                 {
                     fire = 0;
@@ -238,27 +341,35 @@ public abstract class Entity
                 {
                     attackEntityFrom(DamageSource.onFire, 1);
                 }
+
                 fire--;
             }
         }
+
         if (handleLavaMovement())
         {
             setOnFireFromLava();
             fallDistance *= 0.5F;
         }
+
         if (posY < -64D)
         {
             kill();
         }
+
         if (!worldObj.isRemote)
         {
             setFlag(0, fire > 0);
             setFlag(2, ridingEntity != null);
         }
+
         firstUpdate = false;
         Profiler.endSection();
     }
 
+    /**
+     * Called whenever the entity is walking inside of lava.
+     */
     protected void setOnFireFromLava()
     {
         if (!isImmuneToFire)
@@ -268,253 +379,304 @@ public abstract class Entity
         }
     }
 
-    public void setFire(int i)
+    /**
+     * Sets entity to burn for x amount of seconds, cannot lower amount of existing fire.
+     */
+    public void setFire(int par1)
     {
-        int j = i * 20;
-        if (fire < j)
+        int i = par1 * 20;
+
+        if (fire < i)
         {
-            fire = j;
+            fire = i;
         }
     }
 
+    /**
+     * Removes fire from entity.
+     */
     public void extinguish()
     {
         fire = 0;
     }
 
+    /**
+     * sets the dead flag. Used when you fall off the bottom of the world.
+     */
     protected void kill()
     {
         setEntityDead();
     }
 
-    public boolean isOffsetPositionInLiquid(double d, double d1, double d2)
+    public boolean isOffsetPositionInLiquid(double par1, double par3, double par5)
     {
-        AxisAlignedBB axisalignedbb = boundingBox.getOffsetBoundingBox(d, d1, d2);
+        AxisAlignedBB axisalignedbb = boundingBox.getOffsetBoundingBox(par1, par3, par5);
         List list = worldObj.getCollidingBoundingBoxes(this, axisalignedbb);
+
         if (list.size() > 0)
         {
             return false;
         }
-        return !worldObj.getIsAnyLiquid(axisalignedbb);
+
+        return !worldObj.isAnyLiquid(axisalignedbb);
     }
 
-    public void moveEntity(double d, double d1, double d2)
+    /**
+     * Tries to moves the entity by the passed in displacement. Args: x, y, z
+     */
+    public void moveEntity(double par1, double par3, double par5)
     {
         if (noClip)
         {
-            boundingBox.offset(d, d1, d2);
+            boundingBox.offset(par1, par3, par5);
             posX = (boundingBox.minX + boundingBox.maxX) / 2D;
             posY = (boundingBox.minY + (double)yOffset) - (double)ySize;
             posZ = (boundingBox.minZ + boundingBox.maxZ) / 2D;
             return;
         }
+
         Profiler.startSection("move");
         ySize *= 0.4F;
-        double d3 = posX;
-        double d4 = posZ;
+        double d = posX;
+        double d1 = posZ;
+
         if (isInWeb)
         {
             isInWeb = false;
-            d *= 0.25D;
-            d1 *= 0.05000000074505806D;
-            d2 *= 0.25D;
+            par1 *= 0.25D;
+            par3 *= 0.05D;
+            par5 *= 0.25D;
             motionX = 0.0D;
             motionY = 0.0D;
             motionZ = 0.0D;
         }
-        double d5 = d;
-        double d6 = d1;
-        double d7 = d2;
+
+        double d2 = par1;
+        double d3 = par3;
+        double d4 = par5;
         AxisAlignedBB axisalignedbb = boundingBox.copy();
-        boolean flag = onGround && isSneaking();
+        boolean flag = onGround && isSneaking() && (this instanceof EntityPlayer);
+
         if (flag)
         {
-            double d8 = 0.050000000000000003D;
-            for (; d != 0.0D && worldObj.getCollidingBoundingBoxes(this, boundingBox.getOffsetBoundingBox(d, -1D, 0.0D)).size() == 0; d5 = d)
+            double d5 = 0.05D;
+
+            for (; par1 != 0.0D && worldObj.getCollidingBoundingBoxes(this, boundingBox.getOffsetBoundingBox(par1, -1D, 0.0D)).size() == 0; d2 = par1)
             {
-                if (d < d8 && d >= -d8)
+                if (par1 < d5 && par1 >= -d5)
                 {
-                    d = 0.0D;
+                    par1 = 0.0D;
                     continue;
                 }
-                if (d > 0.0D)
+
+                if (par1 > 0.0D)
                 {
-                    d -= d8;
+                    par1 -= d5;
                 }
                 else
                 {
-                    d += d8;
+                    par1 += d5;
                 }
             }
 
-            for (; d2 != 0.0D && worldObj.getCollidingBoundingBoxes(this, boundingBox.getOffsetBoundingBox(0.0D, -1D, d2)).size() == 0; d7 = d2)
+            for (; par5 != 0.0D && worldObj.getCollidingBoundingBoxes(this, boundingBox.getOffsetBoundingBox(0.0D, -1D, par5)).size() == 0; d4 = par5)
             {
-                if (d2 < d8 && d2 >= -d8)
+                if (par5 < d5 && par5 >= -d5)
                 {
-                    d2 = 0.0D;
+                    par5 = 0.0D;
                     continue;
                 }
-                if (d2 > 0.0D)
+
+                if (par5 > 0.0D)
                 {
-                    d2 -= d8;
+                    par5 -= d5;
                 }
                 else
                 {
-                    d2 += d8;
+                    par5 += d5;
                 }
             }
         }
-        List list = worldObj.getCollidingBoundingBoxes(this, boundingBox.addCoord(d, d1, d2));
+
+        List list = worldObj.getCollidingBoundingBoxes(this, boundingBox.addCoord(par1, par3, par5));
+
         for (int i = 0; i < list.size(); i++)
         {
-            d1 = ((AxisAlignedBB)list.get(i)).calculateYOffset(boundingBox, d1);
+            par3 = ((AxisAlignedBB)list.get(i)).calculateYOffset(boundingBox, par3);
         }
 
-        boundingBox.offset(0.0D, d1, 0.0D);
-        if (!field_9077_F && d6 != d1)
+        boundingBox.offset(0.0D, par3, 0.0D);
+
+        if (!field_9077_F && d3 != par3)
         {
-            d = d1 = d2 = 0.0D;
+            par1 = par3 = par5 = 0.0D;
         }
-        boolean flag1 = onGround || d6 != d1 && d6 < 0.0D;
+
+        boolean flag1 = onGround || d3 != par3 && d3 < 0.0D;
+
         for (int j = 0; j < list.size(); j++)
         {
-            d = ((AxisAlignedBB)list.get(j)).calculateXOffset(boundingBox, d);
+            par1 = ((AxisAlignedBB)list.get(j)).calculateXOffset(boundingBox, par1);
         }
 
-        boundingBox.offset(d, 0.0D, 0.0D);
-        if (!field_9077_F && d5 != d)
+        boundingBox.offset(par1, 0.0D, 0.0D);
+
+        if (!field_9077_F && d2 != par1)
         {
-            d = d1 = d2 = 0.0D;
+            par1 = par3 = par5 = 0.0D;
         }
+
         for (int k = 0; k < list.size(); k++)
         {
-            d2 = ((AxisAlignedBB)list.get(k)).calculateZOffset(boundingBox, d2);
+            par5 = ((AxisAlignedBB)list.get(k)).calculateZOffset(boundingBox, par5);
         }
 
-        boundingBox.offset(0.0D, 0.0D, d2);
-        if (!field_9077_F && d7 != d2)
+        boundingBox.offset(0.0D, 0.0D, par5);
+
+        if (!field_9077_F && d4 != par5)
         {
-            d = d1 = d2 = 0.0D;
+            par1 = par3 = par5 = 0.0D;
         }
-        if (stepHeight > 0.0F && flag1 && (flag || ySize < 0.05F) && (d5 != d || d7 != d2))
+
+        if (stepHeight > 0.0F && flag1 && (flag || ySize < 0.05F) && (d2 != par1 || d4 != par5))
         {
-            double d9 = d;
-            double d11 = d1;
-            double d13 = d2;
-            d = d5;
-            d1 = stepHeight;
-            d2 = d7;
+            double d6 = par1;
+            double d8 = par3;
+            double d10 = par5;
+            par1 = d2;
+            par3 = stepHeight;
+            par5 = d4;
             AxisAlignedBB axisalignedbb1 = boundingBox.copy();
             boundingBox.setBB(axisalignedbb);
-            List list1 = worldObj.getCollidingBoundingBoxes(this, boundingBox.addCoord(d, d1, d2));
+            List list1 = worldObj.getCollidingBoundingBoxes(this, boundingBox.addCoord(par1, par3, par5));
+
             for (int j2 = 0; j2 < list1.size(); j2++)
             {
-                d1 = ((AxisAlignedBB)list1.get(j2)).calculateYOffset(boundingBox, d1);
+                par3 = ((AxisAlignedBB)list1.get(j2)).calculateYOffset(boundingBox, par3);
             }
 
-            boundingBox.offset(0.0D, d1, 0.0D);
-            if (!field_9077_F && d6 != d1)
+            boundingBox.offset(0.0D, par3, 0.0D);
+
+            if (!field_9077_F && d3 != par3)
             {
-                d = d1 = d2 = 0.0D;
+                par1 = par3 = par5 = 0.0D;
             }
+
             for (int k2 = 0; k2 < list1.size(); k2++)
             {
-                d = ((AxisAlignedBB)list1.get(k2)).calculateXOffset(boundingBox, d);
+                par1 = ((AxisAlignedBB)list1.get(k2)).calculateXOffset(boundingBox, par1);
             }
 
-            boundingBox.offset(d, 0.0D, 0.0D);
-            if (!field_9077_F && d5 != d)
+            boundingBox.offset(par1, 0.0D, 0.0D);
+
+            if (!field_9077_F && d2 != par1)
             {
-                d = d1 = d2 = 0.0D;
+                par1 = par3 = par5 = 0.0D;
             }
+
             for (int l2 = 0; l2 < list1.size(); l2++)
             {
-                d2 = ((AxisAlignedBB)list1.get(l2)).calculateZOffset(boundingBox, d2);
+                par5 = ((AxisAlignedBB)list1.get(l2)).calculateZOffset(boundingBox, par5);
             }
 
-            boundingBox.offset(0.0D, 0.0D, d2);
-            if (!field_9077_F && d7 != d2)
+            boundingBox.offset(0.0D, 0.0D, par5);
+
+            if (!field_9077_F && d4 != par5)
             {
-                d = d1 = d2 = 0.0D;
+                par1 = par3 = par5 = 0.0D;
             }
-            if (!field_9077_F && d6 != d1)
+
+            if (!field_9077_F && d3 != par3)
             {
-                d = d1 = d2 = 0.0D;
+                par1 = par3 = par5 = 0.0D;
             }
             else
             {
-                d1 = -stepHeight;
+                par3 = -stepHeight;
+
                 for (int i3 = 0; i3 < list1.size(); i3++)
                 {
-                    d1 = ((AxisAlignedBB)list1.get(i3)).calculateYOffset(boundingBox, d1);
+                    par3 = ((AxisAlignedBB)list1.get(i3)).calculateYOffset(boundingBox, par3);
                 }
 
-                boundingBox.offset(0.0D, d1, 0.0D);
+                boundingBox.offset(0.0D, par3, 0.0D);
             }
-            if (d9 * d9 + d13 * d13 >= d * d + d2 * d2)
+
+            if (d6 * d6 + d10 * d10 >= par1 * par1 + par5 * par5)
             {
-                d = d9;
-                d1 = d11;
-                d2 = d13;
+                par1 = d6;
+                par3 = d8;
+                par5 = d10;
                 boundingBox.setBB(axisalignedbb1);
             }
             else
             {
-                double d14 = boundingBox.minY - (double)(int)boundingBox.minY;
-                if (d14 > 0.0D)
+                double d11 = boundingBox.minY - (double)(int)boundingBox.minY;
+
+                if (d11 > 0.0D)
                 {
-                    ySize += d14 + 0.01D;
+                    ySize += d11 + 0.01D;
                 }
             }
         }
+
         Profiler.endSection();
         Profiler.startSection("rest");
         posX = (boundingBox.minX + boundingBox.maxX) / 2D;
         posY = (boundingBox.minY + (double)yOffset) - (double)ySize;
         posZ = (boundingBox.minZ + boundingBox.maxZ) / 2D;
-        isCollidedHorizontally = d5 != d || d7 != d2;
-        isCollidedVertically = d6 != d1;
-        onGround = d6 != d1 && d6 < 0.0D;
+        isCollidedHorizontally = d2 != par1 || d4 != par5;
+        isCollidedVertically = d3 != par3;
+        onGround = d3 != par3 && d3 < 0.0D;
         isCollided = isCollidedHorizontally || isCollidedVertically;
-        updateFallState(d1, onGround);
-        if (d5 != d)
+        updateFallState(par3, onGround);
+
+        if (d2 != par1)
         {
             motionX = 0.0D;
         }
-        if (d6 != d1)
+
+        if (d3 != par3)
         {
             motionY = 0.0D;
         }
-        if (d7 != d2)
+
+        if (d4 != par5)
         {
             motionZ = 0.0D;
         }
-        double d10 = posX - d3;
-        double d12 = posZ - d4;
+
+        double d7 = posX - d;
+        double d9 = posZ - d1;
+
         if (canTriggerWalking() && !flag && ridingEntity == null)
         {
-            distanceWalkedModified += (double)MathHelper.sqrt_double(d10 * d10 + d12 * d12) * 0.59999999999999998D;
+            distanceWalkedModified += (double)MathHelper.sqrt_double(d7 * d7 + d9 * d9) * 0.6D;
             int l = MathHelper.floor_double(posX);
-            int j1 = MathHelper.floor_double(posY - 0.20000000298023224D - (double)yOffset);
+            int j1 = MathHelper.floor_double(posY - 0.2D - (double)yOffset);
             int l1 = MathHelper.floor_double(posZ);
             int j3 = worldObj.getBlockId(l, j1, l1);
+
             if (j3 == 0 && worldObj.getBlockId(l, j1 - 1, l1) == Block.fence.blockID)
             {
                 j3 = worldObj.getBlockId(l, j1 - 1, l1);
             }
+
             if (distanceWalkedModified > (float)nextStepDistance && j3 > 0)
             {
                 nextStepDistance = (int)distanceWalkedModified + 1;
-                func_41011_a(l, j1, l1, j3);
+                playStepSound(l, j1, l1, j3);
                 Block.blocksList[j3].onEntityWalking(worldObj, l, j1, l1, this);
             }
         }
+
         int i1 = MathHelper.floor_double(boundingBox.minX + 0.001D);
         int k1 = MathHelper.floor_double(boundingBox.minY + 0.001D);
         int i2 = MathHelper.floor_double(boundingBox.minZ + 0.001D);
         int k3 = MathHelper.floor_double(boundingBox.maxX - 0.001D);
         int l3 = MathHelper.floor_double(boundingBox.maxY - 0.001D);
         int i4 = MathHelper.floor_double(boundingBox.maxZ - 0.001D);
+
         if (worldObj.checkChunksExist(i1, k1, i2, k3, l3, i4))
         {
             for (int j4 = i1; j4 <= k3; j4++)
@@ -524,6 +686,7 @@ public abstract class Entity
                     for (int l4 = i2; l4 <= i4; l4++)
                     {
                         int i5 = worldObj.getBlockId(j4, k4, l4);
+
                         if (i5 > 0)
                         {
                             Block.blocksList[i5].onEntityCollidedWithBlock(worldObj, j4, k4, l4, this);
@@ -532,13 +695,17 @@ public abstract class Entity
                 }
             }
         }
+
         boolean flag2 = isWet();
+
         if (worldObj.isBoundingBoxBurning(boundingBox.contract(0.001D, 0.001D, 0.001D)))
         {
             dealFireDamage(1);
+
             if (!flag2)
             {
                 fire++;
+
                 if (fire == 0)
                 {
                     setFire(8);
@@ -549,23 +716,26 @@ public abstract class Entity
         {
             fire = -fireResistance;
         }
+
         if (flag2 && fire > 0)
         {
             worldObj.playSoundAtEntity(this, "random.fizz", 0.7F, 1.6F + (rand.nextFloat() - rand.nextFloat()) * 0.4F);
             fire = -fireResistance;
         }
+
         Profiler.endSection();
     }
 
-    protected void func_41011_a(int i, int j, int k, int l)
+    protected void playStepSound(int par1, int par2, int par3, int par4)
     {
-        StepSound stepsound = Block.blocksList[l].stepSound;
-        if (worldObj.getBlockId(i, j + 1, k) == Block.snow.blockID)
+        StepSound stepsound = Block.blocksList[par4].stepSound;
+
+        if (worldObj.getBlockId(par1, par2 + 1, par3) == Block.snow.blockID)
         {
             stepsound = Block.snow.stepSound;
             worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
         }
-        else if (!Block.blocksList[l].blockMaterial.getIsLiquid())
+        else if (!Block.blocksList[par4].blockMaterial.isLiquid())
         {
             worldObj.playSoundAtEntity(this, stepsound.getStepSound(), stepsound.getVolume() * 0.15F, stepsound.getPitch());
         }
@@ -576,47 +746,61 @@ public abstract class Entity
         return true;
     }
 
-    protected void updateFallState(double d, boolean flag)
+    /**
+     * Takes in the distance the entity has fallen this tick and whether its on the ground to update the fall distance
+     * and deal fall damage if landing on the ground.  Args: distanceFallenThisTick, onGround
+     */
+    protected void updateFallState(double par1, boolean par3)
     {
-        if (flag)
+        if (par3)
         {
             if (fallDistance > 0.0F)
             {
                 if (this instanceof EntityLiving)
                 {
                     int i = MathHelper.floor_double(posX);
-                    int j = MathHelper.floor_double(posY - 0.20000000298023224D - (double)yOffset);
+                    int j = MathHelper.floor_double(posY - 0.2D - (double)yOffset);
                     int k = MathHelper.floor_double(posZ);
                     int l = worldObj.getBlockId(i, j, k);
+
                     if (l == 0 && worldObj.getBlockId(i, j - 1, k) == Block.fence.blockID)
                     {
                         l = worldObj.getBlockId(i, j - 1, k);
                     }
+
                     if (l > 0)
                     {
                         Block.blocksList[l].onFallenUpon(worldObj, i, j, k, this, fallDistance);
                     }
                 }
+
                 fall(fallDistance);
                 fallDistance = 0.0F;
             }
         }
-        else if (d < 0.0D)
+        else if (par1 < 0.0D)
         {
-            fallDistance -= d;
+            fallDistance -= par1;
         }
     }
 
+    /**
+     * returns the bounding box for this entity
+     */
     public AxisAlignedBB getBoundingBox()
     {
         return null;
     }
 
-    protected void dealFireDamage(int i)
+    /**
+     * Will deal the specified amount of damage to the entity if the entity isn't immune to fire damage. Args:
+     * amountDamage
+     */
+    protected void dealFireDamage(int par1)
     {
         if (!isImmuneToFire)
         {
-            attackEntityFrom(DamageSource.inFire, i);
+            attackEntityFrom(DamageSource.inFire, par1);
         }
     }
 
@@ -625,11 +809,14 @@ public abstract class Entity
         return isImmuneToFire;
     }
 
-    protected void fall(float f)
+    /**
+     * Called when the mob is falling. Calculates and applies fall damage.
+     */
+    protected void fall(float par1)
     {
         if (riddenByEntity != null)
         {
-            riddenByEntity.fall(f);
+            riddenByEntity.fall(par1);
         }
     }
 
@@ -638,24 +825,34 @@ public abstract class Entity
         return inWater || worldObj.canLightningStrikeAt(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
     }
 
+    /**
+     * Returns whether the entity is in water.
+     */
     public boolean isInWater()
     {
         return inWater;
     }
 
+    /**
+     * Returns if this entity is in water and will end up adding the waters velocity to the entity
+     */
     public boolean handleWaterMovement()
     {
-        return worldObj.handleMaterialAcceleration(boundingBox.expand(0.0D, -0.40000000596046448D, 0.0D).contract(0.001D, 0.001D, 0.001D), Material.water, this);
+        return worldObj.handleMaterialAcceleration(boundingBox.expand(0.0D, -0.4D, 0.0D).contract(0.001D, 0.001D, 0.001D), Material.water, this);
     }
 
-    public boolean isInsideOfMaterial(Material material)
+    /**
+     * Checks if the current block the entity is within of the specified material type
+     */
+    public boolean isInsideOfMaterial(Material par1Material)
     {
         double d = posY + (double)getEyeHeight();
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_float(MathHelper.floor_double(d));
         int k = MathHelper.floor_double(posZ);
         int l = worldObj.getBlockId(i, j, k);
-        if (l != 0 && Block.blocksList[l].blockMaterial == material)
+
+        if (l != 0 && Block.blocksList[l].blockMaterial == par1Material)
         {
             float f = BlockFluid.getFluidHeightPercent(worldObj.getBlockMetadata(i, j, k)) - 0.1111111F;
             float f1 = (float)(j + 1) - f;
@@ -674,36 +871,46 @@ public abstract class Entity
 
     public boolean handleLavaMovement()
     {
-        return worldObj.isMaterialInBB(boundingBox.expand(-0.10000000149011612D, -0.40000000596046448D, -0.10000000149011612D), Material.lava);
+        return worldObj.isMaterialInBB(boundingBox.expand(-0.1D, -0.4D, -0.1D), Material.lava);
     }
 
-    public void moveFlying(float f, float f1, float f2)
+    /**
+     * Used in both water and by flying objects
+     */
+    public void moveFlying(float par1, float par2, float par3)
     {
-        float f3 = MathHelper.sqrt_float(f * f + f1 * f1);
-        if (f3 < 0.01F)
+        float f = MathHelper.sqrt_float(par1 * par1 + par2 * par2);
+
+        if (f < 0.01F)
         {
             return;
         }
-        if (f3 < 1.0F)
+
+        if (f < 1.0F)
         {
-            f3 = 1.0F;
+            f = 1.0F;
         }
-        f3 = f2 / f3;
-        f *= f3;
-        f1 *= f3;
-        float f4 = MathHelper.sin((rotationYaw * 3.141593F) / 180F);
-        float f5 = MathHelper.cos((rotationYaw * 3.141593F) / 180F);
-        motionX += f * f5 - f1 * f4;
-        motionZ += f1 * f5 + f * f4;
+
+        f = par3 / f;
+        par1 *= f;
+        par2 *= f;
+        float f1 = MathHelper.sin((rotationYaw * (float)Math.PI) / 180F);
+        float f2 = MathHelper.cos((rotationYaw * (float)Math.PI) / 180F);
+        motionX += par1 * f2 - par2 * f1;
+        motionZ += par2 * f2 + par1 * f1;
     }
 
-    public float getEntityBrightness(float f)
+    /**
+     * Gets how bright this entity is.
+     */
+    public float getEntityBrightness(float par1)
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posZ);
-        if (worldObj.blockExists(i, worldObj.worldHeight / 2, j))
+
+        if (worldObj.blockExists(i, 0, j))
         {
-            double d = (boundingBox.maxY - boundingBox.minY) * 0.66000000000000003D;
+            double d = (boundingBox.maxY - boundingBox.minY) * 0.66D;
             int k = MathHelper.floor_double((posY - (double)yOffset) + d);
             return worldObj.getLightBrightness(i, k, j);
         }
@@ -713,124 +920,162 @@ public abstract class Entity
         }
     }
 
-    public void setWorld(World world)
+    /**
+     * Sets the reference to the World object.
+     */
+    public void setWorld(World par1World)
     {
-        worldObj = world;
+        worldObj = par1World;
     }
 
-    public void setPositionAndRotation(double d, double d1, double d2, float f,
-            float f1)
+    /**
+     * Sets the entity's position and rotation. Args: posX, posY, posZ, yaw, pitch
+     */
+    public void setPositionAndRotation(double par1, double par3, double par5, float par7, float par8)
     {
-        prevPosX = posX = d;
-        prevPosY = posY = d1;
-        prevPosZ = posZ = d2;
-        prevRotationYaw = rotationYaw = f;
-        prevRotationPitch = rotationPitch = f1;
+        prevPosX = posX = par1;
+        prevPosY = posY = par3;
+        prevPosZ = posZ = par5;
+        prevRotationYaw = rotationYaw = par7;
+        prevRotationPitch = rotationPitch = par8;
         ySize = 0.0F;
-        double d3 = prevRotationYaw - f;
-        if (d3 < -180D)
+        double d = prevRotationYaw - par7;
+
+        if (d < -180D)
         {
             prevRotationYaw += 360F;
         }
-        if (d3 >= 180D)
+
+        if (d >= 180D)
         {
             prevRotationYaw -= 360F;
         }
+
         setPosition(posX, posY, posZ);
-        setRotation(f, f1);
+        setRotation(par7, par8);
     }
 
-    public void setLocationAndAngles(double d, double d1, double d2, float f,
-            float f1)
+    public void setLocationAndAngles(double par1, double par3, double par5, float par7, float par8)
     {
-        lastTickPosX = prevPosX = posX = d;
-        lastTickPosY = prevPosY = posY = d1 + (double)yOffset;
-        lastTickPosZ = prevPosZ = posZ = d2;
-        rotationYaw = f;
-        rotationPitch = f1;
+        lastTickPosX = prevPosX = posX = par1;
+        lastTickPosY = prevPosY = posY = par3 + (double)yOffset;
+        lastTickPosZ = prevPosZ = posZ = par5;
+        rotationYaw = par7;
+        rotationPitch = par8;
         setPosition(posX, posY, posZ);
     }
 
-    public float getDistanceToEntity(Entity entity)
+    /**
+     * Returns the distance to the entity. Args: entity
+     */
+    public float getDistanceToEntity(Entity par1Entity)
     {
-        float f = (float)(posX - entity.posX);
-        float f1 = (float)(posY - entity.posY);
-        float f2 = (float)(posZ - entity.posZ);
+        float f = (float)(posX - par1Entity.posX);
+        float f1 = (float)(posY - par1Entity.posY);
+        float f2 = (float)(posZ - par1Entity.posZ);
         return MathHelper.sqrt_float(f * f + f1 * f1 + f2 * f2);
     }
 
-    public double getDistanceSq(double d, double d1, double d2)
+    /**
+     * Gets the squared distance to the position. Args: x, y, z
+     */
+    public double getDistanceSq(double par1, double par3, double par5)
     {
-        double d3 = posX - d;
-        double d4 = posY - d1;
-        double d5 = posZ - d2;
-        return d3 * d3 + d4 * d4 + d5 * d5;
-    }
-
-    public double getDistance(double d, double d1, double d2)
-    {
-        double d3 = posX - d;
-        double d4 = posY - d1;
-        double d5 = posZ - d2;
-        return (double)MathHelper.sqrt_double(d3 * d3 + d4 * d4 + d5 * d5);
-    }
-
-    public double getDistanceSqToEntity(Entity entity)
-    {
-        double d = posX - entity.posX;
-        double d1 = posY - entity.posY;
-        double d2 = posZ - entity.posZ;
+        double d = posX - par1;
+        double d1 = posY - par3;
+        double d2 = posZ - par5;
         return d * d + d1 * d1 + d2 * d2;
     }
 
+    /**
+     * Gets the distance to the position. Args: x, y, z
+     */
+    public double getDistance(double par1, double par3, double par5)
+    {
+        double d = posX - par1;
+        double d1 = posY - par3;
+        double d2 = posZ - par5;
+        return (double)MathHelper.sqrt_double(d * d + d1 * d1 + d2 * d2);
+    }
+
+    /**
+     * Returns the squared distance to the entity. Args: entity
+     */
+    public double getDistanceSqToEntity(Entity par1Entity)
+    {
+        double d = posX - par1Entity.posX;
+        double d1 = posY - par1Entity.posY;
+        double d2 = posZ - par1Entity.posZ;
+        return d * d + d1 * d1 + d2 * d2;
+    }
+
+    /**
+     * Called by a player entity when they collide with an entity
+     */
     public void onCollideWithPlayer(EntityPlayer entityplayer)
     {
     }
 
-    public void applyEntityCollision(Entity entity)
+    /**
+     * Applies a velocity to each of the entities pushing them away from each other. Args: entity
+     */
+    public void applyEntityCollision(Entity par1Entity)
     {
-        if (entity.riddenByEntity == this || entity.ridingEntity == this)
+        if (par1Entity.riddenByEntity == this || par1Entity.ridingEntity == this)
         {
             return;
         }
-        double d = entity.posX - posX;
-        double d1 = entity.posZ - posZ;
+
+        double d = par1Entity.posX - posX;
+        double d1 = par1Entity.posZ - posZ;
         double d2 = MathHelper.abs_max(d, d1);
-        if (d2 >= 0.0099999997764825821D)
+
+        if (d2 >= 0.01D)
         {
             d2 = MathHelper.sqrt_double(d2);
             d /= d2;
             d1 /= d2;
             double d3 = 1.0D / d2;
+
             if (d3 > 1.0D)
             {
                 d3 = 1.0D;
             }
+
             d *= d3;
             d1 *= d3;
-            d *= 0.05000000074505806D;
-            d1 *= 0.05000000074505806D;
+            d *= 0.05D;
+            d1 *= 0.05D;
             d *= 1.0F - entityCollisionReduction;
             d1 *= 1.0F - entityCollisionReduction;
             addVelocity(-d, 0.0D, -d1);
-            entity.addVelocity(d, 0.0D, d1);
+            par1Entity.addVelocity(d, 0.0D, d1);
         }
     }
 
-    public void addVelocity(double d, double d1, double d2)
+    /**
+     * Adds to the current velocity of the entity. Args: x, y, z
+     */
+    public void addVelocity(double par1, double par3, double par5)
     {
-        motionX += d;
-        motionY += d1;
-        motionZ += d2;
+        motionX += par1;
+        motionY += par3;
+        motionZ += par5;
         isAirBorne = true;
     }
 
+    /**
+     * Sets that this entity has been attacked.
+     */
     protected void setBeenAttacked()
     {
         velocityChanged = true;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         setBeenAttacked();
         return false;
@@ -850,74 +1095,88 @@ public abstract class Entity
     {
     }
 
-    public boolean addEntityID(NBTTagCompound nbttagcompound)
+    /**
+     * adds the ID of this entity to the NBT given
+     */
+    public boolean addEntityID(NBTTagCompound par1NBTTagCompound)
     {
         String s = getEntityString();
+
         if (isDead || s == null)
         {
             return false;
         }
         else
         {
-            nbttagcompound.setString("id", s);
-            writeToNBT(nbttagcompound);
+            par1NBTTagCompound.setString("id", s);
+            writeToNBT(par1NBTTagCompound);
             return true;
         }
     }
 
-    public void writeToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Save the entity to NBT (calls an abstract helper method to write extra data)
+     */
+    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        nbttagcompound.setTag("Pos", newDoubleNBTList(new double[]
+        par1NBTTagCompound.setTag("Pos", newDoubleNBTList(new double[]
                 {
                     posX, posY + (double)ySize, posZ
                 }));
-        nbttagcompound.setTag("Motion", newDoubleNBTList(new double[]
+        par1NBTTagCompound.setTag("Motion", newDoubleNBTList(new double[]
                 {
                     motionX, motionY, motionZ
                 }));
-        nbttagcompound.setTag("Rotation", newFloatNBTList(new float[]
+        par1NBTTagCompound.setTag("Rotation", newFloatNBTList(new float[]
                 {
                     rotationYaw, rotationPitch
                 }));
-        nbttagcompound.setFloat("FallDistance", fallDistance);
-        nbttagcompound.setShort("Fire", (short)fire);
-        nbttagcompound.setShort("Air", (short)getAir());
-        nbttagcompound.setBoolean("OnGround", onGround);
-        writeEntityToNBT(nbttagcompound);
+        par1NBTTagCompound.setFloat("FallDistance", fallDistance);
+        par1NBTTagCompound.setShort("Fire", (short)fire);
+        par1NBTTagCompound.setShort("Air", (short)getAir());
+        par1NBTTagCompound.setBoolean("OnGround", onGround);
+        writeEntityToNBT(par1NBTTagCompound);
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Reads the entity from NBT (calls an abstract helper method to read specialized data)
+     */
+    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        NBTTagList nbttaglist = nbttagcompound.getTagList("Pos");
-        NBTTagList nbttaglist1 = nbttagcompound.getTagList("Motion");
-        NBTTagList nbttaglist2 = nbttagcompound.getTagList("Rotation");
-        motionX = ((NBTTagDouble)nbttaglist1.tagAt(0)).doubleValue;
-        motionY = ((NBTTagDouble)nbttaglist1.tagAt(1)).doubleValue;
-        motionZ = ((NBTTagDouble)nbttaglist1.tagAt(2)).doubleValue;
+        NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Pos");
+        NBTTagList nbttaglist1 = par1NBTTagCompound.getTagList("Motion");
+        NBTTagList nbttaglist2 = par1NBTTagCompound.getTagList("Rotation");
+        motionX = ((NBTTagDouble)nbttaglist1.tagAt(0)).data;
+        motionY = ((NBTTagDouble)nbttaglist1.tagAt(1)).data;
+        motionZ = ((NBTTagDouble)nbttaglist1.tagAt(2)).data;
+
         if (Math.abs(motionX) > 10D)
         {
             motionX = 0.0D;
         }
+
         if (Math.abs(motionY) > 10D)
         {
             motionY = 0.0D;
         }
+
         if (Math.abs(motionZ) > 10D)
         {
             motionZ = 0.0D;
         }
-        prevPosX = lastTickPosX = posX = ((NBTTagDouble)nbttaglist.tagAt(0)).doubleValue;
-        prevPosY = lastTickPosY = posY = ((NBTTagDouble)nbttaglist.tagAt(1)).doubleValue;
-        prevPosZ = lastTickPosZ = posZ = ((NBTTagDouble)nbttaglist.tagAt(2)).doubleValue;
-        prevRotationYaw = rotationYaw = ((NBTTagFloat)nbttaglist2.tagAt(0)).floatValue;
-        prevRotationPitch = rotationPitch = ((NBTTagFloat)nbttaglist2.tagAt(1)).floatValue;
-        fallDistance = nbttagcompound.getFloat("FallDistance");
-        fire = nbttagcompound.getShort("Fire");
-        setAir(nbttagcompound.getShort("Air"));
-        onGround = nbttagcompound.getBoolean("OnGround");
+
+        prevPosX = lastTickPosX = posX = ((NBTTagDouble)nbttaglist.tagAt(0)).data;
+        prevPosY = lastTickPosY = posY = ((NBTTagDouble)nbttaglist.tagAt(1)).data;
+        prevPosZ = lastTickPosZ = posZ = ((NBTTagDouble)nbttaglist.tagAt(2)).data;
+        prevRotationYaw = rotationYaw = ((NBTTagFloat)nbttaglist2.tagAt(0)).data;
+        prevRotationPitch = rotationPitch = ((NBTTagFloat)nbttaglist2.tagAt(1)).data;
+        fallDistance = par1NBTTagCompound.getFloat("FallDistance");
+        fire = par1NBTTagCompound.getShort("Fire");
+        setAir(par1NBTTagCompound.getShort("Air"));
+        onGround = par1NBTTagCompound.getBoolean("OnGround");
         setPosition(posX, posY, posZ);
         setRotation(rotationYaw, rotationPitch);
-        readEntityFromNBT(nbttagcompound);
+        readEntityFromNBT(par1NBTTagCompound);
     }
 
     protected final String getEntityString()
@@ -925,51 +1184,74 @@ public abstract class Entity
         return EntityList.getEntityString(this);
     }
 
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
     protected abstract void readEntityFromNBT(NBTTagCompound nbttagcompound);
 
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
     protected abstract void writeEntityToNBT(NBTTagCompound nbttagcompound);
 
-    protected NBTTagList newDoubleNBTList(double ad[])
+    /**
+     * creates a NBT list from the array of doubles passed to this function
+     */
+    protected NBTTagList newDoubleNBTList(double par1ArrayOfDouble[])
     {
         NBTTagList nbttaglist = new NBTTagList();
-        double ad1[] = ad;
-        int i = ad1.length;
+        double ad[] = par1ArrayOfDouble;
+        int i = ad.length;
+
         for (int j = 0; j < i; j++)
         {
-            double d = ad1[j];
-            nbttaglist.setTag(new NBTTagDouble(null, d));
+            double d = ad[j];
+            nbttaglist.appendTag(new NBTTagDouble(null, d));
         }
 
         return nbttaglist;
     }
 
-    protected NBTTagList newFloatNBTList(float af[])
+    /**
+     * Returns a new NBTTagList filled with the specified floats
+     */
+    protected NBTTagList newFloatNBTList(float par1ArrayOfFloat[])
     {
         NBTTagList nbttaglist = new NBTTagList();
-        float af1[] = af;
-        int i = af1.length;
+        float af[] = par1ArrayOfFloat;
+        int i = af.length;
+
         for (int j = 0; j < i; j++)
         {
-            float f = af1[j];
-            nbttaglist.setTag(new NBTTagFloat(null, f));
+            float f = af[j];
+            nbttaglist.appendTag(new NBTTagFloat(null, f));
         }
 
         return nbttaglist;
     }
 
-    public EntityItem dropItem(int i, int j)
+    /**
+     * Drops an item stack at the entity's position. Args: itemID, count
+     */
+    public EntityItem dropItem(int par1, int par2)
     {
-        return dropItemWithOffset(i, j, 0.0F);
+        return dropItemWithOffset(par1, par2, 0.0F);
     }
 
-    public EntityItem dropItemWithOffset(int i, int j, float f)
+    /**
+     * Drops an item stack with a specified y offset. Args: itemID, count, yOffset
+     */
+    public EntityItem dropItemWithOffset(int par1, int par2, float par3)
     {
-        return entityDropItem(new ItemStack(i, j, 0), f);
+        return entityDropItem(new ItemStack(par1, par2, 0), par3);
     }
 
-    public EntityItem entityDropItem(ItemStack itemstack, float f)
+    /**
+     * Drops an item at the position of the entity.
+     */
+    public EntityItem entityDropItem(ItemStack par1ItemStack, float par2)
     {
-        EntityItem entityitem = new EntityItem(worldObj, posX, posY + (double)f, posZ, itemstack);
+        EntityItem entityitem = new EntityItem(worldObj, posX, posY + (double)par2, posZ, par1ItemStack);
         entityitem.delayBeforeCanPickup = 10;
         worldObj.spawnEntityInWorld(entityitem);
         return entityitem;
@@ -980,6 +1262,9 @@ public abstract class Entity
         return !isDead;
     }
 
+    /**
+     * Checks if this entity is inside of an opaque block
+     */
     public boolean isEntityInsideOpaqueBlock()
     {
         for (int i = 0; i < 8; i++)
@@ -990,6 +1275,7 @@ public abstract class Entity
             int j = MathHelper.floor_double(posX + (double)f);
             int k = MathHelper.floor_double(posY + (double)getEyeHeight() + (double)f1);
             int l = MathHelper.floor_double(posZ + (double)f2);
+
             if (worldObj.isBlockNormalCube(j, k, l))
             {
                 return true;
@@ -999,16 +1285,22 @@ public abstract class Entity
         return false;
     }
 
-    public boolean interact(EntityPlayer entityplayer)
+    /**
+     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
+     */
+    public boolean interact(EntityPlayer par1EntityPlayer)
     {
         return false;
     }
 
-    public AxisAlignedBB getCollisionBox(Entity entity)
+    public AxisAlignedBB getCollisionBox(Entity par1Entity)
     {
         return null;
     }
 
+    /**
+     * Handles updating while being ridden by an entity
+     */
     public void updateRidden()
     {
         if (ridingEntity.isDead)
@@ -1016,40 +1308,53 @@ public abstract class Entity
             ridingEntity = null;
             return;
         }
+
         motionX = 0.0D;
         motionY = 0.0D;
         motionZ = 0.0D;
         onUpdate();
+
         if (ridingEntity == null)
         {
             return;
         }
+
         ridingEntity.updateRiderPosition();
         entityRiderYawDelta += ridingEntity.rotationYaw - ridingEntity.prevRotationYaw;
         entityRiderPitchDelta += ridingEntity.rotationPitch - ridingEntity.prevRotationPitch;
+
         for (; entityRiderYawDelta >= 180D; entityRiderYawDelta -= 360D) { }
+
         for (; entityRiderYawDelta < -180D; entityRiderYawDelta += 360D) { }
+
         for (; entityRiderPitchDelta >= 180D; entityRiderPitchDelta -= 360D) { }
+
         for (; entityRiderPitchDelta < -180D; entityRiderPitchDelta += 360D) { }
+
         double d = entityRiderYawDelta * 0.5D;
         double d1 = entityRiderPitchDelta * 0.5D;
         float f = 10F;
+
         if (d > (double)f)
         {
             d = f;
         }
+
         if (d < (double)(-f))
         {
             d = -f;
         }
+
         if (d1 > (double)f)
         {
             d1 = f;
         }
+
         if (d1 < (double)(-f))
         {
             d1 = -f;
         }
+
         entityRiderYawDelta -= d;
         entityRiderPitchDelta -= d1;
         rotationYaw += d;
@@ -1061,47 +1366,62 @@ public abstract class Entity
         riddenByEntity.setPosition(posX, posY + getMountedYOffset() + riddenByEntity.getYOffset(), posZ);
     }
 
+    /**
+     * Returns the Y Offset of this entity.
+     */
     public double getYOffset()
     {
         return (double)yOffset;
     }
 
+    /**
+     * Returns the Y offset from the entity's position for any entity riding this one.
+     */
     public double getMountedYOffset()
     {
         return (double)height * 0.75D;
     }
 
-    public void mountEntity(Entity entity)
+    /**
+     * set entity to null to unmount
+     */
+    public void mountEntity(Entity par1Entity)
     {
         entityRiderPitchDelta = 0.0D;
         entityRiderYawDelta = 0.0D;
-        if (entity == null)
+
+        if (par1Entity == null)
         {
             if (ridingEntity != null)
             {
                 setLocationAndAngles(ridingEntity.posX, ridingEntity.boundingBox.minY + (double)ridingEntity.height, ridingEntity.posZ, rotationYaw, rotationPitch);
                 ridingEntity.riddenByEntity = null;
             }
+
             ridingEntity = null;
             return;
         }
-        if (ridingEntity == entity)
+
+        if (ridingEntity == par1Entity)
         {
             ridingEntity.riddenByEntity = null;
             ridingEntity = null;
-            setLocationAndAngles(entity.posX, entity.boundingBox.minY + (double)entity.height, entity.posZ, rotationYaw, rotationPitch);
+            setLocationAndAngles(par1Entity.posX, par1Entity.boundingBox.minY + (double)par1Entity.height, par1Entity.posZ, rotationYaw, rotationPitch);
             return;
         }
+
         if (ridingEntity != null)
         {
             ridingEntity.riddenByEntity = null;
         }
-        if (entity.riddenByEntity != null)
+
+        if (par1Entity.riddenByEntity != null)
         {
-            entity.riddenByEntity.ridingEntity = null;
+            par1Entity.riddenByEntity.ridingEntity = null;
         }
-        ridingEntity = entity;
-        entity.riddenByEntity = this;
+
+        ridingEntity = par1Entity;
+        par1Entity.riddenByEntity = this;
     }
 
     public float getCollisionBorderSize()
@@ -1109,65 +1429,96 @@ public abstract class Entity
         return 0.1F;
     }
 
+    /**
+     * returns a (normalized) vector of where this entity is looking
+     */
     public Vec3D getLookVec()
     {
         return null;
     }
 
+    /**
+     * Called by portal blocks when an entity is within it.
+     */
     public void setInPortal()
     {
     }
 
+    /**
+     * returns the inventory of this entity (only used in EntityPlayerMP it seems)
+     */
     public ItemStack[] getInventory()
     {
         return null;
     }
 
+    /**
+     * Returns true if the furnace is currently burning
+     */
     public boolean isBurning()
     {
         return fire > 0 || getFlag(0);
     }
 
+    /**
+     * Returns if this entity is sneaking.
+     */
     public boolean isSneaking()
     {
         return getFlag(1);
     }
 
-    public void setSneaking(boolean flag)
+    /**
+     * Sets the sneaking flag.
+     */
+    public void setSneaking(boolean par1)
     {
-        setFlag(1, flag);
+        setFlag(1, par1);
     }
 
+    /**
+     * Get if the Entity is sprinting.
+     */
     public boolean isSprinting()
     {
         return getFlag(3);
     }
 
-    public void setSprinting(boolean flag)
+    /**
+     * Set sprinting switch for Entity.
+     */
+    public void setSprinting(boolean par1)
     {
-        setFlag(3, flag);
+        setFlag(3, par1);
     }
 
-    public void setEating(boolean flag)
+    public void setEating(boolean par1)
     {
-        setFlag(4, flag);
+        setFlag(4, par1);
     }
 
-    protected boolean getFlag(int i)
+    /**
+     * Gets the specified flag from DataWatcher byte object 0
+     */
+    protected boolean getFlag(int par1)
     {
-        return (dataWatcher.getWatchableObjectByte(0) & 1 << i) != 0;
+        return (dataWatcher.getWatchableObjectByte(0) & 1 << par1) != 0;
     }
 
-    protected void setFlag(int i, boolean flag)
+    /**
+     * Sets the specified flag to the specified value in DataWatcher byte object 0
+     */
+    protected void setFlag(int par1, boolean par2)
     {
         byte byte0 = dataWatcher.getWatchableObjectByte(0);
-        if (flag)
+
+        if (par2)
         {
-            dataWatcher.updateObject(0, Byte.valueOf((byte)(byte0 | 1 << i)));
+            dataWatcher.updateObject(0, Byte.valueOf((byte)(byte0 | 1 << par1)));
         }
         else
         {
-            dataWatcher.updateObject(0, Byte.valueOf((byte)(byte0 & ~(1 << i))));
+            dataWatcher.updateObject(0, Byte.valueOf((byte)(byte0 & ~(1 << par1))));
         }
     }
 
@@ -1176,15 +1527,19 @@ public abstract class Entity
         return dataWatcher.getWatchableObjectShort(1);
     }
 
-    public void setAir(int i)
+    public void setAir(int par1)
     {
-        dataWatcher.updateObject(1, Short.valueOf((short)i));
+        dataWatcher.updateObject(1, Short.valueOf((short)par1));
     }
 
-    public void onStruckByLightning(EntityLightningBolt entitylightningbolt)
+    /**
+     * Called when a lightning bolt hits the entity.
+     */
+    public void onStruckByLightning(EntityLightningBolt par1EntityLightningBolt)
     {
         dealFireDamage(5);
         fire++;
+
         if (fire == 0)
         {
             setFire(8);
@@ -1195,14 +1550,15 @@ public abstract class Entity
     {
     }
 
-    protected boolean pushOutOfBlocks(double d, double d1, double d2)
+    protected boolean pushOutOfBlocks(double par1, double par3, double par5)
     {
-        int i = MathHelper.floor_double(d);
-        int j = MathHelper.floor_double(d1);
-        int k = MathHelper.floor_double(d2);
-        double d3 = d - (double)i;
-        double d4 = d1 - (double)j;
-        double d5 = d2 - (double)k;
+        int i = MathHelper.floor_double(par1);
+        int j = MathHelper.floor_double(par3);
+        int k = MathHelper.floor_double(par5);
+        double d = par1 - (double)i;
+        double d1 = par3 - (double)j;
+        double d2 = par5 - (double)k;
+
         if (worldObj.isBlockNormalCube(i, j, k))
         {
             boolean flag = !worldObj.isBlockNormalCube(i - 1, j, k);
@@ -1212,62 +1568,76 @@ public abstract class Entity
             boolean flag4 = !worldObj.isBlockNormalCube(i, j, k - 1);
             boolean flag5 = !worldObj.isBlockNormalCube(i, j, k + 1);
             byte byte0 = -1;
-            double d6 = 9999D;
-            if (flag && d3 < d6)
+            double d3 = 9999D;
+
+            if (flag && d < d3)
             {
-                d6 = d3;
+                d3 = d;
                 byte0 = 0;
             }
-            if (flag1 && 1.0D - d3 < d6)
+
+            if (flag1 && 1.0D - d < d3)
             {
-                d6 = 1.0D - d3;
+                d3 = 1.0D - d;
                 byte0 = 1;
             }
-            if (flag2 && d4 < d6)
+
+            if (flag2 && d1 < d3)
             {
-                d6 = d4;
+                d3 = d1;
                 byte0 = 2;
             }
-            if (flag3 && 1.0D - d4 < d6)
+
+            if (flag3 && 1.0D - d1 < d3)
             {
-                d6 = 1.0D - d4;
+                d3 = 1.0D - d1;
                 byte0 = 3;
             }
-            if (flag4 && d5 < d6)
+
+            if (flag4 && d2 < d3)
             {
-                d6 = d5;
+                d3 = d2;
                 byte0 = 4;
             }
-            if (flag5 && 1.0D - d5 < d6)
+
+            if (flag5 && 1.0D - d2 < d3)
             {
-                double d7 = 1.0D - d5;
+                double d4 = 1.0D - d2;
                 byte0 = 5;
             }
+
             float f = rand.nextFloat() * 0.2F + 0.1F;
+
             if (byte0 == 0)
             {
                 motionX = -f;
             }
+
             if (byte0 == 1)
             {
                 motionX = f;
             }
+
             if (byte0 == 2)
             {
                 motionY = -f;
             }
+
             if (byte0 == 3)
             {
                 motionY = f;
             }
+
             if (byte0 == 4)
             {
                 motionZ = -f;
             }
+
             if (byte0 == 5)
             {
                 motionZ = f;
             }
+
             return true;
         }
         else
@@ -1276,29 +1646,47 @@ public abstract class Entity
         }
     }
 
+    /**
+     * Sets the Entity inside a web block.
+     */
     public void setInWeb()
     {
         isInWeb = true;
         fallDistance = 0.0F;
     }
 
-    public String func_35150_Y()
+    public String getUsername()
     {
         String s = EntityList.getEntityString(this);
+
         if (s == null)
         {
             s = "generic";
         }
+
         return StatCollector.translateToLocal((new StringBuilder()).append("entity.").append(s).append(".name").toString());
     }
 
+    /**
+     * Return the Entity parts making up this Entity (currently only for dragons)
+     */
     public Entity[] getParts()
     {
         return null;
     }
 
-    public boolean isEntityEqual(Entity entity)
+    public boolean isEntityEqual(Entity par1Entity)
     {
-        return this == entity;
+        return this == par1Entity;
+    }
+
+    public float func_48314_aq()
+    {
+        return 0.0F;
+    }
+
+    public boolean func_48313_k_()
+    {
+        return true;
     }
 }

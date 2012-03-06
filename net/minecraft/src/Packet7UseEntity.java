@@ -4,35 +4,52 @@ import java.io.*;
 
 public class Packet7UseEntity extends Packet
 {
+    /** The entity of the player (ignored by the server) */
     public int playerEntityId;
+
+    /** The entity the player is interacting with */
     public int targetEntity;
+
+    /**
+     * Seems to be true when the player is pointing at an entity and left-clicking and false when right-clicking.
+     */
     public int isLeftClick;
 
     public Packet7UseEntity()
     {
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        playerEntityId = datainputstream.readInt();
-        targetEntity = datainputstream.readInt();
-        isLeftClick = datainputstream.readByte();
+        playerEntityId = par1DataInputStream.readInt();
+        targetEntity = par1DataInputStream.readInt();
+        isLeftClick = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(playerEntityId);
-        dataoutputstream.writeInt(targetEntity);
-        dataoutputstream.writeByte(isLeftClick);
+        par1DataOutputStream.writeInt(playerEntityId);
+        par1DataOutputStream.writeInt(targetEntity);
+        par1DataOutputStream.writeByte(isLeftClick);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleUseEntity(this);
+        par1NetHandler.handleUseEntity(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 9;

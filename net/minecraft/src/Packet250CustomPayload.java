@@ -4,7 +4,10 @@ import java.io.*;
 
 public class Packet250CustomPayload extends Packet
 {
+    /** Name of the 'channel' used to send data */
     public String channel;
+
+    /** Length of the data to be read */
     public int length;
     public byte data[];
 
@@ -12,34 +15,46 @@ public class Packet250CustomPayload extends Packet
     {
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        channel = readString(datainputstream, 16);
-        length = datainputstream.readShort();
+        channel = readString(par1DataInputStream, 16);
+        length = par1DataInputStream.readShort();
+
         if (length > 0 && length < 32767)
         {
             data = new byte[length];
-            datainputstream.read(data);
+            par1DataInputStream.readFully(data);
         }
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        writeString(channel, dataoutputstream);
-        dataoutputstream.writeShort((short)length);
+        writeString(channel, par1DataOutputStream);
+        par1DataOutputStream.writeShort((short)length);
+
         if (data != null)
         {
-            dataoutputstream.write(data);
+            par1DataOutputStream.write(data);
         }
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleCustomPayload(this);
+        par1NetHandler.handleCustomPayload(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 2 + channel.length() * 2 + 2 + length;

@@ -22,28 +22,32 @@ public class RecipesWeapons
                 });
     }
 
-    public void addRecipes(CraftingManager craftingmanager)
+    /**
+     * Adds weapon recipes to the CraftingManager
+     */
+    public void addRecipes(CraftingManager par1CraftingManager)
     {
         for (int i = 0; i < recipeItems[0].length; i++)
         {
             Object obj = recipeItems[0][i];
+
             for (int j = 0; j < recipeItems.length - 1; j++)
             {
                 Item item = (Item)recipeItems[j + 1][i];
-                craftingmanager.addRecipe(new ItemStack(item), new Object[]
+                par1CraftingManager.addRecipe(new ItemStack(item), new Object[]
                         {
-                            recipePatterns[j], Character.valueOf('#'), Item.stick, Character.valueOf('X'), obj
+                            recipePatterns[j], '#', Item.stick, 'X', obj
                         });
             }
         }
 
-        craftingmanager.addRecipe(new ItemStack(Item.bow, 1), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Item.bow, 1), new Object[]
                 {
-                    " #X", "# X", " #X", Character.valueOf('X'), Item.silk, Character.valueOf('#'), Item.stick
+                    " #X", "# X", " #X", 'X', Item.silk, '#', Item.stick
                 });
-        craftingmanager.addRecipe(new ItemStack(Item.arrow, 4), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Item.arrow, 4), new Object[]
                 {
-                    "X", "#", "Y", Character.valueOf('Y'), Item.feather, Character.valueOf('X'), Item.flint, Character.valueOf('#'), Item.stick
+                    "X", "#", "Y", 'Y', Item.feather, 'X', Item.flint, '#', Item.stick
                 });
     }
 }

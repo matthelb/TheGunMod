@@ -2,24 +2,25 @@ package net.minecraft.src;
 
 public class EnchantmentLootBonus extends Enchantment
 {
-    protected EnchantmentLootBonus(int i, int j, EnumEnchantmentType enumenchantmenttype)
+    protected EnchantmentLootBonus(int par1, int par2, EnumEnchantmentType par3EnumEnchantmentType)
     {
-        super(i, j, enumenchantmenttype);
+        super(par1, par2, par3EnumEnchantmentType);
         setName("lootBonus");
-        if (enumenchantmenttype == EnumEnchantmentType.digger)
+
+        if (par3EnumEnchantmentType == EnumEnchantmentType.digger)
         {
             setName("lootBonusDigger");
         }
     }
 
-    public int getMinEnchantability(int i)
+    public int getMinEnchantability(int par1)
     {
-        return 20 + (i - 1) * 12;
+        return 20 + (par1 - 1) * 12;
     }
 
-    public int getMaxEnchantability(int i)
+    public int getMaxEnchantability(int par1)
     {
-        return super.getMinEnchantability(i) + 50;
+        return super.getMinEnchantability(par1) + 50;
     }
 
     public int getMaxLevel()
@@ -27,8 +28,8 @@ public class EnchantmentLootBonus extends Enchantment
         return 3;
     }
 
-    public boolean canApplyTogether(Enchantment enchantment)
+    public boolean canApplyTogether(Enchantment par1Enchantment)
     {
-        return super.canApplyTogether(enchantment) && enchantment.effectId != silkTouch.effectId;
+        return super.canApplyTogether(par1Enchantment) && par1Enchantment.effectId != silkTouch.effectId;
     }
 }

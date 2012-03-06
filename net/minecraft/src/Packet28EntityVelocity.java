@@ -13,67 +13,84 @@ public class Packet28EntityVelocity extends Packet
     {
     }
 
-    public Packet28EntityVelocity(Entity entity)
+    public Packet28EntityVelocity(Entity par1Entity)
     {
-        this(entity.entityId, entity.motionX, entity.motionY, entity.motionZ);
+        this(par1Entity.entityId, par1Entity.motionX, par1Entity.motionY, par1Entity.motionZ);
     }
 
-    public Packet28EntityVelocity(int i, double d, double d1, double d2)
+    public Packet28EntityVelocity(int par1, double par2, double par4, double par6)
     {
-        entityId = i;
-        double d3 = 3.8999999999999999D;
-        if (d < -d3)
+        entityId = par1;
+        double d = 3.9D;
+
+        if (par2 < -d)
         {
-            d = -d3;
+            par2 = -d;
         }
-        if (d1 < -d3)
+
+        if (par4 < -d)
         {
-            d1 = -d3;
+            par4 = -d;
         }
-        if (d2 < -d3)
+
+        if (par6 < -d)
         {
-            d2 = -d3;
+            par6 = -d;
         }
-        if (d > d3)
+
+        if (par2 > d)
         {
-            d = d3;
+            par2 = d;
         }
-        if (d1 > d3)
+
+        if (par4 > d)
         {
-            d1 = d3;
+            par4 = d;
         }
-        if (d2 > d3)
+
+        if (par6 > d)
         {
-            d2 = d3;
+            par6 = d;
         }
-        motionX = (int)(d * 8000D);
-        motionY = (int)(d1 * 8000D);
-        motionZ = (int)(d2 * 8000D);
+
+        motionX = (int)(par2 * 8000D);
+        motionY = (int)(par4 * 8000D);
+        motionZ = (int)(par6 * 8000D);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        motionX = datainputstream.readShort();
-        motionY = datainputstream.readShort();
-        motionZ = datainputstream.readShort();
+        entityId = par1DataInputStream.readInt();
+        motionX = par1DataInputStream.readShort();
+        motionY = par1DataInputStream.readShort();
+        motionZ = par1DataInputStream.readShort();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        dataoutputstream.writeShort(motionX);
-        dataoutputstream.writeShort(motionY);
-        dataoutputstream.writeShort(motionZ);
+        par1DataOutputStream.writeInt(entityId);
+        par1DataOutputStream.writeShort(motionX);
+        par1DataOutputStream.writeShort(motionY);
+        par1DataOutputStream.writeShort(motionZ);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleEntityVelocity(this);
+        par1NetHandler.handleEntityVelocity(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 10;

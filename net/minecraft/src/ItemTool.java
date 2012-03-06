@@ -4,26 +4,34 @@ public class ItemTool extends Item
 {
     private Block blocksEffectiveAgainst[];
     protected float efficiencyOnProperMaterial;
+
+    /** Damage versus entities. */
     private int damageVsEntity;
+
+    /** The material this tool is made from. */
     protected EnumToolMaterial toolMaterial;
 
-    protected ItemTool(int i, int j, EnumToolMaterial enumtoolmaterial, Block ablock[])
+    protected ItemTool(int par1, int par2, EnumToolMaterial par3EnumToolMaterial, Block par4ArrayOfBlock[])
     {
-        super(i);
+        super(par1);
         efficiencyOnProperMaterial = 4F;
-        toolMaterial = enumtoolmaterial;
-        blocksEffectiveAgainst = ablock;
+        toolMaterial = par3EnumToolMaterial;
+        blocksEffectiveAgainst = par4ArrayOfBlock;
         maxStackSize = 1;
-        setMaxDamage(enumtoolmaterial.getMaxUses());
-        efficiencyOnProperMaterial = enumtoolmaterial.getEfficiencyOnProperMaterial();
-        damageVsEntity = j + enumtoolmaterial.getDamageVsEntity();
+        setMaxDamage(par3EnumToolMaterial.getMaxUses());
+        efficiencyOnProperMaterial = par3EnumToolMaterial.getEfficiencyOnProperMaterial();
+        damageVsEntity = par2 + par3EnumToolMaterial.getDamageVsEntity();
     }
 
-    public float getStrVsBlock(ItemStack itemstack, Block block)
+    /**
+     * Returns the strength of the stack against a given block. 1.0F base, (Quality+1)*2 if correct blocktype, 1.5F if
+     * sword
+     */
+    public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
         for (int i = 0; i < blocksEffectiveAgainst.length; i++)
         {
-            if (blocksEffectiveAgainst[i] == block)
+            if (blocksEffectiveAgainst[i] == par2Block)
             {
                 return efficiencyOnProperMaterial;
             }
@@ -32,19 +40,19 @@ public class ItemTool extends Item
         return 1.0F;
     }
 
-    public boolean hitEntity(ItemStack itemstack, EntityLiving entityliving, EntityLiving entityliving1)
+    public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
     {
-        itemstack.damageItem(2, entityliving1);
+        par1ItemStack.damageItem(2, par3EntityLiving);
         return true;
     }
 
-    public boolean onBlockDestroyed(ItemStack itemstack, int i, int j, int k, int l, EntityLiving entityliving)
+    public boolean onBlockDestroyed(ItemStack par1ItemStack, int par2, int par3, int par4, int par5, EntityLiving par6EntityLiving)
     {
-        itemstack.damageItem(1, entityliving);
+        par1ItemStack.damageItem(1, par6EntityLiving);
         return true;
     }
 
-    public int getDamageVsEntity(Entity entity)
+    public int getDamageVsEntity(Entity par1Entity)
     {
         return damageVsEntity;
     }

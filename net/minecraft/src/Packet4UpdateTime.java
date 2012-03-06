@@ -4,34 +4,45 @@ import java.io.*;
 
 public class Packet4UpdateTime extends Packet
 {
+    /** The world time in minutes. */
     public long time;
 
     public Packet4UpdateTime()
     {
     }
 
-    public Packet4UpdateTime(long l)
+    public Packet4UpdateTime(long par1)
     {
-        time = l;
+        time = par1;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        time = datainputstream.readLong();
+        time = par1DataInputStream.readLong();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeLong(time);
+        par1DataOutputStream.writeLong(time);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleUpdateTime(this);
+        par1NetHandler.handleUpdateTime(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 8;

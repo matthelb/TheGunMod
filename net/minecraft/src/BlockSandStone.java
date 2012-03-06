@@ -2,18 +2,22 @@ package net.minecraft.src;
 
 public class BlockSandStone extends Block
 {
-    public BlockSandStone(int i)
+    public BlockSandStone(int par1)
     {
-        super(i, 192, Material.rock);
+        super(par1, 192, Material.rock);
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        if (i == 1)
+        if (par1 == 1)
         {
             return blockIndexInTexture - 16;
         }
-        if (i == 0)
+
+        if (par1 == 0)
         {
             return blockIndexInTexture + 16;
         }

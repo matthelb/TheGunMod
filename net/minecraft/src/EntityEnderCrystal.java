@@ -4,18 +4,19 @@ import java.util.Random;
 
 public class EntityEnderCrystal extends Entity
 {
-    public int field_41023_a;
-    public int field_41022_b;
+    /** Used to create the rotation animation when rendering the crystal. */
+    public int innerRotation;
+    public int health;
 
-    public EntityEnderCrystal(World world)
+    public EntityEnderCrystal(World par1World)
     {
-        super(world);
-        field_41023_a = 0;
+        super(par1World);
+        innerRotation = 0;
         preventEntitySpawning = true;
         setSize(2.0F, 2.0F);
         yOffset = height / 2.0F;
-        field_41022_b = 5;
-        field_41023_a = rand.nextInt(0x186a0);
+        health = 5;
+        innerRotation = rand.nextInt(0x186a0);
     }
 
     protected boolean canTriggerWalking()
@@ -25,29 +26,39 @@ public class EntityEnderCrystal extends Entity
 
     protected void entityInit()
     {
-        dataWatcher.addObject(8, Integer.valueOf(field_41022_b));
+        dataWatcher.addObject(8, Integer.valueOf(health));
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
-        field_41023_a++;
-        dataWatcher.updateObject(8, Integer.valueOf(field_41022_b));
+        innerRotation++;
+        dataWatcher.updateObject(8, Integer.valueOf(health));
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posY);
         int k = MathHelper.floor_double(posZ);
+
         if (worldObj.getBlockId(i, j, k) != Block.fire.blockID)
         {
             worldObj.setBlockWithNotify(i, j, k, Block.fire.blockID);
         }
     }
 
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
     protected void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {
     }
 
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
     protected void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
     }
@@ -57,12 +68,16 @@ public class EntityEnderCrystal extends Entity
         return true;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         if (!isDead && !worldObj.isRemote)
         {
-            field_41022_b = 0;
-            if (field_41022_b <= 0)
+            health = 0;
+
+            if (health <= 0)
             {
                 if (!worldObj.isRemote)
                 {
@@ -75,6 +90,7 @@ public class EntityEnderCrystal extends Entity
                 }
             }
         }
+
         return true;
     }
 }

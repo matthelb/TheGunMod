@@ -4,18 +4,20 @@ import java.io.*;
 
 public class NBTTagString extends NBTBase
 {
-    public String stringValue;
+    /** The string value for the tag (cannot be empty). */
+    public String data;
 
-    public NBTTagString(String s)
+    public NBTTagString(String par1Str)
     {
-        super(s);
+        super(par1Str);
     }
 
-    public NBTTagString(String s, String s1)
+    public NBTTagString(String par1Str, String par2Str)
     {
-        super(s);
-        stringValue = s1;
-        if (s1 == null)
+        super(par1Str);
+        data = par2Str;
+
+        if (par2Str == null)
         {
             throw new IllegalArgumentException("Empty string not allowed");
         }
@@ -25,39 +27,49 @@ public class NBTTagString extends NBTBase
         }
     }
 
-    void writeTagContents(DataOutput dataoutput)
-    throws IOException
+    /**
+     * Write the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void write(DataOutput par1DataOutput) throws IOException
     {
-        dataoutput.writeUTF(stringValue);
+        par1DataOutput.writeUTF(data);
     }
 
-    void readTagContents(DataInput datainput)
-    throws IOException
+    /**
+     * Read the actual data contents of the tag, implemented in NBT extension classes
+     */
+    void load(DataInput par1DataInput) throws IOException
     {
-        stringValue = datainput.readUTF();
+        data = par1DataInput.readUTF();
     }
 
-    public byte getType()
+    /**
+     * Gets the type byte for the tag.
+     */
+    public byte getId()
     {
         return 8;
     }
 
     public String toString()
     {
-        return (new StringBuilder()).append("").append(stringValue).toString();
+        return (new StringBuilder()).append("").append(data).toString();
     }
 
-    public NBTBase cloneTag()
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
     {
-        return new NBTTagString(getKey(), stringValue);
+        return new NBTTagString(getName(), data);
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (super.equals(obj))
+        if (super.equals(par1Obj))
         {
-            NBTTagString nbttagstring = (NBTTagString)obj;
-            return stringValue == null && nbttagstring.stringValue == null || stringValue != null && stringValue.equals(nbttagstring.stringValue);
+            NBTTagString nbttagstring = (NBTTagString)par1Obj;
+            return data == null && nbttagstring.data == null || data != null && data.equals(nbttagstring.data);
         }
         else
         {

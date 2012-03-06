@@ -7,13 +7,16 @@ import java.net.URLEncoder;
 
 class ThreadLoginVerifier extends Thread
 {
+    /** The login packet to be verified. */
     final Packet1Login loginPacket;
+
+    /** The login handler that spawned this thread. */
     final NetLoginHandler loginHandler;
 
-    ThreadLoginVerifier(NetLoginHandler netloginhandler, Packet1Login packet1login)
+    ThreadLoginVerifier(NetLoginHandler par1NetLoginHandler, Packet1Login par2Packet1Login)
     {
-        loginHandler = netloginhandler;
-        loginPacket = packet1login;
+        loginHandler = par1NetLoginHandler;
+        loginPacket = par2Packet1Login;
     }
 
     public void run()
@@ -25,6 +28,7 @@ class ThreadLoginVerifier extends Thread
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(url.openStream()));
             String s1 = bufferedreader.readLine();
             bufferedreader.close();
+
             if (s1.equals("YES"))
             {
                 NetLoginHandler.setLoginPacket(loginHandler, loginPacket);

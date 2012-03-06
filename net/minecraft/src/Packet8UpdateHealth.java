@@ -4,42 +4,57 @@ import java.io.*;
 
 public class Packet8UpdateHealth extends Packet
 {
+    /** Variable used for incoming health packets */
     public int healthMP;
     public int food;
+
+    /**
+     * Players logging on get a saturation of 5.0. Eating food increases the saturation as well as the food bar.
+     */
     public float foodSaturation;
 
     public Packet8UpdateHealth()
     {
     }
 
-    public Packet8UpdateHealth(int i, int j, float f)
+    public Packet8UpdateHealth(int par1, int par2, float par3)
     {
-        healthMP = i;
-        food = j;
-        foodSaturation = f;
+        healthMP = par1;
+        food = par2;
+        foodSaturation = par3;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        healthMP = datainputstream.readShort();
-        food = datainputstream.readShort();
-        foodSaturation = datainputstream.readFloat();
+        healthMP = par1DataInputStream.readShort();
+        food = par1DataInputStream.readShort();
+        foodSaturation = par1DataInputStream.readFloat();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeShort(healthMP);
-        dataoutputstream.writeShort(food);
-        dataoutputstream.writeFloat(foodSaturation);
+        par1DataOutputStream.writeShort(healthMP);
+        par1DataOutputStream.writeShort(food);
+        par1DataOutputStream.writeFloat(foodSaturation);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleUpdateHealth(this);
+        par1NetHandler.handleUpdateHealth(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 8;

@@ -8,34 +8,35 @@ public class PotionEffect
     private int duration;
     private int amplifier;
 
-    public PotionEffect(int i, int j, int k)
+    public PotionEffect(int par1, int par2, int par3)
     {
-        potionID = i;
-        duration = j;
-        amplifier = k;
+        potionID = par1;
+        duration = par2;
+        amplifier = par3;
     }
 
-    public PotionEffect(PotionEffect potioneffect)
+    public PotionEffect(PotionEffect par1PotionEffect)
     {
-        potionID = potioneffect.potionID;
-        duration = potioneffect.duration;
-        amplifier = potioneffect.amplifier;
+        potionID = par1PotionEffect.potionID;
+        duration = par1PotionEffect.duration;
+        amplifier = par1PotionEffect.amplifier;
     }
 
-    public void combine(PotionEffect potioneffect)
+    public void combine(PotionEffect par1PotionEffect)
     {
-        if (potionID != potioneffect.potionID)
+        if (potionID != par1PotionEffect.potionID)
         {
             System.err.println("This method should only be called for matching effects!");
         }
-        if (potioneffect.amplifier > amplifier)
+
+        if (par1PotionEffect.amplifier > amplifier)
         {
-            amplifier = potioneffect.amplifier;
-            duration = potioneffect.duration;
+            amplifier = par1PotionEffect.amplifier;
+            duration = par1PotionEffect.duration;
         }
-        else if (potioneffect.amplifier == amplifier && duration < potioneffect.duration)
+        else if (par1PotionEffect.amplifier == amplifier && duration < par1PotionEffect.duration)
         {
-            duration = potioneffect.duration;
+            duration = par1PotionEffect.duration;
         }
     }
 
@@ -54,16 +55,18 @@ public class PotionEffect
         return amplifier;
     }
 
-    public boolean onUpdate(EntityLiving entityliving)
+    public boolean onUpdate(EntityLiving par1EntityLiving)
     {
         if (duration > 0)
         {
             if (Potion.potionTypes[potionID].isReady(duration, amplifier))
             {
-                performEffect(entityliving);
+                performEffect(par1EntityLiving);
             }
+
             deincrementDuration();
         }
+
         return duration > 0;
     }
 
@@ -72,11 +75,11 @@ public class PotionEffect
         return --duration;
     }
 
-    public void performEffect(EntityLiving entityliving)
+    public void performEffect(EntityLiving par1EntityLiving)
     {
         if (duration > 0)
         {
-            Potion.potionTypes[potionID].performEffect(entityliving, amplifier);
+            Potion.potionTypes[potionID].performEffect(par1EntityLiving, amplifier);
         }
     }
 
@@ -93,6 +96,7 @@ public class PotionEffect
     public String toString()
     {
         String s = "";
+
         if (getAmplifier() > 0)
         {
             s = (new StringBuilder()).append(getEffectName()).append(" x ").append(getAmplifier() + 1).append(", Duration: ").append(getDuration()).toString();
@@ -101,7 +105,8 @@ public class PotionEffect
         {
             s = (new StringBuilder()).append(getEffectName()).append(", Duration: ").append(getDuration()).toString();
         }
-        if (Potion.potionTypes[potionID].func_40593_f())
+
+        if (Potion.potionTypes[potionID].isUsable())
         {
             return (new StringBuilder()).append("(").append(s).append(")").toString();
         }
@@ -111,15 +116,15 @@ public class PotionEffect
         }
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        if (!(obj instanceof PotionEffect))
+        if (!(par1Obj instanceof PotionEffect))
         {
             return false;
         }
         else
         {
-            PotionEffect potioneffect = (PotionEffect)obj;
+            PotionEffect potioneffect = (PotionEffect)par1Obj;
             return potionID == potioneffect.potionID && amplifier == potioneffect.amplifier && duration == potioneffect.duration;
         }
     }

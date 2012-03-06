@@ -8,24 +8,32 @@ public class EntityAIWander extends EntityAIBase
     private double field_46102_b;
     private double field_46103_c;
     private double field_46101_d;
+    private float field_48209_e;
 
-    public EntityAIWander(EntityCreature entitycreature)
+    public EntityAIWander(EntityCreature par1EntityCreature, float par2)
     {
-        entity = entitycreature;
-        func_46087_a(3);
+        entity = par1EntityCreature;
+        field_48209_e = par2;
+        func_46087_a(1);
     }
 
-    public boolean func_46090_a()
+    /**
+     * Returns whether the EntityAIBase should begin execution.
+     */
+    public boolean shouldExecute()
     {
         if (entity.getAge() >= 100)
         {
             return false;
         }
+
         if (entity.getRNG().nextInt(120) != 0)
         {
             return false;
         }
-        Vec3D vec3d = func_46100_h();
+
+        Vec3D vec3d = RandomPositionGenerator.func_48396_a(entity, 10, 7);
+
         if (vec3d == null)
         {
             return false;
@@ -39,72 +47,16 @@ public class EntityAIWander extends EntityAIBase
         }
     }
 
-    public boolean func_46092_g()
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
+    public boolean continueExecuting()
     {
-        return !entity.func_46023_ah().func_46034_b();
+        return !entity.func_48333_ak().func_46034_b();
     }
 
     public void func_46088_e()
     {
-        entity.func_46023_ah().func_46033_a(field_46102_b, field_46103_c, field_46101_d, entity.getMoveSpeed());
-    }
-
-    private Vec3D func_46100_h()
-    {
-        Random random = entity.getRNG();
-        boolean flag = false;
-        int i = -1;
-        int j = -1;
-        int k = -1;
-        float f = -99999F;
-        for (int l = 0; l < 10; l++)
-        {
-            int i1 = MathHelper.floor_double((entity.posX + (double)random.nextInt(13)) - 6D);
-            int j1 = MathHelper.floor_double((entity.posY + (double)random.nextInt(7)) - 3D);
-            int k1 = MathHelper.floor_double((entity.posZ + (double)random.nextInt(13)) - 6D);
-            float f1 = entity.getBlockPathWeight(i1, j1, k1);
-            if (f1 > f)
-            {
-                f = f1;
-                i = i1;
-                j = j1;
-                k = k1;
-                flag = true;
-            }
-        }
-
-        if (flag)
-        {
-            return Vec3D.createVector(i, j, k);
-        }
-        else
-        {
-            return null;
-        }
-    }
-
-    public int func_46091_c()
-    {
-        return super.func_46091_c();
-    }
-
-    public void func_46087_a(int i)
-    {
-        super.func_46087_a(i);
-    }
-
-    public void func_46089_b()
-    {
-        super.func_46089_b();
-    }
-
-    public void func_46085_d()
-    {
-        super.func_46085_d();
-    }
-
-    public boolean func_46086_f()
-    {
-        return super.func_46086_f();
+        entity.func_48333_ak().func_48658_a(field_46102_b, field_46103_c, field_46101_d, field_48209_e);
     }
 }

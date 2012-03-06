@@ -2,9 +2,9 @@ package net.minecraft.src;
 
 public class ItemMapBase extends Item
 {
-    protected ItemMapBase(int i)
+    protected ItemMapBase(int par1)
     {
-        super(i);
+        super(par1);
     }
 
     public boolean func_28019_b()
@@ -12,7 +12,7 @@ public class ItemMapBase extends Item
         return true;
     }
 
-    public Packet getUpdatePacket(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    public Packet getUpdatePacket(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
         return null;
     }

@@ -7,6 +7,7 @@ import java.util.logging.*;
 
 final class ConsoleLogFormatter extends Formatter
 {
+    /** The date format to use in the console log. */
     private SimpleDateFormat dateFormat;
 
     ConsoleLogFormatter()
@@ -14,11 +15,12 @@ final class ConsoleLogFormatter extends Formatter
         dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     }
 
-    public String format(LogRecord logrecord)
+    public String format(LogRecord par1LogRecord)
     {
         StringBuilder stringbuilder = new StringBuilder();
-        stringbuilder.append(dateFormat.format(Long.valueOf(logrecord.getMillis())));
-        Level level = logrecord.getLevel();
+        stringbuilder.append(dateFormat.format(Long.valueOf(par1LogRecord.getMillis())));
+        Level level = par1LogRecord.getLevel();
+
         if (level == Level.FINEST)
         {
             stringbuilder.append(" [FINEST] ");
@@ -47,15 +49,18 @@ final class ConsoleLogFormatter extends Formatter
         {
             stringbuilder.append((new StringBuilder()).append(" [").append(level.getLocalizedName()).append("] ").toString());
         }
-        stringbuilder.append(logrecord.getMessage());
+
+        stringbuilder.append(par1LogRecord.getMessage());
         stringbuilder.append('\n');
-        Throwable throwable = logrecord.getThrown();
+        Throwable throwable = par1LogRecord.getThrown();
+
         if (throwable != null)
         {
             StringWriter stringwriter = new StringWriter();
             throwable.printStackTrace(new PrintWriter(stringwriter));
             stringbuilder.append(stringwriter.toString());
         }
+
         return stringbuilder.toString();
     }
 }

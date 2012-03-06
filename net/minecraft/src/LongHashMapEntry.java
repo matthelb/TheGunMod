@@ -2,17 +2,24 @@ package net.minecraft.src;
 
 class LongHashMapEntry
 {
+    /**
+     * the key as a long (for playerInstances it is the x in the most significant 32 bits and then y)
+     */
     final long key;
+
+    /** the value held by the hash at the specified key */
     Object value;
+
+    /** the next hashentry in the table */
     LongHashMapEntry nextEntry;
     final int hash;
 
-    LongHashMapEntry(int i, long l, Object obj, LongHashMapEntry longhashmapentry)
+    LongHashMapEntry(int par1, long par2, Object par4Obj, LongHashMapEntry par5LongHashMapEntry)
     {
-        value = obj;
-        nextEntry = longhashmapentry;
-        key = l;
-        hash = i;
+        value = par4Obj;
+        nextEntry = par5LongHashMapEntry;
+        key = par2;
+        hash = par1;
     }
 
     public final long getKey()
@@ -25,24 +32,28 @@ class LongHashMapEntry
         return value;
     }
 
-    public final boolean equals(Object obj)
+    public final boolean equals(Object par1Obj)
     {
-        if (!(obj instanceof LongHashMapEntry))
+        if (!(par1Obj instanceof LongHashMapEntry))
         {
             return false;
         }
-        LongHashMapEntry longhashmapentry = (LongHashMapEntry)obj;
+
+        LongHashMapEntry longhashmapentry = (LongHashMapEntry)par1Obj;
         Long long1 = Long.valueOf(getKey());
         Long long2 = Long.valueOf(longhashmapentry.getKey());
+
         if (long1 == long2 || long1 != null && long1.equals(long2))
         {
-            Object obj1 = getValue();
-            Object obj2 = longhashmapentry.getValue();
-            if (obj1 == obj2 || obj1 != null && obj1.equals(obj2))
+            Object obj = getValue();
+            Object obj1 = longhashmapentry.getValue();
+
+            if (obj == obj1 || obj != null && obj.equals(obj1))
             {
                 return true;
             }
         }
+
         return false;
     }
 

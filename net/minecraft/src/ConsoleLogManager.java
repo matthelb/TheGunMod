@@ -4,12 +4,16 @@ import java.util.logging.*;
 
 public class ConsoleLogManager
 {
+    /** Reference to the logger. */
     public static Logger logger = Logger.getLogger("Minecraft");
 
     public ConsoleLogManager()
     {
     }
 
+    /**
+     * Initialises the console logger.
+     */
     public static void init()
     {
         ConsoleLogFormatter consolelogformatter = new ConsoleLogFormatter();
@@ -17,6 +21,7 @@ public class ConsoleLogManager
         ConsoleHandler consolehandler = new ConsoleHandler();
         consolehandler.setFormatter(consolelogformatter);
         logger.addHandler(consolehandler);
+
         try
         {
             FileHandler filehandler = new FileHandler("server.log", true);

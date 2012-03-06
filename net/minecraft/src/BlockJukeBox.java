@@ -4,103 +4,131 @@ import java.util.Random;
 
 public class BlockJukeBox extends BlockContainer
 {
-    protected BlockJukeBox(int i, int j)
+    protected BlockJukeBox(int par1, int par2)
     {
-        super(i, j, Material.wood);
+        super(par1, par2, Material.wood);
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        return blockIndexInTexture + (i != 1 ? 0 : 1);
+        return blockIndexInTexture + (par1 != 1 ? 0 : 1);
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        if (world.getBlockMetadata(i, j, k) == 0)
+        if (par1World.getBlockMetadata(par2, par3, par4) == 0)
         {
             return false;
         }
         else
         {
-            ejectRecord(world, i, j, k);
+            ejectRecord(par1World, par2, par3, par4);
             return true;
         }
     }
 
-    public void insertRecord(World world, int i, int j, int k, int l)
+    /**
+     * Inserts the given record into the JukeBox.
+     */
+    public void insertRecord(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        TileEntityRecordPlayer tileentityrecordplayer = (TileEntityRecordPlayer)world.getBlockTileEntity(i, j, k);
+
+        TileEntityRecordPlayer tileentityrecordplayer = (TileEntityRecordPlayer)par1World.getBlockTileEntity(par2, par3, par4);
+
         if (tileentityrecordplayer == null)
         {
             return;
         }
         else
         {
-            tileentityrecordplayer.record = l;
+            tileentityrecordplayer.record = par5;
             tileentityrecordplayer.onInventoryChanged();
-            world.setBlockMetadataWithNotify(i, j, k, 1);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 1);
             return;
         }
     }
 
-    public void ejectRecord(World world, int i, int j, int k)
+    /**
+     * Ejects the current record inside of the jukebox.
+     */
+    public void ejectRecord(World par1World, int par2, int par3, int par4)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        TileEntityRecordPlayer tileentityrecordplayer = (TileEntityRecordPlayer)world.getBlockTileEntity(i, j, k);
+
+        TileEntityRecordPlayer tileentityrecordplayer = (TileEntityRecordPlayer)par1World.getBlockTileEntity(par2, par3, par4);
+
         if (tileentityrecordplayer == null)
         {
             return;
         }
-        int l = tileentityrecordplayer.record;
-        if (l == 0)
+
+        int i = tileentityrecordplayer.record;
+
+        if (i == 0)
         {
             return;
         }
         else
         {
-            world.playAuxSFX(1005, i, j, k, 0);
-            world.playRecord(null, i, j, k);
+            par1World.playAuxSFX(1005, par2, par3, par4, 0);
+            par1World.playRecord(null, par2, par3, par4);
             tileentityrecordplayer.record = 0;
             tileentityrecordplayer.onInventoryChanged();
-            world.setBlockMetadataWithNotify(i, j, k, 0);
-            int i1 = l;
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 0);
+            int j = i;
             float f = 0.7F;
-            double d = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            double d1 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.20000000000000001D + 0.59999999999999998D;
-            double d2 = (double)(world.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            EntityItem entityitem = new EntityItem(world, (double)i + d, (double)j + d1, (double)k + d2, new ItemStack(i1, 1, 0));
+            double d = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            double d1 = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.2D + 0.6D;
+            double d2 = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
+            EntityItem entityitem = new EntityItem(par1World, (double)par2 + d, (double)par3 + d1, (double)par4 + d2, new ItemStack(j, 1, 0));
             entityitem.delayBeforeCanPickup = 10;
-            world.spawnEntityInWorld(entityitem);
+            par1World.spawnEntityInWorld(entityitem);
             return;
         }
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
-        ejectRecord(world, i, j, k);
-        super.onBlockRemoval(world, i, j, k);
+        ejectRecord(par1World, par2, par3, par4);
+        super.onBlockRemoval(par1World, par2, par3, par4);
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
+    /**
+     * Drops the block items with a specified chance of dropping the specified items
+     */
+    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
         else
         {
-            super.dropBlockAsItemWithChance(world, i, j, k, l, f, 0);
+            super.dropBlockAsItemWithChance(par1World, par2, par3, par4, par5, par6, 0);
             return;
         }
     }
 
+    /**
+     * Returns the TileEntity used by this block.
+     */
     public TileEntity getBlockEntity()
     {
         return new TileEntityRecordPlayer();

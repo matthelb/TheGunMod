@@ -2,48 +2,59 @@ package net.minecraft.src;
 
 import java.util.Random;
 
-public class BlockPumpkin extends Block
+public class BlockPumpkin extends BlockDirectional
 {
+    /** Boolean used to seperate different states of blocks */
     private boolean blockType;
 
-    protected BlockPumpkin(int i, int j, boolean flag)
+    protected BlockPumpkin(int par1, int par2, boolean par3)
     {
-        super(i, Material.pumpkin);
-        blockIndexInTexture = j;
-        setTickOnLoad(true);
-        blockType = flag;
+        super(par1, Material.pumpkin);
+        blockIndexInTexture = par2;
+        setTickRandomly(true);
+        blockType = par3;
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (i == 1)
+        if (par1 == 1)
         {
             return blockIndexInTexture;
         }
-        if (i == 0)
+
+        if (par1 == 0)
         {
             return blockIndexInTexture;
         }
-        int k = blockIndexInTexture + 1 + 16;
+
+        int i = blockIndexInTexture + 1 + 16;
+
         if (blockType)
         {
-            k++;
+            i++;
         }
-        if (j == 2 && i == 2)
+
+        if (par2 == 2 && par1 == 2)
         {
-            return k;
+            return i;
         }
-        if (j == 3 && i == 5)
+
+        if (par2 == 3 && par1 == 5)
         {
-            return k;
+            return i;
         }
-        if (j == 0 && i == 3)
+
+        if (par2 == 0 && par1 == 3)
         {
-            return k;
+            return i;
         }
-        if (j == 1 && i == 4)
+
+        if (par2 == 1 && par1 == 4)
         {
-            return k;
+            return i;
         }
         else
         {
@@ -51,17 +62,22 @@ public class BlockPumpkin extends Block
         }
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        if (i == 1)
+        if (par1 == 1)
         {
             return blockIndexInTexture;
         }
-        if (i == 0)
+
+        if (par1 == 0)
         {
             return blockIndexInTexture;
         }
-        if (i == 3)
+
+        if (par1 == 3)
         {
             return blockIndexInTexture + 1 + 16;
         }
@@ -71,36 +87,98 @@ public class BlockPumpkin extends Block
         }
     }
 
-    public void onBlockAdded(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+    public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
-        super.onBlockAdded(world, i, j, k);
-        if (world.getBlockId(i, j - 1, k) == Block.blockSnow.blockID && world.getBlockId(i, j - 2, k) == Block.blockSnow.blockID)
+        super.onBlockAdded(par1World, par2, par3, par4);
+
+        if (par1World.getBlockId(par2, par3 - 1, par4) == Block.blockSnow.blockID && par1World.getBlockId(par2, par3 - 2, par4) == Block.blockSnow.blockID)
         {
-            if (!world.isRemote)
+            if (!par1World.isRemote)
             {
-                world.setBlockWithNotify(i, j, k, 0);
-                world.setBlockWithNotify(i, j - 1, k, 0);
-                world.setBlockWithNotify(i, j - 2, k, 0);
-                EntitySnowman entitysnowman = new EntitySnowman(world);
-                entitysnowman.setLocationAndAngles((double)i + 0.5D, (double)j - 1.95D, (double)k + 0.5D, 0.0F, 0.0F);
-                world.spawnEntityInWorld(entitysnowman);
+                par1World.setBlock(par2, par3, par4, 0);
+                par1World.setBlock(par2, par3 - 1, par4, 0);
+                par1World.setBlock(par2, par3 - 2, par4, 0);
+                EntitySnowman entitysnowman = new EntitySnowman(par1World);
+                entitysnowman.setLocationAndAngles((double)par2 + 0.5D, (double)par3 - 1.95D, (double)par4 + 0.5D, 0.0F, 0.0F);
+                par1World.spawnEntityInWorld(entitysnowman);
+                par1World.notifyBlockChange(par2, par3, par4, 0);
+                par1World.notifyBlockChange(par2, par3 - 1, par4, 0);
+                par1World.notifyBlockChange(par2, par3 - 2, par4, 0);
             }
-            for (int l = 0; l < 120; l++)
+
+            for (int i = 0; i < 120; i++)
             {
-                world.spawnParticle("snowshovel", (double)i + world.rand.nextDouble(), (double)(j - 2) + world.rand.nextDouble() * 2.5D, (double)k + world.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+                par1World.spawnParticle("snowshovel", (double)par2 + par1World.rand.nextDouble(), (double)(par3 - 2) + par1World.rand.nextDouble() * 2.5D, (double)par4 + par1World.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+            }
+        }
+        else if (par1World.getBlockId(par2, par3 - 1, par4) == Block.blockSteel.blockID && par1World.getBlockId(par2, par3 - 2, par4) == Block.blockSteel.blockID)
+        {
+            boolean flag = par1World.getBlockId(par2 - 1, par3 - 1, par4) == Block.blockSteel.blockID && par1World.getBlockId(par2 + 1, par3 - 1, par4) == Block.blockSteel.blockID;
+            boolean flag1 = par1World.getBlockId(par2, par3 - 1, par4 - 1) == Block.blockSteel.blockID && par1World.getBlockId(par2, par3 - 1, par4 + 1) == Block.blockSteel.blockID;
+
+            if (flag || flag1)
+            {
+                par1World.setBlock(par2, par3, par4, 0);
+                par1World.setBlock(par2, par3 - 1, par4, 0);
+                par1World.setBlock(par2, par3 - 2, par4, 0);
+
+                if (flag)
+                {
+                    par1World.setBlock(par2 - 1, par3 - 1, par4, 0);
+                    par1World.setBlock(par2 + 1, par3 - 1, par4, 0);
+                }
+                else
+                {
+                    par1World.setBlock(par2, par3 - 1, par4 - 1, 0);
+                    par1World.setBlock(par2, par3 - 1, par4 + 1, 0);
+                }
+
+                EntityIronGolem entityirongolem = new EntityIronGolem(par1World);
+                entityirongolem.func_48381_b(true);
+                entityirongolem.setLocationAndAngles((double)par2 + 0.5D, (double)par3 - 1.95D, (double)par4 + 0.5D, 0.0F, 0.0F);
+                par1World.spawnEntityInWorld(entityirongolem);
+
+                for (int j = 0; j < 120; j++)
+                {
+                    par1World.spawnParticle("snowballpoof", (double)par2 + par1World.rand.nextDouble(), (double)(par3 - 2) + par1World.rand.nextDouble() * 3.9D, (double)par4 + par1World.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+                }
+
+                par1World.notifyBlockChange(par2, par3, par4, 0);
+                par1World.notifyBlockChange(par2, par3 - 1, par4, 0);
+                par1World.notifyBlockChange(par2, par3 - 2, par4, 0);
+
+                if (flag)
+                {
+                    par1World.notifyBlockChange(par2 - 1, par3 - 1, par4, 0);
+                    par1World.notifyBlockChange(par2 + 1, par3 - 1, par4, 0);
+                }
+                else
+                {
+                    par1World.notifyBlockChange(par2, par3 - 1, par4 - 1, 0);
+                    par1World.notifyBlockChange(par2, par3 - 1, par4 + 1, 0);
+                }
             }
         }
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        int l = world.getBlockId(i, j, k);
-        return (l == 0 || Block.blocksList[l].blockMaterial.getIsGroundCover()) && world.isBlockNormalCube(i, j - 1, k);
+        int i = par1World.getBlockId(par2, par3, par4);
+        return (i == 0 || Block.blocksList[i].blockMaterial.isGroundCover()) && par1World.isBlockNormalCube(par2, par3 - 1, par4);
     }
 
-    public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving entityliving)
+    /**
+     * Called when a block is using an item and passed in who placed it. Args: x, y, z, entityLiving
+     */
+    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
-        int l = MathHelper.floor_double((double)((entityliving.rotationYaw * 4F) / 360F) + 2.5D) & 3;
-        world.setBlockMetadataWithNotify(i, j, k, l);
+        int i = MathHelper.floor_double((double)((par5EntityLiving.rotationYaw * 4F) / 360F) + 2.5D) & 3;
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, i);
     }
 }

@@ -6,9 +6,12 @@ public abstract class NetHandler
     {
     }
 
+    /**
+     * determine if it is a server handler
+     */
     public abstract boolean isServerHandler();
 
-    public void handleMapChunk(Packet51MapChunk packet51mapchunk)
+    public void func_48070_a(Packet51MapChunk packet51mapchunk)
     {
     }
 
@@ -20,284 +23,314 @@ public abstract class NetHandler
     {
     }
 
-    public void handleKickDisconnect(Packet255KickDisconnect packet255kickdisconnect)
+    public void handleKickDisconnect(Packet255KickDisconnect par1Packet255KickDisconnect)
     {
-        registerPacket(packet255kickdisconnect);
+        registerPacket(par1Packet255KickDisconnect);
     }
 
-    public void handleLogin(Packet1Login packet1login)
+    public void handleLogin(Packet1Login par1Packet1Login)
     {
-        registerPacket(packet1login);
+        registerPacket(par1Packet1Login);
     }
 
-    public void handleFlying(Packet10Flying packet10flying)
+    public void handleFlying(Packet10Flying par1Packet10Flying)
     {
-        registerPacket(packet10flying);
+        registerPacket(par1Packet10Flying);
     }
 
-    public void handleMultiBlockChange(Packet52MultiBlockChange packet52multiblockchange)
+    public void handleMultiBlockChange(Packet52MultiBlockChange par1Packet52MultiBlockChange)
     {
-        registerPacket(packet52multiblockchange);
+        registerPacket(par1Packet52MultiBlockChange);
     }
 
-    public void handleBlockDig(Packet14BlockDig packet14blockdig)
+    public void handleBlockDig(Packet14BlockDig par1Packet14BlockDig)
     {
-        registerPacket(packet14blockdig);
+        registerPacket(par1Packet14BlockDig);
     }
 
-    public void handleBlockChange(Packet53BlockChange packet53blockchange)
+    public void handleBlockChange(Packet53BlockChange par1Packet53BlockChange)
     {
-        registerPacket(packet53blockchange);
+        registerPacket(par1Packet53BlockChange);
     }
 
-    public void handlePreChunk(Packet50PreChunk packet50prechunk)
+    public void handlePreChunk(Packet50PreChunk par1Packet50PreChunk)
     {
-        registerPacket(packet50prechunk);
+        registerPacket(par1Packet50PreChunk);
     }
 
-    public void handleNamedEntitySpawn(Packet20NamedEntitySpawn packet20namedentityspawn)
+    public void handleNamedEntitySpawn(Packet20NamedEntitySpawn par1Packet20NamedEntitySpawn)
     {
-        registerPacket(packet20namedentityspawn);
+        registerPacket(par1Packet20NamedEntitySpawn);
     }
 
-    public void handleEntity(Packet30Entity packet30entity)
+    public void handleEntity(Packet30Entity par1Packet30Entity)
     {
-        registerPacket(packet30entity);
+        registerPacket(par1Packet30Entity);
     }
 
-    public void handleEntityTeleport(Packet34EntityTeleport packet34entityteleport)
+    public void handleEntityTeleport(Packet34EntityTeleport par1Packet34EntityTeleport)
     {
-        registerPacket(packet34entityteleport);
+        registerPacket(par1Packet34EntityTeleport);
     }
 
-    public void handlePlace(Packet15Place packet15place)
+    public void handlePlace(Packet15Place par1Packet15Place)
     {
-        registerPacket(packet15place);
+        registerPacket(par1Packet15Place);
     }
 
-    public void handleBlockItemSwitch(Packet16BlockItemSwitch packet16blockitemswitch)
+    public void handleBlockItemSwitch(Packet16BlockItemSwitch par1Packet16BlockItemSwitch)
     {
-        registerPacket(packet16blockitemswitch);
+        registerPacket(par1Packet16BlockItemSwitch);
     }
 
-    public void handleDestroyEntity(Packet29DestroyEntity packet29destroyentity)
+    public void handleDestroyEntity(Packet29DestroyEntity par1Packet29DestroyEntity)
     {
-        registerPacket(packet29destroyentity);
+        registerPacket(par1Packet29DestroyEntity);
     }
 
-    public void handlePickupSpawn(Packet21PickupSpawn packet21pickupspawn)
+    public void handlePickupSpawn(Packet21PickupSpawn par1Packet21PickupSpawn)
     {
-        registerPacket(packet21pickupspawn);
+        registerPacket(par1Packet21PickupSpawn);
     }
 
-    public void handleCollect(Packet22Collect packet22collect)
+    public void handleCollect(Packet22Collect par1Packet22Collect)
     {
-        registerPacket(packet22collect);
+        registerPacket(par1Packet22Collect);
     }
 
-    public void handleChat(Packet3Chat packet3chat)
+    public void handleChat(Packet3Chat par1Packet3Chat)
     {
-        registerPacket(packet3chat);
+        registerPacket(par1Packet3Chat);
     }
 
-    public void handleVehicleSpawn(Packet23VehicleSpawn packet23vehiclespawn)
+    public void handleVehicleSpawn(Packet23VehicleSpawn par1Packet23VehicleSpawn)
     {
-        registerPacket(packet23vehiclespawn);
+        registerPacket(par1Packet23VehicleSpawn);
     }
 
-    public void handleAnimation(Packet18Animation packet18animation)
+    public void handleAnimation(Packet18Animation par1Packet18Animation)
     {
-        registerPacket(packet18animation);
+        registerPacket(par1Packet18Animation);
     }
 
-    public void handleEntityAction(Packet19EntityAction packet19entityaction)
+    public void handleEntityAction(Packet19EntityAction par1Packet19EntityAction)
     {
-        registerPacket(packet19entityaction);
+        registerPacket(par1Packet19EntityAction);
     }
 
-    public void handleHandshake(Packet2Handshake packet2handshake)
+    public void handleHandshake(Packet2Handshake par1Packet2Handshake)
     {
-        registerPacket(packet2handshake);
+        registerPacket(par1Packet2Handshake);
     }
 
-    public void handleMobSpawn(Packet24MobSpawn packet24mobspawn)
+    public void handleMobSpawn(Packet24MobSpawn par1Packet24MobSpawn)
     {
-        registerPacket(packet24mobspawn);
+        registerPacket(par1Packet24MobSpawn);
     }
 
-    public void handleUpdateTime(Packet4UpdateTime packet4updatetime)
+    public void handleUpdateTime(Packet4UpdateTime par1Packet4UpdateTime)
     {
-        registerPacket(packet4updatetime);
+        registerPacket(par1Packet4UpdateTime);
     }
 
-    public void handleSpawnPosition(Packet6SpawnPosition packet6spawnposition)
+    public void handleSpawnPosition(Packet6SpawnPosition par1Packet6SpawnPosition)
     {
-        registerPacket(packet6spawnposition);
+        registerPacket(par1Packet6SpawnPosition);
     }
 
-    public void handleEntityVelocity(Packet28EntityVelocity packet28entityvelocity)
+    public void handleEntityVelocity(Packet28EntityVelocity par1Packet28EntityVelocity)
     {
-        registerPacket(packet28entityvelocity);
+        registerPacket(par1Packet28EntityVelocity);
     }
 
-    public void handleEntityMetadata(Packet40EntityMetadata packet40entitymetadata)
+    public void handleEntityMetadata(Packet40EntityMetadata par1Packet40EntityMetadata)
     {
-        registerPacket(packet40entitymetadata);
+        registerPacket(par1Packet40EntityMetadata);
     }
 
-    public void handleAttachEntity(Packet39AttachEntity packet39attachentity)
+    public void handleAttachEntity(Packet39AttachEntity par1Packet39AttachEntity)
     {
-        registerPacket(packet39attachentity);
+        registerPacket(par1Packet39AttachEntity);
     }
 
-    public void handleUseEntity(Packet7UseEntity packet7useentity)
+    public void handleUseEntity(Packet7UseEntity par1Packet7UseEntity)
     {
-        registerPacket(packet7useentity);
+        registerPacket(par1Packet7UseEntity);
     }
 
-    public void handleEntityStatus(Packet38EntityStatus packet38entitystatus)
+    public void handleEntityStatus(Packet38EntityStatus par1Packet38EntityStatus)
     {
-        registerPacket(packet38entitystatus);
+        registerPacket(par1Packet38EntityStatus);
     }
 
-    public void handleUpdateHealth(Packet8UpdateHealth packet8updatehealth)
+    public void handleUpdateHealth(Packet8UpdateHealth par1Packet8UpdateHealth)
     {
-        registerPacket(packet8updatehealth);
+        registerPacket(par1Packet8UpdateHealth);
     }
 
-    public void handleRespawn(Packet9Respawn packet9respawn)
+    /**
+     * respawns the player
+     */
+    public void handleRespawn(Packet9Respawn par1Packet9Respawn)
     {
-        registerPacket(packet9respawn);
+        registerPacket(par1Packet9Respawn);
     }
 
-    public void handleExplosion(Packet60Explosion packet60explosion)
+    public void handleExplosion(Packet60Explosion par1Packet60Explosion)
     {
-        registerPacket(packet60explosion);
+        registerPacket(par1Packet60Explosion);
     }
 
-    public void handleOpenWindow(Packet100OpenWindow packet100openwindow)
+    public void handleOpenWindow(Packet100OpenWindow par1Packet100OpenWindow)
     {
-        registerPacket(packet100openwindow);
+        registerPacket(par1Packet100OpenWindow);
     }
 
-    public void handleCloseWindow(Packet101CloseWindow packet101closewindow)
+    public void handleCloseWindow(Packet101CloseWindow par1Packet101CloseWindow)
     {
-        registerPacket(packet101closewindow);
+        registerPacket(par1Packet101CloseWindow);
     }
 
-    public void handleWindowClick(Packet102WindowClick packet102windowclick)
+    public void handleWindowClick(Packet102WindowClick par1Packet102WindowClick)
     {
-        registerPacket(packet102windowclick);
+        registerPacket(par1Packet102WindowClick);
     }
 
-    public void handleSetSlot(Packet103SetSlot packet103setslot)
+    public void handleSetSlot(Packet103SetSlot par1Packet103SetSlot)
     {
-        registerPacket(packet103setslot);
+        registerPacket(par1Packet103SetSlot);
     }
 
-    public void handleWindowItems(Packet104WindowItems packet104windowitems)
+    public void handleWindowItems(Packet104WindowItems par1Packet104WindowItems)
     {
-        registerPacket(packet104windowitems);
+        registerPacket(par1Packet104WindowItems);
     }
 
-    public void handleUpdateSign(Packet130UpdateSign packet130updatesign)
+    public void handleUpdateSign(Packet130UpdateSign par1Packet130UpdateSign)
     {
-        registerPacket(packet130updatesign);
+        registerPacket(par1Packet130UpdateSign);
     }
 
-    public void handleUpdateProgressbar(Packet105UpdateProgressbar packet105updateprogressbar)
+    public void handleUpdateProgressbar(Packet105UpdateProgressbar par1Packet105UpdateProgressbar)
     {
-        registerPacket(packet105updateprogressbar);
+        registerPacket(par1Packet105UpdateProgressbar);
     }
 
-    public void handlePlayerInventory(Packet5PlayerInventory packet5playerinventory)
+    public void handlePlayerInventory(Packet5PlayerInventory par1Packet5PlayerInventory)
     {
-        registerPacket(packet5playerinventory);
+        registerPacket(par1Packet5PlayerInventory);
     }
 
-    public void handleTransaction(Packet106Transaction packet106transaction)
+    public void handleTransaction(Packet106Transaction par1Packet106Transaction)
     {
-        registerPacket(packet106transaction);
+        registerPacket(par1Packet106Transaction);
     }
 
-    public void handleEntityPainting(Packet25EntityPainting packet25entitypainting)
+    public void handleEntityPainting(Packet25EntityPainting par1Packet25EntityPainting)
     {
-        registerPacket(packet25entitypainting);
+        registerPacket(par1Packet25EntityPainting);
     }
 
-    public void handlePlayNoteBlock(Packet54PlayNoteBlock packet54playnoteblock)
+    public void handlePlayNoteBlock(Packet54PlayNoteBlock par1Packet54PlayNoteBlock)
     {
-        registerPacket(packet54playnoteblock);
+        registerPacket(par1Packet54PlayNoteBlock);
     }
 
-    public void handleStatistic(Packet200Statistic packet200statistic)
+    public void handleStatistic(Packet200Statistic par1Packet200Statistic)
     {
-        registerPacket(packet200statistic);
+        registerPacket(par1Packet200Statistic);
     }
 
-    public void handleSleep(Packet17Sleep packet17sleep)
+    public void handleSleep(Packet17Sleep par1Packet17Sleep)
     {
-        registerPacket(packet17sleep);
+        registerPacket(par1Packet17Sleep);
     }
 
-    public void handleBed(Packet70Bed packet70bed)
+    public void handleBed(Packet70Bed par1Packet70Bed)
     {
-        registerPacket(packet70bed);
+        registerPacket(par1Packet70Bed);
     }
 
-    public void handleWeather(Packet71Weather packet71weather)
+    public void handleWeather(Packet71Weather par1Packet71Weather)
     {
-        registerPacket(packet71weather);
+        registerPacket(par1Packet71Weather);
     }
 
-    public void handleMapData(Packet131MapData packet131mapdata)
+    /**
+     * Contains logic for handling packets containing arbitrary unique item data. Currently this is only for maps.
+     */
+    public void handleMapData(Packet131MapData par1Packet131MapData)
     {
-        registerPacket(packet131mapdata);
+        registerPacket(par1Packet131MapData);
     }
 
-    public void handleDoorChange(Packet61DoorChange packet61doorchange)
+    public void handleDoorChange(Packet61DoorChange par1Packet61DoorChange)
     {
-        registerPacket(packet61doorchange);
+        registerPacket(par1Packet61DoorChange);
     }
 
-    public void handleServerPing(Packet254ServerPing packet254serverping)
+    /**
+     * Handle a server ping packet.
+     */
+    public void handleServerPing(Packet254ServerPing par1Packet254ServerPing)
     {
-        registerPacket(packet254serverping);
+        registerPacket(par1Packet254ServerPing);
     }
 
-    public void handleEntityEffect(Packet41EntityEffect packet41entityeffect)
+    /**
+     * Handle an entity effect packet.
+     */
+    public void handleEntityEffect(Packet41EntityEffect par1Packet41EntityEffect)
     {
-        registerPacket(packet41entityeffect);
+        registerPacket(par1Packet41EntityEffect);
     }
 
-    public void handleRemoveEntityEffect(Packet42RemoveEntityEffect packet42removeentityeffect)
+    /**
+     * Handle a remove entity effect packet.
+     */
+    public void handleRemoveEntityEffect(Packet42RemoveEntityEffect par1Packet42RemoveEntityEffect)
     {
-        registerPacket(packet42removeentityeffect);
+        registerPacket(par1Packet42RemoveEntityEffect);
     }
 
-    public void handlePlayerInfo(Packet201PlayerInfo packet201playerinfo)
+    /**
+     * Handle a player information packet.
+     */
+    public void handlePlayerInfo(Packet201PlayerInfo par1Packet201PlayerInfo)
     {
-        registerPacket(packet201playerinfo);
+        registerPacket(par1Packet201PlayerInfo);
     }
 
-    public void handleKeepAlive(Packet0KeepAlive packet0keepalive)
+    /**
+     * Handle a keep alive packet.
+     */
+    public void handleKeepAlive(Packet0KeepAlive par1Packet0KeepAlive)
     {
-        registerPacket(packet0keepalive);
+        registerPacket(par1Packet0KeepAlive);
     }
 
-    public void handleExperience(Packet43Experience packet43experience)
+    /**
+     * Handle an experience packet.
+     */
+    public void handleExperience(Packet43Experience par1Packet43Experience)
     {
-        registerPacket(packet43experience);
+        registerPacket(par1Packet43Experience);
     }
 
-    public void handleCreativeSetSlot(Packet107CreativeSetSlot packet107creativesetslot)
+    /**
+     * Handle a creative slot packet.
+     */
+    public void handleCreativeSetSlot(Packet107CreativeSetSlot par1Packet107CreativeSetSlot)
     {
-        registerPacket(packet107creativesetslot);
+        registerPacket(par1Packet107CreativeSetSlot);
     }
 
-    public void handleEntityExpOrb(Packet26EntityExpOrb packet26entityexporb)
+    /**
+     * Handle a entity experience orb packet.
+     */
+    public void handleEntityExpOrb(Packet26EntityExpOrb par1Packet26EntityExpOrb)
     {
-        registerPacket(packet26entityexporb);
+        registerPacket(par1Packet26EntityExpOrb);
     }
 
     public void handleEnchantItem(Packet108EnchantItem packet108enchantitem)
@@ -306,5 +339,15 @@ public abstract class NetHandler
 
     public void handleCustomPayload(Packet250CustomPayload packet250custompayload)
     {
+    }
+
+    public void func_48072_a(Packet35EntityHeadRotation par1Packet35EntityHeadRotation)
+    {
+        registerPacket(par1Packet35EntityHeadRotation);
+    }
+
+    public void func_48071_a(Packet132TileEntityData par1Packet132TileEntityData)
+    {
+        registerPacket(par1Packet132TileEntityData);
     }
 }

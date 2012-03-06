@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-public interface IMob
-    extends IAnimals
+public interface IMob extends IAnimals
 {
 }

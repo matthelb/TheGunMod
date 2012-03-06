@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
-final class EnchantmentModifierDamage
-    implements IEnchantmentModifier
+final class EnchantmentModifierDamage implements IEnchantmentModifier
 {
     public int damageModifier;
     public DamageSource damageSource;
@@ -10,12 +9,12 @@ final class EnchantmentModifierDamage
     {
     }
 
-    public void calculateModifier(Enchantment enchantment, int i)
+    public void calculateModifier(Enchantment par1Enchantment, int par2)
     {
-        damageModifier += enchantment.calcModifierDamage(i, damageSource);
+        damageModifier += par1Enchantment.calcModifierDamage(par2, damageSource);
     }
 
-    EnchantmentModifierDamage(Empty3 empty3)
+    EnchantmentModifierDamage(Empty3 par1Empty3)
     {
         this();
     }

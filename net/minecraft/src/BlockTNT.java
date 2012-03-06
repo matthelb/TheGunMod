@@ -4,18 +4,22 @@ import java.util.Random;
 
 public class BlockTNT extends Block
 {
-    public BlockTNT(int i, int j)
+    public BlockTNT(int par1, int par2)
     {
-        super(i, j, Material.tnt);
+        super(par1, par2, Material.tnt);
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        if (i == 0)
+        if (par1 == 0)
         {
             return blockIndexInTexture + 2;
         }
-        if (i == 1)
+
+        if (par1 == 1)
         {
             return blockIndexInTexture + 1;
         }
@@ -25,70 +29,100 @@ public class BlockTNT extends Block
         }
     }
 
-    public void onBlockAdded(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+    public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
-        super.onBlockAdded(world, i, j, k);
-        if (world.isBlockIndirectlyGettingPowered(i, j, k))
+        super.onBlockAdded(par1World, par2, par3, par4);
+
+        if (par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
         {
-            onBlockDestroyedByPlayer(world, i, j, k, 1);
-            world.setBlockWithNotify(i, j, k, 0);
+            onBlockDestroyedByPlayer(par1World, par2, par3, par4, 1);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
         }
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (l > 0 && Block.blocksList[l].canProvidePower() && world.isBlockIndirectlyGettingPowered(i, j, k))
+        if (par5 > 0 && Block.blocksList[par5].canProvidePower() && par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
         {
-            onBlockDestroyedByPlayer(world, i, j, k, 1);
-            world.setBlockWithNotify(i, j, k, 0);
+            onBlockDestroyedByPlayer(par1World, par2, par3, par4, 1);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
         }
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 0;
     }
 
-    public void onBlockDestroyedByExplosion(World world, int i, int j, int k)
+    /**
+     * Called upon the block being destroyed by an explosion
+     */
+    public void onBlockDestroyedByExplosion(World par1World, int par2, int par3, int par4)
     {
-        EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F);
-        entitytntprimed.fuse = world.rand.nextInt(entitytntprimed.fuse / 4) + entitytntprimed.fuse / 8;
-        world.spawnEntityInWorld(entitytntprimed);
+        EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(par1World, (float)par2 + 0.5F, (float)par3 + 0.5F, (float)par4 + 0.5F);
+        entitytntprimed.fuse = par1World.rand.nextInt(entitytntprimed.fuse / 4) + entitytntprimed.fuse / 8;
+        par1World.spawnEntityInWorld(entitytntprimed);
     }
 
-    public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
+    /**
+     * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
+     */
+    public void onBlockDestroyedByPlayer(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        if ((l & 1) == 0)
+
+        if ((par5 & 1) == 0)
         {
-            dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.tnt.blockID, 1, 0));
+            dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(Block.tnt.blockID, 1, 0));
         }
         else
         {
-            EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(world, (float)i + 0.5F, (float)j + 0.5F, (float)k + 0.5F);
-            world.spawnEntityInWorld(entitytntprimed);
-            world.playSoundAtEntity(entitytntprimed, "random.fuse", 1.0F, 1.0F);
+            EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(par1World, (float)par2 + 0.5F, (float)par3 + 0.5F, (float)par4 + 0.5F);
+            par1World.spawnEntityInWorld(entitytntprimed);
+            par1World.playSoundAtEntity(entitytntprimed, "random.fuse", 1.0F, 1.0F);
         }
     }
 
-    public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called when the block is clicked by a player. Args: x, y, z, entityPlayer
+     */
+    public void onBlockClicked(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        if (entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.flintAndSteel.shiftedIndex)
+        if (par5EntityPlayer.getCurrentEquippedItem() != null && par5EntityPlayer.getCurrentEquippedItem().itemID == Item.flintAndSteel.shiftedIndex)
         {
-            world.setBlockMetadata(i, j, k, 1);
+            par1World.setBlockMetadata(par2, par3, par4, 1);
         }
-        super.onBlockClicked(world, i, j, k, entityplayer);
+
+        super.onBlockClicked(par1World, par2, par3, par4, par5EntityPlayer);
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        return super.blockActivated(world, i, j, k, entityplayer);
+        return super.blockActivated(par1World, par2, par3, par4, par5EntityPlayer);
     }
 
-    protected ItemStack createStackedBlock(int i)
+    /**
+     * Returns an item stack containing a single instance of the current block type. 'i' is the block's subtype/damage
+     * and is ignored for blocks which do not support subtypes. Blocks which cannot be harvested should return null.
+     */
+    protected ItemStack createStackedBlock(int par1)
     {
         return null;
     }

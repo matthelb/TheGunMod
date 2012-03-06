@@ -4,82 +4,99 @@ import java.util.*;
 
 public class WorldChunkManagerHell extends WorldChunkManager
 {
+    /** The biome generator object. */
     private BiomeGenBase biomeGenerator;
     private float hellTemperature;
+
+    /** The rainfall in the world */
     private float rainfall;
 
-    public WorldChunkManagerHell(BiomeGenBase biomegenbase, float f, float f1)
+    public WorldChunkManagerHell(BiomeGenBase par1BiomeGenBase, float par2, float par3)
     {
-        biomeGenerator = biomegenbase;
-        hellTemperature = f;
-        rainfall = f1;
+        biomeGenerator = par1BiomeGenBase;
+        hellTemperature = par2;
+        rainfall = par3;
     }
 
-    public BiomeGenBase getBiomeGenAtChunkCoord(ChunkCoordIntPair chunkcoordintpair)
+    /**
+     * Returns the BiomeGenBase related to the x, z position on the world.
+     */
+    public BiomeGenBase getBiomeGenAt(int par1, int par2)
     {
         return biomeGenerator;
     }
 
-    public BiomeGenBase getBiomeGenAt(int i, int j)
+    /**
+     * Returns an array of biomes for the location input.
+     */
+    public BiomeGenBase[] getBiomesForGeneration(BiomeGenBase par1ArrayOfBiomeGenBase[], int par2, int par3, int par4, int par5)
     {
-        return biomeGenerator;
-    }
-
-    public BiomeGenBase[] getBiomes(BiomeGenBase abiomegenbase[], int i, int j, int k, int l)
-    {
-        if (abiomegenbase == null || abiomegenbase.length < k * l)
+        if (par1ArrayOfBiomeGenBase == null || par1ArrayOfBiomeGenBase.length < par4 * par5)
         {
-            abiomegenbase = new BiomeGenBase[k * l];
+            par1ArrayOfBiomeGenBase = new BiomeGenBase[par4 * par5];
         }
-        Arrays.fill(abiomegenbase, 0, k * l, biomeGenerator);
-        return abiomegenbase;
+
+        Arrays.fill(par1ArrayOfBiomeGenBase, 0, par4 * par5, biomeGenerator);
+        return par1ArrayOfBiomeGenBase;
     }
 
-    public float[] getTemperatures(float af[], int i, int j, int k, int l)
+    /**
+     * Returns a list of temperatures to use for the specified blocks.  Args: listToReuse, x, y, width, length
+     */
+    public float[] getTemperatures(float par1ArrayOfFloat[], int par2, int par3, int par4, int par5)
     {
-        if (af == null || af.length < k * l)
+        if (par1ArrayOfFloat == null || par1ArrayOfFloat.length < par4 * par5)
         {
-            af = new float[k * l];
+            par1ArrayOfFloat = new float[par4 * par5];
         }
-        Arrays.fill(af, 0, k * l, hellTemperature);
-        return af;
+
+        Arrays.fill(par1ArrayOfFloat, 0, par4 * par5, hellTemperature);
+        return par1ArrayOfFloat;
     }
 
-    public float[] initTemperatureCache(int i, int j, int k, int l)
+    public float[] getRainfall(float par1ArrayOfFloat[], int par2, int par3, int par4, int par5)
     {
-        return getTemperatures(new float[k * l], i, j, k, l);
-    }
-
-    public float[] getRainfall(float af[], int i, int j, int k, int l)
-    {
-        if (af == null || af.length < k * l)
+        if (par1ArrayOfFloat == null || par1ArrayOfFloat.length < par4 * par5)
         {
-            af = new float[k * l];
+            par1ArrayOfFloat = new float[par4 * par5];
         }
-        Arrays.fill(af, 0, k * l, rainfall);
-        return af;
+
+        Arrays.fill(par1ArrayOfFloat, 0, par4 * par5, rainfall);
+        return par1ArrayOfFloat;
     }
 
-    public BiomeGenBase[] loadBlockGeneratorData(BiomeGenBase abiomegenbase[], int i, int j, int k, int l)
+    /**
+     * Returns biomes to use for the blocks and loads the other data like temperature and humidity onto the
+     * WorldChunkManager Args: oldBiomeList, x, z, width, depth
+     */
+    public BiomeGenBase[] loadBlockGeneratorData(BiomeGenBase par1ArrayOfBiomeGenBase[], int par2, int par3, int par4, int par5)
     {
-        if (abiomegenbase == null || abiomegenbase.length < k * l)
+        if (par1ArrayOfBiomeGenBase == null || par1ArrayOfBiomeGenBase.length < par4 * par5)
         {
-            abiomegenbase = new BiomeGenBase[k * l];
+            par1ArrayOfBiomeGenBase = new BiomeGenBase[par4 * par5];
         }
-        Arrays.fill(abiomegenbase, 0, k * l, biomeGenerator);
-        return abiomegenbase;
+
+        Arrays.fill(par1ArrayOfBiomeGenBase, 0, par4 * par5, biomeGenerator);
+        return par1ArrayOfBiomeGenBase;
     }
 
-    public BiomeGenBase[] getBiomeGenAt(BiomeGenBase abiomegenbase[], int i, int j, int k, int l, boolean flag)
+    /**
+     * Return a list of biomes for the specified blocks. Args: listToReuse, x, y, width, length, cacheFlag (if false,
+     * don't check biomeCache to avoid infinite loop in BiomeCacheBlock)
+     */
+    public BiomeGenBase[] getBiomeGenAt(BiomeGenBase par1ArrayOfBiomeGenBase[], int par2, int par3, int par4, int par5, boolean par6)
     {
-        return loadBlockGeneratorData(abiomegenbase, i, j, k, l);
+        return loadBlockGeneratorData(par1ArrayOfBiomeGenBase, par2, par3, par4, par5);
     }
 
-    public ChunkPosition findBiomePosition(int i, int j, int k, List list, Random random)
+    /**
+     * Finds a valid position within a range, that is once of the listed biomes.
+     */
+    public ChunkPosition findBiomePosition(int par1, int par2, int par3, List par4List, Random par5Random)
     {
-        if (list.contains(biomeGenerator))
+        if (par4List.contains(biomeGenerator))
         {
-            return new ChunkPosition((i - k) + random.nextInt(k * 2 + 1), 0, (j - k) + random.nextInt(k * 2 + 1));
+            return new ChunkPosition((par1 - par3) + par5Random.nextInt(par3 * 2 + 1), 0, (par2 - par3) + par5Random.nextInt(par3 * 2 + 1));
         }
         else
         {
@@ -87,8 +104,11 @@ public class WorldChunkManagerHell extends WorldChunkManager
         }
     }
 
-    public boolean areBiomesViable(int i, int j, int k, List list)
+    /**
+     * checks given Chunk's Biomes against List of allowed ones
+     */
+    public boolean areBiomesViable(int par1, int par2, int par3, List par4List)
     {
-        return list.contains(biomeGenerator);
+        return par4List.contains(biomeGenerator);
     }
 }

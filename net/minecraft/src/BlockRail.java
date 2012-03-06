@@ -6,49 +6,65 @@ public class BlockRail extends Block
 {
     private final boolean isPowered;
 
-    public static final boolean isRailBlockAt(World world, int i, int j, int k)
+    public static final boolean isRailBlockAt(World par0World, int par1, int par2, int par3)
     {
-        int l = world.getBlockId(i, j, k);
-        return l == Block.rail.blockID || l == Block.railPowered.blockID || l == Block.railDetector.blockID;
-    }
-
-    public static final boolean isRailBlock(int i)
-    {
+        int i = par0World.getBlockId(par1, par2, par3);
         return i == Block.rail.blockID || i == Block.railPowered.blockID || i == Block.railDetector.blockID;
     }
 
-    protected BlockRail(int i, int j, boolean flag)
+    public static final boolean isRailBlock(int par0)
     {
-        super(i, j, Material.circuits);
-        isPowered = flag;
+        return par0 == Block.rail.blockID || par0 == Block.railPowered.blockID || par0 == Block.railDetector.blockID;
+    }
+
+    protected BlockRail(int par1, int par2, boolean par3)
+    {
+        super(par1, par2, Material.circuits);
+        isPowered = par3;
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
     }
 
-    public boolean getIsPowered()
+    public boolean isPowered()
     {
         return isPowered;
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int i)
     {
         return null;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
-    public MovingObjectPosition collisionRayTrace(World world, int i, int j, int k, Vec3D vec3d, Vec3D vec3d1)
+    /**
+     * Ray traces through the blocks collision from start vector to end vector returning a ray trace hit. Args: world,
+     * x, y, z, startVec, endVec
+     */
+    public MovingObjectPosition collisionRayTrace(World par1World, int par2, int par3, int par4, Vec3D par5Vec3D, Vec3D par6Vec3D)
     {
-        setBlockBoundsBasedOnState(world, i, j, k);
-        return super.collisionRayTrace(world, i, j, k, vec3d, vec3d1);
+        setBlockBoundsBasedOnState(par1World, par2, par3, par4);
+        return super.collisionRayTrace(par1World, par2, par3, par4, par5Vec3D, par6Vec3D);
     }
 
-    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        int l = iblockaccess.getBlockMetadata(i, j, k);
-        if (l >= 2 && l <= 5)
+        int i = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
+
+        if (i >= 2 && i <= 5)
         {
             setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.625F, 1.0F);
         }
@@ -58,267 +74,330 @@ public class BlockRail extends Block
         }
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
         if (isPowered)
         {
-            if (blockID == Block.railPowered.blockID && (j & 8) == 0)
+            if (blockID == Block.railPowered.blockID && (par2 & 8) == 0)
             {
                 return blockIndexInTexture - 16;
             }
         }
-        else if (j >= 6)
+        else if (par2 >= 6)
         {
             return blockIndexInTexture - 16;
         }
+
         return blockIndexInTexture;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 9;
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 1;
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        return world.isBlockNormalCube(i, j - 1, k);
+        return par1World.isBlockNormalCube(par2, par3 - 1, par4);
     }
 
-    public void onBlockAdded(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+    public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
-        if (!world.isRemote)
+        if (!par1World.isRemote)
         {
-            refreshTrackShape(world, i, j, k, true);
+            refreshTrackShape(par1World, par2, par3, par4, true);
+
             if (blockID == Block.railPowered.blockID)
             {
-                onNeighborBlockChange(world, i, j, k, blockID);
+                onNeighborBlockChange(par1World, par2, par3, par4, blockID);
             }
         }
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        int i1 = world.getBlockMetadata(i, j, k);
-        int j1 = i1;
+
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = i;
+
         if (isPowered)
         {
-            j1 &= 7;
+            j &= 7;
         }
+
         boolean flag = false;
-        if (!world.isBlockNormalCube(i, j - 1, k))
+
+        if (!par1World.isBlockNormalCube(par2, par3 - 1, par4))
         {
             flag = true;
         }
-        if (j1 == 2 && !world.isBlockNormalCube(i + 1, j, k))
+
+        if (j == 2 && !par1World.isBlockNormalCube(par2 + 1, par3, par4))
         {
             flag = true;
         }
-        if (j1 == 3 && !world.isBlockNormalCube(i - 1, j, k))
+
+        if (j == 3 && !par1World.isBlockNormalCube(par2 - 1, par3, par4))
         {
             flag = true;
         }
-        if (j1 == 4 && !world.isBlockNormalCube(i, j, k - 1))
+
+        if (j == 4 && !par1World.isBlockNormalCube(par2, par3, par4 - 1))
         {
             flag = true;
         }
-        if (j1 == 5 && !world.isBlockNormalCube(i, j, k + 1))
+
+        if (j == 5 && !par1World.isBlockNormalCube(par2, par3, par4 + 1))
         {
             flag = true;
         }
+
         if (flag)
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-            world.setBlockWithNotify(i, j, k, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
         }
         else if (blockID == Block.railPowered.blockID)
         {
-            boolean flag1 = world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k);
-            flag1 = flag1 || isNeighborRailPowered(world, i, j, k, i1, true, 0) || isNeighborRailPowered(world, i, j, k, i1, false, 0);
+            boolean flag1 = par1World.isBlockIndirectlyGettingPowered(par2, par3, par4);
+            flag1 = flag1 || isNeighborRailPowered(par1World, par2, par3, par4, i, true, 0) || isNeighborRailPowered(par1World, par2, par3, par4, i, false, 0);
             boolean flag2 = false;
-            if (flag1 && (i1 & 8) == 0)
+
+            if (flag1 && (i & 8) == 0)
             {
-                world.setBlockMetadataWithNotify(i, j, k, j1 | 8);
+                par1World.setBlockMetadataWithNotify(par2, par3, par4, j | 8);
                 flag2 = true;
             }
-            else if (!flag1 && (i1 & 8) != 0)
+            else if (!flag1 && (i & 8) != 0)
             {
-                world.setBlockMetadataWithNotify(i, j, k, j1);
+                par1World.setBlockMetadataWithNotify(par2, par3, par4, j);
                 flag2 = true;
             }
+
             if (flag2)
             {
-                world.notifyBlocksOfNeighborChange(i, j - 1, k, blockID);
-                if (j1 == 2 || j1 == 3 || j1 == 4 || j1 == 5)
+                par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
+
+                if (j == 2 || j == 3 || j == 4 || j == 5)
                 {
-                    world.notifyBlocksOfNeighborChange(i, j + 1, k, blockID);
+                    par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
                 }
             }
         }
-        else if (l > 0 && Block.blocksList[l].canProvidePower() && !isPowered && RailLogic.getNAdjacentTracks(new RailLogic(this, world, i, j, k)) == 3)
+        else if (par5 > 0 && Block.blocksList[par5].canProvidePower() && !isPowered && RailLogic.getNAdjacentTracks(new RailLogic(this, par1World, par2, par3, par4)) == 3)
         {
-            refreshTrackShape(world, i, j, k, false);
+            refreshTrackShape(par1World, par2, par3, par4, false);
         }
     }
 
-    private void refreshTrackShape(World world, int i, int j, int k, boolean flag)
+    /**
+     * Completely recalculates the track shape based on neighboring tracks
+     */
+    private void refreshTrackShape(World par1World, int par2, int par3, int par4, boolean par5)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
         else
         {
-            (new RailLogic(this, world, i, j, k)).refreshTrackShape(world.isBlockIndirectlyGettingPowered(i, j, k), flag);
+            (new RailLogic(this, par1World, par2, par3, par4)).refreshTrackShape(par1World.isBlockIndirectlyGettingPowered(par2, par3, par4), par5);
             return;
         }
     }
 
-    private boolean isNeighborRailPowered(World world, int i, int j, int k, int l, boolean flag, int i1)
+    /**
+     * Powered minecart rail is conductive like wire, so check for powered neighbors
+     */
+    private boolean isNeighborRailPowered(World par1World, int par2, int par3, int par4, int par5, boolean par6, int par7)
     {
-        if (i1 >= 8)
+        if (par7 >= 8)
         {
             return false;
         }
-        int j1 = l & 7;
-        boolean flag1 = true;
-        switch (j1)
+
+        int i = par5 & 7;
+        boolean flag = true;
+
+        switch (i)
         {
             case 0:
-                if (flag)
+                if (par6)
                 {
-                    k++;
+                    par4++;
                 }
                 else
                 {
-                    k--;
+                    par4--;
                 }
+
                 break;
 
             case 1:
-                if (flag)
+                if (par6)
                 {
-                    i--;
+                    par2--;
                 }
                 else
                 {
-                    i++;
+                    par2++;
                 }
+
                 break;
 
             case 2:
-                if (flag)
+                if (par6)
                 {
-                    i--;
+                    par2--;
                 }
                 else
                 {
-                    i++;
-                    j++;
-                    flag1 = false;
+                    par2++;
+                    par3++;
+                    flag = false;
                 }
-                j1 = 1;
+
+                i = 1;
                 break;
 
             case 3:
-                if (flag)
+                if (par6)
                 {
-                    i--;
-                    j++;
-                    flag1 = false;
+                    par2--;
+                    par3++;
+                    flag = false;
                 }
                 else
                 {
-                    i++;
+                    par2++;
                 }
-                j1 = 1;
+
+                i = 1;
                 break;
 
             case 4:
-                if (flag)
+                if (par6)
                 {
-                    k++;
+                    par4++;
                 }
                 else
                 {
-                    k--;
-                    j++;
-                    flag1 = false;
+                    par4--;
+                    par3++;
+                    flag = false;
                 }
-                j1 = 0;
+
+                i = 0;
                 break;
 
             case 5:
-                if (flag)
+                if (par6)
                 {
-                    k++;
-                    j++;
-                    flag1 = false;
+                    par4++;
+                    par3++;
+                    flag = false;
                 }
                 else
                 {
-                    k--;
+                    par4--;
                 }
-                j1 = 0;
+
+                i = 0;
                 break;
         }
-        if (isRailPassingPower(world, i, j, k, flag, i1, j1))
+
+        if (isRailPassingPower(par1World, par2, par3, par4, par6, par7, i))
         {
             return true;
         }
-        return flag1 && isRailPassingPower(world, i, j - 1, k, flag, i1, j1);
+
+        return flag && isRailPassingPower(par1World, par2, par3 - 1, par4, par6, par7, i);
     }
 
-    private boolean isRailPassingPower(World world, int i, int j, int k, boolean flag, int l, int i1)
+    /**
+     * Returns true if the specified rail is passing power to its neighbor
+     */
+    private boolean isRailPassingPower(World par1World, int par2, int par3, int par4, boolean par5, int par6, int par7)
     {
-        int j1 = world.getBlockId(i, j, k);
-        if (j1 == Block.railPowered.blockID)
+        int i = par1World.getBlockId(par2, par3, par4);
+
+        if (i == Block.railPowered.blockID)
         {
-            int k1 = world.getBlockMetadata(i, j, k);
-            int l1 = k1 & 7;
-            if (i1 == 1 && (l1 == 0 || l1 == 4 || l1 == 5))
+            int j = par1World.getBlockMetadata(par2, par3, par4);
+            int k = j & 7;
+
+            if (par7 == 1 && (k == 0 || k == 4 || k == 5))
             {
                 return false;
             }
-            if (i1 == 0 && (l1 == 1 || l1 == 2 || l1 == 3))
+
+            if (par7 == 0 && (k == 1 || k == 2 || k == 3))
             {
                 return false;
             }
-            if ((k1 & 8) != 0)
+
+            if ((j & 8) != 0)
             {
-                if (world.isBlockIndirectlyGettingPowered(i, j, k) || world.isBlockIndirectlyGettingPowered(i, j + 1, k))
+                if (par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
                 {
                     return true;
                 }
                 else
                 {
-                    return isNeighborRailPowered(world, i, j, k, k1, flag, l + 1);
+                    return isNeighborRailPowered(par1World, par2, par3, par4, j, par5, par6 + 1);
                 }
             }
         }
+
         return false;
     }
 
+    /**
+     * returns the mobility flag of a block's material
+     */
     public int getMobilityFlag()
     {
         return 0;
     }
 
-    static boolean isPoweredBlockRail(BlockRail blockrail)
+    static boolean isPoweredBlockRail(BlockRail par0BlockRail)
     {
-        return blockrail.isPowered;
+        return par0BlockRail.isPowered;
     }
 }

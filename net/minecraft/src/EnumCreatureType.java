@@ -2,24 +2,25 @@ package net.minecraft.src;
 
 public enum EnumCreatureType
 {
-    monster("monster", 0, net.minecraft.src.IMob.class, 70, Material.air, false),
-    creature("creature", 1, net.minecraft.src.EntityAnimal.class, 15, Material.air, true),
-    waterCreature("waterCreature", 2, net.minecraft.src.EntityWaterMob.class, 5, Material.water, true);
+    monster(net.minecraft.src.IMob.class, 70, Material.air, false),
+    creature(net.minecraft.src.EntityAnimal.class, 15, Material.air, true),
+    waterCreature(net.minecraft.src.EntityWaterMob.class, 5, Material.water, true);
 
+    /**
+     * The root class of creatures associated with this EnumCreatureType (IMobs for aggressive creatures, EntityAnimals
+     * for friendly ones)
+     */
     private final Class creatureClass;
     private final int maxNumberOfCreature;
     private final Material creatureMaterial;
     private final boolean isPeacefulCreature;
-    private static final EnumCreatureType allCreatureTypes[] = (new EnumCreatureType[] {
-        monster, creature, waterCreature
-    });
 
-    private EnumCreatureType(String s, int i, Class class1, int j, Material material, boolean flag)
+    private EnumCreatureType(Class par3Class, int par4, Material par5Material, boolean par6)
     {
-        creatureClass = class1;
-        maxNumberOfCreature = j;
-        creatureMaterial = material;
-        isPeacefulCreature = flag;
+        creatureClass = par3Class;
+        maxNumberOfCreature = par4;
+        creatureMaterial = par5Material;
+        isPeacefulCreature = par6;
     }
 
     public Class getCreatureClass()

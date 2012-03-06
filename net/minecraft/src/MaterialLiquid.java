@@ -2,19 +2,25 @@ package net.minecraft.src;
 
 public class MaterialLiquid extends Material
 {
-    public MaterialLiquid(MapColor mapcolor)
+    public MaterialLiquid(MapColor par1MapColor)
     {
-        super(mapcolor);
-        setIsGroundCover();
+        super(par1MapColor);
+        setGroundCover();
         setNoPushMobility();
     }
 
-    public boolean getIsLiquid()
+    /**
+     * Returns if blocks of these materials are liquids.
+     */
+    public boolean isLiquid()
     {
         return true;
     }
 
-    public boolean getIsSolid()
+    /**
+     * Returns if this material is considered solid or not
+     */
+    public boolean blocksMovement()
     {
         return false;
     }

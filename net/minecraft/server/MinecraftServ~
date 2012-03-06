@@ -1,6 +1,6 @@
 // Decompiled by Jad v1.5.8g. Copyright 2001 Pavel Kouznetsov.
 // Jad home page: http://www.kpdus.com/jad.html
-// Decompiler options: packimports(3) braces deadcode fieldsfirst 
+// Decompiler options: packimports(3) braces deadcode fieldsfirst
 
 package net.minecraft.server;
 
@@ -17,6 +17,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.minecraft.src.AnvilSaveConverter;
+import net.minecraft.src.AnvilSaveHandler;
 import net.minecraft.src.AxisAlignedBB;
 import net.minecraft.src.ChunkCoordinates;
 import net.minecraft.src.ChunkProviderServer;
@@ -24,27 +26,26 @@ import net.minecraft.src.ConsoleCommandHandler;
 import net.minecraft.src.ConsoleLogManager;
 import net.minecraft.src.ConvertProgressUpdater;
 import net.minecraft.src.EntityTracker;
-import net.minecraft.src.EnumWorldType;
 import net.minecraft.src.ICommandListener;
 import net.minecraft.src.ISaveFormat;
 import net.minecraft.src.IServer;
 import net.minecraft.src.IUpdatePlayerListBox;
+import net.minecraft.src.MathHelper;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.NetworkListenThread;
+import net.minecraft.src.Packet;
 import net.minecraft.src.Packet4UpdateTime;
 import net.minecraft.src.PropertyManager;
 import net.minecraft.src.RConConsoleSource;
 import net.minecraft.src.RConThreadMain;
 import net.minecraft.src.RConThreadQuery;
-import net.minecraft.src.SaveConverterMcRegion;
-import net.minecraft.src.SaveOldDir;
 import net.minecraft.src.ServerCommand;
 import net.minecraft.src.ServerConfigurationManager;
 import net.minecraft.src.ServerGUI;
 import net.minecraft.src.StatList;
 import net.minecraft.src.ThreadCommandReader;
 import net.minecraft.src.ThreadServerApplication;
-import net.minecraft.src.ThreadSleepForever;
+import net.minecraft.src.ThreadServerSleep;
 import net.minecraft.src.Vec3D;
 import net.minecraft.src.WorldInfo;
 import net.minecraft.src.WorldManager;
@@ -52,9 +53,9 @@ import net.minecraft.src.WorldProvider;
 import net.minecraft.src.WorldServer;
 import net.minecraft.src.WorldServerMulti;
 import net.minecraft.src.WorldSettings;
+import net.minecraft.src.WorldType;
 
-public class MinecraftServer
-    implements Runnable, ICommandListener, IServer
+public class MinecraftServer implements Runnable, ICommandListener, IServer
 {
 
     public static Logger field_6038_a = Logger.getLogger("Minecraft");
@@ -82,6 +83,15 @@ public class MinecraftServer
     public boolean field_9011_n;
     public boolean field_27005_o;
     public String field_35014_p;
+    public int field_48081_t;
+    private long field_48074_E;
+    private long field_48075_F;
+    private long field_48076_G;
+    private long field_48077_H;
+    public long field_48080_u[];
+    public long field_48079_v[];
+    public long field_48078_w[];
+    public long field_48082_x[];
     private RConThreadQuery field_40032_y;
     private RConThreadMain field_40031_z;
 
@@ -94,22 +104,24 @@ public class MinecraftServer
         field_9010_p = new ArrayList();
         field_6023_p = Collections.synchronizedList(new ArrayList());
         field_6028_k = new EntityTracker[3];
-        new ThreadSleepForever(this);
+        field_48080_u = new long[100];
+        field_48079_v = new long[100];
+        field_48078_w = new long[100];
+        field_48082_x = new long[100];
+        new ThreadServerSleep(this);
     }
 
-    private boolean func_6008_d()
-        throws UnknownHostException
+    private boolean func_6008_d() throws UnknownHostException
     {
         field_22005_o = new ConsoleCommandHandler(this);
         ThreadCommandReader threadcommandreader = new ThreadCommandReader(this);
         threadcommandreader.setDaemon(true);
         threadcommandreader.start();
         ConsoleLogManager.func_641_a();
-        ModLoader.Init(this);
-        field_6038_a.info("Starting minecraft server version 1.1");
+        ModLoader.initialize(this);
+        field_6038_a.info("Starting minecraft server version 1.2.3");
         if(Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
         {
-            field_6038_a.warning("**** NOT ENOUGH RAM!");
             field_6038_a.warning("To start the server with more ram, launch it as \"java -Xmx1024M -Xms1024M -jar minecraft_server.jar\"");
         }
         field_6038_a.info("Loading properties");
@@ -171,13 +183,17 @@ public class MinecraftServer
                 l1 = s1.hashCode();
             }
         }
-        EnumWorldType enumworldtype = EnumWorldType.func_46049_a(s2);
-        if(enumworldtype == null)
+        WorldType worldtype = WorldType.func_46049_a(s2);
+        if(worldtype == null)
         {
-            enumworldtype = EnumWorldType.DEFAULT;
+            worldtype = WorldType.field_48457_b;
         }
+        field_48081_t = field_6035_d.func_722_a("max-build-height", 256);
+        field_48081_t = ((field_48081_t + 8) / 16) * 16;
+        field_48081_t = MathHelper.func_41051_a(field_48081_t, 64, 256);
+        field_6035_d.func_40657_a("max-build-height", Integer.valueOf(field_48081_t));
         field_6038_a.info((new StringBuilder()).append("Preparing level \"").append(s).append("\"").toString());
-        func_6017_c(new SaveConverterMcRegion(new File(".")), s, l1, enumworldtype);
+        func_6017_c(new AnvilSaveConverter(new File(".")), s, l1, worldtype);
         field_6038_a.info((new StringBuilder()).append("Done (").append(System.nanoTime() - l).append("ns)! For help, type \"help\" or \"?\"").toString());
         if(field_6035_d.func_724_a("enable-query", false))
         {
@@ -194,12 +210,12 @@ public class MinecraftServer
         return true;
     }
 
-    private void func_6017_c(ISaveFormat isaveformat, String s, long l, EnumWorldType enumworldtype)
+    private void func_6017_c(ISaveFormat p_6017_1_, String p_6017_2_, long p_6017_3_, WorldType p_6017_5_)
     {
-        if(isaveformat.func_22102_a(s))
+        if(p_6017_1_.func_22102_a(p_6017_2_))
         {
             field_6038_a.info("Converting map!");
-            isaveformat.func_22101_a(s, new ConvertProgressUpdater(this));
+            p_6017_1_.func_22101_a(p_6017_2_, new ConvertProgressUpdater(this));
         }
         field_6034_e = new WorldServer[3];
         field_40028_g = new long[field_6034_e.length][100];
@@ -207,8 +223,8 @@ public class MinecraftServer
         i = WorldSettings.func_35037_a(i);
         field_6038_a.info((new StringBuilder()).append("Default game type: ").append(i).toString());
         boolean flag = field_6035_d.func_724_a("generate-structures", true);
-        WorldSettings worldsettings = new WorldSettings(l, i, flag, false, enumworldtype);
-        SaveOldDir saveolddir = new SaveOldDir(new File("."), s, true);
+        WorldSettings worldsettings = new WorldSettings(p_6017_3_, i, flag, false, p_6017_5_);
+        AnvilSaveHandler anvilsavehandler = new AnvilSaveHandler(new File("."), p_6017_2_, true);
         for(int j = 0; j < field_6034_e.length; j++)
         {
             byte byte0 = 0;
@@ -222,10 +238,10 @@ public class MinecraftServer
             }
             if(j == 0)
             {
-                field_6034_e[j] = new WorldServer(this, saveolddir, s, byte0, worldsettings);
+                field_6034_e[j] = new WorldServer(this, anvilsavehandler, p_6017_2_, byte0, worldsettings);
             } else
             {
-                field_6034_e[j] = new WorldServerMulti(this, saveolddir, s, byte0, worldsettings, field_6034_e[0]);
+                field_6034_e[j] = new WorldServerMulti(this, anvilsavehandler, p_6017_2_, byte0, worldsettings, field_6034_e[0]);
             }
             field_6034_e[j].func_4072_a(new WorldManager(this, field_6034_e[j]));
             field_6034_e[j].field_804_l = field_6035_d.func_722_a("difficulty", 1);
@@ -235,7 +251,7 @@ public class MinecraftServer
         }
 
         char c = '\304';
-        long l1 = System.currentTimeMillis();
+        long l = System.currentTimeMillis();
         for(int k = 0; k < 1; k++)
         {
             field_6038_a.info((new StringBuilder()).append("Preparing start region for level ").append(k).toString());
@@ -245,17 +261,17 @@ public class MinecraftServer
             {
                 for(int j1 = -c; j1 <= c && field_6025_n; j1 += 16)
                 {
-                    long l2 = System.currentTimeMillis();
-                    if(l2 < l1)
+                    long l1 = System.currentTimeMillis();
+                    if(l1 < l)
                     {
-                        l1 = l2;
+                        l = l1;
                     }
-                    if(l2 > l1 + 1000L)
+                    if(l1 > l + 1000L)
                     {
                         int k1 = (c * 2 + 1) * (c * 2 + 1);
                         int i2 = (i1 + c) * (c * 2 + 1) + (j1 + 1);
                         func_6019_a("Preparing spawn area", (i2 * 100) / k1);
-                        l1 = l2;
+                        l = l1;
                     }
                     worldserver.field_20911_y.func_376_d(chunkcoordinates.field_22216_a + i1 >> 4, chunkcoordinates.field_528_b + j1 >> 4);
                     while(worldserver.func_6156_d() && field_6025_n) ;
@@ -268,11 +284,11 @@ public class MinecraftServer
         func_6011_e();
     }
 
-    private void func_6019_a(String s, int i)
+    private void func_6019_a(String p_6019_1_, int p_6019_2_)
     {
-        field_9013_i = s;
-        field_9012_j = i;
-        field_6038_a.info((new StringBuilder()).append(s).append(": ").append(i).append("%").toString());
+        field_9013_i = p_6019_1_;
+        field_9012_j = p_6019_2_;
+        field_6038_a.info((new StringBuilder()).append(p_6019_1_).append(": ").append(p_6019_2_).append("%").toString());
     }
 
     private void func_6011_e()
@@ -324,9 +340,9 @@ public class MinecraftServer
             {
                 long l = System.currentTimeMillis();
                 long l1 = 0L;
-                while(field_6025_n) 
+                while(field_6025_n)
                 {
-                    ModLoader.OnTick(this);
+                    ModLoader.onTick(this);
                     long l2 = System.currentTimeMillis();
                     long l3 = l2 - l;
                     if(l3 > 2000L)
@@ -347,7 +363,7 @@ public class MinecraftServer
                         l1 = 0L;
                     } else
                     {
-                        while(l1 > 50L) 
+                        while(l1 > 50L)
                         {
                             l1 -= 50L;
                             func_6018_h();
@@ -357,7 +373,7 @@ public class MinecraftServer
                 }
             } else
             {
-                while(field_6025_n) 
+                while(field_6025_n)
                 {
                     func_6021_b();
                     try
@@ -375,7 +391,7 @@ public class MinecraftServer
         {
             throwable1.printStackTrace();
             field_6038_a.log(Level.SEVERE, "Unexpected exception", throwable1);
-            while(field_6025_n) 
+            while(field_6025_n)
             {
                 func_6021_b();
                 try
@@ -497,11 +513,19 @@ public class MinecraftServer
             field_6038_a.log(Level.WARNING, "Unexpected exception while parsing console command", exception);
         }
         field_40027_f[field_9014_h % 100] = System.nanoTime() - l;
+        field_48080_u[field_9014_h % 100] = Packet.field_48099_n - field_48074_E;
+        field_48074_E = Packet.field_48099_n;
+        field_48079_v[field_9014_h % 100] = Packet.field_48100_o - field_48075_F;
+        field_48075_F = Packet.field_48100_o;
+        field_48078_w[field_9014_h % 100] = Packet.field_48101_l - field_48076_G;
+        field_48076_G = Packet.field_48101_l;
+        field_48082_x[field_9014_h % 100] = Packet.field_48102_m - field_48077_H;
+        field_48077_H = Packet.field_48102_m;
     }
 
-    public void func_6010_a(String s, ICommandListener icommandlistener)
+    public void func_6010_a(String p_6010_1_, ICommandListener p_6010_2_)
     {
-        field_6023_p.add(new ServerCommand(s, icommandlistener));
+        field_6023_p.add(new ServerCommand(p_6010_1_, p_6010_2_));
     }
 
     public void func_6021_b()
@@ -514,18 +538,18 @@ public class MinecraftServer
 
     }
 
-    public void func_6022_a(IUpdatePlayerListBox iupdateplayerlistbox)
+    public void func_6022_a(IUpdatePlayerListBox p_6022_1_)
     {
-        field_9010_p.add(iupdateplayerlistbox);
+        field_9010_p.add(p_6022_1_);
     }
 
-    public static void main(String args[])
+    public static void main(String p_main_0_[])
     {
         StatList.func_27092_a();
         try
         {
             MinecraftServer minecraftserver = new MinecraftServer();
-            if(!java.awt.GraphicsEnvironment.isHeadless() && (args.length <= 0 || !args[0].equals("nogui")))
+            if(!java.awt.GraphicsEnvironment.isHeadless() && (p_main_0_.length <= 0 || !p_main_0_[0].equals("nogui")))
             {
                 ServerGUI.func_46_a(minecraftserver);
             }
@@ -537,19 +561,19 @@ public class MinecraftServer
         }
     }
 
-    public File func_6009_a(String s)
+    public File func_6009_a(String p_6009_1_)
     {
-        return new File(s);
+        return new File(p_6009_1_);
     }
 
-    public void func_2_b(String s)
+    public void func_2_b(String p_2_1_)
     {
-        field_6038_a.info(s);
+        field_6038_a.info(p_2_1_);
     }
 
-    public void func_25002_c(String s)
+    public void func_25002_c(String p_25002_1_)
     {
-        field_6038_a.warning(s);
+        field_6038_a.warning(p_25002_1_);
     }
 
     public String func_1_c()
@@ -557,13 +581,13 @@ public class MinecraftServer
         return "CONSOLE";
     }
 
-    public WorldServer func_28004_a(int i)
+    public WorldServer func_28004_a(int p_28004_1_)
     {
-        if(i == -1)
+        if(p_28004_1_ == -1)
         {
             return field_6034_e[1];
         }
-        if(i == 1)
+        if(p_28004_1_ == 1)
         {
             return field_6034_e[2];
         } else
@@ -572,13 +596,13 @@ public class MinecraftServer
         }
     }
 
-    public EntityTracker func_28003_b(int i)
+    public EntityTracker func_28003_b(int p_28003_1_)
     {
-        if(i == -1)
+        if(p_28003_1_ == -1)
         {
             return field_6028_k[1];
         }
-        if(i == 1)
+        if(p_28003_1_ == 1)
         {
             return field_6028_k[2];
         } else
@@ -587,19 +611,19 @@ public class MinecraftServer
         }
     }
 
-    public int func_40011_a(String s, int i)
+    public int func_40011_a(String p_40011_1_, int p_40011_2_)
     {
-        return field_6035_d.func_722_a(s, i);
+        return field_6035_d.func_722_a(p_40011_1_, p_40011_2_);
     }
 
-    public String func_40023_a(String s, String s1)
+    public String func_40023_a(String p_40023_1_, String p_40023_2_)
     {
-        return field_6035_d.func_720_a(s, s1);
+        return field_6035_d.func_720_a(p_40023_1_, p_40023_2_);
     }
 
-    public void func_40017_a(String s, Object obj)
+    public void func_40017_a(String p_40017_1_, Object p_40017_2_)
     {
-        field_6035_d.func_40657_a(s, obj);
+        field_6035_d.func_40657_a(p_40017_1_, p_40017_2_);
     }
 
     public void func_40019_c()
@@ -636,7 +660,7 @@ public class MinecraftServer
 
     public String func_40012_i()
     {
-        return "1.1";
+        return "1.2.3";
     }
 
     public int func_40018_j()
@@ -668,10 +692,10 @@ public class MinecraftServer
     {
     }
 
-    public String func_40008_d(String s)
+    public String func_40008_d(String p_40008_1_)
     {
         RConConsoleSource.field_40005_a.func_40002_a();
-        field_22005_o.func_22114_a(new ServerCommand(s, RConConsoleSource.field_40005_a));
+        field_22005_o.func_22114_a(new ServerCommand(p_40008_1_, RConConsoleSource.field_40005_a));
         return RConConsoleSource.field_40005_a.func_40003_b();
     }
 
@@ -680,16 +704,16 @@ public class MinecraftServer
         return false;
     }
 
-    public void func_40007_e(String s)
+    public void func_40007_e(String p_40007_1_)
     {
-        field_6038_a.log(Level.SEVERE, s);
+        field_6038_a.log(Level.SEVERE, p_40007_1_);
     }
 
-    public void func_40006_f(String s)
+    public void func_40006_f(String p_40006_1_)
     {
         if(func_40021_p())
         {
-            field_6038_a.log(Level.INFO, s);
+            field_6038_a.log(Level.INFO, p_40006_1_);
         }
     }
 
@@ -703,9 +727,9 @@ public class MinecraftServer
         return (String[])field_6033_f.func_40576_e().toArray(new String[0]);
     }
 
-    public static boolean func_6015_a(MinecraftServer minecraftserver)
+    public static boolean func_6015_a(MinecraftServer p_6015_0_)
     {
-        return minecraftserver.field_6025_n;
+        return p_6015_0_.field_6025_n;
     }
 
 }

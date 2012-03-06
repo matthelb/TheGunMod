@@ -20,20 +20,20 @@ public class EnchantmentDamage extends Enchantment
     };
     public final int damageType;
 
-    public EnchantmentDamage(int i, int j, int k)
+    public EnchantmentDamage(int par1, int par2, int par3)
     {
-        super(i, j, EnumEnchantmentType.weapon);
-        damageType = k;
+        super(par1, par2, EnumEnchantmentType.weapon);
+        damageType = par3;
     }
 
-    public int getMinEnchantability(int i)
+    public int getMinEnchantability(int par1)
     {
-        return baseEnchantability[damageType] + (i - 1) * levelEnchantability[damageType];
+        return baseEnchantability[damageType] + (par1 - 1) * levelEnchantability[damageType];
     }
 
-    public int getMaxEnchantability(int i)
+    public int getMaxEnchantability(int par1)
     {
-        return getMinEnchantability(i) + thresholdEnchantability[damageType];
+        return getMinEnchantability(par1) + thresholdEnchantability[damageType];
     }
 
     public int getMaxLevel()
@@ -41,19 +41,21 @@ public class EnchantmentDamage extends Enchantment
         return 5;
     }
 
-    public int calcModifierLiving(int i, EntityLiving entityliving)
+    public int calcModifierLiving(int par1, EntityLiving par2EntityLiving)
     {
         if (damageType == 0)
         {
-            return i * 3;
+            return par1 * 3;
         }
-        if (damageType == 1 && entityliving.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD)
+
+        if (damageType == 1 && par2EntityLiving.getCreatureAttribute() == EnumCreatureAttribute.UNDEAD)
         {
-            return i * 4;
+            return par1 * 4;
         }
-        if (damageType == 2 && entityliving.getCreatureAttribute() == EnumCreatureAttribute.ARTHROPOD)
+
+        if (damageType == 2 && par2EntityLiving.getCreatureAttribute() == EnumCreatureAttribute.ARTHROPOD)
         {
-            return i * 4;
+            return par1 * 4;
         }
         else
         {
@@ -61,8 +63,8 @@ public class EnchantmentDamage extends Enchantment
         }
     }
 
-    public boolean canApplyTogether(Enchantment enchantment)
+    public boolean canApplyTogether(Enchantment par1Enchantment)
     {
-        return !(enchantment instanceof EnchantmentDamage);
+        return !(par1Enchantment instanceof EnchantmentDamage);
     }
 }

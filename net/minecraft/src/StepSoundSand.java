@@ -2,8 +2,8 @@ package net.minecraft.src;
 
 final class StepSoundSand extends StepSound
 {
-    StepSoundSand(String s, float f, float f1)
+    StepSoundSand(String par1Str, float par2, float par3)
     {
-        super(s, f, f1);
+        super(par1Str, par2, par3);
     }
 }

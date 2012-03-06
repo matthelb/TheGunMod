@@ -11,72 +11,87 @@ public abstract class MapGenStructure extends MapGenBase
         coordMap = new HashMap();
     }
 
-    public void generate(IChunkProvider ichunkprovider, World world, int i, int j, byte abyte0[])
+    public void generate(IChunkProvider par1IChunkProvider, World par2World, int par3, int par4, byte par5ArrayOfByte[])
     {
-        super.generate(ichunkprovider, world, i, j, abyte0);
+        super.generate(par1IChunkProvider, par2World, par3, par4, par5ArrayOfByte);
     }
 
-    protected void recursiveGenerate(World world, int i, int j, int k, int l, byte abyte0[])
+    protected void recursiveGenerate(World par1World, int par2, int par3, int par4, int par5, byte par6ArrayOfByte[])
     {
-        if (coordMap.containsKey(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j))))
+        if (coordMap.containsKey(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(par2, par3))))
         {
             return;
         }
-        int i1 = rand.nextInt();
-        if (canSpawnStructureAtCoords(i, j))
+
+        rand.nextInt();
+
+        if (canSpawnStructureAtCoords(par2, par3))
         {
-            StructureStart structurestart = getStructureStart(i, j);
-            coordMap.put(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j)), structurestart);
+            StructureStart structurestart = getStructureStart(par2, par3);
+            coordMap.put(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(par2, par3)), structurestart);
         }
     }
 
-    public boolean generateStructuresInChunk(World world, Random random, int i, int j)
+    /**
+     * Generates structures in specified chunk next to existing structures. Does *not* generate StructureStarts.
+     */
+    public boolean generateStructuresInChunk(World par1World, Random par2Random, int par3, int par4)
     {
-        int k = (i << 4) + 8;
-        int l = (j << 4) + 8;
+        int i = (par3 << 4) + 8;
+        int j = (par4 << 4) + 8;
         boolean flag = false;
         Iterator iterator = coordMap.values().iterator();
+
         do
         {
             if (!iterator.hasNext())
             {
                 break;
             }
+
             StructureStart structurestart = (StructureStart)iterator.next();
-            if (structurestart.isSizeableStructure() && structurestart.getBoundingBox().intersectsWith(k, l, k + 15, l + 15))
+
+            if (structurestart.isSizeableStructure() && structurestart.getBoundingBox().intersectsWith(i, j, i + 15, j + 15))
             {
-                structurestart.generateStructure(world, random, new StructureBoundingBox(k, l, k + 15, l + 15));
+                structurestart.generateStructure(par1World, par2Random, new StructureBoundingBox(i, j, i + 15, j + 15));
                 flag = true;
             }
         }
         while (true);
+
         return flag;
     }
 
-    public boolean func_40204_a(int i, int j, int k)
+    public boolean func_40204_a(int par1, int par2, int par3)
     {
         Iterator iterator = coordMap.values().iterator();
         label0:
+
         do
         {
             if (iterator.hasNext())
             {
                 StructureStart structurestart = (StructureStart)iterator.next();
-                if (!structurestart.isSizeableStructure() || !structurestart.getBoundingBox().intersectsWith(i, k, i, k))
+
+                if (!structurestart.isSizeableStructure() || !structurestart.getBoundingBox().intersectsWith(par1, par3, par1, par3))
                 {
                     continue;
                 }
+
                 Iterator iterator1 = structurestart.getComponents().iterator();
                 StructureComponent structurecomponent;
+
                 do
                 {
                     if (!iterator1.hasNext())
                     {
                         continue label0;
                     }
+
                     structurecomponent = (StructureComponent)iterator1.next();
                 }
-                while (!structurecomponent.getBoundingBox().isVecInside(i, j, k));
+                while (!structurecomponent.getBoundingBox().isVecInside(par1, par2, par3));
+
                 break;
             }
             else
@@ -85,37 +100,42 @@ public abstract class MapGenStructure extends MapGenBase
             }
         }
         while (true);
+
         return true;
     }
 
-    public ChunkPosition getNearestInstance(World world, int i, int j, int k)
+    public ChunkPosition getNearestInstance(World par1World, int par2, int par3, int par4)
     {
-        worldObj = world;
-        rand.setSeed(world.getSeed());
+        worldObj = par1World;
+        rand.setSeed(par1World.getSeed());
         long l = rand.nextLong();
         long l1 = rand.nextLong();
-        long l2 = (long)(i >> 4) * l;
-        long l3 = (long)(k >> 4) * l1;
-        rand.setSeed(l2 ^ l3 ^ world.getSeed());
-        recursiveGenerate(world, i >> 4, k >> 4, 0, 0, null);
-        double d = 1.7976931348623157E+308D;
+        long l2 = (long)(par2 >> 4) * l;
+        long l3 = (long)(par4 >> 4) * l1;
+        rand.setSeed(l2 ^ l3 ^ par1World.getSeed());
+        recursiveGenerate(par1World, par2 >> 4, par4 >> 4, 0, 0, null);
+        double d = Double.MAX_VALUE;
         ChunkPosition chunkposition = null;
         Object obj = coordMap.values().iterator();
+
         do
         {
-            if (!((Iterator) (obj)).hasNext())
+            if (!((Iterator)(obj)).hasNext())
             {
                 break;
             }
-            StructureStart structurestart = (StructureStart)((Iterator) (obj)).next();
+
+            StructureStart structurestart = (StructureStart)((Iterator)(obj)).next();
+
             if (structurestart.isSizeableStructure())
             {
                 StructureComponent structurecomponent = (StructureComponent)structurestart.getComponents().get(0);
                 ChunkPosition chunkposition2 = structurecomponent.getCenter();
-                int i1 = chunkposition2.x - i;
-                int k1 = chunkposition2.y - j;
-                int j2 = chunkposition2.z - k;
-                double d1 = i1 + i1 * k1 * k1 + j2 * j2;
+                int i = chunkposition2.x - par2;
+                int k = chunkposition2.y - par3;
+                int j1 = chunkposition2.z - par4;
+                double d1 = i + i * k * k + j1 * j1;
+
                 if (d1 < d)
                 {
                     d = d1;
@@ -124,26 +144,32 @@ public abstract class MapGenStructure extends MapGenBase
             }
         }
         while (true);
+
         if (chunkposition != null)
         {
             return chunkposition;
         }
+
         obj = func_40203_a();
+
         if (obj != null)
         {
             ChunkPosition chunkposition1 = null;
-            Iterator iterator = ((List) (obj)).iterator();
+            Iterator iterator = ((List)(obj)).iterator();
+
             do
             {
                 if (!iterator.hasNext())
                 {
                     break;
                 }
+
                 ChunkPosition chunkposition3 = (ChunkPosition)iterator.next();
-                int j1 = chunkposition3.x - i;
-                int i2 = chunkposition3.y - j;
-                int k2 = chunkposition3.z - k;
-                double d2 = j1 + j1 * i2 * i2 + k2 * k2;
+                int j = chunkposition3.x - par2;
+                int i1 = chunkposition3.y - par3;
+                int k1 = chunkposition3.z - par4;
+                double d2 = j + j * i1 * i1 + k1 * k1;
+
                 if (d2 < d)
                 {
                     d = d2;
@@ -151,6 +177,7 @@ public abstract class MapGenStructure extends MapGenBase
                 }
             }
             while (true);
+
             return chunkposition1;
         }
         else

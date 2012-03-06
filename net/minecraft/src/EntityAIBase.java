@@ -1,22 +1,28 @@
 package net.minecraft.src;
 
-abstract class EntityAIBase
+public abstract class EntityAIBase
 {
     private int field_46093_a;
 
-    EntityAIBase()
+    public EntityAIBase()
     {
         field_46093_a = 0;
     }
 
-    public abstract boolean func_46090_a();
+    /**
+     * Returns whether the EntityAIBase should begin execution.
+     */
+    public abstract boolean shouldExecute();
 
-    public boolean func_46092_g()
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
+    public boolean continueExecuting()
     {
-        return func_46090_a();
+        return shouldExecute();
     }
 
-    public boolean func_46086_f()
+    public boolean isContinous()
     {
         return true;
     }
@@ -25,17 +31,17 @@ abstract class EntityAIBase
     {
     }
 
-    public void func_46085_d()
+    public void resetTask()
     {
     }
 
-    public void func_46089_b()
+    public void updateTask()
     {
     }
 
-    public void func_46087_a(int i)
+    public void func_46087_a(int par1)
     {
-        field_46093_a = i;
+        field_46093_a = par1;
     }
 
     public int func_46091_c()

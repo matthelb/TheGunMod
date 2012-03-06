@@ -14,48 +14,61 @@ public class Packet130UpdateSign extends Packet
         isChunkDataPacket = true;
     }
 
-    public Packet130UpdateSign(int i, int j, int k, String as[])
+    public Packet130UpdateSign(int par1, int par2, int par3, String par4ArrayOfStr[])
     {
         isChunkDataPacket = true;
-        xPosition = i;
-        yPosition = j;
-        zPosition = k;
-        signLines = as;
+        xPosition = par1;
+        yPosition = par2;
+        zPosition = par3;
+        signLines = par4ArrayOfStr;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        xPosition = datainputstream.readInt();
-        yPosition = datainputstream.readShort();
-        zPosition = datainputstream.readInt();
+        xPosition = par1DataInputStream.readInt();
+        yPosition = par1DataInputStream.readShort();
+        zPosition = par1DataInputStream.readInt();
         signLines = new String[4];
+
         for (int i = 0; i < 4; i++)
         {
-            signLines[i] = readString(datainputstream, 15);
+            signLines[i] = readString(par1DataInputStream, 15);
         }
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(xPosition);
-        dataoutputstream.writeShort(yPosition);
-        dataoutputstream.writeInt(zPosition);
+        par1DataOutputStream.writeInt(xPosition);
+        par1DataOutputStream.writeShort(yPosition);
+        par1DataOutputStream.writeInt(zPosition);
+
         for (int i = 0; i < 4; i++)
         {
-            writeString(signLines[i], dataoutputstream);
+            writeString(signLines[i], par1DataOutputStream);
         }
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleUpdateSign(this);
+        par1NetHandler.handleUpdateSign(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         int i = 0;
+
         for (int j = 0; j < 4; j++)
         {
             i += signLines[j].length();

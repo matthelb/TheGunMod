@@ -2,20 +2,20 @@ package net.minecraft.src;
 
 public class EnchantmentFireAspect extends Enchantment
 {
-    protected EnchantmentFireAspect(int i, int j)
+    protected EnchantmentFireAspect(int par1, int par2)
     {
-        super(i, j, EnumEnchantmentType.weapon);
+        super(par1, par2, EnumEnchantmentType.weapon);
         setName("fire");
     }
 
-    public int getMinEnchantability(int i)
+    public int getMinEnchantability(int par1)
     {
-        return 10 + 20 * (i - 1);
+        return 10 + 20 * (par1 - 1);
     }
 
-    public int getMaxEnchantability(int i)
+    public int getMaxEnchantability(int par1)
     {
-        return super.getMinEnchantability(i) + 50;
+        return super.getMinEnchantability(par1) + 50;
     }
 
     public int getMaxLevel()

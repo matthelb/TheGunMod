@@ -6,14 +6,31 @@ import java.util.Map;
 
 public class TileEntity
 {
+    /**
+     * A HashMap storing string names of classes mapping to the actual java.lang.Class type.
+     */
     private static Map nameToClassMap = new HashMap();
+
+    /**
+     * A HashMap storing the classes and mapping to the string names (reverse of nameToClassMap).
+     */
     private static Map classToNameMap = new HashMap();
+
+    /** The reference to the world. */
     public World worldObj;
+
+    /** The x coordinate of the tile entity. */
     public int xCoord;
+
+    /** The y coordinate of the tile entity. */
     public int yCoord;
+
+    /** The z coordinate of the tile entity. */
     public int zCoord;
     protected boolean tileEntityInvalid;
     public int blockMetadata;
+
+    /** the Block type that this TileEntity is contained within */
     public Block blockType;
 
     public TileEntity()
@@ -21,54 +38,73 @@ public class TileEntity
         blockMetadata = -1;
     }
 
-    private static void addMapping(Class class1, String s)
+    /**
+     * Adds a new two-way mapping between the class and its string name in both hashmaps.
+     */
+    private static void addMapping(Class par0Class, String par1Str)
     {
-        if (classToNameMap.containsKey(s))
+        if (classToNameMap.containsKey(par1Str))
         {
-            throw new IllegalArgumentException((new StringBuilder()).append("Duplicate id: ").append(s).toString());
+            throw new IllegalArgumentException((new StringBuilder()).append("Duplicate id: ").append(par1Str).toString());
         }
         else
         {
-            nameToClassMap.put(s, class1);
-            classToNameMap.put(class1, s);
+            nameToClassMap.put(par1Str, par0Class);
+            classToNameMap.put(par0Class, par1Str);
             return;
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Reads a tile entity from NBT.
+     */
+    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        xCoord = nbttagcompound.getInteger("x");
-        yCoord = nbttagcompound.getInteger("y");
-        zCoord = nbttagcompound.getInteger("z");
+        xCoord = par1NBTTagCompound.getInteger("x");
+        yCoord = par1NBTTagCompound.getInteger("y");
+        zCoord = par1NBTTagCompound.getInteger("z");
     }
 
-    public void writeToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Writes a tile entity to NBT.
+     */
+    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
         String s = (String)classToNameMap.get(getClass());
+
         if (s == null)
         {
             throw new RuntimeException((new StringBuilder()).append(getClass()).append(" is missing a mapping! This is a bug!").toString());
         }
         else
         {
-            nbttagcompound.setString("id", s);
-            nbttagcompound.setInteger("x", xCoord);
-            nbttagcompound.setInteger("y", yCoord);
-            nbttagcompound.setInteger("z", zCoord);
+            par1NBTTagCompound.setString("id", s);
+            par1NBTTagCompound.setInteger("x", xCoord);
+            par1NBTTagCompound.setInteger("y", yCoord);
+            par1NBTTagCompound.setInteger("z", zCoord);
             return;
         }
     }
 
+    /**
+     * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
+     * ticks and creates a new spawn inside its implementation.
+     */
     public void updateEntity()
     {
     }
 
-    public static TileEntity createAndLoadEntity(NBTTagCompound nbttagcompound)
+    /**
+     * Creates a new entity and loads its data from the specified NBT.
+     */
+    public static TileEntity createAndLoadEntity(NBTTagCompound par0NBTTagCompound)
     {
         TileEntity tileentity = null;
+
         try
         {
-            Class class1 = (Class)nameToClassMap.get(nbttagcompound.getString("id"));
+            Class class1 = (Class)nameToClassMap.get(par0NBTTagCompound.getString("id"));
+
             if (class1 != null)
             {
                 tileentity = (TileEntity)class1.newInstance();
@@ -78,14 +114,16 @@ public class TileEntity
         {
             exception.printStackTrace();
         }
+
         if (tileentity != null)
         {
-            tileentity.readFromNBT(nbttagcompound);
+            tileentity.readFromNBT(par0NBTTagCompound);
         }
         else
         {
-            System.out.println((new StringBuilder()).append("Skipping TileEntity with id ").append(nbttagcompound.getString("id")).toString());
+            System.out.println((new StringBuilder()).append("Skipping TileEntity with id ").append(par0NBTTagCompound.getString("id")).toString());
         }
+
         return tileentity;
     }
 
@@ -95,9 +133,13 @@ public class TileEntity
         {
             blockMetadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
         }
+
         return blockMetadata;
     }
 
+    /**
+     * Called when an the contents of an Inventory change, usually
+     */
     public void onInventoryChanged()
     {
         if (worldObj != null)
@@ -107,21 +149,33 @@ public class TileEntity
         }
     }
 
+    /**
+     * Overriden in a sign to provide the text
+     */
     public Packet getDescriptionPacket()
     {
         return null;
     }
 
+    /**
+     * returns true if tile entity is invalid, false otherwise
+     */
     public boolean isInvalid()
     {
         return tileEntityInvalid;
     }
 
+    /**
+     * invalidates a tile entity
+     */
     public void invalidate()
     {
         tileEntityInvalid = true;
     }
 
+    /**
+     * validates a tile entity
+     */
     public void validate()
     {
         tileEntityInvalid = false;
@@ -131,22 +185,14 @@ public class TileEntity
     {
     }
 
+    /**
+     * Causes the TileEntity to reset all it's cached values for it's container block, blockID, metaData and in the case
+     * of chests, the adjcacent chest check
+     */
     public void updateContainingBlockInfo()
     {
         blockType = null;
         blockMetadata = -1;
-    }
-
-    static Class _mthclass$(String s)
-    {
-        try
-        {
-            return Class.forName(s);
-        }
-        catch (ClassNotFoundException classnotfoundexception)
-        {
-            throw new NoClassDefFoundError(classnotfoundexception.getMessage());
-        }
     }
 
     static

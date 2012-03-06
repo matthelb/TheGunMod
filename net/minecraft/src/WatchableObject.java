@@ -3,15 +3,17 @@ package net.minecraft.src;
 public class WatchableObject
 {
     private final int objectType;
+
+    /** id of max 31 */
     private final int dataValueId;
     private Object watchedObject;
     private boolean isWatching;
 
-    public WatchableObject(int i, int j, Object obj)
+    public WatchableObject(int par1, int par2, Object par3Obj)
     {
-        dataValueId = j;
-        watchedObject = obj;
-        objectType = i;
+        dataValueId = par2;
+        watchedObject = par3Obj;
+        objectType = par1;
         isWatching = true;
     }
 
@@ -20,9 +22,9 @@ public class WatchableObject
         return dataValueId;
     }
 
-    public void setObject(Object obj)
+    public void setObject(Object par1Obj)
     {
-        watchedObject = obj;
+        watchedObject = par1Obj;
     }
 
     public Object getObject()
@@ -40,8 +42,8 @@ public class WatchableObject
         return isWatching;
     }
 
-    public void setWatching(boolean flag)
+    public void setWatching(boolean par1)
     {
-        isWatching = flag;
+        isWatching = par1;
     }
 }

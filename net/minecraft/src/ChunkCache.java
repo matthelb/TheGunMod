@@ -1,105 +1,144 @@
 package net.minecraft.src;
 
-public class ChunkCache
-    implements IBlockAccess
+public class ChunkCache implements IBlockAccess
 {
     private int chunkX;
     private int chunkZ;
     private Chunk chunkArray[][];
+    private boolean field_48098_d;
+
+    /** Reference to the World object. */
     private World worldObj;
 
-    public ChunkCache(World world, int i, int j, int k, int l, int i1, int j1)
+    public ChunkCache(World par1World, int par2, int par3, int par4, int par5, int par6, int par7)
     {
-        worldObj = world;
-        chunkX = i >> 4;
-        chunkZ = k >> 4;
-        int k1 = l >> 4;
-        int l1 = j1 >> 4;
-        chunkArray = new Chunk[(k1 - chunkX) + 1][(l1 - chunkZ) + 1];
-        for (int i2 = chunkX; i2 <= k1; i2++)
+        worldObj = par1World;
+        chunkX = par2 >> 4;
+        chunkZ = par4 >> 4;
+        int i = par5 >> 4;
+        int j = par7 >> 4;
+        chunkArray = new Chunk[(i - chunkX) + 1][(j - chunkZ) + 1];
+        field_48098_d = true;
+
+        for (int k = chunkX; k <= i; k++)
         {
-            for (int j2 = chunkZ; j2 <= l1; j2++)
+            for (int l = chunkZ; l <= j; l++)
             {
-                chunkArray[i2 - chunkX][j2 - chunkZ] = world.getChunkFromChunkCoords(i2, j2);
+                Chunk chunk = par1World.getChunkFromChunkCoords(k, l);
+
+                if (chunk == null)
+                {
+                    continue;
+                }
+
+                chunkArray[k - chunkX][l - chunkZ] = chunk;
+
+                if (!chunk.func_48556_c(par3, par6))
+                {
+                    field_48098_d = false;
+                }
             }
         }
     }
 
-    public int getBlockId(int i, int j, int k)
+    /**
+     * Returns the block ID at coords x,y,z
+     */
+    public int getBlockId(int par1, int par2, int par3)
     {
-        if (j < 0)
+        if (par2 < 0)
         {
             return 0;
         }
-        if (j >= worldObj.worldHeight)
+
+        if (par2 >= 256)
         {
             return 0;
         }
-        int l = (i >> 4) - chunkX;
-        int i1 = (k >> 4) - chunkZ;
-        if (l < 0 || l >= chunkArray.length || i1 < 0 || i1 >= chunkArray[l].length)
+
+        int i = (par1 >> 4) - chunkX;
+        int j = (par3 >> 4) - chunkZ;
+
+        if (i < 0 || i >= chunkArray.length || j < 0 || j >= chunkArray[i].length)
         {
             return 0;
         }
-        Chunk chunk = chunkArray[l][i1];
+
+        Chunk chunk = chunkArray[i][j];
+
         if (chunk == null)
         {
             return 0;
         }
         else
         {
-            return chunk.getBlockID(i & 0xf, j, k & 0xf);
+            return chunk.getBlockID(par1 & 0xf, par2, par3 & 0xf);
         }
     }
 
-    public TileEntity getBlockTileEntity(int i, int j, int k)
+    /**
+     * Returns the TileEntity associated with a given block in X,Y,Z coordinates, or null if no TileEntity exists
+     */
+    public TileEntity getBlockTileEntity(int par1, int par2, int par3)
     {
-        int l = (i >> 4) - chunkX;
-        int i1 = (k >> 4) - chunkZ;
-        return chunkArray[l][i1].getChunkBlockTileEntity(i & 0xf, j, k & 0xf);
+        int i = (par1 >> 4) - chunkX;
+        int j = (par3 >> 4) - chunkZ;
+        return chunkArray[i][j].getChunkBlockTileEntity(par1 & 0xf, par2, par3 & 0xf);
     }
 
-    public int getBlockMetadata(int i, int j, int k)
+    /**
+     * Returns the block metadata at coords x,y,z
+     */
+    public int getBlockMetadata(int par1, int par2, int par3)
     {
-        if (j < 0)
+        if (par2 < 0)
         {
             return 0;
         }
-        if (j >= worldObj.worldHeight)
+
+        if (par2 >= 256)
         {
             return 0;
         }
         else
         {
-            int l = (i >> 4) - chunkX;
-            int i1 = (k >> 4) - chunkZ;
-            return chunkArray[l][i1].getBlockMetadata(i & 0xf, j, k & 0xf);
+            int i = (par1 >> 4) - chunkX;
+            int j = (par3 >> 4) - chunkZ;
+            return chunkArray[i][j].getBlockMetadata(par1 & 0xf, par2, par3 & 0xf);
         }
     }
 
-    public Material getBlockMaterial(int i, int j, int k)
+    /**
+     * Returns the block's material.
+     */
+    public Material getBlockMaterial(int par1, int par2, int par3)
     {
-        int l = getBlockId(i, j, k);
-        if (l == 0)
+        int i = getBlockId(par1, par2, par3);
+
+        if (i == 0)
         {
             return Material.air;
         }
         else
         {
-            return Block.blocksList[l].blockMaterial;
+            return Block.blocksList[i].blockMaterial;
         }
     }
 
-    public boolean isBlockNormalCube(int i, int j, int k)
+    /**
+     * Returns true if the block at the specified coordinates is an opaque cube. Args: x, y, z
+     */
+    public boolean isBlockNormalCube(int par1, int par2, int par3)
     {
-        Block block = Block.blocksList[getBlockId(i, j, k)];
+        Block block = Block.blocksList[getBlockId(par1, par2, par3)];
+
         if (block == null)
         {
             return false;
         }
         else
         {
-            return block.blockMaterial.getIsSolid() && block.renderAsNormalBlock();
+            return block.blockMaterial.blocksMovement() && block.renderAsNormalBlock();
         }
     }
 }

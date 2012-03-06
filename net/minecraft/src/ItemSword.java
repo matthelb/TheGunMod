@@ -5,56 +5,72 @@ public class ItemSword extends Item
     private int weaponDamage;
     private final EnumToolMaterial toolMaterial;
 
-    public ItemSword(int i, EnumToolMaterial enumtoolmaterial)
+    public ItemSword(int par1, EnumToolMaterial par2EnumToolMaterial)
     {
-        super(i);
-        toolMaterial = enumtoolmaterial;
+        super(par1);
+        toolMaterial = par2EnumToolMaterial;
         maxStackSize = 1;
-        setMaxDamage(enumtoolmaterial.getMaxUses());
-        weaponDamage = 4 + enumtoolmaterial.getDamageVsEntity();
+        setMaxDamage(par2EnumToolMaterial.getMaxUses());
+        weaponDamage = 4 + par2EnumToolMaterial.getDamageVsEntity();
     }
 
-    public float getStrVsBlock(ItemStack itemstack, Block block)
+    /**
+     * Returns the strength of the stack against a given block. 1.0F base, (Quality+1)*2 if correct blocktype, 1.5F if
+     * sword
+     */
+    public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
-        return block.blockID != Block.web.blockID ? 1.5F : 15F;
+        return par2Block.blockID != Block.web.blockID ? 1.5F : 15F;
     }
 
-    public boolean hitEntity(ItemStack itemstack, EntityLiving entityliving, EntityLiving entityliving1)
+    public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
     {
-        itemstack.damageItem(1, entityliving1);
+        par1ItemStack.damageItem(1, par3EntityLiving);
         return true;
     }
 
-    public boolean onBlockDestroyed(ItemStack itemstack, int i, int j, int k, int l, EntityLiving entityliving)
+    public boolean onBlockDestroyed(ItemStack par1ItemStack, int par2, int par3, int par4, int par5, EntityLiving par6EntityLiving)
     {
-        itemstack.damageItem(2, entityliving);
+        par1ItemStack.damageItem(2, par6EntityLiving);
         return true;
     }
 
-    public int getDamageVsEntity(Entity entity)
+    public int getDamageVsEntity(Entity par1Entity)
     {
         return weaponDamage;
     }
 
-    public EnumAction getItemUseAction(ItemStack itemstack)
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.block;
     }
 
-    public int getMaxItemUseDuration(ItemStack itemstack)
+    /**
+     * How long it takes to use or consume an item
+     */
+    public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
         return 0x11940;
     }
 
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    /**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        entityplayer.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
-        return itemstack;
+        par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
+        return par1ItemStack;
     }
 
-    public boolean canHarvestBlock(Block block)
+    /**
+     * Returns if the item (tool) can harvest results from the block type.
+     */
+    public boolean canHarvestBlock(Block par1Block)
     {
-        return block.blockID == Block.web.blockID;
+        return par1Block.blockID == Block.web.blockID;
     }
 
     public int getItemEnchantability()

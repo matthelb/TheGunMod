@@ -20,10 +20,10 @@ public class MapColor
     public final int colorValue;
     public final int colorIndex;
 
-    private MapColor(int i, int j)
+    private MapColor(int par1, int par2)
     {
-        colorIndex = i;
-        colorValue = j;
-        mapColorArray[i] = this;
+        colorIndex = par1;
+        colorValue = par2;
+        mapColorArray[par1] = this;
     }
 }

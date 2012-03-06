@@ -4,9 +4,9 @@ import java.util.Random;
 
 public class BiomeGenSwamp extends BiomeGenBase
 {
-    protected BiomeGenSwamp(int i)
+    protected BiomeGenSwamp(int par1)
     {
-        super(i);
+        super(par1);
         biomeDecorator.treesPerChunk = 2;
         biomeDecorator.flowersPerChunk = -999;
         biomeDecorator.deadBushPerChunk = 1;
@@ -17,7 +17,10 @@ public class BiomeGenSwamp extends BiomeGenBase
         waterColorMultiplier = 0xe0ffae;
     }
 
-    public WorldGenerator getRandomWorldGenForTrees(Random random)
+    /**
+     * Gets a WorldGen appropriate for this biome.
+     */
+    public WorldGenerator getRandomWorldGenForTrees(Random par1Random)
     {
         return worldGenSwamp;
     }

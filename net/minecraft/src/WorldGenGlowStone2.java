@@ -8,63 +8,76 @@ public class WorldGenGlowStone2 extends WorldGenerator
     {
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        if (!world.isAirBlock(i, j, k))
+        if (!par1World.isAirBlock(par3, par4, par5))
         {
             return false;
         }
-        if (world.getBlockId(i, j + 1, k) != Block.netherrack.blockID)
+
+        if (par1World.getBlockId(par3, par4 + 1, par5) != Block.netherrack.blockID)
         {
             return false;
         }
-        world.setBlockWithNotify(i, j, k, Block.glowStone.blockID);
-        for (int l = 0; l < 1500; l++)
+
+        par1World.setBlockWithNotify(par3, par4, par5, Block.glowStone.blockID);
+
+        for (int i = 0; i < 1500; i++)
         {
-            int i1 = (i + random.nextInt(8)) - random.nextInt(8);
-            int j1 = j - random.nextInt(12);
-            int k1 = (k + random.nextInt(8)) - random.nextInt(8);
-            if (world.getBlockId(i1, j1, k1) != 0)
+            int j = (par3 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+            int k = par4 - par2Random.nextInt(12);
+            int l = (par5 + par2Random.nextInt(8)) - par2Random.nextInt(8);
+
+            if (par1World.getBlockId(j, k, l) != 0)
             {
                 continue;
             }
-            int l1 = 0;
-            for (int i2 = 0; i2 < 6; i2++)
+
+            int i1 = 0;
+
+            for (int j1 = 0; j1 < 6; j1++)
             {
-                int j2 = 0;
-                if (i2 == 0)
+                int k1 = 0;
+
+                if (j1 == 0)
                 {
-                    j2 = world.getBlockId(i1 - 1, j1, k1);
+                    k1 = par1World.getBlockId(j - 1, k, l);
                 }
-                if (i2 == 1)
+
+                if (j1 == 1)
                 {
-                    j2 = world.getBlockId(i1 + 1, j1, k1);
+                    k1 = par1World.getBlockId(j + 1, k, l);
                 }
-                if (i2 == 2)
+
+                if (j1 == 2)
                 {
-                    j2 = world.getBlockId(i1, j1 - 1, k1);
+                    k1 = par1World.getBlockId(j, k - 1, l);
                 }
-                if (i2 == 3)
+
+                if (j1 == 3)
                 {
-                    j2 = world.getBlockId(i1, j1 + 1, k1);
+                    k1 = par1World.getBlockId(j, k + 1, l);
                 }
-                if (i2 == 4)
+
+                if (j1 == 4)
                 {
-                    j2 = world.getBlockId(i1, j1, k1 - 1);
+                    k1 = par1World.getBlockId(j, k, l - 1);
                 }
-                if (i2 == 5)
+
+                if (j1 == 5)
                 {
-                    j2 = world.getBlockId(i1, j1, k1 + 1);
+                    k1 = par1World.getBlockId(j, k, l + 1);
                 }
-                if (j2 == Block.glowStone.blockID)
+
+                if (k1 == Block.glowStone.blockID)
                 {
-                    l1++;
+                    i1++;
                 }
             }
 
-            if (l1 == 1)
+            if (i1 == 1)
             {
-                world.setBlockWithNotify(i1, j1, k1, Block.glowStone.blockID);
+                par1World.setBlockWithNotify(j, k, l, Block.glowStone.blockID);
             }
         }
 

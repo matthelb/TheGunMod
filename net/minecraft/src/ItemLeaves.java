@@ -2,15 +2,18 @@ package net.minecraft.src;
 
 public class ItemLeaves extends ItemBlock
 {
-    public ItemLeaves(int i)
+    public ItemLeaves(int par1)
     {
-        super(i);
+        super(par1);
         setMaxDamage(0);
         setHasSubtypes(true);
     }
 
-    public int getMetadata(int i)
+    /**
+     * returns the argument if the item has metadata, 0 otherwise
+     */
+    public int getMetadata(int par1)
     {
-        return i | 4;
+        return par1 | 4;
     }
 }

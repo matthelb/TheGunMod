@@ -7,43 +7,55 @@ import net.minecraft.server.MinecraftServer;
 public class WorldServer extends World
 {
     public ChunkProviderServer chunkProviderServer;
+
+    /** Set to true when an op is building or this dimension != 0 */
     public boolean disableSpawnProtection;
+
+    /** Whether or not level saving is enabled */
     public boolean levelSaving;
     private MinecraftServer mcServer;
-    private IntHashMap field_34902_Q;
 
-    public WorldServer(MinecraftServer minecraftserver, ISaveHandler isavehandler, String s, int i, WorldSettings worldsettings)
+    /** Maps ids to entity instances */
+    private IntHashMap entityInstanceIdMap;
+
+    public WorldServer(MinecraftServer par1MinecraftServer, ISaveHandler par2ISaveHandler, String par3Str, int par4, WorldSettings par5WorldSettings)
     {
-        super(isavehandler, s, worldsettings, WorldProvider.getProviderForDimension(i));
+        super(par2ISaveHandler, par3Str, par5WorldSettings, WorldProvider.getProviderForDimension(par4));
         disableSpawnProtection = false;
-        mcServer = minecraftserver;
-        if (field_34902_Q == null)
+        mcServer = par1MinecraftServer;
+
+        if (entityInstanceIdMap == null)
         {
-            field_34902_Q = new IntHashMap();
+            entityInstanceIdMap = new IntHashMap();
         }
     }
 
-    public void updateEntityWithOptionalForce(Entity entity, boolean flag)
+    public void updateEntityWithOptionalForce(Entity par1Entity, boolean par2)
     {
-        if (!mcServer.spawnPeacefulMobs && ((entity instanceof EntityAnimal) || (entity instanceof EntityWaterMob)))
+        if (!mcServer.spawnPeacefulMobs && ((par1Entity instanceof EntityAnimal) || (par1Entity instanceof EntityWaterMob)))
         {
-            entity.setEntityDead();
+            par1Entity.setEntityDead();
         }
-        if (!mcServer.field_44002_p && (entity instanceof INpc))
+
+        if (!mcServer.field_44002_p && (par1Entity instanceof INpc))
         {
-            entity.setEntityDead();
+            par1Entity.setEntityDead();
         }
-        if (entity.riddenByEntity == null || !(entity.riddenByEntity instanceof EntityPlayer))
+
+        if (par1Entity.riddenByEntity == null || !(par1Entity.riddenByEntity instanceof EntityPlayer))
         {
-            super.updateEntityWithOptionalForce(entity, flag);
+            super.updateEntityWithOptionalForce(par1Entity, par2);
         }
     }
 
-    public void func_12017_b(Entity entity, boolean flag)
+    public void func_12017_b(Entity par1Entity, boolean par2)
     {
-        super.updateEntityWithOptionalForce(entity, flag);
+        super.updateEntityWithOptionalForce(par1Entity, par2);
     }
 
+    /**
+     * Creates the chunk provider for this world. Called in the constructor. Retrieves provider from worldProvider?
+     */
     protected IChunkProvider createChunkProvider()
     {
         IChunkLoader ichunkloader = saveHandler.getChunkLoader(worldProvider);
@@ -51,13 +63,18 @@ public class WorldServer extends World
         return chunkProviderServer;
     }
 
-    public List getTileEntityList(int i, int j, int k, int l, int i1, int j1)
+    /**
+     * get a list of tileEntity's
+     */
+    public List getTileEntityList(int par1, int par2, int par3, int par4, int par5, int par6)
     {
         ArrayList arraylist = new ArrayList();
-        for (int k1 = 0; k1 < loadedTileEntityList.size(); k1++)
+
+        for (int i = 0; i < loadedTileEntityList.size(); i++)
         {
-            TileEntity tileentity = (TileEntity)loadedTileEntityList.get(k1);
-            if (tileentity.xCoord >= i && tileentity.yCoord >= j && tileentity.zCoord >= k && tileentity.xCoord < l && tileentity.yCoord < i1 && tileentity.zCoord < j1)
+            TileEntity tileentity = (TileEntity)loadedTileEntityList.get(i);
+
+            if (tileentity.xCoord >= par1 && tileentity.yCoord >= par2 && tileentity.zCoord >= par3 && tileentity.xCoord < par4 && tileentity.yCoord < par5 && tileentity.zCoord < par6)
             {
                 arraylist.add(tileentity);
             }
@@ -66,64 +83,78 @@ public class WorldServer extends World
         return arraylist;
     }
 
-    public boolean canMineBlock(EntityPlayer entityplayer, int i, int j, int k)
+    /**
+     * Called when checking if a certain block can be mined or not. The 'spawn safe zone' check is located here.
+     */
+    public boolean canMineBlock(EntityPlayer par1EntityPlayer, int par2, int par3, int par4)
     {
-        int l = MathHelper.abs(i - worldInfo.getSpawnX());
-        int i1 = MathHelper.abs(k - worldInfo.getSpawnZ());
-        if (l > i1)
+        int i = MathHelper.abs(par2 - worldInfo.getSpawnX());
+        int j = MathHelper.abs(par4 - worldInfo.getSpawnZ());
+
+        if (i > j)
         {
-            i1 = l;
+            j = i;
         }
-        return i1 > 16 || mcServer.configManager.isOp(entityplayer.username);
+
+        return j > 16 || mcServer.configManager.isOp(par1EntityPlayer.username);
     }
 
+    /**
+     * generates a spawn point for this world
+     */
     protected void generateSpawnPoint()
     {
-        if (field_34902_Q == null)
+        if (entityInstanceIdMap == null)
         {
-            field_34902_Q = new IntHashMap();
+            entityInstanceIdMap = new IntHashMap();
         }
+
         super.generateSpawnPoint();
     }
 
-    protected void obtainEntitySkin(Entity entity)
+    protected void obtainEntitySkin(Entity par1Entity)
     {
-        super.obtainEntitySkin(entity);
-        field_34902_Q.addKey(entity.entityId, entity);
-        Entity aentity[] = entity.getParts();
+        super.obtainEntitySkin(par1Entity);
+        entityInstanceIdMap.addKey(par1Entity.entityId, par1Entity);
+        Entity aentity[] = par1Entity.getParts();
+
         if (aentity != null)
         {
             for (int i = 0; i < aentity.length; i++)
             {
-                field_34902_Q.addKey(aentity[i].entityId, aentity[i]);
+                entityInstanceIdMap.addKey(aentity[i].entityId, aentity[i]);
             }
         }
     }
 
-    protected void releaseEntitySkin(Entity entity)
+    protected void releaseEntitySkin(Entity par1Entity)
     {
-        super.releaseEntitySkin(entity);
-        field_34902_Q.removeObject(entity.entityId);
-        Entity aentity[] = entity.getParts();
+        super.releaseEntitySkin(par1Entity);
+        entityInstanceIdMap.removeObject(par1Entity.entityId);
+        Entity aentity[] = par1Entity.getParts();
+
         if (aentity != null)
         {
             for (int i = 0; i < aentity.length; i++)
             {
-                field_34902_Q.removeObject(aentity[i].entityId);
+                entityInstanceIdMap.removeObject(aentity[i].entityId);
             }
         }
     }
 
-    public Entity func_6158_a(int i)
+    public Entity func_6158_a(int par1)
     {
-        return (Entity)field_34902_Q.lookup(i);
+        return (Entity)entityInstanceIdMap.lookup(par1);
     }
 
-    public boolean addWeatherEffect(Entity entity)
+    /**
+     * adds a lightning bolt to the list of lightning bolts in this world.
+     */
+    public boolean addWeatherEffect(Entity par1Entity)
     {
-        if (super.addWeatherEffect(entity))
+        if (super.addWeatherEffect(par1Entity))
         {
-            mcServer.configManager.sendPacketToPlayersAroundPoint(entity.posX, entity.posY, entity.posZ, 512D, worldProvider.worldType, new Packet71Weather(entity));
+            mcServer.configManager.sendPacketToPlayersAroundPoint(par1Entity.posX, par1Entity.posY, par1Entity.posZ, 512D, worldProvider.worldType, new Packet71Weather(par1Entity));
             return true;
         }
         else
@@ -132,27 +163,35 @@ public class WorldServer extends World
         }
     }
 
-    public void setEntityState(Entity entity, byte byte0)
+    /**
+     * sends a Packet 38 (Entity Status) to all tracked players of that entity
+     */
+    public void setEntityState(Entity par1Entity, byte par2)
     {
-        Packet38EntityStatus packet38entitystatus = new Packet38EntityStatus(entity.entityId, byte0);
-        mcServer.getEntityTracker(worldProvider.worldType).sendPacketToTrackedPlayersAndTrackedEntity(entity, packet38entitystatus);
+        Packet38EntityStatus packet38entitystatus = new Packet38EntityStatus(par1Entity.entityId, par2);
+        mcServer.getEntityTracker(worldProvider.worldType).sendPacketToTrackedPlayersAndTrackedEntity(par1Entity, packet38entitystatus);
     }
 
-    public Explosion newExplosion(Entity entity, double d, double d1, double d2,
-            float f, boolean flag)
+    /**
+     * returns a new explosion. Does initiation (at time of writing Explosion is not finished)
+     */
+    public Explosion newExplosion(Entity par1Entity, double par2, double par4, double par6, float par8, boolean par9)
     {
-        Explosion explosion = new Explosion(this, entity, d, d1, d2, f);
-        explosion.isFlaming = flag;
+        Explosion explosion = new Explosion(this, par1Entity, par2, par4, par6, par8);
+        explosion.isFlaming = par9;
         explosion.doExplosionA();
         explosion.doExplosionB(false);
-        mcServer.configManager.sendPacketToPlayersAroundPoint(d, d1, d2, 64D, worldProvider.worldType, new Packet60Explosion(d, d1, d2, f, explosion.destroyedBlockPositions));
+        mcServer.configManager.sendPacketToPlayersAroundPoint(par2, par4, par6, 64D, worldProvider.worldType, new Packet60Explosion(par2, par4, par6, par8, explosion.destroyedBlockPositions));
         return explosion;
     }
 
-    public void playNoteAt(int i, int j, int k, int l, int i1)
+    /**
+     * plays a given note at x, y, z. args: x, y, z, instrument, note
+     */
+    public void playNoteAt(int par1, int par2, int par3, int par4, int par5)
     {
-        super.playNoteAt(i, j, k, l, i1);
-        mcServer.configManager.sendPacketToPlayersAroundPoint(i, j, k, 64D, worldProvider.worldType, new Packet54PlayNoteBlock(i, j, k, l, i1));
+        super.playNoteAt(par1, par2, par3, par4, par5);
+        mcServer.configManager.sendPacketToPlayersAroundPoint(par1, par2, par3, 64D, worldProvider.worldType, new Packet54PlayNoteBlock(par1, par2, par3, par4, par5));
     }
 
     public void func_30006_w()
@@ -160,10 +199,14 @@ public class WorldServer extends World
         saveHandler.func_22093_e();
     }
 
+    /**
+     * update's all weather states.
+     */
     protected void updateWeather()
     {
         boolean flag = isRaining();
         super.updateWeather();
+
         if (flag != isRaining())
         {
             if (flag)

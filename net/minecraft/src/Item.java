@@ -106,9 +106,15 @@ public class Item
     public static Item bone = (new Item(96)).setIconCoord(12, 1).setItemName("bone").setFull3D();
     public static Item sugar;
     public static Item cake;
+
+    /** The bed as an inventory item. */
     public static Item bed = (new ItemBed(99)).setMaxStackSize(1).setIconCoord(13, 2).setItemName("bed");
     public static Item redstoneRepeater;
+
+    /** The cookie inventory item. */
     public static Item cookie = (new ItemFood(101, 1, 0.1F, false)).setIconCoord(12, 5).setItemName("cookie");
+
+    /** The map item */
     public static ItemMap map = (ItemMap)(new ItemMap(102)).setIconCoord(12, 3).setItemName("map");
     public static ItemShears shears = (ItemShears)(new ItemShears(103)).setIconCoord(13, 5).setItemName("shears");
     public static Item melon = (new ItemFood(104, 2, 0.3F, false)).setIconCoord(13, 6).setItemName("melon");
@@ -135,6 +141,8 @@ public class Item
     public static Item eyeOfEnder = (new ItemEnderEye(125)).setIconCoord(11, 9).setItemName("eyeOfEnder");
     public static Item speckledMelon;
     public static Item monsterPlacer = (new ItemMonsterPlacer(127)).setIconCoord(9, 9).setItemName("monsterPlacer");
+    public static Item field_48389_bC = (new ItemExpBottle(128)).setIconCoord(11, 10).setItemName("expBottle");
+    public static Item field_48388_bD = (new ItemFireball(129)).setIconCoord(14, 2).setItemName("fireball");
     public static Item record13 = (new ItemRecord(2000, "13")).setIconCoord(0, 15).setItemName("record");
     public static Item recordCat = (new ItemRecord(2001, "cat")).setIconCoord(1, 15).setItemName("record");
     public static Item recordBlocks = (new ItemRecord(2002, "blocks")).setIconCoord(2, 15).setItemName("record");
@@ -146,17 +154,37 @@ public class Item
     public static Item recordStrad = (new ItemRecord(2008, "strad")).setIconCoord(8, 15).setItemName("record");
     public static Item recordWard = (new ItemRecord(2009, "ward")).setIconCoord(9, 15).setItemName("record");
     public static Item record11 = (new ItemRecord(2010, "11")).setIconCoord(10, 15).setItemName("record");
+
+    /** Item index + 256 */
     public final int shiftedIndex;
+
+    /** Maximum size of the stack. */
     protected int maxStackSize;
+
+    /** Maximum damage an item can handle. */
     private int maxDamage;
+
+    /** Icon index in the icons table. */
     protected int iconIndex;
+
+    /** If true, render the object in full 3D, like weapons and tools. */
     protected boolean bFull3D;
+
+    /**
+     * Some items (like dyes) have multiple subtypes on same item, this is field define this behavior
+     */
     protected boolean hasSubtypes;
     private Item containerItem;
+
+    /**
+     * The string representing this item's effect on a potion when used as an ingredient.
+     */
     private String potionEffect;
+
+    /** full name of item from language file */
     private String itemName;
 
-    protected Item(int i)
+    protected Item(int par1)
     {
         maxStackSize = 64;
         maxDamage = 0;
@@ -164,58 +192,80 @@ public class Item
         hasSubtypes = false;
         containerItem = null;
         potionEffect = null;
-        shiftedIndex = 256 + i;
-        if (itemsList[256 + i] != null)
+        shiftedIndex = 256 + par1;
+
+        if (itemsList[256 + par1] != null)
         {
-            System.out.println((new StringBuilder()).append("CONFLICT @ ").append(i).toString());
+            System.out.println((new StringBuilder()).append("CONFLICT @ ").append(par1).toString());
         }
-        itemsList[256 + i] = this;
+
+        itemsList[256 + par1] = this;
     }
 
-    public Item setIconIndex(int i)
+    /**
+     * Sets the icon index for this item. Returns the item.
+     */
+    public Item setIconIndex(int par1)
     {
-        iconIndex = i;
+        iconIndex = par1;
         return this;
     }
 
-    public Item setMaxStackSize(int i)
+    public Item setMaxStackSize(int par1)
     {
-        maxStackSize = i;
+        maxStackSize = par1;
         return this;
     }
 
-    public Item setIconCoord(int i, int j)
+    public Item setIconCoord(int par1, int par2)
     {
-        iconIndex = i + j * 16;
+        iconIndex = par1 + par2 * 16;
         return this;
     }
 
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
+     */
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int i, int j, int k, int l)
     {
         return false;
     }
 
-    public float getStrVsBlock(ItemStack itemstack, Block block)
+    /**
+     * Returns the strength of the stack against a given block. 1.0F base, (Quality+1)*2 if correct blocktype, 1.5F if
+     * sword
+     */
+    public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
         return 1.0F;
     }
 
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    /**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        return itemstack;
+        return par1ItemStack;
     }
 
-    public ItemStack onFoodEaten(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    public ItemStack onFoodEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        return itemstack;
+        return par1ItemStack;
     }
 
+    /**
+     * Returns the maximum size of the stack for a specific item. *Isn't this more a Set than a Get?*
+     */
     public int getItemStackLimit()
     {
         return maxStackSize;
     }
 
-    public int getMetadata(int i)
+    /**
+     * returns the argument if the item has metadata, 0 otherwise
+     */
+    public int getMetadata(int par1)
     {
         return 0;
     }
@@ -225,20 +275,26 @@ public class Item
         return hasSubtypes;
     }
 
-    protected Item setHasSubtypes(boolean flag)
+    protected Item setHasSubtypes(boolean par1)
     {
-        hasSubtypes = flag;
+        hasSubtypes = par1;
         return this;
     }
 
+    /**
+     * Returns the maximum damage an item can take.
+     */
     public int getMaxDamage()
     {
         return maxDamage;
     }
 
-    protected Item setMaxDamage(int i)
+    /**
+     * set max damage of an Item
+     */
+    protected Item setMaxDamage(int par1)
     {
-        maxDamage = i;
+        maxDamage = par1;
         return this;
     }
 
@@ -247,39 +303,51 @@ public class Item
         return maxDamage > 0 && !hasSubtypes;
     }
 
-    public boolean hitEntity(ItemStack itemstack, EntityLiving entityliving, EntityLiving entityliving1)
+    public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
     {
         return false;
     }
 
-    public boolean onBlockDestroyed(ItemStack itemstack, int i, int j, int k, int l, EntityLiving entityliving)
+    public boolean onBlockDestroyed(ItemStack par1ItemStack, int par2, int par3, int i, int j, EntityLiving entityliving)
     {
         return false;
     }
 
-    public int getDamageVsEntity(Entity entity)
+    public int getDamageVsEntity(Entity par1Entity)
     {
         return 1;
     }
 
-    public boolean canHarvestBlock(Block block)
+    /**
+     * Returns if the item (tool) can harvest results from the block type.
+     */
+    public boolean canHarvestBlock(Block par1Block)
     {
         return false;
     }
 
+    /**
+     * Called when a player right clicks a entity with a item.
+     */
     public void useItemOnEntity(ItemStack itemstack, EntityLiving entityliving)
     {
     }
 
+    /**
+     * Sets bFull3D to True and return the object.
+     */
     public Item setFull3D()
     {
         bFull3D = true;
         return this;
     }
 
-    public Item setItemName(String s)
+    /**
+     * set name of item from language file
+     */
+    public Item setItemName(String par1Str)
     {
-        itemName = (new StringBuilder()).append("item.").append(s).toString();
+        itemName = (new StringBuilder()).append("item.").append(par1Str).toString();
         return this;
     }
 
@@ -288,18 +356,22 @@ public class Item
         return itemName;
     }
 
-    public String getItemNameIS(ItemStack itemstack)
+    public String getItemNameIS(ItemStack par1ItemStack)
     {
         return itemName;
     }
 
-    public Item setContainerItem(Item item)
+    public Item setContainerItem(Item par1Item)
     {
-        containerItem = item;
+        containerItem = par1Item;
         return this;
     }
 
-    public boolean func_46004_e(ItemStack itemstack)
+    /**
+     * If this returns true, after a recipe involving this item is crafted the container item will be added to the
+     * player's inventory instead of remaining in the crafting grid.
+     */
+    public boolean doesContainerItemLeaveCraftingGrid(ItemStack par1ItemStack)
     {
         return true;
     }
@@ -314,6 +386,9 @@ public class Item
         return containerItem;
     }
 
+    /**
+     * returns wether the item has a containerItem
+     */
     public boolean hasContainerItem()
     {
         return containerItem != null;
@@ -337,12 +412,18 @@ public class Item
         return false;
     }
 
-    public EnumAction getItemUseAction(ItemStack itemstack)
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.none;
     }
 
-    public int getMaxItemUseDuration(ItemStack itemstack)
+    /**
+     * How long it takes to use or consume an item
+     */
+    public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
         return 0;
     }
@@ -351,38 +432,50 @@ public class Item
     {
     }
 
-    protected Item setPotionEffect(String s)
+    /**
+     * Sets the string representing this item's effect on a potion when used as an ingredient.
+     */
+    protected Item setPotionEffect(String par1Str)
     {
-        potionEffect = s;
+        potionEffect = par1Str;
         return this;
     }
 
+    /**
+     * Returns a string representing what this item does to a potion.
+     */
     public String getPotionEffect()
     {
         return potionEffect;
     }
 
+    /**
+     * Returns true if this item serves as a potion ingredient (its ingredient information is not null).
+     */
     public boolean isPotionIngredient()
     {
         return potionEffect != null;
     }
 
-    public boolean isItemTool(ItemStack itemstack)
+    /**
+     * Checks isDamagable and if it cannot be stacked
+     */
+    public boolean isItemTool(ItemStack par1ItemStack)
     {
         return getItemStackLimit() == 1 && isDamageable();
     }
 
-    protected MovingObjectPosition getMovingObjectPositionFromPlayer(World world, EntityPlayer entityplayer, boolean flag)
+    protected MovingObjectPosition getMovingObjectPositionFromPlayer(World par1World, EntityPlayer par2EntityPlayer, boolean par3)
     {
         float f = 1.0F;
-        float f1 = entityplayer.prevRotationPitch + (entityplayer.rotationPitch - entityplayer.prevRotationPitch) * f;
-        float f2 = entityplayer.prevRotationYaw + (entityplayer.rotationYaw - entityplayer.prevRotationYaw) * f;
-        double d = entityplayer.prevPosX + (entityplayer.posX - entityplayer.prevPosX) * (double)f;
-        double d1 = (entityplayer.prevPosY + (entityplayer.posY - entityplayer.prevPosY) * (double)f + 1.6200000000000001D) - (double)entityplayer.yOffset;
-        double d2 = entityplayer.prevPosZ + (entityplayer.posZ - entityplayer.prevPosZ) * (double)f;
+        float f1 = par2EntityPlayer.prevRotationPitch + (par2EntityPlayer.rotationPitch - par2EntityPlayer.prevRotationPitch) * f;
+        float f2 = par2EntityPlayer.prevRotationYaw + (par2EntityPlayer.rotationYaw - par2EntityPlayer.prevRotationYaw) * f;
+        double d = par2EntityPlayer.prevPosX + (par2EntityPlayer.posX - par2EntityPlayer.prevPosX) * (double)f;
+        double d1 = (par2EntityPlayer.prevPosY + (par2EntityPlayer.posY - par2EntityPlayer.prevPosY) * (double)f + 1.62D) - (double)par2EntityPlayer.yOffset;
+        double d2 = par2EntityPlayer.prevPosZ + (par2EntityPlayer.posZ - par2EntityPlayer.prevPosZ) * (double)f;
         Vec3D vec3d = Vec3D.createVector(d, d1, d2);
-        float f3 = MathHelper.cos(-f2 * 0.01745329F - 3.141593F);
-        float f4 = MathHelper.sin(-f2 * 0.01745329F - 3.141593F);
+        float f3 = MathHelper.cos(-f2 * 0.01745329F - (float)Math.PI);
+        float f4 = MathHelper.sin(-f2 * 0.01745329F - (float)Math.PI);
         float f5 = -MathHelper.cos(-f1 * 0.01745329F);
         float f6 = MathHelper.sin(-f1 * 0.01745329F);
         float f7 = f4 * f5;
@@ -390,7 +483,7 @@ public class Item
         float f9 = f3 * f5;
         double d3 = 5D;
         Vec3D vec3d1 = vec3d.addVector((double)f7 * d3, (double)f8 * d3, (double)f9 * d3);
-        MovingObjectPosition movingobjectposition = world.rayTraceBlocks_do_do(vec3d, vec3d1, flag, !flag);
+        MovingObjectPosition movingobjectposition = par1World.rayTraceBlocks_do_do(vec3d, vec3d1, par3, !par3);
         return movingobjectposition;
     }
 

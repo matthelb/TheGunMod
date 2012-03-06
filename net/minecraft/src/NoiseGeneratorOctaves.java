@@ -7,54 +7,58 @@ public class NoiseGeneratorOctaves extends NoiseGenerator
     private NoiseGeneratorPerlin generatorCollection[];
     private int octaves;
 
-    public NoiseGeneratorOctaves(Random random, int i)
+    public NoiseGeneratorOctaves(Random par1Random, int par2)
     {
-        octaves = i;
-        generatorCollection = new NoiseGeneratorPerlin[i];
-        for (int j = 0; j < i; j++)
+        octaves = par2;
+        generatorCollection = new NoiseGeneratorPerlin[par2];
+
+        for (int i = 0; i < par2; i++)
         {
-            generatorCollection[j] = new NoiseGeneratorPerlin(random);
+            generatorCollection[i] = new NoiseGeneratorPerlin(par1Random);
         }
     }
 
-    public double[] generateNoiseOctaves(double ad[], int i, int j, int k, int l, int i1, int j1,
-            double d, double d1, double d2)
+    public double[] generateNoiseOctaves(double par1ArrayOfDouble[], int par2, int par3, int par4, int par5, int par6, int par7, double par8, double par10, double par12)
     {
-        if (ad == null)
+        if (par1ArrayOfDouble == null)
         {
-            ad = new double[l * i1 * j1];
+            par1ArrayOfDouble = new double[par5 * par6 * par7];
         }
         else
         {
-            for (int k1 = 0; k1 < ad.length; k1++)
+            for (int i = 0; i < par1ArrayOfDouble.length; i++)
             {
-                ad[k1] = 0.0D;
+                par1ArrayOfDouble[i] = 0.0D;
             }
         }
-        double d3 = 1.0D;
-        for (int l1 = 0; l1 < octaves; l1++)
+
+        double d = 1.0D;
+
+        for (int j = 0; j < octaves; j++)
         {
-            double d4 = (double)i * d3 * d;
-            double d5 = (double)j * d3 * d1;
-            double d6 = (double)k * d3 * d2;
-            long l2 = MathHelper.floor_double_long(d4);
-            long l3 = MathHelper.floor_double_long(d6);
-            d4 -= l2;
-            d6 -= l3;
-            l2 %= 0x1000000L;
-            l3 %= 0x1000000L;
-            d4 += l2;
-            d6 += l3;
-            generatorCollection[l1].func_646_a(ad, d4, d5, d6, l, i1, j1, d * d3, d1 * d3, d2 * d3, d3);
-            d3 /= 2D;
+            double d1 = (double)par2 * d * par8;
+            double d2 = (double)par3 * d * par10;
+            double d3 = (double)par4 * d * par12;
+            long l = MathHelper.floor_double_long(d1);
+            long l1 = MathHelper.floor_double_long(d3);
+            d1 -= l;
+            d3 -= l1;
+            l %= 0x1000000L;
+            l1 %= 0x1000000L;
+            d1 += l;
+            d3 += l1;
+            generatorCollection[j].func_646_a(par1ArrayOfDouble, d1, d2, d3, par5, par6, par7, par8 * d, par10 * d, par12 * d, d);
+            d /= 2D;
         }
 
-        return ad;
+        return par1ArrayOfDouble;
     }
 
-    public double[] generateNoiseOctaves(double ad[], int i, int j, int k, int l, double d,
-            double d1, double d2)
+    /**
+     * Bouncer function to the main one with some default arguments.
+     */
+    public double[] generateNoiseOctaves(double par1ArrayOfDouble[], int par2, int par3, int par4, int par5, double par6, double par8, double par10)
     {
-        return generateNoiseOctaves(ad, i, 10, j, k, 1, l, d, 1.0D, d1);
+        return generateNoiseOctaves(par1ArrayOfDouble, par2, 10, par3, par4, 1, par5, par6, 1.0D, par8);
     }
 }

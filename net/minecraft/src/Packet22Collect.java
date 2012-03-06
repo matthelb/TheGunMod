@@ -4,38 +4,51 @@ import java.io.*;
 
 public class Packet22Collect extends Packet
 {
+    /** The entity on the ground that was picked up. */
     public int collectedEntityId;
+
+    /** The entity that picked up the one from the ground. */
     public int collectorEntityId;
 
     public Packet22Collect()
     {
     }
 
-    public Packet22Collect(int i, int j)
+    public Packet22Collect(int par1, int par2)
     {
-        collectedEntityId = i;
-        collectorEntityId = j;
+        collectedEntityId = par1;
+        collectorEntityId = par2;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        collectedEntityId = datainputstream.readInt();
-        collectorEntityId = datainputstream.readInt();
+        collectedEntityId = par1DataInputStream.readInt();
+        collectorEntityId = par1DataInputStream.readInt();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(collectedEntityId);
-        dataoutputstream.writeInt(collectorEntityId);
+        par1DataOutputStream.writeInt(collectedEntityId);
+        par1DataOutputStream.writeInt(collectorEntityId);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleCollect(this);
+        par1NetHandler.handleCollect(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 8;

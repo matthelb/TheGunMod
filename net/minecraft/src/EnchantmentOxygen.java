@@ -2,20 +2,20 @@ package net.minecraft.src;
 
 public class EnchantmentOxygen extends Enchantment
 {
-    public EnchantmentOxygen(int i, int j)
+    public EnchantmentOxygen(int par1, int par2)
     {
-        super(i, j, EnumEnchantmentType.armor_head);
+        super(par1, par2, EnumEnchantmentType.armor_head);
         setName("oxygen");
     }
 
-    public int getMinEnchantability(int i)
+    public int getMinEnchantability(int par1)
     {
-        return 10 * i;
+        return 10 * par1;
     }
 
-    public int getMaxEnchantability(int i)
+    public int getMaxEnchantability(int par1)
     {
-        return getMinEnchantability(i) + 30;
+        return getMinEnchantability(par1) + 30;
     }
 
     public int getMaxLevel()

@@ -8,14 +8,17 @@ import net.minecraft.server.MinecraftServer;
 
 class NetworkAcceptThread extends Thread
 {
+    /** Reference to the MinecraftServer object. */
     final MinecraftServer mcServer;
+
+    /** The network listener object. */
     final NetworkListenThread netWorkListener;
 
-    NetworkAcceptThread(NetworkListenThread networklistenthread, String s, MinecraftServer minecraftserver)
+    NetworkAcceptThread(NetworkListenThread par1NetworkListenThread, String par2Str, MinecraftServer par3MinecraftServer)
     {
-        super(s);
-        netWorkListener = networklistenthread;
-        mcServer = minecraftserver;
+        super(par2Str);
+        netWorkListener = par1NetworkListenThread;
+        mcServer = par3MinecraftServer;
     }
 
     public void run()
@@ -26,24 +29,30 @@ class NetworkAcceptThread extends Thread
             {
                 break;
             }
+
             try
             {
                 Socket socket = NetworkListenThread.getServerSocket(netWorkListener).accept();
+
                 if (socket == null)
                 {
                     continue;
                 }
+
                 synchronized (NetworkListenThread.func_35504_b(netWorkListener))
                 {
                     java.net.InetAddress inetaddress = socket.getInetAddress();
+
                     if (NetworkListenThread.func_35504_b(netWorkListener).containsKey(inetaddress) && System.currentTimeMillis() - ((Long)NetworkListenThread.func_35504_b(netWorkListener).get(inetaddress)).longValue() < 5000L)
                     {
                         NetworkListenThread.func_35504_b(netWorkListener).put(inetaddress, Long.valueOf(System.currentTimeMillis()));
                         socket.close();
                         continue;
                     }
+
                     NetworkListenThread.func_35504_b(netWorkListener).put(inetaddress, Long.valueOf(System.currentTimeMillis()));
                 }
+
                 NetLoginHandler netloginhandler = new NetLoginHandler(mcServer, socket, (new StringBuilder()).append("Connection #").append(NetworkListenThread.func_712_b(netWorkListener)).toString());
                 NetworkListenThread.func_716_a(netWorkListener, netloginhandler);
             }

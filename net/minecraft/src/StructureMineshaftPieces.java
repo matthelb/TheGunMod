@@ -11,58 +11,67 @@ public class StructureMineshaftPieces
     {
     }
 
-    private static StructureComponent getRandomComponent(List list, Random random, int i, int j, int k, int l, int i1)
+    private static StructureComponent getRandomComponent(List par0List, Random par1Random, int par2, int par3, int par4, int par5, int par6)
     {
-        int j1 = random.nextInt(100);
-        if (j1 >= 80)
+        int i = par1Random.nextInt(100);
+
+        if (i >= 80)
         {
-            StructureBoundingBox structureboundingbox = ComponentMineshaftCross.func_35362_a(list, random, i, j, k, l);
+            StructureBoundingBox structureboundingbox = ComponentMineshaftCross.findValidPlacement(par0List, par1Random, par2, par3, par4, par5);
+
             if (structureboundingbox != null)
             {
-                return new ComponentMineshaftCross(i1, random, structureboundingbox, l);
+                return new ComponentMineshaftCross(par6, par1Random, structureboundingbox, par5);
             }
         }
-        else if (j1 >= 70)
+        else if (i >= 70)
         {
-            StructureBoundingBox structureboundingbox1 = ComponentMineshaftStairs.findValidPlacement(list, random, i, j, k, l);
+            StructureBoundingBox structureboundingbox1 = ComponentMineshaftStairs.findValidPlacement(par0List, par1Random, par2, par3, par4, par5);
+
             if (structureboundingbox1 != null)
             {
-                return new ComponentMineshaftStairs(i1, random, structureboundingbox1, l);
+                return new ComponentMineshaftStairs(par6, par1Random, structureboundingbox1, par5);
             }
         }
         else
         {
-            StructureBoundingBox structureboundingbox2 = ComponentMineshaftCorridor.func_35357_a(list, random, i, j, k, l);
+            StructureBoundingBox structureboundingbox2 = ComponentMineshaftCorridor.findValidPlacement(par0List, par1Random, par2, par3, par4, par5);
+
             if (structureboundingbox2 != null)
             {
-                return new ComponentMineshaftCorridor(i1, random, structureboundingbox2, l);
+                return new ComponentMineshaftCorridor(par6, par1Random, structureboundingbox2, par5);
             }
         }
+
         return null;
     }
 
-    private static StructureComponent getNextMineShaftComponent(StructureComponent structurecomponent, List list, Random random, int i, int j, int k, int l, int i1)
+    private static StructureComponent getNextMineShaftComponent(StructureComponent par0StructureComponent, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
-        if (i1 > 8)
+        if (par7 > 8)
         {
             return null;
         }
-        if (Math.abs(i - structurecomponent.getBoundingBox().minX) > 80 || Math.abs(k - structurecomponent.getBoundingBox().minZ) > 80)
+
+        if (Math.abs(par3 - par0StructureComponent.getBoundingBox().minX) > 80 || Math.abs(par5 - par0StructureComponent.getBoundingBox().minZ) > 80)
         {
             return null;
         }
-        StructureComponent structurecomponent1 = getRandomComponent(list, random, i, j, k, l, i1 + 1);
-        if (structurecomponent1 != null)
+
+        StructureComponent structurecomponent = getRandomComponent(par1List, par2Random, par3, par4, par5, par6, par7 + 1);
+
+        if (structurecomponent != null)
         {
-            list.add(structurecomponent1);
-            structurecomponent1.buildComponent(structurecomponent, list, random);
+            par1List.add(structurecomponent);
+            structurecomponent.buildComponent(par0StructureComponent, par1List, par2Random);
         }
-        return structurecomponent1;
+
+        return structurecomponent;
     }
 
-    static StructureComponent getNextComponent(StructureComponent structurecomponent, List list, Random random, int i, int j, int k, int l, int i1)
+    static StructureComponent getNextComponent(StructureComponent par0StructureComponent, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
-        return getNextMineShaftComponent(structurecomponent, list, random, i, j, k, l, i1);
+        return getNextMineShaftComponent(par0StructureComponent, par1List, par2Random, par3, par4, par5, par6, par7);
     }
 
     static StructurePieceTreasure[] getTreasurePieces()

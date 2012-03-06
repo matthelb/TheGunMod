@@ -8,13 +8,13 @@ public class StatCollector
     {
     }
 
-    public static String translateToLocal(String s)
+    public static String translateToLocal(String par0Str)
     {
-        return localizedName.translateKey(s);
+        return localizedName.translateKey(par0Str);
     }
 
-    public static String translateToLocalFormatted(String s, Object aobj[])
+    public static String translateToLocalFormatted(String par0Str, Object par1ArrayOfObj[])
     {
-        return localizedName.translateKeyFormat(s, aobj);
+        return localizedName.translateKeyFormat(par0Str, par1ArrayOfObj);
     }
 }

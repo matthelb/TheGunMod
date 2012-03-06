@@ -4,10 +4,10 @@ public class EntityDamageSource extends DamageSource
 {
     protected Entity damageSourceEntity;
 
-    public EntityDamageSource(String s, Entity entity)
+    public EntityDamageSource(String par1Str, Entity par2Entity)
     {
-        super(s);
-        damageSourceEntity = entity;
+        super(par1Str);
+        damageSourceEntity = par2Entity;
     }
 
     public Entity getEntity()
@@ -15,11 +15,14 @@ public class EntityDamageSource extends DamageSource
         return damageSourceEntity;
     }
 
-    public String func_35075_a(EntityPlayer entityplayer)
+    /**
+     * Returns the message to be displayed on player death.
+     */
+    public String getDeathMessage(EntityPlayer par1EntityPlayer)
     {
         return StatCollector.translateToLocalFormatted((new StringBuilder()).append("death.").append(damageType).toString(), new Object[]
                 {
-                    entityplayer.username, damageSourceEntity.func_35150_Y()
+                    par1EntityPlayer.username, damageSourceEntity.getUsername()
                 });
     }
 }

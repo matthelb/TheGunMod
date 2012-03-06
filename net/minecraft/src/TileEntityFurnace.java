@@ -1,11 +1,18 @@
 package net.minecraft.src;
 
-public class TileEntityFurnace extends TileEntity
-    implements IInventory
+public class TileEntityFurnace extends TileEntity implements IInventory
 {
     private ItemStack furnaceItemStacks[];
+
+    /** The number of ticks that the furnace will keep burning */
     public int furnaceBurnTime;
+
+    /**
+     * The number of ticks that a fresh copy of the currently-burning item would keep the furnace burning for
+     */
     public int currentItemBurnTime;
+
+    /** The number of ticks that the current item has been cooking for */
     public int furnaceCookTime;
 
     public TileEntityFurnace()
@@ -21,26 +28,36 @@ public class TileEntityFurnace extends TileEntity
         return furnaceItemStacks.length;
     }
 
-    public ItemStack getStackInSlot(int i)
+    /**
+     * Returns the stack in slot i
+     */
+    public ItemStack getStackInSlot(int par1)
     {
-        return furnaceItemStacks[i];
+        return furnaceItemStacks[par1];
     }
 
-    public ItemStack decrStackSize(int i, int j)
+    /**
+     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
+     * stack.
+     */
+    public ItemStack decrStackSize(int par1, int par2)
     {
-        if (furnaceItemStacks[i] != null)
+        if (furnaceItemStacks[par1] != null)
         {
-            if (furnaceItemStacks[i].stackSize <= j)
+            if (furnaceItemStacks[par1].stackSize <= par2)
             {
-                ItemStack itemstack = furnaceItemStacks[i];
-                furnaceItemStacks[i] = null;
+                ItemStack itemstack = furnaceItemStacks[par1];
+                furnaceItemStacks[par1] = null;
                 return itemstack;
             }
-            ItemStack itemstack1 = furnaceItemStacks[i].splitStack(j);
-            if (furnaceItemStacks[i].stackSize == 0)
+
+            ItemStack itemstack1 = furnaceItemStacks[par1].splitStack(par2);
+
+            if (furnaceItemStacks[par1].stackSize == 0)
             {
-                furnaceItemStacks[i] = null;
+                furnaceItemStacks[par1] = null;
             }
+
             return itemstack1;
         }
         else
@@ -49,89 +66,135 @@ public class TileEntityFurnace extends TileEntity
         }
     }
 
-    public void setInventorySlotContents(int i, ItemStack itemstack)
+    public ItemStack func_48315_b(int par1)
     {
-        furnaceItemStacks[i] = itemstack;
-        if (itemstack != null && itemstack.stackSize > getInventoryStackLimit())
+        if (furnaceItemStacks[par1] != null)
         {
-            itemstack.stackSize = getInventoryStackLimit();
+            ItemStack itemstack = furnaceItemStacks[par1];
+            furnaceItemStacks[par1] = null;
+            return itemstack;
+        }
+        else
+        {
+            return null;
         }
     }
 
-    public String getInvName()
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
     {
-        return "Furnace";
+        furnaceItemStacks[par1] = par2ItemStack;
+
+        if (par2ItemStack != null && par2ItemStack.stackSize > getInventoryStackLimit())
+        {
+            par2ItemStack.stackSize = getInventoryStackLimit();
+        }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Returns the name of the inventory.
+     */
+    public String getInvName()
     {
-        super.readFromNBT(nbttagcompound);
-        NBTTagList nbttaglist = nbttagcompound.getTagList("Items");
+        return "container.furnace";
+    }
+
+    /**
+     * Reads a tile entity from NBT.
+     */
+    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
+    {
+        super.readFromNBT(par1NBTTagCompound);
+        NBTTagList nbttaglist = par1NBTTagCompound.getTagList("Items");
         furnaceItemStacks = new ItemStack[getSizeInventory()];
+
         for (int i = 0; i < nbttaglist.tagCount(); i++)
         {
-            NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(i);
-            byte byte0 = nbttagcompound1.getByte("Slot");
+            NBTTagCompound nbttagcompound = (NBTTagCompound)nbttaglist.tagAt(i);
+            byte byte0 = nbttagcompound.getByte("Slot");
+
             if (byte0 >= 0 && byte0 < furnaceItemStacks.length)
             {
-                furnaceItemStacks[byte0] = ItemStack.loadItemStackFromNBT(nbttagcompound1);
+                furnaceItemStacks[byte0] = ItemStack.loadItemStackFromNBT(nbttagcompound);
             }
         }
 
-        furnaceBurnTime = nbttagcompound.getShort("BurnTime");
-        furnaceCookTime = nbttagcompound.getShort("CookTime");
+        furnaceBurnTime = par1NBTTagCompound.getShort("BurnTime");
+        furnaceCookTime = par1NBTTagCompound.getShort("CookTime");
         currentItemBurnTime = getItemBurnTime(furnaceItemStacks[1]);
     }
 
-    public void writeToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Writes a tile entity to NBT.
+     */
+    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setShort("BurnTime", (short)furnaceBurnTime);
-        nbttagcompound.setShort("CookTime", (short)furnaceCookTime);
+        super.writeToNBT(par1NBTTagCompound);
+        par1NBTTagCompound.setShort("BurnTime", (short)furnaceBurnTime);
+        par1NBTTagCompound.setShort("CookTime", (short)furnaceCookTime);
         NBTTagList nbttaglist = new NBTTagList();
+
         for (int i = 0; i < furnaceItemStacks.length; i++)
         {
             if (furnaceItemStacks[i] != null)
             {
-                NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-                nbttagcompound1.setByte("Slot", (byte)i);
-                furnaceItemStacks[i].writeToNBT(nbttagcompound1);
-                nbttaglist.setTag(nbttagcompound1);
+                NBTTagCompound nbttagcompound = new NBTTagCompound();
+                nbttagcompound.setByte("Slot", (byte)i);
+                furnaceItemStacks[i].writeToNBT(nbttagcompound);
+                nbttaglist.appendTag(nbttagcompound);
             }
         }
 
-        nbttagcompound.setTag("Items", nbttaglist);
+        par1NBTTagCompound.setTag("Items", nbttaglist);
     }
 
+    /**
+     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended. *Isn't
+     * this more of a set than a get?*
+     */
     public int getInventoryStackLimit()
     {
         return 64;
     }
 
+    /**
+     * Returns true if the furnace is currently burning
+     */
     public boolean isBurning()
     {
         return furnaceBurnTime > 0;
     }
 
+    /**
+     * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
+     * ticks and creates a new spawn inside its implementation.
+     */
     public void updateEntity()
     {
         boolean flag = furnaceBurnTime > 0;
         boolean flag1 = false;
+
         if (furnaceBurnTime > 0)
         {
             furnaceBurnTime--;
         }
+
         if (!worldObj.isRemote)
         {
             if (furnaceBurnTime == 0 && canSmelt())
             {
                 currentItemBurnTime = furnaceBurnTime = getItemBurnTime(furnaceItemStacks[1]);
+
                 if (furnaceBurnTime > 0)
                 {
                     flag1 = true;
+
                     if (furnaceItemStacks[1] != null)
                     {
                         furnaceItemStacks[1].stackSize--;
+
                         if (furnaceItemStacks[1].stackSize == 0)
                         {
                             furnaceItemStacks[1] = null;
@@ -139,9 +202,11 @@ public class TileEntityFurnace extends TileEntity
                     }
                 }
             }
+
             if (isBurning() && canSmelt())
             {
                 furnaceCookTime++;
+
                 if (furnaceCookTime == 200)
                 {
                     furnaceCookTime = 0;
@@ -153,37 +218,47 @@ public class TileEntityFurnace extends TileEntity
             {
                 furnaceCookTime = 0;
             }
+
             if (flag != (furnaceBurnTime > 0))
             {
                 flag1 = true;
                 BlockFurnace.updateFurnaceBlockState(furnaceBurnTime > 0, worldObj, xCoord, yCoord, zCoord);
             }
         }
+
         if (flag1)
         {
             onInventoryChanged();
         }
     }
 
+    /**
+     * Returns true if the furnace can smelt an item, i.e. has a source item, destination stack isn't full, etc.
+     */
     private boolean canSmelt()
     {
         if (furnaceItemStacks[0] == null)
         {
             return false;
         }
+
         ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(furnaceItemStacks[0].getItem().shiftedIndex);
+
         if (itemstack == null)
         {
             return false;
         }
+
         if (furnaceItemStacks[2] == null)
         {
             return true;
         }
+
         if (!furnaceItemStacks[2].isItemEqual(itemstack))
         {
             return false;
         }
+
         if (furnaceItemStacks[2].stackSize < getInventoryStackLimit() && furnaceItemStacks[2].stackSize < furnaceItemStacks[2].getMaxStackSize())
         {
             return true;
@@ -194,13 +269,18 @@ public class TileEntityFurnace extends TileEntity
         }
     }
 
+    /**
+     * Turn one item from the furnace source stack into the appropriate smelted item in the furnace result stack
+     */
     public void smeltItem()
     {
         if (!canSmelt())
         {
             return;
         }
+
         ItemStack itemstack = FurnaceRecipes.smelting().getSmeltingResult(furnaceItemStacks[0].getItem().shiftedIndex);
+
         if (furnaceItemStacks[2] == null)
         {
             furnaceItemStacks[2] = itemstack.copy();
@@ -209,47 +289,62 @@ public class TileEntityFurnace extends TileEntity
         {
             furnaceItemStacks[2].stackSize++;
         }
+
         furnaceItemStacks[0].stackSize--;
+
         if (furnaceItemStacks[0].stackSize <= 0)
         {
             furnaceItemStacks[0] = null;
         }
     }
 
-    private int getItemBurnTime(ItemStack itemstack)
+    /**
+     * Returns the number of ticks that the supplied fuel item will keep the furnace burning, or 0 if the item isn't
+     * fuel
+     */
+    private int getItemBurnTime(ItemStack par1ItemStack)
     {
-        if (itemstack == null)
+        if (par1ItemStack == null)
         {
             return 0;
         }
-        int i = itemstack.getItem().shiftedIndex;
+
+        int i = par1ItemStack.getItem().shiftedIndex;
+
         if (i < 256 && Block.blocksList[i].blockMaterial == Material.wood)
         {
             return 300;
         }
+
         if (i == Item.stick.shiftedIndex)
         {
             return 100;
         }
+
         if (i == Item.coal.shiftedIndex)
         {
             return 1600;
         }
+
         if (i == Item.bucketLava.shiftedIndex)
         {
             return 20000;
         }
+
         if (i == Block.sapling.blockID)
         {
             return 100;
         }
         else
         {
-            return i != Item.blazeRod.shiftedIndex ? ModLoader.AddAllFuel(i) : 2400;
+            return i == Item.blazeRod.shiftedIndex ? 2400 : ModLoader.addAllFuel(i, par1ItemStack.getItemDamage());
         }
     }
 
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    /**
+     * Do not make give this method the name canInteractWith because it clashes with Container
+     */
+    public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
     {
         if (worldObj.getBlockTileEntity(xCoord, yCoord, zCoord) != this)
         {
@@ -257,7 +352,7 @@ public class TileEntityFurnace extends TileEntity
         }
         else
         {
-            return entityplayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
+            return par1EntityPlayer.getDistanceSq((double)xCoord + 0.5D, (double)yCoord + 0.5D, (double)zCoord + 0.5D) <= 64D;
         }
     }
 

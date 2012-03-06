@@ -4,68 +4,83 @@ import java.util.Random;
 
 public class WorldGenLiquids extends WorldGenerator
 {
+    /** The ID of the liquid block used in this liquid generator. */
     private int liquidBlockId;
 
-    public WorldGenLiquids(int i)
+    public WorldGenLiquids(int par1)
     {
-        liquidBlockId = i;
+        liquidBlockId = par1;
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        if (world.getBlockId(i, j + 1, k) != Block.stone.blockID)
+        if (par1World.getBlockId(par3, par4 + 1, par5) != Block.stone.blockID)
         {
             return false;
         }
-        if (world.getBlockId(i, j - 1, k) != Block.stone.blockID)
+
+        if (par1World.getBlockId(par3, par4 - 1, par5) != Block.stone.blockID)
         {
             return false;
         }
-        if (world.getBlockId(i, j, k) != 0 && world.getBlockId(i, j, k) != Block.stone.blockID)
+
+        if (par1World.getBlockId(par3, par4, par5) != 0 && par1World.getBlockId(par3, par4, par5) != Block.stone.blockID)
         {
             return false;
         }
-        int l = 0;
-        if (world.getBlockId(i - 1, j, k) == Block.stone.blockID)
+
+        int i = 0;
+
+        if (par1World.getBlockId(par3 - 1, par4, par5) == Block.stone.blockID)
         {
-            l++;
+            i++;
         }
-        if (world.getBlockId(i + 1, j, k) == Block.stone.blockID)
+
+        if (par1World.getBlockId(par3 + 1, par4, par5) == Block.stone.blockID)
         {
-            l++;
+            i++;
         }
-        if (world.getBlockId(i, j, k - 1) == Block.stone.blockID)
+
+        if (par1World.getBlockId(par3, par4, par5 - 1) == Block.stone.blockID)
         {
-            l++;
+            i++;
         }
-        if (world.getBlockId(i, j, k + 1) == Block.stone.blockID)
+
+        if (par1World.getBlockId(par3, par4, par5 + 1) == Block.stone.blockID)
         {
-            l++;
+            i++;
         }
-        int i1 = 0;
-        if (world.isAirBlock(i - 1, j, k))
+
+        int j = 0;
+
+        if (par1World.isAirBlock(par3 - 1, par4, par5))
         {
-            i1++;
+            j++;
         }
-        if (world.isAirBlock(i + 1, j, k))
+
+        if (par1World.isAirBlock(par3 + 1, par4, par5))
         {
-            i1++;
+            j++;
         }
-        if (world.isAirBlock(i, j, k - 1))
+
+        if (par1World.isAirBlock(par3, par4, par5 - 1))
         {
-            i1++;
+            j++;
         }
-        if (world.isAirBlock(i, j, k + 1))
+
+        if (par1World.isAirBlock(par3, par4, par5 + 1))
         {
-            i1++;
+            j++;
         }
-        if (l == 3 && i1 == 1)
+
+        if (i == 3 && j == 1)
         {
-            world.setBlockWithNotify(i, j, k, liquidBlockId);
-            world.scheduledUpdatesAreImmediate = true;
-            Block.blocksList[liquidBlockId].updateTick(world, i, j, k, random);
-            world.scheduledUpdatesAreImmediate = false;
+            par1World.setBlockWithNotify(par3, par4, par5, liquidBlockId);
+            par1World.scheduledUpdatesAreImmediate = true;
+            Block.blocksList[liquidBlockId].updateTick(par1World, par3, par4, par5, par2Random);
+            par1World.scheduledUpdatesAreImmediate = false;
         }
+
         return true;
     }
 }

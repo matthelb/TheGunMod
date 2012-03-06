@@ -11,40 +11,45 @@ public class Achievement extends StatBase
     public final ItemStack theItemStack;
     private boolean isSpecial;
 
-    public Achievement(int i, String s, int j, int k, Item item, Achievement achievement)
+    public Achievement(int par1, String par2Str, int par3, int par4, Item par5Item, Achievement par6Achievement)
     {
-        this(i, s, j, k, new ItemStack(item), achievement);
+        this(par1, par2Str, par3, par4, new ItemStack(par5Item), par6Achievement);
     }
 
-    public Achievement(int i, String s, int j, int k, Block block, Achievement achievement)
+    public Achievement(int par1, String par2Str, int par3, int par4, Block par5Block, Achievement par6Achievement)
     {
-        this(i, s, j, k, new ItemStack(block), achievement);
+        this(par1, par2Str, par3, par4, new ItemStack(par5Block), par6Achievement);
     }
 
-    public Achievement(int i, String s, int j, int k, ItemStack itemstack, Achievement achievement)
+    public Achievement(int par1, String par2Str, int par3, int par4, ItemStack par5ItemStack, Achievement par6Achievement)
     {
-        super(0x500000 + i, (new StringBuilder()).append("achievement.").append(s).toString());
-        theItemStack = itemstack;
-        achievementDescription = (new StringBuilder()).append("achievement.").append(s).append(".desc").toString();
-        displayColumn = j;
-        displayRow = k;
-        if (j < AchievementList.minDisplayColumn)
+        super(0x500000 + par1, (new StringBuilder()).append("achievement.").append(par2Str).toString());
+        theItemStack = par5ItemStack;
+        achievementDescription = (new StringBuilder()).append("achievement.").append(par2Str).append(".desc").toString();
+        displayColumn = par3;
+        displayRow = par4;
+
+        if (par3 < AchievementList.minDisplayColumn)
         {
-            AchievementList.minDisplayColumn = j;
+            AchievementList.minDisplayColumn = par3;
         }
-        if (k < AchievementList.minDisplayRow)
+
+        if (par4 < AchievementList.minDisplayRow)
         {
-            AchievementList.minDisplayRow = k;
+            AchievementList.minDisplayRow = par4;
         }
-        if (j > AchievementList.maxDisplayColumn)
+
+        if (par3 > AchievementList.maxDisplayColumn)
         {
-            AchievementList.maxDisplayColumn = j;
+            AchievementList.maxDisplayColumn = par3;
         }
-        if (k > AchievementList.maxDisplayRow)
+
+        if (par4 > AchievementList.maxDisplayRow)
         {
-            AchievementList.maxDisplayRow = k;
+            AchievementList.maxDisplayRow = par4;
         }
-        parentAchievement = achievement;
+
+        parentAchievement = par6Achievement;
     }
 
     public Achievement setIndependent()

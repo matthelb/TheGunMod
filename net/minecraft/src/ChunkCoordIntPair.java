@@ -5,16 +5,19 @@ public class ChunkCoordIntPair
     public final int chunkXPos;
     public final int chunkZPos;
 
-    public ChunkCoordIntPair(int i, int j)
+    public ChunkCoordIntPair(int par1, int par2)
     {
-        chunkXPos = i;
-        chunkZPos = j;
+        chunkXPos = par1;
+        chunkZPos = par2;
     }
 
-    public static long chunkXZ2Int(int i, int j)
+    /**
+     * converts a chunk coordinate pair to an integer (suitable for hashing)
+     */
+    public static long chunkXZ2Int(int par0, int par1)
     {
-        long l = i;
-        long l1 = j;
+        long l = par0;
+        long l1 = par1;
         return l & 0xffffffffL | (l1 & 0xffffffffL) << 32;
     }
 
@@ -26,10 +29,19 @@ public class ChunkCoordIntPair
         return i ^ j;
     }
 
-    public boolean equals(Object obj)
+    public boolean equals(Object par1Obj)
     {
-        ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair)obj;
+        ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair)par1Obj;
         return chunkcoordintpair.chunkXPos == chunkXPos && chunkcoordintpair.chunkZPos == chunkZPos;
+    }
+
+    public double func_48477_a(Entity par1Entity)
+    {
+        double d = chunkXPos * 16 + 8;
+        double d1 = chunkZPos * 16 + 8;
+        double d2 = d - par1Entity.posX;
+        double d3 = d1 - par1Entity.posZ;
+        return d2 * d2 + d3 * d3;
     }
 
     public int getCenterXPos()
@@ -42,9 +54,9 @@ public class ChunkCoordIntPair
         return (chunkZPos << 4) + 8;
     }
 
-    public ChunkPosition getChunkPosition(int i)
+    public ChunkPosition getChunkPosition(int par1)
     {
-        return new ChunkPosition(getCenterXPos(), i, getCenterZPos());
+        return new ChunkPosition(getCenterXPos(), par1, getCenterZPos());
     }
 
     public String toString()

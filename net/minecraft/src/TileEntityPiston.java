@@ -8,22 +8,22 @@ public class TileEntityPiston extends TileEntity
     private int storedMetadata;
     private int storedOrientation;
     private boolean extending;
-    private boolean field_31018_j;
+    private boolean shouldHeadBeRendered;
     private float progress;
     private float lastProgress;
-    private static List field_31013_m = new ArrayList();
+    private static List pushedObjects = new ArrayList();
 
     public TileEntityPiston()
     {
     }
 
-    public TileEntityPiston(int i, int j, int k, boolean flag, boolean flag1)
+    public TileEntityPiston(int par1, int par2, int par3, boolean par4, boolean par5)
     {
-        storedBlockID = i;
-        storedMetadata = j;
-        storedOrientation = k;
-        extending = flag;
-        field_31018_j = flag1;
+        storedBlockID = par1;
+        storedMetadata = par2;
+        storedOrientation = par3;
+        extending = par4;
+        shouldHeadBeRendered = par5;
     }
 
     public int getStoredBlockID()
@@ -36,53 +36,67 @@ public class TileEntityPiston extends TileEntity
         return storedMetadata;
     }
 
+    /**
+     * Returns true if a piston is extending
+     */
     public boolean isExtending()
     {
         return extending;
     }
 
+    /**
+     * Returns the orientation of the piston as an int
+     */
     public int getPistonOrientation()
     {
         return storedOrientation;
     }
 
-    public float func_31007_a(float f)
+    public float getProgress(float par1)
     {
-        if (f > 1.0F)
+        if (par1 > 1.0F)
         {
-            f = 1.0F;
+            par1 = 1.0F;
         }
-        return lastProgress + (progress - lastProgress) * f;
+
+        return lastProgress + (progress - lastProgress) * par1;
     }
 
-    private void func_31009_a(float f, float f1)
+    private void updatePushedObjects(float par1, float par2)
     {
         if (!extending)
         {
-            f--;
+            par1--;
         }
         else
         {
-            f = 1.0F - f;
+            par1 = 1.0F - par1;
         }
-        AxisAlignedBB axisalignedbb = Block.pistonMoving.getAxisAlignedBB(worldObj, xCoord, yCoord, zCoord, storedBlockID, f, storedOrientation);
+
+        AxisAlignedBB axisalignedbb = Block.pistonMoving.getAxisAlignedBB(worldObj, xCoord, yCoord, zCoord, storedBlockID, par1, storedOrientation);
+
         if (axisalignedbb != null)
         {
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(null, axisalignedbb);
+
             if (!list.isEmpty())
             {
-                field_31013_m.addAll(list);
+                pushedObjects.addAll(list);
                 Entity entity;
-                for (Iterator iterator = field_31013_m.iterator(); iterator.hasNext(); entity.moveEntity(f1 * (float)Facing.offsetsXForSide[storedOrientation], f1 * (float)Facing.offsetsYForSide[storedOrientation], f1 * (float)Facing.offsetsZForSide[storedOrientation]))
+
+                for (Iterator iterator = pushedObjects.iterator(); iterator.hasNext(); entity.moveEntity(par2 * (float)Facing.offsetsXForSide[storedOrientation], par2 * (float)Facing.offsetsYForSide[storedOrientation], par2 * (float)Facing.offsetsZForSide[storedOrientation]))
                 {
                     entity = (Entity)iterator.next();
                 }
 
-                field_31013_m.clear();
+                pushedObjects.clear();
             }
         }
     }
 
+    /**
+     * removes a pistons tile entity (and if the piston is moving, stops it)
+     */
     public void clearPistonTileEntity()
     {
         if (lastProgress < 1.0F && worldObj != null)
@@ -90,6 +104,7 @@ public class TileEntityPiston extends TileEntity
             lastProgress = progress = 1.0F;
             worldObj.removeBlockTileEntity(xCoord, yCoord, zCoord);
             invalidate();
+
             if (worldObj.getBlockId(xCoord, yCoord, zCoord) == Block.pistonMoving.blockID)
             {
                 worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord, zCoord, storedBlockID, storedMetadata);
@@ -97,48 +112,64 @@ public class TileEntityPiston extends TileEntity
         }
     }
 
+    /**
+     * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
+     * ticks and creates a new spawn inside its implementation.
+     */
     public void updateEntity()
     {
         lastProgress = progress;
+
         if (lastProgress >= 1.0F)
         {
-            func_31009_a(1.0F, 0.25F);
+            updatePushedObjects(1.0F, 0.25F);
             worldObj.removeBlockTileEntity(xCoord, yCoord, zCoord);
             invalidate();
+
             if (worldObj.getBlockId(xCoord, yCoord, zCoord) == Block.pistonMoving.blockID)
             {
                 worldObj.setBlockAndMetadataWithNotify(xCoord, yCoord, zCoord, storedBlockID, storedMetadata);
             }
+
             return;
         }
+
         progress += 0.5F;
+
         if (progress >= 1.0F)
         {
             progress = 1.0F;
         }
+
         if (extending)
         {
-            func_31009_a(progress, (progress - lastProgress) + 0.0625F);
+            updatePushedObjects(progress, (progress - lastProgress) + 0.0625F);
         }
     }
 
-    public void readFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Reads a tile entity from NBT.
+     */
+    public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readFromNBT(nbttagcompound);
-        storedBlockID = nbttagcompound.getInteger("blockId");
-        storedMetadata = nbttagcompound.getInteger("blockData");
-        storedOrientation = nbttagcompound.getInteger("facing");
-        lastProgress = progress = nbttagcompound.getFloat("progress");
-        extending = nbttagcompound.getBoolean("extending");
+        super.readFromNBT(par1NBTTagCompound);
+        storedBlockID = par1NBTTagCompound.getInteger("blockId");
+        storedMetadata = par1NBTTagCompound.getInteger("blockData");
+        storedOrientation = par1NBTTagCompound.getInteger("facing");
+        lastProgress = progress = par1NBTTagCompound.getFloat("progress");
+        extending = par1NBTTagCompound.getBoolean("extending");
     }
 
-    public void writeToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * Writes a tile entity to NBT.
+     */
+    public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeToNBT(nbttagcompound);
-        nbttagcompound.setInteger("blockId", storedBlockID);
-        nbttagcompound.setInteger("blockData", storedMetadata);
-        nbttagcompound.setInteger("facing", storedOrientation);
-        nbttagcompound.setFloat("progress", lastProgress);
-        nbttagcompound.setBoolean("extending", extending);
+        super.writeToNBT(par1NBTTagCompound);
+        par1NBTTagCompound.setInteger("blockId", storedBlockID);
+        par1NBTTagCompound.setInteger("blockData", storedMetadata);
+        par1NBTTagCompound.setInteger("facing", storedOrientation);
+        par1NBTTagCompound.setFloat("progress", lastProgress);
+        par1NBTTagCompound.setBoolean("extending", extending);
     }
 }

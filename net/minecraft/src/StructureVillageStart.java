@@ -6,48 +6,53 @@ class StructureVillageStart extends StructureStart
 {
     private boolean hasMoreThanTwoComponents;
 
-    public StructureVillageStart(World world, Random random, int i, int j, int k)
+    public StructureVillageStart(World par1World, Random par2Random, int par3, int par4, int par5)
     {
         hasMoreThanTwoComponents = false;
-        int l = k;
-        ArrayList arraylist = StructureVillagePieces.getStructureVillageWeightedPieceList(random, l);
-        ComponentVillageStartPiece componentvillagestartpiece = new ComponentVillageStartPiece(world.getWorldChunkManager(), 0, random, (i << 4) + 2, (j << 4) + 2, arraylist, l);
+        int i = par5;
+        ArrayList arraylist = StructureVillagePieces.getStructureVillageWeightedPieceList(par2Random, i);
+        ComponentVillageStartPiece componentvillagestartpiece = new ComponentVillageStartPiece(par1World.getWorldChunkManager(), 0, par2Random, (par3 << 4) + 2, (par4 << 4) + 2, arraylist, i);
         components.add(componentvillagestartpiece);
-        componentvillagestartpiece.buildComponent(componentvillagestartpiece, components, random);
+        componentvillagestartpiece.buildComponent(componentvillagestartpiece, components, par2Random);
         ArrayList arraylist1 = componentvillagestartpiece.field_35387_f;
+
         for (ArrayList arraylist2 = componentvillagestartpiece.field_35389_e; !arraylist1.isEmpty() || !arraylist2.isEmpty();)
         {
             if (!arraylist1.isEmpty())
             {
-                int i1 = random.nextInt(arraylist1.size());
-                StructureComponent structurecomponent = (StructureComponent)arraylist1.remove(i1);
-                structurecomponent.buildComponent(componentvillagestartpiece, components, random);
+                int j = par2Random.nextInt(arraylist1.size());
+                StructureComponent structurecomponent = (StructureComponent)arraylist1.remove(j);
+                structurecomponent.buildComponent(componentvillagestartpiece, components, par2Random);
             }
             else
             {
-                int j1 = random.nextInt(arraylist2.size());
-                StructureComponent structurecomponent1 = (StructureComponent)arraylist2.remove(j1);
-                structurecomponent1.buildComponent(componentvillagestartpiece, components, random);
+                int k = par2Random.nextInt(arraylist2.size());
+                StructureComponent structurecomponent1 = (StructureComponent)arraylist2.remove(k);
+                structurecomponent1.buildComponent(componentvillagestartpiece, components, par2Random);
             }
         }
 
         updateBoundingBox();
-        int k1 = 0;
+        int l = 0;
         Iterator iterator = components.iterator();
+
         do
         {
             if (!iterator.hasNext())
             {
                 break;
             }
+
             StructureComponent structurecomponent2 = (StructureComponent)iterator.next();
+
             if (!(structurecomponent2 instanceof ComponentVillageRoadPiece))
             {
-                k1++;
+                l++;
             }
         }
         while (true);
-        hasMoreThanTwoComponents = k1 > 2;
+
+        hasMoreThanTwoComponents = l > 2;
     }
 
     public boolean isSizeableStructure()

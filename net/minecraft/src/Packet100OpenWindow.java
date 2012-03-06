@@ -13,37 +13,47 @@ public class Packet100OpenWindow extends Packet
     {
     }
 
-    public Packet100OpenWindow(int i, int j, String s, int k)
+    public Packet100OpenWindow(int par1, int par2, String par3Str, int par4)
     {
-        windowId = i;
-        inventoryType = j;
-        windowTitle = s;
-        slotsCount = k;
+        windowId = par1;
+        inventoryType = par2;
+        windowTitle = par3Str;
+        slotsCount = par4;
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleOpenWindow(this);
+        par1NetHandler.handleOpenWindow(this);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        windowId = datainputstream.readByte() & 0xff;
-        inventoryType = datainputstream.readByte() & 0xff;
-        windowTitle = readString(datainputstream, 16);
-        slotsCount = datainputstream.readByte() & 0xff;
+        windowId = par1DataInputStream.readByte() & 0xff;
+        inventoryType = par1DataInputStream.readByte() & 0xff;
+        windowTitle = readString(par1DataInputStream, 32);
+        slotsCount = par1DataInputStream.readByte() & 0xff;
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeByte(windowId & 0xff);
-        dataoutputstream.writeByte(inventoryType & 0xff);
-        writeString(windowTitle, dataoutputstream);
-        dataoutputstream.writeByte(slotsCount & 0xff);
+        par1DataOutputStream.writeByte(windowId & 0xff);
+        par1DataOutputStream.writeByte(inventoryType & 0xff);
+        writeString(windowTitle, par1DataOutputStream);
+        par1DataOutputStream.writeByte(slotsCount & 0xff);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 3 + windowTitle.length();

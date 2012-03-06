@@ -6,11 +6,11 @@ public class StepSound
     public final float stepSoundVolume;
     public final float stepSoundPitch;
 
-    public StepSound(String s, float f, float f1)
+    public StepSound(String par1Str, float par2, float par3)
     {
-        stepSoundName = s;
-        stepSoundVolume = f;
-        stepSoundPitch = f1;
+        stepSoundName = par1Str;
+        stepSoundVolume = par2;
+        stepSoundPitch = par3;
     }
 
     public float getVolume()
@@ -23,6 +23,9 @@ public class StepSound
         return stepSoundPitch;
     }
 
+    /**
+     * Used when a entity walks over, or otherwise interacts with the block.
+     */
     public String getStepSound()
     {
         return (new StringBuilder()).append("step.").append(stepSoundName).toString();

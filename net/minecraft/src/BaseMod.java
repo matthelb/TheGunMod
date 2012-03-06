@@ -9,22 +9,21 @@ public abstract class BaseMod
     {
     }
 
-    public int AddFuel(int i)
+    public int addFuel(int i, int j)
     {
         return 0;
     }
 
-    public boolean DispenseEntity(World world, double d, double d1, double d2,
-            int i, int j, ItemStack itemstack)
+    public boolean dispenseEntity(World world, double d, double d1, double d2, int i, int j, ItemStack itemstack)
     {
         return false;
     }
 
-    public void GenerateNether(World world, Random random, int i, int j)
+    public void generateNether(World world, Random random, int i, int j)
     {
     }
 
-    public void GenerateSurface(World world, Random random, int i, int j)
+    public void generateSurface(World world, Random random, int i, int j)
     {
     }
 
@@ -42,23 +41,23 @@ public abstract class BaseMod
 
     public abstract void load();
 
-    public void OnTickInGame(MinecraftServer minecraftserver)
+    public void modsLoaded()
     {
     }
 
-    public void ModsLoaded()
+    public void onItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
     {
     }
 
-    public void TakenFromCrafting(EntityPlayer entityplayer, ItemStack itemstack)
+    public void onTickInGame(MinecraftServer minecraftserver)
     {
     }
 
-    public void TakenFromFurnace(EntityPlayer entityplayer, ItemStack itemstack)
+    public void takenFromCrafting(EntityPlayer entityplayer, ItemStack itemstack, IInventory iinventory)
     {
     }
 
-    public void OnItemPickup(EntityPlayer entityplayer, ItemStack itemstack)
+    public void takenFromFurnace(EntityPlayer entityplayer, ItemStack itemstack)
     {
     }
 

@@ -11,98 +11,111 @@ public class ComponentStrongholdCrossing extends ComponentStronghold
     private boolean field_35351_d;
     private boolean field_35352_e;
 
-    public ComponentStrongholdCrossing(int i, Random random, StructureBoundingBox structureboundingbox, int j)
+    public ComponentStrongholdCrossing(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
-        super(i);
-        coordBaseMode = j;
-        doorType = getRandomDoor(random);
-        boundingBox = structureboundingbox;
-        field_35353_b = random.nextBoolean();
-        field_35354_c = random.nextBoolean();
-        field_35351_d = random.nextBoolean();
-        field_35352_e = random.nextInt(3) > 0;
+        super(par1);
+        coordBaseMode = par4;
+        doorType = getRandomDoor(par2Random);
+        boundingBox = par3StructureBoundingBox;
+        field_35353_b = par2Random.nextBoolean();
+        field_35354_c = par2Random.nextBoolean();
+        field_35351_d = par2Random.nextBoolean();
+        field_35352_e = par2Random.nextInt(3) > 0;
     }
 
-    public void buildComponent(StructureComponent structurecomponent, List list, Random random)
+    public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
         int i = 3;
         int j = 5;
+
         if (coordBaseMode == 1 || coordBaseMode == 2)
         {
             i = 8 - i;
             j = 8 - j;
         }
-        func_35324_a((ComponentStrongholdStairs2)structurecomponent, list, random, 5, 1);
+
+        getNextComponentNormal((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 5, 1);
+
         if (field_35353_b)
         {
-            func_35321_b((ComponentStrongholdStairs2)structurecomponent, list, random, i, 1);
+            getNextComponentX((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, i, 1);
         }
+
         if (field_35354_c)
         {
-            func_35321_b((ComponentStrongholdStairs2)structurecomponent, list, random, j, 7);
+            getNextComponentX((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, j, 7);
         }
+
         if (field_35351_d)
         {
-            func_35320_c((ComponentStrongholdStairs2)structurecomponent, list, random, i, 1);
+            getNextComponentZ((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, i, 1);
         }
+
         if (field_35352_e)
         {
-            func_35320_c((ComponentStrongholdStairs2)structurecomponent, list, random, j, 7);
+            getNextComponentZ((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, j, 7);
         }
     }
 
-    public static ComponentStrongholdCrossing func_35350_a(List list, Random random, int i, int j, int k, int l, int i1)
+    public static ComponentStrongholdCrossing findValidPlacement(List par0List, Random par1Random, int par2, int par3, int par4, int par5, int par6)
     {
-        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(i, j, k, -4, -3, 0, 10, 9, 11, l);
-        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(list, structureboundingbox) != null)
+        StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(par2, par3, par4, -4, -3, 0, 10, 9, 11, par5);
+
+        if (!canStrongholdGoDeeper(structureboundingbox) || StructureComponent.findIntersecting(par0List, structureboundingbox) != null)
         {
             return null;
         }
         else
         {
-            return new ComponentStrongholdCrossing(i1, random, structureboundingbox, l);
+            return new ComponentStrongholdCrossing(par6, par1Random, structureboundingbox, par5);
         }
     }
 
-    public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
+    public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
-        if (isLiquidInStructureBoundingBox(world, structureboundingbox))
+        if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))
         {
             return false;
         }
-        fillWithRandomizedBlocks(world, structureboundingbox, 0, 0, 0, 9, 8, 10, true, random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(world, random, structureboundingbox, doorType, 4, 3, 0);
+
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 9, 8, 10, true, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, doorType, 4, 3, 0);
+
         if (field_35353_b)
         {
-            fillWithBlocks(world, structureboundingbox, 0, 3, 1, 0, 5, 3, 0, 0, false);
+            fillWithBlocks(par1World, par3StructureBoundingBox, 0, 3, 1, 0, 5, 3, 0, 0, false);
         }
+
         if (field_35351_d)
         {
-            fillWithBlocks(world, structureboundingbox, 9, 3, 1, 9, 5, 3, 0, 0, false);
+            fillWithBlocks(par1World, par3StructureBoundingBox, 9, 3, 1, 9, 5, 3, 0, 0, false);
         }
+
         if (field_35354_c)
         {
-            fillWithBlocks(world, structureboundingbox, 0, 5, 7, 0, 7, 9, 0, 0, false);
+            fillWithBlocks(par1World, par3StructureBoundingBox, 0, 5, 7, 0, 7, 9, 0, 0, false);
         }
+
         if (field_35352_e)
         {
-            fillWithBlocks(world, structureboundingbox, 9, 5, 7, 9, 7, 9, 0, 0, false);
+            fillWithBlocks(par1World, par3StructureBoundingBox, 9, 5, 7, 9, 7, 9, 0, 0, false);
         }
-        fillWithBlocks(world, structureboundingbox, 5, 1, 10, 7, 3, 10, 0, 0, false);
-        fillWithRandomizedBlocks(world, structureboundingbox, 1, 2, 1, 8, 2, 6, false, random, StructureStrongholdPieces.getStrongholdStones());
-        fillWithRandomizedBlocks(world, structureboundingbox, 4, 1, 5, 4, 4, 9, false, random, StructureStrongholdPieces.getStrongholdStones());
-        fillWithRandomizedBlocks(world, structureboundingbox, 8, 1, 5, 8, 4, 9, false, random, StructureStrongholdPieces.getStrongholdStones());
-        fillWithRandomizedBlocks(world, structureboundingbox, 1, 4, 7, 3, 4, 9, false, random, StructureStrongholdPieces.getStrongholdStones());
-        fillWithRandomizedBlocks(world, structureboundingbox, 1, 3, 5, 3, 3, 6, false, random, StructureStrongholdPieces.getStrongholdStones());
-        fillWithBlocks(world, structureboundingbox, 1, 3, 4, 3, 3, 4, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
-        fillWithBlocks(world, structureboundingbox, 1, 4, 6, 3, 4, 6, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
-        fillWithRandomizedBlocks(world, structureboundingbox, 5, 1, 7, 7, 1, 8, false, random, StructureStrongholdPieces.getStrongholdStones());
-        fillWithBlocks(world, structureboundingbox, 5, 1, 9, 7, 1, 9, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
-        fillWithBlocks(world, structureboundingbox, 5, 2, 7, 7, 2, 7, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
-        fillWithBlocks(world, structureboundingbox, 4, 5, 7, 4, 5, 9, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
-        fillWithBlocks(world, structureboundingbox, 8, 5, 7, 8, 5, 9, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
-        fillWithBlocks(world, structureboundingbox, 5, 5, 7, 7, 5, 9, Block.stairDouble.blockID, Block.stairDouble.blockID, false);
-        placeBlockAtCurrentPosition(world, Block.torchWood.blockID, 0, 6, 5, 6, structureboundingbox);
+
+        fillWithBlocks(par1World, par3StructureBoundingBox, 5, 1, 10, 7, 3, 10, 0, 0, false);
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 1, 2, 1, 8, 2, 6, false, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 4, 1, 5, 4, 4, 9, false, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 8, 1, 5, 8, 4, 9, false, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 1, 4, 7, 3, 4, 9, false, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 1, 3, 5, 3, 3, 6, false, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        fillWithBlocks(par1World, par3StructureBoundingBox, 1, 3, 4, 3, 3, 4, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
+        fillWithBlocks(par1World, par3StructureBoundingBox, 1, 4, 6, 3, 4, 6, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
+        fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 5, 1, 7, 7, 1, 8, false, par2Random, StructureStrongholdPieces.getStrongholdStones());
+        fillWithBlocks(par1World, par3StructureBoundingBox, 5, 1, 9, 7, 1, 9, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
+        fillWithBlocks(par1World, par3StructureBoundingBox, 5, 2, 7, 7, 2, 7, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
+        fillWithBlocks(par1World, par3StructureBoundingBox, 4, 5, 7, 4, 5, 9, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
+        fillWithBlocks(par1World, par3StructureBoundingBox, 8, 5, 7, 8, 5, 9, Block.stairSingle.blockID, Block.stairSingle.blockID, false);
+        fillWithBlocks(par1World, par3StructureBoundingBox, 5, 5, 7, 7, 5, 9, Block.stairDouble.blockID, Block.stairDouble.blockID, false);
+        placeBlockAtCurrentPosition(par1World, Block.torchWood.blockID, 0, 6, 5, 6, par3StructureBoundingBox);
         return true;
     }
 }

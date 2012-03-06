@@ -2,20 +2,20 @@ package net.minecraft.src;
 
 public class EnchantmentDurability extends Enchantment
 {
-    protected EnchantmentDurability(int i, int j)
+    protected EnchantmentDurability(int par1, int par2)
     {
-        super(i, j, EnumEnchantmentType.digger);
+        super(par1, par2, EnumEnchantmentType.digger);
         setName("durability");
     }
 
-    public int getMinEnchantability(int i)
+    public int getMinEnchantability(int par1)
     {
-        return 5 + (i - 1) * 10;
+        return 5 + (par1 - 1) * 10;
     }
 
-    public int getMaxEnchantability(int i)
+    public int getMaxEnchantability(int par1)
     {
-        return super.getMinEnchantability(i) + 50;
+        return super.getMinEnchantability(par1) + 50;
     }
 
     public int getMaxLevel()

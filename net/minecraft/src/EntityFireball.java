@@ -17,9 +17,9 @@ public class EntityFireball extends Entity
     public double accelerationY;
     public double accelerationZ;
 
-    public EntityFireball(World world)
+    public EntityFireball(World par1World)
     {
-        super(world);
+        super(par1World);
         xTile = -1;
         yTile = -1;
         zTile = -1;
@@ -33,41 +33,66 @@ public class EntityFireball extends Entity
     {
     }
 
-    public EntityFireball(World world, EntityLiving entityliving, double d, double d1, double d2)
+    public EntityFireball(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
-        super(world);
+        super(par1World);
         xTile = -1;
         yTile = -1;
         zTile = -1;
         inTile = 0;
         inGround = false;
         ticksInAir = 0;
-        shootingEntity = entityliving;
         setSize(1.0F, 1.0F);
-        setLocationAndAngles(entityliving.posX, entityliving.posY, entityliving.posZ, entityliving.rotationYaw, entityliving.rotationPitch);
+        setLocationAndAngles(par2, par4, par6, rotationYaw, rotationPitch);
+        setPosition(par2, par4, par6);
+        double d = MathHelper.sqrt_double(par8 * par8 + par10 * par10 + par12 * par12);
+        accelerationX = (par8 / d) * 0.1D;
+        accelerationY = (par10 / d) * 0.1D;
+        accelerationZ = (par12 / d) * 0.1D;
+    }
+
+    public EntityFireball(World par1World, EntityLiving par2EntityLiving, double par3, double par5, double par7)
+    {
+        super(par1World);
+        xTile = -1;
+        yTile = -1;
+        zTile = -1;
+        inTile = 0;
+        inGround = false;
+        ticksInAir = 0;
+        shootingEntity = par2EntityLiving;
+        setSize(1.0F, 1.0F);
+        setLocationAndAngles(par2EntityLiving.posX, par2EntityLiving.posY, par2EntityLiving.posZ, par2EntityLiving.rotationYaw, par2EntityLiving.rotationPitch);
         setPosition(posX, posY, posZ);
         yOffset = 0.0F;
         motionX = motionY = motionZ = 0.0D;
-        d += rand.nextGaussian() * 0.40000000000000002D;
-        d1 += rand.nextGaussian() * 0.40000000000000002D;
-        d2 += rand.nextGaussian() * 0.40000000000000002D;
-        double d3 = MathHelper.sqrt_double(d * d + d1 * d1 + d2 * d2);
-        accelerationX = (d / d3) * 0.10000000000000001D;
-        accelerationY = (d1 / d3) * 0.10000000000000001D;
-        accelerationZ = (d2 / d3) * 0.10000000000000001D;
+        par3 += rand.nextGaussian() * 0.4D;
+        par5 += rand.nextGaussian() * 0.4D;
+        par7 += rand.nextGaussian() * 0.4D;
+        double d = MathHelper.sqrt_double(par3 * par3 + par5 * par5 + par7 * par7);
+        accelerationX = (par3 / d) * 0.1D;
+        accelerationY = (par5 / d) * 0.1D;
+        accelerationZ = (par7 / d) * 0.1D;
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
-        super.onUpdate();
-        setFire(1);
-        if (!worldObj.isRemote && (shootingEntity == null || shootingEntity.isDead))
+        if (!worldObj.isRemote && (shootingEntity != null && shootingEntity.isDead || !worldObj.blockExists((int)posX, (int)posY, (int)posZ)))
         {
             setEntityDead();
+            return;
         }
+
+        super.onUpdate();
+        setFire(1);
+
         if (inGround)
         {
             int i = worldObj.getBlockId(xTile, yTile, zTile);
+
             if (i != inTile)
             {
                 inGround = false;
@@ -80,10 +105,12 @@ public class EntityFireball extends Entity
             else
             {
                 ticksAlive++;
-                if (ticksAlive == 1200)
+
+                if (ticksAlive == 600)
                 {
                     setEntityDead();
                 }
+
                 return;
             }
         }
@@ -91,33 +118,42 @@ public class EntityFireball extends Entity
         {
             ticksInAir++;
         }
+
         Vec3D vec3d = Vec3D.createVector(posX, posY, posZ);
         Vec3D vec3d1 = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
         MovingObjectPosition movingobjectposition = worldObj.rayTraceBlocks(vec3d, vec3d1);
         vec3d = Vec3D.createVector(posX, posY, posZ);
         vec3d1 = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
+
         if (movingobjectposition != null)
         {
             vec3d1 = Vec3D.createVector(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
+
         Entity entity = null;
         List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
         double d = 0.0D;
+
         for (int j = 0; j < list.size(); j++)
         {
             Entity entity1 = (Entity)list.get(j);
+
             if (!entity1.canBeCollidedWith() || entity1.isEntityEqual(shootingEntity) && ticksInAir < 25)
             {
                 continue;
             }
+
             float f2 = 0.3F;
             AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f2, f2, f2);
             MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3d, vec3d1);
+
             if (movingobjectposition1 == null)
             {
                 continue;
             }
+
             double d1 = vec3d.distanceTo(movingobjectposition1.hitVec);
+
             if (d1 < d || d == 0.0D)
             {
                 entity = entity1;
@@ -129,22 +165,30 @@ public class EntityFireball extends Entity
         {
             movingobjectposition = new MovingObjectPosition(entity);
         }
+
         if (movingobjectposition != null)
         {
             func_40063_a(movingobjectposition);
         }
+
         posX += motionX;
         posY += motionY;
         posZ += motionZ;
         float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
-        rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180D) / 3.1415927410125732D);
-        for (rotationPitch = (float)((Math.atan2(motionY, f) * 180D) / 3.1415927410125732D); rotationPitch - prevRotationPitch < -180F; prevRotationPitch -= 360F) { }
+        rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180D) / Math.PI);
+
+        for (rotationPitch = (float)((Math.atan2(motionY, f) * 180D) / Math.PI); rotationPitch - prevRotationPitch < -180F; prevRotationPitch -= 360F) { }
+
         for (; rotationPitch - prevRotationPitch >= 180F; prevRotationPitch += 360F) { }
+
         for (; rotationYaw - prevRotationYaw < -180F; prevRotationYaw -= 360F) { }
+
         for (; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
+
         rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2F;
         rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2F;
         float f1 = 0.95F;
+
         if (isInWater())
         {
             for (int k = 0; k < 4; k++)
@@ -155,6 +199,7 @@ public class EntityFireball extends Entity
 
             f1 = 0.8F;
         }
+
         motionX += accelerationX;
         motionY += accelerationY;
         motionZ += accelerationZ;
@@ -165,35 +210,42 @@ public class EntityFireball extends Entity
         setPosition(posX, posY, posZ);
     }
 
-    protected void func_40063_a(MovingObjectPosition movingobjectposition)
+    protected void func_40063_a(MovingObjectPosition par1MovingObjectPosition)
     {
         if (!worldObj.isRemote)
         {
-            if (movingobjectposition.entityHit != null)
+            if (par1MovingObjectPosition.entityHit != null)
             {
-                if (!movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, shootingEntity), 4));
+                if (!par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, shootingEntity), 4));
             }
+
             worldObj.newExplosion(null, posX, posY, posZ, 1.0F, true);
             setEntityDead();
         }
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        nbttagcompound.setShort("xTile", (short)xTile);
-        nbttagcompound.setShort("yTile", (short)yTile);
-        nbttagcompound.setShort("zTile", (short)zTile);
-        nbttagcompound.setByte("inTile", (byte)inTile);
-        nbttagcompound.setByte("inGround", (byte)(inGround ? 1 : 0));
+        par1NBTTagCompound.setShort("xTile", (short)xTile);
+        par1NBTTagCompound.setShort("yTile", (short)yTile);
+        par1NBTTagCompound.setShort("zTile", (short)zTile);
+        par1NBTTagCompound.setByte("inTile", (byte)inTile);
+        par1NBTTagCompound.setByte("inGround", (byte)(inGround ? 1 : 0));
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        xTile = nbttagcompound.getShort("xTile");
-        yTile = nbttagcompound.getShort("yTile");
-        zTile = nbttagcompound.getShort("zTile");
-        inTile = nbttagcompound.getByte("inTile") & 0xff;
-        inGround = nbttagcompound.getByte("inGround") == 1;
+        xTile = par1NBTTagCompound.getShort("xTile");
+        yTile = par1NBTTagCompound.getShort("yTile");
+        zTile = par1NBTTagCompound.getShort("zTile");
+        inTile = par1NBTTagCompound.getByte("inTile") & 0xff;
+        inGround = par1NBTTagCompound.getByte("inGround") == 1;
     }
 
     public boolean canBeCollidedWith()
@@ -206,25 +258,32 @@ public class EntityFireball extends Entity
         return 1.0F;
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         setBeenAttacked();
-        if (damagesource.getEntity() != null)
+
+        if (par1DamageSource.getEntity() != null)
         {
-            Vec3D vec3d = damagesource.getEntity().getLookVec();
+            Vec3D vec3d = par1DamageSource.getEntity().getLookVec();
+
             if (vec3d != null)
             {
                 motionX = vec3d.xCoord;
                 motionY = vec3d.yCoord;
                 motionZ = vec3d.zCoord;
-                accelerationX = motionX * 0.10000000000000001D;
-                accelerationY = motionY * 0.10000000000000001D;
-                accelerationZ = motionZ * 0.10000000000000001D;
+                accelerationX = motionX * 0.1D;
+                accelerationY = motionY * 0.1D;
+                accelerationZ = motionZ * 0.1D;
             }
-            if (damagesource.getEntity() instanceof EntityLiving)
+
+            if (par1DamageSource.getEntity() instanceof EntityLiving)
             {
-                shootingEntity = (EntityLiving)damagesource.getEntity();
+                shootingEntity = (EntityLiving)par1DamageSource.getEntity();
             }
+
             return true;
         }
         else
@@ -233,7 +292,10 @@ public class EntityFireball extends Entity
         }
     }
 
-    public float getEntityBrightness(float f)
+    /**
+     * Gets how bright this entity is.
+     */
+    public float getEntityBrightness(float par1)
     {
         return 1.0F;
     }

@@ -2,12 +2,15 @@ package net.minecraft.src;
 
 public class ItemPiston extends ItemBlock
 {
-    public ItemPiston(int i)
+    public ItemPiston(int par1)
     {
-        super(i);
+        super(par1);
     }
 
-    public int getMetadata(int i)
+    /**
+     * returns the argument if the item has metadata, 0 otherwise
+     */
+    public int getMetadata(int par1)
     {
         return 7;
     }

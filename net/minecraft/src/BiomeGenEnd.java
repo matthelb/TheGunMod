@@ -4,9 +4,9 @@ import java.util.List;
 
 public class BiomeGenEnd extends BiomeGenBase
 {
-    public BiomeGenEnd(int i)
+    public BiomeGenEnd(int par1)
     {
-        super(i);
+        super(par1);
         spawnableMonsterList.clear();
         spawnableCreatureList.clear();
         spawnableWaterCreatureList.clear();

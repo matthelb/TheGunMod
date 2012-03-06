@@ -8,66 +8,72 @@ public class ComponentVillageWell extends ComponentVillage
     private final boolean field_35385_a = true;
     private int averageGroundLevel;
 
-    public ComponentVillageWell(int i, Random random, int j, int k)
+    public ComponentVillageWell(int par1, Random par2Random, int par3, int par4)
     {
-        super(i);
+        super(par1);
         averageGroundLevel = -1;
-        coordBaseMode = random.nextInt(4);
+        coordBaseMode = par2Random.nextInt(4);
+
         switch (coordBaseMode)
         {
             case 0:
             case 2:
-                boundingBox = new StructureBoundingBox(j, 64, k, (j + 6) - 1, 78, (k + 6) - 1);
+                boundingBox = new StructureBoundingBox(par3, 64, par4, (par3 + 6) - 1, 78, (par4 + 6) - 1);
                 break;
 
             default:
-                boundingBox = new StructureBoundingBox(j, 64, k, (j + 6) - 1, 78, (k + 6) - 1);
+                boundingBox = new StructureBoundingBox(par3, 64, par4, (par3 + 6) - 1, 78, (par4 + 6) - 1);
                 break;
         }
     }
 
-    public void buildComponent(StructureComponent structurecomponent, List list, Random random)
+    public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
-        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX - 1, boundingBox.maxY - 4, boundingBox.minZ + 1, 1, getComponentType());
-        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.maxX + 1, boundingBox.maxY - 4, boundingBox.minZ + 1, 3, getComponentType());
-        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX + 1, boundingBox.maxY - 4, boundingBox.minZ - 1, 2, getComponentType());
-        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)structurecomponent, list, random, boundingBox.minX + 1, boundingBox.maxY - 4, boundingBox.maxZ + 1, 0, getComponentType());
+        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)par1StructureComponent, par2List, par3Random, boundingBox.minX - 1, boundingBox.maxY - 4, boundingBox.minZ + 1, 1, getComponentType());
+        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)par1StructureComponent, par2List, par3Random, boundingBox.maxX + 1, boundingBox.maxY - 4, boundingBox.minZ + 1, 3, getComponentType());
+        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)par1StructureComponent, par2List, par3Random, boundingBox.minX + 1, boundingBox.maxY - 4, boundingBox.minZ - 1, 2, getComponentType());
+        StructureVillagePieces.getNextStructureComponentVillagePath((ComponentVillageStartPiece)par1StructureComponent, par2List, par3Random, boundingBox.minX + 1, boundingBox.maxY - 4, boundingBox.maxZ + 1, 0, getComponentType());
     }
 
-    public boolean addComponentParts(World world, Random random, StructureBoundingBox structureboundingbox)
+    public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         if (averageGroundLevel < 0)
         {
-            averageGroundLevel = getAverageGroundLevel(world, structureboundingbox);
+            averageGroundLevel = getAverageGroundLevel(par1World, par3StructureBoundingBox);
+
             if (averageGroundLevel < 0)
             {
                 return true;
             }
+
             boundingBox.offset(0, (averageGroundLevel - boundingBox.maxY) + 3, 0);
         }
+
         if (!field_35385_a);
-        fillWithBlocks(world, structureboundingbox, 1, 0, 1, 4, 12, 4, Block.cobblestone.blockID, Block.waterMoving.blockID, false);
-        placeBlockAtCurrentPosition(world, 0, 0, 2, 12, 2, structureboundingbox);
-        placeBlockAtCurrentPosition(world, 0, 0, 3, 12, 2, structureboundingbox);
-        placeBlockAtCurrentPosition(world, 0, 0, 2, 12, 3, structureboundingbox);
-        placeBlockAtCurrentPosition(world, 0, 0, 3, 12, 3, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 1, 13, 1, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 1, 14, 1, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 4, 13, 1, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 4, 14, 1, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 1, 13, 4, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 1, 14, 4, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 4, 13, 4, structureboundingbox);
-        placeBlockAtCurrentPosition(world, Block.fence.blockID, 0, 4, 14, 4, structureboundingbox);
-        fillWithBlocks(world, structureboundingbox, 1, 15, 1, 4, 15, 4, Block.cobblestone.blockID, Block.cobblestone.blockID, false);
+
+        fillWithBlocks(par1World, par3StructureBoundingBox, 1, 0, 1, 4, 12, 4, Block.cobblestone.blockID, Block.waterMoving.blockID, false);
+        placeBlockAtCurrentPosition(par1World, 0, 0, 2, 12, 2, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, 0, 0, 3, 12, 2, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, 0, 0, 2, 12, 3, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, 0, 0, 3, 12, 3, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 1, 13, 1, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 1, 14, 1, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 4, 13, 1, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 4, 14, 1, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 1, 13, 4, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 1, 14, 4, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 4, 13, 4, par3StructureBoundingBox);
+        placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 4, 14, 4, par3StructureBoundingBox);
+        fillWithBlocks(par1World, par3StructureBoundingBox, 1, 15, 1, 4, 15, 4, Block.cobblestone.blockID, Block.cobblestone.blockID, false);
+
         for (int i = 0; i <= 5; i++)
         {
             for (int j = 0; j <= 5; j++)
             {
                 if (j == 0 || j == 5 || i == 0 || i == 5)
                 {
-                    placeBlockAtCurrentPosition(world, Block.gravel.blockID, 0, j, 11, i, structureboundingbox);
-                    clearCurrentPositionBlocksUpwards(world, j, 12, i, structureboundingbox);
+                    placeBlockAtCurrentPosition(par1World, Block.gravel.blockID, 0, j, 11, i, par3StructureBoundingBox);
+                    clearCurrentPositionBlocksUpwards(par1World, j, 12, i, par3StructureBoundingBox);
                 }
             }
         }

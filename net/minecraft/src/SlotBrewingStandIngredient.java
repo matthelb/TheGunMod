@@ -2,19 +2,23 @@ package net.minecraft.src;
 
 class SlotBrewingStandIngredient extends Slot
 {
+    /** The brewing stand this clot belongs to. */
     final ContainerBrewingStand container;
 
-    public SlotBrewingStandIngredient(ContainerBrewingStand containerbrewingstand, IInventory iinventory, int i, int j, int k)
+    public SlotBrewingStandIngredient(ContainerBrewingStand par1ContainerBrewingStand, IInventory par2IInventory, int par3, int par4, int par5)
     {
-        super(iinventory, i, j, k);
-        container = containerbrewingstand;
+        super(par2IInventory, par3, par4, par5);
+        container = par1ContainerBrewingStand;
     }
 
-    public boolean isItemValid(ItemStack itemstack)
+    /**
+     * Check if the stack is a valid item for this slot.
+     */
+    public boolean isItemValid(ItemStack par1ItemStack)
     {
-        if (itemstack != null)
+        if (par1ItemStack != null)
         {
-            return Item.itemsList[itemstack.itemID].isPotionIngredient();
+            return Item.itemsList[par1ItemStack.itemID].isPotionIngredient();
         }
         else
         {
@@ -22,6 +26,10 @@ class SlotBrewingStandIngredient extends Slot
         }
     }
 
+    /**
+     * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in the case
+     * of armor slots)
+     */
     public int getSlotStackLimit()
     {
         return 64;

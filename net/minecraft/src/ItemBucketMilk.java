@@ -2,42 +2,53 @@ package net.minecraft.src;
 
 public class ItemBucketMilk extends Item
 {
-    public ItemBucketMilk(int i)
+    public ItemBucketMilk(int par1)
     {
-        super(i);
+        super(par1);
         setMaxStackSize(1);
     }
 
-    public ItemStack onFoodEaten(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    public ItemStack onFoodEaten(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        itemstack.stackSize--;
-        if (!world.isRemote)
+        par1ItemStack.stackSize--;
+
+        if (!par2World.isRemote)
         {
-            entityplayer.clearActivePotions();
+            par3EntityPlayer.clearActivePotions();
         }
-        if (itemstack.stackSize <= 0)
+
+        if (par1ItemStack.stackSize <= 0)
         {
             return new ItemStack(Item.bucketEmpty);
         }
         else
         {
-            return itemstack;
+            return par1ItemStack;
         }
     }
 
-    public int getMaxItemUseDuration(ItemStack itemstack)
+    /**
+     * How long it takes to use or consume an item
+     */
+    public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
         return 32;
     }
 
-    public EnumAction getItemUseAction(ItemStack itemstack)
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.drink;
     }
 
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    /**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        entityplayer.setItemInUse(itemstack, getMaxItemUseDuration(itemstack));
-        return itemstack;
+        par3EntityPlayer.setItemInUse(par1ItemStack, getMaxItemUseDuration(par1ItemStack));
+        return par1ItemStack;
     }
 }

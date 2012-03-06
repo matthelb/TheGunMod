@@ -2,20 +2,20 @@ package net.minecraft.src;
 
 public class EnchantmentWaterWorker extends Enchantment
 {
-    public EnchantmentWaterWorker(int i, int j)
+    public EnchantmentWaterWorker(int par1, int par2)
     {
-        super(i, j, EnumEnchantmentType.armor_head);
+        super(par1, par2, EnumEnchantmentType.armor_head);
         setName("waterWorker");
     }
 
-    public int getMinEnchantability(int i)
+    public int getMinEnchantability(int par1)
     {
         return 1;
     }
 
-    public int getMaxEnchantability(int i)
+    public int getMaxEnchantability(int par1)
     {
-        return getMinEnchantability(i) + 40;
+        return getMinEnchantability(par1) + 40;
     }
 
     public int getMaxLevel()

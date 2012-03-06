@@ -4,42 +4,57 @@ import java.io.*;
 
 public class Packet103SetSlot extends Packet
 {
+    /** The window which is being updated. 0 for player inventory */
     public int windowId;
+
+    /** Slot that should be updated */
     public int itemSlot;
+
+    /** Item stack */
     public ItemStack myItemStack;
 
     public Packet103SetSlot()
     {
     }
 
-    public Packet103SetSlot(int i, int j, ItemStack itemstack)
+    public Packet103SetSlot(int par1, int par2, ItemStack par3ItemStack)
     {
-        windowId = i;
-        itemSlot = j;
-        myItemStack = itemstack != null ? itemstack.copy() : itemstack;
+        windowId = par1;
+        itemSlot = par2;
+        myItemStack = par3ItemStack != null ? par3ItemStack.copy() : par3ItemStack;
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleSetSlot(this);
+        par1NetHandler.handleSetSlot(this);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        windowId = datainputstream.readByte();
-        itemSlot = datainputstream.readShort();
-        myItemStack = readItemStack(datainputstream);
+        windowId = par1DataInputStream.readByte();
+        itemSlot = par1DataInputStream.readShort();
+        myItemStack = readItemStack(par1DataInputStream);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeByte(windowId);
-        dataoutputstream.writeShort(itemSlot);
-        writeItemStack(myItemStack, dataoutputstream);
+        par1DataOutputStream.writeByte(windowId);
+        par1DataOutputStream.writeShort(itemSlot);
+        writeItemStack(myItemStack, par1DataOutputStream);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 8;

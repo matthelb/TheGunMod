@@ -2,9 +2,9 @@ package net.minecraft.src;
 
 import java.util.*;
 
-public class ThreadedFileIOBase
-    implements Runnable
+public class ThreadedFileIOBase implements Runnable
 {
+    /** Instance of ThreadedFileIOBase */
     public static final ThreadedFileIOBase threadedIOInstance = new ThreadedFileIOBase();
     private List threadedIOQueue;
     private volatile long writeQueuedCounter;
@@ -31,17 +31,22 @@ public class ThreadedFileIOBase
         while (true);
     }
 
+    /**
+     * Process the items that are in the queue
+     */
     private void processQueue()
     {
         for (int i = 0; i < threadedIOQueue.size(); i++)
         {
             IThreadedFileIO ithreadedfileio = (IThreadedFileIO)threadedIOQueue.get(i);
             boolean flag = ithreadedfileio.writeNextIO();
+
             if (!flag)
             {
                 threadedIOQueue.remove(i--);
                 savedIOCounter++;
             }
+
             try
             {
                 if (!isThreadWaiting)
@@ -72,28 +77,32 @@ public class ThreadedFileIOBase
         }
     }
 
-    public void queueIO(IThreadedFileIO ithreadedfileio)
+    /**
+     * threaded io
+     */
+    public void queueIO(IThreadedFileIO par1IThreadedFileIO)
     {
-        if (threadedIOQueue.contains(ithreadedfileio))
+        if (threadedIOQueue.contains(par1IThreadedFileIO))
         {
             return;
         }
         else
         {
             writeQueuedCounter++;
-            threadedIOQueue.add(ithreadedfileio);
+            threadedIOQueue.add(par1IThreadedFileIO);
             return;
         }
     }
 
-    public void waitForFinish()
-    throws InterruptedException
+    public void waitForFinish() throws InterruptedException
     {
         isThreadWaiting = true;
+
         while (writeQueuedCounter != savedIOCounter)
         {
             Thread.sleep(10L);
         }
+
         isThreadWaiting = false;
     }
 }

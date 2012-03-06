@@ -6,17 +6,19 @@ import java.util.logging.*;
 
 class GuiLogFormatter extends Formatter
 {
+    /** Reference to the GuiLogOutputHandler. */
     final GuiLogOutputHandler outputHandler;
 
-    GuiLogFormatter(GuiLogOutputHandler guilogoutputhandler)
+    GuiLogFormatter(GuiLogOutputHandler par1GuiLogOutputHandler)
     {
-        outputHandler = guilogoutputhandler;
+        outputHandler = par1GuiLogOutputHandler;
     }
 
-    public String format(LogRecord logrecord)
+    public String format(LogRecord par1LogRecord)
     {
         StringBuilder stringbuilder = new StringBuilder();
-        Level level = logrecord.getLevel();
+        Level level = par1LogRecord.getLevel();
+
         if (level == Level.FINEST)
         {
             stringbuilder.append("[FINEST] ");
@@ -45,15 +47,18 @@ class GuiLogFormatter extends Formatter
         {
             stringbuilder.append((new StringBuilder()).append("[").append(level.getLocalizedName()).append("] ").toString());
         }
-        stringbuilder.append(logrecord.getMessage());
+
+        stringbuilder.append(par1LogRecord.getMessage());
         stringbuilder.append('\n');
-        Throwable throwable = logrecord.getThrown();
+        Throwable throwable = par1LogRecord.getThrown();
+
         if (throwable != null)
         {
             StringWriter stringwriter = new StringWriter();
             throwable.printStackTrace(new PrintWriter(stringwriter));
             stringbuilder.append(stringwriter.toString());
         }
+
         return stringbuilder.toString();
     }
 }

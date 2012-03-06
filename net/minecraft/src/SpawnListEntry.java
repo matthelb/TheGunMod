@@ -6,11 +6,11 @@ public class SpawnListEntry extends WeightedRandomChoice
     public int minGroupCount;
     public int maxGroupCount;
 
-    public SpawnListEntry(Class class1, int i, int j, int k)
+    public SpawnListEntry(Class par1Class, int par2, int par3, int par4)
     {
-        super(i);
-        entityClass = class1;
-        minGroupCount = j;
-        maxGroupCount = k;
+        super(par2);
+        entityClass = par1Class;
+        minGroupCount = par3;
+        maxGroupCount = par4;
     }
 }

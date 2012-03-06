@@ -5,176 +5,275 @@ import java.util.Random;
 
 public class BlockStairs extends Block
 {
+    /** The block that is used as model for the stair. */
     private Block modelBlock;
 
-    protected BlockStairs(int i, Block block)
+    protected BlockStairs(int par1, Block par2Block)
     {
-        super(i, block.blockIndexInTexture, block.blockMaterial);
-        modelBlock = block;
-        setHardness(block.blockHardness);
-        setResistance(block.blockResistance / 3F);
-        setStepSound(block.stepSound);
+        super(par1, par2Block.blockIndexInTexture, par2Block.blockMaterial);
+        modelBlock = par2Block;
+        setHardness(par2Block.blockHardness);
+        setResistance(par2Block.blockResistance / 3F);
+        setStepSound(par2Block.stepSound);
         setLightOpacity(255);
     }
 
-    public void setBlockBoundsBasedOnState(IBlockAccess iblockaccess, int i, int j, int k)
+    /**
+     * Updates the blocks bounds based on its current state. Args: world, x, y, z
+     */
+    public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
-        return super.getCollisionBoundingBoxFromPool(world, i, j, k);
+        return super.getCollisionBoundingBoxFromPool(par1World, par2, par3, par4);
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 10;
     }
 
-    public void getCollidingBoundingBoxes(World world, int i, int j, int k, AxisAlignedBB axisalignedbb, ArrayList arraylist)
+    /**
+     * Adds to the supplied array any colliding bounding boxes with the passed in bounding box. Args: world, x, y, z,
+     * axisAlignedBB, arrayList
+     */
+    public void getCollidingBoundingBoxes(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, ArrayList par6ArrayList)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        if (l == 0)
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        int j = i & 3;
+        float f = 0.0F;
+        float f1 = 0.5F;
+        float f2 = 0.5F;
+        float f3 = 1.0F;
+
+        if ((i & 4) != 0)
         {
-            setBlockBounds(0.0F, 0.0F, 0.0F, 0.5F, 0.5F, 1.0F);
-            super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
-            setBlockBounds(0.5F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-            super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+            f = 0.5F;
+            f1 = 1.0F;
+            f2 = 0.0F;
+            f3 = 0.5F;
         }
-        else if (l == 1)
+
+        setBlockBounds(0.0F, f, 0.0F, 1.0F, f1, 1.0F);
+        super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
+
+        if (j == 0)
         {
-            setBlockBounds(0.0F, 0.0F, 0.0F, 0.5F, 1.0F, 1.0F);
-            super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
-            setBlockBounds(0.5F, 0.0F, 0.0F, 1.0F, 0.5F, 1.0F);
-            super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+            setBlockBounds(0.5F, f2, 0.0F, 1.0F, f3, 1.0F);
+            super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
         }
-        else if (l == 2)
+        else if (j == 1)
         {
-            setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5F, 0.5F);
-            super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
-            setBlockBounds(0.0F, 0.0F, 0.5F, 1.0F, 1.0F, 1.0F);
-            super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+            setBlockBounds(0.0F, f2, 0.0F, 0.5F, f3, 1.0F);
+            super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
         }
-        else if (l == 3)
+        else if (j == 2)
         {
-            setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 0.5F);
-            super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
-            setBlockBounds(0.0F, 0.0F, 0.5F, 1.0F, 0.5F, 1.0F);
-            super.getCollidingBoundingBoxes(world, i, j, k, axisalignedbb, arraylist);
+            setBlockBounds(0.0F, f2, 0.5F, 1.0F, f3, 1.0F);
+            super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
         }
+        else if (j == 3)
+        {
+            setBlockBounds(0.0F, f2, 0.0F, 1.0F, f3, 0.5F);
+            super.getCollidingBoundingBoxes(par1World, par2, par3, par4, par5AxisAlignedBB, par6ArrayList);
+        }
+
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    public void onBlockClicked(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called when the block is clicked by a player. Args: x, y, z, entityPlayer
+     */
+    public void onBlockClicked(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        modelBlock.onBlockClicked(world, i, j, k, entityplayer);
+        modelBlock.onBlockClicked(par1World, par2, par3, par4, par5EntityPlayer);
     }
 
-    public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
+    /**
+     * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
+     */
+    public void onBlockDestroyedByPlayer(World par1World, int par2, int par3, int par4, int par5)
     {
-        modelBlock.onBlockDestroyedByPlayer(world, i, j, k, l);
+        modelBlock.onBlockDestroyedByPlayer(par1World, par2, par3, par4, par5);
     }
 
-    public float getExplosionResistance(Entity entity)
+    public float getExplosionResistance(Entity par1Entity)
     {
-        return modelBlock.getExplosionResistance(entity);
+        return modelBlock.getExplosionResistance(par1Entity);
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        return modelBlock.getBlockTextureFromSideAndMetadata(i, 0);
+        return modelBlock.getBlockTextureFromSideAndMetadata(par1, 0);
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        return modelBlock.getBlockTextureFromSideAndMetadata(i, 0);
+        return modelBlock.getBlockTextureFromSideAndMetadata(par1, 0);
     }
 
+    /**
+     * How many world ticks before ticking
+     */
     public int tickRate()
     {
         return modelBlock.tickRate();
     }
 
-    public void velocityToAddToEntity(World world, int i, int j, int k, Entity entity, Vec3D vec3d)
+    /**
+     * Can add to the passed in vector for a movement vector to be applied to the entity. Args: x, y, z, entity, vec3d
+     */
+    public void velocityToAddToEntity(World par1World, int par2, int par3, int par4, Entity par5Entity, Vec3D par6Vec3D)
     {
-        modelBlock.velocityToAddToEntity(world, i, j, k, entity, vec3d);
+        modelBlock.velocityToAddToEntity(par1World, par2, par3, par4, par5Entity, par6Vec3D);
     }
 
+    /**
+     * Returns if this block is collidable (only used by Fire). Args: x, y, z
+     */
     public boolean isCollidable()
     {
         return modelBlock.isCollidable();
     }
 
-    public boolean canCollideCheck(int i, boolean flag)
+    /**
+     * Returns whether this block is collideable based on the arguments passed in Args: blockMetaData, unknownFlag
+     */
+    public boolean canCollideCheck(int par1, boolean par2)
     {
-        return modelBlock.canCollideCheck(i, flag);
+        return modelBlock.canCollideCheck(par1, par2);
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        return modelBlock.canPlaceBlockAt(world, i, j, k);
+        return modelBlock.canPlaceBlockAt(par1World, par2, par3, par4);
     }
 
-    public void onBlockAdded(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+    public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
-        onNeighborBlockChange(world, i, j, k, 0);
-        modelBlock.onBlockAdded(world, i, j, k);
+        onNeighborBlockChange(par1World, par2, par3, par4, 0);
+        modelBlock.onBlockAdded(par1World, par2, par3, par4);
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
-        modelBlock.onBlockRemoval(world, i, j, k);
+        modelBlock.onBlockRemoval(par1World, par2, par3, par4);
     }
 
-    public void onEntityWalking(World world, int i, int j, int k, Entity entity)
+    /**
+     * Called whenever an entity is walking on top of this block. Args: world, x, y, z, entity
+     */
+    public void onEntityWalking(World par1World, int par2, int par3, int par4, Entity par5Entity)
     {
-        modelBlock.onEntityWalking(world, i, j, k, entity);
+        modelBlock.onEntityWalking(par1World, par2, par3, par4, par5Entity);
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        modelBlock.updateTick(world, i, j, k, random);
+        modelBlock.updateTick(par1World, par2, par3, par4, par5Random);
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        return modelBlock.blockActivated(world, i, j, k, entityplayer);
+        return modelBlock.blockActivated(par1World, par2, par3, par4, par5EntityPlayer);
     }
 
-    public void onBlockDestroyedByExplosion(World world, int i, int j, int k)
+    /**
+     * Called upon the block being destroyed by an explosion
+     */
+    public void onBlockDestroyedByExplosion(World par1World, int par2, int par3, int par4)
     {
-        modelBlock.onBlockDestroyedByExplosion(world, i, j, k);
+        modelBlock.onBlockDestroyedByExplosion(par1World, par2, par3, par4);
     }
 
-    public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving entityliving)
+    /**
+     * Called when a block is using an item and passed in who placed it. Args: x, y, z, entityLiving
+     */
+    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
-        int l = MathHelper.floor_double((double)((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-        if (l == 0)
+        int i = MathHelper.floor_double((double)((par5EntityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+        int j = par1World.getBlockMetadata(par2, par3, par4) & 4;
+
+        if (i == 0)
         {
-            world.setBlockMetadataWithNotify(i, j, k, 2);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 2 | j);
         }
-        if (l == 1)
+
+        if (i == 1)
         {
-            world.setBlockMetadataWithNotify(i, j, k, 1);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 1 | j);
         }
-        if (l == 2)
+
+        if (i == 2)
         {
-            world.setBlockMetadataWithNotify(i, j, k, 3);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 3 | j);
         }
-        if (l == 3)
+
+        if (i == 3)
         {
-            world.setBlockMetadataWithNotify(i, j, k, 0);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 0 | j);
+        }
+    }
+
+    /**
+     * Called when a block is placed using an item. Used often for taking the facing and figuring out how to position
+     * the item. Args: x, y, z, facing
+     */
+    public void onBlockPlaced(World par1World, int par2, int par3, int par4, int par5)
+    {
+        if (par5 == 0)
+        {
+            int i = par1World.getBlockMetadata(par2, par3, par4);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, i | 4);
         }
     }
 }

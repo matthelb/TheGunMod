@@ -4,80 +4,175 @@ import java.util.Random;
 
 public class BlockSapling extends BlockFlower
 {
-    protected BlockSapling(int i, int j)
+    protected BlockSapling(int par1, int par2)
     {
-        super(i, j);
+        super(par1, par2);
         float f = 0.4F;
         setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, f * 2.0F, 0.5F + f);
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        super.updateTick(world, i, j, k, random);
-        if (world.getBlockLightValue(i, j + 1, k) >= 9 && random.nextInt(7) == 0)
+
+        super.updateTick(par1World, par2, par3, par4, par5Random);
+
+        if (par1World.getBlockLightValue(par2, par3 + 1, par4) >= 9 && par5Random.nextInt(7) == 0)
         {
-            int l = world.getBlockMetadata(i, j, k);
-            if ((l & 8) == 0)
+            int i = par1World.getBlockMetadata(par2, par3, par4);
+
+            if ((i & 8) == 0)
             {
-                world.setBlockMetadataWithNotify(i, j, k, l | 8);
+                par1World.setBlockMetadataWithNotify(par2, par3, par4, i | 8);
             }
             else
             {
-                growTree(world, i, j, k, random);
+                growTree(par1World, par2, par3, par4, par5Random);
             }
         }
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        j &= 3;
-        if (j == 1)
+        par2 &= 3;
+
+        if (par2 == 1)
         {
             return 63;
         }
-        if (j == 2)
+
+        if (par2 == 2)
         {
             return 79;
         }
+
+        if (par2 == 3)
+        {
+            return 30;
+        }
         else
         {
-            return super.getBlockTextureFromSideAndMetadata(i, j);
+            return super.getBlockTextureFromSideAndMetadata(par1, par2);
         }
     }
 
-    public void growTree(World world, int i, int j, int k, Random random)
+    /**
+     * grows a tree from a sapling block.
+     */
+    public void growTree(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        int l = world.getBlockMetadata(i, j, k) & 3;
-        world.setBlock(i, j, k, 0);
+        int i = par1World.getBlockMetadata(par2, par3, par4) & 3;
         Object obj = null;
-        if (l == 1)
+        int j = 0;
+        int k = 0;
+        boolean flag = false;
+
+        if (i == 1)
         {
             obj = new WorldGenTaiga2(true);
         }
-        else if (l == 2)
+        else if (i == 2)
         {
             obj = new WorldGenForest(true);
+        }
+        else if (i == 3)
+        {
+            j = 0;
+
+            do
+            {
+                if (j < -1)
+                {
+                    break;
+                }
+
+                k = 0;
+
+                do
+                {
+                    if (k < -1)
+                    {
+                        break;
+                    }
+
+                    if (par1World.getBlockId(par2 + j, par3, par4 + k) == blockID && par1World.getBlockId(par2 + j + 1, par3, par4 + k) == blockID && par1World.getBlockId(par2 + j, par3, par4 + k + 1) == blockID && par1World.getBlockId(par2 + j + 1, par3, par4 + k + 1) == blockID)
+                    {
+                        obj = new WorldGenHugeTrees(true, 10 + par5Random.nextInt(20), 3, 3);
+                        flag = true;
+                        break;
+                    }
+
+                    k--;
+                }
+                while (true);
+
+                if (obj != null)
+                {
+                    break;
+                }
+
+                j--;
+            }
+            while (true);
+
+            if (obj == null)
+            {
+                j = k = 0;
+                obj = new WorldGenTrees(true, 4 + par5Random.nextInt(7), 3, 3, false);
+            }
         }
         else
         {
             obj = new WorldGenTrees(true);
-            if (random.nextInt(10) == 0)
+
+            if (par5Random.nextInt(10) == 0)
             {
                 obj = new WorldGenBigTree(true);
             }
         }
-        if (!((WorldGenerator) (obj)).generate(world, random, i, j, k))
+
+        if (flag)
         {
-            world.setBlockAndMetadata(i, j, k, blockID, l);
+            par1World.setBlock(par2 + j, par3, par4 + k, 0);
+            par1World.setBlock(par2 + j + 1, par3, par4 + k, 0);
+            par1World.setBlock(par2 + j, par3, par4 + k + 1, 0);
+            par1World.setBlock(par2 + j + 1, par3, par4 + k + 1, 0);
+        }
+        else
+        {
+            par1World.setBlock(par2, par3, par4, 0);
+        }
+
+        if (!((WorldGenerator)(obj)).generate(par1World, par5Random, par2 + j, par3, par4 + k))
+        {
+            if (flag)
+            {
+                par1World.setBlockAndMetadata(par2 + j, par3, par4 + k, blockID, i);
+                par1World.setBlockAndMetadata(par2 + j + 1, par3, par4 + k, blockID, i);
+                par1World.setBlockAndMetadata(par2 + j, par3, par4 + k + 1, blockID, i);
+                par1World.setBlockAndMetadata(par2 + j + 1, par3, par4 + k + 1, blockID, i);
+            }
+            else
+            {
+                par1World.setBlockAndMetadata(par2, par3, par4, blockID, i);
+            }
         }
     }
 
-    protected int damageDropped(int i)
+    /**
+     * Determines the damage on the item the block drops. Used in cloth and wood.
+     */
+    protected int damageDropped(int par1)
     {
-        return i & 3;
+        return par1 & 3;
     }
 }

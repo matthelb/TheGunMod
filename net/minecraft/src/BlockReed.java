@@ -4,102 +4,144 @@ import java.util.Random;
 
 public class BlockReed extends Block
 {
-    protected BlockReed(int i, int j)
+    protected BlockReed(int par1, int par2)
     {
-        super(i, Material.plants);
-        blockIndexInTexture = j;
+        super(par1, Material.plants);
+        blockIndexInTexture = par2;
         float f = 0.375F;
         setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 1.0F, 0.5F + f);
-        setTickOnLoad(true);
+        setTickRandomly(true);
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (world.isAirBlock(i, j + 1, k))
+        if (par1World.isAirBlock(par2, par3 + 1, par4))
         {
-            int l;
-            for (l = 1; world.getBlockId(i, j - l, k) == blockID; l++) { }
-            if (l < 3)
+            int i;
+
+            for (i = 1; par1World.getBlockId(par2, par3 - i, par4) == blockID; i++) { }
+
+            if (i < 3)
             {
-                int i1 = world.getBlockMetadata(i, j, k);
-                if (i1 == 15)
+                int j = par1World.getBlockMetadata(par2, par3, par4);
+
+                if (j == 15)
                 {
-                    world.setBlockWithNotify(i, j + 1, k, blockID);
-                    world.setBlockMetadataWithNotify(i, j, k, 0);
+                    par1World.setBlockWithNotify(par2, par3 + 1, par4, blockID);
+                    par1World.setBlockMetadataWithNotify(par2, par3, par4, 0);
                 }
                 else
                 {
-                    world.setBlockMetadataWithNotify(i, j, k, i1 + 1);
+                    par1World.setBlockMetadataWithNotify(par2, par3, par4, j + 1);
                 }
             }
         }
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        int l = world.getBlockId(i, j - 1, k);
-        if (l == blockID)
+        int i = par1World.getBlockId(par2, par3 - 1, par4);
+
+        if (i == blockID)
         {
             return true;
         }
-        if (l != Block.grass.blockID && l != Block.dirt.blockID && l != Block.sand.blockID)
+
+        if (i != Block.grass.blockID && i != Block.dirt.blockID && i != Block.sand.blockID)
         {
             return false;
         }
-        if (world.getBlockMaterial(i - 1, j - 1, k) == Material.water)
+
+        if (par1World.getBlockMaterial(par2 - 1, par3 - 1, par4) == Material.water)
         {
             return true;
         }
-        if (world.getBlockMaterial(i + 1, j - 1, k) == Material.water)
+
+        if (par1World.getBlockMaterial(par2 + 1, par3 - 1, par4) == Material.water)
         {
             return true;
         }
-        if (world.getBlockMaterial(i, j - 1, k - 1) == Material.water)
+
+        if (par1World.getBlockMaterial(par2, par3 - 1, par4 - 1) == Material.water)
         {
             return true;
         }
-        return world.getBlockMaterial(i, j - 1, k + 1) == Material.water;
+
+        return par1World.getBlockMaterial(par2, par3 - 1, par4 + 1) == Material.water;
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        checkBlockCoordValid(world, i, j, k);
+        checkBlockCoordValid(par1World, par2, par3, par4);
     }
 
-    protected final void checkBlockCoordValid(World world, int i, int j, int k)
+    /**
+     * Checks if current block pos is valid, if not, breaks the block as dropable item. Used for reed and cactus.
+     */
+    protected final void checkBlockCoordValid(World par1World, int par2, int par3, int par4)
     {
-        if (!canBlockStay(world, i, j, k))
+        if (!canBlockStay(par1World, par2, par3, par4))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-            world.setBlockWithNotify(i, j, k, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
         }
     }
 
-    public boolean canBlockStay(World world, int i, int j, int k)
+    /**
+     * Can this block stay at this position.  Similar to canPlaceBlockAt except gets checked often with plants.
+     */
+    public boolean canBlockStay(World par1World, int par2, int par3, int par4)
     {
-        return canPlaceBlockAt(world, i, j, k);
+        return canPlaceBlockAt(par1World, par2, par3, par4);
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int i)
     {
         return null;
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Item.reed.shiftedIndex;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 1;

@@ -4,13 +4,38 @@ import java.util.Random;
 
 public class EntityCreeper extends EntityMob
 {
+    /**
+     * The amount of time since the creeper was close enough to the player to ignite
+     */
     int timeSinceIgnited;
+
+    /**
+     * Time when this creeper was last in an active state (Messed up code here, probably causes creeper animation to go
+     * weird)
+     */
     int lastActiveTime;
 
-    public EntityCreeper(World world)
+    public EntityCreeper(World par1World)
     {
-        super(world);
+        super(par1World);
         texture = "/mob/creeper.png";
+        tasks.addTask(1, new EntityAISwimming(this));
+        tasks.addTask(2, new EntityAICreeperSwell(this));
+        tasks.addTask(3, new EntityAIAvoidEntity(this, net.minecraft.src.EntityOcelot.class, 6F, 0.25F, 0.3F));
+        tasks.addTask(4, new EntityAIAttackOnCollide(this, 0.25F, false));
+        tasks.addTask(5, new EntityAIWander(this, 0.2F));
+        tasks.addTask(6, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 8F));
+        tasks.addTask(6, new EntityAILookIdle(this));
+        field_48337_aM.addTask(1, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, false));
+        field_48337_aM.addTask(2, new EntityAIHurtByTarget(this, false));
+    }
+
+    /**
+     * Returns true if the newer Entity AI code should be run
+     */
+    public boolean isAIEnabled()
+    {
+        return true;
     }
 
     public int getMaxHealth()
@@ -25,127 +50,105 @@ public class EntityCreeper extends EntityMob
         dataWatcher.addObject(17, Byte.valueOf((byte)0));
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeEntityToNBT(nbttagcompound);
+        super.writeEntityToNBT(par1NBTTagCompound);
+
         if (dataWatcher.getWatchableObjectByte(17) == 1)
         {
-            nbttagcompound.setBoolean("powered", true);
+            par1NBTTagCompound.setBoolean("powered", true);
         }
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readEntityFromNBT(nbttagcompound);
-        dataWatcher.updateObject(17, Byte.valueOf((byte)(nbttagcompound.getBoolean("powered") ? 1 : 0)));
+        super.readEntityFromNBT(par1NBTTagCompound);
+        dataWatcher.updateObject(17, Byte.valueOf((byte)(par1NBTTagCompound.getBoolean("powered") ? 1 : 0)));
     }
 
-    protected void attackBlockedEntity(Entity entity, float f)
-    {
-        if (worldObj.isRemote)
-        {
-            return;
-        }
-        if (timeSinceIgnited > 0)
-        {
-            setCreeperState(-1);
-            timeSinceIgnited--;
-            if (timeSinceIgnited < 0)
-            {
-                timeSinceIgnited = 0;
-            }
-        }
-    }
-
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
-        lastActiveTime = timeSinceIgnited;
-        if (worldObj.isRemote)
+        if (isEntityAlive())
         {
+            lastActiveTime = timeSinceIgnited;
             int i = getCreeperState();
+
             if (i > 0 && timeSinceIgnited == 0)
             {
                 worldObj.playSoundAtEntity(this, "random.fuse", 1.0F, 0.5F);
             }
+
             timeSinceIgnited += i;
+
             if (timeSinceIgnited < 0)
             {
                 timeSinceIgnited = 0;
             }
+
             if (timeSinceIgnited >= 30)
             {
                 timeSinceIgnited = 30;
+
+                if (!worldObj.isRemote)
+                {
+                    if (getPowered())
+                    {
+                        worldObj.createExplosion(this, posX, posY, posZ, 6F);
+                    }
+                    else
+                    {
+                        worldObj.createExplosion(this, posX, posY, posZ, 3F);
+                    }
+
+                    setEntityDead();
+                }
             }
         }
+
         super.onUpdate();
-        if (entityToAttack == null && timeSinceIgnited > 0)
-        {
-            setCreeperState(-1);
-            timeSinceIgnited--;
-            if (timeSinceIgnited < 0)
-            {
-                timeSinceIgnited = 0;
-            }
-        }
     }
 
+    /**
+     * Returns the sound this mob makes when it is hurt.
+     */
     protected String getHurtSound()
     {
         return "mob.creeper";
     }
 
+    /**
+     * Returns the sound this mob makes on death.
+     */
     protected String getDeathSound()
     {
         return "mob.creeperdeath";
     }
 
-    public void onDeath(DamageSource damagesource)
+    /**
+     * Called when the mob's health reaches 0.
+     */
+    public void onDeath(DamageSource par1DamageSource)
     {
-        super.onDeath(damagesource);
-        if (damagesource.getEntity() instanceof EntitySkeleton)
+        super.onDeath(par1DamageSource);
+
+        if (par1DamageSource.getEntity() instanceof EntitySkeleton)
         {
             dropItem(Item.record13.shiftedIndex + rand.nextInt(10), 1);
         }
     }
 
-    protected void attackEntity(Entity entity, float f)
+    public boolean attackEntityAsMob(Entity par1Entity)
     {
-        if (worldObj.isRemote)
-        {
-            return;
-        }
-        int i = getCreeperState();
-        if (i <= 0 && f < 3F || i > 0 && f < 7F)
-        {
-            if (timeSinceIgnited == 0)
-            {
-                worldObj.playSoundAtEntity(this, "random.fuse", 1.0F, 0.5F);
-            }
-            setCreeperState(1);
-            timeSinceIgnited++;
-            if (timeSinceIgnited >= 30)
-            {
-                if (getPowered())
-                {
-                    worldObj.createExplosion(this, posX, posY, posZ, 6F);
-                }
-                else
-                {
-                    worldObj.createExplosion(this, posX, posY, posZ, 3F);
-                }
-                setEntityDead();
-            }
-            hasAttacked = true;
-        }
-        else
-        {
-            setCreeperState(-1);
-            timeSinceIgnited--;
-            if (timeSinceIgnited < 0)
-            {
-                timeSinceIgnited = 0;
-            }
-        }
+        return true;
     }
 
     public boolean getPowered()
@@ -153,24 +156,30 @@ public class EntityCreeper extends EntityMob
         return dataWatcher.getWatchableObjectByte(17) == 1;
     }
 
+    /**
+     * Returns the item ID for the item the mob drops on death.
+     */
     protected int getDropItemId()
     {
         return Item.gunpowder.shiftedIndex;
     }
 
-    private int getCreeperState()
+    public int getCreeperState()
     {
         return dataWatcher.getWatchableObjectByte(16);
     }
 
-    private void setCreeperState(int i)
+    public void setCreeperState(int par1)
     {
-        dataWatcher.updateObject(16, Byte.valueOf((byte)i));
+        dataWatcher.updateObject(16, Byte.valueOf((byte)par1));
     }
 
-    public void onStruckByLightning(EntityLightningBolt entitylightningbolt)
+    /**
+     * Called when a lightning bolt hits the entity.
+     */
+    public void onStruckByLightning(EntityLightningBolt par1EntityLightningBolt)
     {
-        super.onStruckByLightning(entitylightningbolt);
+        super.onStruckByLightning(par1EntityLightningBolt);
         dataWatcher.updateObject(17, Byte.valueOf((byte)1));
     }
 }

@@ -4,29 +4,40 @@ import java.io.*;
 
 public class Packet16BlockItemSwitch extends Packet
 {
+    /** The block/item id to be equipped. */
     public int id;
 
     public Packet16BlockItemSwitch()
     {
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        id = datainputstream.readShort();
+        id = par1DataInputStream.readShort();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeShort(id);
+        par1DataOutputStream.writeShort(id);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleBlockItemSwitch(this);
+        par1NetHandler.handleBlockItemSwitch(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 2;

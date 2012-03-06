@@ -5,69 +5,88 @@ import java.util.Random;
 public class BlockFurnace extends BlockContainer
 {
     private Random furnaceRand;
+
+    /** True if this is an active furnace, false if idle */
     private final boolean isActive;
     private static boolean keepFurnaceInventory = false;
 
-    protected BlockFurnace(int i, boolean flag)
+    protected BlockFurnace(int par1, boolean par2)
     {
-        super(i, Material.rock);
+        super(par1, Material.rock);
         furnaceRand = new Random();
-        isActive = flag;
+        isActive = par2;
         blockIndexInTexture = 45;
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Block.stoneOvenIdle.blockID;
     }
 
-    public void onBlockAdded(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is added into the world. Args: world, x, y, z
+     */
+    public void onBlockAdded(World par1World, int par2, int par3, int par4)
     {
-        super.onBlockAdded(world, i, j, k);
-        setDefaultDirection(world, i, j, k);
+        super.onBlockAdded(par1World, par2, par3, par4);
+        setDefaultDirection(par1World, par2, par3, par4);
     }
 
-    private void setDefaultDirection(World world, int i, int j, int k)
+    private void setDefaultDirection(World par1World, int par2, int par3, int par4)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        int l = world.getBlockId(i, j, k - 1);
-        int i1 = world.getBlockId(i, j, k + 1);
-        int j1 = world.getBlockId(i - 1, j, k);
-        int k1 = world.getBlockId(i + 1, j, k);
+
+        int i = par1World.getBlockId(par2, par3, par4 - 1);
+        int j = par1World.getBlockId(par2, par3, par4 + 1);
+        int k = par1World.getBlockId(par2 - 1, par3, par4);
+        int l = par1World.getBlockId(par2 + 1, par3, par4);
         byte byte0 = 3;
-        if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[i1])
+
+        if (Block.opaqueCubeLookup[i] && !Block.opaqueCubeLookup[j])
         {
             byte0 = 3;
         }
-        if (Block.opaqueCubeLookup[i1] && !Block.opaqueCubeLookup[l])
+
+        if (Block.opaqueCubeLookup[j] && !Block.opaqueCubeLookup[i])
         {
             byte0 = 2;
         }
-        if (Block.opaqueCubeLookup[j1] && !Block.opaqueCubeLookup[k1])
+
+        if (Block.opaqueCubeLookup[k] && !Block.opaqueCubeLookup[l])
         {
             byte0 = 5;
         }
-        if (Block.opaqueCubeLookup[k1] && !Block.opaqueCubeLookup[j1])
+
+        if (Block.opaqueCubeLookup[l] && !Block.opaqueCubeLookup[k])
         {
             byte0 = 4;
         }
-        world.setBlockMetadataWithNotify(i, j, k, byte0);
+
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, byte0);
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        if (i == 1)
+        if (par1 == 1)
         {
             return blockIndexInTexture + 17;
         }
-        if (i == 0)
+
+        if (par1 == 0)
         {
             return blockIndexInTexture + 17;
         }
-        if (i == 3)
+
+        if (par1 == 3)
         {
             return blockIndexInTexture - 1;
         }
@@ -77,109 +96,144 @@ public class BlockFurnace extends BlockContainer
         }
     }
 
-    public boolean blockActivated(World world, int i, int j, int k, EntityPlayer entityplayer)
+    /**
+     * Called upon block activation (left or right click on the block.). The three integers represent x,y,z of the
+     * block.
+     */
+    public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return true;
         }
-        TileEntityFurnace tileentityfurnace = (TileEntityFurnace)world.getBlockTileEntity(i, j, k);
+
+        TileEntityFurnace tileentityfurnace = (TileEntityFurnace)par1World.getBlockTileEntity(par2, par3, par4);
+
         if (tileentityfurnace != null)
         {
-            entityplayer.displayGUIFurnace(tileentityfurnace);
+            par5EntityPlayer.displayGUIFurnace(tileentityfurnace);
         }
+
         return true;
     }
 
-    public static void updateFurnaceBlockState(boolean flag, World world, int i, int j, int k)
+    /**
+     * Update which block ID the furnace is using depending on whether or not it is burning
+     */
+    public static void updateFurnaceBlockState(boolean par0, World par1World, int par2, int par3, int par4)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        TileEntity tileentity = world.getBlockTileEntity(i, j, k);
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+        TileEntity tileentity = par1World.getBlockTileEntity(par2, par3, par4);
         keepFurnaceInventory = true;
-        if (flag)
+
+        if (par0)
         {
-            world.setBlockWithNotify(i, j, k, Block.stoneOvenActive.blockID);
+            par1World.setBlockWithNotify(par2, par3, par4, Block.stoneOvenActive.blockID);
         }
         else
         {
-            world.setBlockWithNotify(i, j, k, Block.stoneOvenIdle.blockID);
+            par1World.setBlockWithNotify(par2, par3, par4, Block.stoneOvenIdle.blockID);
         }
+
         keepFurnaceInventory = false;
-        world.setBlockMetadataWithNotify(i, j, k, l);
+        par1World.setBlockMetadataWithNotify(par2, par3, par4, i);
+
         if (tileentity != null)
         {
             tileentity.validate();
-            world.setBlockTileEntity(i, j, k, tileentity);
+            par1World.setBlockTileEntity(par2, par3, par4, tileentity);
         }
     }
 
+    /**
+     * Returns the TileEntity used by this block.
+     */
     public TileEntity getBlockEntity()
     {
         return new TileEntityFurnace();
     }
 
-    public void onBlockPlacedBy(World world, int i, int j, int k, EntityLiving entityliving)
+    /**
+     * Called when a block is using an item and passed in who placed it. Args: x, y, z, entityLiving
+     */
+    public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
-        int l = MathHelper.floor_double((double)((entityliving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
-        if (l == 0)
+        int i = MathHelper.floor_double((double)((par5EntityLiving.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+
+        if (i == 0)
         {
-            world.setBlockMetadataWithNotify(i, j, k, 2);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 2);
         }
-        if (l == 1)
+
+        if (i == 1)
         {
-            world.setBlockMetadataWithNotify(i, j, k, 5);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 5);
         }
-        if (l == 2)
+
+        if (i == 2)
         {
-            world.setBlockMetadataWithNotify(i, j, k, 3);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 3);
         }
-        if (l == 3)
+
+        if (i == 3)
         {
-            world.setBlockMetadataWithNotify(i, j, k, 4);
+            par1World.setBlockMetadataWithNotify(par2, par3, par4, 4);
         }
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
         if (!keepFurnaceInventory)
         {
-            TileEntityFurnace tileentityfurnace = (TileEntityFurnace)world.getBlockTileEntity(i, j, k);
+            TileEntityFurnace tileentityfurnace = (TileEntityFurnace)par1World.getBlockTileEntity(par2, par3, par4);
+
             if (tileentityfurnace != null)
             {
                 label0:
-                for (int l = 0; l < tileentityfurnace.getSizeInventory(); l++)
+
+                for (int i = 0; i < tileentityfurnace.getSizeInventory(); i++)
                 {
-                    ItemStack itemstack = tileentityfurnace.getStackInSlot(l);
+                    ItemStack itemstack = tileentityfurnace.getStackInSlot(i);
+
                     if (itemstack == null)
                     {
                         continue;
                     }
+
                     float f = furnaceRand.nextFloat() * 0.8F + 0.1F;
                     float f1 = furnaceRand.nextFloat() * 0.8F + 0.1F;
                     float f2 = furnaceRand.nextFloat() * 0.8F + 0.1F;
+
                     do
                     {
                         if (itemstack.stackSize <= 0)
                         {
                             continue label0;
                         }
-                        int i1 = furnaceRand.nextInt(21) + 10;
-                        if (i1 > itemstack.stackSize)
+
+                        int j = furnaceRand.nextInt(21) + 10;
+
+                        if (j > itemstack.stackSize)
                         {
-                            i1 = itemstack.stackSize;
+                            j = itemstack.stackSize;
                         }
-                        itemstack.stackSize -= i1;
-                        EntityItem entityitem = new EntityItem(world, (float)i + f, (float)j + f1, (float)k + f2, new ItemStack(itemstack.itemID, i1, itemstack.getItemDamage()));
+
+                        itemstack.stackSize -= j;
+                        EntityItem entityitem = new EntityItem(par1World, (float)par2 + f, (float)par3 + f1, (float)par4 + f2, new ItemStack(itemstack.itemID, j, itemstack.getItemDamage()));
                         float f3 = 0.05F;
                         entityitem.motionX = (float)furnaceRand.nextGaussian() * f3;
                         entityitem.motionY = (float)furnaceRand.nextGaussian() * f3 + 0.2F;
                         entityitem.motionZ = (float)furnaceRand.nextGaussian() * f3;
-                        world.spawnEntityInWorld(entityitem);
+                        par1World.spawnEntityInWorld(entityitem);
                     }
                     while (true);
                 }
             }
         }
-        super.onBlockRemoval(world, i, j, k);
+
+        super.onBlockRemoval(par1World, par2, par3, par4);
     }
 }

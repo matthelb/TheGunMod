@@ -8,23 +8,26 @@ public class WorldGenReed extends WorldGenerator
     {
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        for (int l = 0; l < 20; l++)
+        for (int i = 0; i < 20; i++)
         {
-            int i1 = (i + random.nextInt(4)) - random.nextInt(4);
-            int j1 = j;
-            int k1 = (k + random.nextInt(4)) - random.nextInt(4);
-            if (!world.isAirBlock(i1, j1, k1) || world.getBlockMaterial(i1 - 1, j1 - 1, k1) != Material.water && world.getBlockMaterial(i1 + 1, j1 - 1, k1) != Material.water && world.getBlockMaterial(i1, j1 - 1, k1 - 1) != Material.water && world.getBlockMaterial(i1, j1 - 1, k1 + 1) != Material.water)
+            int j = (par3 + par2Random.nextInt(4)) - par2Random.nextInt(4);
+            int k = par4;
+            int l = (par5 + par2Random.nextInt(4)) - par2Random.nextInt(4);
+
+            if (!par1World.isAirBlock(j, k, l) || par1World.getBlockMaterial(j - 1, k - 1, l) != Material.water && par1World.getBlockMaterial(j + 1, k - 1, l) != Material.water && par1World.getBlockMaterial(j, k - 1, l - 1) != Material.water && par1World.getBlockMaterial(j, k - 1, l + 1) != Material.water)
             {
                 continue;
             }
-            int l1 = 2 + random.nextInt(random.nextInt(3) + 1);
-            for (int i2 = 0; i2 < l1; i2++)
+
+            int i1 = 2 + par2Random.nextInt(par2Random.nextInt(3) + 1);
+
+            for (int j1 = 0; j1 < i1; j1++)
             {
-                if (Block.reed.canBlockStay(world, i1, j1 + i2, k1))
+                if (Block.reed.canBlockStay(par1World, j, k + j1, l))
                 {
-                    world.setBlock(i1, j1 + i2, k1, Block.reed.blockID);
+                    par1World.setBlock(j, k + j1, l, Block.reed.blockID);
                 }
             }
         }

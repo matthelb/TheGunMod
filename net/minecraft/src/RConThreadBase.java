@@ -5,29 +5,41 @@ import java.net.DatagramSocket;
 import java.net.ServerSocket;
 import java.util.*;
 
-public abstract class RConThreadBase
-    implements Runnable
+public abstract class RConThreadBase implements Runnable
 {
+    /** True i */
     protected boolean running;
+
+    /** Reference to the server object */
     protected IServer server;
+
+    /** Thread for this runnable class */
     protected Thread rconThread;
     protected int field_40415_d;
+
+    /** A list of registered DatagramSockets */
     protected List socketList;
+
+    /** A list of registered ServerSockets */
     protected List serverSocketList;
 
-    RConThreadBase(IServer iserver)
+    RConThreadBase(IServer par1IServer)
     {
         running = false;
         field_40415_d = 5;
         socketList = new ArrayList();
         serverSocketList = new ArrayList();
-        server = iserver;
+        server = par1IServer;
+
         if (server.isDebuggingEnabled())
         {
             logWarning("Debugging is enabled, performance maybe reduced!");
         }
     }
 
+    /**
+     * Creates a new Thread object from this class and starts running
+     */
     public synchronized void startThread()
     {
         rconThread = new Thread(this);
@@ -35,133 +47,185 @@ public abstract class RConThreadBase
         running = true;
     }
 
+    /**
+     * Returns true if the Thread is running, false otherwise
+     */
     public boolean isRunning()
     {
         return running;
     }
 
-    protected void logInfo(String s)
+    /**
+     * Log information message
+     */
+    protected void logInfo(String par1Str)
     {
-        server.logIn(s);
+        server.logIn(par1Str);
     }
 
-    protected void log(String s)
+    /**
+     * Log message
+     */
+    protected void log(String par1Str)
     {
-        server.log(s);
+        server.log(par1Str);
     }
 
-    protected void logWarning(String s)
+    /**
+     * Log warning message
+     */
+    protected void logWarning(String par1Str)
     {
-        server.logWarning(s);
+        server.logWarning(par1Str);
     }
 
-    protected void logSevere(String s)
+    /**
+     * Log severe error message
+     */
+    protected void logSevere(String par1Str)
     {
-        server.logSevere(s);
+        server.logSevere(par1Str);
     }
 
+    /**
+     * Returns the number of players on the server
+     */
     protected int getNumberOfPlayers()
     {
         return server.playersOnline();
     }
 
-    protected void registerSocket(DatagramSocket datagramsocket)
+    /**
+     * Registers a DatagramSocket with this thread
+     */
+    protected void registerSocket(DatagramSocket par1DatagramSocket)
     {
-        logInfo((new StringBuilder()).append("registerSocket: ").append(datagramsocket).toString());
-        socketList.add(datagramsocket);
+        logInfo((new StringBuilder()).append("registerSocket: ").append(par1DatagramSocket).toString());
+        socketList.add(par1DatagramSocket);
     }
 
-    protected boolean closeSocket(DatagramSocket datagramsocket, boolean flag)
+    /**
+     * Closes the specified Da
+     */
+    protected boolean closeSocket(DatagramSocket par1DatagramSocket, boolean par2)
     {
-        logInfo((new StringBuilder()).append("closeSocket: ").append(datagramsocket).toString());
-        if (null == datagramsocket)
+        logInfo((new StringBuilder()).append("closeSocket: ").append(par1DatagramSocket).toString());
+
+        if (null == par1DatagramSocket)
         {
             return false;
         }
-        boolean flag1 = false;
-        if (!datagramsocket.isClosed())
+
+        boolean flag = false;
+
+        if (!par1DatagramSocket.isClosed())
         {
-            datagramsocket.close();
-            flag1 = true;
+            par1DatagramSocket.close();
+            flag = true;
         }
-        if (flag)
+
+        if (par2)
         {
-            socketList.remove(datagramsocket);
+            socketList.remove(par1DatagramSocket);
         }
-        return flag1;
+
+        return flag;
     }
 
-    protected boolean closeServerSocket(ServerSocket serversocket)
+    /**
+     * Closes the specified ServerSocket
+     */
+    protected boolean closeServerSocket(ServerSocket par1ServerSocket)
     {
-        return closeServerSocket_do(serversocket, true);
+        return closeServerSocket_do(par1ServerSocket, true);
     }
 
-    protected boolean closeServerSocket_do(ServerSocket serversocket, boolean flag)
+    /**
+     * Closes the specified ServerSocket
+     */
+    protected boolean closeServerSocket_do(ServerSocket par1ServerSocket, boolean par2)
     {
-        logInfo((new StringBuilder()).append("closeSocket: ").append(serversocket).toString());
-        if (null == serversocket)
+        logInfo((new StringBuilder()).append("closeSocket: ").append(par1ServerSocket).toString());
+
+        if (null == par1ServerSocket)
         {
             return false;
         }
-        boolean flag1 = false;
+
+        boolean flag = false;
+
         try
         {
-            if (!serversocket.isClosed())
+            if (!par1ServerSocket.isClosed())
             {
-                serversocket.close();
-                flag1 = true;
+                par1ServerSocket.close();
+                flag = true;
             }
         }
         catch (IOException ioexception)
         {
             logWarning((new StringBuilder()).append("IO: ").append(ioexception.getMessage()).toString());
         }
-        if (flag)
+
+        if (par2)
         {
-            serverSocketList.remove(serversocket);
+            serverSocketList.remove(par1ServerSocket);
         }
-        return flag1;
+
+        return flag;
     }
 
+    /**
+     * Closes all of the opened sockets
+     */
     protected void closeAllSockets()
     {
         clos(false);
     }
 
-    protected void clos(boolean flag)
+    protected void clos(boolean par1)
     {
         int i = 0;
         Iterator iterator = socketList.iterator();
+
         do
         {
             if (!iterator.hasNext())
             {
                 break;
             }
+
             DatagramSocket datagramsocket = (DatagramSocket)iterator.next();
+
             if (closeSocket(datagramsocket, false))
             {
                 i++;
             }
         }
         while (true);
+
         socketList.clear();
         iterator = serverSocketList.iterator();
+
         do
         {
             if (!iterator.hasNext())
             {
                 break;
             }
+
             ServerSocket serversocket = (ServerSocket)iterator.next();
+
             if (closeServerSocket_do(serversocket, false))
             {
                 i++;
             }
         }
         while (true);
+
         serverSocketList.clear();
-        if (flag && 0 < i)
+
+        if (par1 && 0 < i)
         {
             logWarning((new StringBuilder()).append("Force closed ").append(i).append(" sockets").toString());
         }

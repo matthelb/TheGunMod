@@ -4,42 +4,57 @@ import java.io.*;
 
 public class Packet43Experience extends Packet
 {
+    /** Experience at the current level */
     public float experience;
+
+    /** The total experience points. */
     public int experienceTotal;
+
+    /** The experience level. */
     public int experienceLevel;
 
     public Packet43Experience()
     {
     }
 
-    public Packet43Experience(float f, int i, int j)
+    public Packet43Experience(float par1, int par2, int par3)
     {
-        experience = f;
-        experienceTotal = i;
-        experienceLevel = j;
+        experience = par1;
+        experienceTotal = par2;
+        experienceLevel = par3;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        experience = datainputstream.readFloat();
-        experienceLevel = datainputstream.readShort();
-        experienceTotal = datainputstream.readShort();
+        experience = par1DataInputStream.readFloat();
+        experienceLevel = par1DataInputStream.readShort();
+        experienceTotal = par1DataInputStream.readShort();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeFloat(experience);
-        dataoutputstream.writeShort(experienceLevel);
-        dataoutputstream.writeShort(experienceTotal);
+        par1DataOutputStream.writeFloat(experience);
+        par1DataOutputStream.writeShort(experienceLevel);
+        par1DataOutputStream.writeShort(experienceTotal);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleExperience(this);
+        par1NetHandler.handleExperience(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 4;

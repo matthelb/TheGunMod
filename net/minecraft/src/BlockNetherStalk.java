@@ -4,45 +4,63 @@ import java.util.Random;
 
 public class BlockNetherStalk extends BlockFlower
 {
-    protected BlockNetherStalk(int i)
+    protected BlockNetherStalk(int par1)
     {
-        super(i, 226);
-        setTickOnLoad(true);
+        super(par1, 226);
+        setTickRandomly(true);
         float f = 0.5F;
         setBlockBounds(0.5F - f, 0.0F, 0.5F - f, 0.5F + f, 0.25F, 0.5F + f);
     }
 
-    protected boolean canThisPlantGrowOnThisBlockID(int i)
+    /**
+     * Gets passed in the blockID of the block below and supposed to return true if its allowed to grow on the type of
+     * blockID passed in. Args: blockID
+     */
+    protected boolean canThisPlantGrowOnThisBlockID(int par1)
     {
-        return i == Block.slowSand.blockID;
+        return par1 == Block.slowSand.blockID;
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Can this block stay at this position.  Similar to canPlaceBlockAt except gets checked often with plants.
+     */
+    public boolean canBlockStay(World par1World, int par2, int par3, int par4)
     {
-        int l = world.getBlockMetadata(i, j, k);
-        if (l < 3)
+        return canThisPlantGrowOnThisBlockID(par1World.getBlockId(par2, par3 - 1, par4));
+    }
+
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
+    {
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+
+        if (i < 3)
         {
-            WorldChunkManager worldchunkmanager = world.getWorldChunkManager();
-            if (worldchunkmanager != null)
+            BiomeGenBase biomegenbase = par1World.func_48091_a(par2, par4);
+
+            if ((biomegenbase instanceof BiomeGenHell) && par5Random.nextInt(10) == 0)
             {
-                BiomeGenBase biomegenbase = worldchunkmanager.getBiomeGenAt(i, k);
-                if ((biomegenbase instanceof BiomeGenHell) && random.nextInt(15) == 0)
-                {
-                    l++;
-                    world.setBlockMetadataWithNotify(i, j, k, l);
-                }
+                i++;
+                par1World.setBlockMetadataWithNotify(par2, par3, par4, i);
             }
         }
-        super.updateTick(world, i, j, k, random);
+
+        super.updateTick(par1World, par2, par3, par4, par5Random);
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (j >= 3)
+        if (par2 >= 3)
         {
             return blockIndexInTexture + 2;
         }
-        if (j > 0)
+
+        if (par2 > 0)
         {
             return blockIndexInTexture + 1;
         }
@@ -52,38 +70,54 @@ public class BlockNetherStalk extends BlockFlower
         }
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 6;
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
+    /**
+     * Drops the block items with a specified chance of dropping the specified items
+     */
+    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        int j1 = 1;
-        if (l >= 3)
+
+        int i = 1;
+
+        if (par5 >= 3)
         {
-            j1 = 2 + world.rand.nextInt(3);
-            if (i1 > 0)
+            i = 2 + par1World.rand.nextInt(3);
+
+            if (par7 > 0)
             {
-                j1 += world.rand.nextInt(i1 + 1);
+                i += par1World.rand.nextInt(par7 + 1);
             }
         }
-        for (int k1 = 0; k1 < j1; k1++)
+
+        for (int j = 0; j < i; j++)
         {
-            dropBlockAsItem_do(world, i, j, k, new ItemStack(Item.netherStalkSeeds));
+            dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(Item.netherStalkSeeds));
         }
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return 0;
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 0;
     }

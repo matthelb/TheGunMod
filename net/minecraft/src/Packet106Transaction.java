@@ -4,6 +4,7 @@ import java.io.*;
 
 public class Packet106Transaction extends Packet
 {
+    /** The id of the window that the action occurred in. */
     public int windowId;
     public short shortWindowId;
     public boolean accepted;
@@ -12,34 +13,44 @@ public class Packet106Transaction extends Packet
     {
     }
 
-    public Packet106Transaction(int i, short word0, boolean flag)
+    public Packet106Transaction(int par1, short par2, boolean par3)
     {
-        windowId = i;
-        shortWindowId = word0;
-        accepted = flag;
+        windowId = par1;
+        shortWindowId = par2;
+        accepted = par3;
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleTransaction(this);
+        par1NetHandler.handleTransaction(this);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        windowId = datainputstream.readByte();
-        shortWindowId = datainputstream.readShort();
-        accepted = datainputstream.readByte() != 0;
+        windowId = par1DataInputStream.readByte();
+        shortWindowId = par1DataInputStream.readShort();
+        accepted = par1DataInputStream.readByte() != 0;
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeByte(windowId);
-        dataoutputstream.writeShort(shortWindowId);
-        dataoutputstream.writeByte(accepted ? 1 : 0);
+        par1DataOutputStream.writeByte(windowId);
+        par1DataOutputStream.writeShort(shortWindowId);
+        par1DataOutputStream.writeByte(accepted ? 1 : 0);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 4;

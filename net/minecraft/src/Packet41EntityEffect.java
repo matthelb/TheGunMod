@@ -6,6 +6,8 @@ public class Packet41EntityEffect extends Packet
 {
     public int entityId;
     public byte effectId;
+
+    /** effectAmp */
     public byte effectAmp;
     public short duration;
 
@@ -13,37 +15,47 @@ public class Packet41EntityEffect extends Packet
     {
     }
 
-    public Packet41EntityEffect(int i, PotionEffect potioneffect)
+    public Packet41EntityEffect(int par1, PotionEffect par2PotionEffect)
     {
-        entityId = i;
-        effectId = (byte)(potioneffect.getPotionID() & 0xff);
-        effectAmp = (byte)(potioneffect.getAmplifier() & 0xff);
-        duration = (short)potioneffect.getDuration();
+        entityId = par1;
+        effectId = (byte)(par2PotionEffect.getPotionID() & 0xff);
+        effectAmp = (byte)(par2PotionEffect.getAmplifier() & 0xff);
+        duration = (short)par2PotionEffect.getDuration();
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        effectId = datainputstream.readByte();
-        effectAmp = datainputstream.readByte();
-        duration = datainputstream.readShort();
+        entityId = par1DataInputStream.readInt();
+        effectId = par1DataInputStream.readByte();
+        effectAmp = par1DataInputStream.readByte();
+        duration = par1DataInputStream.readShort();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        dataoutputstream.writeByte(effectId);
-        dataoutputstream.writeByte(effectAmp);
-        dataoutputstream.writeShort(duration);
+        par1DataOutputStream.writeInt(entityId);
+        par1DataOutputStream.writeByte(effectId);
+        par1DataOutputStream.writeByte(effectAmp);
+        par1DataOutputStream.writeShort(duration);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleEntityEffect(this);
+        par1NetHandler.handleEntityEffect(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 8;

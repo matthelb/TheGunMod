@@ -5,31 +5,45 @@ import java.io.*;
 public class Packet108EnchantItem extends Packet
 {
     public int windowId;
+
+    /**
+     * The position of the enchantment on the enchantment table window, starting with 0 as the topmost one.
+     */
     public int enchantment;
 
     public Packet108EnchantItem()
     {
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleEnchantItem(this);
+        par1NetHandler.handleEnchantItem(this);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        windowId = datainputstream.readByte();
-        enchantment = datainputstream.readByte();
+        windowId = par1DataInputStream.readByte();
+        enchantment = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeByte(windowId);
-        dataoutputstream.writeByte(enchantment);
+        par1DataOutputStream.writeByte(windowId);
+        par1DataOutputStream.writeByte(enchantment);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 2;

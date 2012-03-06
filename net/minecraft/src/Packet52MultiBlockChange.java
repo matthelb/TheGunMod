@@ -4,77 +4,119 @@ import java.io.*;
 
 public class Packet52MultiBlockChange extends Packet
 {
+    /** Chunk X position. */
     public int xPosition;
+
+    /** Chunk Z position. */
     public int zPosition;
-    public short coordinateArray[];
-    public byte typeArray[];
     public byte metadataArray[];
+
+    /** The size of the arrays. */
     public int size;
+    private static byte field_48123_e[] = new byte[0];
 
     public Packet52MultiBlockChange()
     {
         isChunkDataPacket = true;
     }
 
-    public Packet52MultiBlockChange(int i, int j, short aword0[], int k, World world)
+    public Packet52MultiBlockChange(int par1, int par2, short par3ArrayOfShort[], int par4, World par5World)
     {
         isChunkDataPacket = true;
-        xPosition = i;
-        zPosition = j;
-        size = k;
-        coordinateArray = new short[k];
-        typeArray = new byte[k];
-        metadataArray = new byte[k];
-        Chunk chunk = world.getChunkFromChunkCoords(i, j);
-        for (int l = 0; l < k; l++)
+        xPosition = par1;
+        zPosition = par2;
+        size = par4;
+        int i = 4 * par4;
+        Chunk chunk = par5World.getChunkFromChunkCoords(par1, par2);
+
+        try
         {
-            int i1 = aword0[l] >> 12 & 0xf;
-            int j1 = aword0[l] >> 8 & 0xf;
-            int k1 = aword0[l] & 0xff;
-            coordinateArray[l] = aword0[l];
-            typeArray[l] = (byte)chunk.getBlockID(i1, k1, j1);
-            metadataArray[l] = (byte)chunk.getBlockMetadata(i1, k1, j1);
+            if (par4 >= 64)
+            {
+                System.out.println((new StringBuilder()).append("ChunkTilesUpdatePacket compress ").append(par4).toString());
+
+                if (field_48123_e.length < i)
+                {
+                    field_48123_e = new byte[i];
+                }
+            }
+            else
+            {
+                ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(i);
+                DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
+
+                for (int j = 0; j < par4; j++)
+                {
+                    int k = par3ArrayOfShort[j] >> 12 & 0xf;
+                    int l = par3ArrayOfShort[j] >> 8 & 0xf;
+                    int i1 = par3ArrayOfShort[j] & 0xff;
+                    dataoutputstream.writeShort(par3ArrayOfShort[j]);
+                    dataoutputstream.writeShort((short)((chunk.getBlockID(k, i1, l) & 0xfff) << 4 | chunk.getBlockMetadata(k, i1, l) & 0xf));
+                }
+
+                metadataArray = bytearrayoutputstream.toByteArray();
+
+                if (metadataArray.length != i)
+                {
+                    throw new RuntimeException((new StringBuilder()).append("Expected length ").append(i).append(" doesn't match received length ").append(metadataArray.length).toString());
+                }
+            }
+        }
+        catch (IOException ioexception)
+        {
+            System.err.println(ioexception.getMessage());
+            metadataArray = null;
         }
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        xPosition = datainputstream.readInt();
-        zPosition = datainputstream.readInt();
-        size = datainputstream.readShort() & 0xffff;
-        coordinateArray = new short[size];
-        typeArray = new byte[size];
-        metadataArray = new byte[size];
-        for (int i = 0; i < size; i++)
+        xPosition = par1DataInputStream.readInt();
+        zPosition = par1DataInputStream.readInt();
+        size = par1DataInputStream.readShort() & 0xffff;
+        int i = par1DataInputStream.readInt();
+
+        if (i > 0)
         {
-            coordinateArray[i] = datainputstream.readShort();
+            metadataArray = new byte[i];
+            par1DataInputStream.readFully(metadataArray);
         }
-
-        datainputstream.readFully(typeArray);
-        datainputstream.readFully(metadataArray);
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(xPosition);
-        dataoutputstream.writeInt(zPosition);
-        dataoutputstream.writeShort((short)size);
-        for (int i = 0; i < size; i++)
+        par1DataOutputStream.writeInt(xPosition);
+        par1DataOutputStream.writeInt(zPosition);
+        par1DataOutputStream.writeShort((short)size);
+
+        if (metadataArray != null)
         {
-            dataoutputstream.writeShort(coordinateArray[i]);
+            par1DataOutputStream.writeInt(metadataArray.length);
+            par1DataOutputStream.write(metadataArray);
         }
-
-        dataoutputstream.write(typeArray);
-        dataoutputstream.write(metadataArray);
+        else
+        {
+            par1DataOutputStream.writeInt(0);
+        }
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleMultiBlockChange(this);
+        par1NetHandler.handleMultiBlockChange(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 10 + size * 4;

@@ -19,25 +19,28 @@ public class MapGenNetherBridge extends MapGenStructure
         return spawnList;
     }
 
-    protected boolean canSpawnStructureAtCoords(int i, int j)
+    protected boolean canSpawnStructureAtCoords(int par1, int par2)
     {
-        int k = i >> 4;
-        int l = j >> 4;
-        rand.setSeed((long)(k ^ l << 4) ^ worldObj.getSeed());
+        int i = par1 >> 4;
+        int j = par2 >> 4;
+        rand.setSeed((long)(i ^ j << 4) ^ worldObj.getSeed());
         rand.nextInt();
+
         if (rand.nextInt(3) != 0)
         {
             return false;
         }
-        if (i != (k << 4) + 4 + rand.nextInt(8))
+
+        if (par1 != (i << 4) + 4 + rand.nextInt(8))
         {
             return false;
         }
-        return j == (l << 4) + 4 + rand.nextInt(8);
+
+        return par2 == (j << 4) + 4 + rand.nextInt(8);
     }
 
-    protected StructureStart getStructureStart(int i, int j)
+    protected StructureStart getStructureStart(int par1, int par2)
     {
-        return new StructureNetherBridgeStart(worldObj, rand, i, j);
+        return new StructureNetherBridgeStart(worldObj, rand, par1, par2);
     }
 }

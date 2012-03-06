@@ -14,40 +14,50 @@ public class Packet17Sleep extends Packet
     {
     }
 
-    public Packet17Sleep(Entity entity, int i, int j, int k, int l)
+    public Packet17Sleep(Entity par1Entity, int par2, int par3, int par4, int par5)
     {
-        field_22042_e = i;
-        bedX = j;
-        bedY = k;
-        bedZ = l;
-        entityID = entity.entityId;
+        field_22042_e = par2;
+        bedX = par3;
+        bedY = par4;
+        bedZ = par5;
+        entityID = par1Entity.entityId;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityID = datainputstream.readInt();
-        field_22042_e = datainputstream.readByte();
-        bedX = datainputstream.readInt();
-        bedY = datainputstream.readByte();
-        bedZ = datainputstream.readInt();
+        entityID = par1DataInputStream.readInt();
+        field_22042_e = par1DataInputStream.readByte();
+        bedX = par1DataInputStream.readInt();
+        bedY = par1DataInputStream.readByte();
+        bedZ = par1DataInputStream.readInt();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityID);
-        dataoutputstream.writeByte(field_22042_e);
-        dataoutputstream.writeInt(bedX);
-        dataoutputstream.writeByte(bedY);
-        dataoutputstream.writeInt(bedZ);
+        par1DataOutputStream.writeInt(entityID);
+        par1DataOutputStream.writeByte(field_22042_e);
+        par1DataOutputStream.writeInt(bedX);
+        par1DataOutputStream.writeByte(bedY);
+        par1DataOutputStream.writeInt(bedZ);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleSleep(this);
+        par1NetHandler.handleSleep(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 14;

@@ -4,50 +4,63 @@ import java.io.*;
 
 public class Packet26EntityExpOrb extends Packet
 {
+    /** Entity ID for the XP Orb */
     public int entityId;
     public int posX;
     public int posY;
     public int posZ;
+
+    /** The Orbs Experience points value. */
     public int xpValue;
 
     public Packet26EntityExpOrb()
     {
     }
 
-    public Packet26EntityExpOrb(EntityXPOrb entityxporb)
+    public Packet26EntityExpOrb(EntityXPOrb par1EntityXPOrb)
     {
-        entityId = entityxporb.entityId;
-        posX = MathHelper.floor_double(entityxporb.posX * 32D);
-        posY = MathHelper.floor_double(entityxporb.posY * 32D);
-        posZ = MathHelper.floor_double(entityxporb.posZ * 32D);
-        xpValue = entityxporb.getXpValue();
+        entityId = par1EntityXPOrb.entityId;
+        posX = MathHelper.floor_double(par1EntityXPOrb.posX * 32D);
+        posY = MathHelper.floor_double(par1EntityXPOrb.posY * 32D);
+        posZ = MathHelper.floor_double(par1EntityXPOrb.posZ * 32D);
+        xpValue = par1EntityXPOrb.getXpValue();
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        entityId = datainputstream.readInt();
-        posX = datainputstream.readInt();
-        posY = datainputstream.readInt();
-        posZ = datainputstream.readInt();
-        xpValue = datainputstream.readShort();
+        entityId = par1DataInputStream.readInt();
+        posX = par1DataInputStream.readInt();
+        posY = par1DataInputStream.readInt();
+        posZ = par1DataInputStream.readInt();
+        xpValue = par1DataInputStream.readShort();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(entityId);
-        dataoutputstream.writeInt(posX);
-        dataoutputstream.writeInt(posY);
-        dataoutputstream.writeInt(posZ);
-        dataoutputstream.writeShort(xpValue);
+        par1DataOutputStream.writeInt(entityId);
+        par1DataOutputStream.writeInt(posX);
+        par1DataOutputStream.writeInt(posY);
+        par1DataOutputStream.writeInt(posZ);
+        par1DataOutputStream.writeShort(xpValue);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleEntityExpOrb(this);
+        par1NetHandler.handleEntityExpOrb(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 18;

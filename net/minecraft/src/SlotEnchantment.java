@@ -2,15 +2,19 @@ package net.minecraft.src;
 
 class SlotEnchantment extends Slot
 {
+    /** The brewing stand this slot belongs to. */
     final ContainerEnchantment container;
 
-    SlotEnchantment(ContainerEnchantment containerenchantment, IInventory iinventory, int i, int j, int k)
+    SlotEnchantment(ContainerEnchantment par1ContainerEnchantment, IInventory par2IInventory, int par3, int par4, int par5)
     {
-        super(iinventory, i, j, k);
-        container = containerenchantment;
+        super(par2IInventory, par3, par4, par5);
+        container = par1ContainerEnchantment;
     }
 
-    public boolean isItemValid(ItemStack itemstack)
+    /**
+     * Check if the stack is a valid item for this slot.
+     */
+    public boolean isItemValid(ItemStack par1ItemStack)
     {
         return true;
     }

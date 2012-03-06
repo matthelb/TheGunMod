@@ -7,14 +7,14 @@ class StructureStrongholdPieceWeight
     public int instancesSpawned;
     public int instancesLimit;
 
-    public StructureStrongholdPieceWeight(Class class1, int i, int j)
+    public StructureStrongholdPieceWeight(Class par1Class, int par2, int par3)
     {
-        pieceClass = class1;
-        pieceWeight = i;
-        instancesLimit = j;
+        pieceClass = par1Class;
+        pieceWeight = par2;
+        instancesLimit = par3;
     }
 
-    public boolean canSpawnMoreStructuresOfType(int i)
+    public boolean canSpawnMoreStructuresOfType(int par1)
     {
         return instancesLimit == 0 || instancesSpawned < instancesLimit;
     }

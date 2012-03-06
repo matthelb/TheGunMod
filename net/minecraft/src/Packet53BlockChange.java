@@ -4,10 +4,19 @@ import java.io.*;
 
 public class Packet53BlockChange extends Packet
 {
+    /** Block X position. */
     public int xPosition;
+
+    /** Block Y position. */
     public int yPosition;
+
+    /** Block Z position. */
     public int zPosition;
+
+    /** The new block type for the block. */
     public int type;
+
+    /** Metadata of the block. */
     public int metadata;
 
     public Packet53BlockChange()
@@ -15,41 +24,51 @@ public class Packet53BlockChange extends Packet
         isChunkDataPacket = true;
     }
 
-    public Packet53BlockChange(int i, int j, int k, World world)
+    public Packet53BlockChange(int par1, int par2, int par3, World par4World)
     {
         isChunkDataPacket = true;
-        xPosition = i;
-        yPosition = j;
-        zPosition = k;
-        type = world.getBlockId(i, j, k);
-        metadata = world.getBlockMetadata(i, j, k);
+        xPosition = par1;
+        yPosition = par2;
+        zPosition = par3;
+        type = par4World.getBlockId(par1, par2, par3);
+        metadata = par4World.getBlockMetadata(par1, par2, par3);
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        xPosition = datainputstream.readInt();
-        yPosition = datainputstream.read();
-        zPosition = datainputstream.readInt();
-        type = datainputstream.read();
-        metadata = datainputstream.read();
+        xPosition = par1DataInputStream.readInt();
+        yPosition = par1DataInputStream.read();
+        zPosition = par1DataInputStream.readInt();
+        type = par1DataInputStream.read();
+        metadata = par1DataInputStream.read();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(xPosition);
-        dataoutputstream.write(yPosition);
-        dataoutputstream.writeInt(zPosition);
-        dataoutputstream.write(type);
-        dataoutputstream.write(metadata);
+        par1DataOutputStream.writeInt(xPosition);
+        par1DataOutputStream.write(yPosition);
+        par1DataOutputStream.writeInt(zPosition);
+        par1DataOutputStream.write(type);
+        par1DataOutputStream.write(metadata);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleBlockChange(this);
+        par1NetHandler.handleBlockChange(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 11;

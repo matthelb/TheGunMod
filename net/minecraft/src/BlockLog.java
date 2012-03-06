@@ -4,48 +4,65 @@ import java.util.Random;
 
 public class BlockLog extends Block
 {
-    protected BlockLog(int i)
+    protected BlockLog(int par1)
     {
-        super(i, Material.wood);
+        super(par1, Material.wood);
         blockIndexInTexture = 20;
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 1;
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Block.wood.blockID;
     }
 
-    public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
+    /**
+     * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the coordinates of the
+     * block and l is the block's subtype/damage.
+     */
+    public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6)
     {
-        super.harvestBlock(world, entityplayer, i, j, k, l);
+        super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
         byte byte0 = 4;
-        int l = byte0 + 1;
-        if (world.checkChunksExist(i - l, j - l, k - l, i + l, j + l, k + l))
+        int i = byte0 + 1;
+
+        if (par1World.checkChunksExist(par2 - i, par3 - i, par4 - i, par2 + i, par3 + i, par4 + i))
         {
-            for (int i1 = -byte0; i1 <= byte0; i1++)
+            for (int j = -byte0; j <= byte0; j++)
             {
-                for (int j1 = -byte0; j1 <= byte0; j1++)
+                for (int k = -byte0; k <= byte0; k++)
                 {
-                    for (int k1 = -byte0; k1 <= byte0; k1++)
+                    for (int l = -byte0; l <= byte0; l++)
                     {
-                        int l1 = world.getBlockId(i + i1, j + j1, k + k1);
-                        if (l1 != Block.leaves.blockID)
+                        int i1 = par1World.getBlockId(par2 + j, par3 + k, par4 + l);
+
+                        if (i1 != Block.leaves.blockID)
                         {
                             continue;
                         }
-                        int i2 = world.getBlockMetadata(i + i1, j + j1, k + k1);
-                        if ((i2 & 8) == 0)
+
+                        int j1 = par1World.getBlockMetadata(par2 + j, par3 + k, par4 + l);
+
+                        if ((j1 & 8) == 0)
                         {
-                            world.setBlockMetadata(i + i1, j + j1, k + k1, i2 | 8);
+                            par1World.setBlockMetadata(par2 + j, par3 + k, par4 + l, j1 | 8);
                         }
                     }
                 }
@@ -53,25 +70,39 @@ public class BlockLog extends Block
         }
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (i == 1)
+        if (par1 == 1)
         {
             return 21;
         }
-        if (i == 0)
+
+        if (par1 == 0)
         {
             return 21;
         }
-        if (j == 1)
+
+        if (par2 == 1)
         {
             return 116;
         }
-        return j != 2 ? 20 : 117;
+
+        if (par2 == 2)
+        {
+            return 117;
+        }
+
+        return par2 != 3 ? 20 : 153;
     }
 
-    protected int damageDropped(int i)
+    /**
+     * Determines the damage on the item the block drops. Used in cloth and wood.
+     */
+    protected int damageDropped(int par1)
     {
-        return i;
+        return par1;
     }
 }

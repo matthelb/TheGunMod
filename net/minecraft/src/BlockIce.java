@@ -4,43 +4,61 @@ import java.util.Random;
 
 public class BlockIce extends BlockBreakable
 {
-    public BlockIce(int i, int j)
+    public BlockIce(int par1, int par2)
     {
-        super(i, j, Material.ice, false);
+        super(par1, par2, Material.ice, false);
         slipperiness = 0.98F;
-        setTickOnLoad(true);
+        setTickRandomly(true);
     }
 
-    public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
+    /**
+     * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the coordinates of the
+     * block and l is the block's subtype/damage.
+     */
+    public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6)
     {
-        super.harvestBlock(world, entityplayer, i, j, k, l);
-        Material material = world.getBlockMaterial(i, j - 1, k);
-        if (material.getIsSolid() || material.getIsLiquid())
+        super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
+        Material material = par1World.getBlockMaterial(par3, par4 - 1, par5);
+
+        if (material.blocksMovement() || material.isLiquid())
         {
-            world.setBlockWithNotify(i, j, k, Block.waterMoving.blockID);
+            par1World.setBlockWithNotify(par3, par4, par5, Block.waterMoving.blockID);
         }
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 0;
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (world.getSavedLightValue(EnumSkyBlock.Block, i, j, k) > 11 - Block.lightOpacity[blockID])
+        if (par1World.getSavedLightValue(EnumSkyBlock.Block, par2, par3, par4) > 11 - Block.lightOpacity[blockID])
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-            world.setBlockWithNotify(i, j, k, Block.waterStill.blockID);
+            dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            par1World.setBlockWithNotify(par2, par3, par4, Block.waterStill.blockID);
         }
     }
 
+    /**
+     * returns the mobility flag of a block's material
+     */
     public int getMobilityFlag()
     {
         return 0;
     }
 
-    protected ItemStack createStackedBlock(int i)
+    /**
+     * Returns an item stack containing a single instance of the current block type. 'i' is the block's subtype/damage
+     * and is ignored for blocks which do not support subtypes. Blocks which cannot be harvested should return null.
+     */
+    protected ItemStack createStackedBlock(int par1)
     {
         return null;
     }

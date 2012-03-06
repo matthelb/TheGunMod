@@ -9,186 +9,224 @@ public class WorldGenDungeons extends WorldGenerator
     {
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
         byte byte0 = 3;
-        int l = random.nextInt(2) + 2;
-        int i1 = random.nextInt(2) + 2;
-        int j1 = 0;
-        for (int k1 = i - l - 1; k1 <= i + l + 1; k1++)
+        int i = par2Random.nextInt(2) + 2;
+        int j = par2Random.nextInt(2) + 2;
+        int k = 0;
+
+        for (int l = par3 - i - 1; l <= par3 + i + 1; l++)
         {
-            for (int j2 = j - 1; j2 <= j + byte0 + 1; j2++)
+            for (int k1 = par4 - 1; k1 <= par4 + byte0 + 1; k1++)
             {
-                for (int i3 = k - i1 - 1; i3 <= k + i1 + 1; i3++)
+                for (int j2 = par5 - j - 1; j2 <= par5 + j + 1; j2++)
                 {
-                    Material material = world.getBlockMaterial(k1, j2, i3);
-                    if (j2 == j - 1 && !material.isSolid())
+                    Material material = par1World.getBlockMaterial(l, k1, j2);
+
+                    if (k1 == par4 - 1 && !material.isSolid())
                     {
                         return false;
                     }
-                    if (j2 == j + byte0 + 1 && !material.isSolid())
+
+                    if (k1 == par4 + byte0 + 1 && !material.isSolid())
                     {
                         return false;
                     }
-                    if ((k1 == i - l - 1 || k1 == i + l + 1 || i3 == k - i1 - 1 || i3 == k + i1 + 1) && j2 == j && world.isAirBlock(k1, j2, i3) && world.isAirBlock(k1, j2 + 1, i3))
+
+                    if ((l == par3 - i - 1 || l == par3 + i + 1 || j2 == par5 - j - 1 || j2 == par5 + j + 1) && k1 == par4 && par1World.isAirBlock(l, k1, j2) && par1World.isAirBlock(l, k1 + 1, j2))
                     {
-                        j1++;
+                        k++;
                     }
                 }
             }
         }
 
-        if (j1 < 1 || j1 > 5)
+        if (k < 1 || k > 5)
         {
             return false;
         }
-        for (int l1 = i - l - 1; l1 <= i + l + 1; l1++)
+
+        for (int i1 = par3 - i - 1; i1 <= par3 + i + 1; i1++)
         {
-            for (int k2 = j + byte0; k2 >= j - 1; k2--)
+            for (int l1 = par4 + byte0; l1 >= par4 - 1; l1--)
             {
-                for (int j3 = k - i1 - 1; j3 <= k + i1 + 1; j3++)
+                for (int k2 = par5 - j - 1; k2 <= par5 + j + 1; k2++)
                 {
-                    if (l1 == i - l - 1 || k2 == j - 1 || j3 == k - i1 - 1 || l1 == i + l + 1 || k2 == j + byte0 + 1 || j3 == k + i1 + 1)
+                    if (i1 == par3 - i - 1 || l1 == par4 - 1 || k2 == par5 - j - 1 || i1 == par3 + i + 1 || l1 == par4 + byte0 + 1 || k2 == par5 + j + 1)
                     {
-                        if (k2 >= 0 && !world.getBlockMaterial(l1, k2 - 1, j3).isSolid())
+                        if (l1 >= 0 && !par1World.getBlockMaterial(i1, l1 - 1, k2).isSolid())
                         {
-                            world.setBlockWithNotify(l1, k2, j3, 0);
+                            par1World.setBlockWithNotify(i1, l1, k2, 0);
                             continue;
                         }
-                        if (!world.getBlockMaterial(l1, k2, j3).isSolid())
+
+                        if (!par1World.getBlockMaterial(i1, l1, k2).isSolid())
                         {
                             continue;
                         }
-                        if (k2 == j - 1 && random.nextInt(4) != 0)
+
+                        if (l1 == par4 - 1 && par2Random.nextInt(4) != 0)
                         {
-                            world.setBlockWithNotify(l1, k2, j3, Block.cobblestoneMossy.blockID);
+                            par1World.setBlockWithNotify(i1, l1, k2, Block.cobblestoneMossy.blockID);
                         }
                         else
                         {
-                            world.setBlockWithNotify(l1, k2, j3, Block.cobblestone.blockID);
+                            par1World.setBlockWithNotify(i1, l1, k2, Block.cobblestone.blockID);
                         }
                     }
                     else
                     {
-                        world.setBlockWithNotify(l1, k2, j3, 0);
+                        par1World.setBlockWithNotify(i1, l1, k2, 0);
                     }
                 }
             }
         }
 
-        for (int i2 = 0; i2 < 2; i2++)
+        for (int j1 = 0; j1 < 2; j1++)
         {
             label0:
-            for (int l2 = 0; l2 < 3; l2++)
+
+            for (int i2 = 0; i2 < 3; i2++)
             {
-                int k3 = (i + random.nextInt(l * 2 + 1)) - l;
-                int l3 = j;
-                int i4 = (k + random.nextInt(i1 * 2 + 1)) - i1;
-                if (!world.isAirBlock(k3, l3, i4))
+                int l2 = (par3 + par2Random.nextInt(i * 2 + 1)) - i;
+                int i3 = par4;
+                int j3 = (par5 + par2Random.nextInt(j * 2 + 1)) - j;
+
+                if (!par1World.isAirBlock(l2, i3, j3))
                 {
                     continue;
                 }
-                int j4 = 0;
-                if (world.getBlockMaterial(k3 - 1, l3, i4).isSolid())
+
+                int k3 = 0;
+
+                if (par1World.getBlockMaterial(l2 - 1, i3, j3).isSolid())
                 {
-                    j4++;
+                    k3++;
                 }
-                if (world.getBlockMaterial(k3 + 1, l3, i4).isSolid())
+
+                if (par1World.getBlockMaterial(l2 + 1, i3, j3).isSolid())
                 {
-                    j4++;
+                    k3++;
                 }
-                if (world.getBlockMaterial(k3, l3, i4 - 1).isSolid())
+
+                if (par1World.getBlockMaterial(l2, i3, j3 - 1).isSolid())
                 {
-                    j4++;
+                    k3++;
                 }
-                if (world.getBlockMaterial(k3, l3, i4 + 1).isSolid())
+
+                if (par1World.getBlockMaterial(l2, i3, j3 + 1).isSolid())
                 {
-                    j4++;
+                    k3++;
                 }
-                if (j4 != 1)
+
+                if (k3 != 1)
                 {
                     continue;
                 }
-                world.setBlockWithNotify(k3, l3, i4, Block.chest.blockID);
-                TileEntityChest tileentitychest = (TileEntityChest)world.getBlockTileEntity(k3, l3, i4);
+
+                par1World.setBlockWithNotify(l2, i3, j3, Block.chest.blockID);
+                TileEntityChest tileentitychest = (TileEntityChest)par1World.getBlockTileEntity(l2, i3, j3);
+
                 if (tileentitychest == null)
                 {
                     break;
                 }
-                int k4 = 0;
+
+                int l3 = 0;
+
                 do
                 {
-                    if (k4 >= 8)
+                    if (l3 >= 8)
                     {
                         break label0;
                     }
-                    ItemStack itemstack = pickCheckLootItem(random);
+
+                    ItemStack itemstack = pickCheckLootItem(par2Random);
+
                     if (itemstack != null)
                     {
-                        tileentitychest.setInventorySlotContents(random.nextInt(tileentitychest.getSizeInventory()), itemstack);
+                        tileentitychest.setInventorySlotContents(par2Random.nextInt(tileentitychest.getSizeInventory()), itemstack);
                     }
-                    k4++;
+
+                    l3++;
                 }
                 while (true);
             }
         }
 
-        world.setBlockWithNotify(i, j, k, Block.mobSpawner.blockID);
-        TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)world.getBlockTileEntity(i, j, k);
+        par1World.setBlockWithNotify(par3, par4, par5, Block.mobSpawner.blockID);
+        TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)par1World.getBlockTileEntity(par3, par4, par5);
+
         if (tileentitymobspawner != null)
         {
-            tileentitymobspawner.setMobID(pickMobSpawner(random));
+            tileentitymobspawner.setMobID(pickMobSpawner(par2Random));
         }
         else
         {
-            System.err.println((new StringBuilder()).append("Failed to fetch mob spawner entity at (").append(i).append(", ").append(j).append(", ").append(k).append(")").toString());
+            System.err.println((new StringBuilder()).append("Failed to fetch mob spawner entity at (").append(par3).append(", ").append(par4).append(", ").append(par5).append(")").toString());
         }
+
         return true;
     }
 
-    private ItemStack pickCheckLootItem(Random random)
+    /**
+     * Picks potentially a random item to add to a dungeon chest
+     */
+    private ItemStack pickCheckLootItem(Random par1Random)
     {
-        int i = random.nextInt(11);
+        int i = par1Random.nextInt(11);
+
         if (i == 0)
         {
             return new ItemStack(Item.saddle);
         }
+
         if (i == 1)
         {
-            return new ItemStack(Item.ingotIron, random.nextInt(4) + 1);
+            return new ItemStack(Item.ingotIron, par1Random.nextInt(4) + 1);
         }
+
         if (i == 2)
         {
             return new ItemStack(Item.bread);
         }
+
         if (i == 3)
         {
-            return new ItemStack(Item.wheat, random.nextInt(4) + 1);
+            return new ItemStack(Item.wheat, par1Random.nextInt(4) + 1);
         }
+
         if (i == 4)
         {
-            return new ItemStack(Item.gunpowder, random.nextInt(4) + 1);
+            return new ItemStack(Item.gunpowder, par1Random.nextInt(4) + 1);
         }
+
         if (i == 5)
         {
-            return new ItemStack(Item.silk, random.nextInt(4) + 1);
+            return new ItemStack(Item.silk, par1Random.nextInt(4) + 1);
         }
+
         if (i == 6)
         {
             return new ItemStack(Item.bucketEmpty);
         }
-        if (i == 7 && random.nextInt(100) == 0)
+
+        if (i == 7 && par1Random.nextInt(100) == 0)
         {
             return new ItemStack(Item.appleGold);
         }
-        if (i == 8 && random.nextInt(2) == 0)
+
+        if (i == 8 && par1Random.nextInt(2) == 0)
         {
-            return new ItemStack(Item.redstone, random.nextInt(4) + 1);
+            return new ItemStack(Item.redstone, par1Random.nextInt(4) + 1);
         }
-        if (i == 9 && random.nextInt(10) == 0)
+
+        if (i == 9 && par1Random.nextInt(10) == 0)
         {
-            return new ItemStack(Item.itemsList[Item.record13.shiftedIndex + random.nextInt(2)]);
+            return new ItemStack(Item.itemsList[Item.record13.shiftedIndex + par1Random.nextInt(2)]);
         }
+
         if (i == 10)
         {
             return new ItemStack(Item.dyePowder, 1, 3);
@@ -199,21 +237,28 @@ public class WorldGenDungeons extends WorldGenerator
         }
     }
 
-    private String pickMobSpawner(Random random)
+    /**
+     * Randomly decides which spawner to use in a dungeon
+     */
+    private String pickMobSpawner(Random par1Random)
     {
-        int i = random.nextInt(4);
+        int i = par1Random.nextInt(4);
+
         if (i == 0)
         {
             return "Skeleton";
         }
+
         if (i == 1)
         {
             return "Zombie";
         }
+
         if (i == 2)
         {
             return "Zombie";
         }
+
         if (i == 3)
         {
             return "Spider";

@@ -3,71 +3,93 @@ package net.minecraft.src;
 import java.io.IOException;
 import java.util.*;
 
-public class ChunkProviderServer
-    implements IChunkProvider
+public class ChunkProviderServer implements IChunkProvider
 {
     private Set droppedChunksSet;
+
+    /** a dummy chunk, returned in place of an actual chunk. */
     private Chunk dummyChunk;
+
+    /**
+     * chunk generator object. Calls to load nonexistent chunks are forwarded to this object.
+     */
     private IChunkProvider serverChunkGenerator;
     private IChunkLoader chunkLoader;
+
+    /**
+     * if set, this flag forces a request to load a chunk to load the chunk rather than defaulting to the dummy if
+     * possible
+     */
     public boolean chunkLoadOverride;
+
+    /** map of chunk Id's to Chunk instances */
     private LongHashMap id2ChunkMap;
     private List field_727_f;
     private WorldServer world;
 
-    public ChunkProviderServer(WorldServer worldserver, IChunkLoader ichunkloader, IChunkProvider ichunkprovider)
+    public ChunkProviderServer(WorldServer par1WorldServer, IChunkLoader par2IChunkLoader, IChunkProvider par3IChunkProvider)
     {
         droppedChunksSet = new HashSet();
         chunkLoadOverride = false;
         id2ChunkMap = new LongHashMap();
         field_727_f = new ArrayList();
-        dummyChunk = new EmptyChunk(worldserver, new byte[256 * worldserver.worldHeight], 0, 0);
-        world = worldserver;
-        chunkLoader = ichunkloader;
-        serverChunkGenerator = ichunkprovider;
+        dummyChunk = new EmptyChunk(par1WorldServer, 0, 0);
+        world = par1WorldServer;
+        chunkLoader = par2IChunkLoader;
+        serverChunkGenerator = par3IChunkProvider;
     }
 
-    public boolean chunkExists(int i, int j)
+    /**
+     * Checks to see if a chunk exists at x, y
+     */
+    public boolean chunkExists(int par1, int par2)
     {
-        return id2ChunkMap.containsItem(ChunkCoordIntPair.chunkXZ2Int(i, j));
+        return id2ChunkMap.containsItem(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
     }
 
-    public void dropChunk(int i, int j)
+    public void dropChunk(int par1, int par2)
     {
         if (world.worldProvider.canRespawnHere())
         {
             ChunkCoordinates chunkcoordinates = world.getSpawnPoint();
-            int k = (i * 16 + 8) - chunkcoordinates.posX;
-            int l = (j * 16 + 8) - chunkcoordinates.posZ;
+            int i = (par1 * 16 + 8) - chunkcoordinates.posX;
+            int j = (par2 * 16 + 8) - chunkcoordinates.posZ;
             char c = '\200';
-            if (k < -c || k > c || l < -c || l > c)
+
+            if (i < -c || i > c || j < -c || j > c)
             {
-                droppedChunksSet.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j)));
+                droppedChunksSet.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(par1, par2)));
             }
         }
         else
         {
-            droppedChunksSet.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(i, j)));
+            droppedChunksSet.add(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(par1, par2)));
         }
     }
 
     public void unloadAllChunks()
     {
         Chunk chunk;
+
         for (Iterator iterator = field_727_f.iterator(); iterator.hasNext(); dropChunk(chunk.xPosition, chunk.zPosition))
         {
             chunk = (Chunk)iterator.next();
         }
     }
 
-    public Chunk loadChunk(int i, int j)
+    /**
+     * loads or generates the chunk at the chunk location specified
+     */
+    public Chunk loadChunk(int par1, int par2)
     {
-        long l = ChunkCoordIntPair.chunkXZ2Int(i, j);
+        long l = ChunkCoordIntPair.chunkXZ2Int(par1, par2);
         droppedChunksSet.remove(Long.valueOf(l));
         Chunk chunk = (Chunk)id2ChunkMap.getValueByKey(l);
+
         if (chunk == null)
         {
-            chunk = loadChunkFromFile(i, j);
+            chunk = loadChunkFromFile(par1, par2);
+
             if (chunk == null)
             {
                 if (serverChunkGenerator == null)
@@ -76,29 +98,34 @@ public class ChunkProviderServer
                 }
                 else
                 {
-                    chunk = serverChunkGenerator.provideChunk(i, j);
+                    chunk = serverChunkGenerator.provideChunk(par1, par2);
                 }
             }
+
             id2ChunkMap.add(l, chunk);
             field_727_f.add(chunk);
+
             if (chunk != null)
             {
                 chunk.func_4053_c();
                 chunk.onChunkLoad();
             }
-            chunk.populateChunk(this, this, i, j);
+
+            chunk.populateChunk(this, this, par1, par2);
         }
+
         return chunk;
     }
 
-    public Chunk provideChunk(int i, int j)
+    public Chunk provideChunk(int par1, int par2)
     {
-        Chunk chunk = (Chunk)id2ChunkMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(i, j));
+        Chunk chunk = (Chunk)id2ChunkMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
+
         if (chunk == null)
         {
             if (world.findingSpawnPoint || chunkLoadOverride)
             {
-                return loadChunk(i, j);
+                return loadChunk(par1, par2);
             }
             else
             {
@@ -111,37 +138,42 @@ public class ChunkProviderServer
         }
     }
 
-    private Chunk loadChunkFromFile(int i, int j)
+    private Chunk loadChunkFromFile(int par1, int par2)
     {
         if (chunkLoader == null)
         {
             return null;
         }
+
         try
         {
-            Chunk chunk = chunkLoader.loadChunk(world, i, j);
+            Chunk chunk = chunkLoader.loadChunk(world, par1, par2);
+
             if (chunk != null)
             {
                 chunk.lastSaveTime = world.getWorldTime();
             }
+
             return chunk;
         }
         catch (Exception exception)
         {
             exception.printStackTrace();
         }
+
         return null;
     }
 
-    private void saveChunkExtraData(Chunk chunk)
+    private void saveChunkExtraData(Chunk par1Chunk)
     {
         if (chunkLoader == null)
         {
             return;
         }
+
         try
         {
-            chunkLoader.saveExtraChunkData(world, chunk);
+            chunkLoader.saveExtraChunkData(world, par1Chunk);
         }
         catch (Exception exception)
         {
@@ -149,16 +181,17 @@ public class ChunkProviderServer
         }
     }
 
-    private void saveChunkData(Chunk chunk)
+    private void saveChunkData(Chunk par1Chunk)
     {
         if (chunkLoader == null)
         {
             return;
         }
+
         try
         {
-            chunk.lastSaveTime = world.getWorldTime();
-            chunkLoader.saveChunk(world, chunk);
+            par1Chunk.lastSaveTime = world.getWorldTime();
+            chunkLoader.saveChunk(world, par1Chunk);
         }
         catch (IOException ioexception)
         {
@@ -166,51 +199,67 @@ public class ChunkProviderServer
         }
     }
 
-    public void populate(IChunkProvider ichunkprovider, int i, int j)
+    /**
+     * Populates chunk with ores etc etc
+     */
+    public void populate(IChunkProvider par1IChunkProvider, int par2, int par3)
     {
-        Chunk chunk = provideChunk(i, j);
+        Chunk chunk = provideChunk(par2, par3);
+
         if (!chunk.isTerrainPopulated)
         {
             chunk.isTerrainPopulated = true;
+
             if (serverChunkGenerator != null)
             {
-                serverChunkGenerator.populate(ichunkprovider, i, j);
-                ModLoader.PopulateChunk(serverChunkGenerator, i << 4, j << 4, world);
+                serverChunkGenerator.populate(par1IChunkProvider, par2, par3);
+                ModLoader.populateChunk(serverChunkGenerator, par2 << 4, par3 << 4, world);
                 chunk.setChunkModified();
             }
         }
     }
 
-    public boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate)
+    /**
+     * Two modes of operation: if passed true, save all Chunks in one go.  If passed false, save up to two chunks.
+     * Return true if all chunks have been saved.
+     */
+    public boolean saveChunks(boolean par1, IProgressUpdate par2IProgressUpdate)
     {
         int i = 0;
+
         for (int j = 0; j < field_727_f.size(); j++)
         {
             Chunk chunk = (Chunk)field_727_f.get(j);
-            if (flag && !chunk.neverSave)
+
+            if (par1)
             {
                 saveChunkExtraData(chunk);
             }
-            if (!chunk.needsSaving(flag))
+
+            if (!chunk.needsSaving(par1))
             {
                 continue;
             }
+
             saveChunkData(chunk);
             chunk.isModified = false;
-            if (++i == 24 && !flag)
+
+            if (++i == 24 && !par1)
             {
                 return false;
             }
         }
 
-        if (flag)
+        if (par1)
         {
             if (chunkLoader == null)
             {
                 return true;
             }
+
             chunkLoader.saveExtraData();
         }
+
         return true;
     }
 
@@ -238,6 +287,7 @@ public class ChunkProviderServer
                 chunkLoader.chunkTick();
             }
         }
+
         return serverChunkGenerator.unload100OldestChunks();
     }
 
@@ -251,13 +301,19 @@ public class ChunkProviderServer
         return (new StringBuilder()).append("ServerChunkCache: ").append(id2ChunkMap.getNumHashElements()).append(" Drop: ").append(droppedChunksSet.size()).toString();
     }
 
-    public List getPossibleCreatures(EnumCreatureType enumcreaturetype, int i, int j, int k)
+    /**
+     * Returns a list of creatures of the specified type that can spawn at the given location.
+     */
+    public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int par4)
     {
-        return serverChunkGenerator.getPossibleCreatures(enumcreaturetype, i, j, k);
+        return serverChunkGenerator.getPossibleCreatures(par1EnumCreatureType, par2, par3, par4);
     }
 
-    public ChunkPosition findClosestStructure(World world, String s, int i, int j, int k)
+    /**
+     * Returns the location of the closest structure of the specified type. If not found returns null.
+     */
+    public ChunkPosition findClosestStructure(World par1World, String par2Str, int par3, int par4, int par5)
     {
-        return serverChunkGenerator.findClosestStructure(world, s, i, j, k);
+        return serverChunkGenerator.findClosestStructure(par1World, par2Str, par3, par4, par5);
     }
 }

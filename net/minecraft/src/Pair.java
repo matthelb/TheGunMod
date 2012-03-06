@@ -32,6 +32,7 @@ public class Pair
         {
             return false;
         }
+
         if (!(obj instanceof Pair))
         {
             return false;

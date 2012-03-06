@@ -6,19 +6,26 @@ import java.net.SocketTimeoutException;
 
 public class RConThreadClient extends RConThreadBase
 {
+    /**
+     * True if the client has succefssfully logged into the RCon, otherwise false
+     */
     private boolean loggedIn;
+
+    /** The client's Socket connection */
     private Socket clientSocket;
     private byte buffer[];
+
+    /** The RCon password */
     private String rconPassword;
 
-    RConThreadClient(IServer iserver, Socket socket)
+    RConThreadClient(IServer par1IServer, Socket par2Socket)
     {
-        super(iserver);
+        super(par1IServer);
         loggedIn = false;
         buffer = new byte[1460];
-        clientSocket = socket;
-        rconPassword = iserver.getStringProperty("rcon.password", "");
-        log((new StringBuilder()).append("Rcon connection from: ").append(socket.getInetAddress()).toString());
+        clientSocket = par2Socket;
+        rconPassword = par1IServer.getStringProperty("rcon.password", "");
+        log((new StringBuilder()).append("Rcon connection from: ").append(par2Socket.getInetAddress()).toString());
     }
 
     public void run()
@@ -31,30 +38,37 @@ public class RConThreadClient extends RConThreadBase
                 {
                     break;
                 }
+
                 try
                 {
                     BufferedInputStream bufferedinputstream = new BufferedInputStream(clientSocket.getInputStream());
                     int i = bufferedinputstream.read(buffer, 0, 1460);
+
                     if (10 > i)
                     {
                         return;
                     }
+
                     int j = 0;
                     int k = RConUtils.getBytesAsLEInt(buffer, 0, i);
+
                     if (k != i - 4)
                     {
                         return;
                     }
+
                     j += 4;
                     int l = RConUtils.getBytesAsLEInt(buffer, j, i);
                     j += 4;
                     int i1 = RConUtils.getRemainingBytesAsLEInt(buffer, j);
                     j += 4;
+
                     switch (i1)
                     {
                         case 3:
                             String s = RConUtils.getBytesAsString(buffer, j, i);
                             j += s.length();
+
                             if (0 != s.length() && s.equals(rconPassword))
                             {
                                 loggedIn = true;
@@ -65,12 +79,14 @@ public class RConThreadClient extends RConThreadBase
                                 loggedIn = false;
                                 sendLoginFailedResponse();
                             }
+
                             break;
 
                         case 2:
                             if (loggedIn)
                             {
                                 String s1 = RConUtils.getBytesAsString(buffer, j, i);
+
                                 try
                                 {
                                     sendMultipacketResponse(l, server.handleRConCommand(s1));
@@ -84,6 +100,7 @@ public class RConThreadClient extends RConThreadBase
                             {
                                 sendLoginFailedResponse();
                             }
+
                             break;
 
                         default:
@@ -114,46 +131,57 @@ public class RConThreadClient extends RConThreadBase
         }
     }
 
-    private void sendResponse(int i, int j, String s)
-    throws IOException
+    /**
+     * Sends the given response message to the client
+     */
+    private void sendResponse(int par1, int par2, String par3Str) throws IOException
     {
         ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream(1248);
         DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
-        dataoutputstream.writeInt(Integer.reverseBytes(s.length() + 10));
-        dataoutputstream.writeInt(Integer.reverseBytes(i));
-        dataoutputstream.writeInt(Integer.reverseBytes(j));
-        dataoutputstream.writeBytes(s);
+        dataoutputstream.writeInt(Integer.reverseBytes(par3Str.length() + 10));
+        dataoutputstream.writeInt(Integer.reverseBytes(par1));
+        dataoutputstream.writeInt(Integer.reverseBytes(par2));
+        dataoutputstream.writeBytes(par3Str);
         dataoutputstream.write(0);
         dataoutputstream.write(0);
         clientSocket.getOutputStream().write(bytearrayoutputstream.toByteArray());
     }
 
-    private void sendLoginFailedResponse()
-    throws IOException
+    /**
+     * Sends the standard RCon 'authorization failed' response packet
+     */
+    private void sendLoginFailedResponse() throws IOException
     {
         sendResponse(-1, 2, "");
     }
 
-    private void sendMultipacketResponse(int i, String s)
-    throws IOException
+    /**
+     * Splits the response message into individual packets and sends each one
+     */
+    private void sendMultipacketResponse(int par1, String par2Str) throws IOException
     {
-        int j = s.length();
+        int i = par2Str.length();
+
         do
         {
-            int k = 4096 > j ? j : 4096;
-            sendResponse(i, 0, s.substring(0, k));
-            s = s.substring(k);
-            j = s.length();
+            int j = 4096 > i ? i : 4096;
+            sendResponse(par1, 0, par2Str.substring(0, j));
+            par2Str = par2Str.substring(j);
+            i = par2Str.length();
         }
-        while (0 != j);
+        while (0 != i);
     }
 
+    /**
+     * Closes the client socket
+     */
     private void closeSocket()
     {
         if (null == clientSocket)
         {
             return;
         }
+
         try
         {
             clientSocket.close();
@@ -162,6 +190,7 @@ public class RConThreadClient extends RConThreadBase
         {
             logWarning((new StringBuilder()).append("IO: ").append(ioexception.getMessage()).toString());
         }
+
         clientSocket = null;
     }
 }

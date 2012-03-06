@@ -17,38 +17,42 @@ public class DamageSource
     private boolean isUnblockable;
     private boolean isDamageAllowedInCreativeMode;
     private float hungerDamage;
+
+    /** This kind of damage is based on fire or not. */
     private boolean fireDamage;
+
+    /** This kind of damage is based on a projectile or not. */
     private boolean projectile;
     public String damageType;
 
-    public static DamageSource causeMobDamage(EntityLiving entityliving)
+    public static DamageSource causeMobDamage(EntityLiving par0EntityLiving)
     {
-        return new EntityDamageSource("mob", entityliving);
+        return new EntityDamageSource("mob", par0EntityLiving);
     }
 
-    public static DamageSource causePlayerDamage(EntityPlayer entityplayer)
+    public static DamageSource causePlayerDamage(EntityPlayer par0EntityPlayer)
     {
-        return new EntityDamageSource("player", entityplayer);
+        return new EntityDamageSource("player", par0EntityPlayer);
     }
 
-    public static DamageSource causeArrowDamage(EntityArrow entityarrow, Entity entity)
+    public static DamageSource causeArrowDamage(EntityArrow par0EntityArrow, Entity par1Entity)
     {
-        return (new EntityDamageSourceIndirect("arrow", entityarrow, entity)).setProjectile();
+        return (new EntityDamageSourceIndirect("arrow", par0EntityArrow, par1Entity)).setProjectile();
     }
 
-    public static DamageSource causeFireballDamage(EntityFireball entityfireball, Entity entity)
+    public static DamageSource causeFireballDamage(EntityFireball par0EntityFireball, Entity par1Entity)
     {
-        return (new EntityDamageSourceIndirect("fireball", entityfireball, entity)).setFireDamage().setProjectile();
+        return (new EntityDamageSourceIndirect("fireball", par0EntityFireball, par1Entity)).setFireDamage().setProjectile();
     }
 
-    public static DamageSource causeThrownDamage(Entity entity, Entity entity1)
+    public static DamageSource causeThrownDamage(Entity par0Entity, Entity par1Entity)
     {
-        return (new EntityDamageSourceIndirect("thrown", entity, entity1)).setProjectile();
+        return (new EntityDamageSourceIndirect("thrown", par0Entity, par1Entity)).setProjectile();
     }
 
-    public static DamageSource causeIndirectMagicDamage(Entity entity, Entity entity1)
+    public static DamageSource causeIndirectMagicDamage(Entity par0Entity, Entity par1Entity)
     {
-        return (new EntityDamageSourceIndirect("indirectMagic", entity, entity1)).setDamageBypassesArmor();
+        return (new EntityDamageSourceIndirect("indirectMagic", par0Entity, par1Entity)).setDamageBypassesArmor();
     }
 
     public boolean isProjectile()
@@ -56,6 +60,9 @@ public class DamageSource
         return projectile;
     }
 
+    /**
+     * Define the damage type as projectile based.
+     */
     public DamageSource setProjectile()
     {
         projectile = true;
@@ -77,12 +84,12 @@ public class DamageSource
         return isDamageAllowedInCreativeMode;
     }
 
-    protected DamageSource(String s)
+    protected DamageSource(String par1Str)
     {
         isUnblockable = false;
         isDamageAllowedInCreativeMode = false;
         hungerDamage = 0.3F;
-        damageType = s;
+        damageType = par1Str;
     }
 
     public Entity getSourceOfDamage()
@@ -108,25 +115,37 @@ public class DamageSource
         return this;
     }
 
+    /**
+     * Define the damage type as fire based.
+     */
     protected DamageSource setFireDamage()
     {
         fireDamage = true;
         return this;
     }
 
-    public String func_35075_a(EntityPlayer entityplayer)
+    /**
+     * Returns the message to be displayed on player death.
+     */
+    public String getDeathMessage(EntityPlayer par1EntityPlayer)
     {
         return StatCollector.translateToLocalFormatted((new StringBuilder()).append("death.").append(damageType).toString(), new Object[]
                 {
-                    entityplayer.username
+                    par1EntityPlayer.username
                 });
     }
 
+    /**
+     * Returns true if the damage is fire based.
+     */
     public boolean fireDamage()
     {
         return fireDamage;
     }
 
+    /**
+     * Return the name of damage type.
+     */
     public String getDamageType()
     {
         return damageType;

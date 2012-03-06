@@ -2,16 +2,13 @@ package net.minecraft.src;
 
 public enum EnumSkyBlock
 {
-    Sky("Sky", 0, 15),
-    Block("Block", 1, 0);
+    Sky(15),
+    Block(0);
 
     public final int defaultLightValue;
-    private static final EnumSkyBlock allSkyBlocks[] = (new EnumSkyBlock[] {
-        Sky, Block
-    });
 
-    private EnumSkyBlock(String s, int i, int j)
+    private EnumSkyBlock(int par3)
     {
-        defaultLightValue = j;
+        defaultLightValue = par3;
     }
 }

@@ -4,33 +4,42 @@ import java.util.Random;
 
 public class BlockLeaves extends BlockLeavesBase
 {
+    /**
+     * The base index in terrain.png corresponding to the fancy version of the leaf texture. This is stored so we can
+     * switch the displayed version between fancy and fast graphics (fast is this index + 1).
+     */
     private int baseIndexInPNG;
     int adjacentTreeBlocks[];
 
-    protected BlockLeaves(int i, int j)
+    protected BlockLeaves(int par1, int par2)
     {
-        super(i, j, Material.leaves, false);
-        baseIndexInPNG = j;
-        setTickOnLoad(true);
+        super(par1, par2, Material.leaves, false);
+        baseIndexInPNG = par2;
+        setTickRandomly(true);
     }
 
-    public void onBlockRemoval(World world, int i, int j, int k)
+    /**
+     * Called whenever the block is removed.
+     */
+    public void onBlockRemoval(World par1World, int par2, int par3, int par4)
     {
-        int l = 1;
-        int i1 = l + 1;
-        if (world.checkChunksExist(i - i1, j - i1, k - i1, i + i1, j + i1, k + i1))
+        int i = 1;
+        int j = i + 1;
+
+        if (par1World.checkChunksExist(par2 - j, par3 - j, par4 - j, par2 + j, par3 + j, par4 + j))
         {
-            for (int j1 = -l; j1 <= l; j1++)
+            for (int k = -i; k <= i; k++)
             {
-                for (int k1 = -l; k1 <= l; k1++)
+                for (int l = -i; l <= i; l++)
                 {
-                    for (int l1 = -l; l1 <= l; l1++)
+                    for (int i1 = -i; i1 <= i; i1++)
                     {
-                        int i2 = world.getBlockId(i + j1, j + k1, k + l1);
-                        if (i2 == Block.leaves.blockID)
+                        int j1 = par1World.getBlockId(par2 + k, par3 + l, par4 + i1);
+
+                        if (j1 == Block.leaves.blockID)
                         {
-                            int j2 = world.getBlockMetadata(i + j1, j + k1, k + l1);
-                            world.setBlockMetadata(i + j1, j + k1, k + l1, j2 | 8);
+                            int k1 = par1World.getBlockMetadata(par2 + k, par3 + l, par4 + i1);
+                            par1World.setBlockMetadata(par2 + k, par3 + l, par4 + i1, k1 | 8);
                         }
                     }
                 }
@@ -38,156 +47,216 @@ public class BlockLeaves extends BlockLeavesBase
         }
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (world.isRemote)
+        if (par1World.isRemote)
         {
             return;
         }
-        int l = world.getBlockMetadata(i, j, k);
-        if ((l & 8) != 0 && (l & 4) == 0)
+
+        int i = par1World.getBlockMetadata(par2, par3, par4);
+
+        if ((i & 8) != 0 && (i & 4) == 0)
         {
             byte byte0 = 4;
-            int i1 = byte0 + 1;
+            int j = byte0 + 1;
             byte byte1 = 32;
-            int j1 = byte1 * byte1;
-            int k1 = byte1 / 2;
+            int k = byte1 * byte1;
+            int l = byte1 / 2;
+
             if (adjacentTreeBlocks == null)
             {
                 adjacentTreeBlocks = new int[byte1 * byte1 * byte1];
             }
-            if (world.checkChunksExist(i - i1, j - i1, k - i1, i + i1, j + i1, k + i1))
+
+            if (par1World.checkChunksExist(par2 - j, par3 - j, par4 - j, par2 + j, par3 + j, par4 + j))
             {
-                for (int l1 = -byte0; l1 <= byte0; l1++)
+                for (int i1 = -byte0; i1 <= byte0; i1++)
                 {
-                    for (int k2 = -byte0; k2 <= byte0; k2++)
+                    for (int l1 = -byte0; l1 <= byte0; l1++)
                     {
-                        for (int i3 = -byte0; i3 <= byte0; i3++)
+                        for (int j2 = -byte0; j2 <= byte0; j2++)
                         {
-                            int k3 = world.getBlockId(i + l1, j + k2, k + i3);
-                            if (k3 == Block.wood.blockID)
+                            int l2 = par1World.getBlockId(par2 + i1, par3 + l1, par4 + j2);
+
+                            if (l2 == Block.wood.blockID)
                             {
-                                adjacentTreeBlocks[(l1 + k1) * j1 + (k2 + k1) * byte1 + (i3 + k1)] = 0;
+                                adjacentTreeBlocks[(i1 + l) * k + (l1 + l) * byte1 + (j2 + l)] = 0;
                                 continue;
                             }
-                            if (k3 == Block.leaves.blockID)
+
+                            if (l2 == Block.leaves.blockID)
                             {
-                                adjacentTreeBlocks[(l1 + k1) * j1 + (k2 + k1) * byte1 + (i3 + k1)] = -2;
+                                adjacentTreeBlocks[(i1 + l) * k + (l1 + l) * byte1 + (j2 + l)] = -2;
                             }
                             else
                             {
-                                adjacentTreeBlocks[(l1 + k1) * j1 + (k2 + k1) * byte1 + (i3 + k1)] = -1;
+                                adjacentTreeBlocks[(i1 + l) * k + (l1 + l) * byte1 + (j2 + l)] = -1;
                             }
                         }
                     }
                 }
 
-                for (int i2 = 1; i2 <= 4; i2++)
+                for (int j1 = 1; j1 <= 4; j1++)
                 {
-                    for (int l2 = -byte0; l2 <= byte0; l2++)
+                    for (int i2 = -byte0; i2 <= byte0; i2++)
                     {
-                        for (int j3 = -byte0; j3 <= byte0; j3++)
+                        for (int k2 = -byte0; k2 <= byte0; k2++)
                         {
-                            for (int l3 = -byte0; l3 <= byte0; l3++)
+                            for (int i3 = -byte0; i3 <= byte0; i3++)
                             {
-                                if (adjacentTreeBlocks[(l2 + k1) * j1 + (j3 + k1) * byte1 + (l3 + k1)] != i2 - 1)
+                                if (adjacentTreeBlocks[(i2 + l) * k + (k2 + l) * byte1 + (i3 + l)] != j1 - 1)
                                 {
                                     continue;
                                 }
-                                if (adjacentTreeBlocks[((l2 + k1) - 1) * j1 + (j3 + k1) * byte1 + (l3 + k1)] == -2)
+
+                                if (adjacentTreeBlocks[((i2 + l) - 1) * k + (k2 + l) * byte1 + (i3 + l)] == -2)
                                 {
-                                    adjacentTreeBlocks[((l2 + k1) - 1) * j1 + (j3 + k1) * byte1 + (l3 + k1)] = i2;
+                                    adjacentTreeBlocks[((i2 + l) - 1) * k + (k2 + l) * byte1 + (i3 + l)] = j1;
                                 }
-                                if (adjacentTreeBlocks[(l2 + k1 + 1) * j1 + (j3 + k1) * byte1 + (l3 + k1)] == -2)
+
+                                if (adjacentTreeBlocks[(i2 + l + 1) * k + (k2 + l) * byte1 + (i3 + l)] == -2)
                                 {
-                                    adjacentTreeBlocks[(l2 + k1 + 1) * j1 + (j3 + k1) * byte1 + (l3 + k1)] = i2;
+                                    adjacentTreeBlocks[(i2 + l + 1) * k + (k2 + l) * byte1 + (i3 + l)] = j1;
                                 }
-                                if (adjacentTreeBlocks[(l2 + k1) * j1 + ((j3 + k1) - 1) * byte1 + (l3 + k1)] == -2)
+
+                                if (adjacentTreeBlocks[(i2 + l) * k + ((k2 + l) - 1) * byte1 + (i3 + l)] == -2)
                                 {
-                                    adjacentTreeBlocks[(l2 + k1) * j1 + ((j3 + k1) - 1) * byte1 + (l3 + k1)] = i2;
+                                    adjacentTreeBlocks[(i2 + l) * k + ((k2 + l) - 1) * byte1 + (i3 + l)] = j1;
                                 }
-                                if (adjacentTreeBlocks[(l2 + k1) * j1 + (j3 + k1 + 1) * byte1 + (l3 + k1)] == -2)
+
+                                if (adjacentTreeBlocks[(i2 + l) * k + (k2 + l + 1) * byte1 + (i3 + l)] == -2)
                                 {
-                                    adjacentTreeBlocks[(l2 + k1) * j1 + (j3 + k1 + 1) * byte1 + (l3 + k1)] = i2;
+                                    adjacentTreeBlocks[(i2 + l) * k + (k2 + l + 1) * byte1 + (i3 + l)] = j1;
                                 }
-                                if (adjacentTreeBlocks[(l2 + k1) * j1 + (j3 + k1) * byte1 + ((l3 + k1) - 1)] == -2)
+
+                                if (adjacentTreeBlocks[(i2 + l) * k + (k2 + l) * byte1 + ((i3 + l) - 1)] == -2)
                                 {
-                                    adjacentTreeBlocks[(l2 + k1) * j1 + (j3 + k1) * byte1 + ((l3 + k1) - 1)] = i2;
+                                    adjacentTreeBlocks[(i2 + l) * k + (k2 + l) * byte1 + ((i3 + l) - 1)] = j1;
                                 }
-                                if (adjacentTreeBlocks[(l2 + k1) * j1 + (j3 + k1) * byte1 + (l3 + k1 + 1)] == -2)
+
+                                if (adjacentTreeBlocks[(i2 + l) * k + (k2 + l) * byte1 + (i3 + l + 1)] == -2)
                                 {
-                                    adjacentTreeBlocks[(l2 + k1) * j1 + (j3 + k1) * byte1 + (l3 + k1 + 1)] = i2;
+                                    adjacentTreeBlocks[(i2 + l) * k + (k2 + l) * byte1 + (i3 + l + 1)] = j1;
                                 }
                             }
                         }
                     }
                 }
             }
-            int j2 = adjacentTreeBlocks[k1 * j1 + k1 * byte1 + k1];
-            if (j2 >= 0)
+
+            int k1 = adjacentTreeBlocks[l * k + l * byte1 + l];
+
+            if (k1 >= 0)
             {
-                world.setBlockMetadata(i, j, k, l & -9);
+                par1World.setBlockMetadata(par2, par3, par4, i & -9);
             }
             else
             {
-                removeLeaves(world, i, j, k);
+                removeLeaves(par1World, par2, par3, par4);
             }
         }
     }
 
-    private void removeLeaves(World world, int i, int j, int k)
+    private void removeLeaves(World par1World, int par2, int par3, int par4)
     {
-        dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-        world.setBlockWithNotify(i, j, k, 0);
+        dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+        par1World.setBlockWithNotify(par2, par3, par4, 0);
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
-        return random.nextInt(20) != 0 ? 0 : 1;
+        return par1Random.nextInt(20) != 0 ? 0 : 1;
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Block.sapling.blockID;
     }
 
-    public void dropBlockAsItemWithChance(World world, int i, int j, int k, int l, float f, int i1)
+    /**
+     * Drops the block items with a specified chance of dropping the specified items
+     */
+    public void dropBlockAsItemWithChance(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
-        super.dropBlockAsItemWithChance(world, i, j, k, l, f, i1);
-        if (!world.isRemote && (l & 3) == 0 && world.rand.nextInt(200) == 0)
+        if (!par1World.isRemote)
         {
-            dropBlockAsItem_do(world, i, j, k, new ItemStack(Item.appleRed, 1, 0));
+            byte byte0 = 20;
+
+            if ((par5 & 3) == 3)
+            {
+                byte0 = 40;
+            }
+
+            if (par1World.rand.nextInt(byte0) == 0)
+            {
+                int i = idDropped(par5, par1World.rand, par7);
+                dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(i, 1, damageDropped(par5)));
+            }
+
+            if ((par5 & 3) == 0 && par1World.rand.nextInt(200) == 0)
+            {
+                dropBlockAsItem_do(par1World, par2, par3, par4, new ItemStack(Item.appleRed, 1, 0));
+            }
         }
     }
 
-    public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
+    /**
+     * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the coordinates of the
+     * block and l is the block's subtype/damage.
+     */
+    public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6)
     {
-        if (!world.isRemote && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
+        if (!par1World.isRemote && par2EntityPlayer.getCurrentEquippedItem() != null && par2EntityPlayer.getCurrentEquippedItem().itemID == Item.shears.shiftedIndex)
         {
-            entityplayer.addStat(StatList.mineBlockStatArray[blockID], 1);
-            dropBlockAsItem_do(world, i, j, k, new ItemStack(Block.leaves.blockID, 1, l & 3));
+            par2EntityPlayer.addStat(StatList.mineBlockStatArray[blockID], 1);
+            dropBlockAsItem_do(par1World, par3, par4, par5, new ItemStack(Block.leaves.blockID, 1, par6 & 3));
         }
         else
         {
-            super.harvestBlock(world, entityplayer, i, j, k, l);
+            super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
         }
     }
 
-    protected int damageDropped(int i)
+    /**
+     * Determines the damage on the item the block drops. Used in cloth and wood.
+     */
+    protected int damageDropped(int par1)
     {
-        return i & 3;
+        return par1 & 3;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return !graphicsLevel;
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if ((j & 3) == 1)
+        if ((par2 & 3) == 1)
         {
             return blockIndexInTexture + 80;
+        }
+
+        if ((par2 & 3) == 3)
+        {
+            return blockIndexInTexture + 144;
         }
         else
         {
@@ -195,8 +264,11 @@ public class BlockLeaves extends BlockLeavesBase
         }
     }
 
-    public void onEntityWalking(World world, int i, int j, int k, Entity entity)
+    /**
+     * Called whenever an entity is walking on top of this block. Args: world, x, y, z, entity
+     */
+    public void onEntityWalking(World par1World, int par2, int par3, int par4, Entity par5Entity)
     {
-        super.onEntityWalking(world, i, j, k, entity);
+        super.onEntityWalking(par1World, par2, par3, par4, par5Entity);
     }
 }

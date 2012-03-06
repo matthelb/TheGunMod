@@ -6,35 +6,42 @@ public class RecipesCrafting
     {
     }
 
-    public void addRecipes(CraftingManager craftingmanager)
+    /**
+     * Adds crafting recipes to the CraftingManager
+     */
+    public void addRecipes(CraftingManager par1CraftingManager)
     {
-        craftingmanager.addRecipe(new ItemStack(Block.chest), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Block.chest), new Object[]
                 {
-                    "###", "# #", "###", Character.valueOf('#'), Block.planks
+                    "###", "# #", "###", '#', Block.planks
                 });
-        craftingmanager.addRecipe(new ItemStack(Block.stoneOvenIdle), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Block.stoneOvenIdle), new Object[]
                 {
-                    "###", "# #", "###", Character.valueOf('#'), Block.cobblestone
+                    "###", "# #", "###", '#', Block.cobblestone
                 });
-        craftingmanager.addRecipe(new ItemStack(Block.workbench), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Block.workbench), new Object[]
                 {
-                    "##", "##", Character.valueOf('#'), Block.planks
+                    "##", "##", '#', Block.planks
                 });
-        craftingmanager.addRecipe(new ItemStack(Block.sandStone), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Block.sandStone), new Object[]
                 {
-                    "##", "##", Character.valueOf('#'), Block.sand
+                    "##", "##", '#', Block.sand
                 });
-        craftingmanager.addRecipe(new ItemStack(Block.stoneBrick, 4), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Block.stoneBrick, 4), new Object[]
                 {
-                    "##", "##", Character.valueOf('#'), Block.stone
+                    "##", "##", '#', Block.stone
                 });
-        craftingmanager.addRecipe(new ItemStack(Block.fenceIron, 16), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Block.fenceIron, 16), new Object[]
                 {
-                    "###", "###", Character.valueOf('#'), Item.ingotIron
+                    "###", "###", '#', Item.ingotIron
                 });
-        craftingmanager.addRecipe(new ItemStack(Block.thinGlass, 16), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Block.thinGlass, 16), new Object[]
                 {
-                    "###", "###", Character.valueOf('#'), Block.glass
+                    "###", "###", '#', Block.glass
+                });
+        par1CraftingManager.addRecipe(new ItemStack(Block.field_48130_bL, 1), new Object[]
+                {
+                    " R ", "RGR", " R ", 'R', Item.redstone, 'G', Block.glowStone
                 });
     }
 }

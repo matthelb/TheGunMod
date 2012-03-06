@@ -17,17 +17,17 @@ public class StatBase
     public static IStatType timeStatType = new StatTypeTime();
     public static IStatType distanceStatType = new StatTypeDistance();
 
-    public StatBase(int i, String s, IStatType istattype)
+    public StatBase(int par1, String par2Str, IStatType par3IStatType)
     {
         isIndependent = false;
-        statId = i;
-        statName = s;
-        type = istattype;
+        statId = par1;
+        statName = par2Str;
+        type = par3IStatType;
     }
 
-    public StatBase(int i, String s)
+    public StatBase(int par1, String par2Str)
     {
-        this(i, s, simpleStatType);
+        this(par1, par2Str, simpleStatType);
     }
 
     public StatBase initIndependentStat()
@@ -44,7 +44,7 @@ public class StatBase
         }
         else
         {
-            StatList.field_25123_a.add(this);
+            StatList.allStats.add(this);
             StatList.oneShotStats.put(Integer.valueOf(statId), this);
             statGuid = AchievementMap.getGuid(statId);
             return this;

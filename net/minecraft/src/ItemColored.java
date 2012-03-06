@@ -5,42 +5,51 @@ public class ItemColored extends ItemBlock
     private final Block blockRef;
     private String blockNames[];
 
-    public ItemColored(int i, boolean flag)
+    public ItemColored(int par1, boolean par2)
     {
-        super(i);
+        super(par1);
         blockRef = Block.blocksList[getBlockID()];
-        if (flag)
+
+        if (par2)
         {
             setMaxDamage(0);
             setHasSubtypes(true);
         }
     }
 
-    public int getMetadata(int i)
+    /**
+     * returns the argument if the item has metadata, 0 otherwise
+     */
+    public int getMetadata(int par1)
     {
-        return i;
+        return par1;
     }
 
-    public ItemColored setBlockNames(String as[])
+    /**
+     * Sets the array of strings to be used for name lookups from item damage to metadata
+     */
+    public ItemColored setBlockNames(String par1ArrayOfStr[])
     {
-        blockNames = as;
+        blockNames = par1ArrayOfStr;
         return this;
     }
 
-    public String getItemNameIS(ItemStack itemstack)
+    public String getItemNameIS(ItemStack par1ItemStack)
     {
         if (blockNames == null)
         {
-            return super.getItemNameIS(itemstack);
+            return super.getItemNameIS(par1ItemStack);
         }
-        int i = itemstack.getItemDamage();
+
+        int i = par1ItemStack.getItemDamage();
+
         if (i >= 0 && i < blockNames.length)
         {
-            return (new StringBuilder()).append(super.getItemNameIS(itemstack)).append(".").append(blockNames[i]).toString();
+            return (new StringBuilder()).append(super.getItemNameIS(par1ItemStack)).append(".").append(blockNames[i]).toString();
         }
         else
         {
-            return super.getItemNameIS(itemstack);
+            return super.getItemNameIS(par1ItemStack);
         }
     }
 }

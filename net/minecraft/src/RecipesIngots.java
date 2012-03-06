@@ -20,29 +20,32 @@ public class RecipesIngots
                 });
     }
 
-    public void addRecipes(CraftingManager craftingmanager)
+    /**
+     * Adds ingot recipes to the CraftingManager.
+     */
+    public void addRecipes(CraftingManager par1CraftingManager)
     {
         for (int i = 0; i < recipeItems.length; i++)
         {
             Block block = (Block)recipeItems[i][0];
             ItemStack itemstack = (ItemStack)recipeItems[i][1];
-            craftingmanager.addRecipe(new ItemStack(block), new Object[]
+            par1CraftingManager.addRecipe(new ItemStack(block), new Object[]
                     {
-                        "###", "###", "###", Character.valueOf('#'), itemstack
+                        "###", "###", "###", '#', itemstack
                     });
-            craftingmanager.addRecipe(itemstack, new Object[]
+            par1CraftingManager.addRecipe(itemstack, new Object[]
                     {
-                        "#", Character.valueOf('#'), block
+                        "#", '#', block
                     });
         }
 
-        craftingmanager.addRecipe(new ItemStack(Item.ingotGold), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Item.ingotGold), new Object[]
                 {
-                    "###", "###", "###", Character.valueOf('#'), Item.goldNugget
+                    "###", "###", "###", '#', Item.goldNugget
                 });
-        craftingmanager.addRecipe(new ItemStack(Item.goldNugget, 9), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Item.goldNugget, 9), new Object[]
                 {
-                    "#", Character.valueOf('#'), Item.ingotGold
+                    "#", '#', Item.ingotGold
                 });
     }
 }

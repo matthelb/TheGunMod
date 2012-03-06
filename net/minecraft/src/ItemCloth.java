@@ -2,20 +2,23 @@ package net.minecraft.src;
 
 public class ItemCloth extends ItemBlock
 {
-    public ItemCloth(int i)
+    public ItemCloth(int par1)
     {
-        super(i);
+        super(par1);
         setMaxDamage(0);
         setHasSubtypes(true);
     }
 
-    public int getMetadata(int i)
+    /**
+     * returns the argument if the item has metadata, 0 otherwise
+     */
+    public int getMetadata(int par1)
     {
-        return i;
+        return par1;
     }
 
-    public String getItemNameIS(ItemStack itemstack)
+    public String getItemNameIS(ItemStack par1ItemStack)
     {
-        return (new StringBuilder()).append(super.getItemName()).append(".").append(ItemDye.dyeColorNames[BlockCloth.getBlockFromDye(itemstack.getItemDamage())]).toString();
+        return (new StringBuilder()).append(super.getItemName()).append(".").append(ItemDye.dyeColorNames[BlockCloth.getBlockFromDye(par1ItemStack.getItemDamage())]).toString();
     }
 }

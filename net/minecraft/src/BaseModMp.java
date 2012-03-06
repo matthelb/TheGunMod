@@ -13,28 +13,29 @@ public abstract class BaseModMp extends BaseMod
         return toString().hashCode();
     }
 
-    public void ModsLoaded()
+    public void modsLoaded()
     {
-        ModLoaderMp.InitModLoaderMp();
+        ModLoaderMp.initialize();
+        super.modsLoaded();
     }
 
-    public void HandlePacket(Packet230ModLoader packet230modloader, EntityPlayerMP entityplayermp)
-    {
-    }
-
-    public void HandleLogin(EntityPlayerMP entityplayermp)
+    public void handlePacket(Packet230ModLoader packet230modloader, EntityPlayerMP entityplayermp)
     {
     }
 
-    public void HandleSendKey(EntityPlayerMP entityplayermp, int i)
+    public void handleLogin(EntityPlayerMP entityplayermp)
     {
     }
 
-    public void GetCommandInfo(ICommandListener icommandlistener)
+    public void handleSendKey(EntityPlayerMP entityplayermp, int i)
     {
     }
 
-    public boolean HandleCommand(String s, String s1, Logger logger, boolean flag)
+    public void getCommandInfo(ICommandListener icommandlistener)
+    {
+    }
+
+    public boolean handleCommand(String s, String s1, Logger logger, boolean flag)
     {
         return false;
     }

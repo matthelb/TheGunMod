@@ -1,7 +1,6 @@
 package net.minecraft.src;
 
-final class EnchantmentModifierLiving
-    implements IEnchantmentModifier
+final class EnchantmentModifierLiving implements IEnchantmentModifier
 {
     public int livingModifier;
     public EntityLiving entityLiving;
@@ -10,12 +9,12 @@ final class EnchantmentModifierLiving
     {
     }
 
-    public void calculateModifier(Enchantment enchantment, int i)
+    public void calculateModifier(Enchantment par1Enchantment, int par2)
     {
-        livingModifier += enchantment.calcModifierLiving(i, entityLiving);
+        livingModifier += par1Enchantment.calcModifierLiving(par2, entityLiving);
     }
 
-    EnchantmentModifierLiving(Empty3 empty3)
+    EnchantmentModifierLiving(Empty3 par1Empty3)
     {
         this();
     }

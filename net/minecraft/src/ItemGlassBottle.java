@@ -2,44 +2,55 @@ package net.minecraft.src;
 
 public class ItemGlassBottle extends Item
 {
-    public ItemGlassBottle(int i)
+    public ItemGlassBottle(int par1)
     {
-        super(i);
+        super(par1);
     }
 
-    public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
+    /**
+     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
+     */
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(world, entityplayer, true);
+        MovingObjectPosition movingobjectposition = getMovingObjectPositionFromPlayer(par2World, par3EntityPlayer, true);
+
         if (movingobjectposition == null)
         {
-            return itemstack;
+            return par1ItemStack;
         }
+
         if (movingobjectposition.typeOfHit == EnumMovingObjectType.TILE)
         {
             int i = movingobjectposition.blockX;
             int j = movingobjectposition.blockY;
             int k = movingobjectposition.blockZ;
-            if (!world.canMineBlock(entityplayer, i, j, k))
+
+            if (!par2World.canMineBlock(par3EntityPlayer, i, j, k))
             {
-                return itemstack;
+                return par1ItemStack;
             }
-            if (!entityplayer.canPlayerEdit(i, j, k))
+
+            if (!par3EntityPlayer.canPlayerEdit(i, j, k))
             {
-                return itemstack;
+                return par1ItemStack;
             }
-            if (world.getBlockMaterial(i, j, k) == Material.water)
+
+            if (par2World.getBlockMaterial(i, j, k) == Material.water)
             {
-                itemstack.stackSize--;
-                if (itemstack.stackSize <= 0)
+                par1ItemStack.stackSize--;
+
+                if (par1ItemStack.stackSize <= 0)
                 {
                     return new ItemStack(Item.potion);
                 }
-                if (!entityplayer.inventory.addItemStackToInventory(new ItemStack(Item.potion)))
+
+                if (!par3EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.potion)))
                 {
-                    entityplayer.dropPlayerItem(new ItemStack(Item.potion.shiftedIndex, 1, 0));
+                    par3EntityPlayer.func_48348_b(new ItemStack(Item.potion.shiftedIndex, 1, 0));
                 }
             }
         }
-        return itemstack;
+
+        return par1ItemStack;
     }
 }

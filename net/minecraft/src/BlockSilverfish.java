@@ -4,24 +4,32 @@ import java.util.Random;
 
 public class BlockSilverfish extends Block
 {
-    public BlockSilverfish(int i)
+    public BlockSilverfish(int par1)
     {
-        super(i, 1, Material.clay);
+        super(par1, 1, Material.clay);
         setHardness(0.0F);
     }
 
-    public void harvestBlock(World world, EntityPlayer entityplayer, int i, int j, int k, int l)
+    /**
+     * Called when the player destroys a block with an item that can harvest it. (i, j, k) are the coordinates of the
+     * block and l is the block's subtype/damage.
+     */
+    public void harvestBlock(World par1World, EntityPlayer par2EntityPlayer, int par3, int par4, int par5, int par6)
     {
-        super.harvestBlock(world, entityplayer, i, j, k, l);
+        super.harvestBlock(par1World, par2EntityPlayer, par3, par4, par5, par6);
     }
 
-    public int getBlockTextureFromSideAndMetadata(int i, int j)
+    /**
+     * From the specified side and block metadata retrieves the blocks texture. Args: side, metadata
+     */
+    public int getBlockTextureFromSideAndMetadata(int par1, int par2)
     {
-        if (j == 1)
+        if (par2 == 1)
         {
             return Block.cobblestone.blockIndexInTexture;
         }
-        if (j == 2)
+
+        if (par2 == 2)
         {
             return Block.stoneBrick.blockIndexInTexture;
         }
@@ -31,48 +39,70 @@ public class BlockSilverfish extends Block
         }
     }
 
-    public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
+    /**
+     * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
+     */
+    public void onBlockDestroyedByPlayer(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (!world.isRemote)
+        if (!par1World.isRemote)
         {
-            EntitySilverfish entitysilverfish = new EntitySilverfish(world);
-            entitysilverfish.setLocationAndAngles((double)i + 0.5D, j, (double)k + 0.5D, 0.0F, 0.0F);
-            world.spawnEntityInWorld(entitysilverfish);
+            EntitySilverfish entitysilverfish = new EntitySilverfish(par1World);
+            entitysilverfish.setLocationAndAngles((double)par2 + 0.5D, par3, (double)par4 + 0.5D, 0.0F, 0.0F);
+            par1World.spawnEntityInWorld(entitysilverfish);
             entitysilverfish.spawnExplosionParticle();
         }
-        super.onBlockDestroyedByPlayer(world, i, j, k, l);
+
+        super.onBlockDestroyedByPlayer(par1World, par2, par3, par4, par5);
     }
 
-    public int quantityDropped(Random random)
+    /**
+     * Returns the quantity of items to drop on block destruction.
+     */
+    public int quantityDropped(Random par1Random)
     {
         return 0;
     }
 
-    public static boolean getPosingIdByMetadata(int i)
+    /**
+     * Gets the blockID of the block this block is pretending to be according to this block's metadata.
+     */
+    public static boolean getPosingIdByMetadata(int par0)
     {
-        return i == Block.stone.blockID || i == Block.cobblestone.blockID || i == Block.stoneBrick.blockID;
+        return par0 == Block.stone.blockID || par0 == Block.cobblestone.blockID || par0 == Block.stoneBrick.blockID;
     }
 
-    public static int getMetadataForBlockType(int i)
+    /**
+     * Returns the metadata to use when a Silverfish hides in the block. Sets the block to BlockSilverfish with this
+     * metadata. It changes the displayed texture client side to look like a normal block.
+     */
+    public static int getMetadataForBlockType(int par0)
     {
-        if (i == Block.cobblestone.blockID)
+        if (par0 == Block.cobblestone.blockID)
         {
             return 1;
         }
-        return i != Block.stoneBrick.blockID ? 0 : 2;
+
+        return par0 != Block.stoneBrick.blockID ? 0 : 2;
     }
 
-    protected ItemStack createStackedBlock(int i)
+    /**
+     * Returns an item stack containing a single instance of the current block type. 'i' is the block's subtype/damage
+     * and is ignored for blocks which do not support subtypes. Blocks which cannot be harvested should return null.
+     */
+    protected ItemStack createStackedBlock(int par1)
     {
         Block block = Block.stone;
-        if (i == 1)
+
+        if (par1 == 1)
         {
             block = Block.cobblestone;
         }
-        if (i == 2)
+
+        if (par1 == 2)
         {
             block = Block.stoneBrick;
         }
+
         return new ItemStack(block);
     }
 }

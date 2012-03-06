@@ -4,86 +4,108 @@ import java.io.*;
 
 public class Packet1Login extends Packet
 {
+    /** The protocol version in use. Current version is 2. */
     public int protocolVersion;
+
+    /** The name of the user attempting to login. */
     public String username;
-    public long mapSeed;
-    public EnumWorldType terrainType;
+    public WorldType terrainType;
+
+    /** 0 for survival, 1 for creative */
     public int serverMode;
-    public byte worldType;
+    public int field_48112_e;
+
+    /** The difficulty setting byte. */
     public byte difficultySetting;
+
+    /** Defaults to 128 */
     public byte worldHeight;
+
+    /** The maximum players. */
     public byte maxPlayers;
 
     public Packet1Login()
     {
     }
 
-    public Packet1Login(String s, int i, long l, EnumWorldType enumworldtype, int j, byte byte0,
-            byte byte1, byte byte2, byte byte3)
+    public Packet1Login(String par1Str, int par2, WorldType par3WorldType, int par4, int par5, byte par6, byte par7, byte par8)
     {
-        username = s;
-        protocolVersion = i;
-        mapSeed = l;
-        terrainType = enumworldtype;
-        worldType = byte0;
-        difficultySetting = byte1;
-        serverMode = j;
-        worldHeight = byte2;
-        maxPlayers = byte3;
+        username = par1Str;
+        protocolVersion = par2;
+        terrainType = par3WorldType;
+        field_48112_e = par5;
+        difficultySetting = par6;
+        serverMode = par4;
+        worldHeight = par7;
+        maxPlayers = par8;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        protocolVersion = datainputstream.readInt();
-        username = readString(datainputstream, 16);
-        mapSeed = datainputstream.readLong();
-        String s = readString(datainputstream, 16);
-        terrainType = EnumWorldType.parseWorldType(s);
+        protocolVersion = par1DataInputStream.readInt();
+        username = readString(par1DataInputStream, 16);
+        String s = readString(par1DataInputStream, 16);
+        terrainType = WorldType.parseWorldType(s);
+
         if (terrainType == null)
         {
-            terrainType = EnumWorldType.DEFAULT;
+            terrainType = WorldType.field_48457_b;
         }
-        serverMode = datainputstream.readInt();
-        worldType = datainputstream.readByte();
-        difficultySetting = datainputstream.readByte();
-        worldHeight = datainputstream.readByte();
-        maxPlayers = datainputstream.readByte();
+
+        serverMode = par1DataInputStream.readInt();
+        field_48112_e = par1DataInputStream.readInt();
+        difficultySetting = par1DataInputStream.readByte();
+        worldHeight = par1DataInputStream.readByte();
+        maxPlayers = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        dataoutputstream.writeInt(protocolVersion);
-        writeString(username, dataoutputstream);
-        dataoutputstream.writeLong(mapSeed);
+        par1DataOutputStream.writeInt(protocolVersion);
+        writeString(username, par1DataOutputStream);
+
         if (terrainType == null)
         {
-            writeString("", dataoutputstream);
+            writeString("", par1DataOutputStream);
         }
         else
         {
-            writeString(terrainType.name(), dataoutputstream);
+            writeString(terrainType.func_48449_a(), par1DataOutputStream);
         }
-        dataoutputstream.writeInt(serverMode);
-        dataoutputstream.writeByte(worldType);
-        dataoutputstream.writeByte(difficultySetting);
-        dataoutputstream.writeByte(worldHeight);
-        dataoutputstream.writeByte(maxPlayers);
+
+        par1DataOutputStream.writeInt(serverMode);
+        par1DataOutputStream.writeInt(field_48112_e);
+        par1DataOutputStream.writeByte(difficultySetting);
+        par1DataOutputStream.writeByte(worldHeight);
+        par1DataOutputStream.writeByte(maxPlayers);
     }
 
-    public void processPacket(NetHandler nethandler)
+    /**
+     * Passes this Packet on to the NetHandler for processing.
+     */
+    public void processPacket(NetHandler par1NetHandler)
     {
-        nethandler.handleLogin(this);
+        par1NetHandler.handleLogin(this);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         int i = 0;
+
         if (terrainType != null)
         {
-            i = terrainType.name().length();
+            i = terrainType.func_48449_a().length();
         }
-        return 4 + username.length() + 4 + 7 + 4 + i;
+
+        return 4 + username.length() + 4 + 7 + 7 + i;
     }
 }

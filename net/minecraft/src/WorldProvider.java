@@ -3,18 +3,22 @@ package net.minecraft.src;
 public abstract class WorldProvider
 {
     public World worldObj;
-    public EnumWorldType terrainType;
+    public WorldType terrainType;
     public WorldChunkManager worldChunkMgr;
-    public boolean isAlternateDimension;
+
+    /**
+     * States whether the Hell world provider is used(true) or if the normal world provider is used(false)
+     */
     public boolean isHellWorld;
     public boolean hasNoSky;
     public float lightBrightnessTable[];
+
+    /** 0 for normal world -1 for hell */
     public int worldType;
     private float colorsSunriseSunset[];
 
     public WorldProvider()
     {
-        isAlternateDimension = false;
         isHellWorld = false;
         hasNoSky = false;
         lightBrightnessTable = new float[16];
@@ -22,17 +26,21 @@ public abstract class WorldProvider
         colorsSunriseSunset = new float[4];
     }
 
-    public final void registerWorld(World world)
+    public final void registerWorld(World par1World)
     {
-        worldObj = world;
-        terrainType = world.getWorldInfo().getTerrainType();
+        worldObj = par1World;
+        terrainType = par1World.getWorldInfo().getTerrainType();
         registerWorldChunkManager();
         generateLightBrightnessTable();
     }
 
+    /**
+     * Creates the light to brightness table
+     */
     protected void generateLightBrightnessTable()
     {
         float f = 0.0F;
+
         for (int i = 0; i <= 15; i++)
         {
             float f1 = 1.0F - (float)i / 15F;
@@ -42,7 +50,7 @@ public abstract class WorldProvider
 
     protected void registerWorldChunkManager()
     {
-        if (worldObj.getWorldInfo().getTerrainType() == EnumWorldType.FLAT)
+        if (worldObj.getWorldInfo().getTerrainType() == WorldType.field_48458_c)
         {
             worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.plains, 0.5F, 0.5F);
         }
@@ -52,9 +60,12 @@ public abstract class WorldProvider
         }
     }
 
+    /**
+     * Returns the chunk provider back for the world provider
+     */
     public IChunkProvider getChunkProvider()
     {
-        if (terrainType == EnumWorldType.FLAT)
+        if (terrainType == WorldType.field_48458_c)
         {
             return new ChunkProviderFlat(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
         }
@@ -64,28 +75,39 @@ public abstract class WorldProvider
         }
     }
 
-    public boolean canCoordinateBeSpawn(int i, int j)
+    /**
+     * Will check if the x, z position specified is alright to be set as the map spawn point
+     */
+    public boolean canCoordinateBeSpawn(int par1, int par2)
     {
-        int k = worldObj.getFirstUncoveredBlock(i, j);
-        return k == Block.grass.blockID;
+        int i = worldObj.getFirstUncoveredBlock(par1, par2);
+        return i == Block.grass.blockID;
     }
 
-    public float calculateCelestialAngle(long l, float f)
+    public float calculateCelestialAngle(long par1, float par3)
     {
-        int i = (int)(l % 24000L);
-        float f1 = ((float)i + f) / 24000F - 0.25F;
-        if (f1 < 0.0F)
+        int i = (int)(par1 % 24000L);
+        float f = ((float)i + par3) / 24000F - 0.25F;
+
+        if (f < 0.0F)
         {
-            f1++;
+            f++;
         }
-        if (f1 > 1.0F)
+
+        if (f > 1.0F)
         {
-            f1--;
+            f--;
         }
-        float f2 = f1;
-        f1 = 1.0F - (float)((Math.cos((double)f1 * 3.1415926535897931D) + 1.0D) / 2D);
-        f1 = f2 + (f1 - f2) / 3F;
-        return f1;
+
+        float f1 = f;
+        f = 1.0F - (float)((Math.cos((double)f * Math.PI) + 1.0D) / 2D);
+        f = f1 + (f - f1) / 3F;
+        return f;
+    }
+
+    public boolean func_48567_d()
+    {
+        return true;
     }
 
     public boolean canRespawnHere()
@@ -93,17 +115,19 @@ public abstract class WorldProvider
         return true;
     }
 
-    public static WorldProvider getProviderForDimension(int i)
+    public static WorldProvider getProviderForDimension(int par0)
     {
-        if (i == -1)
+        if (par0 == -1)
         {
             return new WorldProviderHell();
         }
-        if (i == 0)
+
+        if (par0 == 0)
         {
             return new WorldProviderSurface();
         }
-        if (i == 1)
+
+        if (par0 == 1)
         {
             return new WorldProviderEnd();
         }
@@ -113,6 +137,9 @@ public abstract class WorldProvider
         }
     }
 
+    /**
+     * Gets the hard-coded portal location to use when entering this dimension
+     */
     public ChunkCoordinates getEntrancePortalLocation()
     {
         return null;
@@ -120,13 +147,6 @@ public abstract class WorldProvider
 
     public int getAverageGroundLevel()
     {
-        if (terrainType == EnumWorldType.FLAT)
-        {
-            return 4;
-        }
-        else
-        {
-            return worldObj.worldHeight / 2;
-        }
+        return terrainType != WorldType.field_48458_c ? 64 : 4;
     }
 }

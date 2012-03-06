@@ -6,8 +6,13 @@ import java.util.Map;
 public class FurnaceRecipes
 {
     private static final FurnaceRecipes smeltingBase = new FurnaceRecipes();
+
+    /** The list of smelting results. */
     private Map smeltingList;
 
+    /**
+     * Used to call methods addSmelting and getSmeltingResult.
+     */
     public static final FurnaceRecipes smelting()
     {
         return smeltingBase;
@@ -33,14 +38,20 @@ public class FurnaceRecipes
         addSmelting(Block.oreLapis.blockID, new ItemStack(Item.dyePowder, 1, 4));
     }
 
-    public void addSmelting(int i, ItemStack itemstack)
+    /**
+     * Adds a smelting recipe.
+     */
+    public void addSmelting(int par1, ItemStack par2ItemStack)
     {
-        smeltingList.put(Integer.valueOf(i), itemstack);
+        smeltingList.put(Integer.valueOf(par1), par2ItemStack);
     }
 
-    public ItemStack getSmeltingResult(int i)
+    /**
+     * Returns the smelting result of an item.
+     */
+    public ItemStack getSmeltingResult(int par1)
     {
-        return (ItemStack)smeltingList.get(Integer.valueOf(i));
+        return (ItemStack)smeltingList.get(Integer.valueOf(par1));
     }
 
     public Map getSmeltingList()

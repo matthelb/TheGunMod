@@ -10,8 +10,14 @@ public class AchievementList
     public static int minDisplayRow;
     public static int maxDisplayColumn;
     public static int maxDisplayRow;
+
+    /** The list holding all achievements */
     public static List achievementList;
+
+    /** The open inventory achievement */
     public static Achievement openInventory;
+
+    /** The get wood achievement */
     public static Achievement mineWood;
     public static Achievement buildWorkBench;
     public static Achievement buildPickaxe;
@@ -27,22 +33,45 @@ public class AchievementList
     public static Achievement killEnemy;
     public static Achievement killCow;
     public static Achievement flyPig;
+
+    /** The achievement for killing a Skeleton from 50 meters aways. */
     public static Achievement snipeSkeleton;
+
+    /** Is the 'DIAMONDS!' achievement */
     public static Achievement diamonds;
+
+    /** Is the 'We Need to Go Deeper' achievement */
     public static Achievement portal;
+
+    /** Is the 'Return to Sender' achievement */
     public static Achievement ghast;
+
+    /** Is the 'Into Fire' achievement */
     public static Achievement blazeRod;
+
+    /** Is the 'Local Brewery' achievement */
     public static Achievement potion;
+
+    /** Is the 'The End?' achievement */
     public static Achievement theEnd;
+
+    /** Is the 'The End.' achievement */
     public static Achievement theEnd2;
+
+    /** Is the 'Enchanter' achievement */
     public static Achievement enchantments;
     public static Achievement overkill;
+
+    /** Is the 'Librarian' achievement */
     public static Achievement bookcase;
 
     public AchievementList()
     {
     }
 
+    /**
+     * A stub functions called to make the static initializer for this class run.
+     */
     public static void init()
     {
     }

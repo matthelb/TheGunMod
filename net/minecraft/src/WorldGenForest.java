@@ -4,38 +4,44 @@ import java.util.Random;
 
 public class WorldGenForest extends WorldGenerator
 {
-    public WorldGenForest(boolean flag)
+    public WorldGenForest(boolean par1)
     {
-        super(flag);
+        super(par1);
     }
 
-    public boolean generate(World world, Random random, int i, int j, int k)
+    public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
     {
-        int l = random.nextInt(3) + 5;
+        int i = par2Random.nextInt(3) + 5;
         boolean flag = true;
-        if (j < 1 || j + l + 1 > world.worldHeight)
+
+        if (par4 < 1 || par4 + i + 1 > 256)
         {
             return false;
         }
-        for (int i1 = j; i1 <= j + 1 + l; i1++)
+
+        for (int j = par4; j <= par4 + 1 + i; j++)
         {
             byte byte0 = 1;
-            if (i1 == j)
+
+            if (j == par4)
             {
                 byte0 = 0;
             }
-            if (i1 >= (j + 1 + l) - 2)
+
+            if (j >= (par4 + 1 + i) - 2)
             {
                 byte0 = 2;
             }
-            for (int i2 = i - byte0; i2 <= i + byte0 && flag; i2++)
+
+            for (int j1 = par3 - byte0; j1 <= par3 + byte0 && flag; j1++)
             {
-                for (int l2 = k - byte0; l2 <= k + byte0 && flag; l2++)
+                for (int i2 = par5 - byte0; i2 <= par5 + byte0 && flag; i2++)
                 {
-                    if (i1 >= 0 && i1 < world.worldHeight)
+                    if (j >= 0 && j < 256)
                     {
-                        int j3 = world.getBlockId(i2, i1, l2);
-                        if (j3 != 0 && j3 != Block.leaves.blockID)
+                        int k2 = par1World.getBlockId(j1, j, i2);
+
+                        if (k2 != 0 && k2 != Block.leaves.blockID)
                         {
                             flag = false;
                         }
@@ -52,36 +58,44 @@ public class WorldGenForest extends WorldGenerator
         {
             return false;
         }
-        int j1 = world.getBlockId(i, j - 1, k);
-        if (j1 != Block.grass.blockID && j1 != Block.dirt.blockID || j >= world.worldHeight - l - 1)
+
+        int k = par1World.getBlockId(par3, par4 - 1, par5);
+
+        if (k != Block.grass.blockID && k != Block.dirt.blockID || par4 >= 256 - i - 1)
         {
             return false;
         }
-        world.setBlock(i, j - 1, k, Block.dirt.blockID);
-        for (int k1 = (j - 3) + l; k1 <= j + l; k1++)
+
+        par1World.setBlock(par3, par4 - 1, par5, Block.dirt.blockID);
+
+        for (int l = (par4 - 3) + i; l <= par4 + i; l++)
         {
-            int j2 = k1 - (j + l);
-            int i3 = 1 - j2 / 2;
-            for (int k3 = i - i3; k3 <= i + i3; k3++)
+            int k1 = l - (par4 + i);
+            int j2 = 1 - k1 / 2;
+
+            for (int l2 = par3 - j2; l2 <= par3 + j2; l2++)
             {
-                int l3 = k3 - i;
-                for (int i4 = k - i3; i4 <= k + i3; i4++)
+                int i3 = l2 - par3;
+
+                for (int j3 = par5 - j2; j3 <= par5 + j2; j3++)
                 {
-                    int j4 = i4 - k;
-                    if ((Math.abs(l3) != i3 || Math.abs(j4) != i3 || random.nextInt(2) != 0 && j2 != 0) && !Block.opaqueCubeLookup[world.getBlockId(k3, k1, i4)])
+                    int k3 = j3 - par5;
+
+                    if ((Math.abs(i3) != j2 || Math.abs(k3) != j2 || par2Random.nextInt(2) != 0 && k1 != 0) && !Block.opaqueCubeLookup[par1World.getBlockId(l2, l, j3)])
                     {
-                        setBlockAndMetadata(world, k3, k1, i4, Block.leaves.blockID, 2);
+                        setBlockAndMetadata(par1World, l2, l, j3, Block.leaves.blockID, 2);
                     }
                 }
             }
         }
 
-        for (int l1 = 0; l1 < l; l1++)
+        for (int i1 = 0; i1 < i; i1++)
         {
-            int k2 = world.getBlockId(i, j + l1, k);
-            if (k2 == 0 || k2 == Block.leaves.blockID)
+            int l1 = par1World.getBlockId(par3, par4 + i1, par5);
+
+            if (l1 == 0 || l1 == Block.leaves.blockID)
             {
-                setBlockAndMetadata(world, i, j + l1, k, Block.wood.blockID, 2);
+                setBlockAndMetadata(par1World, par3, par4 + i1, par5, Block.wood.blockID, 2);
             }
         }
 

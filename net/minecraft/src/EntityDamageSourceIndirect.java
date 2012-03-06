@@ -4,10 +4,10 @@ public class EntityDamageSourceIndirect extends EntityDamageSource
 {
     private Entity indirectEntity;
 
-    public EntityDamageSourceIndirect(String s, Entity entity, Entity entity1)
+    public EntityDamageSourceIndirect(String par1Str, Entity par2Entity, Entity par3Entity)
     {
-        super(s, entity);
-        indirectEntity = entity1;
+        super(par1Str, par2Entity);
+        indirectEntity = par3Entity;
     }
 
     public Entity getSourceOfDamage()
@@ -20,11 +20,14 @@ public class EntityDamageSourceIndirect extends EntityDamageSource
         return indirectEntity;
     }
 
-    public String func_35075_a(EntityPlayer entityplayer)
+    /**
+     * Returns the message to be displayed on player death.
+     */
+    public String getDeathMessage(EntityPlayer par1EntityPlayer)
     {
         return StatCollector.translateToLocalFormatted((new StringBuilder()).append("death.").append(damageType).toString(), new Object[]
                 {
-                    entityplayer.username, indirectEntity.func_35150_Y()
+                    par1EntityPlayer.username, indirectEntity.getUsername()
                 });
     }
 }

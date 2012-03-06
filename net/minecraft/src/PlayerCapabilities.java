@@ -2,7 +2,10 @@ package net.minecraft.src;
 
 public class PlayerCapabilities
 {
+    /** Disables player damage. */
     public boolean disableDamage;
+
+    /** Sets/indicates whether the player is flying. */
     public boolean isFlying;
     public boolean allowFlying;
     public boolean depleteBuckets;
@@ -15,25 +18,25 @@ public class PlayerCapabilities
         depleteBuckets = false;
     }
 
-    public void writeCapabilitiesToNBT(NBTTagCompound nbttagcompound)
+    public void writeCapabilitiesToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        NBTTagCompound nbttagcompound1 = new NBTTagCompound();
-        nbttagcompound1.setBoolean("invulnerable", disableDamage);
-        nbttagcompound1.setBoolean("flying", disableDamage);
-        nbttagcompound1.setBoolean("mayfly", allowFlying);
-        nbttagcompound1.setBoolean("instabuild", depleteBuckets);
-        nbttagcompound.setTag("abilities", nbttagcompound1);
+        NBTTagCompound nbttagcompound = new NBTTagCompound();
+        nbttagcompound.setBoolean("invulnerable", disableDamage);
+        nbttagcompound.setBoolean("flying", disableDamage);
+        nbttagcompound.setBoolean("mayfly", allowFlying);
+        nbttagcompound.setBoolean("instabuild", depleteBuckets);
+        par1NBTTagCompound.setTag("abilities", nbttagcompound);
     }
 
-    public void readCapabilitiesFromNBT(NBTTagCompound nbttagcompound)
+    public void readCapabilitiesFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        if (nbttagcompound.hasKey("abilities"))
+        if (par1NBTTagCompound.hasKey("abilities"))
         {
-            NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("abilities");
-            disableDamage = nbttagcompound1.getBoolean("invulnerable");
-            isFlying = nbttagcompound1.getBoolean("flying");
-            allowFlying = nbttagcompound1.getBoolean("mayfly");
-            depleteBuckets = nbttagcompound1.getBoolean("instabuild");
+            NBTTagCompound nbttagcompound = par1NBTTagCompound.getCompoundTag("abilities");
+            disableDamage = nbttagcompound.getBoolean("invulnerable");
+            isFlying = nbttagcompound.getBoolean("flying");
+            allowFlying = nbttagcompound.getBoolean("mayfly");
+            depleteBuckets = nbttagcompound.getBoolean("instabuild");
         }
     }
 }

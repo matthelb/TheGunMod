@@ -7,12 +7,12 @@ class IntHashMapEntry
     IntHashMapEntry nextEntry;
     final int slotHash;
 
-    IntHashMapEntry(int i, int j, Object obj, IntHashMapEntry inthashmapentry)
+    IntHashMapEntry(int par1, int par2, Object par3Obj, IntHashMapEntry par4IntHashMapEntry)
     {
-        valueEntry = obj;
-        nextEntry = inthashmapentry;
-        hashEntry = j;
-        slotHash = i;
+        valueEntry = par3Obj;
+        nextEntry = par4IntHashMapEntry;
+        hashEntry = par2;
+        slotHash = par1;
     }
 
     public final int getHash()
@@ -25,24 +25,28 @@ class IntHashMapEntry
         return valueEntry;
     }
 
-    public final boolean equals(Object obj)
+    public final boolean equals(Object par1Obj)
     {
-        if (!(obj instanceof IntHashMapEntry))
+        if (!(par1Obj instanceof IntHashMapEntry))
         {
             return false;
         }
-        IntHashMapEntry inthashmapentry = (IntHashMapEntry)obj;
+
+        IntHashMapEntry inthashmapentry = (IntHashMapEntry)par1Obj;
         Integer integer = Integer.valueOf(getHash());
         Integer integer1 = Integer.valueOf(inthashmapentry.getHash());
+
         if (integer == integer1 || integer != null && integer.equals(integer1))
         {
-            Object obj1 = getValue();
-            Object obj2 = inthashmapentry.getValue();
-            if (obj1 == obj2 || obj1 != null && obj1.equals(obj2))
+            Object obj = getValue();
+            Object obj1 = inthashmapentry.getValue();
+
+            if (obj == obj1 || obj != null && obj.equals(obj1))
             {
                 return true;
             }
         }
+
         return false;
     }
 

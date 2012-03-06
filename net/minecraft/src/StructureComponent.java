@@ -6,11 +6,13 @@ public abstract class StructureComponent
 {
     protected StructureBoundingBox boundingBox;
     protected int coordBaseMode;
+
+    /** The type ID of this component. */
     protected int componentType;
 
-    protected StructureComponent(int i)
+    protected StructureComponent(int par1)
     {
-        componentType = i;
+        componentType = par1;
         coordBaseMode = -1;
     }
 
@@ -25,17 +27,24 @@ public abstract class StructureComponent
         return boundingBox;
     }
 
+    /**
+     * Returns the component type ID of this component.
+     */
     public int getComponentType()
     {
         return componentType;
     }
 
-    public static StructureComponent findIntersecting(List list, StructureBoundingBox structureboundingbox)
+    /**
+     * Discover if bounding box can fit within the current bounding box object.
+     */
+    public static StructureComponent findIntersecting(List par0List, StructureBoundingBox par1StructureBoundingBox)
     {
-        for (Iterator iterator = list.iterator(); iterator.hasNext();)
+        for (Iterator iterator = par0List.iterator(); iterator.hasNext();)
         {
             StructureComponent structurecomponent = (StructureComponent)iterator.next();
-            if (structurecomponent.getBoundingBox() != null && structurecomponent.getBoundingBox().intersectsWith(structureboundingbox))
+
+            if (structurecomponent.getBoundingBox() != null && structurecomponent.getBoundingBox().intersectsWith(par1StructureBoundingBox))
             {
                 return structurecomponent;
             }
@@ -49,25 +58,29 @@ public abstract class StructureComponent
         return new ChunkPosition(boundingBox.getCenterX(), boundingBox.getCenterY(), boundingBox.getCenterZ());
     }
 
-    protected boolean isLiquidInStructureBoundingBox(World world, StructureBoundingBox structureboundingbox)
+    protected boolean isLiquidInStructureBoundingBox(World par1World, StructureBoundingBox par2StructureBoundingBox)
     {
-        int i = Math.max(boundingBox.minX - 1, structureboundingbox.minX);
-        int j = Math.max(boundingBox.minY - 1, structureboundingbox.minY);
-        int k = Math.max(boundingBox.minZ - 1, structureboundingbox.minZ);
-        int l = Math.min(boundingBox.maxX + 1, structureboundingbox.maxX);
-        int i1 = Math.min(boundingBox.maxY + 1, structureboundingbox.maxY);
-        int j1 = Math.min(boundingBox.maxZ + 1, structureboundingbox.maxZ);
+        int i = Math.max(boundingBox.minX - 1, par2StructureBoundingBox.minX);
+        int j = Math.max(boundingBox.minY - 1, par2StructureBoundingBox.minY);
+        int k = Math.max(boundingBox.minZ - 1, par2StructureBoundingBox.minZ);
+        int l = Math.min(boundingBox.maxX + 1, par2StructureBoundingBox.maxX);
+        int i1 = Math.min(boundingBox.maxY + 1, par2StructureBoundingBox.maxY);
+        int j1 = Math.min(boundingBox.maxZ + 1, par2StructureBoundingBox.maxZ);
+
         for (int k1 = i; k1 <= l; k1++)
         {
             for (int j2 = k; j2 <= j1; j2++)
             {
-                int i3 = world.getBlockId(k1, j, j2);
-                if (i3 > 0 && Block.blocksList[i3].blockMaterial.getIsLiquid())
+                int i3 = par1World.getBlockId(k1, j, j2);
+
+                if (i3 > 0 && Block.blocksList[i3].blockMaterial.isLiquid())
                 {
                     return true;
                 }
-                i3 = world.getBlockId(k1, i1, j2);
-                if (i3 > 0 && Block.blocksList[i3].blockMaterial.getIsLiquid())
+
+                i3 = par1World.getBlockId(k1, i1, j2);
+
+                if (i3 > 0 && Block.blocksList[i3].blockMaterial.isLiquid())
                 {
                     return true;
                 }
@@ -78,13 +91,16 @@ public abstract class StructureComponent
         {
             for (int k2 = j; k2 <= i1; k2++)
             {
-                int j3 = world.getBlockId(l1, k2, k);
-                if (j3 > 0 && Block.blocksList[j3].blockMaterial.getIsLiquid())
+                int j3 = par1World.getBlockId(l1, k2, k);
+
+                if (j3 > 0 && Block.blocksList[j3].blockMaterial.isLiquid())
                 {
                     return true;
                 }
-                j3 = world.getBlockId(l1, k2, j1);
-                if (j3 > 0 && Block.blocksList[j3].blockMaterial.getIsLiquid())
+
+                j3 = par1World.getBlockId(l1, k2, j1);
+
+                if (j3 > 0 && Block.blocksList[j3].blockMaterial.isLiquid())
                 {
                     return true;
                 }
@@ -95,13 +111,16 @@ public abstract class StructureComponent
         {
             for (int l2 = j; l2 <= i1; l2++)
             {
-                int k3 = world.getBlockId(i, l2, i2);
-                if (k3 > 0 && Block.blocksList[k3].blockMaterial.getIsLiquid())
+                int k3 = par1World.getBlockId(i, l2, i2);
+
+                if (k3 > 0 && Block.blocksList[k3].blockMaterial.isLiquid())
                 {
                     return true;
                 }
-                k3 = world.getBlockId(l, l2, i2);
-                if (k3 > 0 && Block.blocksList[k3].blockMaterial.getIsLiquid())
+
+                k3 = par1World.getBlockId(l, l2, i2);
+
+                if (k3 > 0 && Block.blocksList[k3].blockMaterial.isLiquid())
                 {
                     return true;
                 }
@@ -111,70 +130,77 @@ public abstract class StructureComponent
         return false;
     }
 
-    protected int getXWithOffset(int i, int j)
+    protected int getXWithOffset(int par1, int par2)
     {
         switch (coordBaseMode)
         {
             case 0:
             case 2:
-                return boundingBox.minX + i;
+                return boundingBox.minX + par1;
 
             case 1:
-                return boundingBox.maxX - j;
+                return boundingBox.maxX - par2;
 
             case 3:
-                return boundingBox.minX + j;
+                return boundingBox.minX + par2;
         }
-        return i;
+
+        return par1;
     }
 
-    protected int getYWithOffset(int i)
+    protected int getYWithOffset(int par1)
     {
         if (coordBaseMode == -1)
         {
-            return i;
+            return par1;
         }
         else
         {
-            return i + boundingBox.minY;
+            return par1 + boundingBox.minY;
         }
     }
 
-    protected int getZWithOffset(int i, int j)
+    protected int getZWithOffset(int par1, int par2)
     {
         switch (coordBaseMode)
         {
             case 2:
-                return boundingBox.maxZ - j;
+                return boundingBox.maxZ - par2;
 
             case 0:
-                return boundingBox.minZ + j;
+                return boundingBox.minZ + par2;
 
             case 1:
             case 3:
-                return boundingBox.minZ + i;
+                return boundingBox.minZ + par1;
         }
-        return j;
+
+        return par2;
     }
 
-    protected int getMetadataWithOffset(int i, int j)
+    /**
+     * Returns the direction-shifted metadata for blocks that require orientation, e.g. doors, stairs, ladders.
+     * Parameters: block ID, original metadata
+     */
+    protected int getMetadataWithOffset(int par1, int par2)
     {
-        if (i == Block.rail.blockID)
+        if (par1 == Block.rail.blockID)
         {
             if (coordBaseMode == 1 || coordBaseMode == 3)
             {
-                return j != 1 ? 1 : 0;
+                return par2 != 1 ? 1 : 0;
             }
         }
-        else if (i == Block.doorWood.blockID || i == Block.doorSteel.blockID)
+        else if (par1 == Block.doorWood.blockID || par1 == Block.doorSteel.blockID)
         {
             if (coordBaseMode == 0)
             {
-                if (j == 0)
+                if (par2 == 0)
                 {
                     return 2;
                 }
-                if (j == 2)
+
+                if (par2 == 2)
                 {
                     return 0;
                 }
@@ -183,388 +209,441 @@ public abstract class StructureComponent
             {
                 if (coordBaseMode == 1)
                 {
-                    return j + 1 & 3;
+                    return par2 + 1 & 3;
                 }
+
                 if (coordBaseMode == 3)
                 {
-                    return j + 3 & 3;
+                    return par2 + 3 & 3;
                 }
             }
         }
-        else if (i == Block.stairCompactCobblestone.blockID || i == Block.stairCompactPlanks.blockID || i == Block.stairsNetherBrick.blockID || i == Block.stairsStoneBrickSmooth.blockID)
+        else if (par1 == Block.stairCompactCobblestone.blockID || par1 == Block.stairCompactPlanks.blockID || par1 == Block.stairsNetherBrick.blockID || par1 == Block.stairsStoneBrickSmooth.blockID)
         {
             if (coordBaseMode == 0)
             {
-                if (j == 2)
+                if (par2 == 2)
                 {
                     return 3;
                 }
-                if (j == 3)
+
+                if (par2 == 3)
                 {
                     return 2;
                 }
             }
             else if (coordBaseMode == 1)
             {
-                if (j == 0)
+                if (par2 == 0)
                 {
                     return 2;
                 }
-                if (j == 1)
+
+                if (par2 == 1)
                 {
                     return 3;
                 }
-                if (j == 2)
+
+                if (par2 == 2)
                 {
                     return 0;
                 }
-                if (j == 3)
+
+                if (par2 == 3)
                 {
                     return 1;
                 }
             }
             else if (coordBaseMode == 3)
             {
-                if (j == 0)
+                if (par2 == 0)
                 {
                     return 2;
                 }
-                if (j == 1)
+
+                if (par2 == 1)
                 {
                     return 3;
                 }
-                if (j == 2)
+
+                if (par2 == 2)
                 {
                     return 1;
                 }
-                if (j == 3)
+
+                if (par2 == 3)
                 {
                     return 0;
                 }
             }
         }
-        else if (i == Block.ladder.blockID)
+        else if (par1 == Block.ladder.blockID)
         {
             if (coordBaseMode == 0)
             {
-                if (j == 2)
+                if (par2 == 2)
                 {
                     return 3;
                 }
-                if (j == 3)
+
+                if (par2 == 3)
                 {
                     return 2;
                 }
             }
             else if (coordBaseMode == 1)
             {
-                if (j == 2)
+                if (par2 == 2)
                 {
                     return 4;
                 }
-                if (j == 3)
+
+                if (par2 == 3)
                 {
                     return 5;
                 }
-                if (j == 4)
+
+                if (par2 == 4)
                 {
                     return 2;
                 }
-                if (j == 5)
+
+                if (par2 == 5)
                 {
                     return 3;
                 }
             }
             else if (coordBaseMode == 3)
             {
-                if (j == 2)
+                if (par2 == 2)
                 {
                     return 5;
                 }
-                if (j == 3)
+
+                if (par2 == 3)
                 {
                     return 4;
                 }
-                if (j == 4)
+
+                if (par2 == 4)
                 {
                     return 2;
                 }
-                if (j == 5)
+
+                if (par2 == 5)
                 {
                     return 3;
                 }
             }
         }
-        else if (i == Block.button.blockID)
+        else if (par1 == Block.button.blockID)
         {
             if (coordBaseMode == 0)
             {
-                if (j == 3)
+                if (par2 == 3)
                 {
                     return 4;
                 }
-                if (j == 4)
+
+                if (par2 == 4)
                 {
                     return 3;
                 }
             }
             else if (coordBaseMode == 1)
             {
-                if (j == 3)
+                if (par2 == 3)
                 {
                     return 1;
                 }
-                if (j == 4)
+
+                if (par2 == 4)
                 {
                     return 2;
                 }
-                if (j == 2)
+
+                if (par2 == 2)
                 {
                     return 3;
                 }
-                if (j == 1)
+
+                if (par2 == 1)
                 {
                     return 4;
                 }
             }
             else if (coordBaseMode == 3)
             {
-                if (j == 3)
+                if (par2 == 3)
                 {
                     return 2;
                 }
-                if (j == 4)
+
+                if (par2 == 4)
                 {
                     return 1;
                 }
-                if (j == 2)
+
+                if (par2 == 2)
                 {
                     return 3;
                 }
-                if (j == 1)
+
+                if (par2 == 1)
                 {
                     return 4;
                 }
             }
         }
-        return j;
+
+        return par2;
     }
 
-    protected void placeBlockAtCurrentPosition(World world, int i, int j, int k, int l, int i1, StructureBoundingBox structureboundingbox)
+    /**
+     * current Position depends on currently set Coordinates mode, is computed here
+     */
+    protected void placeBlockAtCurrentPosition(World par1World, int par2, int par3, int par4, int par5, int par6, StructureBoundingBox par7StructureBoundingBox)
     {
-        int j1 = getXWithOffset(k, i1);
-        int k1 = getYWithOffset(l);
-        int l1 = getZWithOffset(k, i1);
-        if (!structureboundingbox.isVecInside(j1, k1, l1))
+        int i = getXWithOffset(par4, par6);
+        int j = getYWithOffset(par5);
+        int k = getZWithOffset(par4, par6);
+
+        if (!par7StructureBoundingBox.isVecInside(i, j, k))
         {
             return;
         }
         else
         {
-            world.setBlockAndMetadata(j1, k1, l1, i, j);
+            par1World.setBlockAndMetadata(i, j, k, par2, par3);
             return;
         }
     }
 
-    protected int getBlockIdAtCurrentPosition(World world, int i, int j, int k, StructureBoundingBox structureboundingbox)
+    protected int getBlockIdAtCurrentPosition(World par1World, int par2, int par3, int par4, StructureBoundingBox par5StructureBoundingBox)
     {
-        int l = getXWithOffset(i, k);
-        int i1 = getYWithOffset(j);
-        int j1 = getZWithOffset(i, k);
-        if (!structureboundingbox.isVecInside(l, i1, j1))
+        int i = getXWithOffset(par2, par4);
+        int j = getYWithOffset(par3);
+        int k = getZWithOffset(par2, par4);
+
+        if (!par5StructureBoundingBox.isVecInside(i, j, k))
         {
             return 0;
         }
         else
         {
-            return world.getBlockId(l, i1, j1);
+            return par1World.getBlockId(i, j, k);
         }
     }
 
-    protected void fillWithBlocks(World world, StructureBoundingBox structureboundingbox, int i, int j, int k, int l, int i1,
-            int j1, int k1, int l1, boolean flag)
+    protected void fillWithBlocks(World par1World, StructureBoundingBox par2StructureBoundingBox, int par3, int par4, int par5, int par6, int par7, int par8, int par9, int par10, boolean par11)
     {
-        for (int i2 = j; i2 <= i1; i2++)
+        for (int i = par4; i <= par7; i++)
         {
-            for (int j2 = i; j2 <= l; j2++)
+            for (int j = par3; j <= par6; j++)
             {
-                for (int k2 = k; k2 <= j1; k2++)
+                for (int k = par5; k <= par8; k++)
                 {
-                    if (flag && getBlockIdAtCurrentPosition(world, j2, i2, k2, structureboundingbox) == 0)
+                    if (par11 && getBlockIdAtCurrentPosition(par1World, j, i, k, par2StructureBoundingBox) == 0)
                     {
                         continue;
                     }
-                    if (i2 == j || i2 == i1 || j2 == i || j2 == l || k2 == k || k2 == j1)
+
+                    if (i == par4 || i == par7 || j == par3 || j == par6 || k == par5 || k == par8)
                     {
-                        placeBlockAtCurrentPosition(world, k1, 0, j2, i2, k2, structureboundingbox);
+                        placeBlockAtCurrentPosition(par1World, par9, 0, j, i, k, par2StructureBoundingBox);
                     }
                     else
                     {
-                        placeBlockAtCurrentPosition(world, l1, 0, j2, i2, k2, structureboundingbox);
+                        placeBlockAtCurrentPosition(par1World, par10, 0, j, i, k, par2StructureBoundingBox);
                     }
                 }
             }
         }
     }
 
-    protected void fillWithRandomizedBlocks(World world, StructureBoundingBox structureboundingbox, int i, int j, int k, int l, int i1,
-            int j1, boolean flag, Random random, StructurePieceBlockSelector structurepieceblockselector)
+    /**
+     * arguments: World worldObj, StructureBoundingBox structBB, int minX, int minY, int minZ, int maxX, int maxY, int
+     * maxZ, boolean alwaysreplace, Random rand, StructurePieceBlockSelector blockselector
+     */
+    protected void fillWithRandomizedBlocks(World par1World, StructureBoundingBox par2StructureBoundingBox, int par3, int par4, int par5, int par6, int par7, int par8, boolean par9, Random par10Random, StructurePieceBlockSelector par11StructurePieceBlockSelector)
     {
-        for (int k1 = j; k1 <= i1; k1++)
+        for (int i = par4; i <= par7; i++)
         {
-            for (int l1 = i; l1 <= l; l1++)
+            for (int j = par3; j <= par6; j++)
             {
-                for (int i2 = k; i2 <= j1; i2++)
+                for (int k = par5; k <= par8; k++)
                 {
-                    if (!flag || getBlockIdAtCurrentPosition(world, l1, k1, i2, structureboundingbox) != 0)
+                    if (!par9 || getBlockIdAtCurrentPosition(par1World, j, i, k, par2StructureBoundingBox) != 0)
                     {
-                        structurepieceblockselector.selectBlocks(random, l1, k1, i2, k1 == j || k1 == i1 || l1 == i || l1 == l || i2 == k || i2 == j1);
-                        placeBlockAtCurrentPosition(world, structurepieceblockselector.getSelectedBlockId(), structurepieceblockselector.getSelectedBlockMetaData(), l1, k1, i2, structureboundingbox);
+                        par11StructurePieceBlockSelector.selectBlocks(par10Random, j, i, k, i == par4 || i == par7 || j == par3 || j == par6 || k == par5 || k == par8);
+                        placeBlockAtCurrentPosition(par1World, par11StructurePieceBlockSelector.getSelectedBlockId(), par11StructurePieceBlockSelector.getSelectedBlockMetaData(), j, i, k, par2StructureBoundingBox);
                     }
                 }
             }
         }
     }
 
-    protected void randomlyFillWithBlocks(World world, StructureBoundingBox structureboundingbox, Random random, float f, int i, int j, int k,
-            int l, int i1, int j1, int k1, int l1, boolean flag)
+    protected void randomlyFillWithBlocks(World par1World, StructureBoundingBox par2StructureBoundingBox, Random par3Random, float par4, int par5, int par6, int par7, int par8, int par9, int par10, int par11, int par12, boolean par13)
     {
-        for (int i2 = j; i2 <= i1; i2++)
+        for (int i = par6; i <= par9; i++)
         {
-            for (int j2 = i; j2 <= l; j2++)
+            for (int j = par5; j <= par8; j++)
             {
-                for (int k2 = k; k2 <= j1; k2++)
+                for (int k = par7; k <= par10; k++)
                 {
-                    if (random.nextFloat() > f || flag && getBlockIdAtCurrentPosition(world, j2, i2, k2, structureboundingbox) == 0)
+                    if (par3Random.nextFloat() > par4 || par13 && getBlockIdAtCurrentPosition(par1World, j, i, k, par2StructureBoundingBox) == 0)
                     {
                         continue;
                     }
-                    if (i2 == j || i2 == i1 || j2 == i || j2 == l || k2 == k || k2 == j1)
+
+                    if (i == par6 || i == par9 || j == par5 || j == par8 || k == par7 || k == par10)
                     {
-                        placeBlockAtCurrentPosition(world, k1, 0, j2, i2, k2, structureboundingbox);
+                        placeBlockAtCurrentPosition(par1World, par11, 0, j, i, k, par2StructureBoundingBox);
                     }
                     else
                     {
-                        placeBlockAtCurrentPosition(world, l1, 0, j2, i2, k2, structureboundingbox);
+                        placeBlockAtCurrentPosition(par1World, par12, 0, j, i, k, par2StructureBoundingBox);
                     }
                 }
             }
         }
     }
 
-    protected void randomlyPlaceBlock(World world, StructureBoundingBox structureboundingbox, Random random, float f, int i, int j, int k,
-            int l, int i1)
+    protected void randomlyPlaceBlock(World par1World, StructureBoundingBox par2StructureBoundingBox, Random par3Random, float par4, int par5, int par6, int par7, int par8, int par9)
     {
-        if (random.nextFloat() < f)
+        if (par3Random.nextFloat() < par4)
         {
-            placeBlockAtCurrentPosition(world, l, i1, i, j, k, structureboundingbox);
+            placeBlockAtCurrentPosition(par1World, par8, par9, par5, par6, par7, par2StructureBoundingBox);
         }
     }
 
-    protected void randomlyRareFillWithBlocks(World world, StructureBoundingBox structureboundingbox, int i, int j, int k, int l, int i1,
-            int j1, int k1, boolean flag)
+    /**
+     * arguments: World worldObj, StructureBoundingBox structBB, int minX, int minY, int minZ, int maxX, int maxY, int
+     * maxZ, int placeBlockId, boolean alwaysreplace
+     */
+    protected void randomlyRareFillWithBlocks(World par1World, StructureBoundingBox par2StructureBoundingBox, int par3, int par4, int par5, int par6, int par7, int par8, int par9, boolean par10)
     {
-        float f = (l - i) + 1;
-        float f1 = (i1 - j) + 1;
-        float f2 = (j1 - k) + 1;
-        float f3 = (float)i + f / 2.0F;
-        float f4 = (float)k + f2 / 2.0F;
-        for (int l1 = j; l1 <= i1; l1++)
+        float f = (par6 - par3) + 1;
+        float f1 = (par7 - par4) + 1;
+        float f2 = (par8 - par5) + 1;
+        float f3 = (float)par3 + f / 2.0F;
+        float f4 = (float)par5 + f2 / 2.0F;
+
+        for (int i = par4; i <= par7; i++)
         {
-            float f5 = (float)(l1 - j) / f1;
-            for (int i2 = i; i2 <= l; i2++)
+            float f5 = (float)(i - par4) / f1;
+
+            for (int j = par3; j <= par6; j++)
             {
-                float f6 = ((float)i2 - f3) / (f * 0.5F);
-                for (int j2 = k; j2 <= j1; j2++)
+                float f6 = ((float)j - f3) / (f * 0.5F);
+
+                for (int k = par5; k <= par8; k++)
                 {
-                    float f7 = ((float)j2 - f4) / (f2 * 0.5F);
-                    if (flag && getBlockIdAtCurrentPosition(world, i2, l1, j2, structureboundingbox) == 0)
+                    float f7 = ((float)k - f4) / (f2 * 0.5F);
+
+                    if (par10 && getBlockIdAtCurrentPosition(par1World, j, i, k, par2StructureBoundingBox) == 0)
                     {
                         continue;
                     }
+
                     float f8 = f6 * f6 + f5 * f5 + f7 * f7;
+
                     if (f8 <= 1.05F)
                     {
-                        placeBlockAtCurrentPosition(world, k1, 0, i2, l1, j2, structureboundingbox);
+                        placeBlockAtCurrentPosition(par1World, par9, 0, j, i, k, par2StructureBoundingBox);
                     }
                 }
             }
         }
     }
 
-    protected void clearCurrentPositionBlocksUpwards(World world, int i, int j, int k, StructureBoundingBox structureboundingbox)
+    /**
+     * Deletes all continuous Blocks from selected position upwards. Stops at hitting air
+     */
+    protected void clearCurrentPositionBlocksUpwards(World par1World, int par2, int par3, int par4, StructureBoundingBox par5StructureBoundingBox)
     {
-        int l = getXWithOffset(i, k);
-        int i1 = getYWithOffset(j);
-        int j1 = getZWithOffset(i, k);
-        if (!structureboundingbox.isVecInside(l, i1, j1))
+        int i = getXWithOffset(par2, par4);
+        int j = getYWithOffset(par3);
+        int k = getZWithOffset(par2, par4);
+
+        if (!par5StructureBoundingBox.isVecInside(i, j, k))
         {
             return;
         }
-        for (; !world.isAirBlock(l, i1, j1) && i1 < world.worldMaxY; i1++)
+
+        for (; !par1World.isAirBlock(i, j, k) && j < 255; j++)
         {
-            world.setBlockAndMetadata(l, i1, j1, 0, 0);
+            par1World.setBlockAndMetadata(i, j, k, 0, 0);
         }
     }
 
-    protected void fillCurrentPositionBlocksDownwards(World world, int i, int j, int k, int l, int i1, StructureBoundingBox structureboundingbox)
+    /**
+     * Overwrites Air and Liquids from selected Position downwards, stops at hitting anything else
+     */
+    protected void fillCurrentPositionBlocksDownwards(World par1World, int par2, int par3, int par4, int par5, int par6, StructureBoundingBox par7StructureBoundingBox)
     {
-        int j1 = getXWithOffset(k, i1);
-        int k1 = getYWithOffset(l);
-        int l1 = getZWithOffset(k, i1);
-        if (!structureboundingbox.isVecInside(j1, k1, l1))
+        int i = getXWithOffset(par4, par6);
+        int j = getYWithOffset(par5);
+        int k = getZWithOffset(par4, par6);
+
+        if (!par7StructureBoundingBox.isVecInside(i, j, k))
         {
             return;
         }
-        for (; (world.isAirBlock(j1, k1, l1) || world.getBlockMaterial(j1, k1, l1).getIsLiquid()) && k1 > 1; k1--)
+
+        for (; (par1World.isAirBlock(i, j, k) || par1World.getBlockMaterial(i, j, k).isLiquid()) && j > 1; j--)
         {
-            world.setBlockAndMetadata(j1, k1, l1, i, j);
+            par1World.setBlockAndMetadata(i, j, k, par2, par3);
         }
     }
 
-    protected void createTreasureChestAtCurrentPosition(World world, StructureBoundingBox structureboundingbox, Random random, int i, int j, int k, StructurePieceTreasure astructurepiecetreasure[],
-            int l)
+    protected void createTreasureChestAtCurrentPosition(World par1World, StructureBoundingBox par2StructureBoundingBox, Random par3Random, int par4, int par5, int par6, StructurePieceTreasure par7ArrayOfStructurePieceTreasure[], int par8)
     {
-        int i1 = getXWithOffset(i, k);
-        int j1 = getYWithOffset(j);
-        int k1 = getZWithOffset(i, k);
-        if (structureboundingbox.isVecInside(i1, j1, k1) && world.getBlockId(i1, j1, k1) != Block.chest.blockID)
+        int i = getXWithOffset(par4, par6);
+        int j = getYWithOffset(par5);
+        int k = getZWithOffset(par4, par6);
+
+        if (par2StructureBoundingBox.isVecInside(i, j, k) && par1World.getBlockId(i, j, k) != Block.chest.blockID)
         {
-            world.setBlockWithNotify(i1, j1, k1, Block.chest.blockID);
-            TileEntityChest tileentitychest = (TileEntityChest)world.getBlockTileEntity(i1, j1, k1);
+            par1World.setBlockWithNotify(i, j, k, Block.chest.blockID);
+            TileEntityChest tileentitychest = (TileEntityChest)par1World.getBlockTileEntity(i, j, k);
+
             if (tileentitychest != null)
             {
-                fillTreasureChestWithLoot(random, astructurepiecetreasure, tileentitychest, l);
+                fillTreasureChestWithLoot(par3Random, par7ArrayOfStructurePieceTreasure, tileentitychest, par8);
             }
         }
     }
 
-    private static void fillTreasureChestWithLoot(Random random, StructurePieceTreasure astructurepiecetreasure[], TileEntityChest tileentitychest, int i)
+    private static void fillTreasureChestWithLoot(Random par0Random, StructurePieceTreasure par1ArrayOfStructurePieceTreasure[], TileEntityChest par2TileEntityChest, int par3)
     {
-        for (int j = 0; j < i; j++)
+        for (int i = 0; i < par3; i++)
         {
-            StructurePieceTreasure structurepiecetreasure = (StructurePieceTreasure)WeightedRandom.getRandomItem(random, astructurepiecetreasure);
-            int k = structurepiecetreasure.minItemStack + random.nextInt((structurepiecetreasure.maxItemStack - structurepiecetreasure.minItemStack) + 1);
-            if (Item.itemsList[structurepiecetreasure.itemID].getItemStackLimit() >= k)
+            StructurePieceTreasure structurepiecetreasure = (StructurePieceTreasure)WeightedRandom.getRandomItem(par0Random, par1ArrayOfStructurePieceTreasure);
+            int j = structurepiecetreasure.minItemStack + par0Random.nextInt((structurepiecetreasure.maxItemStack - structurepiecetreasure.minItemStack) + 1);
+
+            if (Item.itemsList[structurepiecetreasure.itemID].getItemStackLimit() >= j)
             {
-                tileentitychest.setInventorySlotContents(random.nextInt(tileentitychest.getSizeInventory()), new ItemStack(structurepiecetreasure.itemID, k, structurepiecetreasure.itemMetadata));
+                par2TileEntityChest.setInventorySlotContents(par0Random.nextInt(par2TileEntityChest.getSizeInventory()), new ItemStack(structurepiecetreasure.itemID, j, structurepiecetreasure.itemMetadata));
                 continue;
             }
-            for (int l = 0; l < k; l++)
+
+            for (int k = 0; k < j; k++)
             {
-                tileentitychest.setInventorySlotContents(random.nextInt(tileentitychest.getSizeInventory()), new ItemStack(structurepiecetreasure.itemID, 1, structurepiecetreasure.itemMetadata));
+                par2TileEntityChest.setInventorySlotContents(par0Random.nextInt(par2TileEntityChest.getSizeInventory()), new ItemStack(structurepiecetreasure.itemID, 1, structurepiecetreasure.itemMetadata));
             }
         }
     }
 
-    protected void placeDoorAtCurrentPosition(World world, StructureBoundingBox structureboundingbox, Random random, int i, int j, int k, int l)
+    protected void placeDoorAtCurrentPosition(World par1World, StructureBoundingBox par2StructureBoundingBox, Random par3Random, int par4, int par5, int par6, int par7)
     {
-        int i1 = getXWithOffset(i, k);
-        int j1 = getYWithOffset(j);
-        int k1 = getZWithOffset(i, k);
-        if (structureboundingbox.isVecInside(i1, j1, k1))
+        int i = getXWithOffset(par4, par6);
+        int j = getYWithOffset(par5);
+        int k = getZWithOffset(par4, par6);
+
+        if (par2StructureBoundingBox.isVecInside(i, j, k))
         {
-            ItemDoor.placeDoorBlock(world, i1, j1, k1, l, Block.doorWood);
+            ItemDoor.placeDoorBlock(par1World, i, j, k, par7, Block.doorWood);
         }
     }
 }

@@ -2,32 +2,46 @@ package net.minecraft.src;
 
 class SlotBrewingStandPotion extends Slot
 {
+    /** The player that has this container open. */
     private EntityPlayer player;
+
+    /** The brewing stand this slot belongs to. */
     final ContainerBrewingStand container;
 
-    public SlotBrewingStandPotion(ContainerBrewingStand containerbrewingstand, EntityPlayer entityplayer, IInventory iinventory, int i, int j, int k)
+    public SlotBrewingStandPotion(ContainerBrewingStand par1ContainerBrewingStand, EntityPlayer par2EntityPlayer, IInventory par3IInventory, int par4, int par5, int par6)
     {
-        super(iinventory, i, j, k);
-        container = containerbrewingstand;
-        player = entityplayer;
+        super(par3IInventory, par4, par5, par6);
+        container = par1ContainerBrewingStand;
+        player = par2EntityPlayer;
     }
 
-    public boolean isItemValid(ItemStack itemstack)
+    /**
+     * Check if the stack is a valid item for this slot.
+     */
+    public boolean isItemValid(ItemStack par1ItemStack)
     {
-        return itemstack != null && (itemstack.itemID == Item.potion.shiftedIndex || itemstack.itemID == Item.glassBottle.shiftedIndex);
+        return par1ItemStack != null && (par1ItemStack.itemID == Item.potion.shiftedIndex || par1ItemStack.itemID == Item.glassBottle.shiftedIndex);
     }
 
+    /**
+     * Returns the maximum stack size for a given slot (usually the same as getInventoryStackLimit(), but 1 in the case
+     * of armor slots)
+     */
     public int getSlotStackLimit()
     {
         return 1;
     }
 
-    public void onPickupFromSlot(ItemStack itemstack)
+    /**
+     * Called when the player picks up an item from an inventory slot
+     */
+    public void onPickupFromSlot(ItemStack par1ItemStack)
     {
-        if (itemstack.itemID == Item.potion.shiftedIndex && itemstack.getItemDamage() > 0)
+        if (par1ItemStack.itemID == Item.potion.shiftedIndex && par1ItemStack.getItemDamage() > 0)
         {
             player.addStat(AchievementList.potion, 1);
         }
-        super.onPickupFromSlot(itemstack);
+
+        super.onPickupFromSlot(par1ItemStack);
     }
 }

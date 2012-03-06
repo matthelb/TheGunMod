@@ -2,12 +2,13 @@ package net.minecraft.src;
 
 public abstract class WorldSavedData
 {
+    /** The name of the map data nbt */
     public final String mapName;
     private boolean dirty;
 
-    public WorldSavedData(String s)
+    public WorldSavedData(String par1Str)
     {
-        mapName = s;
+        mapName = par1Str;
     }
 
     public abstract void readFromNBT(NBTTagCompound nbttagcompound);
@@ -19,9 +20,9 @@ public abstract class WorldSavedData
         setDirty(true);
     }
 
-    public void setDirty(boolean flag)
+    public void setDirty(boolean par1)
     {
-        dirty = flag;
+        dirty = par1;
     }
 
     public boolean isDirty()

@@ -4,47 +4,61 @@ import java.util.Random;
 
 public class BlockCactus extends Block
 {
-    protected BlockCactus(int i, int j)
+    protected BlockCactus(int par1, int par2)
     {
-        super(i, j, Material.cactus);
-        setTickOnLoad(true);
+        super(par1, par2, Material.cactus);
+        setTickRandomly(true);
     }
 
-    public void updateTick(World world, int i, int j, int k, Random random)
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
     {
-        if (world.isAirBlock(i, j + 1, k))
+        if (par1World.isAirBlock(par2, par3 + 1, par4))
         {
-            int l;
-            for (l = 1; world.getBlockId(i, j - l, k) == blockID; l++) { }
-            if (l < 3)
+            int i;
+
+            for (i = 1; par1World.getBlockId(par2, par3 - i, par4) == blockID; i++) { }
+
+            if (i < 3)
             {
-                int i1 = world.getBlockMetadata(i, j, k);
-                if (i1 == 15)
+                int j = par1World.getBlockMetadata(par2, par3, par4);
+
+                if (j == 15)
                 {
-                    world.setBlockWithNotify(i, j + 1, k, blockID);
-                    world.setBlockMetadataWithNotify(i, j, k, 0);
+                    par1World.setBlockWithNotify(par2, par3 + 1, par4, blockID);
+                    par1World.setBlockMetadataWithNotify(par2, par3, par4, 0);
                 }
                 else
                 {
-                    world.setBlockMetadataWithNotify(i, j, k, i1 + 1);
+                    par1World.setBlockMetadataWithNotify(par2, par3, par4, j + 1);
                 }
             }
         }
     }
 
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
+    /**
+     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
+     * cleared to be reused)
+     */
+    public AxisAlignedBB getCollisionBoundingBoxFromPool(World par1World, int par2, int par3, int par4)
     {
         float f = 0.0625F;
-        return AxisAlignedBB.getBoundingBoxFromPool((float)i + f, j, (float)k + f, (float)(i + 1) - f, (float)(j + 1) - f, (float)(k + 1) - f);
+        return AxisAlignedBB.getBoundingBoxFromPool((float)par2 + f, par3, (float)par4 + f, (float)(par2 + 1) - f, (float)(par3 + 1) - f, (float)(par4 + 1) - f);
     }
 
-    public int getBlockTextureFromSide(int i)
+    /**
+     * Returns the block texture based on the side being looked at.  Args: side
+     */
+    public int getBlockTextureFromSide(int par1)
     {
-        if (i == 1)
+        if (par1 == 1)
         {
             return blockIndexInTexture - 1;
         }
-        if (i == 0)
+
+        if (par1 == 0)
         {
             return blockIndexInTexture + 1;
         }
@@ -54,69 +68,95 @@ public class BlockCactus extends Block
         }
     }
 
+    /**
+     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     */
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
+    /**
+     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
+     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
+     */
     public boolean isOpaqueCube()
     {
         return false;
     }
 
+    /**
+     * The type of render function that is called for this block
+     */
     public int getRenderType()
     {
         return 13;
     }
 
-    public boolean canPlaceBlockAt(World world, int i, int j, int k)
+    /**
+     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
+     */
+    public boolean canPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
-        if (!super.canPlaceBlockAt(world, i, j, k))
+        if (!super.canPlaceBlockAt(par1World, par2, par3, par4))
         {
             return false;
         }
         else
         {
-            return canBlockStay(world, i, j, k);
+            return canBlockStay(par1World, par2, par3, par4);
         }
     }
 
-    public void onNeighborBlockChange(World world, int i, int j, int k, int l)
+    /**
+     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
+     * their own) Args: x, y, z, blockID
+     */
+    public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
-        if (!canBlockStay(world, i, j, k))
+        if (!canBlockStay(par1World, par2, par3, par4))
         {
-            dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
-            world.setBlockWithNotify(i, j, k, 0);
+            dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
         }
     }
 
-    public boolean canBlockStay(World world, int i, int j, int k)
+    /**
+     * Can this block stay at this position.  Similar to canPlaceBlockAt except gets checked often with plants.
+     */
+    public boolean canBlockStay(World par1World, int par2, int par3, int par4)
     {
-        if (world.getBlockMaterial(i - 1, j, k).isSolid())
+        if (par1World.getBlockMaterial(par2 - 1, par3, par4).isSolid())
         {
             return false;
         }
-        if (world.getBlockMaterial(i + 1, j, k).isSolid())
+
+        if (par1World.getBlockMaterial(par2 + 1, par3, par4).isSolid())
         {
             return false;
         }
-        if (world.getBlockMaterial(i, j, k - 1).isSolid())
+
+        if (par1World.getBlockMaterial(par2, par3, par4 - 1).isSolid())
         {
             return false;
         }
-        if (world.getBlockMaterial(i, j, k + 1).isSolid())
+
+        if (par1World.getBlockMaterial(par2, par3, par4 + 1).isSolid())
         {
             return false;
         }
         else
         {
-            int l = world.getBlockId(i, j - 1, k);
-            return l == Block.cactus.blockID || l == Block.sand.blockID;
+            int i = par1World.getBlockId(par2, par3 - 1, par4);
+            return i == Block.cactus.blockID || i == Block.sand.blockID;
         }
     }
 
-    public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
+    /**
+     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
+     */
+    public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
     {
-        entity.attackEntityFrom(DamageSource.cactus, 1);
+        par5Entity.attackEntityFrom(DamageSource.cactus, 1);
     }
 }

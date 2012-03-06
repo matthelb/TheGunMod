@@ -7,39 +7,51 @@ import java.util.logging.Logger;
 
 public class PropertyManager
 {
+    /** Reference to the logger. */
     public static Logger logger = Logger.getLogger("Minecraft");
+
+    /** The server properties object. */
     private Properties serverProperties;
+
+    /** The server properties file. */
     private File serverPropertiesFile;
 
-    public PropertyManager(File file)
+    public PropertyManager(File par1File)
     {
         serverProperties = new Properties();
-        serverPropertiesFile = file;
-        if (file.exists())
+        serverPropertiesFile = par1File;
+
+        if (par1File.exists())
         {
             try
             {
-                serverProperties.load(new FileInputStream(file));
+                serverProperties.load(new FileInputStream(par1File));
             }
             catch (Exception exception)
             {
-                logger.log(Level.WARNING, (new StringBuilder()).append("Failed to load ").append(file).toString(), exception);
+                logger.log(Level.WARNING, (new StringBuilder()).append("Failed to load ").append(par1File).toString(), exception);
                 generateNewProperties();
             }
         }
         else
         {
-            logger.log(Level.WARNING, (new StringBuilder()).append(file).append(" does not exist").toString());
+            logger.log(Level.WARNING, (new StringBuilder()).append(par1File).append(" does not exist").toString());
             generateNewProperties();
         }
     }
 
+    /**
+     * Generates a new properties file.
+     */
     public void generateNewProperties()
     {
         logger.log(Level.INFO, "Generating new properties file");
         saveProperties();
     }
 
+    /**
+     * Writes the properties to the properties file.
+     */
     public void saveProperties()
     {
         try
@@ -53,55 +65,73 @@ public class PropertyManager
         }
     }
 
+    /**
+     * Returns this PropertyManager's file object used for property saving.
+     */
     public File getPropertiesFile()
     {
         return serverPropertiesFile;
     }
 
-    public String getStringProperty(String s, String s1)
+    /**
+     * Returns a string property. If the property doesn't exist the default is returned.
+     */
+    public String getStringProperty(String par1Str, String par2Str)
     {
-        if (!serverProperties.containsKey(s))
+        if (!serverProperties.containsKey(par1Str))
         {
-            serverProperties.setProperty(s, s1);
+            serverProperties.setProperty(par1Str, par2Str);
             saveProperties();
         }
-        return serverProperties.getProperty(s, s1);
+
+        return serverProperties.getProperty(par1Str, par2Str);
     }
 
-    public int getIntProperty(String s, int i)
+    /**
+     * Returns an integer property. If the property doesn't exist the default is returned.
+     */
+    public int getIntProperty(String par1Str, int par2)
     {
         try
         {
-            return Integer.parseInt(getStringProperty(s, (new StringBuilder()).append("").append(i).toString()));
+            return Integer.parseInt(getStringProperty(par1Str, (new StringBuilder()).append("").append(par2).toString()));
         }
         catch (Exception exception)
         {
-            serverProperties.setProperty(s, (new StringBuilder()).append("").append(i).toString());
+            serverProperties.setProperty(par1Str, (new StringBuilder()).append("").append(par2).toString());
         }
-        return i;
+
+        return par2;
     }
 
-    public boolean getBooleanProperty(String s, boolean flag)
+    /**
+     * Returns a boolean property. If the property doesn't exist the default is returned.
+     */
+    public boolean getBooleanProperty(String par1Str, boolean par2)
     {
         try
         {
-            return Boolean.parseBoolean(getStringProperty(s, (new StringBuilder()).append("").append(flag).toString()));
+            return Boolean.parseBoolean(getStringProperty(par1Str, (new StringBuilder()).append("").append(par2).toString()));
         }
         catch (Exception exception)
         {
-            serverProperties.setProperty(s, (new StringBuilder()).append("").append(flag).toString());
+            serverProperties.setProperty(par1Str, (new StringBuilder()).append("").append(par2).toString());
         }
-        return flag;
+
+        return par2;
     }
 
-    public void setProperty(String s, Object obj)
+    /**
+     * Saves an Object with the given property name
+     */
+    public void setProperty(String par1Str, Object par2Obj)
     {
-        serverProperties.setProperty(s, (new StringBuilder()).append("").append(obj).toString());
+        serverProperties.setProperty(par1Str, (new StringBuilder()).append("").append(par2Obj).toString());
     }
 
-    public void setProperty(String s, boolean flag)
+    public void setProperty(String par1Str, boolean par2)
     {
-        serverProperties.setProperty(s, (new StringBuilder()).append("").append(flag).toString());
+        serverProperties.setProperty(par1Str, (new StringBuilder()).append("").append(par2).toString());
         saveProperties();
     }
 }

@@ -8,9 +8,9 @@ public class EntityBlaze extends EntityMob
     private int heightOffsetUpdateTime;
     private int field_40128_g;
 
-    public EntityBlaze(World world)
+    public EntityBlaze(World par1World)
     {
-        super(world);
+        super(par1World);
         heightOffset = 0.5F;
         texture = "/mob/fire.png";
         isImmuneToFire = true;
@@ -29,36 +29,58 @@ public class EntityBlaze extends EntityMob
         dataWatcher.addObject(16, new Byte((byte)0));
     }
 
+    /**
+     * Returns the sound this mob makes while it's alive.
+     */
     protected String getLivingSound()
     {
         return "mob.blaze.breathe";
     }
 
+    /**
+     * Returns the sound this mob makes when it is hurt.
+     */
     protected String getHurtSound()
     {
         return "mob.blaze.hit";
     }
 
+    /**
+     * Returns the sound this mob makes on death.
+     */
     protected String getDeathSound()
     {
         return "mob.blaze.death";
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
-        return super.attackEntityFrom(damagesource, i);
+        return super.attackEntityFrom(par1DamageSource, par2);
     }
 
-    public void onDeath(DamageSource damagesource)
+    /**
+     * Called when the mob's health reaches 0.
+     */
+    public void onDeath(DamageSource par1DamageSource)
     {
-        super.onDeath(damagesource);
+        super.onDeath(par1DamageSource);
     }
 
-    public float getEntityBrightness(float f)
+    /**
+     * Gets how bright this entity is.
+     */
+    public float getEntityBrightness(float par1)
     {
         return 1.0F;
     }
 
+    /**
+     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+     * use this to react to sunlight and start to burn.
+     */
     public void onLivingUpdate()
     {
         if (!worldObj.isRemote)
@@ -67,25 +89,31 @@ public class EntityBlaze extends EntityMob
             {
                 attackEntityFrom(DamageSource.drown, 1);
             }
+
             heightOffsetUpdateTime--;
+
             if (heightOffsetUpdateTime <= 0)
             {
                 heightOffsetUpdateTime = 100;
                 heightOffset = 0.5F + (float)rand.nextGaussian() * 3F;
             }
+
             if (getEntityToAttack() != null && getEntityToAttack().posY + (double)getEntityToAttack().getEyeHeight() > posY + (double)getEyeHeight() + (double)heightOffset)
             {
-                motionY = motionY + (0.30000001192092896D - motionY) * 0.30000001192092896D;
+                motionY = motionY + (0.3D - motionY) * 0.3D;
             }
         }
+
         if (rand.nextInt(24) == 0)
         {
             worldObj.playSoundEffect(posX + 0.5D, posY + 0.5D, posZ + 0.5D, "fire.fire", 1.0F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.3F);
         }
+
         if (!onGround && motionY < 0.0D)
         {
-            motionY *= 0.59999999999999998D;
+            motionY *= 0.6D;
         }
+
         for (int i = 0; i < 2; i++)
         {
             worldObj.spawnParticle("largesmoke", posX + (rand.nextDouble() - 0.5D) * (double)width, posY + rand.nextDouble() * (double)height, posZ + (rand.nextDouble() - 0.5D) * (double)width, 0.0D, 0.0D, 0.0D);
@@ -94,21 +122,26 @@ public class EntityBlaze extends EntityMob
         super.onLivingUpdate();
     }
 
-    protected void attackEntity(Entity entity, float f)
+    /**
+     * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
+     */
+    protected void attackEntity(Entity par1Entity, float par2)
     {
-        if (attackTime <= 0 && f < 2.0F && entity.boundingBox.maxY > boundingBox.minY && entity.boundingBox.minY < boundingBox.maxY)
+        if (attackTime <= 0 && par2 < 2.0F && par1Entity.boundingBox.maxY > boundingBox.minY && par1Entity.boundingBox.minY < boundingBox.maxY)
         {
             attackTime = 20;
-            attackEntityAsMob(entity);
+            attackEntityAsMob(par1Entity);
         }
-        else if (f < 30F)
+        else if (par2 < 30F)
         {
-            double d = entity.posX - posX;
-            double d1 = (entity.boundingBox.minY + (double)(entity.height / 2.0F)) - (posY + (double)(height / 2.0F));
-            double d2 = entity.posZ - posZ;
+            double d = par1Entity.posX - posX;
+            double d1 = (par1Entity.boundingBox.minY + (double)(par1Entity.height / 2.0F)) - (posY + (double)(height / 2.0F));
+            double d2 = par1Entity.posZ - posZ;
+
             if (attackTime == 0)
             {
                 field_40128_g++;
+
                 if (field_40128_g == 1)
                 {
                     attackTime = 60;
@@ -124,53 +157,75 @@ public class EntityBlaze extends EntityMob
                     field_40128_g = 0;
                     func_40127_a(false);
                 }
+
                 if (field_40128_g > 1)
                 {
-                    float f1 = MathHelper.sqrt_float(f) * 0.5F;
+                    float f = MathHelper.sqrt_float(par2) * 0.5F;
                     worldObj.playAuxSFXAtEntity(null, 1009, (int)posX, (int)posY, (int)posZ, 0);
+
                     for (int i = 0; i < 1; i++)
                     {
-                        EntitySmallFireball entitysmallfireball = new EntitySmallFireball(worldObj, this, d + rand.nextGaussian() * (double)f1, d1, d2 + rand.nextGaussian() * (double)f1);
+                        EntitySmallFireball entitysmallfireball = new EntitySmallFireball(worldObj, this, d + rand.nextGaussian() * (double)f, d1, d2 + rand.nextGaussian() * (double)f);
                         entitysmallfireball.posY = posY + (double)(height / 2.0F) + 0.5D;
                         worldObj.spawnEntityInWorld(entitysmallfireball);
                     }
                 }
             }
-            rotationYaw = (float)((Math.atan2(d2, d) * 180D) / 3.1415927410125732D) - 90F;
+
+            rotationYaw = (float)((Math.atan2(d2, d) * 180D) / Math.PI) - 90F;
             hasAttacked = true;
         }
     }
 
+    /**
+     * Called when the mob is falling. Calculates and applies fall damage.
+     */
     protected void fall(float f)
     {
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeEntityToNBT(nbttagcompound);
+        super.writeEntityToNBT(par1NBTTagCompound);
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readEntityFromNBT(nbttagcompound);
+        super.readEntityFromNBT(par1NBTTagCompound);
     }
 
+    /**
+     * Returns the item ID for the item the mob drops on death.
+     */
     protected int getDropItemId()
     {
         return Item.blazeRod.shiftedIndex;
     }
 
+    /**
+     * Returns true if the furnace is currently burning
+     */
     public boolean isBurning()
     {
         return func_40126_A();
     }
 
-    protected void dropFewItems(boolean flag, int i)
+    /**
+     * Drop 0-2 items of this living's type
+     */
+    protected void dropFewItems(boolean par1, int par2)
     {
-        if (flag)
+        if (par1)
         {
-            int j = rand.nextInt(2 + i);
-            for (int k = 0; k < j; k++)
+            int i = rand.nextInt(2 + par2);
+
+            for (int j = 0; j < i; j++)
             {
                 dropItem(Item.blazeRod.shiftedIndex, 1);
             }
@@ -182,10 +237,11 @@ public class EntityBlaze extends EntityMob
         return (dataWatcher.getWatchableObjectByte(16) & 1) != 0;
     }
 
-    public void func_40127_a(boolean flag)
+    public void func_40127_a(boolean par1)
     {
         byte byte0 = dataWatcher.getWatchableObjectByte(16);
-        if (flag)
+
+        if (par1)
         {
             byte0 |= 1;
         }
@@ -193,6 +249,7 @@ public class EntityBlaze extends EntityMob
         {
             byte0 &= 0xfe;
         }
+
         dataWatcher.updateObject(16, Byte.valueOf(byte0));
     }
 

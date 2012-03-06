@@ -4,59 +4,65 @@ import java.util.*;
 
 abstract class ComponentNetherBridgePiece extends StructureComponent
 {
-    protected ComponentNetherBridgePiece(int i)
+    protected ComponentNetherBridgePiece(int par1)
     {
-        super(i);
+        super(par1);
     }
 
-    private int func_40282_a(List list)
+    private int getTotalWeight(List par1List)
     {
         boolean flag = false;
         int i = 0;
-        for (Iterator iterator = list.iterator(); iterator.hasNext();)
+
+        for (Iterator iterator = par1List.iterator(); iterator.hasNext();)
         {
             StructureNetherBridgePieceWeight structurenetherbridgepieceweight = (StructureNetherBridgePieceWeight)iterator.next();
+
             if (structurenetherbridgepieceweight.field_40651_d > 0 && structurenetherbridgepieceweight.field_40654_c < structurenetherbridgepieceweight.field_40651_d)
             {
                 flag = true;
             }
+
             i += structurenetherbridgepieceweight.field_40653_b;
         }
 
         return flag ? i : -1;
     }
 
-    private ComponentNetherBridgePiece func_40284_a(ComponentNetherBridgeStartPiece var1, List var2, List var3, Random var4, int var5, int var6, int var7, int var8, int var9)
+    private ComponentNetherBridgePiece getNextComponent(ComponentNetherBridgeStartPiece par1ComponentNetherBridgeStartPiece, List par2List, List par3List, Random par4Random, int par5, int par6, int par7, int par8, int par9)
     {
-        int var10 = this.func_40282_a(var2);
-        boolean var11 = var10 > 0 && var9 <= 30;
+        int var10 = this.getTotalWeight(par2List);
+        boolean var11 = var10 > 0 && par9 <= 30;
         int var12 = 0;
 
         while (var12 < 5 && var11)
         {
             ++var12;
-            int var13 = var4.nextInt(var10);
-            Iterator var14 = var2.iterator();
+            int var13 = par4Random.nextInt(var10);
+            Iterator var14 = par2List.iterator();
 
             while (var14.hasNext())
             {
                 StructureNetherBridgePieceWeight var15 = (StructureNetherBridgePieceWeight)var14.next();
                 var13 -= var15.field_40653_b;
+
                 if (var13 < 0)
                 {
-                    if (!var15.func_40649_a(var9) || var15 == var1.field_40296_a && !var15.field_40652_e)
+                    if (!var15.func_40649_a(par9) || var15 == par1ComponentNetherBridgeStartPiece.field_40296_a && !var15.field_40652_e)
                     {
                         break;
                     }
 
-                    ComponentNetherBridgePiece var16 = StructureNetherBridgePieces.func_40538_a(var15, var3, var4, var5, var6, var7, var8, var9);
+                    ComponentNetherBridgePiece var16 = StructureNetherBridgePieces.createNextComponent(var15, par3List, par4Random, par5, par6, par7, par8, par9);
+
                     if (var16 != null)
                     {
                         ++var15.field_40654_c;
-                        var1.field_40296_a = var15;
+                        par1ComponentNetherBridgeStartPiece.field_40296_a = var15;
+
                         if (!var15.func_40650_a())
                         {
-                            var2.remove(var15);
+                            par2List.remove(var15);
                         }
 
                         return var16;
@@ -65,91 +71,113 @@ abstract class ComponentNetherBridgePiece extends StructureComponent
             }
         }
 
-        StructureNetherBridgeEnd var17 = StructureNetherBridgeEnd.func_40301_a(var3, var4, var5, var6, var7, var8, var9);
+        ComponentNetherBridgeEnd var17 = ComponentNetherBridgeEnd.func_40301_a(par3List, par4Random, par5, par6, par7, par8, par9);
         return var17;
     }
 
-    private StructureComponent func_40283_a(ComponentNetherBridgeStartPiece componentnetherbridgestartpiece, List list, Random random, int i, int j, int k, int l,
-            int i1, boolean flag)
+    /**
+     * Finds a random component to tack on to the bridge. Or builds the end.
+     */
+    private StructureComponent getNextComponent(ComponentNetherBridgeStartPiece par1ComponentNetherBridgeStartPiece, List par2List, Random par3Random, int par4, int par5, int par6, int par7, int par8, boolean par9)
     {
-        if (Math.abs(i - componentnetherbridgestartpiece.getBoundingBox().minX) > 112 || Math.abs(k - componentnetherbridgestartpiece.getBoundingBox().minZ) > 112)
+        if (Math.abs(par4 - par1ComponentNetherBridgeStartPiece.getBoundingBox().minX) > 112 || Math.abs(par6 - par1ComponentNetherBridgeStartPiece.getBoundingBox().minZ) > 112)
         {
-            StructureNetherBridgeEnd structurenetherbridgeend = StructureNetherBridgeEnd.func_40301_a(list, random, i, j, k, l, i1);
-            return structurenetherbridgeend;
+            ComponentNetherBridgeEnd componentnetherbridgeend = ComponentNetherBridgeEnd.func_40301_a(par2List, par3Random, par4, par5, par6, par7, par8);
+            return componentnetherbridgeend;
         }
-        List list1 = componentnetherbridgestartpiece.field_40294_b;
-        if (flag)
+
+        List list = par1ComponentNetherBridgeStartPiece.field_40294_b;
+
+        if (par9)
         {
-            list1 = componentnetherbridgestartpiece.field_40295_c;
+            list = par1ComponentNetherBridgeStartPiece.field_40295_c;
         }
-        ComponentNetherBridgePiece componentnetherbridgepiece = func_40284_a(componentnetherbridgestartpiece, list1, list, random, i, j, k, l, i1 + 1);
+
+        ComponentNetherBridgePiece componentnetherbridgepiece = getNextComponent(par1ComponentNetherBridgeStartPiece, list, par2List, par3Random, par4, par5, par6, par7, par8 + 1);
+
         if (componentnetherbridgepiece != null)
         {
-            list.add(componentnetherbridgepiece);
-            componentnetherbridgestartpiece.field_40293_d.add(componentnetherbridgepiece);
+            par2List.add(componentnetherbridgepiece);
+            par1ComponentNetherBridgeStartPiece.field_40293_d.add(componentnetherbridgepiece);
         }
+
         return componentnetherbridgepiece;
     }
 
-    protected StructureComponent func_40287_a(ComponentNetherBridgeStartPiece componentnetherbridgestartpiece, List list, Random random, int i, int j, boolean flag)
+    /**
+     * Gets the next component in any cardinal direction
+     */
+    protected StructureComponent getNextComponentNormal(ComponentNetherBridgeStartPiece par1ComponentNetherBridgeStartPiece, List par2List, Random par3Random, int par4, int par5, boolean par6)
     {
         switch (coordBaseMode)
         {
             case 2:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.minZ - 1, coordBaseMode, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.minX + par4, boundingBox.minY + par5, boundingBox.minZ - 1, coordBaseMode, getComponentType(), par6);
 
             case 0:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + i, boundingBox.minY + j, boundingBox.maxZ + 1, coordBaseMode, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.minX + par4, boundingBox.minY + par5, boundingBox.maxZ + 1, coordBaseMode, getComponentType(), par6);
 
             case 1:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.minX - 1, boundingBox.minY + par5, boundingBox.minZ + par4, coordBaseMode, getComponentType(), par6);
 
             case 3:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + j, boundingBox.minZ + i, coordBaseMode, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.maxX + 1, boundingBox.minY + par5, boundingBox.minZ + par4, coordBaseMode, getComponentType(), par6);
         }
+
         return null;
     }
 
-    protected StructureComponent func_40285_b(ComponentNetherBridgeStartPiece componentnetherbridgestartpiece, List list, Random random, int i, int j, boolean flag)
+    /**
+     * Gets the next component in the +/- X direction
+     */
+    protected StructureComponent getNextComponentX(ComponentNetherBridgeStartPiece par1ComponentNetherBridgeStartPiece, List par2List, Random par3Random, int par4, int par5, boolean par6)
     {
         switch (coordBaseMode)
         {
             case 2:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.minX - 1, boundingBox.minY + par4, boundingBox.minZ + par5, 1, getComponentType(), par6);
 
             case 0:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.minX - 1, boundingBox.minY + i, boundingBox.minZ + j, 1, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.minX - 1, boundingBox.minY + par4, boundingBox.minZ + par5, 1, getComponentType(), par6);
 
             case 1:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.minX + par5, boundingBox.minY + par4, boundingBox.minZ - 1, 2, getComponentType(), par6);
 
             case 3:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.minZ - 1, 2, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.minX + par5, boundingBox.minY + par4, boundingBox.minZ - 1, 2, getComponentType(), par6);
         }
+
         return null;
     }
 
-    protected StructureComponent func_40288_c(ComponentNetherBridgeStartPiece componentnetherbridgestartpiece, List list, Random random, int i, int j, boolean flag)
+    /**
+     * Gets the next component in the +/- Z direction
+     */
+    protected StructureComponent getNextComponentZ(ComponentNetherBridgeStartPiece par1ComponentNetherBridgeStartPiece, List par2List, Random par3Random, int par4, int par5, boolean par6)
     {
         switch (coordBaseMode)
         {
             case 2:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.maxX + 1, boundingBox.minY + par4, boundingBox.minZ + par5, 3, getComponentType(), par6);
 
             case 0:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.maxX + 1, boundingBox.minY + i, boundingBox.minZ + j, 3, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.maxX + 1, boundingBox.minY + par4, boundingBox.minZ + par5, 3, getComponentType(), par6);
 
             case 1:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.minX + par5, boundingBox.minY + par4, boundingBox.maxZ + 1, 0, getComponentType(), par6);
 
             case 3:
-                return func_40283_a(componentnetherbridgestartpiece, list, random, boundingBox.minX + j, boundingBox.minY + i, boundingBox.maxZ + 1, 0, getComponentType(), flag);
+                return getNextComponent(par1ComponentNetherBridgeStartPiece, par2List, par3Random, boundingBox.minX + par5, boundingBox.minY + par4, boundingBox.maxZ + 1, 0, getComponentType(), par6);
         }
+
         return null;
     }
 
-    protected static boolean func_40286_a(StructureBoundingBox structureboundingbox)
+    /**
+     * Checks if the bounding box's minY is > 10
+     */
+    protected static boolean isAboveGround(StructureBoundingBox par0StructureBoundingBox)
     {
-        return structureboundingbox != null && structureboundingbox.minY > 10;
+        return par0StructureBoundingBox != null && par0StructureBoundingBox.minY > 10;
     }
 }

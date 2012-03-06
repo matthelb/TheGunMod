@@ -2,35 +2,44 @@ package net.minecraft.src;
 
 import net.minecraft.server.MinecraftServer;
 
-public class WorldManager
-    implements IWorldAccess
+public class WorldManager implements IWorldAccess
 {
+    /** Reference to the MinecraftServer object. */
     private MinecraftServer mcServer;
+
+    /** The world itself. */
     private WorldServer world;
 
-    public WorldManager(MinecraftServer minecraftserver, WorldServer worldserver)
+    public WorldManager(MinecraftServer par1MinecraftServer, WorldServer par2WorldServer)
     {
-        mcServer = minecraftserver;
-        world = worldserver;
+        mcServer = par1MinecraftServer;
+        world = par2WorldServer;
     }
 
-    public void spawnParticle(String s, double d, double d1, double d2,
-            double d3, double d4, double d5)
+    /**
+     * Spawns a particle. Arg: particleType, x, y, z, velX, velY, velZ
+     */
+    public void spawnParticle(String s, double d, double d1, double d2, double d3, double d4, double d5)
     {
     }
 
-    public void obtainEntitySkin(Entity entity)
+    public void obtainEntitySkin(Entity par1Entity)
     {
-        mcServer.getEntityTracker(world.worldProvider.worldType).trackEntity(entity);
+        mcServer.getEntityTracker(world.worldProvider.worldType).trackEntity(par1Entity);
     }
 
-    public void releaseEntitySkin(Entity entity)
+    /**
+     * Decrement the reference counter for this entity's skin image data
+     */
+    public void releaseEntitySkin(Entity par1Entity)
     {
-        mcServer.getEntityTracker(world.worldProvider.worldType).untrackEntity(entity);
+        mcServer.getEntityTracker(world.worldProvider.worldType).untrackEntity(par1Entity);
     }
 
-    public void playSound(String s, double d, double d1, double d2,
-            float f, float f1)
+    /**
+     * Plays the specified sound. Arg: x, y, z, soundName, unknown1, unknown2
+     */
+    public void playSound(String s, double d, double d1, double d2, float f, float f1)
     {
     }
 
@@ -38,22 +47,32 @@ public class WorldManager
     {
     }
 
-    public void markBlockNeedsUpdate(int i, int j, int k)
+    public void markBlockNeedsUpdate(int par1, int par2, int par3)
     {
-        mcServer.configManager.markBlockNeedsUpdate(i, j, k, world.worldProvider.worldType);
+        mcServer.configManager.markBlockNeedsUpdate(par1, par2, par3, world.worldProvider.worldType);
     }
 
+    public void func_48414_b(int i, int j, int k)
+    {
+    }
+
+    /**
+     * Plays the specified record. Arg: recordName, x, y, z
+     */
     public void playRecord(String s, int i, int j, int k)
     {
     }
 
-    public void doNothingWithTileEntity(int i, int j, int k, TileEntity tileentity)
+    /**
+     * In all implementations, this method does nothing.
+     */
+    public void doNothingWithTileEntity(int par1, int par2, int par3, TileEntity par4TileEntity)
     {
-        mcServer.configManager.sentTileEntityToPlayer(i, j, k, tileentity);
+        mcServer.configManager.sentTileEntityToPlayer(par1, par2, par3, par4TileEntity);
     }
 
-    public void playAuxSFX(EntityPlayer entityplayer, int i, int j, int k, int l, int i1)
+    public void playAuxSFX(EntityPlayer par1EntityPlayer, int par2, int par3, int par4, int par5, int par6)
     {
-        mcServer.configManager.func_28171_a(entityplayer, j, k, l, 64D, world.worldProvider.worldType, new Packet61DoorChange(i, j, k, l, i1));
+        mcServer.configManager.func_28171_a(par1EntityPlayer, par3, par4, par5, 64D, world.worldProvider.worldType, new Packet61DoorChange(par2, par3, par4, par5, par6));
     }
 }

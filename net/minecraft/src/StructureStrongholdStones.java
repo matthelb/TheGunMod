@@ -8,9 +8,9 @@ class StructureStrongholdStones extends StructurePieceBlockSelector
     {
     }
 
-    public void selectBlocks(Random random, int i, int j, int k, boolean flag)
+    public void selectBlocks(Random par1Random, int par2, int par3, int par4, boolean par5)
     {
-        if (!flag)
+        if (!par5)
         {
             selectedBlockId = 0;
             selectedBlockMetaData = 0;
@@ -18,7 +18,8 @@ class StructureStrongholdStones extends StructurePieceBlockSelector
         else
         {
             selectedBlockId = Block.stoneBrick.blockID;
-            float f = random.nextFloat();
+            float f = par1Random.nextFloat();
+
             if (f < 0.2F)
             {
                 selectedBlockMetaData = 2;
@@ -39,7 +40,7 @@ class StructureStrongholdStones extends StructurePieceBlockSelector
         }
     }
 
-    StructureStrongholdStones(StructureStrongholdPieceWeight2 structurestrongholdpieceweight2)
+    StructureStrongholdStones(StructureStrongholdPieceWeight2 par1StructureStrongholdPieceWeight2)
     {
         this();
     }

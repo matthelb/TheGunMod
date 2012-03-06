@@ -4,9 +4,9 @@ import java.util.List;
 
 public class BiomeGenMushroomIsland extends BiomeGenBase
 {
-    public BiomeGenMushroomIsland(int i)
+    public BiomeGenMushroomIsland(int par1)
     {
-        super(i);
+        super(par1);
         biomeDecorator.treesPerChunk = -100;
         biomeDecorator.flowersPerChunk = -100;
         biomeDecorator.grassPerChunk = -100;

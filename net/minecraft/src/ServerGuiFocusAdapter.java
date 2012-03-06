@@ -5,11 +5,12 @@ import java.awt.event.FocusEvent;
 
 class ServerGuiFocusAdapter extends FocusAdapter
 {
+    /** Reference to the ServerGui object. */
     final ServerGUI mcServerGui;
 
-    ServerGuiFocusAdapter(ServerGUI servergui)
+    ServerGuiFocusAdapter(ServerGUI par1ServerGUI)
     {
-        mcServerGui = servergui;
+        mcServerGui = par1ServerGUI;
     }
 
     public void focusGained(FocusEvent focusevent)

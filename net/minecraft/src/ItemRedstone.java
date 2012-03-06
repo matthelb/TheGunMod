@@ -2,53 +2,66 @@ package net.minecraft.src;
 
 public class ItemRedstone extends Item
 {
-    public ItemRedstone(int i)
+    public ItemRedstone(int par1)
     {
-        super(i);
+        super(par1);
     }
 
-    public boolean onItemUse(ItemStack itemstack, EntityPlayer entityplayer, World world, int i, int j, int k, int l)
+    /**
+     * Callback for item usage. If the item does something special on right clicking, he will have one of those. Return
+     * True if something happen and false if it don't. This is for ITEMS, not BLOCKS !
+     */
+    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7)
     {
-        if (world.getBlockId(i, j, k) != Block.snow.blockID)
+        if (par3World.getBlockId(par4, par5, par6) != Block.snow.blockID)
         {
-            if (l == 0)
+            if (par7 == 0)
             {
-                j--;
+                par5--;
             }
-            if (l == 1)
+
+            if (par7 == 1)
             {
-                j++;
+                par5++;
             }
-            if (l == 2)
+
+            if (par7 == 2)
             {
-                k--;
+                par6--;
             }
-            if (l == 3)
+
+            if (par7 == 3)
             {
-                k++;
+                par6++;
             }
-            if (l == 4)
+
+            if (par7 == 4)
             {
-                i--;
+                par4--;
             }
-            if (l == 5)
+
+            if (par7 == 5)
             {
-                i++;
+                par4++;
             }
-            if (!world.isAirBlock(i, j, k))
+
+            if (!par3World.isAirBlock(par4, par5, par6))
             {
                 return false;
             }
         }
-        if (!entityplayer.canPlayerEdit(i, j, k))
+
+        if (!par2EntityPlayer.canPlayerEdit(par4, par5, par6))
         {
             return false;
         }
-        if (Block.redstoneWire.canPlaceBlockAt(world, i, j, k))
+
+        if (Block.redstoneWire.canPlaceBlockAt(par3World, par4, par5, par6))
         {
-            itemstack.stackSize--;
-            world.setBlockWithNotify(i, j, k, Block.redstoneWire.blockID);
+            par1ItemStack.stackSize--;
+            par3World.setBlockWithNotify(par4, par5, par6, Block.redstoneWire.blockID);
         }
+
         return true;
     }
 }

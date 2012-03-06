@@ -1,18 +1,21 @@
 package net.minecraft.src;
 
-public class InventoryCrafting
-    implements IInventory
+public class InventoryCrafting implements IInventory
 {
     private ItemStack stackList[];
     private int inventoryWidth;
+
+    /**
+     * Class containing the callbacks for the events on_GUIClosed and on_CraftMaxtrixChanged.
+     */
     private Container eventHandler;
 
-    public InventoryCrafting(Container container, int i, int j)
+    public InventoryCrafting(Container par1Container, int par2, int par3)
     {
-        int k = i * j;
-        stackList = new ItemStack[k];
-        eventHandler = container;
-        inventoryWidth = i;
+        int i = par2 * par3;
+        stackList = new ItemStack[i];
+        eventHandler = par1Container;
+        inventoryWidth = par2;
     }
 
     public int getSizeInventory()
@@ -20,52 +23,79 @@ public class InventoryCrafting
         return stackList.length;
     }
 
-    public ItemStack getStackInSlot(int i)
+    /**
+     * Returns the stack in slot i
+     */
+    public ItemStack getStackInSlot(int par1)
     {
-        if (i >= getSizeInventory())
+        if (par1 >= getSizeInventory())
         {
             return null;
         }
         else
         {
-            return stackList[i];
+            return stackList[par1];
         }
     }
 
-    public ItemStack getStackInRowAndColumn(int i, int j)
+    public ItemStack getStackInRowAndColumn(int par1, int par2)
     {
-        if (i < 0 || i >= inventoryWidth)
+        if (par1 < 0 || par1 >= inventoryWidth)
         {
             return null;
         }
         else
         {
-            int k = i + j * inventoryWidth;
-            return getStackInSlot(k);
+            int i = par1 + par2 * inventoryWidth;
+            return getStackInSlot(i);
         }
     }
 
+    /**
+     * Returns the name of the inventory.
+     */
     public String getInvName()
     {
-        return "Crafting";
+        return "container.crafting";
     }
 
-    public ItemStack decrStackSize(int i, int j)
+    public ItemStack func_48315_b(int par1)
     {
-        if (stackList[i] != null)
+        if (stackList[par1] != null)
         {
-            if (stackList[i].stackSize <= j)
+            ItemStack itemstack = stackList[par1];
+            stackList[par1] = null;
+            return itemstack;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /**
+     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
+     * stack.
+     */
+    public ItemStack decrStackSize(int par1, int par2)
+    {
+        if (stackList[par1] != null)
+        {
+            if (stackList[par1].stackSize <= par2)
             {
-                ItemStack itemstack = stackList[i];
-                stackList[i] = null;
+                ItemStack itemstack = stackList[par1];
+                stackList[par1] = null;
                 eventHandler.onCraftMatrixChanged(this);
                 return itemstack;
             }
-            ItemStack itemstack1 = stackList[i].splitStack(j);
-            if (stackList[i].stackSize == 0)
+
+            ItemStack itemstack1 = stackList[par1].splitStack(par2);
+
+            if (stackList[par1].stackSize == 0)
             {
-                stackList[i] = null;
+                stackList[par1] = null;
             }
+
             eventHandler.onCraftMatrixChanged(this);
             return itemstack1;
         }
@@ -75,22 +105,35 @@ public class InventoryCrafting
         }
     }
 
-    public void setInventorySlotContents(int i, ItemStack itemstack)
+    /**
+     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
+     */
+    public void setInventorySlotContents(int par1, ItemStack par2ItemStack)
     {
-        stackList[i] = itemstack;
+        stackList[par1] = par2ItemStack;
         eventHandler.onCraftMatrixChanged(this);
     }
 
+    /**
+     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended. *Isn't
+     * this more of a set than a get?*
+     */
     public int getInventoryStackLimit()
     {
         return 64;
     }
 
+    /**
+     * Called when an the contents of an Inventory change, usually
+     */
     public void onInventoryChanged()
     {
     }
 
-    public boolean isUseableByPlayer(EntityPlayer entityplayer)
+    /**
+     * Do not make give this method the name canInteractWith because it clashes with Container
+     */
+    public boolean isUseableByPlayer(EntityPlayer par1EntityPlayer)
     {
         return true;
     }

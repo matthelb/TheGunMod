@@ -1,0 +1,80 @@
+package net.minecraft.src;
+
+import java.util.*;
+
+public class EntityAINearestAttackableTarget extends EntityAITarget
+{
+    EntityLiving field_48298_a;
+    Class field_48297_b;
+    int field_48295_f;
+    private EntityAINearestAttackableTargetSorter field_48296_g;
+
+    public EntityAINearestAttackableTarget(EntityLiving par1EntityLiving, Class par2Class, float par3, int par4, boolean par5)
+    {
+        this(par1EntityLiving, par2Class, par3, par4, par5, false);
+    }
+
+    public EntityAINearestAttackableTarget(EntityLiving par1EntityLiving, Class par2Class, float par3, int par4, boolean par5, boolean par6)
+    {
+        super(par1EntityLiving, par3, par5, par6);
+        field_48297_b = par2Class;
+        field_48288_d = par3;
+        field_48295_f = par4;
+        field_48296_g = new EntityAINearestAttackableTargetSorter(this, par1EntityLiving);
+        func_46087_a(1);
+    }
+
+    /**
+     * Returns whether the EntityAIBase should begin execution.
+     */
+    public boolean shouldExecute()
+    {
+        label0:
+        {
+            if (field_48295_f > 0 && field_48291_c.getRNG().nextInt(field_48295_f) != 0)
+            {
+                return false;
+            }
+
+            if (field_48297_b == (net.minecraft.src.EntityPlayer.class))
+            {
+                EntityPlayer entityplayer = field_48291_c.worldObj.getClosestVulnerablePlayerToEntity(field_48291_c, field_48288_d);
+
+                if (func_48284_a(entityplayer, false))
+                {
+                    field_48298_a = entityplayer;
+                    return true;
+                }
+
+                break label0;
+            }
+
+            List list = field_48291_c.worldObj.getEntitiesWithinAABB(field_48297_b, field_48291_c.boundingBox.expand(field_48288_d, 4D, field_48288_d));
+            Collections.sort(list, field_48296_g);
+            Iterator iterator = list.iterator();
+            EntityLiving entityliving;
+
+            do
+            {
+                if (!iterator.hasNext())
+                {
+                    break label0;
+                }
+
+                Entity entity = (Entity)iterator.next();
+                entityliving = (EntityLiving)entity;
+            }
+            while (!func_48284_a(entityliving, false));
+
+            field_48298_a = entityliving;
+            return true;
+        }
+        return false;
+    }
+
+    public void func_46088_e()
+    {
+        field_48291_c.func_48327_b(field_48298_a);
+        super.func_46088_e();
+    }
+}

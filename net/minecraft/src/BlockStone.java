@@ -4,12 +4,15 @@ import java.util.Random;
 
 public class BlockStone extends Block
 {
-    public BlockStone(int i, int j)
+    public BlockStone(int par1, int par2)
     {
-        super(i, j, Material.rock);
+        super(par1, par2, Material.rock);
     }
 
-    public int idDropped(int i, Random random, int j)
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
     {
         return Block.cobblestone.blockID;
     }

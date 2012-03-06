@@ -5,36 +5,63 @@ import java.util.Random;
 public class EntityAIWatchClosest extends EntityAIBase
 {
     private EntityLiving field_46110_a;
-    private EntityLiving field_46108_b;
-    private World field_46109_c;
+    private Entity field_48242_b;
     private float field_46106_d;
     private int field_46107_e;
+    private float field_48241_e;
+    private Class field_48240_f;
 
-    public EntityAIWatchClosest(EntityLiving entityliving, World world, float f)
+    public EntityAIWatchClosest(EntityLiving par1EntityLiving, Class par2Class, float par3)
     {
-        field_46110_a = entityliving;
-        field_46109_c = world;
-        field_46106_d = f;
-        func_46087_a(3);
+        field_46110_a = par1EntityLiving;
+        field_48240_f = par2Class;
+        field_46106_d = par3;
+        field_48241_e = 0.02F;
+        func_46087_a(2);
     }
 
-    public boolean func_46090_a()
+    public EntityAIWatchClosest(EntityLiving par1EntityLiving, Class par2Class, float par3, float par4)
     {
-        if (field_46110_a.getRNG().nextFloat() >= 0.02F)
+        field_46110_a = par1EntityLiving;
+        field_48240_f = par2Class;
+        field_46106_d = par3;
+        field_48241_e = par4;
+        func_46087_a(2);
+    }
+
+    /**
+     * Returns whether the EntityAIBase should begin execution.
+     */
+    public boolean shouldExecute()
+    {
+        if (field_46110_a.getRNG().nextFloat() >= field_48241_e)
         {
             return false;
         }
-        field_46108_b = field_46109_c.getClosestPlayerToEntity(field_46110_a, field_46106_d);
-        return field_46108_b != null;
+
+        if (field_48240_f == (net.minecraft.src.EntityPlayer.class))
+        {
+            field_48242_b = field_46110_a.worldObj.getClosestPlayerToEntity(field_46110_a, field_46106_d);
+        }
+        else
+        {
+            field_48242_b = field_46110_a.worldObj.func_48085_a(field_48240_f, field_46110_a.boundingBox.expand(field_46106_d, 3D, field_46106_d), field_46110_a);
+        }
+
+        return field_48242_b != null;
     }
 
-    public boolean func_46092_g()
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
+    public boolean continueExecuting()
     {
-        if (!field_46108_b.isEntityAlive())
+        if (!field_48242_b.isEntityAlive())
         {
             return false;
         }
-        if (field_46110_a.getDistanceSqToEntity(field_46108_b) > (double)(field_46106_d * field_46106_d))
+
+        if (field_46110_a.getDistanceSqToEntity(field_48242_b) > (double)(field_46106_d * field_46106_d))
         {
             return false;
         }
@@ -49,29 +76,14 @@ public class EntityAIWatchClosest extends EntityAIBase
         field_46107_e = 40 + field_46110_a.getRNG().nextInt(40);
     }
 
-    public void func_46085_d()
+    public void resetTask()
     {
-        field_46108_b = null;
+        field_48242_b = null;
     }
 
-    public void func_46089_b()
+    public void updateTask()
     {
-        field_46110_a.getLookHelper().func_46060_a(field_46108_b.posX, field_46108_b.posY + (double)field_46108_b.getEyeHeight(), field_46108_b.posZ, 10F, field_46110_a.getVerticalFaceSpeed());
+        field_46110_a.getLookHelper().setLookPosition(field_48242_b.posX, field_48242_b.posY + (double)field_48242_b.getEyeHeight(), field_48242_b.posZ, 10F, field_46110_a.getVerticalFaceSpeed());
         field_46107_e--;
-    }
-
-    public int func_46091_c()
-    {
-        return super.func_46091_c();
-    }
-
-    public void func_46087_a(int i)
-    {
-        super.func_46087_a(i);
-    }
-
-    public boolean func_46086_f()
-    {
-        return super.func_46086_f();
     }
 }

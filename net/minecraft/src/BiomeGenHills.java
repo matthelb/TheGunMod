@@ -2,8 +2,8 @@ package net.minecraft.src;
 
 public class BiomeGenHills extends BiomeGenBase
 {
-    protected BiomeGenHills(int i)
+    protected BiomeGenHills(int par1)
     {
-        super(i);
+        super(par1);
     }
 }

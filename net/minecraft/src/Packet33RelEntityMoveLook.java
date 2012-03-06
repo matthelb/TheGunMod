@@ -9,39 +9,46 @@ public class Packet33RelEntityMoveLook extends Packet30Entity
         rotating = true;
     }
 
-    public Packet33RelEntityMoveLook(int i, byte byte0, byte byte1, byte byte2, byte byte3, byte byte4)
+    public Packet33RelEntityMoveLook(int par1, byte par2, byte par3, byte par4, byte par5, byte par6)
     {
-        super(i);
-        xPosition = byte0;
-        yPosition = byte1;
-        zPosition = byte2;
-        yaw = byte3;
-        pitch = byte4;
+        super(par1);
+        xPosition = par2;
+        yPosition = par3;
+        zPosition = par4;
+        yaw = par5;
+        pitch = par6;
         rotating = true;
     }
 
-    public void readPacketData(DataInputStream datainputstream)
-    throws IOException
+    /**
+     * Abstract. Reads the raw packet data from the data stream.
+     */
+    public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        super.readPacketData(datainputstream);
-        xPosition = datainputstream.readByte();
-        yPosition = datainputstream.readByte();
-        zPosition = datainputstream.readByte();
-        yaw = datainputstream.readByte();
-        pitch = datainputstream.readByte();
+        super.readPacketData(par1DataInputStream);
+        xPosition = par1DataInputStream.readByte();
+        yPosition = par1DataInputStream.readByte();
+        zPosition = par1DataInputStream.readByte();
+        yaw = par1DataInputStream.readByte();
+        pitch = par1DataInputStream.readByte();
     }
 
-    public void writePacketData(DataOutputStream dataoutputstream)
-    throws IOException
+    /**
+     * Abstract. Writes the raw packet data to the data stream.
+     */
+    public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        super.writePacketData(dataoutputstream);
-        dataoutputstream.writeByte(xPosition);
-        dataoutputstream.writeByte(yPosition);
-        dataoutputstream.writeByte(zPosition);
-        dataoutputstream.writeByte(yaw);
-        dataoutputstream.writeByte(pitch);
+        super.writePacketData(par1DataOutputStream);
+        par1DataOutputStream.writeByte(xPosition);
+        par1DataOutputStream.writeByte(yPosition);
+        par1DataOutputStream.writeByte(zPosition);
+        par1DataOutputStream.writeByte(yaw);
+        par1DataOutputStream.writeByte(pitch);
     }
 
+    /**
+     * Abstract. Return the size of the packet (not counting the header).
+     */
     public int getPacketSize()
     {
         return 9;

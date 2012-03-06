@@ -2,40 +2,55 @@ package net.minecraft.src;
 
 import java.util.Random;
 
-public abstract class EntityMob extends EntityCreature
-    implements IMob
+public abstract class EntityMob extends EntityCreature implements IMob
 {
+    /** How much damage this mob's attacks deal */
     protected int attackStrength;
 
-    public EntityMob(World world)
+    public EntityMob(World par1World)
     {
-        super(world);
+        super(par1World);
         attackStrength = 2;
         experienceValue = 5;
     }
 
+    /**
+     * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
+     * use this to react to sunlight and start to burn.
+     */
     public void onLivingUpdate()
     {
         float f = getEntityBrightness(1.0F);
+
         if (f > 0.5F)
         {
             entityAge += 2;
         }
+
         super.onLivingUpdate();
     }
 
+    /**
+     * Called to update the entity's position/logic.
+     */
     public void onUpdate()
     {
         super.onUpdate();
+
         if (!worldObj.isRemote && worldObj.difficultySetting == 0)
         {
             setEntityDead();
         }
     }
 
+    /**
+     * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
+     * (Animals, Spiders at day, peaceful PigZombies).
+     */
     protected Entity findPlayerToAttack()
     {
         EntityPlayer entityplayer = worldObj.getClosestVulnerablePlayerToEntity(this, 16D);
+
         if (entityplayer != null && canEntityBeSeen(entityplayer))
         {
             return entityplayer;
@@ -46,20 +61,25 @@ public abstract class EntityMob extends EntityCreature
         }
     }
 
-    public boolean attackEntityFrom(DamageSource damagesource, int i)
+    /**
+     * Called when the entity is attacked.
+     */
+    public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
-        if (super.attackEntityFrom(damagesource, i))
+        if (super.attackEntityFrom(par1DamageSource, par2))
         {
-            Entity entity = damagesource.getEntity();
+            Entity entity = par1DamageSource.getEntity();
+
             if (riddenByEntity == entity || ridingEntity == entity)
             {
                 return true;
             }
+
             if (entity != this)
             {
                 entityToAttack = entity;
-                entityLivingToAttack = (entity instanceof EntityLiving) ? (EntityLiving)entity : null;
             }
+
             return true;
         }
         else
@@ -68,42 +88,58 @@ public abstract class EntityMob extends EntityCreature
         }
     }
 
-    public boolean attackEntityAsMob(Entity entity)
+    public boolean attackEntityAsMob(Entity par1Entity)
     {
         int i = attackStrength;
+
         if (isPotionActive(Potion.damageBoost))
         {
             i += 3 << getActivePotionEffect(Potion.damageBoost).getAmplifier();
         }
+
         if (isPotionActive(Potion.weakness))
         {
             i -= 2 << getActivePotionEffect(Potion.weakness).getAmplifier();
         }
-        return entity.attackEntityFrom(DamageSource.causeMobDamage(this), i);
+
+        return par1Entity.attackEntityFrom(DamageSource.causeMobDamage(this), i);
     }
 
-    protected void attackEntity(Entity entity, float f)
+    /**
+     * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
+     */
+    protected void attackEntity(Entity par1Entity, float par2)
     {
-        if (attackTime <= 0 && f < 2.0F && entity.boundingBox.maxY > boundingBox.minY && entity.boundingBox.minY < boundingBox.maxY)
+        if (attackTime <= 0 && par2 < 2.0F && par1Entity.boundingBox.maxY > boundingBox.minY && par1Entity.boundingBox.minY < boundingBox.maxY)
         {
             attackTime = 20;
-            attackEntityAsMob(entity);
+            attackEntityAsMob(par1Entity);
         }
     }
 
-    public float getBlockPathWeight(int i, int j, int k)
+    /**
+     * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block.
+     * Args: x, y, z
+     */
+    public float getBlockPathWeight(int par1, int par2, int par3)
     {
-        return 0.5F - worldObj.getLightBrightness(i, j, k);
+        return 0.5F - worldObj.getLightBrightness(par1, par2, par3);
     }
 
-    public void writeEntityToNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to write subclass entity data to NBT.
+     */
+    public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.writeEntityToNBT(nbttagcompound);
+        super.writeEntityToNBT(par1NBTTagCompound);
     }
 
-    public void readEntityFromNBT(NBTTagCompound nbttagcompound)
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
-        super.readEntityFromNBT(nbttagcompound);
+        super.readEntityFromNBT(par1NBTTagCompound);
     }
 
     protected boolean isValidLightLevel()
@@ -111,21 +147,28 @@ public abstract class EntityMob extends EntityCreature
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(boundingBox.minY);
         int k = MathHelper.floor_double(posZ);
+
         if (worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) > rand.nextInt(32))
         {
             return false;
         }
+
         int l = worldObj.getBlockLightValue(i, j, k);
-        if (worldObj.getIsThundering())
+
+        if (worldObj.isThundering())
         {
             int i1 = worldObj.skylightSubtracted;
             worldObj.skylightSubtracted = 10;
             l = worldObj.getBlockLightValue(i, j, k);
             worldObj.skylightSubtracted = i1;
         }
+
         return l <= rand.nextInt(8);
     }
 
+    /**
+     * Checks if the entity's current position is a valid location to spawn this entity.
+     */
     public boolean getCanSpawnHere()
     {
         return isValidLightLevel() && super.getCanSpawnHere();

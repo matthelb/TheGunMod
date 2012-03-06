@@ -2,18 +2,18 @@ package net.minecraft.src;
 
 public class EnchantmentArrowInfinite extends Enchantment
 {
-    public EnchantmentArrowInfinite(int i, int j)
+    public EnchantmentArrowInfinite(int par1, int par2)
     {
-        super(i, j, EnumEnchantmentType.bow);
+        super(par1, par2, EnumEnchantmentType.bow);
         setName("arrowInfinite");
     }
 
-    public int getMinEnchantability(int i)
+    public int getMinEnchantability(int par1)
     {
         return 20;
     }
 
-    public int getMaxEnchantability(int i)
+    public int getMaxEnchantability(int par1)
     {
         return 50;
     }
