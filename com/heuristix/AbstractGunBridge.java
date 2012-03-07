@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public abstract class AbstractGunBridge implements GunBridge {
 
-    public static final String VERSION = "0.9.71";
+    public static final String VERSION = "0.9.8";
 
     public static final List<Pair<String, String>> OBFUSCATED_CLASS_NAMES = new LinkedList<Pair<String, String>>();
 
@@ -38,6 +38,7 @@ public abstract class AbstractGunBridge implements GunBridge {
 
     static {
         //add additional Pairs as obfuscations increase
+        OBFUSCATED_CLASS_NAMES.add(new Pair("wz", "acl"));
         OBFUSCATED_CLASS_NAMES.add(new Pair("vq", "aar"));
         OBFUSCATED_CLASS_NAMES.add(new Pair("ry", "nq"));
         OBFUSCATED_CLASS_NAMES.add(new Pair("rv", "wd"));
