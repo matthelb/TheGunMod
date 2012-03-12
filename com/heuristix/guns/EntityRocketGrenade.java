@@ -1,5 +1,6 @@
 package com.heuristix.guns;
 
+import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.World;
 
@@ -57,4 +58,11 @@ public class EntityRocketGrenade extends EntityGrenade {
         }
     }
 
+    @Override
+    public boolean onEntityHit(Entity hit) {
+        if(!worldObj.isRemote) {
+            worldObj.createExplosion(this, posX, posY, posZ, getDamage());
+        }
+        return true;
+    }
 }
