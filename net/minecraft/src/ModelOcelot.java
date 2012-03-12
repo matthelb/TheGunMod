@@ -170,7 +170,7 @@ public class ModelOcelot extends ModelBase
             field_48219_f.rotateAngleX = ((float)Math.PI / 2F);
             field_48227_o = 2;
         }
-        else if (entityocelot.func_48141_af())
+        else if (entityocelot.isSitting())
         {
             field_48226_n.rotateAngleX = ((float)Math.PI / 4F);
             field_48226_n.rotationPointY += -4F;

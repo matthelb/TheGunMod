@@ -54,6 +54,9 @@ public abstract class EntityWaterMob extends EntityCreature
         return true;
     }
 
+    /**
+     * Get the experience points the entity currently has.
+     */
     protected int getExperiencePoints(EntityPlayer par1EntityPlayer)
     {
         return 1 + worldObj.rand.nextInt(3);

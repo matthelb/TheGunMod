@@ -93,7 +93,7 @@ public class BlockSign extends BlockContainer
         return false;
     }
 
-    public boolean func_48204_b(IBlockAccess par1IBlockAccess, int par2, int par3, int i)
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int i)
     {
         return true;
     }

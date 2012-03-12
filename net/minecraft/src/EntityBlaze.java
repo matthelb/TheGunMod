@@ -108,7 +108,7 @@ public class EntityBlaze extends EntityMob
 
             if (getEntityToAttack() != null && getEntityToAttack().posY + (double)getEntityToAttack().getEyeHeight() > posY + (double)getEyeHeight() + (double)heightOffset)
             {
-                motionY = motionY + (0.3D - motionY) * 0.3D;
+                motionY = motionY + (0.30000001192092896D - motionY) * 0.30000001192092896D;
             }
         }
 
@@ -119,7 +119,7 @@ public class EntityBlaze extends EntityMob
 
         if (!onGround && motionY < 0.0D)
         {
-            motionY *= 0.6D;
+            motionY *= 0.59999999999999998D;
         }
 
         for (int i = 0; i < 2; i++)

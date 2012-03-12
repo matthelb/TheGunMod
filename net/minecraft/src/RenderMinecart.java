@@ -25,7 +25,7 @@ public class RenderMinecart extends Render
         double d = par1EntityMinecart.lastTickPosX + (par1EntityMinecart.posX - par1EntityMinecart.lastTickPosX) * (double)par9;
         double d1 = par1EntityMinecart.lastTickPosY + (par1EntityMinecart.posY - par1EntityMinecart.lastTickPosY) * (double)par9;
         double d2 = par1EntityMinecart.lastTickPosZ + (par1EntityMinecart.posZ - par1EntityMinecart.lastTickPosZ) * (double)par9;
-        double d3 = 0.3D;
+        double d3 = 0.30000001192092896D;
         Vec3D vec3d = par1EntityMinecart.func_514_g(d, d1, d2);
         float f3 = par1EntityMinecart.prevRotationPitch + (par1EntityMinecart.rotationPitch - par1EntityMinecart.prevRotationPitch) * par9;
 

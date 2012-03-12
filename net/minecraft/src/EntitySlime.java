@@ -211,7 +211,7 @@ public class EntitySlime extends EntityLiving implements IMob
         {
             int i = getSlimeSize();
 
-            if (canEntityBeSeen(par1EntityPlayer) && (double)getDistanceToEntity(par1EntityPlayer) < 0.6D * (double)i && par1EntityPlayer.attackEntityFrom(DamageSource.causeMobDamage(this), func_40130_ai()))
+            if (canEntityBeSeen(par1EntityPlayer) && (double)getDistanceToEntity(par1EntityPlayer) < 0.59999999999999998D * (double)i && par1EntityPlayer.attackEntityFrom(DamageSource.causeMobDamage(this), func_40130_ai()))
             {
                 worldObj.playSoundAtEntity(this, "mob.slimeattack", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             }

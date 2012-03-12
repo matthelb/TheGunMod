@@ -12,10 +12,10 @@ public class EntityNoteFX extends EntityFX
     public EntityNoteFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, float par14)
     {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
-        motionX *= 0.01D;
-        motionY *= 0.01D;
-        motionZ *= 0.01D;
-        motionY += 0.2D;
+        motionX *= 0.0099999997764825821D;
+        motionY *= 0.0099999997764825821D;
+        motionZ *= 0.0099999997764825821D;
+        motionY += 0.20000000000000001D;
         particleRed = MathHelper.sin(((float)par8 + 0.0F) * (float)Math.PI * 2.0F) * 0.65F + 0.35F;
         particleGreen = MathHelper.sin(((float)par8 + 0.3333333F) * (float)Math.PI * 2.0F) * 0.65F + 0.35F;
         particleBlue = MathHelper.sin(((float)par8 + 0.6666667F) * (float)Math.PI * 2.0F) * 0.65F + 0.35F;
@@ -63,18 +63,18 @@ public class EntityNoteFX extends EntityFX
 
         if (posY == prevPosY)
         {
-            motionX *= 1.1D;
-            motionZ *= 1.1D;
+            motionX *= 1.1000000000000001D;
+            motionZ *= 1.1000000000000001D;
         }
 
-        motionX *= 0.66D;
-        motionY *= 0.66D;
-        motionZ *= 0.66D;
+        motionX *= 0.6600000262260437D;
+        motionY *= 0.6600000262260437D;
+        motionZ *= 0.6600000262260437D;
 
         if (onGround)
         {
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
         }
     }
 }

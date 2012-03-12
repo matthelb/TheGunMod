@@ -186,6 +186,9 @@ public abstract class NetHandler
         registerPacket(par1Packet8UpdateHealth);
     }
 
+    /**
+     * respawns the player
+     */
     public void handleRespawn(Packet9Respawn par1Packet9Respawn)
     {
         registerPacket(par1Packet9Respawn);
@@ -296,41 +299,65 @@ public abstract class NetHandler
         registerPacket(par1Packet61DoorChange);
     }
 
+    /**
+     * Handle a server ping packet.
+     */
     public void handleServerPing(Packet254ServerPing par1Packet254ServerPing)
     {
         registerPacket(par1Packet254ServerPing);
     }
 
+    /**
+     * Handle an entity effect packet.
+     */
     public void handleEntityEffect(Packet41EntityEffect par1Packet41EntityEffect)
     {
         registerPacket(par1Packet41EntityEffect);
     }
 
+    /**
+     * Handle a remove entity effect packet.
+     */
     public void handleRemoveEntityEffect(Packet42RemoveEntityEffect par1Packet42RemoveEntityEffect)
     {
         registerPacket(par1Packet42RemoveEntityEffect);
     }
 
+    /**
+     * Handle a player information packet.
+     */
     public void handlePlayerInfo(Packet201PlayerInfo par1Packet201PlayerInfo)
     {
         registerPacket(par1Packet201PlayerInfo);
     }
 
+    /**
+     * Handle a keep alive packet.
+     */
     public void handleKeepAlive(Packet0KeepAlive par1Packet0KeepAlive)
     {
         registerPacket(par1Packet0KeepAlive);
     }
 
+    /**
+     * Handle an experience packet.
+     */
     public void handleExperience(Packet43Experience par1Packet43Experience)
     {
         registerPacket(par1Packet43Experience);
     }
 
+    /**
+     * Handle a creative slot packet.
+     */
     public void handleCreativeSetSlot(Packet107CreativeSetSlot par1Packet107CreativeSetSlot)
     {
         registerPacket(par1Packet107CreativeSetSlot);
     }
 
+    /**
+     * Handle a entity experience orb packet.
+     */
     public void handleEntityExpOrb(Packet26EntityExpOrb par1Packet26EntityExpOrb)
     {
         registerPacket(par1Packet26EntityExpOrb);

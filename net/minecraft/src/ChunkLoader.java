@@ -6,38 +6,38 @@ public class ChunkLoader
     {
     }
 
-    public static AnvilConverterData func_48485_a(NBTTagCompound par0NBTTagCompound)
+    public static AnvilConverterData load(NBTTagCompound par0NBTTagCompound)
     {
         int i = par0NBTTagCompound.getInteger("xPos");
         int j = par0NBTTagCompound.getInteger("zPos");
         AnvilConverterData anvilconverterdata = new AnvilConverterData(i, j);
-        anvilconverterdata.field_48603_g = par0NBTTagCompound.getByteArray("Blocks");
-        anvilconverterdata.field_48602_f = new NibbleArrayReader(par0NBTTagCompound.getByteArray("Data"), 7);
-        anvilconverterdata.field_48605_e = new NibbleArrayReader(par0NBTTagCompound.getByteArray("SkyLight"), 7);
-        anvilconverterdata.field_48604_d = new NibbleArrayReader(par0NBTTagCompound.getByteArray("BlockLight"), 7);
-        anvilconverterdata.field_48607_c = par0NBTTagCompound.getByteArray("HeightMap");
-        anvilconverterdata.field_48606_b = par0NBTTagCompound.getBoolean("TerrainPopulated");
-        anvilconverterdata.field_48612_h = par0NBTTagCompound.getTagList("Entities");
-        anvilconverterdata.field_48613_i = par0NBTTagCompound.getTagList("TileEntities");
-        anvilconverterdata.field_48610_j = par0NBTTagCompound.getTagList("TileTicks");
-        anvilconverterdata.field_48608_a = par0NBTTagCompound.getLong("LastUpdate");
+        anvilconverterdata.blocks = par0NBTTagCompound.getByteArray("Blocks");
+        anvilconverterdata.data = new NibbleArrayReader(par0NBTTagCompound.getByteArray("Data"), 7);
+        anvilconverterdata.skyLight = new NibbleArrayReader(par0NBTTagCompound.getByteArray("SkyLight"), 7);
+        anvilconverterdata.blockLight = new NibbleArrayReader(par0NBTTagCompound.getByteArray("BlockLight"), 7);
+        anvilconverterdata.heightmap = par0NBTTagCompound.getByteArray("HeightMap");
+        anvilconverterdata.terrainPopulated = par0NBTTagCompound.getBoolean("TerrainPopulated");
+        anvilconverterdata.entities = par0NBTTagCompound.getTagList("Entities");
+        anvilconverterdata.tileEntities = par0NBTTagCompound.getTagList("TileEntities");
+        anvilconverterdata.tileTicks = par0NBTTagCompound.getTagList("TileTicks");
+        anvilconverterdata.lastUpdated = par0NBTTagCompound.getLong("LastUpdate");
         return anvilconverterdata;
     }
 
-    public static void func_48486_a(AnvilConverterData par0AnvilConverterData, NBTTagCompound par1NBTTagCompound, WorldChunkManager par2WorldChunkManager)
+    public static void convertToAnvilFormat(AnvilConverterData par0AnvilConverterData, NBTTagCompound par1NBTTagCompound, WorldChunkManager par2WorldChunkManager)
     {
-        par1NBTTagCompound.setInteger("xPos", par0AnvilConverterData.field_48611_k);
-        par1NBTTagCompound.setInteger("zPos", par0AnvilConverterData.field_48609_l);
-        par1NBTTagCompound.setLong("LastUpdate", par0AnvilConverterData.field_48608_a);
-        int ai[] = new int[par0AnvilConverterData.field_48607_c.length];
+        par1NBTTagCompound.setInteger("xPos", par0AnvilConverterData.x);
+        par1NBTTagCompound.setInteger("zPos", par0AnvilConverterData.z);
+        par1NBTTagCompound.setLong("LastUpdate", par0AnvilConverterData.lastUpdated);
+        int ai[] = new int[par0AnvilConverterData.heightmap.length];
 
-        for (int i = 0; i < par0AnvilConverterData.field_48607_c.length; i++)
+        for (int i = 0; i < par0AnvilConverterData.heightmap.length; i++)
         {
-            ai[i] = par0AnvilConverterData.field_48607_c[i];
+            ai[i] = par0AnvilConverterData.heightmap[i];
         }
 
         par1NBTTagCompound.func_48183_a("HeightMap", ai);
-        par1NBTTagCompound.setBoolean("TerrainPopulated", par0AnvilConverterData.field_48606_b);
+        par1NBTTagCompound.setBoolean("TerrainPopulated", par0AnvilConverterData.terrainPopulated);
         NBTTagList nbttaglist = new NBTTagList("Sections");
 
         for (int j = 0; j < 8; j++)
@@ -60,7 +60,7 @@ public class ChunkLoader
                         }
 
                         int l1 = l << 11 | k1 << 7 | j1 + (j << 4);
-                        byte byte0 = par0AnvilConverterData.field_48603_g[l1];
+                        byte byte0 = par0AnvilConverterData.blocks[l1];
 
                         if (byte0 != 0)
                         {
@@ -91,11 +91,11 @@ public class ChunkLoader
                     for (int k2 = 0; k2 < 16; k2++)
                     {
                         int l2 = i2 << 11 | k2 << 7 | j2 + (j << 4);
-                        byte byte1 = par0AnvilConverterData.field_48603_g[l2];
+                        byte byte1 = par0AnvilConverterData.blocks[l2];
                         abyte1[j2 << 8 | k2 << 4 | i2] = (byte)(byte1 & 0xff);
-                        nibblearray.set(i2, j2, k2, par0AnvilConverterData.field_48602_f.func_48508_a(i2, j2 + (j << 4), k2));
-                        nibblearray1.set(i2, j2, k2, par0AnvilConverterData.field_48605_e.func_48508_a(i2, j2 + (j << 4), k2));
-                        nibblearray2.set(i2, j2, k2, par0AnvilConverterData.field_48604_d.func_48508_a(i2, j2 + (j << 4), k2));
+                        nibblearray.set(i2, j2, k2, par0AnvilConverterData.data.get(i2, j2 + (j << 4), k2));
+                        nibblearray1.set(i2, j2, k2, par0AnvilConverterData.skyLight.get(i2, j2 + (j << 4), k2));
+                        nibblearray2.set(i2, j2, k2, par0AnvilConverterData.blockLight.get(i2, j2 + (j << 4), k2));
                     }
                 }
             }
@@ -116,17 +116,17 @@ public class ChunkLoader
         {
             for (int i1 = 0; i1 < 16; i1++)
             {
-                abyte0[i1 << 4 | k] = (byte)(par2WorldChunkManager.getBiomeGenAt(par0AnvilConverterData.field_48611_k << 4 | k, par0AnvilConverterData.field_48609_l << 4 | i1).biomeID & 0xff);
+                abyte0[i1 << 4 | k] = (byte)(par2WorldChunkManager.getBiomeGenAt(par0AnvilConverterData.x << 4 | k, par0AnvilConverterData.z << 4 | i1).biomeID & 0xff);
             }
         }
 
         par1NBTTagCompound.setByteArray("Biomes", abyte0);
-        par1NBTTagCompound.setTag("Entities", par0AnvilConverterData.field_48612_h);
-        par1NBTTagCompound.setTag("TileEntities", par0AnvilConverterData.field_48613_i);
+        par1NBTTagCompound.setTag("Entities", par0AnvilConverterData.entities);
+        par1NBTTagCompound.setTag("TileEntities", par0AnvilConverterData.tileEntities);
 
-        if (par0AnvilConverterData.field_48610_j != null)
+        if (par0AnvilConverterData.tileTicks != null)
         {
-            par1NBTTagCompound.setTag("TileTicks", par0AnvilConverterData.field_48610_j);
+            par1NBTTagCompound.setTag("TileTicks", par0AnvilConverterData.tileTicks);
         }
     }
 }

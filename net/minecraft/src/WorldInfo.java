@@ -45,6 +45,8 @@ public class WorldInfo
 
     /** Number of ticks untils next thunderbolt. */
     private int thunderTime;
+
+    /** Indicates the type of the game. 0 for survival, 1 for creative. */
     private int gameType;
 
     /** are map structures going to be generated (e.g. strongholds) */
@@ -420,6 +422,9 @@ public class WorldInfo
         rainTime = par1;
     }
 
+    /**
+     * Get the game type, 0 for survival, 1 for creative.
+     */
     public int getGameType()
     {
         return gameType;
@@ -446,7 +451,7 @@ public class WorldInfo
         return terrainType;
     }
 
-    public void func_48619_a(WorldType par1WorldType)
+    public void setTerrainType(WorldType par1WorldType)
     {
         terrainType = par1WorldType;
     }

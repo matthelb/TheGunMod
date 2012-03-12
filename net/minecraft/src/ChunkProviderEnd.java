@@ -191,8 +191,8 @@ public class ChunkProviderEnd implements IChunkProvider
             par1ArrayOfDouble = new double[par5 * par6 * par7];
         }
 
-        double d = 684.412D;
-        double d1 = 684.412D;
+        double d = 684.41200000000003D;
+        double d1 = 684.41200000000003D;
         field_40382_f = field_40388_a.generateNoiseOctaves(field_40382_f, par2, par4, par5, par7, 1.121D, 1.121D, 0.5D);
         field_40383_g = field_40386_b.generateNoiseOctaves(field_40383_g, par2, par4, par5, par7, 200D, 200D, 0.5D);
         d *= 2D;
@@ -217,7 +217,7 @@ public class ChunkProviderEnd implements IChunkProvider
 
                 if (d3 < 0.0D)
                 {
-                    d3 = -d3 * 0.3D;
+                    d3 = -d3 * 0.29999999999999999D;
                 }
 
                 d3 = d3 * 3D - 2D;

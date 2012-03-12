@@ -44,6 +44,9 @@ public abstract class StructureComponent
         return componentType;
     }
 
+    /**
+     * Discover if bounding box can fit within the current bounding box object.
+     */
     public static StructureComponent findIntersecting(List par0List, StructureBoundingBox par1StructureBoundingBox)
     {
         for (Iterator iterator = par0List.iterator(); iterator.hasNext();)

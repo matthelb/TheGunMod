@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 public abstract class WorldSavedData
 {
+    /** The name of the map data nbt */
     public final String mapName;
 
     /** Whether this MapDataBase needs saving to disk. */

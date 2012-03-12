@@ -18,9 +18,17 @@ public class BiomeDecorator
 
     /** The biome to generate trees for */
     protected BiomeGenBase biome;
+
+    /** The clay generator. */
     protected WorldGenerator clayGen;
+
+    /** The sand generator. */
     protected WorldGenerator sandGen;
+
+    /** The gravel generator. */
     protected WorldGenerator gravelAsSandGen;
+
+    /** The dirt generator. */
     protected WorldGenerator dirtGen;
     protected WorldGenerator gravelGen;
     protected WorldGenerator coalGen;

@@ -20,8 +20,8 @@ public class EntityAIAvoidEntity extends EntityAIBase
         field_48241_e = par3;
         field_48242_b = par4;
         field_48243_c = par5;
-        field_48239_g = par1EntityCreature.func_48084_aL();
-        func_46079_a(1);
+        field_48239_g = par1EntityCreature.getNavigator();
+        setMutexBits(1);
     }
 
     /**
@@ -31,7 +31,7 @@ public class EntityAIAvoidEntity extends EntityAIBase
     {
         if (field_48245_h == (net.minecraft.src.EntityPlayer.class))
         {
-            if ((field_48244_a instanceof EntityTameable) && ((EntityTameable)field_48244_a).func_48139_F_())
+            if ((field_48244_a instanceof EntityTameable) && ((EntityTameable)field_48244_a).isTamed())
             {
                 return false;
             }
@@ -55,7 +55,7 @@ public class EntityAIAvoidEntity extends EntityAIBase
             field_48240_d = (Entity)list.get(0);
         }
 
-        if (!field_48244_a.func_48090_aM().func_48480_a(field_48240_d))
+        if (!field_48244_a.func_48090_aM().canSee(field_48240_d))
         {
             return false;
         }
@@ -87,12 +87,15 @@ public class EntityAIAvoidEntity extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48239_g.func_46072_b();
+        return !field_48239_g.noPath();
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48239_g.func_48678_a(field_48238_f, field_48242_b);
+        field_48239_g.setPath(field_48238_f, field_48242_b);
     }
 
     /**
@@ -110,11 +113,11 @@ public class EntityAIAvoidEntity extends EntityAIBase
     {
         if (field_48244_a.getDistanceSqToEntity(field_48240_d) < 49D)
         {
-            field_48244_a.func_48084_aL().func_48660_a(field_48243_c);
+            field_48244_a.getNavigator().func_48660_a(field_48243_c);
         }
         else
         {
-            field_48244_a.func_48084_aL().func_48660_a(field_48242_b);
+            field_48244_a.getNavigator().func_48660_a(field_48242_b);
         }
     }
 }

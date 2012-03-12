@@ -14,7 +14,7 @@ public class EntityAIWander extends EntityAIBase
     {
         entity = par1EntityCreature;
         field_48317_e = par2;
-        func_46079_a(1);
+        setMutexBits(1);
     }
 
     /**
@@ -52,11 +52,14 @@ public class EntityAIWander extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !entity.func_48084_aL().func_46072_b();
+        return !entity.getNavigator().noPath();
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        entity.func_48084_aL().func_48666_a(field_46098_b, field_46099_c, field_46097_d, field_48317_e);
+        entity.getNavigator().func_48666_a(field_46098_b, field_46099_c, field_46097_d, field_48317_e);
     }
 }

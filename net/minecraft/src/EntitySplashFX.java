@@ -11,7 +11,7 @@ public class EntitySplashFX extends EntityRainFX
         if (par10 == 0.0D && (par8 != 0.0D || par12 != 0.0D))
         {
             motionX = par8;
-            motionY = par10 + 0.1D;
+            motionY = par10 + 0.10000000000000001D;
             motionZ = par12;
         }
     }

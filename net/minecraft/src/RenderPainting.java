@@ -128,7 +128,7 @@ public class RenderPainting extends Render
         int l = renderManager.worldObj.getLightBrightnessForSkyBlocks(i, j, k, 0);
         int i1 = l % 0x10000;
         int j1 = l / 0x10000;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, i1, j1);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, i1, j1);
         GL11.glColor3f(1.0F, 1.0F, 1.0F);
     }
 

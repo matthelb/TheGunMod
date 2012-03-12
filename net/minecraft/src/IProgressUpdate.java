@@ -2,6 +2,9 @@ package net.minecraft.src;
 
 public interface IProgressUpdate
 {
+    /**
+     * Shows the 'Saving level' string.
+     */
     public abstract void displaySavingString(String s);
 
     /**

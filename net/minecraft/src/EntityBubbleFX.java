@@ -13,10 +13,10 @@ public class EntityBubbleFX extends EntityFX
         setParticleTextureIndex(32);
         setSize(0.02F, 0.02F);
         particleScale = particleScale * (rand.nextFloat() * 0.6F + 0.2F);
-        motionX = par8 * 0.2D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
-        motionY = par10 * 0.2D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
-        motionZ = par12 * 0.2D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
-        particleMaxAge = (int)(8D / (Math.random() * 0.8D + 0.2D));
+        motionX = par8 * 0.20000000298023224D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
+        motionY = par10 * 0.20000000298023224D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
+        motionZ = par12 * 0.20000000298023224D + (double)((float)(Math.random() * 2D - 1.0D) * 0.02F);
+        particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
     }
 
     /**
@@ -29,9 +29,9 @@ public class EntityBubbleFX extends EntityFX
         prevPosZ = posZ;
         motionY += 0.002D;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.85D;
-        motionY *= 0.85D;
-        motionZ *= 0.85D;
+        motionX *= 0.85000002384185791D;
+        motionY *= 0.85000002384185791D;
+        motionZ *= 0.85000002384185791D;
 
         if (worldObj.getBlockMaterial(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) != Material.water)
         {

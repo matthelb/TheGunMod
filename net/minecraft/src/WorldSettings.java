@@ -7,6 +7,10 @@ public final class WorldSettings
 
     /** The game mode, 1 for creative, 0 for survival. */
     private final int gameType;
+
+    /**
+     * Switch for the map features. 'true' for enabled, 'false' for disabled.
+     */
     private final boolean mapFeaturesEnabled;
 
     /** True if hardcore mode is enabled */

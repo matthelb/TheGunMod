@@ -176,16 +176,25 @@ public class TileEntity
         return blockType;
     }
 
+    /**
+     * returns true if tile entity is invalid, false otherwise
+     */
     public boolean isInvalid()
     {
         return tileEntityInvalid;
     }
 
+    /**
+     * invalidates a tile entity
+     */
     public void invalidate()
     {
         tileEntityInvalid = true;
     }
 
+    /**
+     * validates a tile entity
+     */
     public void validate()
     {
         tileEntityInvalid = false;

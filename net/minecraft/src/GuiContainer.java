@@ -65,7 +65,7 @@ public abstract class GuiContainer extends GuiScreen
         Slot slot = null;
         int k = 240;
         int i1 = 240;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)k / 1.0F, (float)i1 / 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)k / 1.0F, (float)i1 / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         for (int l = 0; l < inventorySlots.inventorySlots.size(); l++)

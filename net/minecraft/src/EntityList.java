@@ -18,7 +18,9 @@ public class EntityList
 
     /** provides a mapping between an Entity Class and an entity ID */
     private static Map classToIDMapping = new HashMap();
-    private static Map field_48506_f = new HashMap();
+
+    /** Maps entity names to their numeric identifiers */
+    private static Map stringToIDMapping = new HashMap();
 
     /** This is a HashMap of the Creative Entity Eggs/Spawners. */
     public static HashMap entityEggs = new HashMap();
@@ -36,7 +38,7 @@ public class EntityList
         classToStringMapping.put(par0Class, par1Str);
         IDtoClassMapping.put(Integer.valueOf(par2), par0Class);
         classToIDMapping.put(par0Class, Integer.valueOf(par2));
-        field_48506_f.put(par1Str, Integer.valueOf(par2));
+        stringToIDMapping.put(par1Str, Integer.valueOf(par2));
     }
 
     /**

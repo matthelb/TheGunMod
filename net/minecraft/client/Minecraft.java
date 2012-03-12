@@ -2343,7 +2343,10 @@ public abstract class Minecraft implements Runnable
         return renderGlobal.getDebugInfoEntities();
     }
 
-    public String func_21002_o()
+    /**
+     * Gets the name of the world's current chunk provider
+     */
+    public String getWorldProviderName()
     {
         return theWorld.getProviderName();
     }
@@ -2458,7 +2461,7 @@ public abstract class Minecraft implements Runnable
         boolean flag = false;
         String s = par0Str;
         Frame frame = new Frame("Minecraft");
-        AWTGLCanvas awtglcanvas = new AWTGLCanvas();
+        Canvas awtglcanvas = new Canvas();
         frame.setLayout(new BorderLayout());
         frame.add(awtglcanvas, "Center");
         awtglcanvas.setPreferredSize(new Dimension(854, 480));

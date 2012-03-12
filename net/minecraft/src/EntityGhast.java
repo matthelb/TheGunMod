@@ -95,9 +95,9 @@ public class EntityGhast extends EntityFlying implements IMob
 
             if (isCourseTraversable(waypointX, waypointY, waypointZ, d3))
             {
-                motionX += (d / d3) * 0.1D;
-                motionY += (d1 / d3) * 0.1D;
-                motionZ += (d2 / d3) * 0.1D;
+                motionX += (d / d3) * 0.10000000000000001D;
+                motionY += (d1 / d3) * 0.10000000000000001D;
+                motionZ += (d2 / d3) * 0.10000000000000001D;
             }
             else
             {
@@ -180,6 +180,9 @@ public class EntityGhast extends EntityFlying implements IMob
         }
     }
 
+    /**
+     * True if the ghast has an unobstructed line of travel to the waypoint.
+     */
     private boolean isCourseTraversable(double par1, double par3, double par5, double par7)
     {
         double d = (waypointX - posX) / par7;

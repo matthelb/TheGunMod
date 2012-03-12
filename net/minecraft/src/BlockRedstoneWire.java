@@ -546,9 +546,9 @@ public class BlockRedstoneWire extends Block
 
         if (i > 0)
         {
-            double d = (double)par2 + 0.5D + ((double)par5Random.nextFloat() - 0.5D) * 0.2D;
+            double d = (double)par2 + 0.5D + ((double)par5Random.nextFloat() - 0.5D) * 0.20000000000000001D;
             double d1 = (float)par3 + 0.0625F;
-            double d2 = (double)par4 + 0.5D + ((double)par5Random.nextFloat() - 0.5D) * 0.2D;
+            double d2 = (double)par4 + 0.5D + ((double)par5Random.nextFloat() - 0.5D) * 0.20000000000000001D;
             float f = (float)i / 15F;
             float f1 = f * 0.6F + 0.4F;
 

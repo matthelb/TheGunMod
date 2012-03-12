@@ -15,6 +15,9 @@ public interface ISaveFormat
 
     public abstract void flushCache();
 
+    /**
+     * gets the world info
+     */
     public abstract WorldInfo getWorldInfo(String s);
 
     /**

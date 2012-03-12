@@ -48,7 +48,7 @@ public class RenderFish extends Render
             double d2 = MathHelper.cos(f7);
             float f9 = par1EntityFishHook.angler.getSwingProgress(par9);
             float f10 = MathHelper.sin(MathHelper.sqrt_float(f9) * (float)Math.PI);
-            Vec3D vec3d = Vec3D.createVector(-0.5D, 0.03D, 0.8D);
+            Vec3D vec3d = Vec3D.createVector(-0.5D, 0.029999999999999999D, 0.80000000000000004D);
             vec3d.rotateAroundX((-(par1EntityFishHook.angler.prevRotationPitch + (par1EntityFishHook.angler.rotationPitch - par1EntityFishHook.angler.prevRotationPitch) * par9) * (float)Math.PI) / 180F);
             vec3d.rotateAroundY((-(par1EntityFishHook.angler.prevRotationYaw + (par1EntityFishHook.angler.rotationYaw - par1EntityFishHook.angler.prevRotationYaw) * par9) * (float)Math.PI) / 180F);
             vec3d.rotateAroundY(f10 * 0.5F);
@@ -62,9 +62,9 @@ public class RenderFish extends Render
                 float f8 = ((par1EntityFishHook.angler.prevRenderYawOffset + (par1EntityFishHook.angler.renderYawOffset - par1EntityFishHook.angler.prevRenderYawOffset) * par9) * (float)Math.PI) / 180F;
                 double d1 = MathHelper.sin(f8);
                 double d3 = MathHelper.cos(f8);
-                d4 = (par1EntityFishHook.angler.prevPosX + (par1EntityFishHook.angler.posX - par1EntityFishHook.angler.prevPosX) * (double)par9) - d3 * 0.35D - d1 * 0.85D;
-                d5 = (par1EntityFishHook.angler.prevPosY + (par1EntityFishHook.angler.posY - par1EntityFishHook.angler.prevPosY) * (double)par9) - 0.45D;
-                d6 = ((par1EntityFishHook.angler.prevPosZ + (par1EntityFishHook.angler.posZ - par1EntityFishHook.angler.prevPosZ) * (double)par9) - d1 * 0.35D) + d3 * 0.85D;
+                d4 = (par1EntityFishHook.angler.prevPosX + (par1EntityFishHook.angler.posX - par1EntityFishHook.angler.prevPosX) * (double)par9) - d3 * 0.34999999999999998D - d1 * 0.84999999999999998D;
+                d5 = (par1EntityFishHook.angler.prevPosY + (par1EntityFishHook.angler.posY - par1EntityFishHook.angler.prevPosY) * (double)par9) - 0.45000000000000001D;
+                d6 = ((par1EntityFishHook.angler.prevPosZ + (par1EntityFishHook.angler.posZ - par1EntityFishHook.angler.prevPosZ) * (double)par9) - d1 * 0.34999999999999998D) + d3 * 0.84999999999999998D;
             }
 
             double d7 = par1EntityFishHook.prevPosX + (par1EntityFishHook.posX - par1EntityFishHook.prevPosX) * (double)par9;

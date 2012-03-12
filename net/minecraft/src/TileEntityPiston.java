@@ -148,6 +148,9 @@ public class TileEntityPiston extends TileEntity
         }
     }
 
+    /**
+     * removes a pistons tile entity (and if the piston is moving, stops it)
+     */
     public void clearPistonTileEntity()
     {
         if (lastProgress < 1.0F && worldObj != null)

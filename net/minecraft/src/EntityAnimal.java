@@ -72,7 +72,7 @@ public abstract class EntityAnimal extends EntityAgeable
         {
             EntityAnimal entityanimal = (EntityAnimal)par1Entity;
 
-            if (func_48123_at() > 0 && entityanimal.func_48123_at() < 0)
+            if (getGrowingAge() > 0 && entityanimal.getGrowingAge() < 0)
             {
                 if ((double)par2 < 2.5D)
                 {
@@ -125,15 +125,15 @@ public abstract class EntityAnimal extends EntityAgeable
 
         if (entityanimal != null)
         {
-            func_48122_d(6000);
-            par1EntityAnimal.func_48122_d(6000);
+            setGrowingAge(6000);
+            par1EntityAnimal.setGrowingAge(6000);
             inLove = 0;
             breeding = 0;
             entityToAttack = null;
             par1EntityAnimal.entityToAttack = null;
             par1EntityAnimal.breeding = 0;
             par1EntityAnimal.inLove = 0;
-            entityanimal.func_48122_d(-24000);
+            entityanimal.setGrowingAge(-24000);
             entityanimal.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
 
             for (int i = 0; i < 7; i++)
@@ -149,7 +149,7 @@ public abstract class EntityAnimal extends EntityAgeable
     }
 
     /**
-     * [This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.]
+     * This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.
      */
     public abstract EntityAnimal spawnBabyAnimal(EntityAnimal entityanimal);
 
@@ -232,7 +232,7 @@ public abstract class EntityAnimal extends EntityAgeable
                 }
             }
         }
-        else if (func_48123_at() == 0)
+        else if (getGrowingAge() == 0)
         {
             List list1 = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityPlayer.class, boundingBox.expand(f, f, f));
 
@@ -246,7 +246,7 @@ public abstract class EntityAnimal extends EntityAgeable
                 }
             }
         }
-        else if (func_48123_at() > 0)
+        else if (getGrowingAge() > 0)
         {
             List list2 = worldObj.getEntitiesWithinAABB(getClass(), boundingBox.expand(f, f, f));
 
@@ -254,7 +254,7 @@ public abstract class EntityAnimal extends EntityAgeable
             {
                 EntityAnimal entityanimal1 = (EntityAnimal)list2.get(k);
 
-                if (entityanimal1 != this && entityanimal1.func_48123_at() < 0)
+                if (entityanimal1 != this && entityanimal1.getGrowingAge() < 0)
                 {
                     return entityanimal1;
                 }
@@ -291,6 +291,9 @@ public abstract class EntityAnimal extends EntityAgeable
         return false;
     }
 
+    /**
+     * Get the experience points the entity currently has.
+     */
     protected int getExperiencePoints(EntityPlayer par1EntityPlayer)
     {
         return 1 + worldObj.rand.nextInt(3);
@@ -311,7 +314,7 @@ public abstract class EntityAnimal extends EntityAgeable
     {
         ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
 
-        if (itemstack != null && isWheat(itemstack) && func_48123_at() == 0)
+        if (itemstack != null && isWheat(itemstack) && getGrowingAge() == 0)
         {
             if (worldObj.getWorldInfo().getGameType() != 1)
             {

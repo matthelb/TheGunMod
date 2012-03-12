@@ -126,7 +126,7 @@ public class EntityOtherPlayerMP extends EntityPlayer
 
         prevCameraYaw = cameraYaw;
         float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
-        float f1 = (float)Math.atan(-motionY * 0.2D) * 15F;
+        float f1 = (float)Math.atan(-motionY * 0.20000000298023224D) * 15F;
 
         if (f > 0.1F)
         {
@@ -148,8 +148,8 @@ public class EntityOtherPlayerMP extends EntityPlayer
     }
 
     /**
-     * args: if j >= 0 a new item will be generated with j as itemid and; k as damage - ignored if j < 0; i 0 for held
-     * item, 1-4 for armor slots 0-3, o;
+     * Parameters: item slot, item ID, item damage. If slot >= 0 a new item will be generated with the specified item ID
+     * damage.
      */
     public void outfitWithItem(int par1, int par2, int par3)
     {

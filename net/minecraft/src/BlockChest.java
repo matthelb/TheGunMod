@@ -140,6 +140,9 @@ public class BlockChest extends BlockContainer
         }
     }
 
+    /**
+     * Turns the adjacent chests to a double chest.
+     */
     public void unifyAdjacentChests(World par1World, int par2, int par3, int par4)
     {
         if (par1World.isRemote)

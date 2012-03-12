@@ -2,11 +2,15 @@ package net.minecraft.src;
 
 public abstract class EntityAIBase
 {
-    private int field_46085_a;
+    /**
+     * A bitmask telling which other tasks may not run concurrently. The test is a simple bitwise AND - if it yields
+     * zero, the two tasks may run concurrently, if not - they must run exclusively from each other.
+     */
+    private int mutexBits;
 
     public EntityAIBase()
     {
-        field_46085_a = 0;
+        mutexBits = 0;
     }
 
     /**
@@ -25,12 +29,15 @@ public abstract class EntityAIBase
     /**
      * Returns whether the task requires multiple updates or not
      */
-    public boolean isContinous()
+    public boolean isContinuous()
     {
         return true;
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
     }
 
@@ -48,13 +55,21 @@ public abstract class EntityAIBase
     {
     }
 
-    public void func_46079_a(int par1)
+    /**
+     * Sets a bitmask telling which other tasks may not run concurrently. The test is a simple bitwise AND - if it
+     * yields zero, the two tasks may run concurrently, if not - they must run exclusively from each other.
+     */
+    public void setMutexBits(int par1)
     {
-        field_46085_a = par1;
+        mutexBits = par1;
     }
 
-    public int func_46083_c()
+    /**
+     * Get a bitmask telling which other tasks may not run concurrently. The test is a simple bitwise AND - if it yields
+     * zero, the two tasks may run concurrently, if not - they must run exclusively from each other.
+     */
+    public int getMutexBits()
     {
-        return field_46085_a;
+        return mutexBits;
     }
 }

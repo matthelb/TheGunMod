@@ -20,7 +20,7 @@ public final class SpawnerAnimals
     {
         Chunk chunk = par0World.getChunkFromChunkCoords(par1, par2);
         int i = par1 * 16 + par0World.rand.nextInt(16);
-        int j = par0World.rand.nextInt(chunk != null ? Math.max(128, chunk.func_48498_h()) : 128);
+        int j = par0World.rand.nextInt(chunk != null ? Math.max(128, chunk.getTopFilledSegment()) : 128);
         int k = par2 * 16 + par0World.rand.nextInt(16);
         return new ChunkPosition(i, j, k);
     }
@@ -203,7 +203,7 @@ public final class SpawnerAnimals
         else
         {
             int i = par1World.getBlockId(par2, par3 - 1, par4);
-            return Block.func_48206_g(i) && i != Block.bedrock.blockID && !par1World.isBlockNormalCube(par2, par3, par4) && !par1World.getBlockMaterial(par2, par3, par4).isLiquid() && !par1World.isBlockNormalCube(par2, par3 + 1, par4);
+            return Block.isNormalCube(i) && i != Block.bedrock.blockID && !par1World.isBlockNormalCube(par2, par3, par4) && !par1World.getBlockMaterial(par2, par3, par4).isLiquid() && !par1World.isBlockNormalCube(par2, par3 + 1, par4);
         }
     }
 
@@ -229,7 +229,7 @@ public final class SpawnerAnimals
             {
                 EntityOcelot entityocelot = new EntityOcelot(par1World);
                 entityocelot.setLocationAndAngles(par2, par3, par4, par0EntityLiving.rotationYaw, 0.0F);
-                entityocelot.func_48122_d(-24000);
+                entityocelot.setGrowingAge(-24000);
                 par1World.spawnEntityInWorld(entityocelot);
             }
         }

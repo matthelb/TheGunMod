@@ -7,6 +7,8 @@ public class Slot
 
     /** The inventory we want to extract a slot from. */
     public final IInventory inventory;
+
+    /** the id of the slot(also the index in the inventory arraylist) */
     public int slotNumber;
 
     /** display position of the inventory slot on the screen x axis */

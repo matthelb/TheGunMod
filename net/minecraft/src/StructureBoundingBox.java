@@ -2,11 +2,22 @@ package net.minecraft.src;
 
 public class StructureBoundingBox
 {
+    /** The first x coordinate of a bounding box. */
     public int minX;
+
+    /** The first y coordinate of a bounding box. */
     public int minY;
+
+    /** The first z coordinate of a bounding box. */
     public int minZ;
+
+    /** The second x coordinate of a bounding box. */
     public int maxX;
+
+    /** The second y coordinate of a bounding box. */
     public int maxY;
+
+    /** The second z coordinate of a bounding box. */
     public int maxZ;
 
     public StructureBoundingBox()
@@ -83,11 +94,17 @@ public class StructureBoundingBox
         return maxX >= par1StructureBoundingBox.minX && minX <= par1StructureBoundingBox.maxX && maxZ >= par1StructureBoundingBox.minZ && minZ <= par1StructureBoundingBox.maxZ && maxY >= par1StructureBoundingBox.minY && minY <= par1StructureBoundingBox.maxY;
     }
 
+    /**
+     * Discover if a coordinate is inside the bounding box area.
+     */
     public boolean intersectsWith(int par1, int par2, int par3, int par4)
     {
         return maxX >= par1 && minX <= par3 && maxZ >= par2 && minZ <= par4;
     }
 
+    /**
+     * Expands a bounding box's dimensions to include the supplied bounding box.
+     */
     public void expandTo(StructureBoundingBox par1StructureBoundingBox)
     {
         minX = Math.min(minX, par1StructureBoundingBox.minX);

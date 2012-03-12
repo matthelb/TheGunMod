@@ -11,6 +11,8 @@ public class EntityWolf extends EntityTameable
     private boolean looksWithInterest;
     private float field_25048_b;
     private float field_25054_c;
+
+    /** true is the wolf is wet else false */
     private boolean isShaking;
     private boolean field_25052_g;
 
@@ -27,9 +29,9 @@ public class EntityWolf extends EntityTameable
         texture = "/mob/wolf.png";
         setSize(0.6F, 0.8F);
         moveSpeed = 0.3F;
-        func_48084_aL().func_48664_a(true);
+        getNavigator().func_48664_a(true);
         tasks.addTask(1, new EntityAISwimming(this));
-        tasks.addTask(2, field_48146_a);
+        tasks.addTask(2, aiSit);
         tasks.addTask(3, new EntityAILeapAtTarget(this, 0.4F));
         tasks.addTask(4, new EntityAIAttackOnCollide(this, moveSpeed, true));
         tasks.addTask(5, new EntityAIFollowOwner(this, moveSpeed, 10F, 2.0F));
@@ -38,10 +40,10 @@ public class EntityWolf extends EntityTameable
         tasks.addTask(8, new EntityAIBeg(this, 8F));
         tasks.addTask(9, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 8F));
         tasks.addTask(9, new EntityAILookIdle(this));
-        field_48105_bU.addTask(1, new EntityAIOwnerHurtByTarget(this));
-        field_48105_bU.addTask(2, new EntityAIOwnerHurtTarget(this));
-        field_48105_bU.addTask(3, new EntityAIHurtByTarget(this, true));
-        field_48105_bU.addTask(4, new EntityAITargetNonTamed(this, net.minecraft.src.EntitySheep.class, 16F, 200, false));
+        targetTasks.addTask(1, new EntityAIOwnerHurtByTarget(this));
+        targetTasks.addTask(2, new EntityAIOwnerHurtTarget(this));
+        targetTasks.addTask(3, new EntityAIHurtByTarget(this, true));
+        targetTasks.addTask(4, new EntityAITargetNonTamed(this, net.minecraft.src.EntitySheep.class, 16F, 200, false));
     }
 
     /**
@@ -52,9 +54,12 @@ public class EntityWolf extends EntityTameable
         return true;
     }
 
-    public void func_48092_c(EntityLiving par1EntityLiving)
+    /**
+     * Sets the active target the Task system uses for tracking
+     */
+    public void setAttackTarget(EntityLiving par1EntityLiving)
     {
-        super.func_48092_c(par1EntityLiving);
+        super.setAttackTarget(par1EntityLiving);
 
         if (par1EntityLiving instanceof EntityPlayer)
         {
@@ -62,14 +67,17 @@ public class EntityWolf extends EntityTameable
         }
     }
 
-    protected void func_48097_s_()
+    /**
+     * main AI tick function, replaces updateEntityActionState
+     */
+    protected void updateAITick()
     {
         dataWatcher.updateObject(18, Integer.valueOf(getEntityHealth()));
     }
 
     public int getMaxHealth()
     {
-        return !func_48139_F_() ? 8 : 20;
+        return !isTamed() ? 8 : 20;
     }
 
     protected void entityInit()
@@ -92,7 +100,7 @@ public class EntityWolf extends EntityTameable
      */
     public String getEntityTexture()
     {
-        if (func_48139_F_())
+        if (isTamed())
         {
             return "/mob/wolf_tame.png";
         }
@@ -145,7 +153,7 @@ public class EntityWolf extends EntityTameable
 
         if (rand.nextInt(3) == 0)
         {
-            if (func_48139_F_() && dataWatcher.getWatchableObjectInt(18) < 10)
+            if (isTamed() && dataWatcher.getWatchableObjectInt(18) < 10)
             {
                 return "mob.wolf.whine";
             }
@@ -316,7 +324,7 @@ public class EntityWolf extends EntityTameable
      */
     public int getVerticalFaceSpeed()
     {
-        if (func_48141_af())
+        if (isSitting())
         {
             return 20;
         }
@@ -332,7 +340,7 @@ public class EntityWolf extends EntityTameable
     public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
         Entity entity = par1DamageSource.getEntity();
-        field_48146_a.func_48407_a(false);
+        aiSit.func_48407_a(false);
 
         if (entity != null && !(entity instanceof EntityPlayer) && !(entity instanceof EntityArrow))
         {
@@ -344,7 +352,7 @@ public class EntityWolf extends EntityTameable
 
     public boolean attackEntityAsMob(Entity par1Entity)
     {
-        byte byte0 = ((byte)(func_48139_F_() ? 4 : 2));
+        byte byte0 = ((byte)(isTamed() ? 4 : 2));
         return par1Entity.attackEntityFrom(DamageSource.causeMobDamage(this), byte0);
     }
 
@@ -355,7 +363,7 @@ public class EntityWolf extends EntityTameable
     {
         ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
 
-        if (!func_48139_F_())
+        if (!isTamed())
         {
             if (itemstack != null && itemstack.itemID == Item.bone.shiftedIndex && !isAngry())
             {
@@ -370,12 +378,12 @@ public class EntityWolf extends EntityTameable
                 {
                     if (rand.nextInt(3) == 0)
                     {
-                        func_48138_b(true);
+                        setTamed(true);
                         setPathToEntity(null);
-                        func_48092_c(null);
-                        field_48146_a.func_48407_a(true);
+                        setAttackTarget(null);
+                        aiSit.func_48407_a(true);
                         setEntityHealth(20);
-                        func_48143_a(par1EntityPlayer.username);
+                        setOwner(par1EntityPlayer.username);
                         func_48142_a(true);
                         worldObj.setEntityState(this, (byte)7);
                     }
@@ -409,9 +417,9 @@ public class EntityWolf extends EntityTameable
                 }
             }
 
-            if (par1EntityPlayer.username.equalsIgnoreCase(func_48145_ag()) && !worldObj.isRemote && !isWheat(itemstack))
+            if (par1EntityPlayer.username.equalsIgnoreCase(getOwnerName()) && !worldObj.isRemote && !isWheat(itemstack))
             {
-                field_48146_a.func_48407_a(!func_48141_af());
+                aiSit.func_48407_a(!isSitting());
                 isJumping = false;
                 setPathToEntity(null);
             }
@@ -441,7 +449,7 @@ public class EntityWolf extends EntityTameable
             return 1.53938F;
         }
 
-        if (func_48139_F_())
+        if (isTamed())
         {
             return (0.55F - (float)(20 - dataWatcher.getWatchableObjectInt(18)) * 0.02F) * (float)Math.PI;
         }
@@ -505,13 +513,13 @@ public class EntityWolf extends EntityTameable
     }
 
     /**
-     * [This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.]
+     * This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.
      */
     public EntityAnimal spawnBabyAnimal(EntityAnimal par1EntityAnimal)
     {
         EntityWolf entitywolf = new EntityWolf(worldObj);
-        entitywolf.func_48143_a(func_48145_ag());
-        entitywolf.func_48138_b(true);
+        entitywolf.setOwner(getOwnerName());
+        entitywolf.setTamed(true);
         return entitywolf;
     }
 
@@ -527,7 +535,7 @@ public class EntityWolf extends EntityTameable
             return false;
         }
 
-        if (!func_48139_F_())
+        if (!isTamed())
         {
             return false;
         }
@@ -539,12 +547,12 @@ public class EntityWolf extends EntityTameable
 
         EntityWolf entitywolf = (EntityWolf)par1EntityAnimal;
 
-        if (!entitywolf.func_48139_F_())
+        if (!entitywolf.isTamed())
         {
             return false;
         }
 
-        if (entitywolf.func_48141_af())
+        if (entitywolf.isSitting())
         {
             return false;
         }

@@ -94,6 +94,9 @@ public class WorldClient extends World
         }
     }
 
+    /**
+     * Creates the chunk provider for this world. Called in the constructor. Retrieves provider from worldProvider?
+     */
     protected IChunkProvider createChunkProvider()
     {
         field_20915_C = new ChunkProviderClient(this);
@@ -108,6 +111,10 @@ public class WorldClient extends World
         setSpawnPoint(new ChunkCoordinates(8, 64, 8));
     }
 
+    /**
+     * plays random cave ambient sounds and runs updateTick on random blocks within each chunk in the vacinity of a
+     * player
+     */
     protected void tickBlocksAndAmbiance()
     {
         func_48461_r();
@@ -294,6 +301,9 @@ public class WorldClient extends World
         sendQueue.quitWithPacket(new Packet255KickDisconnect("Quitting"));
     }
 
+    /**
+     * update's all weather states.
+     */
     protected void updateWeather()
     {
         if (worldProvider.hasNoSky)

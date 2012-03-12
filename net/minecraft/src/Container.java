@@ -4,10 +4,17 @@ import java.util.*;
 
 public abstract class Container
 {
+    /** the list of all items(stacks) for the corresponding slot */
     public List inventoryItemStacks;
+
+    /** the list of all slots in the inventory */
     public List inventorySlots;
     public int windowId;
-    private short field_20917_a;
+    private short transactionID;
+
+    /**
+     * list of all people that need to be notified when this craftinventory changes
+     */
     protected List crafters;
     private Set field_20918_b;
 
@@ -16,11 +23,14 @@ public abstract class Container
         inventoryItemStacks = new ArrayList();
         inventorySlots = new ArrayList();
         windowId = 0;
-        field_20917_a = 0;
+        transactionID = 0;
         crafters = new ArrayList();
         field_20918_b = new HashSet();
     }
 
+    /**
+     * adds the slot to the inventory it is in
+     */
     protected void addSlot(Slot par1Slot)
     {
         par1Slot.slotNumber = inventorySlots.size();
@@ -105,13 +115,13 @@ public abstract class Container
                 {
                     if (par2 == 0)
                     {
-                        par4EntityPlayer.func_48153_a(inventoryplayer.getItemStack());
+                        par4EntityPlayer.dropPlayerItem(inventoryplayer.getItemStack());
                         inventoryplayer.setItemStack(null);
                     }
 
                     if (par2 == 1)
                     {
-                        par4EntityPlayer.func_48153_a(inventoryplayer.getItemStack().splitStack(1));
+                        par4EntityPlayer.dropPlayerItem(inventoryplayer.getItemStack().splitStack(1));
 
                         if (inventoryplayer.getItemStack().stackSize == 0)
                         {
@@ -261,7 +271,7 @@ public abstract class Container
 
         if (inventoryplayer.getItemStack() != null)
         {
-            par1EntityPlayer.func_48153_a(inventoryplayer.getItemStack());
+            par1EntityPlayer.dropPlayerItem(inventoryplayer.getItemStack());
             inventoryplayer.setItemStack(null);
         }
     }
@@ -302,8 +312,8 @@ public abstract class Container
      */
     public short getNextTransactionID(InventoryPlayer par1InventoryPlayer)
     {
-        field_20917_a++;
-        return field_20917_a;
+        transactionID++;
+        return transactionID;
     }
 
     public void func_20113_a(short word0)

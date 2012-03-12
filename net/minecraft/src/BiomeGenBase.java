@@ -48,8 +48,10 @@ public abstract class BiomeGenBase
 
     /** Extreme Hills Edge biome. */
     public static final BiomeGenBase extremeHillsEdge = (new BiomeGenHills(20)).setColor(0x72789a).setBiomeName("Extreme Hills Edge").setMinMaxHeight(0.2F, 0.8F).setTemperatureRainfall(0.2F, 0.3F);
-    public static final BiomeGenBase field_48416_w = (new BiomeGenJungle(21)).setColor(0x537b09).setBiomeName("Jungle").func_4124_a(0x537b09).setTemperatureRainfall(1.2F, 0.9F).setMinMaxHeight(0.2F, 0.4F);
-    public static final BiomeGenBase field_48417_x = (new BiomeGenJungle(22)).setColor(0x2c4205).setBiomeName("JungleHills").func_4124_a(0x537b09).setTemperatureRainfall(1.2F, 0.9F).setMinMaxHeight(1.8F, 0.2F);
+    public static final BiomeGenBase jungle = (new BiomeGenJungle(21)).setColor(0x537b09).setBiomeName("Jungle").func_4124_a(0x537b09).setTemperatureRainfall(1.2F, 0.9F).setMinMaxHeight(0.2F, 0.4F);
+
+    /** Jungle Hills biome */
+    public static final BiomeGenBase jungleHills = (new BiomeGenJungle(22)).setColor(0x2c4205).setBiomeName("JungleHills").func_4124_a(0x537b09).setTemperatureRainfall(1.2F, 0.9F).setMinMaxHeight(1.8F, 0.2F);
     public String biomeName;
     public int color;
 
@@ -321,12 +323,18 @@ public abstract class BiomeGenBase
         return (int)(temperature * 65536F);
     }
 
-    public final float func_48414_h()
+    /**
+     * Gets a floating point representation of this biome's rainfall
+     */
+    public final float getFloatRainfall()
     {
         return rainfall;
     }
 
-    public final float func_48411_i()
+    /**
+     * Gets a floating point representation of this biome's temperature
+     */
+    public final float getFloatTemperature()
     {
         return temperature;
     }
@@ -338,15 +346,15 @@ public abstract class BiomeGenBase
 
     public int func_48415_j()
     {
-        double d = MathHelper.func_48442_a(func_48411_i(), 0.0F, 1.0F);
-        double d1 = MathHelper.func_48442_a(func_48414_h(), 0.0F, 1.0F);
+        double d = MathHelper.clamp_float(getFloatTemperature(), 0.0F, 1.0F);
+        double d1 = MathHelper.clamp_float(getFloatRainfall(), 0.0F, 1.0F);
         return ColorizerGrass.getGrassColor(d, d1);
     }
 
     public int func_48412_k()
     {
-        double d = MathHelper.func_48442_a(func_48411_i(), 0.0F, 1.0F);
-        double d1 = MathHelper.func_48442_a(func_48414_h(), 0.0F, 1.0F);
+        double d = MathHelper.clamp_float(getFloatTemperature(), 0.0F, 1.0F);
+        double d1 = MathHelper.clamp_float(getFloatRainfall(), 0.0F, 1.0F);
         return ColorizerFoliage.getFoliageColor(d, d1);
     }
 }

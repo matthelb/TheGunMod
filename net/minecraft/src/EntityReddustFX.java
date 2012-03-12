@@ -12,9 +12,9 @@ public class EntityReddustFX extends EntityFX
     public EntityReddustFX(World par1World, double par2, double par4, double par6, float par8, float par9, float par10, float par11)
     {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
-        motionX *= 0.1D;
-        motionY *= 0.1D;
-        motionZ *= 0.1D;
+        motionX *= 0.10000000149011612D;
+        motionY *= 0.10000000149011612D;
+        motionZ *= 0.10000000149011612D;
 
         if (par9 == 0.0F)
         {
@@ -22,13 +22,13 @@ public class EntityReddustFX extends EntityFX
         }
 
         float f = (float)Math.random() * 0.4F + 0.6F;
-        particleRed = ((float)(Math.random() * 0.2D) + 0.8F) * par9 * f;
-        particleGreen = ((float)(Math.random() * 0.2D) + 0.8F) * par10 * f;
-        particleBlue = ((float)(Math.random() * 0.2D) + 0.8F) * par11 * f;
+        particleRed = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * par9 * f;
+        particleGreen = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * par10 * f;
+        particleBlue = ((float)(Math.random() * 0.20000000298023224D) + 0.8F) * par11 * f;
         particleScale *= 0.75F;
         particleScale *= par8;
         reddustParticleScale = particleScale;
-        particleMaxAge = (int)(8D / (Math.random() * 0.8D + 0.2D));
+        particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
         particleMaxAge *= par8;
         noClip = false;
     }
@@ -70,18 +70,18 @@ public class EntityReddustFX extends EntityFX
 
         if (posY == prevPosY)
         {
-            motionX *= 1.1D;
-            motionZ *= 1.1D;
+            motionX *= 1.1000000000000001D;
+            motionZ *= 1.1000000000000001D;
         }
 
-        motionX *= 0.96D;
-        motionY *= 0.96D;
-        motionZ *= 0.96D;
+        motionX *= 0.95999997854232788D;
+        motionY *= 0.95999997854232788D;
+        motionZ *= 0.95999997854232788D;
 
         if (onGround)
         {
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
         }
     }
 }

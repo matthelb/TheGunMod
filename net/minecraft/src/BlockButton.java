@@ -44,6 +44,9 @@ public class BlockButton extends Block
         return false;
     }
 
+    /**
+     * checks to see if you can place this block can be placed on that side of a block: BlockLever overrides
+     */
     public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
     {
         if (par5 == 2 && par1World.isBlockNormalCube(par2, par3, par4 + 1))
@@ -183,6 +186,9 @@ public class BlockButton extends Block
         }
     }
 
+    /**
+     * This method is redundant, check it out...
+     */
     private boolean redundantCanPlaceBlockAt(World par1World, int par2, int par3, int par4)
     {
         if (!canPlaceBlockAt(par1World, par2, par3, par4))

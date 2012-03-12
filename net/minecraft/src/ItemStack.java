@@ -465,7 +465,7 @@ public final class ItemStack
         Item.itemsList[itemID].onUpdate(this, par1World, par2Entity, par3, par4);
     }
 
-    public void func_48507_a(World par1World, EntityPlayer par2EntityPlayer, int par3)
+    public void onCrafting(World par1World, EntityPlayer par2EntityPlayer, int par3)
     {
         par2EntityPlayer.addStat(StatList.objectCraftStats[itemID], par3);
         Item.itemsList[itemID].onCreated(this, par1World, par2EntityPlayer);

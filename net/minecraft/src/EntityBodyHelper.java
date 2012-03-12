@@ -18,7 +18,7 @@ public class EntityBodyHelper
         double d = field_48654_a.posX - field_48654_a.prevPosX;
         double d1 = field_48654_a.posZ - field_48654_a.prevPosZ;
 
-        if (d * d + d1 * d1 > 2.5E-007D)
+        if (d * d + d1 * d1 > 2.5000002779052011E-007D)
         {
             field_48654_a.renderYawOffset = field_48654_a.rotationYaw;
             field_48654_a.prevRotationYaw2 = func_48651_a(field_48654_a.renderYawOffset, field_48654_a.prevRotationYaw2, 75F);

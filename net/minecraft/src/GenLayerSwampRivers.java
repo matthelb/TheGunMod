@@ -30,7 +30,7 @@ public class GenLayerSwampRivers extends GenLayer
                     continue;
                 }
 
-                if ((k == BiomeGenBase.field_48416_w.biomeID || k == BiomeGenBase.field_48417_x.biomeID) && nextInt(8) == 0)
+                if ((k == BiomeGenBase.jungle.biomeID || k == BiomeGenBase.jungleHills.biomeID) && nextInt(8) == 0)
                 {
                     ai1[j + i * par3] = BiomeGenBase.river.biomeID;
                 }

@@ -70,8 +70,8 @@ public class TextureWatchFX extends TextureFX
             d1 = 1.0D;
         }
 
-        field_4221_k += d1 * 0.1D;
-        field_4221_k *= 0.8D;
+        field_4221_k += d1 * 0.10000000000000001D;
+        field_4221_k *= 0.80000000000000004D;
         field_4222_j += field_4221_k;
         double d2 = Math.sin(field_4222_j);
         double d3 = Math.cos(field_4222_j);

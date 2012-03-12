@@ -2,19 +2,19 @@ package net.minecraft.src;
 
 public class TextureWaterFX extends TextureFX
 {
-    protected float field_1158_g[];
-    protected float field_1157_h[];
-    protected float field_1156_i[];
-    protected float field_1155_j[];
+    protected float red[];
+    protected float green[];
+    protected float blue[];
+    protected float alpha[];
     private int tickCounter;
 
     public TextureWaterFX()
     {
         super(Block.waterMoving.blockIndexInTexture);
-        field_1158_g = new float[256];
-        field_1157_h = new float[256];
-        field_1156_i = new float[256];
-        field_1155_j = new float[256];
+        red = new float[256];
+        green = new float[256];
+        blue = new float[256];
+        alpha = new float[256];
         tickCounter = 0;
     }
 
@@ -32,10 +32,10 @@ public class TextureWaterFX extends TextureFX
                 {
                     int k1 = j1 & 0xf;
                     int i2 = k & 0xf;
-                    f += field_1158_g[k1 + i2 * 16];
+                    f += red[k1 + i2 * 16];
                 }
 
-                field_1157_h[i + k * 16] = f / 3.3F + field_1156_i[i + k * 16] * 0.8F;
+                green[i + k * 16] = f / 3.3F + blue[i + k * 16] * 0.8F;
             }
         }
 
@@ -43,29 +43,29 @@ public class TextureWaterFX extends TextureFX
         {
             for (int l = 0; l < 16; l++)
             {
-                field_1156_i[j + l * 16] += field_1155_j[j + l * 16] * 0.05F;
+                blue[j + l * 16] += alpha[j + l * 16] * 0.05F;
 
-                if (field_1156_i[j + l * 16] < 0.0F)
+                if (blue[j + l * 16] < 0.0F)
                 {
-                    field_1156_i[j + l * 16] = 0.0F;
+                    blue[j + l * 16] = 0.0F;
                 }
 
-                field_1155_j[j + l * 16] -= 0.1F;
+                alpha[j + l * 16] -= 0.1F;
 
-                if (Math.random() < 0.05D)
+                if (Math.random() < 0.050000000000000003D)
                 {
-                    field_1155_j[j + l * 16] = 0.5F;
+                    alpha[j + l * 16] = 0.5F;
                 }
             }
         }
 
-        float af[] = field_1157_h;
-        field_1157_h = field_1158_g;
-        field_1158_g = af;
+        float af[] = green;
+        green = red;
+        red = af;
 
         for (int i1 = 0; i1 < 256; i1++)
         {
-            float f1 = field_1158_g[i1];
+            float f1 = red[i1];
 
             if (f1 > 1.0F)
             {

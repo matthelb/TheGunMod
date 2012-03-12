@@ -2,8 +2,11 @@ package net.minecraft.src;
 
 public class EntityDropParticleFX extends EntityFX
 {
-    private Material field_40103_a;
-    private int field_40104_aw;
+    /** the material type for dropped items/blocks */
+    private Material materialType;
+
+    /** The height of the current bob */
+    private int bobTimer;
 
     public EntityDropParticleFX(World par1World, double par2, double par4, double par6, Material par8Material)
     {
@@ -26,9 +29,9 @@ public class EntityDropParticleFX extends EntityFX
         setParticleTextureIndex(113);
         setSize(0.01F, 0.01F);
         particleGravity = 0.06F;
-        field_40103_a = par8Material;
-        field_40104_aw = 40;
-        particleMaxAge = (int)(64D / (Math.random() * 0.8D + 0.2D));
+        materialType = par8Material;
+        bobTimer = 40;
+        particleMaxAge = (int)(64D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
         motionX = motionY = motionZ = 0.0D;
     }
 
@@ -39,7 +42,7 @@ public class EntityDropParticleFX extends EntityFX
 
     public int getEntityBrightnessForRender(float par1)
     {
-        if (field_40103_a == Material.water)
+        if (materialType == Material.water)
         {
             return super.getEntityBrightnessForRender(par1);
         }
@@ -54,7 +57,7 @@ public class EntityDropParticleFX extends EntityFX
      */
     public float getEntityBrightness(float par1)
     {
-        if (field_40103_a == Material.water)
+        if (materialType == Material.water)
         {
             return super.getEntityBrightness(par1);
         }
@@ -73,7 +76,7 @@ public class EntityDropParticleFX extends EntityFX
         prevPosY = posY;
         prevPosZ = posZ;
 
-        if (field_40103_a == Material.water)
+        if (materialType == Material.water)
         {
             particleRed = 0.2F;
             particleGreen = 0.3F;
@@ -82,13 +85,13 @@ public class EntityDropParticleFX extends EntityFX
         else
         {
             particleRed = 1.0F;
-            particleGreen = 16F / (float)((40 - field_40104_aw) + 16);
-            particleBlue = 4F / (float)((40 - field_40104_aw) + 8);
+            particleGreen = 16F / (float)((40 - bobTimer) + 16);
+            particleBlue = 4F / (float)((40 - bobTimer) + 8);
         }
 
         motionY -= particleGravity;
 
-        if (field_40104_aw-- > 0)
+        if (bobTimer-- > 0)
         {
             motionX *= 0.02D;
             motionY *= 0.02D;
@@ -101,9 +104,9 @@ public class EntityDropParticleFX extends EntityFX
         }
 
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.98D;
-        motionY *= 0.98D;
-        motionZ *= 0.98D;
+        motionX *= 0.98000001907348633D;
+        motionY *= 0.98000001907348633D;
+        motionZ *= 0.98000001907348633D;
 
         if (particleMaxAge-- <= 0)
         {
@@ -112,7 +115,7 @@ public class EntityDropParticleFX extends EntityFX
 
         if (onGround)
         {
-            if (field_40103_a == Material.water)
+            if (materialType == Material.water)
             {
                 setEntityDead();
                 worldObj.spawnParticle("splash", posX, posY, posZ, 0.0D, 0.0D, 0.0D);
@@ -122,8 +125,8 @@ public class EntityDropParticleFX extends EntityFX
                 setParticleTextureIndex(114);
             }
 
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
         }
 
         Material material = worldObj.getBlockMaterial(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));

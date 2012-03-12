@@ -274,6 +274,9 @@ public class NetClientHandler extends NetHandler
         }
     }
 
+    /**
+     * Handle a entity experience orb packet.
+     */
     public void handleEntityExpOrb(Packet26EntityExpOrb par1Packet26EntityExpOrb)
     {
         EntityXPOrb entityxporb = new EntityXPOrb(worldClient, par1Packet26EntityExpOrb.posX, par1Packet26EntityExpOrb.posY, par1Packet26EntityExpOrb.posZ, par1Packet26EntityExpOrb.xpValue);
@@ -539,7 +542,7 @@ public class NetClientHandler extends NetHandler
 
             if (!par1Packet51MapChunk.field_48171_f || !(worldClient.worldProvider instanceof WorldProviderSurface))
             {
-                chunk.func_48496_n();
+                chunk.resetRelightChecks();
                 System.out.println((new StringBuilder()).append("Checking light ").append(par1Packet51MapChunk.field_48177_a).append(", ").append(par1Packet51MapChunk.field_48175_b).toString());
             }
         }
@@ -875,11 +878,17 @@ public class NetClientHandler extends NetHandler
         mc.thePlayer.getFoodStats().setFoodSaturationLevel(par1Packet8UpdateHealth.foodSaturation);
     }
 
+    /**
+     * Handle an experience packet.
+     */
     public void handleExperience(Packet43Experience par1Packet43Experience)
     {
         mc.thePlayer.setXPStats(par1Packet43Experience.experience, par1Packet43Experience.experienceTotal, par1Packet43Experience.experienceLevel);
     }
 
+    /**
+     * respawns the player
+     */
     public void handleRespawn(Packet9Respawn par1Packet9Respawn)
     {
         if (par1Packet9Respawn.respawnDimension != mc.thePlayer.dimension)
@@ -1132,6 +1141,9 @@ public class NetClientHandler extends NetHandler
         ((EntityClientPlayerMP)mc.thePlayer).incrementStat(StatList.getOneShotStat(par1Packet200Statistic.statisticId), par1Packet200Statistic.amount);
     }
 
+    /**
+     * Handle an entity effect packet.
+     */
     public void handleEntityEffect(Packet41EntityEffect par1Packet41EntityEffect)
     {
         Entity entity = getEntityByID(par1Packet41EntityEffect.entityId);
@@ -1147,6 +1159,9 @@ public class NetClientHandler extends NetHandler
         }
     }
 
+    /**
+     * Handle a remove entity effect packet.
+     */
     public void handleRemoveEntityEffect(Packet42RemoveEntityEffect par1Packet42RemoveEntityEffect)
     {
         Entity entity = getEntityByID(par1Packet42RemoveEntityEffect.entityId);
@@ -1170,6 +1185,9 @@ public class NetClientHandler extends NetHandler
         return false;
     }
 
+    /**
+     * Handle a player information packet.
+     */
     public void handlePlayerInfo(Packet201PlayerInfo par1Packet201PlayerInfo)
     {
         GuiPlayerInfo guiplayerinfo = (GuiPlayerInfo)playerInfoMap.get(par1Packet201PlayerInfo.playerName);
@@ -1193,6 +1211,9 @@ public class NetClientHandler extends NetHandler
         }
     }
 
+    /**
+     * Handle a keep alive packet.
+     */
     public void handleKeepAlive(Packet0KeepAlive par1Packet0KeepAlive)
     {
         addToSendQueue(new Packet0KeepAlive(par1Packet0KeepAlive.randomId));

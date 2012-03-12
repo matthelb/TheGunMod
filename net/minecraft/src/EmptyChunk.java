@@ -128,7 +128,7 @@ public class EmptyChunk extends Chunk
     }
 
     /**
-     * removes entity at index i from entity array
+     * Removes entity at the specified index from the entity array.
      */
     public void removeEntityAtIndex(Entity entity, int i)
     {

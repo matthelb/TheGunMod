@@ -9,7 +9,7 @@ public class EntityAISit extends EntityAIBase
     {
         field_48408_b = false;
         field_48409_a = par1EntityTameable;
-        func_46079_a(5);
+        setMutexBits(5);
     }
 
     /**
@@ -17,7 +17,7 @@ public class EntityAISit extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (!field_48409_a.func_48139_F_())
+        if (!field_48409_a.isTamed())
         {
             return false;
         }
@@ -32,7 +32,7 @@ public class EntityAISit extends EntityAIBase
             return false;
         }
 
-        EntityLiving entityliving = field_48409_a.func_48144_ah();
+        EntityLiving entityliving = field_48409_a.getOwner();
 
         if (entityliving == null)
         {
@@ -49,9 +49,12 @@ public class EntityAISit extends EntityAIBase
         }
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48409_a.func_48084_aL().func_48672_f();
+        field_48409_a.getNavigator().func_48672_f();
         field_48409_a.func_48140_f(true);
     }
 

@@ -36,6 +36,9 @@ public class AnvilSaveHandler extends SaveHandler
         }
     }
 
+    /**
+     * saves level.dat and backs up the existing one to level.dat_old
+     */
     public void saveWorldInfoAndPlayer(WorldInfo par1WorldInfo, List par2List)
     {
         par1WorldInfo.setSaveVersion(19133);

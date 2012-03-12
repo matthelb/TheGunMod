@@ -180,10 +180,10 @@ public class RenderDragon extends RenderLiving
                 tessellator.setColorRGBA_I(0xffffff, (int)(255F * (1.0F - f1)));
                 tessellator.addVertex(0.0D, 0.0D, 0.0D);
                 tessellator.setColorRGBA_I(0xff00ff, 0);
-                tessellator.addVertex(-0.866D * (double)f3, f2, -0.5F * f3);
-                tessellator.addVertex(0.866D * (double)f3, f2, -0.5F * f3);
+                tessellator.addVertex(-0.86599999999999999D * (double)f3, f2, -0.5F * f3);
+                tessellator.addVertex(0.86599999999999999D * (double)f3, f2, -0.5F * f3);
                 tessellator.addVertex(0.0D, f2, 1.0F * f3);
-                tessellator.addVertex(-0.866D * (double)f3, f2, -0.5F * f3);
+                tessellator.addVertex(-0.86599999999999999D * (double)f3, f2, -0.5F * f3);
                 tessellator.draw();
             }
 
@@ -222,7 +222,7 @@ public class RenderDragon extends RenderLiving
             int i = 61680;
             int j = i % 0x10000;
             int k = i / 0x10000;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)j / 1.0F, (float)k / 1.0F);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, f);

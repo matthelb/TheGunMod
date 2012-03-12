@@ -4,10 +4,13 @@ import java.io.*;
 
 public class Packet5PlayerInventory extends Packet
 {
+    /** Entity ID of the object. */
     public int entityID;
 
     /** Equipment slot: 0=held, 1-4=armor slot */
     public int slot;
+
+    /** Equipped item (-1 for empty slot). */
     public int itemID;
 
     /** The health of the item. */

@@ -26,7 +26,7 @@ public abstract class EntityAIDoorInteract extends EntityAIBase
             return false;
         }
 
-        PathNavigate pathnavigate = field_48325_a.func_48084_aL();
+        PathNavigate pathnavigate = field_48325_a.getNavigator();
         PathEntity pathentity = pathnavigate.func_48670_c();
 
         if (pathentity == null || pathentity.isFinished() || !pathnavigate.func_48665_b())
@@ -34,9 +34,9 @@ public abstract class EntityAIDoorInteract extends EntityAIBase
             return false;
         }
 
-        for (int i = 0; i < Math.min(pathentity.func_48643_e() + 2, pathentity.func_48644_d()); i++)
+        for (int i = 0; i < Math.min(pathentity.getCurrentPathIndex() + 2, pathentity.getCurrentPathLength()); i++)
         {
-            PathPoint pathpoint = pathentity.func_48648_a(i);
+            PathPoint pathpoint = pathentity.getPathPointFromIndex(i);
             field_48323_b = pathpoint.xCoord;
             field_48324_c = pathpoint.yCoord + 1;
             field_48321_d = pathpoint.zCoord;
@@ -69,7 +69,10 @@ public abstract class EntityAIDoorInteract extends EntityAIBase
         return !field_48319_f;
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48319_f = false;
         field_48320_g = (float)((double)((float)field_48323_b + 0.5F) - field_48325_a.posX);

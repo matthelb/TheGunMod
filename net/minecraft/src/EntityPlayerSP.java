@@ -200,10 +200,10 @@ public class EntityPlayerSP extends EntityPlayer
             ySize = 0.2F;
         }
 
-        pushOutOfBlocks(posX - (double)width * 0.35D, boundingBox.minY + 0.5D, posZ + (double)width * 0.35D);
-        pushOutOfBlocks(posX - (double)width * 0.35D, boundingBox.minY + 0.5D, posZ - (double)width * 0.35D);
-        pushOutOfBlocks(posX + (double)width * 0.35D, boundingBox.minY + 0.5D, posZ - (double)width * 0.35D);
-        pushOutOfBlocks(posX + (double)width * 0.35D, boundingBox.minY + 0.5D, posZ + (double)width * 0.35D);
+        pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, boundingBox.minY + 0.5D, posZ + (double)width * 0.34999999999999998D);
+        pushOutOfBlocks(posX - (double)width * 0.34999999999999998D, boundingBox.minY + 0.5D, posZ - (double)width * 0.34999999999999998D);
+        pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, boundingBox.minY + 0.5D, posZ - (double)width * 0.34999999999999998D);
+        pushOutOfBlocks(posX + (double)width * 0.34999999999999998D, boundingBox.minY + 0.5D, posZ + (double)width * 0.34999999999999998D);
         boolean flag2 = (float)getFoodStats().getFoodLevel() > 6F;
 
         if (onGround && !flag1 && movementInput.moveForward >= f && !isSprinting() && flag2 && !isUsingItem() && !isPotionActive(Potion.blindness))
@@ -246,12 +246,12 @@ public class EntityPlayerSP extends EntityPlayer
         {
             if (movementInput.sneak)
             {
-                motionY -= 0.15D;
+                motionY -= 0.14999999999999999D;
             }
 
             if (movementInput.jump)
             {
-                motionY += 0.15D;
+                motionY += 0.14999999999999999D;
             }
         }
 

@@ -10,6 +10,9 @@ public interface ISaveHandler
      */
     public abstract WorldInfo loadWorldInfo();
 
+    /**
+     * Checks the session lock to prevent save collisions
+     */
     public abstract void checkSessionLock();
 
     /**
@@ -17,6 +20,9 @@ public interface ISaveHandler
      */
     public abstract IChunkLoader getChunkLoader(WorldProvider worldprovider);
 
+    /**
+     * saves level.dat and backs up the existing one to level.dat_old
+     */
     public abstract void saveWorldInfoAndPlayer(WorldInfo worldinfo, List list);
 
     /**

@@ -4,16 +4,16 @@ import java.util.*;
 
 public class EntityAIPlay extends EntityAIBase
 {
-    private EntityVillager field_48359_a;
-    private EntityLiving field_48357_b;
+    private EntityVillager villagerObj;
+    private EntityLiving targetVillager;
     private float field_48358_c;
     private int field_48356_d;
 
     public EntityAIPlay(EntityVillager par1EntityVillager, float par2)
     {
-        field_48359_a = par1EntityVillager;
+        villagerObj = par1EntityVillager;
         field_48358_c = par2;
-        func_46079_a(1);
+        setMutexBits(1);
     }
 
     /**
@@ -21,17 +21,17 @@ public class EntityAIPlay extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (field_48359_a.func_48123_at() >= 0)
+        if (villagerObj.getGrowingAge() >= 0)
         {
             return false;
         }
 
-        if (field_48359_a.getRNG().nextInt(400) != 0)
+        if (villagerObj.getRNG().nextInt(400) != 0)
         {
             return false;
         }
 
-        List list = field_48359_a.worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityVillager.class, field_48359_a.boundingBox.expand(6D, 3D, 6D));
+        List list = villagerObj.worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityVillager.class, villagerObj.boundingBox.expand(6D, 3D, 6D));
         double d = Double.MAX_VALUE;
         Iterator iterator = list.iterator();
 
@@ -44,27 +44,27 @@ public class EntityAIPlay extends EntityAIBase
 
             Entity entity = (Entity)iterator.next();
 
-            if (entity != field_48359_a)
+            if (entity != villagerObj)
             {
                 EntityVillager entityvillager = (EntityVillager)entity;
 
-                if (!entityvillager.func_48125_w() && entityvillager.func_48123_at() < 0)
+                if (!entityvillager.getIsPlayingFlag() && entityvillager.getGrowingAge() < 0)
                 {
-                    double d1 = entityvillager.getDistanceSqToEntity(field_48359_a);
+                    double d1 = entityvillager.getDistanceSqToEntity(villagerObj);
 
                     if (d1 <= d)
                     {
                         d = d1;
-                        field_48357_b = entityvillager;
+                        targetVillager = entityvillager;
                     }
                 }
             }
         }
         while (true);
 
-        if (field_48357_b == null)
+        if (targetVillager == null)
         {
-            Vec3D vec3d = RandomPositionGenerator.func_48622_a(field_48359_a, 16, 3);
+            Vec3D vec3d = RandomPositionGenerator.func_48622_a(villagerObj, 16, 3);
 
             if (vec3d == null)
             {
@@ -83,11 +83,14 @@ public class EntityAIPlay extends EntityAIBase
         return field_48356_d > 0;
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        if (field_48357_b != null)
+        if (targetVillager != null)
         {
-            field_48359_a.func_48127_b(true);
+            villagerObj.setIsPlayingFlag(true);
         }
 
         field_48356_d = 1000;
@@ -98,8 +101,8 @@ public class EntityAIPlay extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48359_a.func_48127_b(false);
-        field_48357_b = null;
+        villagerObj.setIsPlayingFlag(false);
+        targetVillager = null;
     }
 
     /**
@@ -109,23 +112,23 @@ public class EntityAIPlay extends EntityAIBase
     {
         field_48356_d--;
 
-        if (field_48357_b != null)
+        if (targetVillager != null)
         {
-            if (field_48359_a.getDistanceSqToEntity(field_48357_b) > 4D)
+            if (villagerObj.getDistanceSqToEntity(targetVillager) > 4D)
             {
-                field_48359_a.func_48084_aL().func_48667_a(field_48357_b, field_48358_c);
+                villagerObj.getNavigator().func_48667_a(targetVillager, field_48358_c);
             }
         }
-        else if (field_48359_a.func_48084_aL().func_46072_b())
+        else if (villagerObj.getNavigator().noPath())
         {
-            Vec3D vec3d = RandomPositionGenerator.func_48622_a(field_48359_a, 16, 3);
+            Vec3D vec3d = RandomPositionGenerator.func_48622_a(villagerObj, 16, 3);
 
             if (vec3d == null)
             {
                 return;
             }
 
-            field_48359_a.func_48084_aL().func_48666_a(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, field_48358_c);
+            villagerObj.getNavigator().func_48666_a(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, field_48358_c);
         }
     }
 }

@@ -50,6 +50,9 @@ public class BlockPistonMoving extends BlockContainer
         return false;
     }
 
+    /**
+     * checks to see if you can place this block can be placed on that side of a block: BlockLever overrides
+     */
     public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int i, int j)
     {
         return false;
@@ -252,6 +255,9 @@ public class BlockPistonMoving extends BlockContainer
         return axisalignedbb;
     }
 
+    /**
+     * gets the piston tile entity at the specified location
+     */
     private TileEntityPiston getTileEntityAtLocation(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         TileEntity tileentity = par1IBlockAccess.getBlockTileEntity(par2, par3, par4);

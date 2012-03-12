@@ -136,7 +136,7 @@ public class TileEntityRenderer
             int i = worldObj.getLightBrightnessForSkyBlocks(par1TileEntity.xCoord, par1TileEntity.yCoord, par1TileEntity.zCoord, 0);
             int j = i % 0x10000;
             int k = i / 0x10000;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)j / 1.0F, (float)k / 1.0F);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             renderTileEntityAt(par1TileEntity, (double)par1TileEntity.xCoord - staticPlayerX, (double)par1TileEntity.yCoord - staticPlayerY, (double)par1TileEntity.zCoord - staticPlayerZ, par2);
         }

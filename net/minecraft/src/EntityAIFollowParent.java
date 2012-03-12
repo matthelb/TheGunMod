@@ -5,14 +5,15 @@ import java.util.List;
 
 public class EntityAIFollowParent extends EntityAIBase
 {
-    EntityAnimal field_48249_a;
+    /** The child that is following its parent. */
+    EntityAnimal childAnimal;
     EntityAnimal field_48247_b;
     float field_48248_c;
     private int field_48246_d;
 
     public EntityAIFollowParent(EntityAnimal par1EntityAnimal, float par2)
     {
-        field_48249_a = par1EntityAnimal;
+        childAnimal = par1EntityAnimal;
         field_48248_c = par2;
     }
 
@@ -21,12 +22,12 @@ public class EntityAIFollowParent extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (field_48249_a.func_48123_at() >= 0)
+        if (childAnimal.getGrowingAge() >= 0)
         {
             return false;
         }
 
-        List list = field_48249_a.worldObj.getEntitiesWithinAABB(field_48249_a.getClass(), field_48249_a.boundingBox.expand(8D, 4D, 8D));
+        List list = childAnimal.worldObj.getEntitiesWithinAABB(childAnimal.getClass(), childAnimal.boundingBox.expand(8D, 4D, 8D));
         EntityAnimal entityanimal = null;
         double d = Double.MAX_VALUE;
         Iterator iterator = list.iterator();
@@ -41,9 +42,9 @@ public class EntityAIFollowParent extends EntityAIBase
             Entity entity = (Entity)iterator.next();
             EntityAnimal entityanimal1 = (EntityAnimal)entity;
 
-            if (entityanimal1.func_48123_at() >= 0)
+            if (entityanimal1.getGrowingAge() >= 0)
             {
-                double d1 = field_48249_a.getDistanceSqToEntity(entityanimal1);
+                double d1 = childAnimal.getDistanceSqToEntity(entityanimal1);
 
                 if (d1 <= d)
                 {
@@ -80,11 +81,14 @@ public class EntityAIFollowParent extends EntityAIBase
             return false;
         }
 
-        double d = field_48249_a.getDistanceSqToEntity(field_48247_b);
+        double d = childAnimal.getDistanceSqToEntity(field_48247_b);
         return d >= 9D && d <= 256D;
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48246_d = 0;
     }
@@ -109,7 +113,7 @@ public class EntityAIFollowParent extends EntityAIBase
         else
         {
             field_48246_d = 10;
-            field_48249_a.func_48084_aL().func_48667_a(field_48247_b, field_48248_c);
+            childAnimal.getNavigator().func_48667_a(field_48247_b, field_48248_c);
             return;
         }
     }

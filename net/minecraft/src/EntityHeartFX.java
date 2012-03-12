@@ -12,10 +12,10 @@ public class EntityHeartFX extends EntityFX
     public EntityHeartFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, float par14)
     {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
-        motionX *= 0.01D;
-        motionY *= 0.01D;
-        motionZ *= 0.01D;
-        motionY += 0.1D;
+        motionX *= 0.0099999997764825821D;
+        motionY *= 0.0099999997764825821D;
+        motionZ *= 0.0099999997764825821D;
+        motionY += 0.10000000000000001D;
         particleScale *= 0.75F;
         particleScale *= par14;
         particleScaleOverTime = particleScale;
@@ -60,18 +60,18 @@ public class EntityHeartFX extends EntityFX
 
         if (posY == prevPosY)
         {
-            motionX *= 1.1D;
-            motionZ *= 1.1D;
+            motionX *= 1.1000000000000001D;
+            motionZ *= 1.1000000000000001D;
         }
 
-        motionX *= 0.86D;
-        motionY *= 0.86D;
-        motionZ *= 0.86D;
+        motionX *= 0.86000001430511475D;
+        motionY *= 0.86000001430511475D;
+        motionZ *= 0.86000001430511475D;
 
         if (onGround)
         {
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
         }
     }
 }

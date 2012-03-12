@@ -52,7 +52,10 @@ public interface IBlockAccess
 
     public abstract BiomeGenBase func_48454_a(int i, int j);
 
-    public abstract int func_48453_b();
+    /**
+     * Returns current world height
+     */
+    public abstract int getWorldHeight();
 
     public abstract boolean func_48452_a();
 }

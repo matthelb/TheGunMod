@@ -353,7 +353,11 @@ public class InventoryPlayer implements IInventory
         }
     }
 
-    public ItemStack func_48081_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         ItemStack aitemstack[] = mainInventory;
 
@@ -613,7 +617,7 @@ public class InventoryPlayer implements IInventory
         {
             if (mainInventory[i] != null)
             {
-                player.func_48151_a(mainInventory[i], true);
+                player.dropPlayerItemWithRandomChoice(mainInventory[i], true);
                 mainInventory[i] = null;
             }
         }
@@ -622,7 +626,7 @@ public class InventoryPlayer implements IInventory
         {
             if (armorInventory[j] != null)
             {
-                player.func_48151_a(armorInventory[j], true);
+                player.dropPlayerItemWithRandomChoice(armorInventory[j], true);
                 armorInventory[j] = null;
             }
         }

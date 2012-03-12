@@ -6,6 +6,7 @@ import java.util.logging.Logger;
 
 public class SaveHandler implements ISaveHandler
 {
+    /** Reference to the logger. */
     private static final Logger logger = Logger.getLogger("Minecraft");
 
     /** The path to the current savegame directory */
@@ -74,6 +75,9 @@ public class SaveHandler implements ISaveHandler
         return saveDirectory;
     }
 
+    /**
+     * Checks the session lock to prevent save collisions
+     */
     public void checkSessionLock()
     {
         try
@@ -147,6 +151,9 @@ public class SaveHandler implements ISaveHandler
         return null;
     }
 
+    /**
+     * saves level.dat and backs up the existing one to level.dat_old
+     */
     public void saveWorldInfoAndPlayer(WorldInfo par1WorldInfo, List par2List)
     {
         NBTTagCompound nbttagcompound = par1WorldInfo.getNBTTagCompoundWithPlayers(par2List);

@@ -43,6 +43,9 @@ public class BlockLever extends Block
         return 12;
     }
 
+    /**
+     * checks to see if you can place this block can be placed on that side of a block: BlockLever overrides
+     */
     public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
     {
         if (par5 == 1 && par1World.isBlockNormalCube(par2, par3 - 1, par4))

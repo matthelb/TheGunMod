@@ -48,6 +48,9 @@ public class SaveFormatOld implements ISaveFormat
     {
     }
 
+    /**
+     * gets the world info
+     */
     public WorldInfo getWorldInfo(String par1Str)
     {
         File file = new File(savesDirectory, par1Str);

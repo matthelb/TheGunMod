@@ -111,6 +111,9 @@ public class BlockPistonExtension extends Block
         return false;
     }
 
+    /**
+     * checks to see if you can place this block can be placed on that side of a block: BlockLever overrides
+     */
     public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int i, int j)
     {
         return false;

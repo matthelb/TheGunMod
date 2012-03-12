@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 public class StructureVillagePieceWeight
 {
+    /** The Class object for the represantation of this village piece. */
     public Class villagePieceClass;
     public final int villagePieceWeight;
     public int villagePiecesSpawned;

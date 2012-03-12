@@ -307,11 +307,11 @@ public class CraftingManager
                 {
                     Item.enderPearl, Item.blazePowder
                 });
-        addShapelessRecipe(new ItemStack(Item.field_48439_bE, 3), new Object[]
+        addShapelessRecipe(new ItemStack(Item.fireballCharge, 3), new Object[]
                 {
                     Item.gunpowder, Item.blazePowder, Item.coal
                 });
-        addShapelessRecipe(new ItemStack(Item.field_48439_bE, 3), new Object[]
+        addShapelessRecipe(new ItemStack(Item.fireballCharge, 3), new Object[]
                 {
                     Item.gunpowder, Item.blazePowder, new ItemStack(Item.coal, 1, 1)
                 });
@@ -486,6 +486,9 @@ public class CraftingManager
         return null;
     }
 
+    /**
+     * returns the List<> of all recipes
+     */
     public List getRecipeList()
     {
         return recipes;

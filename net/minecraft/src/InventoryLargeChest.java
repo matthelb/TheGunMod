@@ -76,15 +76,19 @@ public class InventoryLargeChest implements IInventory
         }
     }
 
-    public ItemStack func_48081_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (par1 >= upperChest.getSizeInventory())
         {
-            return lowerChest.func_48081_b(par1 - upperChest.getSizeInventory());
+            return lowerChest.getStackInSlotOnClosing(par1 - upperChest.getSizeInventory());
         }
         else
         {
-            return upperChest.func_48081_b(par1);
+            return upperChest.getStackInSlotOnClosing(par1);
         }
     }
 

@@ -41,7 +41,7 @@ public class TextureFlamesFX extends TextureFX
 
                 if (j >= 19)
                 {
-                    field_1132_h[i + j * 16] = (float)(Math.random() * Math.random() * Math.random() * 4D + Math.random() * 0.1D + 0.2D);
+                    field_1132_h[i + j * 16] = (float)(Math.random() * Math.random() * Math.random() * 4D + Math.random() * 0.10000000149011612D + 0.20000000298023224D);
                 }
             }
         }

@@ -700,9 +700,9 @@ public class EntityRenderer
      */
     public void disableLightmap(double par1)
     {
-        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapEnabled);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapDisabled);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
     /**
@@ -710,7 +710,7 @@ public class EntityRenderer
      */
     public void enableLightmap(double par1)
     {
-        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapEnabled);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GL11.glMatrixMode(GL11.GL_TEXTURE);
         GL11.glLoadIdentity();
         float f = 0.00390625F;
@@ -726,7 +726,7 @@ public class EntityRenderer
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_CLAMP);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapDisabled);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
     }
 
     /**
@@ -736,8 +736,8 @@ public class EntityRenderer
     {
         torchFlickerDX += (Math.random() - Math.random()) * Math.random() * Math.random();
         torchFlickerDY += (Math.random() - Math.random()) * Math.random() * Math.random();
-        torchFlickerDX *= 0.9D;
-        torchFlickerDY *= 0.9D;
+        torchFlickerDX *= 0.90000000000000002D;
+        torchFlickerDY *= 0.90000000000000002D;
         torchFlickerX += (torchFlickerDX - torchFlickerX) * 1.0F;
         torchFlickerY += (torchFlickerDY - torchFlickerY) * 1.0F;
         lightmapUpdateNeeded = true;
@@ -1105,7 +1105,7 @@ public class EntityRenderer
             Profiler.endStartSection("culling");
             Frustrum frustrum = new Frustrum();
             frustrum.setPosition(d, d1, d2);
-            mc.renderGlobal.clipRenderersByFrustrum(frustrum, par1);
+            mc.renderGlobal.clipRenderersByFrustum(frustrum, par1);
 
             if (i == 0)
             {
@@ -1302,7 +1302,7 @@ public class EntityRenderer
             int j2 = world.getBlockId(k1, i2 - 1, l1);
             BiomeGenBase biomegenbase = world.func_48454_a(k1, l1);
 
-            if (i2 > j + byte0 || i2 < j - byte0 || !biomegenbase.canSpawnLightningBolt() || biomegenbase.func_48411_i() <= 0.2F)
+            if (i2 > j + byte0 || i2 < j - byte0 || !biomegenbase.canSpawnLightningBolt() || biomegenbase.getFloatTemperature() <= 0.2F)
             {
                 continue;
             }
@@ -1455,7 +1455,7 @@ public class EntityRenderer
                 }
 
                 random.setSeed(i2 * i2 * 3121 + i2 * 0x2b24abb ^ l1 * l1 * 0x66397 + l1 * 13761);
-                float f8 = biomegenbase.func_48411_i();
+                float f8 = biomegenbase.getFloatTemperature();
 
                 if (world.getWorldChunkManager().getTemperatureAtHeight(f8, k2) >= 0.15F)
                 {

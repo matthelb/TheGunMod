@@ -148,9 +148,9 @@ public class RenderLiving extends Render
             renderEquippedItems(par1EntityLiving, par9);
             float f7 = par1EntityLiving.getEntityBrightness(par9);
             int k = getColorMultiplier(par1EntityLiving, f7, par9);
-            OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapEnabled);
+            OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
-            OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapDisabled);
+            OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
 
             if ((k >> 24 & 0xff) > 0 || par1EntityLiving.hurtTime > 0 || par1EntityLiving.deathTime > 0)
             {
@@ -207,9 +207,9 @@ public class RenderLiving extends Render
             exception.printStackTrace();
         }
 
-        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapEnabled);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
-        OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapDisabled);
+        OpenGlHelper.setActiveTexture(OpenGlHelper.defaultTexUnit);
         GL11.glEnable(GL11.GL_CULL_FACE);
         GL11.glPopMatrix();
         passSpecialRender(par1EntityLiving, par2, par4, par6);

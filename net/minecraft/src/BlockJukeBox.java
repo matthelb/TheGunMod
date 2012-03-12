@@ -92,7 +92,7 @@ public class BlockJukeBox extends BlockContainer
             int j = i;
             float f = 0.7F;
             double d = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
-            double d1 = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.2D + 0.6D;
+            double d1 = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.20000000000000001D + 0.59999999999999998D;
             double d2 = (double)(par1World.rand.nextFloat() * f) + (double)(1.0F - f) * 0.5D;
             EntityItem entityitem = new EntityItem(par1World, (double)par2 + d, (double)par3 + d1, (double)par4 + d2, new ItemStack(j, 1, 0));
             entityitem.delayBeforeCanPickup = 10;

@@ -294,8 +294,8 @@ public class ChunkCache implements IBlockAccess
     }
 
     /**
-     * 'Brightness for SkyBlock.Sky is clear white and (through color computing i assume) DEPENDANT ON DAYTIME.
-     * Brightness for SkyBlock.Block is yellowish and independant'
+     * Brightness for SkyBlock.Sky is clear white and (through color computing it is assumed) DEPENDENT ON DAYTIME.
+     * Brightness for SkyBlock.Block is yellowish and independent.
      */
     public int getSkyBlockTypeBrightness(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int par4)
     {
@@ -379,7 +379,10 @@ public class ChunkCache implements IBlockAccess
         }
     }
 
-    public int func_48453_b()
+    /**
+     * Returns current world height
+     */
+    public int getWorldHeight()
     {
         return 256;
     }

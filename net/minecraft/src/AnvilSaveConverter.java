@@ -127,7 +127,7 @@ public class AnvilSaveConverter extends SaveFormatOld
 
         if (worldinfo.getTerrainType() == WorldType.field_48634_d)
         {
-            worldinfo.func_48619_a(WorldType.field_48635_b);
+            worldinfo.setTerrainType(WorldType.field_48635_b);
         }
 
         func_48429_d(par1Str);
@@ -203,11 +203,11 @@ public class AnvilSaveConverter extends SaveFormatOld
                         NBTTagCompound nbttagcompound = CompressedStreamTools.read(datainputstream);
                         datainputstream.close();
                         NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("Level");
-                        AnvilConverterData anvilconverterdata = ChunkLoader.func_48485_a(nbttagcompound1);
+                        AnvilConverterData anvilconverterdata = ChunkLoader.load(nbttagcompound1);
                         NBTTagCompound nbttagcompound2 = new NBTTagCompound();
                         NBTTagCompound nbttagcompound3 = new NBTTagCompound();
                         nbttagcompound2.setTag("Level", nbttagcompound3);
-                        ChunkLoader.func_48486_a(anvilconverterdata, nbttagcompound3, par3WorldChunkManager);
+                        ChunkLoader.convertToAnvilFormat(anvilconverterdata, nbttagcompound3, par3WorldChunkManager);
                         DataOutputStream dataoutputstream = regionfile1.getChunkDataOutputStream(i, j);
                         CompressedStreamTools.write(nbttagcompound2, dataoutputstream);
                         dataoutputstream.close();

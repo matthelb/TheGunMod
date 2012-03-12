@@ -177,8 +177,8 @@ public class GuiAchievements extends GuiScreen
         }
         else
         {
-            guiMapX += d * 0.85D;
-            guiMapY += d1 * 0.85D;
+            guiMapX += d * 0.84999999999999998D;
+            guiMapY += d1 * 0.84999999999999998D;
         }
     }
 
@@ -303,7 +303,7 @@ public class GuiAchievements extends GuiScreen
             int j5 = 0;
             boolean flag = statFileWriter.hasAchievementUnlocked(achievement1);
             boolean flag1 = statFileWriter.canUnlockAchievement(achievement1);
-            char c = Math.sin(((double)(System.currentTimeMillis() % 600L) / 600D) * Math.PI * 2D) <= 0.6D ? '\202' : '\377';
+            char c = Math.sin(((double)(System.currentTimeMillis() % 600L) / 600D) * Math.PI * 2D) <= 0.59999999999999998D ? '\202' : '\377';
 
             if (flag)
             {
@@ -347,7 +347,7 @@ public class GuiAchievements extends GuiScreen
             }
             else if (statFileWriter.canUnlockAchievement(achievement3))
             {
-                float f1 = Math.sin(((double)(System.currentTimeMillis() % 600L) / 600D) * Math.PI * 2D) >= 0.6D ? 0.8F : 0.6F;
+                float f1 = Math.sin(((double)(System.currentTimeMillis() % 600L) / 600D) * Math.PI * 2D) >= 0.59999999999999998D ? 0.8F : 0.6F;
                 GL11.glColor4f(f1, f1, f1, 1.0F);
             }
             else

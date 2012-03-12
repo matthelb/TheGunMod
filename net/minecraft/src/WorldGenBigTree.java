@@ -8,6 +8,8 @@ public class WorldGenBigTree extends WorldGenerator
     {
         2, 0, 0, 1, 2, 1
     };
+
+    /** random seed for GenBigTree */
     Random rand;
 
     /** Reference to the World object. */
@@ -45,9 +47,9 @@ public class WorldGenBigTree extends WorldGenerator
         super(par1);
         rand = new Random();
         heightLimit = 0;
-        heightAttenuation = 0.618D;
+        heightAttenuation = 0.61799999999999999D;
         branchDensity = 1.0D;
-        branchSlope = 0.381D;
+        branchSlope = 0.38100000000000001D;
         scaleWidth = 1.0D;
         leafDensity = 1.0D;
         trunkSize = 1;
@@ -67,7 +69,7 @@ public class WorldGenBigTree extends WorldGenerator
             height = heightLimit - 1;
         }
 
-        int i = (int)(1.382D + Math.pow((leafDensity * (double)heightLimit) / 13D, 2D));
+        int i = (int)(1.3819999999999999D + Math.pow((leafDensity * (double)heightLimit) / 13D, 2D));
 
         if (i < 1)
         {
@@ -101,7 +103,7 @@ public class WorldGenBigTree extends WorldGenerator
 
                 for (; j1 < i; j1++)
                 {
-                    double d1 = scaleWidth * ((double)f * ((double)rand.nextFloat() + 0.328D));
+                    double d1 = scaleWidth * ((double)f * ((double)rand.nextFloat() + 0.32800000000000001D));
                     double d2 = (double)rand.nextFloat() * 2D * Math.PI;
                     int k1 = MathHelper.floor_double(d1 * Math.sin(d2) + (double)basePos[0] + d);
                     int l1 = MathHelper.floor_double(d1 * Math.cos(d2) + (double)basePos[2] + d);
@@ -156,7 +158,7 @@ public class WorldGenBigTree extends WorldGenerator
 
     void genTreeLayer(int par1, int par2, int par3, float par4, byte par5, int par6)
     {
-        int i = (int)((double)par4 + 0.618D);
+        int i = (int)((double)par4 + 0.61799999999999999D);
         byte byte0 = otherCoordPairs[par5];
         byte byte1 = otherCoordPairs[par5 + 3];
         int ai[] =
@@ -207,7 +209,7 @@ public class WorldGenBigTree extends WorldGenerator
      */
     float layerSize(int par1)
     {
-        if ((double)par1 < (double)(float)heightLimit * 0.3D)
+        if ((double)par1 < (double)(float)heightLimit * 0.29999999999999999D)
         {
             return -1.618F;
         }
@@ -335,7 +337,7 @@ public class WorldGenBigTree extends WorldGenerator
      */
     boolean leafNodeNeedsBase(int par1)
     {
-        return (double)par1 >= (double)heightLimit * 0.2D;
+        return (double)par1 >= (double)heightLimit * 0.20000000000000001D;
     }
 
     /**

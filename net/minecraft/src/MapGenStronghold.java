@@ -18,7 +18,7 @@ public class MapGenStronghold extends MapGenStructure
         allowedBiomeGenBases = (new BiomeGenBase[]
                 {
                     BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.taiga, BiomeGenBase.icePlains, BiomeGenBase.iceMountains, BiomeGenBase.desertHills, BiomeGenBase.forestHills, BiomeGenBase.extremeHillsEdge,
-                    BiomeGenBase.field_48416_w, BiomeGenBase.field_48417_x
+                    BiomeGenBase.jungle, BiomeGenBase.jungleHills
                 });
         structureCoords = new ChunkCoordIntPair[3];
     }
@@ -105,7 +105,7 @@ public class MapGenStronghold extends MapGenStructure
     {
         StructureStrongholdStart structurestrongholdstart;
 
-        for (structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2); structurestrongholdstart.getComponents().isEmpty() || ((ComponentStrongholdStairs2)structurestrongholdstart.getComponents().get(0)).field_40009_b == null; structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2)) { }
+        for (structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2); structurestrongholdstart.getComponents().isEmpty() || ((ComponentStrongholdStairs2)structurestrongholdstart.getComponents().get(0)).portalRoom == null; structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2)) { }
 
         return structurestrongholdstart;
     }

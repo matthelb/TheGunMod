@@ -9,12 +9,12 @@ public class EntitySnowman extends EntityGolem
         super(par1World);
         texture = "/mob/snowman.png";
         setSize(0.4F, 1.8F);
-        func_48084_aL().func_48664_a(true);
+        getNavigator().func_48664_a(true);
         tasks.addTask(1, new EntityAIArrowAttack(this, 0.25F, 2, 20));
         tasks.addTask(2, new EntityAIWander(this, 0.2F));
         tasks.addTask(3, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 6F));
         tasks.addTask(4, new EntityAILookIdle(this));
-        field_48105_bU.addTask(1, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityMob.class, 16F, 0, true));
+        targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityMob.class, 16F, 0, true));
     }
 
     /**
@@ -46,7 +46,7 @@ public class EntitySnowman extends EntityGolem
         int i = MathHelper.floor_double(posX);
         int k = MathHelper.floor_double(posZ);
 
-        if (worldObj.func_48454_a(i, k).func_48411_i() > 1.0F)
+        if (worldObj.func_48454_a(i, k).getFloatTemperature() > 1.0F)
         {
             attackEntityFrom(DamageSource.onFire, 1);
         }
@@ -57,7 +57,7 @@ public class EntitySnowman extends EntityGolem
             int i1 = MathHelper.floor_double(posY);
             int j1 = MathHelper.floor_double(posZ + (double)((float)(((j / 2) % 2) * 2 - 1) * 0.25F));
 
-            if (worldObj.getBlockId(l, i1, j1) == 0 && worldObj.func_48454_a(l, j1).func_48411_i() < 0.8F && Block.snow.canPlaceBlockAt(worldObj, l, i1, j1))
+            if (worldObj.getBlockId(l, i1, j1) == 0 && worldObj.func_48454_a(l, j1).getFloatTemperature() < 0.8F && Block.snow.canPlaceBlockAt(worldObj, l, i1, j1))
             {
                 worldObj.setBlockWithNotify(l, i1, j1, Block.snow.blockID);
             }

@@ -188,7 +188,7 @@ public class Tessellator
 
             if (hasBrightness)
             {
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapEnabled);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
 
                 if (useVBO)
                 {
@@ -201,7 +201,7 @@ public class Tessellator
                 }
 
                 GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapDisabled);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
             }
 
             if (hasColor)
@@ -264,9 +264,9 @@ public class Tessellator
 
             if (hasBrightness)
             {
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapEnabled);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapTexUnit);
                 GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
-                OpenGlHelper.setClientActiveTexture(OpenGlHelper.lightmapDisabled);
+                OpenGlHelper.setClientActiveTexture(OpenGlHelper.defaultTexUnit);
             }
 
             if (hasColor)

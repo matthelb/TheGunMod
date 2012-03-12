@@ -89,16 +89,16 @@ public class TextureCompassFX extends TextureFX
             d1 = 1.0D;
         }
 
-        field_4228_j += d1 * 0.1D;
-        field_4228_j *= 0.8D;
+        field_4228_j += d1 * 0.10000000000000001D;
+        field_4228_j *= 0.80000000000000004D;
         field_4229_i += field_4228_j;
         double d3 = Math.sin(field_4229_i);
         double d5 = Math.cos(field_4229_i);
 
         for (int i2 = -4; i2 <= 4; i2++)
         {
-            int k2 = (int)(8.5D + d5 * (double)i2 * 0.3D);
-            int i3 = (int)(7.5D - d3 * (double)i2 * 0.3D * 0.5D);
+            int k2 = (int)(8.5D + d5 * (double)i2 * 0.29999999999999999D);
+            int i3 = (int)(7.5D - d3 * (double)i2 * 0.29999999999999999D * 0.5D);
             int k3 = i3 * 16 + k2;
             int i4 = 100;
             int k4 = 100;
@@ -123,8 +123,8 @@ public class TextureCompassFX extends TextureFX
 
         for (int j2 = -8; j2 <= 16; j2++)
         {
-            int l2 = (int)(8.5D + d3 * (double)j2 * 0.3D);
-            int j3 = (int)(7.5D + d5 * (double)j2 * 0.3D * 0.5D);
+            int l2 = (int)(8.5D + d3 * (double)j2 * 0.29999999999999999D);
+            int j3 = (int)(7.5D + d5 * (double)j2 * 0.29999999999999999D * 0.5D);
             int l3 = j3 * 16 + l2;
             int j4 = j2 < 0 ? 100 : 255;
             int l4 = j2 < 0 ? 100 : 20;

@@ -13,15 +13,33 @@ public class Potion
     public static final Potion harm = (new PotionHealth(7, true, 0x430a09)).setPotionName("potion.harm");
     public static final Potion jump = (new Potion(8, false, 0x786297)).setPotionName("potion.jump").setIconIndex(2, 1);
     public static final Potion confusion = (new Potion(9, true, 0x551d4a)).setPotionName("potion.confusion").setIconIndex(3, 1).setEffectiveness(0.25D);
+
+    /** The regeneration Potion object. */
     public static final Potion regeneration = (new Potion(10, false, 0xcd5cab)).setPotionName("potion.regeneration").setIconIndex(7, 0).setEffectiveness(0.25D);
     public static final Potion resistance = (new Potion(11, false, 0x99453a)).setPotionName("potion.resistance").setIconIndex(6, 1);
+
+    /** The fire resistance Potion object. */
     public static final Potion fireResistance = (new Potion(12, false, 0xe49a3a)).setPotionName("potion.fireResistance").setIconIndex(7, 1);
+
+    /** The water breathing Potion object. */
     public static final Potion waterBreathing = (new Potion(13, false, 0x2e5299)).setPotionName("potion.waterBreathing").setIconIndex(0, 2);
+
+    /** The invisibility Potion object. */
     public static final Potion invisibility = (new Potion(14, false, 0x7f8392)).setPotionName("potion.invisibility").setIconIndex(0, 1).setPotionUnusable();
+
+    /** The blindness Potion object. */
     public static final Potion blindness = (new Potion(15, true, 0x1f1f23)).setPotionName("potion.blindness").setIconIndex(5, 1).setEffectiveness(0.25D);
+
+    /** The night vision Potion object. */
     public static final Potion nightVision = (new Potion(16, false, 0x1f1fa1)).setPotionName("potion.nightVision").setIconIndex(4, 1).setPotionUnusable();
+
+    /** The hunger Potion object. */
     public static final Potion hunger = (new Potion(17, true, 0x587653)).setPotionName("potion.hunger").setIconIndex(1, 1);
+
+    /** The weakness Potion object. */
     public static final Potion weakness = (new Potion(18, true, 0x484d48)).setPotionName("potion.weakness").setIconIndex(5, 0);
+
+    /** The poison Potion object. */
     public static final Potion poison = (new Potion(19, true, 0x4e9331)).setPotionName("potion.poison").setIconIndex(6, 0).setEffectiveness(0.25D);
     public static final Potion field_35688_v = null;
     public static final Potion field_35687_w = null;
@@ -35,7 +53,11 @@ public class Potion
     public static final Potion field_35664_E = null;
     public static final Potion field_35665_F = null;
     public static final Potion field_35666_G = null;
+
+    /** The Id of a Potion object. */
     public final int id;
+
+    /** The name of the Potion. */
     private String name;
 
     /** The index for the icon displayed when the potion effect is active. */
@@ -173,6 +195,9 @@ public class Potion
         return id == hunger.id;
     }
 
+    /**
+     * Set the potion name.
+     */
     public Potion setPotionName(String par1Str)
     {
         name = par1Str;

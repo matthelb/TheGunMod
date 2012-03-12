@@ -21,7 +21,10 @@ public class VillageSiege
         field_48582_a = par1World;
     }
 
-    public void func_48573_a()
+    /**
+     * Runs a single tick for the village siege
+     */
+    public void tick()
     {
         boolean flag = false;
 
@@ -103,12 +106,12 @@ public class VillageSiege
         for (Iterator iterator = list.iterator(); iterator.hasNext();)
         {
             EntityPlayer entityplayer = (EntityPlayer)iterator.next();
-            field_48576_f = field_48582_a.field_48465_A.func_48564_a((int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ, 1);
+            field_48576_f = field_48582_a.villageCollectionObj.findNearestVillage((int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ, 1);
 
-            if (field_48576_f != null && field_48576_f.func_48530_c() >= 10 && field_48576_f.func_48523_d() >= 20 && field_48576_f.func_48524_e() >= 20)
+            if (field_48576_f != null && field_48576_f.getNumVillageDoors() >= 10 && field_48576_f.getTicksSinceLastDoorAdding() >= 20 && field_48576_f.getNumVillagers() >= 20)
             {
-                ChunkCoordinates chunkcoordinates = field_48576_f.func_48539_a();
-                float f = field_48576_f.func_48531_b();
+                ChunkCoordinates chunkcoordinates = field_48576_f.getCenter();
+                float f = field_48576_f.getVillageRadius();
                 boolean flag = false;
                 int i = 0;
 
@@ -119,11 +122,11 @@ public class VillageSiege
                         break;
                     }
 
-                    field_48577_g = chunkcoordinates.posX + (int)((double)(MathHelper.cos(field_48582_a.rand.nextFloat() * (float)Math.PI * 2.0F) * f) * 0.9D);
+                    field_48577_g = chunkcoordinates.posX + (int)((double)(MathHelper.cos(field_48582_a.rand.nextFloat() * (float)Math.PI * 2.0F) * f) * 0.90000000000000002D);
                     field_48583_h = chunkcoordinates.posY;
-                    field_48584_i = chunkcoordinates.posZ + (int)((double)(MathHelper.sin(field_48582_a.rand.nextFloat() * (float)Math.PI * 2.0F) * f) * 0.9D);
+                    field_48584_i = chunkcoordinates.posZ + (int)((double)(MathHelper.sin(field_48582_a.rand.nextFloat() * (float)Math.PI * 2.0F) * f) * 0.90000000000000002D);
                     flag = false;
-                    Iterator iterator1 = field_48582_a.field_48465_A.func_48554_b().iterator();
+                    Iterator iterator1 = field_48582_a.villageCollectionObj.func_48554_b().iterator();
 
                     do
                     {
@@ -134,7 +137,7 @@ public class VillageSiege
 
                         Village village = (Village)iterator1.next();
 
-                        if (village == field_48576_f || !village.func_48533_a(field_48577_g, field_48583_h, field_48584_i))
+                        if (village == field_48576_f || !village.isInRange(field_48577_g, field_48583_h, field_48584_i))
                         {
                             continue;
                         }
@@ -195,8 +198,8 @@ public class VillageSiege
 
         entityzombie.setLocationAndAngles(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, field_48582_a.rand.nextFloat() * 360F, 0.0F);
         field_48582_a.spawnEntityInWorld(entityzombie);
-        ChunkCoordinates chunkcoordinates = field_48576_f.func_48539_a();
-        entityzombie.func_48082_b(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, field_48576_f.func_48531_b());
+        ChunkCoordinates chunkcoordinates = field_48576_f.getCenter();
+        entityzombie.setHomeArea(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, field_48576_f.getVillageRadius());
         return true;
     }
 
@@ -208,7 +211,7 @@ public class VillageSiege
             int k = (par2 + field_48582_a.rand.nextInt(6)) - 3;
             int l = (par3 + field_48582_a.rand.nextInt(16)) - 8;
 
-            if (field_48576_f.func_48533_a(j, k, l) && SpawnerAnimals.canCreatureTypeSpawnAtLocation(EnumCreatureType.monster, field_48582_a, j, k, l))
+            if (field_48576_f.isInRange(j, k, l) && SpawnerAnimals.canCreatureTypeSpawnAtLocation(EnumCreatureType.monster, field_48582_a, j, k, l))
             {
                 return Vec3D.createVector(j, k, l);
             }

@@ -289,8 +289,8 @@ public class BlockTorch extends Block
         double d = (float)par2 + 0.5F;
         double d1 = (float)par3 + 0.7F;
         double d2 = (float)par4 + 0.5F;
-        double d3 = 0.22D;
-        double d4 = 0.27D;
+        double d3 = 0.2199999988079071D;
+        double d4 = 0.27000001072883606D;
 
         if (i == 1)
         {

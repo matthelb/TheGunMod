@@ -180,7 +180,7 @@ public class TileEntityBrewingStand extends TileEntity implements IInventory
     }
 
     /**
-     * the result of brewing a potion of damage value i with an ingredient itemstack
+     * The result of brewing a potion of the specified damage value with an ingredient itemstack.
      */
     private int getPotionResult(int par1, ItemStack par2ItemStack)
     {
@@ -278,7 +278,11 @@ public class TileEntityBrewingStand extends TileEntity implements IInventory
         }
     }
 
-    public ItemStack func_48081_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (par1 >= 0 && par1 < brewingItemStacks.length)
         {

@@ -2,9 +2,16 @@ package net.minecraft.src;
 
 public class FoodStats
 {
+    /** The player's food level. */
     private int foodLevel;
+
+    /** The player's food saturation. */
     private float foodSaturationLevel;
+
+    /** The player's food exhaustion. */
     private float foodExhaustionLevel;
+
+    /** The player's food timer value. */
     private int foodTimer;
     private int prevFoodLevel;
 
@@ -25,11 +32,17 @@ public class FoodStats
         foodSaturationLevel = Math.min(foodSaturationLevel + (float)par1 * par2 * 2.0F, foodLevel);
     }
 
+    /**
+     * Eat some food.
+     */
     public void addStats(ItemFood par1ItemFood)
     {
         addStats(par1ItemFood.getHealAmount(), par1ItemFood.getSaturationModifier());
     }
 
+    /**
+     * Handles the food game logic.
+     */
     public void onUpdate(EntityPlayer par1EntityPlayer)
     {
         int i = par1EntityPlayer.worldObj.difficultySetting;
@@ -104,6 +117,9 @@ public class FoodStats
         par1NBTTagCompound.setFloat("foodExhaustionLevel", foodExhaustionLevel);
     }
 
+    /**
+     * Get the player's food level.
+     */
     public int getFoodLevel()
     {
         return foodLevel;
@@ -130,6 +146,9 @@ public class FoodStats
         foodExhaustionLevel = Math.min(foodExhaustionLevel + par1, 40F);
     }
 
+    /**
+     * Get the player's food saturation level.
+     */
     public float getSaturationLevel()
     {
         return foodSaturationLevel;

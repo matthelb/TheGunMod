@@ -87,7 +87,11 @@ public class TileEntityChest extends TileEntity implements IInventory
         }
     }
 
-    public ItemStack func_48081_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (chestContents[par1] != null)
         {
@@ -356,6 +360,9 @@ public class TileEntityChest extends TileEntity implements IInventory
         worldObj.playNoteAt(xCoord, yCoord, zCoord, 1, numUsingPlayers);
     }
 
+    /**
+     * invalidates a tile entity
+     */
     public void invalidate()
     {
         updateContainingBlockInfo();

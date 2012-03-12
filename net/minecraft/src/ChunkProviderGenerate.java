@@ -32,7 +32,7 @@ public class ChunkProviderGenerate implements IChunkProvider
 
     /** are map structures going to be generated (e.g. strongholds) */
     private final boolean mapFeaturesEnabled;
-    private double field_4180_q[];
+    private double noiseArray[];
     private double stoneNoise[];
     private MapGenBase caveGenerator;
 
@@ -90,7 +90,7 @@ public class ChunkProviderGenerate implements IChunkProvider
         byte byte3 = 17;
         int j = byte0 + 1;
         biomesForGeneration = worldObj.getWorldChunkManager().getBiomesForGeneration(biomesForGeneration, par1 * 4 - 2, par2 * 4 - 2, i + 5, j + 5);
-        field_4180_q = initializeNoiseField(field_4180_q, par1 * byte0, 0, par2 * byte0, i, byte3, j);
+        noiseArray = initializeNoiseField(noiseArray, par1 * byte0, 0, par2 * byte0, i, byte3, j);
 
         for (int k = 0; k < byte0; k++)
         {
@@ -99,14 +99,14 @@ public class ChunkProviderGenerate implements IChunkProvider
                 for (int i1 = 0; i1 < byte1; i1++)
                 {
                     double d = 0.125D;
-                    double d1 = field_4180_q[((k + 0) * j + (l + 0)) * byte3 + (i1 + 0)];
-                    double d2 = field_4180_q[((k + 0) * j + (l + 1)) * byte3 + (i1 + 0)];
-                    double d3 = field_4180_q[((k + 1) * j + (l + 0)) * byte3 + (i1 + 0)];
-                    double d4 = field_4180_q[((k + 1) * j + (l + 1)) * byte3 + (i1 + 0)];
-                    double d5 = (field_4180_q[((k + 0) * j + (l + 0)) * byte3 + (i1 + 1)] - d1) * d;
-                    double d6 = (field_4180_q[((k + 0) * j + (l + 1)) * byte3 + (i1 + 1)] - d2) * d;
-                    double d7 = (field_4180_q[((k + 1) * j + (l + 0)) * byte3 + (i1 + 1)] - d3) * d;
-                    double d8 = (field_4180_q[((k + 1) * j + (l + 1)) * byte3 + (i1 + 1)] - d4) * d;
+                    double d1 = noiseArray[((k + 0) * j + (l + 0)) * byte3 + (i1 + 0)];
+                    double d2 = noiseArray[((k + 0) * j + (l + 1)) * byte3 + (i1 + 0)];
+                    double d3 = noiseArray[((k + 1) * j + (l + 0)) * byte3 + (i1 + 0)];
+                    double d4 = noiseArray[((k + 1) * j + (l + 1)) * byte3 + (i1 + 0)];
+                    double d5 = (noiseArray[((k + 0) * j + (l + 0)) * byte3 + (i1 + 1)] - d1) * d;
+                    double d6 = (noiseArray[((k + 0) * j + (l + 1)) * byte3 + (i1 + 1)] - d2) * d;
+                    double d7 = (noiseArray[((k + 1) * j + (l + 0)) * byte3 + (i1 + 1)] - d3) * d;
+                    double d8 = (noiseArray[((k + 1) * j + (l + 1)) * byte3 + (i1 + 1)] - d4) * d;
 
                     for (int j1 = 0; j1 < 8; j1++)
                     {
@@ -172,7 +172,7 @@ public class ChunkProviderGenerate implements IChunkProvider
             for (int j = 0; j < 16; j++)
             {
                 BiomeGenBase biomegenbase = par4ArrayOfBiomeGenBase[j + i * 16];
-                float f = biomegenbase.func_48411_i();
+                float f = biomegenbase.getFloatTemperature();
                 int k = (int)(stoneNoise[i + j * 16] / 3D + 3D + rand.nextDouble() * 0.25D);
                 int l = -1;
                 byte byte1 = biomegenbase.topBlock;
@@ -317,8 +317,8 @@ public class ChunkProviderGenerate implements IChunkProvider
             }
         }
 
-        double d = 684.412D;
-        double d1 = 684.412D;
+        double d = 684.41200000000003D;
+        double d1 = 684.41200000000003D;
         noise5 = noiseGen5.generateNoiseOctaves(noise5, par2, par4, par5, par7, 1.121D, 1.121D, 0.5D);
         noise6 = noiseGen6.generateNoiseOctaves(noise6, par2, par4, par5, par7, 200D, 200D, 0.5D);
         noise3 = noiseGen3.generateNoiseOctaves(noise3, par2, par3, par4, par5, par6, par7, d / 80D, d1 / 160D, d / 80D);
@@ -364,7 +364,7 @@ public class ChunkProviderGenerate implements IChunkProvider
 
                 if (d2 < 0.0D)
                 {
-                    d2 = -d2 * 0.3D;
+                    d2 = -d2 * 0.29999999999999999D;
                 }
 
                 d2 = d2 * 3D - 2D;
@@ -378,7 +378,7 @@ public class ChunkProviderGenerate implements IChunkProvider
                         d2 = -1D;
                     }
 
-                    d2 /= 1.4D;
+                    d2 /= 1.3999999999999999D;
                     d2 /= 2D;
                 }
                 else
@@ -397,7 +397,7 @@ public class ChunkProviderGenerate implements IChunkProvider
                 {
                     double d3 = f2;
                     double d4 = f1;
-                    d3 += d2 * 0.2D;
+                    d3 += d2 * 0.20000000000000001D;
                     d3 = (d3 * (double)par6) / 16D;
                     double d5 = (double)par6 / 2D + d3 * 4D;
                     double d6 = 0.0D;

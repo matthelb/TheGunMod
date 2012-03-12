@@ -119,7 +119,7 @@ public class EntityEnderman extends EntityMob
         vec3d1 = vec3d1.normalize();
         double d1 = vec3d.dotProduct(vec3d1);
 
-        if (d1 > 1.0D - 0.025D / d)
+        if (d1 > 1.0D - 0.025000000000000001D / d)
         {
             return par1EntityPlayer.canEntityBeSeen(this);
         }

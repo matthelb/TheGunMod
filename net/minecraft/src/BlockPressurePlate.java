@@ -51,7 +51,7 @@ public class BlockPressurePlate extends Block
         return false;
     }
 
-    public boolean func_48204_b(IBlockAccess par1IBlockAccess, int par2, int par3, int i)
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int i)
     {
         return true;
     }
@@ -169,7 +169,7 @@ public class BlockPressurePlate extends Block
             par1World.notifyBlocksOfNeighborChange(par2, par3, par4, blockID);
             par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
             par1World.markBlocksDirty(par2, par3, par4, par2, par3, par4);
-            par1World.playSoundEffect((double)par2 + 0.5D, (double)par3 + 0.1D, (double)par4 + 0.5D, "random.click", 0.3F, 0.6F);
+            par1World.playSoundEffect((double)par2 + 0.5D, (double)par3 + 0.10000000000000001D, (double)par4 + 0.5D, "random.click", 0.3F, 0.6F);
         }
 
         if (!flag1 && flag)
@@ -178,7 +178,7 @@ public class BlockPressurePlate extends Block
             par1World.notifyBlocksOfNeighborChange(par2, par3, par4, blockID);
             par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
             par1World.markBlocksDirty(par2, par3, par4, par2, par3, par4);
-            par1World.playSoundEffect((double)par2 + 0.5D, (double)par3 + 0.1D, (double)par4 + 0.5D, "random.click", 0.3F, 0.5F);
+            par1World.playSoundEffect((double)par2 + 0.5D, (double)par3 + 0.10000000000000001D, (double)par4 + 0.5D, "random.click", 0.3F, 0.5F);
         }
 
         if (flag1)

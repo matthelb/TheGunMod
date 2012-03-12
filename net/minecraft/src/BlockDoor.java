@@ -93,7 +93,7 @@ public class BlockDoor extends Block
         return false;
     }
 
-    public boolean func_48204_b(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         int i = func_48212_i(par1IBlockAccess, par2, par3, par4);
         return (i & 4) != 0;
@@ -142,7 +142,10 @@ public class BlockDoor extends Block
         setDoorRotation(func_48212_i(par1IBlockAccess, par2, par3, par4));
     }
 
-    public int func_48214_g(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    /**
+     * Returns 0, 1, 2 or 3 depending on where the hinge is.
+     */
+    public int getDoorOrientation(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         return func_48212_i(par1IBlockAccess, par2, par3, par4) & 3;
     }

@@ -74,18 +74,18 @@ public class RenderLightningBolt extends Render
                     tessellator.startDrawing(5);
                     float f = 0.5F;
                     tessellator.setColorRGBA_F(0.9F * f, 0.9F * f, 1.0F * f, 0.3F);
-                    double d6 = 0.1D + (double)i * 0.2D;
+                    double d6 = 0.10000000000000001D + (double)i * 0.20000000000000001D;
 
                     if (k == 0)
                     {
-                        d6 *= (double)j1 * 0.1D + 1.0D;
+                        d6 *= (double)j1 * 0.10000000000000001D + 1.0D;
                     }
 
-                    double d7 = 0.1D + (double)i * 0.2D;
+                    double d7 = 0.10000000000000001D + (double)i * 0.20000000000000001D;
 
                     if (k == 0)
                     {
-                        d7 *= (double)(j1 - 1) * 0.1D + 1.0D;
+                        d7 *= (double)(j1 - 1) * 0.10000000000000001D + 1.0D;
                     }
 
                     for (int k1 = 0; k1 < 5; k1++)

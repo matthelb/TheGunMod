@@ -12,7 +12,7 @@ public class EntityAIMoveTwardsRestriction extends EntityAIBase
     {
         field_48355_a = par1EntityCreature;
         field_48352_e = par2;
-        func_46079_a(1);
+        setMutexBits(1);
     }
 
     /**
@@ -20,12 +20,12 @@ public class EntityAIMoveTwardsRestriction extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (field_48355_a.func_48093_aT())
+        if (field_48355_a.isWithinHomeDistanceCurrentPosition())
         {
             return false;
         }
 
-        ChunkCoordinates chunkcoordinates = field_48355_a.func_48091_aU();
+        ChunkCoordinates chunkcoordinates = field_48355_a.getHomePosition();
         Vec3D vec3d = RandomPositionGenerator.func_48620_a(field_48355_a, 16, 7, Vec3D.createVector(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
 
         if (vec3d == null)
@@ -46,11 +46,14 @@ public class EntityAIMoveTwardsRestriction extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48355_a.func_48084_aL().func_46072_b();
+        return !field_48355_a.getNavigator().noPath();
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48355_a.func_48084_aL().func_48666_a(field_48353_b, field_48354_c, field_48351_d, field_48352_e);
+        field_48355_a.getNavigator().func_48666_a(field_48353_b, field_48354_c, field_48351_d, field_48352_e);
     }
 }

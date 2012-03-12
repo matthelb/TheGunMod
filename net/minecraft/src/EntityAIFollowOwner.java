@@ -17,10 +17,10 @@ public class EntityAIFollowOwner extends EntityAIBase
         field_48305_d = par1EntityTameable;
         field_48309_a = par1EntityTameable.worldObj;
         field_48303_f = par2;
-        field_48304_g = par1EntityTameable.func_48084_aL();
+        field_48304_g = par1EntityTameable.getNavigator();
         field_48308_c = par3;
         field_48307_b = par4;
-        func_46079_a(3);
+        setMutexBits(3);
     }
 
     /**
@@ -28,14 +28,14 @@ public class EntityAIFollowOwner extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLiving entityliving = field_48305_d.func_48144_ah();
+        EntityLiving entityliving = field_48305_d.getOwner();
 
         if (entityliving == null)
         {
             return false;
         }
 
-        if (field_48305_d.func_48141_af())
+        if (field_48305_d.isSitting())
         {
             return false;
         }
@@ -56,14 +56,17 @@ public class EntityAIFollowOwner extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48304_g.func_46072_b() && field_48305_d.getDistanceSqToEntity(field_48306_e) > (double)(field_48307_b * field_48307_b) && !field_48305_d.func_48141_af();
+        return !field_48304_g.noPath() && field_48305_d.getDistanceSqToEntity(field_48306_e) > (double)(field_48307_b * field_48307_b) && !field_48305_d.isSitting();
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48310_h = 0;
-        field_48311_i = field_48305_d.func_48084_aL().func_48658_a();
-        field_48305_d.func_48084_aL().func_48664_a(false);
+        field_48311_i = field_48305_d.getNavigator().func_48658_a();
+        field_48305_d.getNavigator().func_48664_a(false);
     }
 
     /**
@@ -73,7 +76,7 @@ public class EntityAIFollowOwner extends EntityAIBase
     {
         field_48306_e = null;
         field_48304_g.func_48672_f();
-        field_48305_d.func_48084_aL().func_48664_a(field_48311_i);
+        field_48305_d.getNavigator().func_48664_a(field_48311_i);
     }
 
     /**
@@ -83,7 +86,7 @@ public class EntityAIFollowOwner extends EntityAIBase
     {
         field_48305_d.getLookHelper().setLookPositionWithEntity(field_48306_e, 10F, field_48305_d.getVerticalFaceSpeed());
 
-        if (field_48305_d.func_48141_af())
+        if (field_48305_d.isSitting())
         {
             return;
         }

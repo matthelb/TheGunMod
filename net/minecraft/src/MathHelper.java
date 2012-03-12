@@ -94,7 +94,11 @@ public class MathHelper
         }
     }
 
-    public static float func_48442_a(float par0, float par1, float par2)
+    /**
+     * Returns the value of the first parameter, clamped to be within the lower and upper limits given by the second and
+     * third parameters
+     */
+    public static float clamp_float(float par0, float par1, float par2)
     {
         if (par0 < par1)
         {

@@ -5,24 +5,39 @@ import java.util.Random;
 public class EntityAIArrowAttack extends EntityAIBase
 {
     World field_48373_a;
-    EntityLiving field_48371_b;
-    EntityLiving field_48372_c;
-    int field_48369_d;
+
+    /** The entity the AI instance has been applied to */
+    EntityLiving entityHost;
+    EntityLiving attackTarget;
+
+    /**
+     * A decrementing tick that spawns a ranged attack once this value reaches 0. It is then set back to the
+     * maxRangedAttackTime.
+     */
+    int rangedAttackTime;
     float field_48370_e;
     int field_48367_f;
-    int field_48368_g;
-    int field_48374_h;
+
+    /**
+     * The ID of this ranged attack AI. This chooses which entity is to be used as a ranged attack.
+     */
+    int rangedAttackID;
+
+    /**
+     * The maximum time the AI has to wait before peforming another ranged attack.
+     */
+    int maxRangedAttackTime;
 
     public EntityAIArrowAttack(EntityLiving par1EntityLiving, float par2, int par3, int par4)
     {
-        field_48369_d = 0;
+        rangedAttackTime = 0;
         field_48367_f = 0;
-        field_48371_b = par1EntityLiving;
+        entityHost = par1EntityLiving;
         field_48373_a = par1EntityLiving.worldObj;
         field_48370_e = par2;
-        field_48368_g = par3;
-        field_48374_h = par4;
-        func_46079_a(3);
+        rangedAttackID = par3;
+        maxRangedAttackTime = par4;
+        setMutexBits(3);
     }
 
     /**
@@ -30,7 +45,7 @@ public class EntityAIArrowAttack extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLiving entityliving = field_48371_b.func_48094_aS();
+        EntityLiving entityliving = entityHost.getAttackTarget();
 
         if (entityliving == null)
         {
@@ -38,7 +53,7 @@ public class EntityAIArrowAttack extends EntityAIBase
         }
         else
         {
-            field_48372_c = entityliving;
+            attackTarget = entityliving;
             return true;
         }
     }
@@ -48,7 +63,7 @@ public class EntityAIArrowAttack extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return shouldExecute() || !field_48371_b.func_48084_aL().func_46072_b();
+        return shouldExecute() || !entityHost.getNavigator().noPath();
     }
 
     /**
@@ -56,7 +71,7 @@ public class EntityAIArrowAttack extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48372_c = null;
+        attackTarget = null;
     }
 
     /**
@@ -65,8 +80,8 @@ public class EntityAIArrowAttack extends EntityAIBase
     public void updateTask()
     {
         double d = 100D;
-        double d1 = field_48371_b.getDistanceSq(field_48372_c.posX, field_48372_c.boundingBox.minY, field_48372_c.posZ);
-        boolean flag = field_48371_b.func_48090_aM().func_48480_a(field_48372_c);
+        double d1 = entityHost.getDistanceSq(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
+        boolean flag = entityHost.func_48090_aM().canSee(attackTarget);
 
         if (flag)
         {
@@ -79,17 +94,17 @@ public class EntityAIArrowAttack extends EntityAIBase
 
         if (d1 > d || field_48367_f < 20)
         {
-            field_48371_b.func_48084_aL().func_48667_a(field_48372_c, field_48370_e);
+            entityHost.getNavigator().func_48667_a(attackTarget, field_48370_e);
         }
         else
         {
-            field_48371_b.func_48084_aL().func_48672_f();
+            entityHost.getNavigator().func_48672_f();
         }
 
-        field_48371_b.getLookHelper().setLookPositionWithEntity(field_48372_c, 30F, 30F);
-        field_48369_d = Math.max(field_48369_d - 1, 0);
+        entityHost.getLookHelper().setLookPositionWithEntity(attackTarget, 30F, 30F);
+        rangedAttackTime = Math.max(rangedAttackTime - 1, 0);
 
-        if (field_48369_d > 0)
+        if (rangedAttackTime > 0)
         {
             return;
         }
@@ -100,29 +115,32 @@ public class EntityAIArrowAttack extends EntityAIBase
         }
         else
         {
-            func_48366_h();
-            field_48369_d = field_48374_h;
+            doRangedAttack();
+            rangedAttackTime = maxRangedAttackTime;
             return;
         }
     }
 
-    private void func_48366_h()
+    /**
+     * Performs a ranged attack according to the AI's rangedAttackID.
+     */
+    private void doRangedAttack()
     {
-        if (field_48368_g == 1)
+        if (rangedAttackID == 1)
         {
-            EntityArrow entityarrow = new EntityArrow(field_48373_a, field_48371_b, field_48372_c, 1.6F, 12F);
-            field_48373_a.playSoundAtEntity(field_48371_b, "random.bow", 1.0F, 1.0F / (field_48371_b.getRNG().nextFloat() * 0.4F + 0.8F));
+            EntityArrow entityarrow = new EntityArrow(field_48373_a, entityHost, attackTarget, 1.6F, 12F);
+            field_48373_a.playSoundAtEntity(entityHost, "random.bow", 1.0F, 1.0F / (entityHost.getRNG().nextFloat() * 0.4F + 0.8F));
             field_48373_a.spawnEntityInWorld(entityarrow);
         }
-        else if (field_48368_g == 2)
+        else if (rangedAttackID == 2)
         {
-            EntitySnowball entitysnowball = new EntitySnowball(field_48373_a, field_48371_b);
-            double d = field_48372_c.posX - field_48371_b.posX;
-            double d1 = (field_48372_c.posY + (double)field_48372_c.getEyeHeight()) - 1.1D - entitysnowball.posY;
-            double d2 = field_48372_c.posZ - field_48371_b.posZ;
+            EntitySnowball entitysnowball = new EntitySnowball(field_48373_a, entityHost);
+            double d = attackTarget.posX - entityHost.posX;
+            double d1 = (attackTarget.posY + (double)attackTarget.getEyeHeight()) - 1.1000000238418579D - entitysnowball.posY;
+            double d2 = attackTarget.posZ - entityHost.posZ;
             float f = MathHelper.sqrt_double(d * d + d2 * d2) * 0.2F;
             entitysnowball.setThrowableHeading(d, d1 + (double)f, d2, 1.6F, 12F);
-            field_48373_a.playSoundAtEntity(field_48371_b, "random.bow", 1.0F, 1.0F / (field_48371_b.getRNG().nextFloat() * 0.4F + 0.8F));
+            field_48373_a.playSoundAtEntity(entityHost, "random.bow", 1.0F, 1.0F / (entityHost.getRNG().nextFloat() * 0.4F + 0.8F));
             field_48373_a.spawnEntityInWorld(entitysnowball);
         }
     }

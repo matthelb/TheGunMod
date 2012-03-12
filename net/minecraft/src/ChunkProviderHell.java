@@ -6,11 +6,19 @@ import java.util.Random;
 public class ChunkProviderHell implements IChunkProvider
 {
     private Random hellRNG;
-    private NoiseGeneratorOctaves field_4169_i;
+
+    /** A NoiseGeneratorOctaves used in generating nether terrain */
+    private NoiseGeneratorOctaves netherNoiseGen1;
     private NoiseGeneratorOctaves field_4168_j;
     private NoiseGeneratorOctaves field_4167_k;
-    private NoiseGeneratorOctaves field_4166_l;
-    private NoiseGeneratorOctaves field_4165_m;
+
+    /** Determines whether slowsand or gravel can be generated at a location */
+    private NoiseGeneratorOctaves slowsandGravelNoiseGen;
+
+    /**
+     * Determines whether something other than nettherack can be generated at a location
+     */
+    private NoiseGeneratorOctaves netherrackExculsivityNoiseGen;
     public NoiseGeneratorOctaves field_4177_a;
     public NoiseGeneratorOctaves field_4176_b;
 
@@ -18,9 +26,9 @@ public class ChunkProviderHell implements IChunkProvider
     private World worldObj;
     private double field_4163_o[];
     public MapGenNetherBridge genNetherBridge;
-    private double field_4162_p[];
+    private double slowsandNoise[];
     private double gravelNoise[];
-    private double field_4160_r[];
+    private double netherrackExclusivityNoise[];
     private MapGenBase netherCaveGenerator;
     double field_4175_c[];
     double field_4174_d[];
@@ -31,17 +39,17 @@ public class ChunkProviderHell implements IChunkProvider
     public ChunkProviderHell(World par1World, long par2)
     {
         genNetherBridge = new MapGenNetherBridge();
-        field_4162_p = new double[256];
+        slowsandNoise = new double[256];
         gravelNoise = new double[256];
-        field_4160_r = new double[256];
+        netherrackExclusivityNoise = new double[256];
         netherCaveGenerator = new MapGenCavesHell();
         worldObj = par1World;
         hellRNG = new Random(par2);
-        field_4169_i = new NoiseGeneratorOctaves(hellRNG, 16);
+        netherNoiseGen1 = new NoiseGeneratorOctaves(hellRNG, 16);
         field_4168_j = new NoiseGeneratorOctaves(hellRNG, 16);
         field_4167_k = new NoiseGeneratorOctaves(hellRNG, 8);
-        field_4166_l = new NoiseGeneratorOctaves(hellRNG, 4);
-        field_4165_m = new NoiseGeneratorOctaves(hellRNG, 4);
+        slowsandGravelNoiseGen = new NoiseGeneratorOctaves(hellRNG, 4);
+        netherrackExculsivityNoiseGen = new NoiseGeneratorOctaves(hellRNG, 4);
         field_4177_a = new NoiseGeneratorOctaves(hellRNG, 10);
         field_4176_b = new NoiseGeneratorOctaves(hellRNG, 16);
     }
@@ -127,17 +135,17 @@ public class ChunkProviderHell implements IChunkProvider
     {
         byte byte0 = 64;
         double d = 0.03125D;
-        field_4162_p = field_4166_l.generateNoiseOctaves(field_4162_p, par1 * 16, par2 * 16, 0, 16, 16, 1, d, d, 1.0D);
-        gravelNoise = field_4166_l.generateNoiseOctaves(gravelNoise, par1 * 16, 109, par2 * 16, 16, 1, 16, d, 1.0D, d);
-        field_4160_r = field_4165_m.generateNoiseOctaves(field_4160_r, par1 * 16, par2 * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
+        slowsandNoise = slowsandGravelNoiseGen.generateNoiseOctaves(slowsandNoise, par1 * 16, par2 * 16, 0, 16, 16, 1, d, d, 1.0D);
+        gravelNoise = slowsandGravelNoiseGen.generateNoiseOctaves(gravelNoise, par1 * 16, 109, par2 * 16, 16, 1, 16, d, 1.0D, d);
+        netherrackExclusivityNoise = netherrackExculsivityNoiseGen.generateNoiseOctaves(netherrackExclusivityNoise, par1 * 16, par2 * 16, 0, 16, 16, 1, d * 2D, d * 2D, d * 2D);
 
         for (int i = 0; i < 16; i++)
         {
             for (int j = 0; j < 16; j++)
             {
-                boolean flag = field_4162_p[i + j * 16] + hellRNG.nextDouble() * 0.2D > 0.0D;
-                boolean flag1 = gravelNoise[i + j * 16] + hellRNG.nextDouble() * 0.2D > 0.0D;
-                int k = (int)(field_4160_r[i + j * 16] / 3D + 3D + hellRNG.nextDouble() * 0.25D);
+                boolean flag = slowsandNoise[i + j * 16] + hellRNG.nextDouble() * 0.20000000000000001D > 0.0D;
+                boolean flag1 = gravelNoise[i + j * 16] + hellRNG.nextDouble() * 0.20000000000000001D > 0.0D;
+                int k = (int)(netherrackExclusivityNoise[i + j * 16] / 3D + 3D + hellRNG.nextDouble() * 0.25D);
                 int l = -1;
                 byte byte1 = (byte)Block.netherrack.blockID;
                 byte byte2 = (byte)Block.netherrack.blockID;
@@ -254,7 +262,7 @@ public class ChunkProviderHell implements IChunkProvider
         netherCaveGenerator.generate(this, worldObj, par1, par2, abyte0);
         genNetherBridge.generate(this, worldObj, par1, par2, abyte0);
         Chunk chunk = new Chunk(worldObj, abyte0, par1, par2);
-        chunk.func_48496_n();
+        chunk.resetRelightChecks();
         return chunk;
     }
 
@@ -265,12 +273,12 @@ public class ChunkProviderHell implements IChunkProvider
             par1ArrayOfDouble = new double[par5 * par6 * par7];
         }
 
-        double d = 684.412D;
-        double d1 = 2053.236D;
+        double d = 684.41200000000003D;
+        double d1 = 2053.2359999999999D;
         field_4172_f = field_4177_a.generateNoiseOctaves(field_4172_f, par2, par3, par4, par5, 1, par7, 1.0D, 0.0D, 1.0D);
         field_4171_g = field_4176_b.generateNoiseOctaves(field_4171_g, par2, par3, par4, par5, 1, par7, 100D, 0.0D, 100D);
         field_4175_c = field_4167_k.generateNoiseOctaves(field_4175_c, par2, par3, par4, par5, par6, par7, d / 80D, d1 / 60D, d / 80D);
-        field_4174_d = field_4169_i.generateNoiseOctaves(field_4174_d, par2, par3, par4, par5, par6, par7, d, d1, d);
+        field_4174_d = netherNoiseGen1.generateNoiseOctaves(field_4174_d, par2, par3, par4, par5, par6, par7, d, d1, d);
         field_4173_e = field_4168_j.generateNoiseOctaves(field_4173_e, par2, par3, par4, par5, par6, par7, d, d1, d);
         int i = 0;
         int j = 0;
@@ -323,7 +331,7 @@ public class ChunkProviderHell implements IChunkProvider
                         d5 = -1D;
                     }
 
-                    d5 /= 1.4D;
+                    d5 /= 1.3999999999999999D;
                     d5 /= 2D;
                     d3 = 0.0D;
                 }

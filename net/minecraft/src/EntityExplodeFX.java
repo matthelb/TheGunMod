@@ -12,7 +12,7 @@ public class EntityExplodeFX extends EntityFX
         motionZ = par12 + (double)((float)(Math.random() * 2D - 1.0D) * 0.05F);
         particleRed = particleGreen = particleBlue = rand.nextFloat() * 0.3F + 0.7F;
         particleScale = rand.nextFloat() * rand.nextFloat() * 6F + 1.0F;
-        particleMaxAge = (int)(16D / ((double)rand.nextFloat() * 0.8D + 0.2D)) + 2;
+        particleMaxAge = (int)(16D / ((double)rand.nextFloat() * 0.80000000000000004D + 0.20000000000000001D)) + 2;
     }
 
     public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
@@ -35,16 +35,16 @@ public class EntityExplodeFX extends EntityFX
         }
 
         setParticleTextureIndex(7 - (particleAge * 8) / particleMaxAge);
-        motionY += 0.004D;
+        motionY += 0.0040000000000000001D;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.9D;
-        motionY *= 0.9D;
-        motionZ *= 0.9D;
+        motionX *= 0.89999997615814209D;
+        motionY *= 0.89999997615814209D;
+        motionZ *= 0.89999997615814209D;
 
         if (onGround)
         {
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
         }
     }
 }

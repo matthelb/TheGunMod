@@ -125,9 +125,9 @@ public class EntitySpider extends EntityMob
                 double d = par1Entity.posX - posX;
                 double d1 = par1Entity.posZ - posZ;
                 float f1 = MathHelper.sqrt_double(d * d + d1 * d1);
-                motionX = (d / (double)f1) * 0.5D * 0.8D + motionX * 0.2D;
-                motionZ = (d1 / (double)f1) * 0.5D * 0.8D + motionZ * 0.2D;
-                motionY = 0.4D;
+                motionX = (d / (double)f1) * 0.5D * 0.80000001192092896D + motionX * 0.20000000298023224D;
+                motionZ = (d1 / (double)f1) * 0.5D * 0.80000001192092896D + motionZ * 0.20000000298023224D;
+                motionY = 0.40000000596046448D;
             }
         }
         else
@@ -204,7 +204,7 @@ public class EntitySpider extends EntityMob
         return EnumCreatureAttribute.ARTHROPOD;
     }
 
-    public boolean isPotionAplicable(PotionEffect par1PotionEffect)
+    public boolean isPotionApplicable(PotionEffect par1PotionEffect)
     {
         if (par1PotionEffect.getPotionID() == Potion.poison.id)
         {
@@ -212,7 +212,7 @@ public class EntitySpider extends EntityMob
         }
         else
         {
-            return super.isPotionAplicable(par1PotionEffect);
+            return super.isPotionApplicable(par1PotionEffect);
         }
     }
 

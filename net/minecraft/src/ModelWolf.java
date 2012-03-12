@@ -118,7 +118,7 @@ public class ModelWolf extends ModelBase
             wolfTail.rotateAngleY = MathHelper.cos(par2 * 0.6662F) * 1.4F * par3;
         }
 
-        if (entitywolf.func_48141_af())
+        if (entitywolf.isSitting())
         {
             wolfMane.setRotationPoint(-1F, 16F, -3F);
             wolfMane.rotateAngleX = ((float)Math.PI * 2F / 5F);

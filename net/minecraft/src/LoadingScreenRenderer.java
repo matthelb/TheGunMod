@@ -33,6 +33,9 @@ public class LoadingScreenRenderer implements IProgressUpdate
         func_597_c(par1Str);
     }
 
+    /**
+     * Shows the 'Saving level' string.
+     */
     public void displaySavingString(String par1Str)
     {
         field_1005_e = true;

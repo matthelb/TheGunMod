@@ -194,7 +194,7 @@ public class MapGenCaves extends MapGenBase
 
                         double d10 = (((double)i3 + 0.5D) - par8) / d3;
 
-                        if (d10 > -0.7D && d8 * d8 + d10 * d10 + d9 * d9 < 1.0D)
+                        if (d10 > -0.69999999999999996D && d8 * d8 + d10 * d10 + d9 * d9 < 1.0D)
                         {
                             byte byte0 = par5ArrayOfByte[l2];
 

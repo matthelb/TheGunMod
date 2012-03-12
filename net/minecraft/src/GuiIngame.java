@@ -350,7 +350,7 @@ public class GuiIngame extends Gui
             fontrenderer.drawStringWithShadow(mc.debugInfoRenders(), 2, 12, 0xffffff);
             fontrenderer.drawStringWithShadow(mc.getEntityDebug(), 2, 22, 0xffffff);
             fontrenderer.drawStringWithShadow(mc.debugInfoEntities(), 2, 32, 0xffffff);
-            fontrenderer.drawStringWithShadow(mc.func_21002_o(), 2, 42, 0xffffff);
+            fontrenderer.drawStringWithShadow(mc.getWorldProviderName(), 2, 42, 0xffffff);
             long la = Runtime.getRuntime().maxMemory();
             long l2a = Runtime.getRuntime().totalMemory();
             long l3 = Runtime.getRuntime().freeMemory();
@@ -370,7 +370,7 @@ public class GuiIngame extends Gui
             if (mc.theWorld != null && mc.theWorld.blockExists(l, j1, l2))
             {
                 Chunk chunk = mc.theWorld.getChunkFromBlockCoords(l, l2);
-                drawString(fontrenderer, (new StringBuilder()).append("lc: ").append(chunk.func_48498_h() + 15).append(" b: ").append(chunk.func_48490_a(l & 0xf, l2 & 0xf, mc.theWorld.getWorldChunkManager()).biomeName).append(" bl: ").append(chunk.getSavedLightValue(EnumSkyBlock.Block, l & 0xf, j1, l2 & 0xf)).append(" sl: ").append(chunk.getSavedLightValue(EnumSkyBlock.Sky, l & 0xf, j1, l2 & 0xf)).append(" rl: ").append(chunk.getBlockLightValue(l & 0xf, j1, l2 & 0xf, 0)).toString(), 2, 96, 0xe0e0e0);
+                drawString(fontrenderer, (new StringBuilder()).append("lc: ").append(chunk.getTopFilledSegment() + 15).append(" b: ").append(chunk.func_48490_a(l & 0xf, l2 & 0xf, mc.theWorld.getWorldChunkManager()).biomeName).append(" bl: ").append(chunk.getSavedLightValue(EnumSkyBlock.Block, l & 0xf, j1, l2 & 0xf)).append(" sl: ").append(chunk.getSavedLightValue(EnumSkyBlock.Sky, l & 0xf, j1, l2 & 0xf)).append(" rl: ").append(chunk.getBlockLightValue(l & 0xf, j1, l2 & 0xf, 0)).toString(), 2, 96, 0xe0e0e0);
             }
 
             drawString(fontrenderer, (new StringBuilder()).append("Seed: ").append(mc.theWorld.getSeed()).toString(), 2, 112, 0xe0e0e0);

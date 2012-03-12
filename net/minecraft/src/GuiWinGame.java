@@ -54,7 +54,7 @@ public class GuiWinGame extends GuiScreen
         {
             EntityClientPlayerMP entityclientplayermp = (EntityClientPlayerMP)mc.thePlayer;
             entityclientplayermp.sendInventoryChanged();
-            entityclientplayermp.sendQueue.addToSendQueue(new Packet9Respawn(entityclientplayermp.dimension, (byte)mc.theWorld.difficultySetting, mc.theWorld.getWorldInfo().getTerrainType(), mc.theWorld.func_48453_b(), 0));
+            entityclientplayermp.sendQueue.addToSendQueue(new Packet9Respawn(entityclientplayermp.dimension, (byte)mc.theWorld.difficultySetting, mc.theWorld.getWorldInfo().getTerrainType(), mc.theWorld.getWorldHeight(), 0));
         }
         else
         {

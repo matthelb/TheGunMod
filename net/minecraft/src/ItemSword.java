@@ -55,11 +55,17 @@ public class ItemSword extends Item
         return true;
     }
 
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
     public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.block;
     }
 
+    /**
+     * How long it takes to use or consume an item
+     */
     public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
         return 0x11940;

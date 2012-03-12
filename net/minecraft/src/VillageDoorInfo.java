@@ -2,77 +2,84 @@ package net.minecraft.src;
 
 public class VillageDoorInfo
 {
-    public final int field_48600_a;
-    public final int field_48598_b;
-    public final int field_48599_c;
-    public final int field_48596_d;
-    public final int field_48597_e;
-    public int field_48594_f;
-    public boolean field_48595_g;
-    private int field_48601_h;
+    public final int posX;
+    public final int posY;
+    public final int posZ;
+    public final int insideDirectionX;
+    public final int insideDirectionZ;
+    public int lastActivityTimestamp;
+    public boolean isDetachedFromVillageFlag;
+    private int doorOpeningRestrictionCounter;
 
     public VillageDoorInfo(int par1, int par2, int par3, int par4, int par5, int par6)
     {
-        field_48595_g = false;
-        field_48601_h = 0;
-        field_48600_a = par1;
-        field_48598_b = par2;
-        field_48599_c = par3;
-        field_48596_d = par4;
-        field_48597_e = par5;
-        field_48594_f = par6;
+        isDetachedFromVillageFlag = false;
+        doorOpeningRestrictionCounter = 0;
+        posX = par1;
+        posY = par2;
+        posZ = par3;
+        insideDirectionX = par4;
+        insideDirectionZ = par5;
+        lastActivityTimestamp = par6;
     }
 
-    public int func_48588_a(int par1, int par2, int par3)
+    /**
+     * Returns the squared distance between this door and the given coordinate.
+     */
+    public int getDistanceSquared(int par1, int par2, int par3)
     {
-        int i = par1 - field_48600_a;
-        int j = par2 - field_48598_b;
-        int k = par3 - field_48599_c;
+        int i = par1 - posX;
+        int j = par2 - posY;
+        int k = par3 - posZ;
         return i * i + j * j + k * k;
     }
 
-    public int func_48593_b(int par1, int par2, int par3)
+    /**
+     * Get the square of the distance from a location 2 blocks away from the door considered 'inside' and the given
+     * arguments
+     */
+    public int getInsideDistanceSquare(int par1, int par2, int par3)
     {
-        int i = par1 - field_48600_a - field_48596_d;
-        int j = par2 - field_48598_b;
-        int k = par3 - field_48599_c - field_48597_e;
+        int i = par1 - posX - insideDirectionX;
+        int j = par2 - posY;
+        int k = par3 - posZ - insideDirectionZ;
         return i * i + j * j + k * k;
     }
 
-    public int func_48590_a()
+    public int getInsidePosX()
     {
-        return field_48600_a + field_48596_d;
+        return posX + insideDirectionX;
     }
 
-    public int func_48592_b()
+    public int getInsidePosY()
     {
-        return field_48598_b;
+        return posY;
     }
 
-    public int func_48591_c()
+    public int getInsidePosZ()
     {
-        return field_48599_c + field_48597_e;
+        return posZ + insideDirectionZ;
     }
 
-    public boolean func_48586_a(int par1, int par2)
+    public boolean isInside(int par1, int par2)
     {
-        int i = par1 - field_48600_a;
-        int j = par2 - field_48599_c;
-        return i * field_48596_d + j * field_48597_e >= 0;
+        int i = par1 - posX;
+        int j = par2 - posZ;
+        return i * insideDirectionX + j * insideDirectionZ >= 0;
     }
 
-    public void func_48585_d()
+    public void resetDoorOpeningRestrictionCounter()
     {
-        field_48601_h = 0;
+        doorOpeningRestrictionCounter = 0;
     }
 
-    public void func_48589_e()
+    public void incrementDoorOpeningRestrictionCounter()
     {
-        field_48601_h++;
+        doorOpeningRestrictionCounter++;
     }
 
-    public int func_48587_f()
+    public int getDoorOpeningRestrictionCounter()
     {
-        return field_48601_h;
+        return doorOpeningRestrictionCounter;
     }
 }

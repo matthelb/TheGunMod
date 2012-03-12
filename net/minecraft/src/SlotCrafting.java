@@ -46,7 +46,7 @@ public class SlotCrafting extends Slot
 
     protected void func_48434_c(ItemStack par1ItemStack)
     {
-        par1ItemStack.func_48507_a(thePlayer.worldObj, thePlayer, field_48436_g);
+        par1ItemStack.onCrafting(thePlayer.worldObj, thePlayer, field_48436_g);
         field_48436_g = 0;
 
         if (par1ItemStack.itemID == Block.workbench.blockID)
@@ -120,7 +120,7 @@ public class SlotCrafting extends Slot
                         }
                         else
                         {
-                            thePlayer.func_48153_a(itemstack1);
+                            thePlayer.dropPlayerItem(itemstack1);
                         }
                     }
                 }

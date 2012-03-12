@@ -12,27 +12,71 @@ public class StatList
 
     /** Tracks the number of times a given block or item has been mined. */
     public static List objectMineStats = new ArrayList();
+
+    /** times the game has been started */
     public static StatBase startGameStat = (new StatBasic(1000, "stat.startGame")).initIndependentStat().registerStat();
+
+    /** times a world has been created */
     public static StatBase createWorldStat = (new StatBasic(1001, "stat.createWorld")).initIndependentStat().registerStat();
+
+    /** the number of times you have loaded a world */
     public static StatBase loadWorldStat = (new StatBasic(1002, "stat.loadWorld")).initIndependentStat().registerStat();
+
+    /** number of times you've joined a multiplayer world */
     public static StatBase joinMultiplayerStat = (new StatBasic(1003, "stat.joinMultiplayer")).initIndependentStat().registerStat();
+
+    /** number of times you've left a game */
     public static StatBase leaveGameStat = (new StatBasic(1004, "stat.leaveGame")).initIndependentStat().registerStat();
+
+    /** number of minutes you have played */
     public static StatBase minutesPlayedStat;
+
+    /** distance you've walked */
     public static StatBase distanceWalkedStat;
+
+    /** distance you have swam */
     public static StatBase distanceSwumStat;
+
+    /** the distance you have fallen */
     public static StatBase distanceFallenStat;
+
+    /** the distance you've climbed */
     public static StatBase distanceClimbedStat;
+
+    /** the distance you've flown */
     public static StatBase distanceFlownStat;
+
+    /** the distance you've dived */
     public static StatBase distanceDoveStat;
+
+    /** the distance you've traveled by minecart */
     public static StatBase distanceByMinecartStat;
+
+    /** the distance you've traveled by boat */
     public static StatBase distanceByBoatStat;
+
+    /** the distance you've traveled by pig */
     public static StatBase distanceByPigStat;
+
+    /** the times you've jumped */
     public static StatBase jumpStat = (new StatBasic(2010, "stat.jump")).initIndependentStat().registerStat();
+
+    /** the distance you've dropped (or times you've fallen?) */
     public static StatBase dropStat = (new StatBasic(2011, "stat.drop")).initIndependentStat().registerStat();
+
+    /** the amount of damage you've dealt */
     public static StatBase damageDealtStat = (new StatBasic(2020, "stat.damageDealt")).registerStat();
+
+    /** the amount of damage you have taken */
     public static StatBase damageTakenStat = (new StatBasic(2021, "stat.damageTaken")).registerStat();
+
+    /** the number of times you have died */
     public static StatBase deathsStat = (new StatBasic(2022, "stat.deaths")).registerStat();
+
+    /** the number of mobs you have killed */
     public static StatBase mobKillsStat = (new StatBasic(2023, "stat.mobKills")).registerStat();
+
+    /** counts the number of times you've killed a player */
     public static StatBase playerKillsStat = (new StatBasic(2024, "stat.playerKills")).registerStat();
     public static StatBase fishCaughtStat = (new StatBasic(2025, "stat.fishCaught")).registerStat();
     public static StatBase mineBlockStatArray[] = initMinableStats("stat.mineBlock", 0x1000000);

@@ -5,15 +5,19 @@ import java.util.Random;
 public class WorldGenHugeTrees extends WorldGenerator
 {
     private final int field_48195_a;
-    private final int field_48193_b;
-    private final int field_48194_c;
+
+    /** Sets the metadata for the wood blocks used */
+    private final int woodMetadata;
+
+    /** Sets the metadata for the leaves used in huge trees */
+    private final int leavesMetadata;
 
     public WorldGenHugeTrees(boolean par1, int par2, int par3, int par4)
     {
         super(par1);
         field_48195_a = par2;
-        field_48193_b = par3;
-        field_48194_c = par4;
+        woodMetadata = par3;
+        leavesMetadata = par4;
     }
 
     public boolean generate(World par1World, Random par2Random, int par3, int par4, int par5)
@@ -90,7 +94,7 @@ public class WorldGenHugeTrees extends WorldGenerator
             {
                 int i2 = par3 + (int)(1.5F + MathHelper.cos(f) * (float)j3);
                 int i3 = par5 + (int)(1.5F + MathHelper.sin(f) * (float)j3);
-                setBlockAndMetadata(par1World, i2, (l - 3) + j3 / 2, i3, Block.wood.blockID, field_48193_b);
+                setBlockAndMetadata(par1World, i2, (l - 3) + j3 / 2, i3, Block.wood.blockID, woodMetadata);
             }
         }
 
@@ -100,7 +104,7 @@ public class WorldGenHugeTrees extends WorldGenerator
 
             if (j2 == 0 || j2 == Block.leaves.blockID)
             {
-                setBlockAndMetadata(par1World, par3, par4 + j1, par5, Block.wood.blockID, field_48193_b);
+                setBlockAndMetadata(par1World, par3, par4 + j1, par5, Block.wood.blockID, woodMetadata);
 
                 if (j1 > 0)
                 {
@@ -125,7 +129,7 @@ public class WorldGenHugeTrees extends WorldGenerator
 
             if (j2 == 0 || j2 == Block.leaves.blockID)
             {
-                setBlockAndMetadata(par1World, par3 + 1, par4 + j1, par5, Block.wood.blockID, field_48193_b);
+                setBlockAndMetadata(par1World, par3 + 1, par4 + j1, par5, Block.wood.blockID, woodMetadata);
 
                 if (j1 > 0)
                 {
@@ -145,7 +149,7 @@ public class WorldGenHugeTrees extends WorldGenerator
 
             if (j2 == 0 || j2 == Block.leaves.blockID)
             {
-                setBlockAndMetadata(par1World, par3 + 1, par4 + j1, par5 + 1, Block.wood.blockID, field_48193_b);
+                setBlockAndMetadata(par1World, par3 + 1, par4 + j1, par5 + 1, Block.wood.blockID, woodMetadata);
 
                 if (j1 > 0)
                 {
@@ -168,7 +172,7 @@ public class WorldGenHugeTrees extends WorldGenerator
                 continue;
             }
 
-            setBlockAndMetadata(par1World, par3, par4 + j1, par5 + 1, Block.wood.blockID, field_48193_b);
+            setBlockAndMetadata(par1World, par3, par4 + j1, par5 + 1, Block.wood.blockID, woodMetadata);
 
             if (j1 <= 0)
             {
@@ -208,7 +212,7 @@ public class WorldGenHugeTrees extends WorldGenerator
 
                     if ((i1 >= 0 || k1 >= 0 || i1 * i1 + k1 * k1 <= k * k) && (i1 <= 0 && k1 <= 0 || i1 * i1 + k1 * k1 <= (k + 1) * (k + 1)) && (par6Random.nextInt(4) != 0 || i1 * i1 + k1 * k1 <= (k - 1) * (k - 1)) && !Block.opaqueCubeLookup[par1World.getBlockId(l, i, j1)])
                     {
-                        setBlockAndMetadata(par1World, l, i, j1, Block.leaves.blockID, field_48194_c);
+                        setBlockAndMetadata(par1World, l, i, j1, Block.leaves.blockID, leavesMetadata);
                     }
                 }
             }

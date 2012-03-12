@@ -56,7 +56,7 @@ public class RenderIronGolem extends RenderLiving
             int i = par1EntityIronGolem.getEntityBrightnessForRender(par2);
             int j = i % 0x10000;
             int k = i / 0x10000;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)j / 1.0F, (float)k / 1.0F);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             loadTexture("/terrain.png");

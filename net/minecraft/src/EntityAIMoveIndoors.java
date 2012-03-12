@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class EntityAIMoveIndoors extends EntityAIBase
 {
-    private EntityCreature field_48256_a;
+    private EntityCreature entityObj;
     private VillageDoorInfo field_48254_b;
     private int field_48255_c;
     private int field_48253_d;
@@ -13,8 +13,8 @@ public class EntityAIMoveIndoors extends EntityAIBase
     {
         field_48255_c = -1;
         field_48253_d = -1;
-        field_48256_a = par1EntityCreature;
-        func_46079_a(1);
+        entityObj = par1EntityCreature;
+        setMutexBits(1);
     }
 
     /**
@@ -22,22 +22,22 @@ public class EntityAIMoveIndoors extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (field_48256_a.worldObj.isDaytime() && !field_48256_a.worldObj.isRaining() || field_48256_a.worldObj.worldProvider.hasNoSky)
+        if (entityObj.worldObj.isDaytime() && !entityObj.worldObj.isRaining() || entityObj.worldObj.worldProvider.hasNoSky)
         {
             return false;
         }
 
-        if (field_48256_a.getRNG().nextInt(50) != 0)
+        if (entityObj.getRNG().nextInt(50) != 0)
         {
             return false;
         }
 
-        if (field_48255_c != -1 && field_48256_a.getDistanceSq(field_48255_c, field_48256_a.posY, field_48253_d) < 4D)
+        if (field_48255_c != -1 && entityObj.getDistanceSq(field_48255_c, entityObj.posY, field_48253_d) < 4D)
         {
             return false;
         }
 
-        Village village = field_48256_a.worldObj.field_48465_A.func_48564_a(MathHelper.floor_double(field_48256_a.posX), MathHelper.floor_double(field_48256_a.posY), MathHelper.floor_double(field_48256_a.posZ), 14);
+        Village village = entityObj.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(entityObj.posX), MathHelper.floor_double(entityObj.posY), MathHelper.floor_double(entityObj.posZ), 14);
 
         if (village == null)
         {
@@ -45,7 +45,7 @@ public class EntityAIMoveIndoors extends EntityAIBase
         }
         else
         {
-            field_48254_b = village.func_48540_c(MathHelper.floor_double(field_48256_a.posX), MathHelper.floor_double(field_48256_a.posY), MathHelper.floor_double(field_48256_a.posZ));
+            field_48254_b = village.findNearestDoorUnrestricted(MathHelper.floor_double(entityObj.posX), MathHelper.floor_double(entityObj.posY), MathHelper.floor_double(entityObj.posZ));
             return field_48254_b != null;
         }
     }
@@ -55,25 +55,28 @@ public class EntityAIMoveIndoors extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48256_a.func_48084_aL().func_46072_b();
+        return !entityObj.getNavigator().noPath();
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48255_c = -1;
 
-        if (field_48256_a.getDistanceSq(field_48254_b.func_48590_a(), field_48254_b.field_48598_b, field_48254_b.func_48591_c()) > 256D)
+        if (entityObj.getDistanceSq(field_48254_b.getInsidePosX(), field_48254_b.posY, field_48254_b.getInsidePosZ()) > 256D)
         {
-            Vec3D vec3d = RandomPositionGenerator.func_48620_a(field_48256_a, 14, 3, Vec3D.createVector((double)field_48254_b.func_48590_a() + 0.5D, field_48254_b.func_48592_b(), (double)field_48254_b.func_48591_c() + 0.5D));
+            Vec3D vec3d = RandomPositionGenerator.func_48620_a(entityObj, 14, 3, Vec3D.createVector((double)field_48254_b.getInsidePosX() + 0.5D, field_48254_b.getInsidePosY(), (double)field_48254_b.getInsidePosZ() + 0.5D));
 
             if (vec3d != null)
             {
-                field_48256_a.func_48084_aL().func_48666_a(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, 0.3F);
+                entityObj.getNavigator().func_48666_a(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, 0.3F);
             }
         }
         else
         {
-            field_48256_a.func_48084_aL().func_48666_a((double)field_48254_b.func_48590_a() + 0.5D, field_48254_b.func_48592_b(), (double)field_48254_b.func_48591_c() + 0.5D, 0.3F);
+            entityObj.getNavigator().func_48666_a((double)field_48254_b.getInsidePosX() + 0.5D, field_48254_b.getInsidePosY(), (double)field_48254_b.getInsidePosZ() + 0.5D, 0.3F);
         }
     }
 
@@ -82,8 +85,8 @@ public class EntityAIMoveIndoors extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48255_c = field_48254_b.func_48590_a();
-        field_48253_d = field_48254_b.func_48591_c();
+        field_48255_c = field_48254_b.getInsidePosX();
+        field_48253_d = field_48254_b.getInsidePosZ();
         field_48254_b = null;
     }
 }

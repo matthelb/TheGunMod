@@ -318,7 +318,7 @@ public class WorldRenderer
         }
     }
 
-    public void updateInFrustrum(ICamera par1ICamera)
+    public void updateInFrustum(ICamera par1ICamera)
     {
         isInFrustum = par1ICamera.isBoundingBoxInFrustum(rendererBoundingBox);
     }

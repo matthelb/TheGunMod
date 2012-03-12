@@ -6,7 +6,11 @@ public abstract class EntityPlayer extends EntityLiving
 {
     /** Inventory of the player */
     public InventoryPlayer inventory;
+
+    /** the crafting inventory in you get when opening your inventory */
     public Container inventorySlots;
+
+    /** the crafting inventory you are currently using */
     public Container craftingInventory;
 
     /** The player's food stats. (See class FoodStats) */
@@ -357,14 +361,14 @@ public abstract class EntityPlayer extends EntityLiving
         {
             for (int i = 0; i < par2; i++)
             {
-                Vec3D vec3d = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+                Vec3D vec3d = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.10000000000000001D, Math.random() * 0.10000000000000001D + 0.10000000000000001D, 0.0D);
                 vec3d.rotateAroundX((-rotationPitch * (float)Math.PI) / 180F);
                 vec3d.rotateAroundY((-rotationYaw * (float)Math.PI) / 180F);
-                Vec3D vec3d1 = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.3D, (double)(-rand.nextFloat()) * 0.6D - 0.3D, 0.6D);
+                Vec3D vec3d1 = Vec3D.createVector(((double)rand.nextFloat() - 0.5D) * 0.29999999999999999D, (double)(-rand.nextFloat()) * 0.59999999999999998D - 0.29999999999999999D, 0.59999999999999998D);
                 vec3d1.rotateAroundX((-rotationPitch * (float)Math.PI) / 180F);
                 vec3d1.rotateAroundY((-rotationYaw * (float)Math.PI) / 180F);
                 vec3d1 = vec3d1.addVector(posX, posY + (double)getEyeHeight(), posZ);
-                worldObj.spawnParticle((new StringBuilder()).append("iconcrack_").append(par1ItemStack.getItem().shiftedIndex).toString(), vec3d1.xCoord, vec3d1.yCoord, vec3d1.zCoord, vec3d.xCoord, vec3d.yCoord + 0.05D, vec3d.zCoord);
+                worldObj.spawnParticle((new StringBuilder()).append("iconcrack_").append(par1ItemStack.getItem().shiftedIndex).toString(), vec3d1.xCoord, vec3d1.yCoord, vec3d1.zCoord, vec3d.xCoord, vec3d.yCoord + 0.050000000000000003D, vec3d.zCoord);
             }
 
             worldObj.playSoundAtEntity(this, "random.eat", 0.5F + 0.5F * (float)rand.nextInt(2), (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
@@ -520,12 +524,12 @@ public abstract class EntityPlayer extends EntityLiving
 
         if (isSprinting())
         {
-            landMovementFactor += (double)speedOnGround * 0.3D;
-            jumpMovementFactor += (double)speedInAir * 0.3D;
+            landMovementFactor += (double)speedOnGround * 0.29999999999999999D;
+            jumpMovementFactor += (double)speedInAir * 0.29999999999999999D;
         }
 
         float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
-        float f1 = (float)Math.atan(-motionY * 0.2D) * 15F;
+        float f1 = (float)Math.atan(-motionY * 0.20000000298023224D) * 15F;
 
         if (f > 0.1F)
         {
@@ -582,11 +586,11 @@ public abstract class EntityPlayer extends EntityLiving
         super.onDeath(par1DamageSource);
         setSize(0.2F, 0.2F);
         setPosition(posX, posY, posZ);
-        motionY = 0.1D;
+        motionY = 0.10000000149011612D;
 
         if (username.equals("Notch"))
         {
-            func_48151_a(new ItemStack(Item.appleRed, 1), true);
+            dropPlayerItemWithRandomChoice(new ItemStack(Item.appleRed, 1), true);
         }
 
         inventory.dropAllItems();
@@ -642,22 +646,28 @@ public abstract class EntityPlayer extends EntityLiving
 
     public EntityItem func_48152_as()
     {
-        return func_48151_a(inventory.decrStackSize(inventory.currentItem, 1), false);
+        return dropPlayerItemWithRandomChoice(inventory.decrStackSize(inventory.currentItem, 1), false);
     }
 
-    public EntityItem func_48153_a(ItemStack par1ItemStack)
+    /**
+     * Args: itemstack
+     */
+    public EntityItem dropPlayerItem(ItemStack par1ItemStack)
     {
-        return func_48151_a(par1ItemStack, false);
+        return dropPlayerItemWithRandomChoice(par1ItemStack, false);
     }
 
-    public EntityItem func_48151_a(ItemStack par1ItemStack, boolean par2)
+    /**
+     * Args: itemstack, flag
+     */
+    public EntityItem dropPlayerItemWithRandomChoice(ItemStack par1ItemStack, boolean par2)
     {
         if (par1ItemStack == null)
         {
             return null;
         }
 
-        EntityItem entityitem = new EntityItem(worldObj, posX, (posY - 0.3D) + (double)getEyeHeight(), posZ, par1ItemStack);
+        EntityItem entityitem = new EntityItem(worldObj, posX, (posY - 0.30000001192092896D) + (double)getEyeHeight(), posZ, par1ItemStack);
         entityitem.delayBeforeCanPickup = 40;
         float f = 0.1F;
 
@@ -667,7 +677,7 @@ public abstract class EntityPlayer extends EntityLiving
             float f4 = rand.nextFloat() * (float)Math.PI * 2.0F;
             entityitem.motionX = -MathHelper.sin(f4) * f2;
             entityitem.motionZ = MathHelper.cos(f4) * f2;
-            entityitem.motionY = 0.2D;
+            entityitem.motionY = 0.20000000298023224D;
         }
         else
         {
@@ -927,6 +937,9 @@ public abstract class EntityPlayer extends EntityLiving
         return i;
     }
 
+    /**
+     * returns if pvp is enabled or not
+     */
     protected boolean isPVPEnabled()
     {
         return false;
@@ -947,7 +960,7 @@ public abstract class EntityPlayer extends EntityLiving
         {
             EntityWolf entitywolf = (EntityWolf)par1EntityLiving;
 
-            if (entitywolf.func_48139_F_() && username.equals(entitywolf.func_48145_ag()))
+            if (entitywolf.isTamed() && username.equals(entitywolf.getOwnerName()))
             {
                 return;
             }
@@ -971,7 +984,7 @@ public abstract class EntityPlayer extends EntityLiving
             Entity entity = (Entity)iterator.next();
             EntityWolf entitywolf1 = (EntityWolf)entity;
 
-            if (entitywolf1.func_48139_F_() && entitywolf1.getEntityToAttack() == null && username.equals(entitywolf1.func_48145_ag()) && (!par2 || !entitywolf1.func_48141_af()))
+            if (entitywolf1.isTamed() && entitywolf1.getEntityToAttack() == null && username.equals(entitywolf1.getOwnerName()) && (!par2 || !entitywolf1.isSitting()))
             {
                 entitywolf1.func_48140_f(false);
                 entitywolf1.setTarget(par1EntityLiving);
@@ -1104,7 +1117,7 @@ public abstract class EntityPlayer extends EntityLiving
      */
     public void attackTargetEntityWithCurrentItem(Entity par1Entity)
     {
-        if (!par1Entity.func_48080_j())
+        if (!par1Entity.canAttackWithItem())
         {
             return;
         }
@@ -1151,9 +1164,9 @@ public abstract class EntityPlayer extends EntityLiving
             {
                 if (j > 0)
                 {
-                    par1Entity.addVelocity(-MathHelper.sin((rotationYaw * (float)Math.PI) / 180F) * (float)j * 0.5F, 0.1D, MathHelper.cos((rotationYaw * (float)Math.PI) / 180F) * (float)j * 0.5F);
-                    motionX *= 0.6D;
-                    motionZ *= 0.6D;
+                    par1Entity.addVelocity(-MathHelper.sin((rotationYaw * (float)Math.PI) / 180F) * (float)j * 0.5F, 0.10000000000000001D, MathHelper.cos((rotationYaw * (float)Math.PI) / 180F) * (float)j * 0.5F);
+                    motionX *= 0.59999999999999998D;
+                    motionZ *= 0.59999999999999998D;
                     setSprinting(false);
                 }
 
@@ -1172,7 +1185,7 @@ public abstract class EntityPlayer extends EntityLiving
                     triggerAchievement(AchievementList.overkill);
                 }
 
-                func_48089_l(par1Entity);
+                setLastAttackingEntity(par1Entity);
             }
 
             ItemStack itemstack = getCurrentEquippedItem();
@@ -1567,7 +1580,7 @@ public abstract class EntityPlayer extends EntityLiving
             float f = jumpMovementFactor;
             jumpMovementFactor = 0.05F;
             super.moveEntityWithHeading(par1, par2);
-            motionY = d3 * 0.6D;
+            motionY = d3 * 0.59999999999999998D;
             jumpMovementFactor = f;
         }
         else
@@ -1625,7 +1638,7 @@ public abstract class EntityPlayer extends EntityLiving
 
                 if (isSprinting())
                 {
-                    addExhaustion(0.1F * (float)k * 0.01F);
+                    addExhaustion(0.09999999F * (float)k * 0.01F);
                 }
                 else
                 {
@@ -1663,7 +1676,7 @@ public abstract class EntityPlayer extends EntityLiving
                     {
                         startMinecartRidingCoordinate = new ChunkCoordinates(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
                     }
-                    else if (startMinecartRidingCoordinate.getSqDistanceTo(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) >= 1000D)
+                    else if (startMinecartRidingCoordinate.getEuclideanDistanceTo(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) >= 1000D)
                     {
                         addStat(AchievementList.onARail, 1);
                     }
@@ -1882,6 +1895,9 @@ public abstract class EntityPlayer extends EntityLiving
         return true;
     }
 
+    /**
+     * Get the experience points the entity currently has.
+     */
     protected int getExperiencePoints(EntityPlayer par1EntityPlayer)
     {
         int i = experienceLevel * 7;

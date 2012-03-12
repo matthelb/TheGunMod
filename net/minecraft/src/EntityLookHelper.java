@@ -67,12 +67,12 @@ public class EntityLookHelper
             double d3 = MathHelper.sqrt_double(d * d + d2 * d2);
             float f1 = (float)((Math.atan2(d2, d) * 180D) / Math.PI) - 90F;
             float f2 = (float)(-((Math.atan2(d1, d3) * 180D) / Math.PI));
-            entity.rotationPitch = func_46144_a(entity.rotationPitch, f2, field_46150_c);
-            entity.prevRotationYaw2 = func_46144_a(entity.prevRotationYaw2, f1, field_46149_b);
+            entity.rotationPitch = updateRotation(entity.rotationPitch, f2, field_46150_c);
+            entity.prevRotationYaw2 = updateRotation(entity.prevRotationYaw2, f1, field_46149_b);
         }
         else
         {
-            entity.prevRotationYaw2 = func_46144_a(entity.prevRotationYaw2, entity.renderYawOffset, 10F);
+            entity.prevRotationYaw2 = updateRotation(entity.prevRotationYaw2, entity.renderYawOffset, 10F);
         }
 
         float f;
@@ -81,7 +81,7 @@ public class EntityLookHelper
 
         for (; f >= 180F; f -= 360F) { }
 
-        if (!entity.func_48084_aL().func_46072_b())
+        if (!entity.getNavigator().noPath())
         {
             if (f < -75F)
             {
@@ -95,7 +95,7 @@ public class EntityLookHelper
         }
     }
 
-    private float func_46144_a(float par1, float par2, float par3)
+    private float updateRotation(float par1, float par2, float par3)
     {
         float f;
 

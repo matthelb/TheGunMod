@@ -4,7 +4,10 @@ import java.io.*;
 
 public class Packet201PlayerInfo extends Packet
 {
+    /** The player's name. */
     public String playerName;
+
+    /** Byte that tells whether the player is connected. */
     public boolean isConnected;
     public int ping;
 

@@ -393,6 +393,9 @@ public class NetworkManager
         return par0NetworkManager.socketOutputStream;
     }
 
+    /**
+     * Gets whether the Network manager is terminating.
+     */
     static boolean isTerminating(NetworkManager par0NetworkManager)
     {
         return par0NetworkManager.isTerminating;

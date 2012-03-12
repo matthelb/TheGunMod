@@ -4,6 +4,7 @@ import java.io.*;
 
 public class Packet26EntityExpOrb extends Packet
 {
+    /** Entity ID for the XP Orb */
     public int entityId;
     public int posX;
     public int posY;

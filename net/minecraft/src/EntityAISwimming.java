@@ -9,8 +9,8 @@ public class EntityAISwimming extends EntityAIBase
     public EntityAISwimming(EntityLiving par1EntityLiving)
     {
         field_46106_a = par1EntityLiving;
-        func_46079_a(4);
-        par1EntityLiving.func_48084_aL().func_48669_e(true);
+        setMutexBits(4);
+        par1EntityLiving.getNavigator().func_48669_e(true);
     }
 
     /**

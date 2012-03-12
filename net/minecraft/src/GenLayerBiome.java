@@ -62,7 +62,7 @@ public class GenLayerBiome extends GenLayer
     {
         biomeArray = (new BiomeGenBase[]
                 {
-                    BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.plains, BiomeGenBase.taiga, BiomeGenBase.field_48416_w
+                    BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.plains, BiomeGenBase.taiga, BiomeGenBase.jungle
                 });
     }
 }

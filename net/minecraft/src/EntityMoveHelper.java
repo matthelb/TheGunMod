@@ -26,7 +26,7 @@ public class EntityMoveHelper
         return field_46036_f;
     }
 
-    public float func_48184_b()
+    public float getSpeed()
     {
         return speed;
     }
@@ -56,7 +56,7 @@ public class EntityMoveHelper
         double d2 = posY - (double)i;
         double d3 = d * d + d2 * d2 + d1 * d1;
 
-        if (d3 < 2.5E-007D)
+        if (d3 < 2.5000002779052011E-007D)
         {
             return;
         }

@@ -8,14 +8,16 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader
     private List field_48451_a;
     private Set field_48449_b;
     private Object field_48450_c;
-    private final File field_48448_d;
+
+    /** Save directory for chunks using the Anvil format */
+    private final File chunkSaveLocation;
 
     public AnvilChunkLoader(File par1File)
     {
         field_48451_a = new ArrayList();
         field_48449_b = new HashSet();
         field_48450_c = new Object();
-        field_48448_d = par1File;
+        chunkSaveLocation = par1File;
     }
 
     /**
@@ -53,7 +55,7 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader
 
         if (nbttagcompound == null)
         {
-            java.io.DataInputStream datainputstream = RegionFileCache.getChunkInputStream(field_48448_d, par2, par3);
+            java.io.DataInputStream datainputstream = RegionFileCache.getChunkInputStream(chunkSaveLocation, par2, par3);
 
             if (datainputstream != null)
             {
@@ -174,7 +176,7 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader
 
     private void func_48447_a(AnvilChunkLoaderPending par1AnvilChunkLoaderPending) throws IOException
     {
-        DataOutputStream dataoutputstream = RegionFileCache.getChunkOutputStream(field_48448_d, par1AnvilChunkLoaderPending.field_48427_a.chunkXPos, par1AnvilChunkLoaderPending.field_48427_a.chunkZPos);
+        DataOutputStream dataoutputstream = RegionFileCache.getChunkOutputStream(chunkSaveLocation, par1AnvilChunkLoaderPending.field_48427_a.chunkXPos, par1AnvilChunkLoaderPending.field_48427_a.chunkZPos);
         CompressedStreamTools.write(par1AnvilChunkLoaderPending.field_48426_b, dataoutputstream);
         dataoutputstream.close();
     }
@@ -210,7 +212,7 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader
         par3NBTTagCompound.setLong("LastUpdate", par2World.getWorldTime());
         par3NBTTagCompound.func_48183_a("HeightMap", par1Chunk.field_48501_f);
         par3NBTTagCompound.setBoolean("TerrainPopulated", par1Chunk.isTerrainPopulated);
-        ExtendedBlockStorage aextendedblockstorage[] = par1Chunk.func_48495_i();
+        ExtendedBlockStorage aextendedblockstorage[] = par1Chunk.getBlockStorageArray();
         NBTTagList nbttaglist = new NBTTagList("Sections");
         ExtendedBlockStorage aextendedblockstorage1[] = aextendedblockstorage;
         int i = aextendedblockstorage1.length;
@@ -225,29 +227,29 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader
             }
 
             NBTTagCompound nbttagcompound = new NBTTagCompound();
-            nbttagcompound.setByte("Y", (byte)(extendedblockstorage.func_48707_c() >> 4 & 0xff));
+            nbttagcompound.setByte("Y", (byte)(extendedblockstorage.getYLocation() >> 4 & 0xff));
             nbttagcompound.setByteArray("Blocks", extendedblockstorage.func_48692_g());
 
-            if (extendedblockstorage.func_48704_i() != null)
+            if (extendedblockstorage.getBlockMSBArray() != null)
             {
-                nbttagcompound.setByteArray("Add", extendedblockstorage.func_48704_i().data);
+                nbttagcompound.setByteArray("Add", extendedblockstorage.getBlockMSBArray().data);
             }
 
             nbttagcompound.setByteArray("Data", extendedblockstorage.func_48697_j().data);
-            nbttagcompound.setByteArray("SkyLight", extendedblockstorage.func_48714_l().data);
-            nbttagcompound.setByteArray("BlockLight", extendedblockstorage.func_48705_k().data);
+            nbttagcompound.setByteArray("SkyLight", extendedblockstorage.getSkylightArray().data);
+            nbttagcompound.setByteArray("BlockLight", extendedblockstorage.getBlocklightArray().data);
             nbttaglist.appendTag(nbttagcompound);
         }
 
         par3NBTTagCompound.setTag("Sections", nbttaglist);
-        par3NBTTagCompound.setByteArray("Biomes", par1Chunk.func_48493_m());
+        par3NBTTagCompound.setByteArray("Biomes", par1Chunk.getBiomeArray());
         par1Chunk.hasEntities = false;
         NBTTagList nbttaglist1 = new NBTTagList();
         label0:
 
-        for (int j = 0; j < par1Chunk.field_48502_j.length; j++)
+        for (int j = 0; j < par1Chunk.entityLists.length; j++)
         {
-            Iterator iterator = par1Chunk.field_48502_j[j].iterator();
+            Iterator iterator = par1Chunk.entityLists[j].iterator();
 
             do
             {
@@ -319,16 +321,16 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader
             NBTTagCompound nbttagcompound = (NBTTagCompound)nbttaglist.tagAt(k);
             byte byte1 = nbttagcompound.getByte("Y");
             ExtendedBlockStorage extendedblockstorage = new ExtendedBlockStorage(byte1 << 4);
-            extendedblockstorage.func_48706_a(nbttagcompound.getByteArray("Blocks"));
+            extendedblockstorage.setBlockLSBArray(nbttagcompound.getByteArray("Blocks"));
 
             if (nbttagcompound.hasKey("Add"))
             {
-                extendedblockstorage.func_48710_a(new NibbleArray(nbttagcompound.getByteArray("Add"), 4));
+                extendedblockstorage.setBlockMSBArray(new NibbleArray(nbttagcompound.getByteArray("Add"), 4));
             }
 
-            extendedblockstorage.func_48701_b(new NibbleArray(nbttagcompound.getByteArray("Data"), 4));
-            extendedblockstorage.func_48713_d(new NibbleArray(nbttagcompound.getByteArray("SkyLight"), 4));
-            extendedblockstorage.func_48695_c(new NibbleArray(nbttagcompound.getByteArray("BlockLight"), 4));
+            extendedblockstorage.setBlockMetadataArray(new NibbleArray(nbttagcompound.getByteArray("Data"), 4));
+            extendedblockstorage.setSkylightArray(new NibbleArray(nbttagcompound.getByteArray("SkyLight"), 4));
+            extendedblockstorage.setBlocklightArray(new NibbleArray(nbttagcompound.getByteArray("BlockLight"), 4));
             extendedblockstorage.func_48708_d();
             aextendedblockstorage[byte1] = extendedblockstorage;
         }
@@ -337,7 +339,7 @@ public class AnvilChunkLoader implements IThreadedFileIO, IChunkLoader
 
         if (par2NBTTagCompound.hasKey("Biomes"))
         {
-            chunk.func_48497_a(par2NBTTagCompound.getByteArray("Biomes"));
+            chunk.setBiomeArray(par2NBTTagCompound.getByteArray("Biomes"));
         }
 
         NBTTagList nbttaglist1 = par2NBTTagCompound.getTagList("Entities");

@@ -7,7 +7,7 @@ public class EntityPig extends EntityAnimal
         super(par1World);
         texture = "/mob/pig.png";
         setSize(0.9F, 0.9F);
-        func_48084_aL().func_48664_a(true);
+        getNavigator().func_48664_a(true);
         float f = 0.25F;
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIPanic(this, 0.38F));
@@ -174,7 +174,7 @@ public class EntityPig extends EntityAnimal
     }
 
     /**
-     * [This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.]
+     * This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.
      */
     public EntityAnimal spawnBabyAnimal(EntityAnimal par1EntityAnimal)
     {

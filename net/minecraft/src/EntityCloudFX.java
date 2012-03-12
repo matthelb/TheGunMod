@@ -8,17 +8,17 @@ public class EntityCloudFX extends EntityFX
     {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
         float f = 2.5F;
-        motionX *= 0.1D;
-        motionY *= 0.1D;
-        motionZ *= 0.1D;
+        motionX *= 0.10000000149011612D;
+        motionY *= 0.10000000149011612D;
+        motionZ *= 0.10000000149011612D;
         motionX += par8;
         motionY += par10;
         motionZ += par12;
-        particleRed = particleGreen = particleBlue = 1.0F - (float)(Math.random() * 0.3D);
+        particleRed = particleGreen = particleBlue = 1.0F - (float)(Math.random() * 0.30000001192092896D);
         particleScale *= 0.75F;
         particleScale *= f;
         field_35135_a = particleScale;
-        particleMaxAge = (int)(8D / (Math.random() * 0.8D + 0.3D));
+        particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.29999999999999999D));
         particleMaxAge *= f;
         noClip = false;
     }
@@ -57,22 +57,22 @@ public class EntityCloudFX extends EntityFX
 
         setParticleTextureIndex(7 - (particleAge * 8) / particleMaxAge);
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.96D;
-        motionY *= 0.96D;
-        motionZ *= 0.96D;
+        motionX *= 0.95999997854232788D;
+        motionY *= 0.95999997854232788D;
+        motionZ *= 0.95999997854232788D;
         EntityPlayer entityplayer = worldObj.getClosestPlayerToEntity(this, 2D);
 
         if (entityplayer != null && posY > entityplayer.boundingBox.minY)
         {
-            posY += (entityplayer.boundingBox.minY - posY) * 0.2D;
-            motionY += (entityplayer.motionY - motionY) * 0.2D;
+            posY += (entityplayer.boundingBox.minY - posY) * 0.20000000000000001D;
+            motionY += (entityplayer.motionY - motionY) * 0.20000000000000001D;
             setPosition(posX, posY, posZ);
         }
 
         if (onGround)
         {
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
         }
     }
 }

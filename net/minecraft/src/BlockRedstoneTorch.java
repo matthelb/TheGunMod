@@ -188,9 +188,9 @@ public class BlockRedstoneTorch extends BlockTorch
 
                     for (int i = 0; i < 5; i++)
                     {
-                        double d = (double)par2 + par5Random.nextDouble() * 0.6D + 0.2D;
-                        double d1 = (double)par3 + par5Random.nextDouble() * 0.6D + 0.2D;
-                        double d2 = (double)par4 + par5Random.nextDouble() * 0.6D + 0.2D;
+                        double d = (double)par2 + par5Random.nextDouble() * 0.59999999999999998D + 0.20000000000000001D;
+                        double d1 = (double)par3 + par5Random.nextDouble() * 0.59999999999999998D + 0.20000000000000001D;
+                        double d2 = (double)par4 + par5Random.nextDouble() * 0.59999999999999998D + 0.20000000000000001D;
                         par1World.spawnParticle("smoke", d, d1, d2, 0.0D, 0.0D, 0.0D);
                     }
                 }
@@ -254,11 +254,11 @@ public class BlockRedstoneTorch extends BlockTorch
         }
 
         int i = par1World.getBlockMetadata(par2, par3, par4);
-        double d = (double)((float)par2 + 0.5F) + (double)(par5Random.nextFloat() - 0.5F) * 0.2D;
-        double d1 = (double)((float)par3 + 0.7F) + (double)(par5Random.nextFloat() - 0.5F) * 0.2D;
-        double d2 = (double)((float)par4 + 0.5F) + (double)(par5Random.nextFloat() - 0.5F) * 0.2D;
-        double d3 = 0.22D;
-        double d4 = 0.27D;
+        double d = (double)((float)par2 + 0.5F) + (double)(par5Random.nextFloat() - 0.5F) * 0.20000000000000001D;
+        double d1 = (double)((float)par3 + 0.7F) + (double)(par5Random.nextFloat() - 0.5F) * 0.20000000000000001D;
+        double d2 = (double)((float)par4 + 0.5F) + (double)(par5Random.nextFloat() - 0.5F) * 0.20000000000000001D;
+        double d3 = 0.2199999988079071D;
+        double d4 = 0.27000001072883606D;
 
         if (i == 1)
         {

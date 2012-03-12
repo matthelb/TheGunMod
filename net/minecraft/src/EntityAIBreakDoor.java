@@ -26,9 +26,12 @@ public class EntityAIBreakDoor extends EntityAIDoorInteract
         }
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        super.func_46080_e();
+        super.startExecuting();
         field_48329_i = 240;
     }
 

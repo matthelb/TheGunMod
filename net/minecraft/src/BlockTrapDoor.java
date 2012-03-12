@@ -34,7 +34,7 @@ public class BlockTrapDoor extends Block
         return false;
     }
 
-    public boolean func_48204_b(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         return !isTrapdoorOpen(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
     }
@@ -246,6 +246,9 @@ public class BlockTrapDoor extends Block
         par1World.setBlockMetadataWithNotify(par2, par3, par4, byte0);
     }
 
+    /**
+     * checks to see if you can place this block can be placed on that side of a block: BlockLever overrides
+     */
     public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
     {
         if (par5 == 0)

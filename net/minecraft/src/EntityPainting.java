@@ -186,6 +186,9 @@ public class EntityPainting extends Entity
         }
     }
 
+    /**
+     * checks to make sure painting can be placed there
+     */
     public boolean onValidSurface()
     {
         if (worldObj.getCollidingBoundingBoxes(this, boundingBox).size() > 0)

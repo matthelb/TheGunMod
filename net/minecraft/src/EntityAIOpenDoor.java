@@ -20,7 +20,10 @@ public class EntityAIOpenDoor extends EntityAIDoorInteract
         return field_48328_i && field_48327_j > 0 && super.continueExecuting();
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48327_j = 20;
         field_48322_e.onPoweredBlockChange(field_48325_a.worldObj, field_48323_b, field_48324_c, field_48321_d, true);

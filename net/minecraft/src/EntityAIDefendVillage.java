@@ -2,14 +2,18 @@ package net.minecraft.src;
 
 public class EntityAIDefendVillage extends EntityAITarget
 {
-    EntityIronGolem field_48385_a;
-    EntityLiving field_48384_b;
+    EntityIronGolem irongolem;
+
+    /**
+     * The aggressor of the iron golem's village which is now the golem's attack target.
+     */
+    EntityLiving villageAgressorTarget;
 
     public EntityAIDefendVillage(EntityIronGolem par1EntityIronGolem)
     {
         super(par1EntityIronGolem, 16F, false, true);
-        field_48385_a = par1EntityIronGolem;
-        func_46079_a(1);
+        irongolem = par1EntityIronGolem;
+        setMutexBits(1);
     }
 
     /**
@@ -17,7 +21,7 @@ public class EntityAIDefendVillage extends EntityAITarget
      */
     public boolean shouldExecute()
     {
-        Village village = field_48385_a.func_48113_aa();
+        Village village = irongolem.getVillage();
 
         if (village == null)
         {
@@ -25,14 +29,17 @@ public class EntityAIDefendVillage extends EntityAITarget
         }
         else
         {
-            field_48384_b = village.func_48537_b(field_48385_a);
-            return func_48376_a(field_48384_b, false);
+            villageAgressorTarget = village.findNearestVillageAggressor(irongolem);
+            return func_48376_a(villageAgressorTarget, false);
         }
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48385_a.func_48092_c(field_48384_b);
-        super.func_46080_e();
+        irongolem.setAttackTarget(villageAgressorTarget);
+        super.startExecuting();
     }
 }

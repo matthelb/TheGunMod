@@ -5,9 +5,9 @@ import java.util.Random;
 public class EntityCrit2FX extends EntityFX
 {
     private Entity field_35134_a;
-    private int field_35133_ay;
-    private int field_35132_az;
-    private String field_40105_ay;
+    private int currentLife;
+    private int maximumLife;
+    private String particleName;
 
     public EntityCrit2FX(World par1World, Entity par2Entity)
     {
@@ -17,11 +17,11 @@ public class EntityCrit2FX extends EntityFX
     public EntityCrit2FX(World par1World, Entity par2Entity, String par3Str)
     {
         super(par1World, par2Entity.posX, par2Entity.boundingBox.minY + (double)(par2Entity.height / 2.0F), par2Entity.posZ, par2Entity.motionX, par2Entity.motionY, par2Entity.motionZ);
-        field_35133_ay = 0;
-        field_35132_az = 0;
+        currentLife = 0;
+        maximumLife = 0;
         field_35134_a = par2Entity;
-        field_35132_az = 3;
-        field_40105_ay = par3Str;
+        maximumLife = 3;
+        particleName = par3Str;
         onUpdate();
     }
 
@@ -45,13 +45,13 @@ public class EntityCrit2FX extends EntityFX
                 double d3 = field_35134_a.posX + (d * (double)field_35134_a.width) / 4D;
                 double d4 = field_35134_a.boundingBox.minY + (double)(field_35134_a.height / 2.0F) + (d1 * (double)field_35134_a.height) / 4D;
                 double d5 = field_35134_a.posZ + (d2 * (double)field_35134_a.width) / 4D;
-                worldObj.spawnParticle(field_40105_ay, d3, d4, d5, d, d1 + 0.2D, d2);
+                worldObj.spawnParticle(particleName, d3, d4, d5, d, d1 + 0.20000000000000001D, d2);
             }
         }
 
-        field_35133_ay++;
+        currentLife++;
 
-        if (field_35133_ay >= field_35132_az)
+        if (currentLife >= maximumLife)
         {
             setEntityDead();
         }

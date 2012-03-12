@@ -77,10 +77,10 @@ public class MapItemRenderer
         GL11.glBlendFunc(GL11.GL_ONE, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_ALPHA_TEST);
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV((float)(j + 0) + f, (float)(k + 128) - f, -0.01D, 0.0D, 1.0D);
-        tessellator.addVertexWithUV((float)(j + 128) - f, (float)(k + 128) - f, -0.01D, 1.0D, 1.0D);
-        tessellator.addVertexWithUV((float)(j + 128) - f, (float)(k + 0) + f, -0.01D, 1.0D, 0.0D);
-        tessellator.addVertexWithUV((float)(j + 0) + f, (float)(k + 0) + f, -0.01D, 0.0D, 0.0D);
+        tessellator.addVertexWithUV((float)(j + 0) + f, (float)(k + 128) - f, -0.0099999997764825821D, 0.0D, 1.0D);
+        tessellator.addVertexWithUV((float)(j + 128) - f, (float)(k + 128) - f, -0.0099999997764825821D, 1.0D, 1.0D);
+        tessellator.addVertexWithUV((float)(j + 128) - f, (float)(k + 0) + f, -0.0099999997764825821D, 1.0D, 0.0D);
+        tessellator.addVertexWithUV((float)(j + 0) + f, (float)(k + 0) + f, -0.0099999997764825821D, 0.0D, 0.0D);
         tessellator.draw();
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glDisable(GL11.GL_BLEND);

@@ -5,7 +5,7 @@ import java.util.Random;
 public class EntityIronGolem extends EntityGolem
 {
     private int field_48119_b;
-    Village field_48121_a;
+    Village villageObj;
     private int field_48120_c;
     private int field_48118_d;
 
@@ -13,10 +13,10 @@ public class EntityIronGolem extends EntityGolem
     {
         super(par1World);
         field_48119_b = 0;
-        field_48121_a = null;
+        villageObj = null;
         texture = "/mob/villager_golem.png";
         setSize(1.4F, 2.9F);
-        func_48084_aL().func_48664_a(true);
+        getNavigator().func_48664_a(true);
         tasks.addTask(1, new EntityAIAttackOnCollide(this, 0.25F, true));
         tasks.addTask(2, new EntityAIMoveTowardsTarget(this, 0.22F, 32F));
         tasks.addTask(3, new EntityAIMoveThroughVillage(this, 0.16F, true));
@@ -25,9 +25,9 @@ public class EntityIronGolem extends EntityGolem
         tasks.addTask(6, new EntityAIWander(this, 0.16F));
         tasks.addTask(7, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 6F));
         tasks.addTask(8, new EntityAILookIdle(this));
-        field_48105_bU.addTask(1, new EntityAIDefendVillage(this));
-        field_48105_bU.addTask(2, new EntityAIHurtByTarget(this, false));
-        field_48105_bU.addTask(3, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityMob.class, 16F, 0, false, true));
+        targetTasks.addTask(1, new EntityAIDefendVillage(this));
+        targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
+        targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityMob.class, 16F, 0, false, true));
     }
 
     protected void entityInit()
@@ -44,25 +44,28 @@ public class EntityIronGolem extends EntityGolem
         return true;
     }
 
-    protected void func_48097_s_()
+    /**
+     * main AI tick function, replaces updateEntityActionState
+     */
+    protected void updateAITick()
     {
         if (--field_48119_b <= 0)
         {
             field_48119_b = 70 + rand.nextInt(50);
-            field_48121_a = worldObj.field_48465_A.func_48564_a(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ), 32);
+            villageObj = worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ), 32);
 
-            if (field_48121_a == null)
+            if (villageObj == null)
             {
-                func_48083_aW();
+                detachHome();
             }
             else
             {
-                ChunkCoordinates chunkcoordinates = field_48121_a.func_48539_a();
-                func_48082_b(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, field_48121_a.func_48531_b());
+                ChunkCoordinates chunkcoordinates = villageObj.getCenter();
+                setHomeArea(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, villageObj.getVillageRadius());
             }
         }
 
-        super.func_48097_s_();
+        super.updateAITick();
     }
 
     public int getMaxHealth()
@@ -96,16 +99,16 @@ public class EntityIronGolem extends EntityGolem
             field_48118_d--;
         }
 
-        if (motionX * motionX + motionZ * motionZ > 2.5E-007D && rand.nextInt(5) == 0)
+        if (motionX * motionX + motionZ * motionZ > 2.5000002779052011E-007D && rand.nextInt(5) == 0)
         {
             int i = MathHelper.floor_double(posX);
-            int j = MathHelper.floor_double(posY - 0.2D - (double)yOffset);
+            int j = MathHelper.floor_double(posY - 0.20000000298023224D - (double)yOffset);
             int k = MathHelper.floor_double(posZ);
             int l = worldObj.getBlockId(i, j, k);
 
             if (l > 0)
             {
-                worldObj.spawnParticle((new StringBuilder()).append("tilecrack_").append(l).toString(), posX + ((double)rand.nextFloat() - 0.5D) * (double)width, boundingBox.minY + 0.1D, posZ + ((double)rand.nextFloat() - 0.5D) * (double)width, 4D * ((double)rand.nextFloat() - 0.5D), 0.5D, ((double)rand.nextFloat() - 0.5D) * 4D);
+                worldObj.spawnParticle((new StringBuilder()).append("tilecrack_").append(l).toString(), posX + ((double)rand.nextFloat() - 0.5D) * (double)width, boundingBox.minY + 0.10000000000000001D, posZ + ((double)rand.nextFloat() - 0.5D) * (double)width, 4D * ((double)rand.nextFloat() - 0.5D), 0.5D, ((double)rand.nextFloat() - 0.5D) * 4D);
             }
         }
     }
@@ -148,7 +151,7 @@ public class EntityIronGolem extends EntityGolem
 
         if (flag)
         {
-            par1Entity.motionY += 0.4D;
+            par1Entity.motionY += 0.40000000596046448D;
         }
 
         worldObj.playSoundAtEntity(this, "mob.irongolem.throw", 1.0F, 1.0F);
@@ -172,9 +175,9 @@ public class EntityIronGolem extends EntityGolem
         }
     }
 
-    public Village func_48113_aa()
+    public Village getVillage()
     {
-        return field_48121_a;
+        return villageObj;
     }
 
     public int func_48114_ab()

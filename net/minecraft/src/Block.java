@@ -201,8 +201,12 @@ public class Block
     public static final Block endPortalFrame;
     public static final Block whiteStone;
     public static final Block dragonEgg;
-    public static final Block field_48209_bL;
-    public static final Block field_48210_bM;
+
+    /** Redstone Lamp (unpowered state) */
+    public static final Block redstoneLampU;
+
+    /** Redstone Lamp (powered state) */
+    public static final Block redstoneLampP;
 
     /**
      * The index of the texture to be displayed for this block. May vary based on graphics settings. Mostly seems to
@@ -228,8 +232,15 @@ public class Block
      * If this field is true, the block is counted for statistics (mined or placed)
      */
     protected boolean enableStats;
-    protected boolean field_48208_bT;
-    protected boolean field_48207_bU;
+
+    /**
+     * Flags whether or not this block is of a type that needs random ticking. Ref-counted by ExtendedBlockStorage in
+     * order to broadly cull a chunk from the random chunk update list for efficiency's sake.
+     */
+    protected boolean needsRandomTick;
+
+    /** true if the Block contains a Tile Entity */
+    protected boolean isBlockContainer;
 
     /** minimum X for the block bounds (local coordinates) */
     public double minX;
@@ -348,7 +359,7 @@ public class Block
         return this;
     }
 
-    public static boolean func_48206_g(int par0)
+    public static boolean isNormalCube(int par0)
     {
         Block block = blocksList[par0];
 
@@ -370,7 +381,7 @@ public class Block
         return true;
     }
 
-    public boolean func_48204_b(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         return !blockMaterial.blocksMovement();
     }
@@ -420,18 +431,22 @@ public class Block
      */
     protected Block setTickRandomly(boolean par1)
     {
-        field_48208_bT = par1;
+        needsRandomTick = par1;
         return this;
     }
 
-    public boolean func_48203_o()
+    /**
+     * Returns whether or not this block is of a type that needs random ticking. Called for ref-counting purposes by
+     * ExtendedBlockStorage in order to broadly cull a chunk from the random chunk update list for efficiency's sake.
+     */
+    public boolean getTickRandomly()
     {
-        return field_48208_bT;
+        return needsRandomTick;
     }
 
     public boolean func_48205_p()
     {
-        return field_48207_bU;
+        return isBlockContainer;
     }
 
     /**
@@ -932,6 +947,9 @@ public class Block
         return 0;
     }
 
+    /**
+     * checks to see if you can place this block can be placed on that side of a block: BlockLever overrides
+     */
     public boolean canPlaceBlockOnSide(World par1World, int par2, int par3, int par4, int par5)
     {
         return canPlaceBlockAt(par1World, par2, par3, par4);
@@ -1060,7 +1078,7 @@ public class Block
         par2EntityPlayer.addStat(StatList.mineBlockStatArray[blockID], 1);
         par2EntityPlayer.addExhaustion(0.025F);
 
-        if (renderAsNormalBlock() && !field_48207_bU && EnchantmentHelper.getSilkTouchModifier(par2EntityPlayer.inventory))
+        if (renderAsNormalBlock() && !isBlockContainer && EnchantmentHelper.getSilkTouchModifier(par2EntityPlayer.inventory))
         {
             ItemStack itemstack = createStackedBlock(par6);
 
@@ -1125,6 +1143,10 @@ public class Block
         return this;
     }
 
+    /**
+     * gets the localized version of the name of this block using StatCollector.translateToLocal. Used for the statistic
+     * page.
+     */
     public String translateBlockName()
     {
         return StatCollector.translateToLocal((new StringBuilder()).append(getBlockName()).append(".name").toString());
@@ -1316,8 +1338,8 @@ public class Block
         endPortalFrame = (new BlockEndPortalFrame(120)).setStepSound(soundGlassFootstep).setLightValue(0.125F).setHardness(-1F).setBlockName("endPortalFrame").setRequiresSelfNotify().setResistance(6000000F);
         whiteStone = (new Block(121, 175, Material.rock)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setBlockName("whiteStone");
         dragonEgg = (new BlockDragonEgg(122, 167)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setLightValue(0.125F).setBlockName("dragonEgg");
-        field_48209_bL = (new BlockRedstoneLight(123, false)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
-        field_48210_bM = (new BlockRedstoneLight(124, true)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
+        redstoneLampU = (new BlockRedstoneLight(123, false)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
+        redstoneLampP = (new BlockRedstoneLight(124, true)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
         Item.itemsList[cloth.blockID] = (new ItemCloth(cloth.blockID - 256)).setItemName("cloth");
         Item.itemsList[wood.blockID] = (new ItemMetadata(wood.blockID - 256, wood)).setItemName("log");
         Item.itemsList[stoneBrick.blockID] = (new ItemMetadata(stoneBrick.blockID - 256, stoneBrick)).setItemName("stonebricksmooth");

@@ -4,6 +4,8 @@ public class ItemTool extends Item
 {
     private Block blocksEffectiveAgainst[];
     protected float efficiencyOnProperMaterial;
+
+    /** Damage versus entities. */
     private int damageVsEntity;
 
     /** The material this tool is made from. */

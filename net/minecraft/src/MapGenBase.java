@@ -9,6 +9,8 @@ public class MapGenBase
 
     /** The RNG used by the MapGen classes. */
     protected Random rand;
+
+    /** This world object. */
     protected World worldObj;
 
     public MapGenBase()

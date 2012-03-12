@@ -4,11 +4,17 @@ import org.lwjgl.opengl.*;
 
 public class OpenGlHelper
 {
-    /** An OpenGL constant specifying the disabled lightmap texture */
-    public static int lightmapDisabled;
+    /**
+     * An OpenGL constant corresponding to GL_TEXTURE0, used when setting data pertaining to auxiliary OpenGL texture
+     * units.
+     */
+    public static int defaultTexUnit;
 
-    /** An OpenGL constant specifying the enabled lightmap texture */
-    public static int lightmapEnabled;
+    /**
+     * An OpenGL constant corresponding to GL_TEXTURE1, used when setting data pertaining to auxiliary OpenGL texture
+     * units.
+     */
+    public static int lightmapTexUnit;
 
     /**
      * True if the renderer supports multitextures and the OpenGL version != 1.3
@@ -28,13 +34,13 @@ public class OpenGlHelper
 
         if (useMultitextureARB)
         {
-            lightmapDisabled = 33984;
-            lightmapEnabled = 33985;
+            defaultTexUnit = 33984;
+            lightmapTexUnit = 33985;
         }
         else
         {
-            lightmapDisabled = 33984;
-            lightmapEnabled = 33985;
+            defaultTexUnit = 33984;
+            lightmapTexUnit = 33985;
         }
     }
 

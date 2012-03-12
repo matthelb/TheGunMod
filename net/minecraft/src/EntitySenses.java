@@ -4,46 +4,52 @@ import java.util.ArrayList;
 
 public class EntitySenses
 {
-    EntityLiving field_48484_a;
-    ArrayList field_48482_b;
-    ArrayList field_48483_c;
+    EntityLiving entityObj;
+    ArrayList canSeeCachePositive;
+    ArrayList canSeeCacheNegative;
 
     public EntitySenses(EntityLiving par1EntityLiving)
     {
-        field_48482_b = new ArrayList();
-        field_48483_c = new ArrayList();
-        field_48484_a = par1EntityLiving;
+        canSeeCachePositive = new ArrayList();
+        canSeeCacheNegative = new ArrayList();
+        entityObj = par1EntityLiving;
     }
 
-    public void func_48481_a()
+    /**
+     * Returns the squared distance between this door and the given coordinate.
+     */
+    public void clearSensingCache()
     {
-        field_48482_b.clear();
-        field_48483_c.clear();
+        canSeeCachePositive.clear();
+        canSeeCacheNegative.clear();
     }
 
-    public boolean func_48480_a(Entity par1Entity)
+    /**
+     * Checks, whether 'our' entity can see the entity given as argument (true) or not (false), caching the result.
+     */
+    public boolean canSee(Entity par1Entity)
     {
-        if (field_48482_b.contains(par1Entity))
+        if (canSeeCachePositive.contains(par1Entity))
         {
             return true;
         }
 
-        if (field_48483_c.contains(par1Entity))
+        if (canSeeCacheNegative.contains(par1Entity))
         {
             return false;
         }
 
         Profiler.startSection("canSee");
-        boolean flag = field_48484_a.canEntityBeSeen(par1Entity);
+        boolean flag = entityObj.canEntityBeSeen(par1Entity);
         Profiler.endSection();
 
         if (flag)
         {
-            field_48482_b.add(par1Entity);
+            canSeeCachePositive.add(par1Entity);
         }
         else
         {
-            field_48483_c.add(par1Entity);
+            canSeeCacheNegative.add(par1Entity);
         }
 
         return flag;

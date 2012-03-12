@@ -326,6 +326,9 @@ public class AxisAlignedBB
         return (d + d1 + d2) / 3D;
     }
 
+    /**
+     * Returns a bounding box that is inset by the specified amounts
+     */
     public AxisAlignedBB contract(double par1, double par3, double par5)
     {
         double d = minX + par1;

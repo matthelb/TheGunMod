@@ -26,8 +26,8 @@ public class EntityCreeper extends EntityMob
         tasks.addTask(5, new EntityAIWander(this, 0.2F));
         tasks.addTask(6, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 8F));
         tasks.addTask(6, new EntityAILookIdle(this));
-        field_48105_bU.addTask(1, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, false));
-        field_48105_bU.addTask(2, new EntityAIHurtByTarget(this, false));
+        targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, false));
+        targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
     }
 
     /**
@@ -176,7 +176,7 @@ public class EntityCreeper extends EntityMob
     }
 
     /**
-     * Returns the current state of crepper, -1 is idle, 1 is 'in fuse'
+     * Returns the current state of creeper, -1 is idle, 1 is 'in fuse'
      */
     public int getCreeperState()
     {

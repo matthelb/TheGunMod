@@ -56,7 +56,7 @@ public class RenderEnderman extends RenderLiving
             int i = par1EntityEnderman.getEntityBrightnessForRender(par2);
             int j = i % 0x10000;
             int k = i / 0x10000;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)j / 1.0F, (float)k / 1.0F);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             loadTexture("/terrain.png");
@@ -86,7 +86,7 @@ public class RenderEnderman extends RenderLiving
             int i = 61680;
             int j = i % 0x10000;
             int k = i / 0x10000;
-            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)j / 1.0F, (float)k / 1.0F);
+            OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glColor4f(1.0F, 1.0F, 1.0F, f);

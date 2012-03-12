@@ -46,7 +46,7 @@ public class TextureLavaFX extends TextureFX
 
                 field_1144_j[i + j * 16] -= 0.06F;
 
-                if (Math.random() < 0.005D)
+                if (Math.random() < 0.0050000000000000001D)
                 {
                     field_1144_j[i + j * 16] = 1.5F;
                 }

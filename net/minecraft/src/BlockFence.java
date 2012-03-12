@@ -112,7 +112,7 @@ public class BlockFence extends Block
         return false;
     }
 
-    public boolean func_48204_b(IBlockAccess par1IBlockAccess, int par2, int par3, int i)
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int i)
     {
         return false;
     }

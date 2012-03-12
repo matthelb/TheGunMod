@@ -67,7 +67,11 @@ public class InventoryCrafting implements IInventory
         return "container.crafting";
     }
 
-    public ItemStack func_48081_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (stackList[par1] != null)
         {

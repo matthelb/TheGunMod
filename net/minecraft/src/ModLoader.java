@@ -507,9 +507,9 @@ public final class ModLoader
 
                 if (itemstack != null)
                 {
-                    double d = world.rand.nextDouble() * 0.8D + 0.1D;
-                    double d1 = world.rand.nextDouble() * 0.8D + 0.1D;
-                    double d2 = world.rand.nextDouble() * 0.8D + 0.1D;
+                    double d = world.rand.nextDouble() * 0.80000000000000004D + 0.10000000000000001D;
+                    double d1 = world.rand.nextDouble() * 0.80000000000000004D + 0.10000000000000001D;
+                    double d2 = world.rand.nextDouble() * 0.80000000000000004D + 0.10000000000000001D;
 
                     while (itemstack.stackSize > 0)
                     {
@@ -522,9 +522,9 @@ public final class ModLoader
 
                         itemstack.stackSize -= i1;
                         EntityItem entityitem = new EntityItem(world, (double)i + d, (double)j + d1, (double)k + d2, new ItemStack(itemstack.itemID, i1, itemstack.getItemDamage()));
-                        double d3 = 0.05D;
+                        double d3 = 0.050000000000000003D;
                         entityitem.motionX = world.rand.nextGaussian() * d3;
-                        entityitem.motionY = world.rand.nextGaussian() * d3 + 0.2D;
+                        entityitem.motionY = world.rand.nextGaussian() * d3 + 0.20000000000000001D;
                         entityitem.motionZ = world.rand.nextGaussian() * d3;
 
                         if (itemstack.hasTagCompound())
@@ -897,7 +897,7 @@ public final class ModLoader
             {
                 String s = StringTranslate.getInstance().translateKeyFormat("stat.mineBlock", new Object[]
                         {
-                            Boolean.valueOf(Block.blocksList[i].func_48203_o())
+                            Boolean.valueOf(Block.blocksList[i].getTickRandomly())
                         });
                 StatList.mineBlockStatArray[i] = (new StatCrafting(0x1000000 + i, s, i)).registerStat();
                 StatList.objectMineStats.add(StatList.mineBlockStatArray[i]);

@@ -50,7 +50,7 @@ public abstract class EntityCreature extends EntityLiving
 
             if (entityToAttack != null)
             {
-                pathToEntity = worldObj.func_48463_a(this, entityToAttack, f, true, false, false, true);
+                pathToEntity = worldObj.getPathEntityToEntity(this, entityToAttack, f, true, false, false, true);
             }
         }
         else if (!entityToAttack.isEntityAlive())
@@ -75,7 +75,7 @@ public abstract class EntityCreature extends EntityLiving
 
         if (!hasAttacked && entityToAttack != null && (pathToEntity == null || rand.nextInt(20) == 0))
         {
-            pathToEntity = worldObj.func_48463_a(this, entityToAttack, f, true, false, false, true);
+            pathToEntity = worldObj.getPathEntityToEntity(this, entityToAttack, f, true, false, false, true);
         }
         else if (!hasAttacked && (pathToEntity == null && rand.nextInt(180) == 0 || rand.nextInt(120) == 0 || fleeingTick > 0) && entityAge < 100)
         {
@@ -95,7 +95,7 @@ public abstract class EntityCreature extends EntityLiving
         }
 
         Profiler.startSection("followpath");
-        Vec3D vec3d = pathToEntity.func_48640_a(this);
+        Vec3D vec3d = pathToEntity.getCurrentNodeVec3d(this);
 
         for (double d = width * 2.0F; vec3d != null && vec3d.squareDistanceTo(posX, vec3d.yCoord, posZ) < d * d;)
         {
@@ -108,7 +108,7 @@ public abstract class EntityCreature extends EntityLiving
             }
             else
             {
-                vec3d = pathToEntity.func_48640_a(this);
+                vec3d = pathToEntity.getCurrentNodeVec3d(this);
             }
         }
 
@@ -205,7 +205,7 @@ public abstract class EntityCreature extends EntityLiving
 
         if (flag)
         {
-            pathToEntity = worldObj.func_48460_a(this, i, j, k, 10F, true, false, false, true);
+            pathToEntity = worldObj.getEntityPathToXYZ(this, i, j, k, 10F, true, false, false, true);
         }
 
         Profiler.endSection();

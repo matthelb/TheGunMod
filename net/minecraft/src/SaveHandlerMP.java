@@ -17,6 +17,9 @@ public class SaveHandlerMP implements ISaveHandler
         return null;
     }
 
+    /**
+     * Checks the session lock to prevent save collisions
+     */
     public void checkSessionLock()
     {
     }
@@ -29,6 +32,9 @@ public class SaveHandlerMP implements ISaveHandler
         return null;
     }
 
+    /**
+     * saves level.dat and backs up the existing one to level.dat_old
+     */
     public void saveWorldInfoAndPlayer(WorldInfo worldinfo, List list)
     {
     }

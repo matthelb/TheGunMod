@@ -42,9 +42,9 @@ public class EntityFX extends Entity
         motionZ = par12 + (double)((float)(Math.random() * 2D - 1.0D) * 0.4F);
         float f = (float)(Math.random() + Math.random() + 1.0D) * 0.15F;
         float f1 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
-        motionX = (motionX / (double)f1) * (double)f * 0.4D;
-        motionY = (motionY / (double)f1) * (double)f * 0.4D + 0.1D;
-        motionZ = (motionZ / (double)f1) * (double)f * 0.4D;
+        motionX = (motionX / (double)f1) * (double)f * 0.40000000596046448D;
+        motionY = (motionY / (double)f1) * (double)f * 0.40000000596046448D + 0.10000000149011612D;
+        motionZ = (motionZ / (double)f1) * (double)f * 0.40000000596046448D;
         particleTextureJitterX = rand.nextFloat() * 3F;
         particleTextureJitterY = rand.nextFloat() * 3F;
         particleScale = (rand.nextFloat() * 0.5F + 0.5F) * 2.0F;
@@ -55,7 +55,7 @@ public class EntityFX extends Entity
     public EntityFX multiplyVelocity(float par1)
     {
         motionX *= par1;
-        motionY = (motionY - 0.1D) * (double)par1 + 0.1D;
+        motionY = (motionY - 0.10000000149011612D) * (double)par1 + 0.10000000149011612D;
         motionZ *= par1;
         return this;
     }
@@ -116,16 +116,16 @@ public class EntityFX extends Entity
             setEntityDead();
         }
 
-        motionY -= 0.04D * (double)particleGravity;
+        motionY -= 0.040000000000000001D * (double)particleGravity;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.98D;
-        motionY *= 0.98D;
-        motionZ *= 0.98D;
+        motionX *= 0.98000001907348633D;
+        motionY *= 0.98000001907348633D;
+        motionZ *= 0.98000001907348633D;
 
         if (onGround)
         {
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
         }
     }
 
@@ -179,7 +179,10 @@ public class EntityFX extends Entity
         return particleTextureIndex;
     }
 
-    public boolean func_48080_j()
+    /**
+     * If returns false, the item will not inflict any damage against entities.
+     */
+    public boolean canAttackWithItem()
     {
         return false;
     }

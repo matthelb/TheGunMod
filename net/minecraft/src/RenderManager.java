@@ -71,7 +71,7 @@ public class RenderManager
         entityRenderMap.put(net.minecraft.src.EntityEnderEye.class, new RenderSnowball(Item.eyeOfEnder.getIconFromDamage(0)));
         entityRenderMap.put(net.minecraft.src.EntityEgg.class, new RenderSnowball(Item.egg.getIconFromDamage(0)));
         entityRenderMap.put(net.minecraft.src.EntityPotion.class, new RenderSnowball(154));
-        entityRenderMap.put(net.minecraft.src.EntityExpBottle.class, new RenderSnowball(Item.field_48438_bD.getIconFromDamage(0)));
+        entityRenderMap.put(net.minecraft.src.EntityExpBottle.class, new RenderSnowball(Item.expBottle.getIconFromDamage(0)));
         entityRenderMap.put(net.minecraft.src.EntityFireball.class, new RenderFireball(2.0F));
         entityRenderMap.put(net.minecraft.src.EntitySmallFireball.class, new RenderFireball(0.5F));
         entityRenderMap.put(net.minecraft.src.EntityItem.class, new RenderItem());
@@ -167,7 +167,7 @@ public class RenderManager
 
         int j = i % 0x10000;
         int k = i / 0x10000;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)j / 1.0F, (float)k / 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         renderEntityWithPosYaw(par1Entity, d - renderPosX, d1 - renderPosY, d2 - renderPosZ, f, par2);
     }

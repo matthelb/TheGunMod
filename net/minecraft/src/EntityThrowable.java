@@ -61,7 +61,7 @@ public abstract class EntityThrowable extends Entity
         setSize(0.25F, 0.25F);
         setLocationAndAngles(par2EntityLiving.posX, par2EntityLiving.posY + (double)par2EntityLiving.getEyeHeight(), par2EntityLiving.posZ, par2EntityLiving.rotationYaw, par2EntityLiving.rotationPitch);
         posX -= MathHelper.cos((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
-        posY -= 0.1D;
+        posY -= 0.10000000149011612D;
         posZ -= MathHelper.sin((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
         setPosition(posX, posY, posZ);
         yOffset = 0.0F;
@@ -107,9 +107,9 @@ public abstract class EntityThrowable extends Entity
         par1 /= f;
         par3 /= f;
         par5 /= f;
-        par1 += rand.nextGaussian() * 0.0075D * (double)par8;
-        par3 += rand.nextGaussian() * 0.0075D * (double)par8;
-        par5 += rand.nextGaussian() * 0.0075D * (double)par8;
+        par1 += rand.nextGaussian() * 0.0074999998323619366D * (double)par8;
+        par3 += rand.nextGaussian() * 0.0074999998323619366D * (double)par8;
+        par5 += rand.nextGaussian() * 0.0074999998323619366D * (double)par8;
         par1 *= par7;
         par3 *= par7;
         par5 *= par7;

@@ -11,7 +11,8 @@ public interface IWorldAccess
     public abstract void func_48180_b(int i, int j, int k);
 
     /**
-     * Marks the blocks as needing an update with the renderer. Args: minX, minY, minZ, maxX, maxY, maxZ
+     * Called across all registered IWorldAccess instances when a block range is invalidated. Args: minX, minY, minZ,
+     * maxX, maxY, maxZ
      */
     public abstract void markBlockRangeNeedsUpdate(int i, int j, int k, int l, int i1, int j1);
 

@@ -218,7 +218,7 @@ public class ItemRenderer
         int i = mc.theWorld.getLightBrightnessForSkyBlocks(MathHelper.floor_double(((EntityPlayer)(entityplayersp)).posX), MathHelper.floor_double(((EntityPlayer)(entityplayersp)).posY), MathHelper.floor_double(((EntityPlayer)(entityplayersp)).posZ), 0);
         int k = i % 0x10000;
         int l = i / 0x10000;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)k / 1.0F, (float)l / 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)k / 1.0F, (float)l / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
         if (itemstack != null)
@@ -324,7 +324,7 @@ public class ItemRenderer
                     f31 = f31 * f31 * f31;
                     f31 = f31 * f31 * f31;
                     float f35 = 1.0F - f31;
-                    GL11.glTranslatef(0.0F, MathHelper.abs(MathHelper.cos((f15 / 4F) * (float)Math.PI) * 0.1F) * (float)((double)f28 <= 0.2D ? 0 : 1), 0.0F);
+                    GL11.glTranslatef(0.0F, MathHelper.abs(MathHelper.cos((f15 / 4F) * (float)Math.PI) * 0.1F) * (float)((double)f28 <= 0.20000000000000001D ? 0 : 1), 0.0F);
                     GL11.glTranslatef(f35 * 0.6F, -f35 * 0.5F, 0.0F);
                     GL11.glRotatef(f35 * 90F, 0.0F, 1.0F, 0.0F);
                     GL11.glRotatef(f35 * 10F, 1.0F, 0.0F, 0.0F);

@@ -24,6 +24,9 @@ public class ItemPotion extends Item
         return getEffects(par1ItemStack.getItemDamage());
     }
 
+    /**
+     * Returns a list of effects for the specified potion damage value.
+     */
     public List getEffects(int par1)
     {
         List list = (List)effectCache.get(Integer.valueOf(par1));
@@ -67,11 +70,17 @@ public class ItemPotion extends Item
         }
     }
 
+    /**
+     * How long it takes to use or consume an item
+     */
     public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
         return 32;
     }
 
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
     public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.drink;

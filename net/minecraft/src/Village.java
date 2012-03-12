@@ -4,69 +4,84 @@ import java.util.*;
 
 public class Village
 {
-    private final World field_48548_a;
-    private final List field_48546_b = new ArrayList();
-    private final ChunkCoordinates field_48547_c = new ChunkCoordinates(0, 0, 0);
-    private final ChunkCoordinates field_48544_d = new ChunkCoordinates(0, 0, 0);
-    private int field_48545_e;
-    private int field_48542_f;
-    private int field_48543_g;
-    private int field_48550_h;
-    private List field_48551_i;
-    private int field_48549_j;
+    private final World worldObj;
+
+    /** list of VillageDoorInfo objects */
+    private final List villageDoorInfoList = new ArrayList();
+
+    /**
+     * This is the sum of all door coordinates and used to calculate the actual village center by dividing by the number
+     * of doors.
+     */
+    private final ChunkCoordinates centerHelper = new ChunkCoordinates(0, 0, 0);
+
+    /** This is the actual village center. */
+    private final ChunkCoordinates center = new ChunkCoordinates(0, 0, 0);
+    private int villageRadius;
+    private int lastAddDoorTimestamp;
+    private int tickCounter;
+    private int numVillagers;
+    private List villageAgressors;
+    private int numIronGolems;
 
     public Village(World par1World)
     {
-        field_48545_e = 0;
-        field_48542_f = 0;
-        field_48543_g = 0;
-        field_48550_h = 0;
-        field_48551_i = new ArrayList();
-        field_48549_j = 0;
-        field_48548_a = par1World;
+        villageRadius = 0;
+        lastAddDoorTimestamp = 0;
+        tickCounter = 0;
+        numVillagers = 0;
+        villageAgressors = new ArrayList();
+        numIronGolems = 0;
+        worldObj = par1World;
     }
 
-    public void func_48522_a(int par1)
+    /**
+     * Called periodically by VillageCollection
+     */
+    public void tick(int par1)
     {
-        field_48543_g = par1;
-        func_48520_k();
-        func_48528_j();
+        tickCounter = par1;
+        removeDeadAndOutOfRangeDoors();
+        removeDeadAndOldAgressors();
 
         if (par1 % 20 == 0)
         {
-            func_48535_i();
+            updateNumVillagers();
         }
 
         if (par1 % 30 == 0)
         {
-            func_48541_h();
+            updateNumIronGolems();
         }
 
-        int i = field_48550_h / 16;
+        int i = numVillagers / 16;
 
-        if (field_48549_j < i && field_48546_b.size() > 20 && field_48548_a.rand.nextInt(7000) == 0)
+        if (numIronGolems < i && villageDoorInfoList.size() > 20 && worldObj.rand.nextInt(7000) == 0)
         {
-            Vec3D vec3d = func_48532_a(MathHelper.floor_float(field_48544_d.posX), MathHelper.floor_float(field_48544_d.posY), MathHelper.floor_float(field_48544_d.posZ), 2, 4, 2);
+            Vec3D vec3d = tryGetIronGolemSpawningLocation(MathHelper.floor_float(center.posX), MathHelper.floor_float(center.posY), MathHelper.floor_float(center.posZ), 2, 4, 2);
 
             if (vec3d != null)
             {
-                EntityIronGolem entityirongolem = new EntityIronGolem(field_48548_a);
+                EntityIronGolem entityirongolem = new EntityIronGolem(worldObj);
                 entityirongolem.setPosition(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord);
-                field_48548_a.spawnEntityInWorld(entityirongolem);
-                field_48549_j++;
+                worldObj.spawnEntityInWorld(entityirongolem);
+                numIronGolems++;
             }
         }
     }
 
-    private Vec3D func_48532_a(int par1, int par2, int par3, int par4, int par5, int par6)
+    /**
+     * Tries up to 10 times to get a valid spawning location before eventually failing and returning null.
+     */
+    private Vec3D tryGetIronGolemSpawningLocation(int par1, int par2, int par3, int par4, int par5, int par6)
     {
         for (int i = 0; i < 10; i++)
         {
-            int j = (par1 + field_48548_a.rand.nextInt(16)) - 8;
-            int k = (par2 + field_48548_a.rand.nextInt(6)) - 3;
-            int l = (par3 + field_48548_a.rand.nextInt(16)) - 8;
+            int j = (par1 + worldObj.rand.nextInt(16)) - 8;
+            int k = (par2 + worldObj.rand.nextInt(6)) - 3;
+            int l = (par3 + worldObj.rand.nextInt(16)) - 8;
 
-            if (func_48533_a(j, k, l) && func_48525_b(j, k, l, par4, par5, par6))
+            if (isInRange(j, k, l) && isValidIronGolemSpawningLocation(j, k, l, par4, par5, par6))
             {
                 return Vec3D.createVector(j, k, l);
             }
@@ -75,9 +90,9 @@ public class Village
         return null;
     }
 
-    private boolean func_48525_b(int par1, int par2, int par3, int par4, int par5, int par6)
+    private boolean isValidIronGolemSpawningLocation(int par1, int par2, int par3, int par4, int par5, int par6)
     {
-        if (!field_48548_a.isBlockNormalCube(par1, par2 - 1, par3))
+        if (!worldObj.isBlockNormalCube(par1, par2 - 1, par3))
         {
             return false;
         }
@@ -91,7 +106,7 @@ public class Village
             {
                 for (int i1 = j; i1 < j + par6; i1++)
                 {
-                    if (field_48548_a.isBlockNormalCube(k, l, i1))
+                    if (worldObj.isBlockNormalCube(k, l, i1))
                     {
                         return false;
                     }
@@ -102,58 +117,68 @@ public class Village
         return true;
     }
 
-    private void func_48541_h()
+    private void updateNumIronGolems()
     {
-        List list = field_48548_a.getEntitiesWithinAABB(net.minecraft.src.EntityIronGolem.class, AxisAlignedBB.getBoundingBoxFromPool(field_48544_d.posX - field_48545_e, field_48544_d.posY - 4, field_48544_d.posZ - field_48545_e, field_48544_d.posX + field_48545_e, field_48544_d.posY + 4, field_48544_d.posZ + field_48545_e));
-        field_48549_j = list.size();
+        List list = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityIronGolem.class, AxisAlignedBB.getBoundingBoxFromPool(center.posX - villageRadius, center.posY - 4, center.posZ - villageRadius, center.posX + villageRadius, center.posY + 4, center.posZ + villageRadius));
+        numIronGolems = list.size();
     }
 
-    private void func_48535_i()
+    private void updateNumVillagers()
     {
-        List list = field_48548_a.getEntitiesWithinAABB(net.minecraft.src.EntityVillager.class, AxisAlignedBB.getBoundingBoxFromPool(field_48544_d.posX - field_48545_e, field_48544_d.posY - 4, field_48544_d.posZ - field_48545_e, field_48544_d.posX + field_48545_e, field_48544_d.posY + 4, field_48544_d.posZ + field_48545_e));
-        field_48550_h = list.size();
+        List list = worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityVillager.class, AxisAlignedBB.getBoundingBoxFromPool(center.posX - villageRadius, center.posY - 4, center.posZ - villageRadius, center.posX + villageRadius, center.posY + 4, center.posZ + villageRadius));
+        numVillagers = list.size();
     }
 
-    public ChunkCoordinates func_48539_a()
+    public ChunkCoordinates getCenter()
     {
-        return field_48544_d;
+        return center;
     }
 
-    public int func_48531_b()
+    public int getVillageRadius()
     {
-        return field_48545_e;
+        return villageRadius;
     }
 
-    public int func_48530_c()
+    /**
+     * Actually get num village door info entries, but that boils down to number of doors. Called by
+     * EntityAIVillagerMate and VillageSiege
+     */
+    public int getNumVillageDoors()
     {
-        return field_48546_b.size();
+        return villageDoorInfoList.size();
     }
 
-    public int func_48523_d()
+    public int getTicksSinceLastDoorAdding()
     {
-        return field_48543_g - field_48542_f;
+        return tickCounter - lastAddDoorTimestamp;
     }
 
-    public int func_48524_e()
+    public int getNumVillagers()
     {
-        return field_48550_h;
+        return numVillagers;
     }
 
-    public boolean func_48533_a(int par1, int par2, int par3)
+    /**
+     * Returns true, if the given coordinates are within the bounding box of the village.
+     */
+    public boolean isInRange(int par1, int par2, int par3)
     {
-        return field_48544_d.func_48655_c(par1, par2, par3) < (float)(field_48545_e * field_48545_e);
+        return center.getDistanceSquared(par1, par2, par3) < (float)(villageRadius * villageRadius);
     }
 
-    public List func_48521_f()
+    /**
+     * called only by class EntityAIMoveThroughVillage
+     */
+    public List getVillageDoorInfoList()
     {
-        return field_48546_b;
+        return villageDoorInfoList;
     }
 
-    public VillageDoorInfo func_48527_b(int par1, int par2, int par3)
+    public VillageDoorInfo findNearestDoor(int par1, int par2, int par3)
     {
         VillageDoorInfo villagedoorinfo = null;
         int i = 0x7fffffff;
-        Iterator iterator = field_48546_b.iterator();
+        Iterator iterator = villageDoorInfoList.iterator();
 
         do
         {
@@ -163,7 +188,7 @@ public class Village
             }
 
             VillageDoorInfo villagedoorinfo1 = (VillageDoorInfo)iterator.next();
-            int j = villagedoorinfo1.func_48588_a(par1, par2, par3);
+            int j = villagedoorinfo1.getDistanceSquared(par1, par2, par3);
 
             if (j < i)
             {
@@ -176,11 +201,16 @@ public class Village
         return villagedoorinfo;
     }
 
-    public VillageDoorInfo func_48540_c(int par1, int par2, int par3)
+    /**
+     * Find a door suitable for shelter. If there are more doors in a distance of 16 blocks, then the least restricted
+     * one (i.e. the one protecting the lowest number of villagers) of them is chosen, else the nearest one regardless
+     * of restriction.
+     */
+    public VillageDoorInfo findNearestDoorUnrestricted(int par1, int par2, int par3)
     {
         VillageDoorInfo villagedoorinfo = null;
         int i = 0x7fffffff;
-        Iterator iterator = field_48546_b.iterator();
+        Iterator iterator = villageDoorInfoList.iterator();
 
         do
         {
@@ -190,7 +220,7 @@ public class Village
             }
 
             VillageDoorInfo villagedoorinfo1 = (VillageDoorInfo)iterator.next();
-            int j = villagedoorinfo1.func_48588_a(par1, par2, par3);
+            int j = villagedoorinfo1.getDistanceSquared(par1, par2, par3);
 
             if (j > 256)
             {
@@ -198,7 +228,7 @@ public class Village
             }
             else
             {
-                j = villagedoorinfo1.func_48587_f();
+                j = villagedoorinfo1.getDoorOpeningRestrictionCounter();
             }
 
             if (j < i)
@@ -212,18 +242,18 @@ public class Village
         return villagedoorinfo;
     }
 
-    public VillageDoorInfo func_48526_d(int par1, int par2, int par3)
+    public VillageDoorInfo getVillageDoorAt(int par1, int par2, int par3)
     {
-        if (field_48544_d.func_48655_c(par1, par2, par3) > (float)(field_48545_e * field_48545_e))
+        if (center.getDistanceSquared(par1, par2, par3) > (float)(villageRadius * villageRadius))
         {
             return null;
         }
 
-        for (Iterator iterator = field_48546_b.iterator(); iterator.hasNext();)
+        for (Iterator iterator = villageDoorInfoList.iterator(); iterator.hasNext();)
         {
             VillageDoorInfo villagedoorinfo = (VillageDoorInfo)iterator.next();
 
-            if (villagedoorinfo.field_48600_a == par1 && villagedoorinfo.field_48599_c == par3 && Math.abs(villagedoorinfo.field_48598_b - par2) <= 1)
+            if (villagedoorinfo.posX == par1 && villagedoorinfo.posZ == par3 && Math.abs(villagedoorinfo.posY - par2) <= 1)
             {
                 return villagedoorinfo;
             }
@@ -232,46 +262,49 @@ public class Village
         return null;
     }
 
-    public void func_48538_a(VillageDoorInfo par1VillageDoorInfo)
+    public void addVillageDoorInfo(VillageDoorInfo par1VillageDoorInfo)
     {
-        field_48546_b.add(par1VillageDoorInfo);
-        field_48547_c.posX += par1VillageDoorInfo.field_48600_a;
-        field_48547_c.posY += par1VillageDoorInfo.field_48598_b;
-        field_48547_c.posZ += par1VillageDoorInfo.field_48599_c;
-        func_48536_l();
-        field_48542_f = par1VillageDoorInfo.field_48594_f;
+        villageDoorInfoList.add(par1VillageDoorInfo);
+        centerHelper.posX += par1VillageDoorInfo.posX;
+        centerHelper.posY += par1VillageDoorInfo.posY;
+        centerHelper.posZ += par1VillageDoorInfo.posZ;
+        updateVillageRadiusAndCenter();
+        lastAddDoorTimestamp = par1VillageDoorInfo.lastActivityTimestamp;
     }
 
-    public boolean func_48529_g()
+    /**
+     * Returns true, if there is not a single village door left. Called by VillageCollection
+     */
+    public boolean isAnnihilated()
     {
-        return field_48546_b.isEmpty();
+        return villageDoorInfoList.isEmpty();
     }
 
-    public void func_48534_a(EntityLiving par1EntityLiving)
+    public void addOrRenewAgressor(EntityLiving par1EntityLiving)
     {
-        for (Iterator iterator = field_48551_i.iterator(); iterator.hasNext();)
+        for (Iterator iterator = villageAgressors.iterator(); iterator.hasNext();)
         {
             VillageAgressor villageagressor = (VillageAgressor)iterator.next();
 
-            if (villageagressor.field_48515_a == par1EntityLiving)
+            if (villageagressor.agressor == par1EntityLiving)
             {
-                villageagressor.field_48513_b = field_48543_g;
+                villageagressor.agressionTime = tickCounter;
                 return;
             }
         }
 
-        field_48551_i.add(new VillageAgressor(this, par1EntityLiving, field_48543_g));
+        villageAgressors.add(new VillageAgressor(this, par1EntityLiving, tickCounter));
     }
 
-    public EntityLiving func_48537_b(EntityLiving par1EntityLiving)
+    public EntityLiving findNearestVillageAggressor(EntityLiving par1EntityLiving)
     {
         double d = Double.MAX_VALUE;
         VillageAgressor villageagressor = null;
 
-        for (int i = 0; i < field_48551_i.size(); i++)
+        for (int i = 0; i < villageAgressors.size(); i++)
         {
-            VillageAgressor villageagressor1 = (VillageAgressor)field_48551_i.get(i);
-            double d1 = villageagressor1.field_48515_a.getDistanceSqToEntity(par1EntityLiving);
+            VillageAgressor villageagressor1 = (VillageAgressor)villageAgressors.get(i);
+            double d1 = villageagressor1.agressor.getDistanceSqToEntity(par1EntityLiving);
 
             if (d1 <= d)
             {
@@ -280,12 +313,12 @@ public class Village
             }
         }
 
-        return villageagressor == null ? null : villageagressor.field_48515_a;
+        return villageagressor == null ? null : villageagressor.agressor;
     }
 
-    private void func_48528_j()
+    private void removeDeadAndOldAgressors()
     {
-        Iterator iterator = field_48551_i.iterator();
+        Iterator iterator = villageAgressors.iterator();
 
         do
         {
@@ -296,7 +329,7 @@ public class Village
 
             VillageAgressor villageagressor = (VillageAgressor)iterator.next();
 
-            if (!villageagressor.field_48515_a.isEntityAlive() || Math.abs(field_48543_g - villageagressor.field_48513_b) > 300)
+            if (!villageagressor.agressor.isEntityAlive() || Math.abs(tickCounter - villageagressor.agressionTime) > 300)
             {
                 iterator.remove();
             }
@@ -304,11 +337,11 @@ public class Village
         while (true);
     }
 
-    private void func_48520_k()
+    private void removeDeadAndOutOfRangeDoors()
     {
         boolean flag = false;
-        boolean flag1 = field_48548_a.rand.nextInt(50) == 0;
-        Iterator iterator = field_48546_b.iterator();
+        boolean flag1 = worldObj.rand.nextInt(50) == 0;
+        Iterator iterator = villageDoorInfoList.iterator();
 
         do
         {
@@ -321,16 +354,16 @@ public class Village
 
             if (flag1)
             {
-                villagedoorinfo.func_48585_d();
+                villagedoorinfo.resetDoorOpeningRestrictionCounter();
             }
 
-            if (!func_48519_e(villagedoorinfo.field_48600_a, villagedoorinfo.field_48598_b, villagedoorinfo.field_48599_c) || Math.abs(field_48543_g - villagedoorinfo.field_48594_f) > 1200)
+            if (!isBlockDoor(villagedoorinfo.posX, villagedoorinfo.posY, villagedoorinfo.posZ) || Math.abs(tickCounter - villagedoorinfo.lastActivityTimestamp) > 1200)
             {
-                field_48547_c.posX -= villagedoorinfo.field_48600_a;
-                field_48547_c.posY -= villagedoorinfo.field_48598_b;
-                field_48547_c.posZ -= villagedoorinfo.field_48599_c;
+                centerHelper.posX -= villagedoorinfo.posX;
+                centerHelper.posY -= villagedoorinfo.posY;
+                centerHelper.posZ -= villagedoorinfo.posZ;
                 flag = true;
-                villagedoorinfo.field_48595_g = true;
+                villagedoorinfo.isDetachedFromVillageFlag = true;
                 iterator.remove();
             }
         }
@@ -338,13 +371,13 @@ public class Village
 
         if (flag)
         {
-            func_48536_l();
+            updateVillageRadiusAndCenter();
         }
     }
 
-    private boolean func_48519_e(int par1, int par2, int par3)
+    private boolean isBlockDoor(int par1, int par2, int par3)
     {
-        int i = field_48548_a.getBlockId(par1, par2, par3);
+        int i = worldObj.getBlockId(par1, par2, par3);
 
         if (i <= 0)
         {
@@ -356,26 +389,26 @@ public class Village
         }
     }
 
-    private void func_48536_l()
+    private void updateVillageRadiusAndCenter()
     {
-        int i = field_48546_b.size();
+        int i = villageDoorInfoList.size();
 
         if (i == 0)
         {
-            field_48544_d.func_48656_a(0, 0, 0);
-            field_48545_e = 0;
+            center.set(0, 0, 0);
+            villageRadius = 0;
             return;
         }
 
-        field_48544_d.func_48656_a(field_48547_c.posX / i, field_48547_c.posY / i, field_48547_c.posZ / i);
+        center.set(centerHelper.posX / i, centerHelper.posY / i, centerHelper.posZ / i);
         int j = 0;
 
-        for (Iterator iterator = field_48546_b.iterator(); iterator.hasNext();)
+        for (Iterator iterator = villageDoorInfoList.iterator(); iterator.hasNext();)
         {
             VillageDoorInfo villagedoorinfo = (VillageDoorInfo)iterator.next();
-            j = Math.max(villagedoorinfo.func_48588_a(field_48544_d.posX, field_48544_d.posY, field_48544_d.posZ), j);
+            j = Math.max(villagedoorinfo.getDistanceSquared(center.posX, center.posY, center.posZ), j);
         }
 
-        field_48545_e = Math.max(32, (int)Math.sqrt(j));
+        villageRadius = Math.max(32, (int)Math.sqrt(j));
     }
 }

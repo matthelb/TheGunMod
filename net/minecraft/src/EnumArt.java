@@ -30,6 +30,8 @@ public enum EnumArt
 
     /** Holds the maximum length of paintings art title. */
     public static final int maxArtTitleLength = "SkullAndRoses".length();
+
+    /** Painting Title. */
     public final String title;
     public final int sizeX;
     public final int sizeY;

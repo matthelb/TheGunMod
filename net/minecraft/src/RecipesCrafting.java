@@ -39,7 +39,7 @@ public class RecipesCrafting
                 {
                     "###", "###", '#', Block.glass
                 });
-        par1CraftingManager.addRecipe(new ItemStack(Block.field_48209_bL, 1), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Block.redstoneLampU, 1), new Object[]
                 {
                     " R ", "RGR", " R ", 'R', Item.redstone, 'G', Block.glowStone
                 });

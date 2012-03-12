@@ -11,7 +11,7 @@ public class EntityAILookAtVillager extends EntityAIBase
     public EntityAILookAtVillager(EntityIronGolem par1EntityIronGolem)
     {
         field_48406_a = par1EntityIronGolem;
-        func_46079_a(3);
+        setMutexBits(3);
     }
 
     /**
@@ -30,7 +30,7 @@ public class EntityAILookAtVillager extends EntityAIBase
         }
         else
         {
-            field_48404_b = (EntityVillager)field_48406_a.worldObj.func_48459_a(net.minecraft.src.EntityVillager.class, field_48406_a.boundingBox.expand(6D, 2D, 6D), field_48406_a);
+            field_48404_b = (EntityVillager)field_48406_a.worldObj.findNearestEntityWithinAABB(net.minecraft.src.EntityVillager.class, field_48406_a.boundingBox.expand(6D, 2D, 6D), field_48406_a);
             return field_48404_b != null;
         }
     }
@@ -43,7 +43,10 @@ public class EntityAILookAtVillager extends EntityAIBase
         return field_48405_c > 0;
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48405_c = 400;
         field_48406_a.func_48116_a(true);

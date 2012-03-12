@@ -118,6 +118,9 @@ public class BlockPistonBase extends Block
         }
     }
 
+    /**
+     * handles attempts to extend or retract the piston.
+     */
     private void updatePistonState(World par1World, int par2, int par3, int par4)
     {
         int i = par1World.getBlockMetadata(par2, par3, par4);
@@ -372,6 +375,9 @@ public class BlockPistonBase extends Block
         return false;
     }
 
+    /**
+     * returns an int which describes the direction the piston faces
+     */
     public static int getOrientation(int par0)
     {
         return par0 & 7;
@@ -392,7 +398,7 @@ public class BlockPistonBase extends Block
     {
         if (MathHelper.abs((float)par4EntityPlayer.posX - (float)par1) < 2.0F && MathHelper.abs((float)par4EntityPlayer.posZ - (float)par3) < 2.0F)
         {
-            double d = (par4EntityPlayer.posY + 1.82D) - (double)par4EntityPlayer.yOffset;
+            double d = (par4EntityPlayer.posY + 1.8200000000000001D) - (double)par4EntityPlayer.yOffset;
 
             if (d - (double)par2 > 2D)
             {

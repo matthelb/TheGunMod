@@ -18,7 +18,7 @@ public class RenderOcelot extends RenderLiving
     {
         super.preRenderCallback(par1EntityOcelot, par2);
 
-        if (par1EntityOcelot.func_48139_F_())
+        if (par1EntityOcelot.isTamed())
         {
             GL11.glScalef(0.8F, 0.8F, 0.8F);
         }

@@ -3,7 +3,13 @@ package net.minecraft.src;
 public class LongHashMap
 {
     private transient LongHashMapEntry hashArray[];
+
+    /** the number of elements in the hash array */
     private transient int numHashElements;
+
+    /**
+     * the maximum amount of elements in the hash (probably 3/4 the size due to meh hashing function)
+     */
     private int capacity;
 
     /**
@@ -28,6 +34,9 @@ public class LongHashMap
         return hash((int)(par0 ^ par0 >>> 32));
     }
 
+    /**
+     * the hash function
+     */
     private static int hash(int par0)
     {
         par0 ^= par0 >>> 20 ^ par0 >>> 12;
@@ -220,6 +229,9 @@ public class LongHashMap
         }
     }
 
+    /**
+     * public method to get the hashed key(hashCode)
+     */
     static int getHashCode(long par0)
     {
         return getHashedKey(par0);

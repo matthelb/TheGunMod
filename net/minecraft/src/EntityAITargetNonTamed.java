@@ -15,7 +15,7 @@ public class EntityAITargetNonTamed extends EntityAINearestAttackableTarget
      */
     public boolean shouldExecute()
     {
-        if (field_48390_g.func_48139_F_())
+        if (field_48390_g.isTamed())
         {
             return false;
         }

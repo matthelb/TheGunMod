@@ -73,11 +73,11 @@ public class ContainerPlayer extends Container
 
         for (int i = 0; i < 4; i++)
         {
-            ItemStack itemstack = craftMatrix.func_48081_b(i);
+            ItemStack itemstack = craftMatrix.getStackInSlotOnClosing(i);
 
             if (itemstack != null)
             {
-                par1EntityPlayer.func_48153_a(itemstack);
+                par1EntityPlayer.dropPlayerItem(itemstack);
             }
         }
 

@@ -53,7 +53,7 @@ public class TextureWaterFlowFX extends TextureFX
 
                 field_1135_j[j + l * 16] -= 0.3F;
 
-                if (Math.random() < 0.2D)
+                if (Math.random() < 0.20000000000000001D)
                 {
                     field_1135_j[j + l * 16] = 0.5F;
                 }

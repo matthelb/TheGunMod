@@ -22,7 +22,7 @@ public class WorldProviderHell extends WorldProvider
      */
     public Vec3D getFogColor(float par1, float par2)
     {
-        return Vec3D.createVector(0.2D, 0.03D, 0.03D);
+        return Vec3D.createVector(0.20000000298023224D, 0.029999999329447746D, 0.029999999329447746D);
     }
 
     /**

@@ -58,11 +58,17 @@ public class DataWatcher
         return ((Short)((WatchableObject)watchedObjects.get(Integer.valueOf(par1))).getObject()).shortValue();
     }
 
+    /**
+     * gets a watchable object and returns it as a Integer
+     */
     public int getWatchableObjectInt(int par1)
     {
         return ((Integer)((WatchableObject)watchedObjects.get(Integer.valueOf(par1))).getObject()).intValue();
     }
 
+    /**
+     * gets a watchable object and returns it as a String
+     */
     public String getWatchableObjectString(int par1)
     {
         return (String)((WatchableObject)watchedObjects.get(Integer.valueOf(par1))).getObject();

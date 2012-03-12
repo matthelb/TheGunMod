@@ -9,7 +9,7 @@ public class EntityAIOwnerHurtByTarget extends EntityAITarget
     {
         super(par1EntityTameable, 32F, false);
         field_48394_a = par1EntityTameable;
-        func_46079_a(1);
+        setMutexBits(1);
     }
 
     /**
@@ -17,12 +17,12 @@ public class EntityAIOwnerHurtByTarget extends EntityAITarget
      */
     public boolean shouldExecute()
     {
-        if (!field_48394_a.func_48139_F_())
+        if (!field_48394_a.isTamed())
         {
             return false;
         }
 
-        EntityLiving entityliving = field_48394_a.func_48144_ah();
+        EntityLiving entityliving = field_48394_a.getOwner();
 
         if (entityliving == null)
         {
@@ -35,9 +35,12 @@ public class EntityAIOwnerHurtByTarget extends EntityAITarget
         }
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48382_c.func_48092_c(field_48393_b);
-        super.func_46080_e();
+        taskOwner.setAttackTarget(field_48393_b);
+        super.startExecuting();
     }
 }

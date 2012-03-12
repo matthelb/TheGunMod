@@ -223,7 +223,7 @@ public class ModelDragon extends ModelBase
         for (int k = 0; k < 12; k++)
         {
             double ad2[] = entitydragon.func_40160_a(12 + k, field_40317_s);
-            f8 = (float)((double)f8 + Math.sin((float)k * 0.45F + f9) * 0.05D);
+            f8 = (float)((double)f8 + Math.sin((float)k * 0.45F + f9) * 0.05000000074505806D);
             neck.rotateAngleY = ((updateRotations(ad2[0] - ad[0]) * f5 + 180F) * (float)Math.PI) / 180F;
             neck.rotateAngleX = f8 + (((float)(ad2[1] - ad[1]) * (float)Math.PI) / 180F) * f5 * 5F;
             neck.rotateAngleZ = ((updateRotations(ad2[0] - (double)f7) * (float)Math.PI) / 180F) * f5;

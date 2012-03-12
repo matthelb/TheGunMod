@@ -39,8 +39,8 @@ public class MovementInputFromOptions extends MovementInput
 
         if (sneak)
         {
-            moveStrafe *= 0.3D;
-            moveForward *= 0.3D;
+            moveStrafe *= 0.29999999999999999D;
+            moveForward *= 0.29999999999999999D;
         }
     }
 }

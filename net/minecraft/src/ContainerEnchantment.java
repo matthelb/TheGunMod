@@ -199,11 +199,11 @@ public class ContainerEnchantment extends Container
             return;
         }
 
-        ItemStack itemstack = tableInventory.func_48081_b(0);
+        ItemStack itemstack = tableInventory.getStackInSlotOnClosing(0);
 
         if (itemstack != null)
         {
-            par1EntityPlayer.func_48153_a(itemstack);
+            par1EntityPlayer.dropPlayerItem(itemstack);
         }
     }
 

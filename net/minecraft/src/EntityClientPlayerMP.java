@@ -10,27 +10,37 @@ public class EntityClientPlayerMP extends EntityPlayerSP
      * Tick counter that resets every 20 ticks, used for sending inventory updates
      */
     private int inventoryUpdateTickCounter;
-    private boolean field_21093_bH;
+
+    /** has the client player's health been set? */
+    private boolean hasSetHealth;
     private double oldPosX;
-    private double field_9378_bz;
+
+    /** Old Minimum Y of the bounding box */
+    private double oldMinY;
     private double oldPosY;
     private double oldPosZ;
     private float oldRotationYaw;
     private float oldRotationPitch;
-    private boolean field_9382_bF;
-    private boolean field_35227_cs;
+
+    /** Check if was on ground last update */
+    private boolean wasOnGround;
+
+    /** should the player stop sneaking? */
+    private boolean shouldStopSneaking;
     private boolean wasSneaking;
-    private int field_12242_bI;
+
+    /** The time since the client player moved */
+    private int timeSinceMoved;
 
     public EntityClientPlayerMP(Minecraft par1Minecraft, World par2World, Session par3Session, NetClientHandler par4NetClientHandler)
     {
         super(par1Minecraft, par2World, par3Session, 0);
         inventoryUpdateTickCounter = 0;
-        field_21093_bH = false;
-        field_9382_bF = false;
-        field_35227_cs = false;
+        hasSetHealth = false;
+        wasOnGround = false;
+        shouldStopSneaking = false;
         wasSneaking = false;
-        field_12242_bI = 0;
+        timeSinceMoved = 0;
         sendQueue = par4NetClientHandler;
     }
 
@@ -61,12 +71,15 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         else
         {
             super.onUpdate();
-            onUpdate2();
+            sendMotionUpdates();
             return;
         }
     }
 
-    public void onUpdate2()
+    /**
+     * Send updated motion and position information to the server
+     */
+    public void sendMotionUpdates()
     {
         if (inventoryUpdateTickCounter++ == 20)
         {
@@ -92,7 +105,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
 
         boolean flag1 = isSneaking();
 
-        if (flag1 != field_35227_cs)
+        if (flag1 != shouldStopSneaking)
         {
             if (flag1)
             {
@@ -103,11 +116,11 @@ public class EntityClientPlayerMP extends EntityPlayerSP
                 sendQueue.addToSendQueue(new Packet19EntityAction(this, 2));
             }
 
-            field_35227_cs = flag1;
+            shouldStopSneaking = flag1;
         }
 
         double d = posX - oldPosX;
-        double d1 = boundingBox.minY - field_9378_bz;
+        double d1 = boundingBox.minY - oldMinY;
         double d2 = posY - oldPosY;
         double d3 = posZ - oldPosZ;
         double d4 = rotationYaw - oldRotationYaw;
@@ -131,38 +144,38 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         else if (flag2 && flag3)
         {
             sendQueue.addToSendQueue(new Packet13PlayerLookMove(posX, boundingBox.minY, posY, posZ, rotationYaw, rotationPitch, onGround));
-            field_12242_bI = 0;
+            timeSinceMoved = 0;
         }
         else if (flag2)
         {
             sendQueue.addToSendQueue(new Packet11PlayerPosition(posX, boundingBox.minY, posY, posZ, onGround));
-            field_12242_bI = 0;
+            timeSinceMoved = 0;
         }
         else if (flag3)
         {
             sendQueue.addToSendQueue(new Packet12PlayerLook(rotationYaw, rotationPitch, onGround));
-            field_12242_bI = 0;
+            timeSinceMoved = 0;
         }
         else
         {
             sendQueue.addToSendQueue(new Packet10Flying(onGround));
 
-            if (field_9382_bF != onGround || field_12242_bI > 200)
+            if (wasOnGround != onGround || timeSinceMoved > 200)
             {
-                field_12242_bI = 0;
+                timeSinceMoved = 0;
             }
             else
             {
-                field_12242_bI++;
+                timeSinceMoved++;
             }
         }
 
-        field_9382_bF = onGround;
+        wasOnGround = onGround;
 
         if (flag2)
         {
             oldPosX = posX;
-            field_9378_bz = boundingBox.minY;
+            oldMinY = boundingBox.minY;
             oldPosY = posY;
             oldPosZ = posZ;
         }
@@ -214,7 +227,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
     public void respawnPlayer()
     {
         sendInventoryChanged();
-        sendQueue.addToSendQueue(new Packet9Respawn(dimension, (byte)worldObj.difficultySetting, worldObj.getWorldInfo().getTerrainType(), worldObj.func_48453_b(), 0));
+        sendQueue.addToSendQueue(new Packet9Respawn(dimension, (byte)worldObj.difficultySetting, worldObj.getWorldInfo().getTerrainType(), worldObj.getWorldHeight(), 0));
     }
 
     /**
@@ -241,14 +254,14 @@ public class EntityClientPlayerMP extends EntityPlayerSP
      */
     public void setHealth(int par1)
     {
-        if (field_21093_bH)
+        if (hasSetHealth)
         {
             super.setHealth(par1);
         }
         else
         {
             setEntityHealth(par1);
-            field_21093_bH = true;
+            hasSetHealth = true;
         }
     }
 

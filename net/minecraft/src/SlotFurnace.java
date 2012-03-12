@@ -51,7 +51,7 @@ public class SlotFurnace extends Slot
 
     protected void func_48434_c(ItemStack par1ItemStack)
     {
-        par1ItemStack.func_48507_a(thePlayer.worldObj, thePlayer, field_48437_f);
+        par1ItemStack.onCrafting(thePlayer.worldObj, thePlayer, field_48437_f);
         field_48437_f = 0;
         ModLoader.takenFromFurnace(thePlayer, par1ItemStack);
 

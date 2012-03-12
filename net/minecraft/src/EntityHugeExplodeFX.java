@@ -4,15 +4,17 @@ import java.util.Random;
 
 public class EntityHugeExplodeFX extends EntityFX
 {
-    private int field_35139_a;
-    private int field_35138_ay;
+    private int timeSinceStart;
+
+    /** the maximum time for the explosion */
+    private int maximumTime;
 
     public EntityHugeExplodeFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
     {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
-        field_35139_a = 0;
-        field_35138_ay = 0;
-        field_35138_ay = 8;
+        timeSinceStart = 0;
+        maximumTime = 0;
+        maximumTime = 8;
     }
 
     public void renderParticle(Tessellator tessellator, float f, float f1, float f2, float f3, float f4, float f5)
@@ -29,12 +31,12 @@ public class EntityHugeExplodeFX extends EntityFX
             double d = posX + (rand.nextDouble() - rand.nextDouble()) * 4D;
             double d1 = posY + (rand.nextDouble() - rand.nextDouble()) * 4D;
             double d2 = posZ + (rand.nextDouble() - rand.nextDouble()) * 4D;
-            worldObj.spawnParticle("largeexplode", d, d1, d2, (float)field_35139_a / (float)field_35138_ay, 0.0D, 0.0D);
+            worldObj.spawnParticle("largeexplode", d, d1, d2, (float)timeSinceStart / (float)maximumTime, 0.0D, 0.0D);
         }
 
-        field_35139_a++;
+        timeSinceStart++;
 
-        if (field_35139_a == field_35138_ay)
+        if (timeSinceStart == maximumTime)
         {
             setEntityDead();
         }

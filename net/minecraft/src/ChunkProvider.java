@@ -46,6 +46,9 @@ public class ChunkProvider implements IChunkProvider
         return chunkMap.containsItem(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
     }
 
+    /**
+     * Drops the specified chunk.
+     */
     public void dropChunk(int par1, int par2)
     {
         ChunkCoordinates chunkcoordinates = worldObj.getSpawnPoint();

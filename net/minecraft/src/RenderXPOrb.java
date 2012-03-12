@@ -33,7 +33,7 @@ public class RenderXPOrb extends Render
         float f7 = par1EntityXPOrb.getEntityBrightnessForRender(par9);
         float f8 = f7 % 0x10000;
         float ja = f7 / 0x10000;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float)f8 / 1.0F, (float)ja / 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)f8 / 1.0F, (float)ja / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         f7 = 255F;
         f8 = ((float)par1EntityXPOrb.xpColor + par9) / 2.0F;

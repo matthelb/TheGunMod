@@ -9,8 +9,8 @@ public class Chunk
      * Determines if the chunk is lit or not at a light value greater than 0.
      */
     public static boolean isLit;
-    private ExtendedBlockStorage field_48505_p[];
-    private byte field_48504_q[];
+    private ExtendedBlockStorage storageArrays[];
+    private byte blockBiomeArray[];
     public int precipitationHeightMap[];
     public boolean updateSkylightColumns[];
 
@@ -30,7 +30,7 @@ public class Chunk
 
     /** A Map of ChunkPositions to TileEntities in this chunk */
     public Map chunkTileEntityMap;
-    public List field_48502_j[];
+    public List entityLists[];
 
     /** Boolean value indicating if the terrain is populated. */
     public boolean isTerrainPopulated;
@@ -47,13 +47,17 @@ public class Chunk
 
     /** The time according to World.worldTime when this chunk was last saved */
     public long lastSaveTime;
-    private int field_48503_s;
+
+    /**
+     * Contains the current round-robin relight check index, and is implied as the relight check location as well.
+     */
+    private int queuedLightChecks;
     boolean field_35846_u;
 
     public Chunk(World par1World, int par2, int par3)
     {
-        field_48505_p = new ExtendedBlockStorage[16];
-        field_48504_q = new byte[256];
+        storageArrays = new ExtendedBlockStorage[16];
+        blockBiomeArray = new byte[256];
         precipitationHeightMap = new int[256];
         updateSkylightColumns = new boolean[256];
         field_40741_v = false;
@@ -62,21 +66,21 @@ public class Chunk
         isModified = false;
         hasEntities = false;
         lastSaveTime = 0L;
-        field_48503_s = 4096;
+        queuedLightChecks = 4096;
         field_35846_u = false;
-        field_48502_j = new List[16];
+        entityLists = new List[16];
         worldObj = par1World;
         xPosition = par2;
         zPosition = par3;
         field_48501_f = new int[256];
 
-        for (int i = 0; i < field_48502_j.length; i++)
+        for (int i = 0; i < entityLists.length; i++)
         {
-            field_48502_j[i] = new ArrayList();
+            entityLists[i] = new ArrayList();
         }
 
         Arrays.fill(precipitationHeightMap, -999);
-        Arrays.fill(field_48504_q, (byte) - 1);
+        Arrays.fill(blockBiomeArray, (byte) - 1);
     }
 
     public Chunk(World par1World, byte par2ArrayOfByte[], int par3, int par4)
@@ -99,12 +103,12 @@ public class Chunk
 
                     int i1 = l >> 4;
 
-                    if (field_48505_p[i1] == null)
+                    if (storageArrays[i1] == null)
                     {
-                        field_48505_p[i1] = new ExtendedBlockStorage(i1 << 4);
+                        storageArrays[i1] = new ExtendedBlockStorage(i1 << 4);
                     }
 
-                    field_48505_p[i1].func_48691_a(j, l & 0xf, k, byte0);
+                    storageArrays[i1].setExtBlockID(j, l & 0xf, k, byte0);
                 }
             }
         }
@@ -126,22 +130,28 @@ public class Chunk
         return field_48501_f[par2 << 4 | par1];
     }
 
-    public int func_48498_h()
+    /**
+     * Returns the topmost ExtendedBlockStorage instance for this Chunk that actually contains a block.
+     */
+    public int getTopFilledSegment()
     {
-        for (int i = field_48505_p.length - 1; i >= 0; i--)
+        for (int i = storageArrays.length - 1; i >= 0; i--)
         {
-            if (field_48505_p[i] != null)
+            if (storageArrays[i] != null)
             {
-                return field_48505_p[i].func_48707_c();
+                return storageArrays[i].getYLocation();
             }
         }
 
         return 0;
     }
 
-    public ExtendedBlockStorage[] func_48495_i()
+    /**
+     * Returns the ExtendedBlockStorage array for this Chunk.
+     */
+    public ExtendedBlockStorage[] getBlockStorageArray()
     {
-        return field_48505_p;
+        return storageArrays;
     }
 
     /**
@@ -149,7 +159,7 @@ public class Chunk
      */
     public void generateHeightMap()
     {
-        int i = func_48498_h();
+        int i = getTopFilledSegment();
 
         for (int j = 0; j < 16; j++)
         {
@@ -189,7 +199,7 @@ public class Chunk
      */
     public void generateSkylightMap()
     {
-        int i = func_48498_h();
+        int i = getTopFilledSegment();
 
         for (int j = 0; j < 16; j++)
         {
@@ -229,11 +239,11 @@ public class Chunk
 
                     if (j1 > 0)
                     {
-                        ExtendedBlockStorage extendedblockstorage = field_48505_p[k1 >> 4];
+                        ExtendedBlockStorage extendedblockstorage = storageArrays[k1 >> 4];
 
                         if (extendedblockstorage != null)
                         {
-                            extendedblockstorage.func_48702_c(j, k1 & 0xf, l, j1);
+                            extendedblockstorage.setExtSkylightValue(j, k1 & 0xf, l, j1);
                             worldObj.func_48464_p((xPosition << 4) + j, k1, (zPosition << 4) + l);
                         }
                     }
@@ -383,11 +393,11 @@ public class Chunk
             {
                 for (int i1 = j; i1 < i; i1++)
                 {
-                    ExtendedBlockStorage extendedblockstorage = field_48505_p[i1 >> 4];
+                    ExtendedBlockStorage extendedblockstorage = storageArrays[i1 >> 4];
 
                     if (extendedblockstorage != null)
                     {
-                        extendedblockstorage.func_48702_c(par1, i1 & 0xf, par3, 15);
+                        extendedblockstorage.setExtSkylightValue(par1, i1 & 0xf, par3, 15);
                         worldObj.func_48464_p((xPosition << 4) + par1, i1, (zPosition << 4) + par3);
                     }
                 }
@@ -396,11 +406,11 @@ public class Chunk
             {
                 for (int j1 = i; j1 < j; j1++)
                 {
-                    ExtendedBlockStorage extendedblockstorage1 = field_48505_p[j1 >> 4];
+                    ExtendedBlockStorage extendedblockstorage1 = storageArrays[j1 >> 4];
 
                     if (extendedblockstorage1 != null)
                     {
-                        extendedblockstorage1.func_48702_c(par1, j1 & 0xf, par3, 0);
+                        extendedblockstorage1.setExtSkylightValue(par1, j1 & 0xf, par3, 0);
                         worldObj.func_48464_p((xPosition << 4) + par1, j1, (zPosition << 4) + par3);
                     }
                 }
@@ -430,11 +440,11 @@ public class Chunk
                     k1 = 0;
                 }
 
-                ExtendedBlockStorage extendedblockstorage2 = field_48505_p[j >> 4];
+                ExtendedBlockStorage extendedblockstorage2 = storageArrays[j >> 4];
 
                 if (extendedblockstorage2 != null)
                 {
-                    extendedblockstorage2.func_48702_c(par1, j & 0xf, par3, k1);
+                    extendedblockstorage2.setExtSkylightValue(par1, j & 0xf, par3, k1);
                 }
             }
             while (true);
@@ -473,11 +483,11 @@ public class Chunk
      */
     public int getBlockID(int par1, int par2, int par3)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48505_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage != null)
         {
-            return extendedblockstorage.func_48703_a(par1, par2 & 0xf, par3);
+            return extendedblockstorage.getExtBlockID(par1, par2 & 0xf, par3);
         }
         else
         {
@@ -490,11 +500,11 @@ public class Chunk
      */
     public int getBlockMetadata(int par1, int par2, int par3)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48505_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage != null)
         {
-            return extendedblockstorage.func_48694_b(par1, par2 & 0xf, par3);
+            return extendedblockstorage.getExtBlockMetadata(par1, par2 & 0xf, par3);
         }
         else
         {
@@ -530,7 +540,7 @@ public class Chunk
             return false;
         }
 
-        ExtendedBlockStorage extendedblockstorage = field_48505_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
         boolean flag = false;
 
         if (extendedblockstorage == null)
@@ -540,11 +550,11 @@ public class Chunk
                 return false;
             }
 
-            extendedblockstorage = field_48505_p[par2 >> 4] = new ExtendedBlockStorage((par2 >> 4) << 4);
+            extendedblockstorage = storageArrays[par2 >> 4] = new ExtendedBlockStorage((par2 >> 4) << 4);
             flag = par2 >= j;
         }
 
-        extendedblockstorage.func_48691_a(par1, par2 & 0xf, par3, par4);
+        extendedblockstorage.setExtBlockID(par1, par2 & 0xf, par3, par4);
         int l = xPosition * 16 + par1;
         int i1 = zPosition * 16 + par3;
 
@@ -560,7 +570,7 @@ public class Chunk
             }
         }
 
-        extendedblockstorage.func_48690_b(par1, par2 & 0xf, par3, par5);
+        extendedblockstorage.setExtBlockMetadata(par1, par2 & 0xf, par3, par5);
 
         if (flag)
         {
@@ -625,14 +635,14 @@ public class Chunk
      */
     public boolean setBlockMetadata(int par1, int par2, int par3, int par4)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48505_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage == null)
         {
             return false;
         }
 
-        int i = extendedblockstorage.func_48694_b(par1, par2 & 0xf, par3);
+        int i = extendedblockstorage.getExtBlockMetadata(par1, par2 & 0xf, par3);
 
         if (i == par4)
         {
@@ -640,8 +650,8 @@ public class Chunk
         }
 
         isModified = true;
-        extendedblockstorage.func_48690_b(par1, par2 & 0xf, par3, par4);
-        int j = extendedblockstorage.func_48703_a(par1, par2 & 0xf, par3);
+        extendedblockstorage.setExtBlockMetadata(par1, par2 & 0xf, par3, par4);
+        int j = extendedblockstorage.getExtBlockID(par1, par2 & 0xf, par3);
 
         if (j > 0 && (Block.blocksList[j] instanceof BlockContainer))
         {
@@ -662,7 +672,7 @@ public class Chunk
      */
     public int getSavedLightValue(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int par4)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48505_p[par3 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par3 >> 4];
 
         if (extendedblockstorage == null)
         {
@@ -671,12 +681,12 @@ public class Chunk
 
         if (par1EnumSkyBlock == EnumSkyBlock.Sky)
         {
-            return extendedblockstorage.func_48709_c(par2, par3 & 0xf, par4);
+            return extendedblockstorage.getExtSkylightValue(par2, par3 & 0xf, par4);
         }
 
         if (par1EnumSkyBlock == EnumSkyBlock.Block)
         {
-            return extendedblockstorage.func_48712_d(par2, par3 & 0xf, par4);
+            return extendedblockstorage.getExtBlocklightValue(par2, par3 & 0xf, par4);
         }
         else
         {
@@ -690,11 +700,11 @@ public class Chunk
      */
     public void setLightValue(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int par4, int par5)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48505_p[par3 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par3 >> 4];
 
         if (extendedblockstorage == null)
         {
-            extendedblockstorage = field_48505_p[par3 >> 4] = new ExtendedBlockStorage((par3 >> 4) << 4);
+            extendedblockstorage = storageArrays[par3 >> 4] = new ExtendedBlockStorage((par3 >> 4) << 4);
             generateSkylightMap();
         }
 
@@ -704,12 +714,12 @@ public class Chunk
         {
             if (!worldObj.worldProvider.hasNoSky)
             {
-                extendedblockstorage.func_48702_c(par2, par3 & 0xf, par4, par5);
+                extendedblockstorage.setExtSkylightValue(par2, par3 & 0xf, par4, par5);
             }
         }
         else if (par1EnumSkyBlock == EnumSkyBlock.Block)
         {
-            extendedblockstorage.func_48699_d(par2, par3 & 0xf, par4, par5);
+            extendedblockstorage.setExtBlocklightValue(par2, par3 & 0xf, par4, par5);
         }
         else
         {
@@ -722,7 +732,7 @@ public class Chunk
      */
     public int getBlockLightValue(int par1, int par2, int par3, int par4)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48505_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage == null)
         {
@@ -736,7 +746,7 @@ public class Chunk
             }
         }
 
-        int i = worldObj.worldProvider.hasNoSky ? 0 : extendedblockstorage.func_48709_c(par1, par2 & 0xf, par3);
+        int i = worldObj.worldProvider.hasNoSky ? 0 : extendedblockstorage.getExtSkylightValue(par1, par2 & 0xf, par3);
 
         if (i > 0)
         {
@@ -744,7 +754,7 @@ public class Chunk
         }
 
         i -= par4;
-        int j = extendedblockstorage.func_48712_d(par1, par2 & 0xf, par3);
+        int j = extendedblockstorage.getExtBlocklightValue(par1, par2 & 0xf, par3);
 
         if (j > i)
         {
@@ -776,16 +786,16 @@ public class Chunk
             k = 0;
         }
 
-        if (k >= field_48502_j.length)
+        if (k >= entityLists.length)
         {
-            k = field_48502_j.length - 1;
+            k = entityLists.length - 1;
         }
 
         par1Entity.addedToChunk = true;
         par1Entity.chunkCoordX = xPosition;
         par1Entity.chunkCoordY = k;
         par1Entity.chunkCoordZ = zPosition;
-        field_48502_j[k].add(par1Entity);
+        entityLists[k].add(par1Entity);
     }
 
     /**
@@ -797,7 +807,7 @@ public class Chunk
     }
 
     /**
-     * removes entity at index i from entity array
+     * Removes entity at the specified index from the entity array.
      */
     public void removeEntityAtIndex(Entity par1Entity, int par2)
     {
@@ -806,12 +816,12 @@ public class Chunk
             par2 = 0;
         }
 
-        if (par2 >= field_48502_j.length)
+        if (par2 >= entityLists.length)
         {
-            par2 = field_48502_j.length - 1;
+            par2 = entityLists.length - 1;
         }
 
-        field_48502_j[par2].remove(par1Entity);
+        entityLists[par2].remove(par1Entity);
     }
 
     /**
@@ -924,9 +934,9 @@ public class Chunk
         isChunkLoaded = true;
         worldObj.addTileEntity(chunkTileEntityMap.values());
 
-        for (int i = 0; i < field_48502_j.length; i++)
+        for (int i = 0; i < entityLists.length; i++)
         {
-            worldObj.addLoadedEntities(field_48502_j[i]);
+            worldObj.addLoadedEntities(entityLists[i]);
         }
     }
 
@@ -943,9 +953,9 @@ public class Chunk
             tileentity = (TileEntity)iterator.next();
         }
 
-        for (int i = 0; i < field_48502_j.length; i++)
+        for (int i = 0; i < entityLists.length; i++)
         {
-            worldObj.unloadEntities(field_48502_j[i]);
+            worldObj.unloadEntities(entityLists[i]);
         }
     }
 
@@ -971,14 +981,14 @@ public class Chunk
             i = 0;
         }
 
-        if (j >= field_48502_j.length)
+        if (j >= entityLists.length)
         {
-            j = field_48502_j.length - 1;
+            j = entityLists.length - 1;
         }
 
         for (int k = i; k <= j; k++)
         {
-            List list = field_48502_j[k];
+            List list = entityLists[k];
 
             for (int l = 0; l < list.size(); l++)
             {
@@ -1022,14 +1032,14 @@ public class Chunk
         {
             i = 0;
         }
-        else if (i >= field_48502_j.length)
+        else if (i >= entityLists.length)
         {
-            i = field_48502_j.length - 1;
+            i = entityLists.length - 1;
         }
 
-        if (j >= field_48502_j.length)
+        if (j >= entityLists.length)
         {
-            j = field_48502_j.length - 1;
+            j = entityLists.length - 1;
         }
         else if (j < 0)
         {
@@ -1038,7 +1048,7 @@ public class Chunk
 
         for (int k = i; k <= j; k++)
         {
-            List list = field_48502_j[k];
+            List list = entityLists[k];
 
             for (int l = 0; l < list.size(); l++)
             {
@@ -1087,7 +1097,7 @@ public class Chunk
      */
     public void removeUnknownBlocks()
     {
-        ExtendedBlockStorage aextendedblockstorage[] = field_48505_p;
+        ExtendedBlockStorage aextendedblockstorage[] = storageArrays;
         int i = aextendedblockstorage.length;
 
         for (int j = 0; j < i; j++)
@@ -1134,7 +1144,7 @@ public class Chunk
 
         if (j == -999)
         {
-            int k = func_48498_h() + 15;
+            int k = getTopFilledSegment() + 15;
 
             for (j = -1; k > 0 && j == -1;)
             {
@@ -1190,9 +1200,9 @@ public class Chunk
 
         for (int i = par1; i <= par2; i += 16)
         {
-            ExtendedBlockStorage extendedblockstorage = field_48505_p[i >> 4];
+            ExtendedBlockStorage extendedblockstorage = storageArrays[i >> 4];
 
-            if (extendedblockstorage != null && !extendedblockstorage.func_48693_a())
+            if (extendedblockstorage != null && !extendedblockstorage.getIsEmpty())
             {
                 return false;
             }
@@ -1203,79 +1213,79 @@ public class Chunk
 
     public void func_48500_a(ExtendedBlockStorage par1ArrayOfExtendedBlockStorage[])
     {
-        field_48505_p = par1ArrayOfExtendedBlockStorage;
+        storageArrays = par1ArrayOfExtendedBlockStorage;
     }
 
     public void func_48494_a(byte par1ArrayOfByte[], int par2, int par3, boolean par4)
     {
         int i = 0;
 
-        for (int j = 0; j < field_48505_p.length; j++)
+        for (int j = 0; j < storageArrays.length; j++)
         {
             if ((par2 & 1 << j) != 0)
             {
-                if (field_48505_p[j] == null)
+                if (storageArrays[j] == null)
                 {
-                    field_48505_p[j] = new ExtendedBlockStorage(j << 4);
+                    storageArrays[j] = new ExtendedBlockStorage(j << 4);
                 }
 
-                byte abyte0[] = field_48505_p[j].func_48692_g();
+                byte abyte0[] = storageArrays[j].func_48692_g();
                 System.arraycopy(par1ArrayOfByte, i, abyte0, 0, abyte0.length);
                 i += abyte0.length;
                 continue;
             }
 
-            if (par4 && field_48505_p[j] != null)
+            if (par4 && storageArrays[j] != null)
             {
-                field_48505_p[j] = null;
+                storageArrays[j] = null;
             }
         }
 
-        for (int k = 0; k < field_48505_p.length; k++)
+        for (int k = 0; k < storageArrays.length; k++)
         {
-            if ((par2 & 1 << k) != 0 && field_48505_p[k] != null)
+            if ((par2 & 1 << k) != 0 && storageArrays[k] != null)
             {
-                NibbleArray nibblearray = field_48505_p[k].func_48697_j();
+                NibbleArray nibblearray = storageArrays[k].func_48697_j();
                 System.arraycopy(par1ArrayOfByte, i, nibblearray.data, 0, nibblearray.data.length);
                 i += nibblearray.data.length;
             }
         }
 
-        for (int l = 0; l < field_48505_p.length; l++)
+        for (int l = 0; l < storageArrays.length; l++)
         {
-            if ((par2 & 1 << l) != 0 && field_48505_p[l] != null)
+            if ((par2 & 1 << l) != 0 && storageArrays[l] != null)
             {
-                NibbleArray nibblearray1 = field_48505_p[l].func_48705_k();
+                NibbleArray nibblearray1 = storageArrays[l].getBlocklightArray();
                 System.arraycopy(par1ArrayOfByte, i, nibblearray1.data, 0, nibblearray1.data.length);
                 i += nibblearray1.data.length;
             }
         }
 
-        for (int i1 = 0; i1 < field_48505_p.length; i1++)
+        for (int i1 = 0; i1 < storageArrays.length; i1++)
         {
-            if ((par2 & 1 << i1) != 0 && field_48505_p[i1] != null)
+            if ((par2 & 1 << i1) != 0 && storageArrays[i1] != null)
             {
-                NibbleArray nibblearray2 = field_48505_p[i1].func_48714_l();
+                NibbleArray nibblearray2 = storageArrays[i1].getSkylightArray();
                 System.arraycopy(par1ArrayOfByte, i, nibblearray2.data, 0, nibblearray2.data.length);
                 i += nibblearray2.data.length;
             }
         }
 
-        for (int j1 = 0; j1 < field_48505_p.length; j1++)
+        for (int j1 = 0; j1 < storageArrays.length; j1++)
         {
             if ((par3 & 1 << j1) != 0)
             {
-                if (field_48505_p[j1] == null)
+                if (storageArrays[j1] == null)
                 {
                     i += 2048;
                     continue;
                 }
 
-                NibbleArray nibblearray3 = field_48505_p[j1].func_48704_i();
+                NibbleArray nibblearray3 = storageArrays[j1].getBlockMSBArray();
 
                 if (nibblearray3 == null)
                 {
-                    nibblearray3 = field_48505_p[j1].func_48696_m();
+                    nibblearray3 = storageArrays[j1].createBlockMSBArray();
                 }
 
                 System.arraycopy(par1ArrayOfByte, i, nibblearray3.data, 0, nibblearray3.data.length);
@@ -1283,23 +1293,23 @@ public class Chunk
                 continue;
             }
 
-            if (par4 && field_48505_p[j1] != null && field_48505_p[j1].func_48704_i() != null)
+            if (par4 && storageArrays[j1] != null && storageArrays[j1].getBlockMSBArray() != null)
             {
-                field_48505_p[j1].func_48715_h();
+                storageArrays[j1].func_48715_h();
             }
         }
 
         if (par4)
         {
-            System.arraycopy(par1ArrayOfByte, i, field_48504_q, 0, field_48504_q.length);
-            i += field_48504_q.length;
+            System.arraycopy(par1ArrayOfByte, i, blockBiomeArray, 0, blockBiomeArray.length);
+            i += blockBiomeArray.length;
         }
 
-        for (int k1 = 0; k1 < field_48505_p.length; k1++)
+        for (int k1 = 0; k1 < storageArrays.length; k1++)
         {
-            if (field_48505_p[k1] != null && (par2 & 1 << k1) != 0)
+            if (storageArrays[k1] != null && (par2 & 1 << k1) != 0)
             {
-                field_48505_p[k1].func_48708_d();
+                storageArrays[k1].func_48708_d();
             }
         }
 
@@ -1314,13 +1324,13 @@ public class Chunk
 
     public BiomeGenBase func_48490_a(int par1, int par2, WorldChunkManager par3WorldChunkManager)
     {
-        int i = field_48504_q[par2 << 4 | par1] & 0xff;
+        int i = blockBiomeArray[par2 << 4 | par1] & 0xff;
 
         if (i == 255)
         {
             BiomeGenBase biomegenbase = par3WorldChunkManager.getBiomeGenAt((xPosition << 4) + par1, (zPosition << 4) + par2);
             i = biomegenbase.biomeID;
-            field_48504_q[par2 << 4 | par1] = (byte)(i & 0xff);
+            blockBiomeArray[par2 << 4 | par1] = (byte)(i & 0xff);
         }
 
         if (BiomeGenBase.biomeList[i] == null)
@@ -1333,34 +1343,49 @@ public class Chunk
         }
     }
 
-    public byte[] func_48493_m()
+    /**
+     * Returns an array containing a 16x16 mapping on the X/Z of block positions in this Chunk to biome IDs.
+     */
+    public byte[] getBiomeArray()
     {
-        return field_48504_q;
+        return blockBiomeArray;
     }
 
-    public void func_48497_a(byte par1ArrayOfByte[])
+    /**
+     * Accepts a 256-entry array that contains a 16x16 mapping on the X/Z plane of block positions in this Chunk to
+     * biome IDs.
+     */
+    public void setBiomeArray(byte par1ArrayOfByte[])
     {
-        field_48504_q = par1ArrayOfByte;
+        blockBiomeArray = par1ArrayOfByte;
     }
 
-    public void func_48496_n()
+    /**
+     * Resets the relight check index to 0 for this Chunk.
+     */
+    public void resetRelightChecks()
     {
-        field_48503_s = 0;
+        queuedLightChecks = 0;
     }
 
-    public void func_48491_o()
+    /**
+     * Called once-per-chunk-per-tick, and advances the round-robin relight check index by up to 8 blocks at a time. In
+     * a worst-case scenario, can potentially take up to 25.6 seconds, calculated via (4096/8)/20, to re-check all
+     * blocks in a chunk, which may explain lagging light updates on initial world generation.
+     */
+    public void enqueueRelightChecks()
     {
         for (int i = 0; i < 8; i++)
         {
-            if (field_48503_s >= 4096)
+            if (queuedLightChecks >= 4096)
             {
                 return;
             }
 
-            int j = field_48503_s % 16;
-            int k = (field_48503_s / 16) % 16;
-            int l = field_48503_s / 256;
-            field_48503_s++;
+            int j = queuedLightChecks % 16;
+            int k = (queuedLightChecks / 16) % 16;
+            int l = queuedLightChecks / 256;
+            queuedLightChecks++;
             int i1 = (xPosition << 4) + k;
             int j1 = (zPosition << 4) + l;
 
@@ -1368,7 +1393,7 @@ public class Chunk
             {
                 int l1 = (j << 4) + k1;
 
-                if ((field_48505_p[j] != null || k1 != 0 && k1 != 15 && k != 0 && k != 15 && l != 0 && l != 15) && (field_48505_p[j] == null || field_48505_p[j].func_48703_a(k, k1, l) != 0))
+                if ((storageArrays[j] != null || k1 != 0 && k1 != 15 && k != 0 && k != 15 && l != 0 && l != 15) && (storageArrays[j] == null || storageArrays[j].getExtBlockID(k, k1, l) != 0))
                 {
                     continue;
                 }

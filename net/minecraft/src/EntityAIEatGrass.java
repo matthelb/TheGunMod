@@ -6,14 +6,16 @@ public class EntityAIEatGrass extends EntityAIBase
 {
     private EntityLiving field_48397_b;
     private World field_48398_c;
-    int field_48399_a;
+
+    /** A decrementing tick used for the sheep's head offset and animation. */
+    int eatGrassTick;
 
     public EntityAIEatGrass(EntityLiving par1EntityLiving)
     {
-        field_48399_a = 0;
+        eatGrassTick = 0;
         field_48397_b = par1EntityLiving;
         field_48398_c = par1EntityLiving.worldObj;
-        func_46079_a(7);
+        setMutexBits(7);
     }
 
     /**
@@ -38,11 +40,14 @@ public class EntityAIEatGrass extends EntityAIBase
         return field_48398_c.getBlockId(i, j - 1, k) == Block.grass.blockID;
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48399_a = 40;
+        eatGrassTick = 40;
         field_48398_c.setEntityState(field_48397_b, (byte)10);
-        field_48397_b.func_48084_aL().func_48672_f();
+        field_48397_b.getNavigator().func_48672_f();
     }
 
     /**
@@ -50,7 +55,7 @@ public class EntityAIEatGrass extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48399_a = 0;
+        eatGrassTick = 0;
     }
 
     /**
@@ -58,12 +63,12 @@ public class EntityAIEatGrass extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return field_48399_a > 0;
+        return eatGrassTick > 0;
     }
 
     public int func_48396_h()
     {
-        return field_48399_a;
+        return eatGrassTick;
     }
 
     /**
@@ -71,9 +76,9 @@ public class EntityAIEatGrass extends EntityAIBase
      */
     public void updateTask()
     {
-        field_48399_a = Math.max(0, field_48399_a - 1);
+        eatGrassTick = Math.max(0, eatGrassTick - 1);
 
-        if (field_48399_a != 4)
+        if (eatGrassTick != 4)
         {
             return;
         }

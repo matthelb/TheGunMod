@@ -724,9 +724,9 @@ public class RenderBlocks
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(par1Block.getMixedBrightnessForBlock(blockAccess, par2, par3, par4));
         tessellator.setColorOpaque_F(1.0F, 1.0F, 1.0F);
-        double d = 0.4D;
+        double d = 0.40000000596046448D;
         double d1 = 0.5D - d;
-        double d2 = 0.2D;
+        double d2 = 0.20000000298023224D;
 
         if (i == 1)
         {
@@ -1509,14 +1509,14 @@ public class RenderBlocks
         }
         else
         {
-            double d19 = (double)par2 + 0.5D + 0.2D;
-            double d6 = ((double)par2 + 0.5D) - 0.2D;
-            double d8 = (double)par4 + 0.5D + 0.2D;
-            double d10 = ((double)par4 + 0.5D) - 0.2D;
-            double d12 = ((double)par2 + 0.5D) - 0.3D;
-            double d14 = (double)par2 + 0.5D + 0.3D;
-            double d16 = ((double)par4 + 0.5D) - 0.3D;
-            double d18 = (double)par4 + 0.5D + 0.3D;
+            double d19 = (double)par2 + 0.5D + 0.20000000000000001D;
+            double d6 = ((double)par2 + 0.5D) - 0.20000000000000001D;
+            double d8 = (double)par4 + 0.5D + 0.20000000000000001D;
+            double d10 = ((double)par4 + 0.5D) - 0.20000000000000001D;
+            double d12 = ((double)par2 + 0.5D) - 0.29999999999999999D;
+            double d14 = (double)par2 + 0.5D + 0.29999999999999999D;
+            double d16 = ((double)par4 + 0.5D) - 0.29999999999999999D;
+            double d18 = (double)par4 + 0.5D + 0.29999999999999999D;
             tessellator.addVertexWithUV(d12, (float)par3 + f, par4 + 1, d1, d2);
             tessellator.addVertexWithUV(d19, par3 + 0, par4 + 1, d1, d3);
             tessellator.addVertexWithUV(d19, par3 + 0, par4 + 0, d, d3);
@@ -1541,10 +1541,10 @@ public class RenderBlocks
             d6 = (double)par2 + 0.5D + 0.5D;
             d8 = ((double)par4 + 0.5D) - 0.5D;
             d10 = (double)par4 + 0.5D + 0.5D;
-            d12 = ((double)par2 + 0.5D) - 0.4D;
-            d14 = (double)par2 + 0.5D + 0.4D;
-            d16 = ((double)par4 + 0.5D) - 0.4D;
-            d18 = (double)par4 + 0.5D + 0.4D;
+            d12 = ((double)par2 + 0.5D) - 0.40000000000000002D;
+            d14 = (double)par2 + 0.5D + 0.40000000000000002D;
+            d16 = ((double)par4 + 0.5D) - 0.40000000000000002D;
+            d18 = (double)par4 + 0.5D + 0.40000000000000002D;
             tessellator.addVertexWithUV(d12, (float)par3 + f, par4 + 0, d, d2);
             tessellator.addVertexWithUV(d19, par3 + 0, par4 + 0, d, d3);
             tessellator.addVertexWithUV(d19, par3 + 0, par4 + 1, d1, d3);
@@ -1925,7 +1925,7 @@ public class RenderBlocks
         double d3 = ((float)k + 15.99F) / 256F;
         int l = blockAccess.getBlockMetadata(par2, par3, par4);
         double d4 = 0.0D;
-        double d5 = 0.05D;
+        double d5 = 0.05000000074505806D;
 
         if (l == 5)
         {
@@ -1988,7 +1988,7 @@ public class RenderBlocks
         double d1 = ((float)j + 15.99F) / 256F;
         double d2 = (float)k / 256F;
         double d3 = ((float)k + 15.99F) / 256F;
-        double d4 = 0.05D;
+        double d4 = 0.05000000074505806D;
         int l = blockAccess.getBlockMetadata(par2, par3, par4);
 
         if ((l & 2) != 0)
@@ -2052,7 +2052,7 @@ public class RenderBlocks
 
     public boolean renderBlockPane(BlockPane par1BlockPane, int par2, int par3, int par4)
     {
-        int i = blockAccess.func_48453_b();
+        int i = blockAccess.getWorldHeight();
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(par1BlockPane.getMixedBrightnessForBlock(blockAccess, par2, par3, par4));
         float f = 1.0F;
@@ -2526,7 +2526,7 @@ public class RenderBlocks
             long l = (long)(par2 * 0x2fc20f) ^ (long)par4 * 0x6ebfff5L ^ (long)par3;
             l = l * l * 0x285b825L + l * 11L;
             d += ((double)((float)(l >> 16 & 15L) / 15F) - 0.5D) * 0.5D;
-            d1 += ((double)((float)(l >> 20 & 15L) / 15F) - 1.0D) * 0.2D;
+            d1 += ((double)((float)(l >> 20 & 15L) / 15F) - 1.0D) * 0.20000000000000001D;
             d2 += ((double)((float)(l >> 24 & 15L) / 15F) - 0.5D) * 0.5D;
         }
 
@@ -2659,10 +2659,10 @@ public class RenderBlocks
         double d1 = ((float)j + 15.99F) / 256F;
         double d2 = (float)k / 256F;
         double d3 = ((float)k + 15.99F) / 256F;
-        double d4 = (par3 + 0.5D) - 0.45D;
-        double d5 = par3 + 0.5D + 0.45D;
-        double d6 = (par7 + 0.5D) - 0.45D;
-        double d7 = par7 + 0.5D + 0.45D;
+        double d4 = (par3 + 0.5D) - 0.45000000000000001D;
+        double d5 = par3 + 0.5D + 0.45000000000000001D;
+        double d6 = (par7 + 0.5D) - 0.45000000000000001D;
+        double d7 = par7 + 0.5D + 0.45000000000000001D;
         tessellator.addVertexWithUV(d4, par5 + 1.0D, d6, d, d2);
         tessellator.addVertexWithUV(d4, par5 + 0.0D, d6, d, d3);
         tessellator.addVertexWithUV(d5, par5 + 0.0D, d7, d1, d3);
@@ -2699,11 +2699,11 @@ public class RenderBlocks
         double d = (float)j / 256F;
         double d1 = ((float)j + 15.99F) / 256F;
         double d2 = (float)k / 256F;
-        double d3 = ((double)k + 15.99D * par3) / 256D;
-        double d4 = (par5 + 0.5D) - 0.45D;
-        double d5 = par5 + 0.5D + 0.45D;
-        double d6 = (par9 + 0.5D) - 0.45D;
-        double d7 = par9 + 0.5D + 0.45D;
+        double d3 = ((double)k + 15.989999771118164D * par3) / 256D;
+        double d4 = (par5 + 0.5D) - 0.44999998807907104D;
+        double d5 = par5 + 0.5D + 0.44999998807907104D;
+        double d6 = (par9 + 0.5D) - 0.44999998807907104D;
+        double d7 = par9 + 0.5D + 0.44999998807907104D;
         tessellator.addVertexWithUV(d4, par7 + par3, d6, d, d2);
         tessellator.addVertexWithUV(d4, par7 + 0.0D, d6, d, d3);
         tessellator.addVertexWithUV(d5, par7 + 0.0D, d7, d1, d3);
@@ -2781,7 +2781,7 @@ public class RenderBlocks
         double d = (float)j / 256F;
         double d1 = ((float)j + 15.99F) / 256F;
         double d2 = (float)k / 256F;
-        double d3 = ((double)k + 15.99D * par4) / 256D;
+        double d3 = ((double)k + 15.989999771118164D * par4) / 256D;
         double d4 = (par6 + 0.5D) - 0.5D;
         double d5 = par6 + 0.5D + 0.5D;
         double d6 = (par10 + 0.5D) - 0.5D;
@@ -2916,7 +2916,7 @@ public class RenderBlocks
         double d3 = getFluidHeight(par2, par3, par4 + 1, material);
         double d4 = getFluidHeight(par2 + 1, par3, par4 + 1, material);
         double d5 = getFluidHeight(par2 + 1, par3, par4, material);
-        double d6 = 0.001D;
+        double d6 = 0.0010000000474974513D;
 
         if (renderAllFaces || flag)
         {
@@ -5757,7 +5757,7 @@ public class RenderBlocks
     }
 
     /**
-     * checks if int i (the items getRenderType() number) should be rendered as a regular block or not
+     * Checks to see if the item's render type indicates that it should be rendered as a regular block or not.
      */
     public static boolean renderItemIn3d(int par0)
     {

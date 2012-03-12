@@ -4,7 +4,8 @@ import java.util.Random;
 
 public abstract class EntityAITarget extends EntityAIBase
 {
-    protected EntityLiving field_48382_c;
+    /** The entity that this task belongs to */
+    protected EntityLiving taskOwner;
     protected float field_48379_d;
     protected boolean field_48380_e;
     private boolean field_48383_a;
@@ -22,7 +23,7 @@ public abstract class EntityAITarget extends EntityAIBase
         field_48381_b = 0;
         field_48377_f = 0;
         field_48378_g = 0;
-        field_48382_c = par1EntityLiving;
+        taskOwner = par1EntityLiving;
         field_48379_d = par2;
         field_48380_e = par3;
         field_48383_a = par4;
@@ -33,7 +34,7 @@ public abstract class EntityAITarget extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        EntityLiving entityliving = field_48382_c.func_48094_aS();
+        EntityLiving entityliving = taskOwner.getAttackTarget();
 
         if (entityliving == null)
         {
@@ -45,14 +46,14 @@ public abstract class EntityAITarget extends EntityAIBase
             return false;
         }
 
-        if (field_48382_c.getDistanceSqToEntity(entityliving) > (double)(field_48379_d * field_48379_d))
+        if (taskOwner.getDistanceSqToEntity(entityliving) > (double)(field_48379_d * field_48379_d))
         {
             return false;
         }
 
         if (field_48380_e)
         {
-            if (!field_48382_c.func_48090_aM().func_48480_a(entityliving))
+            if (!taskOwner.func_48090_aM().canSee(entityliving))
             {
                 if (++field_48378_g > 60)
                 {
@@ -68,7 +69,10 @@ public abstract class EntityAITarget extends EntityAIBase
         return true;
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48381_b = 0;
         field_48377_f = 0;
@@ -80,7 +84,7 @@ public abstract class EntityAITarget extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48382_c.func_48092_c(null);
+        taskOwner.setAttackTarget(null);
     }
 
     protected boolean func_48376_a(EntityLiving par1EntityLiving, boolean par2)
@@ -90,7 +94,7 @@ public abstract class EntityAITarget extends EntityAIBase
             return false;
         }
 
-        if (par1EntityLiving == field_48382_c)
+        if (par1EntityLiving == taskOwner)
         {
             return false;
         }
@@ -100,24 +104,24 @@ public abstract class EntityAITarget extends EntityAIBase
             return false;
         }
 
-        if (par1EntityLiving.boundingBox.maxY <= field_48382_c.boundingBox.minY || par1EntityLiving.boundingBox.minY >= field_48382_c.boundingBox.maxY)
+        if (par1EntityLiving.boundingBox.maxY <= taskOwner.boundingBox.minY || par1EntityLiving.boundingBox.minY >= taskOwner.boundingBox.maxY)
         {
             return false;
         }
 
-        if (!field_48382_c.func_48100_a(par1EntityLiving.getClass()))
+        if (!taskOwner.func_48100_a(par1EntityLiving.getClass()))
         {
             return false;
         }
 
-        if ((field_48382_c instanceof EntityTameable) && ((EntityTameable)field_48382_c).func_48139_F_())
+        if ((taskOwner instanceof EntityTameable) && ((EntityTameable)taskOwner).isTamed())
         {
-            if ((par1EntityLiving instanceof EntityTameable) && ((EntityTameable)par1EntityLiving).func_48139_F_())
+            if ((par1EntityLiving instanceof EntityTameable) && ((EntityTameable)par1EntityLiving).isTamed())
             {
                 return false;
             }
 
-            if (par1EntityLiving == ((EntityTameable)field_48382_c).func_48144_ah())
+            if (par1EntityLiving == ((EntityTameable)taskOwner).getOwner())
             {
                 return false;
             }
@@ -127,12 +131,12 @@ public abstract class EntityAITarget extends EntityAIBase
             return false;
         }
 
-        if (!field_48382_c.func_48096_f(MathHelper.floor_double(par1EntityLiving.posX), MathHelper.floor_double(par1EntityLiving.posY), MathHelper.floor_double(par1EntityLiving.posZ)))
+        if (!taskOwner.isWithinHomeDistance(MathHelper.floor_double(par1EntityLiving.posX), MathHelper.floor_double(par1EntityLiving.posY), MathHelper.floor_double(par1EntityLiving.posZ)))
         {
             return false;
         }
 
-        if (field_48380_e && !field_48382_c.func_48090_aM().func_48480_a(par1EntityLiving))
+        if (field_48380_e && !taskOwner.func_48090_aM().canSee(par1EntityLiving))
         {
             return false;
         }
@@ -160,15 +164,15 @@ public abstract class EntityAITarget extends EntityAIBase
 
     private boolean func_48375_a(EntityLiving par1EntityLiving)
     {
-        field_48377_f = 10 + field_48382_c.getRNG().nextInt(5);
-        PathEntity pathentity = field_48382_c.func_48084_aL().func_48679_a(par1EntityLiving);
+        field_48377_f = 10 + taskOwner.getRNG().nextInt(5);
+        PathEntity pathentity = taskOwner.getNavigator().func_48679_a(par1EntityLiving);
 
         if (pathentity == null)
         {
             return false;
         }
 
-        PathPoint pathpoint = pathentity.func_48645_c();
+        PathPoint pathpoint = pathentity.getFinalPathPoint();
 
         if (pathpoint == null)
         {

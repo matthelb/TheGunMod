@@ -151,8 +151,16 @@ public class Item
     public static Item eyeOfEnder = (new ItemEnderEye(125)).setIconCoord(11, 9).setItemName("eyeOfEnder");
     public static Item speckledMelon;
     public static Item monsterPlacer = (new ItemMonsterPlacer(127)).setIconCoord(9, 9).setItemName("monsterPlacer");
-    public static Item field_48438_bD = (new ItemExpBottle(128)).setIconCoord(11, 10).setItemName("expBottle");
-    public static Item field_48439_bE = (new ItemFireball(129)).setIconCoord(14, 2).setItemName("fireball");
+
+    /**
+     * Bottle o' Enchanting. Drops between 1 and 3 experience orbs when thrown.
+     */
+    public static Item expBottle = (new ItemExpBottle(128)).setIconCoord(11, 10).setItemName("expBottle");
+
+    /**
+     * Fire Charge. When used in a dispenser it fires a fireball similiar to a Ghast's.
+     */
+    public static Item fireballCharge = (new ItemFireball(129)).setIconCoord(14, 2).setItemName("fireball");
     public static Item record13 = (new ItemRecord(2000, "13")).setIconCoord(0, 15).setItemName("record");
     public static Item recordCat = (new ItemRecord(2001, "cat")).setIconCoord(1, 15).setItemName("record");
     public static Item recordBlocks = (new ItemRecord(2002, "blocks")).setIconCoord(2, 15).setItemName("record");
@@ -479,11 +487,17 @@ public class Item
     {
     }
 
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
     public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.none;
     }
 
+    /**
+     * How long it takes to use or consume an item
+     */
     public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
         return 0;
@@ -505,6 +519,9 @@ public class Item
         return this;
     }
 
+    /**
+     * Returns a string representing what this item does to a potion.
+     */
     public String getPotionEffect()
     {
         return potionEffect;
@@ -565,7 +582,7 @@ public class Item
         float f1 = par2EntityPlayer.prevRotationPitch + (par2EntityPlayer.rotationPitch - par2EntityPlayer.prevRotationPitch) * f;
         float f2 = par2EntityPlayer.prevRotationYaw + (par2EntityPlayer.rotationYaw - par2EntityPlayer.prevRotationYaw) * f;
         double d = par2EntityPlayer.prevPosX + (par2EntityPlayer.posX - par2EntityPlayer.prevPosX) * (double)f;
-        double d1 = (par2EntityPlayer.prevPosY + (par2EntityPlayer.posY - par2EntityPlayer.prevPosY) * (double)f + 1.62D) - (double)par2EntityPlayer.yOffset;
+        double d1 = (par2EntityPlayer.prevPosY + (par2EntityPlayer.posY - par2EntityPlayer.prevPosY) * (double)f + 1.6200000000000001D) - (double)par2EntityPlayer.yOffset;
         double d2 = par2EntityPlayer.prevPosZ + (par2EntityPlayer.posZ - par2EntityPlayer.prevPosZ) * (double)f;
         Vec3D vec3d = Vec3D.createVector(d, d1, d2);
         float f3 = MathHelper.cos(-f2 * 0.01745329F - (float)Math.PI);

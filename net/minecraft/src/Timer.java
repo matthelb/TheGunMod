@@ -84,7 +84,7 @@ public class Timer
             {
                 long l3 = l2 - lastSyncHRClock;
                 double d2 = (double)field_28132_i / (double)l3;
-                timeSyncAdjustment += (d2 - timeSyncAdjustment) * 0.2D;
+                timeSyncAdjustment += (d2 - timeSyncAdjustment) * 0.20000000298023224D;
                 lastSyncHRClock = l2;
                 field_28132_i = 0L;
             }

@@ -30,7 +30,7 @@ public class Particle
         posY += velocityY;
         velocityX *= accelScale;
         velocityY *= accelScale;
-        velocityY += 0.1D;
+        velocityY += 0.10000000000000001D;
 
         if (++timeTick > timeLimit)
         {

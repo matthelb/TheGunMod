@@ -35,7 +35,7 @@ public class RenderVillager extends RenderLiving
     {
         float f = 0.9375F;
 
-        if (par1EntityVillager.func_48123_at() < 0)
+        if (par1EntityVillager.getGrowingAge() < 0)
         {
             f = (float)((double)f * 0.5D);
             shadowSize = 0.25F;

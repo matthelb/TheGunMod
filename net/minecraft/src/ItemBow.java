@@ -24,7 +24,7 @@ public class ItemBow extends Item
             float f = (float)i / 20F;
             f = (f * f + f * 2.0F) / 3F;
 
-            if ((double)f < 0.1D)
+            if ((double)f < 0.10000000000000001D)
             {
                 return;
             }
@@ -84,11 +84,17 @@ public class ItemBow extends Item
         return par1ItemStack;
     }
 
+    /**
+     * How long it takes to use or consume an item
+     */
     public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
         return 0x11940;
     }
 
+    /**
+     * returns the action that specifies what animation to play when the items is being used
+     */
     public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.bow;

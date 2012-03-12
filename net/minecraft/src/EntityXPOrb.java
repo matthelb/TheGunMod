@@ -28,9 +28,9 @@ public class EntityXPOrb extends Entity
         yOffset = height / 2.0F;
         setPosition(par2, par4, par6);
         rotationYaw = (float)(Math.random() * 360D);
-        motionX = (float)(Math.random() * 0.2D - 0.1D) * 2.0F;
-        motionY = (float)(Math.random() * 0.2D) * 2.0F;
-        motionZ = (float)(Math.random() * 0.2D - 0.1D) * 2.0F;
+        motionX = (float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F;
+        motionY = (float)(Math.random() * 0.20000000000000001D) * 2.0F;
+        motionZ = (float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D) * 2.0F;
         xpValue = par8;
     }
 
@@ -98,11 +98,11 @@ public class EntityXPOrb extends Entity
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
-        motionY -= 0.03D;
+        motionY -= 0.029999999329447746D;
 
         if (worldObj.getBlockMaterial(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) == Material.lava)
         {
-            motionY = 0.2D;
+            motionY = 0.20000000298023224D;
             motionX = (rand.nextFloat() - rand.nextFloat()) * 0.2F;
             motionZ = (rand.nextFloat() - rand.nextFloat()) * 0.2F;
             worldObj.playSoundAtEntity(this, "random.fizz", 0.4F, 2.0F + rand.nextFloat() * 0.4F);
@@ -123,9 +123,9 @@ public class EntityXPOrb extends Entity
             if (d5 > 0.0D)
             {
                 d5 *= d5;
-                motionX += (d1 / d4) * d5 * 0.1D;
-                motionY += (d2 / d4) * d5 * 0.1D;
-                motionZ += (d3 / d4) * d5 * 0.1D;
+                motionX += (d1 / d4) * d5 * 0.10000000000000001D;
+                motionY += (d2 / d4) * d5 * 0.10000000000000001D;
+                motionZ += (d3 / d4) * d5 * 0.10000000000000001D;
             }
         }
 
@@ -144,12 +144,12 @@ public class EntityXPOrb extends Entity
         }
 
         motionX *= f;
-        motionY *= 0.98D;
+        motionY *= 0.98000001907348633D;
         motionZ *= f;
 
         if (onGround)
         {
-            motionY *= -0.9D;
+            motionY *= -0.89999997615814209D;
         }
 
         xpColor++;
@@ -349,7 +349,10 @@ public class EntityXPOrb extends Entity
         return par0 < 3 ? 1 : 3;
     }
 
-    public boolean func_48080_j()
+    /**
+     * If returns false, the item will not inflict any damage against entities.
+     */
+    public boolean canAttackWithItem()
     {
         return false;
     }

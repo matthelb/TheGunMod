@@ -22,6 +22,9 @@ public class ComponentNetherBridgeCrossing2 extends ComponentNetherBridgePiece
         getNextComponentZ((ComponentNetherBridgeStartPiece)par1StructureComponent, par2List, par3Random, 0, 1, true);
     }
 
+    /**
+     * Creates and returns a new component piece. Or null if it could not find enough room to place it.
+     */
     public static ComponentNetherBridgeCrossing2 createValidComponent(List par0List, Random par1Random, int par2, int par3, int par4, int par5, int par6)
     {
         StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(par2, par3, par4, -1, 0, 0, 5, 7, 5, par5);

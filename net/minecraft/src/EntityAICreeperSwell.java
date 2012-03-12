@@ -2,13 +2,18 @@ package net.minecraft.src;
 
 public class EntityAICreeperSwell extends EntityAIBase
 {
-    EntityCreeper field_48237_a;
-    EntityLiving field_48236_b;
+    /** The creeper that is swelling. */
+    EntityCreeper swellingCreeper;
+
+    /**
+     * The creeper's attack target. This is used for the changing of the creeper's state.
+     */
+    EntityLiving creeperAttackTarget;
 
     public EntityAICreeperSwell(EntityCreeper par1EntityCreeper)
     {
-        field_48237_a = par1EntityCreeper;
-        func_46079_a(1);
+        swellingCreeper = par1EntityCreeper;
+        setMutexBits(1);
     }
 
     /**
@@ -16,14 +21,17 @@ public class EntityAICreeperSwell extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLiving entityliving = field_48237_a.func_48094_aS();
-        return field_48237_a.getCreeperState() > 0 || entityliving != null && field_48237_a.getDistanceSqToEntity(entityliving) < 9D;
+        EntityLiving entityliving = swellingCreeper.getAttackTarget();
+        return swellingCreeper.getCreeperState() > 0 || entityliving != null && swellingCreeper.getDistanceSqToEntity(entityliving) < 9D;
     }
 
-    public void func_46080_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48237_a.func_48084_aL().func_48672_f();
-        field_48236_b = field_48237_a.func_48094_aS();
+        swellingCreeper.getNavigator().func_48672_f();
+        creeperAttackTarget = swellingCreeper.getAttackTarget();
     }
 
     /**
@@ -31,7 +39,7 @@ public class EntityAICreeperSwell extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48236_b = null;
+        creeperAttackTarget = null;
     }
 
     /**
@@ -39,26 +47,26 @@ public class EntityAICreeperSwell extends EntityAIBase
      */
     public void updateTask()
     {
-        if (field_48236_b == null)
+        if (creeperAttackTarget == null)
         {
-            field_48237_a.setCreeperState(-1);
+            swellingCreeper.setCreeperState(-1);
             return;
         }
 
-        if (field_48237_a.getDistanceSqToEntity(field_48236_b) > 49D)
+        if (swellingCreeper.getDistanceSqToEntity(creeperAttackTarget) > 49D)
         {
-            field_48237_a.setCreeperState(-1);
+            swellingCreeper.setCreeperState(-1);
             return;
         }
 
-        if (!field_48237_a.func_48090_aM().func_48480_a(field_48236_b))
+        if (!swellingCreeper.func_48090_aM().canSee(creeperAttackTarget))
         {
-            field_48237_a.setCreeperState(-1);
+            swellingCreeper.setCreeperState(-1);
             return;
         }
         else
         {
-            field_48237_a.setCreeperState(1);
+            swellingCreeper.setCreeperState(1);
             return;
         }
     }

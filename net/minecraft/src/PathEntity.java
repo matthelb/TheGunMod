@@ -3,7 +3,9 @@ package net.minecraft.src;
 public class PathEntity
 {
     private final PathPoint points[];
-    private int field_48649_b;
+
+    /** PathEntity Array Index the Entity is currently targeting */
+    private int currentPathIndex;
 
     /** The total length of the path */
     private int pathLength;
@@ -19,7 +21,7 @@ public class PathEntity
      */
     public void incrementPathIndex()
     {
-        field_48649_b++;
+        currentPathIndex++;
     }
 
     /**
@@ -27,10 +29,13 @@ public class PathEntity
      */
     public boolean isFinished()
     {
-        return field_48649_b >= pathLength;
+        return currentPathIndex >= pathLength;
     }
 
-    public PathPoint func_48645_c()
+    /**
+     * returns the last PathPoint of the Array
+     */
+    public PathPoint getFinalPathPoint()
     {
         if (pathLength > 0)
         {
@@ -42,29 +47,32 @@ public class PathEntity
         }
     }
 
-    public PathPoint func_48648_a(int par1)
+    /**
+     * return the PathPoint located at the specified PathIndex, usually the current one
+     */
+    public PathPoint getPathPointFromIndex(int par1)
     {
         return points[par1];
     }
 
-    public int func_48644_d()
+    public int getCurrentPathLength()
     {
         return pathLength;
     }
 
-    public void func_48641_b(int par1)
+    public void setCurrentPathLength(int par1)
     {
         pathLength = par1;
     }
 
-    public int func_48643_e()
+    public int getCurrentPathIndex()
     {
-        return field_48649_b;
+        return currentPathIndex;
     }
 
-    public void func_48642_c(int par1)
+    public void setCurrentPathIndex(int par1)
     {
-        field_48649_b = par1;
+        currentPathIndex = par1;
     }
 
     public Vec3D func_48646_a(Entity par1Entity, int par2)
@@ -75,9 +83,12 @@ public class PathEntity
         return Vec3D.createVector(d, d1, d2);
     }
 
-    public Vec3D func_48640_a(Entity par1Entity)
+    /**
+     * returns the current PathEntity target node as Vec3D
+     */
+    public Vec3D getCurrentNodeVec3d(Entity par1Entity)
     {
-        return func_48646_a(par1Entity, field_48649_b);
+        return func_48646_a(par1Entity, currentPathIndex);
     }
 
     public boolean func_48647_a(PathEntity par1PathEntity)
@@ -105,7 +116,7 @@ public class PathEntity
 
     public boolean func_48639_a(Vec3D par1Vec3D)
     {
-        PathPoint pathpoint = func_48645_c();
+        PathPoint pathpoint = getFinalPathPoint();
 
         if (pathpoint == null)
         {

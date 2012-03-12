@@ -9,14 +9,14 @@ public class EntityLavaFX extends EntityFX
     public EntityLavaFX(World par1World, double par2, double par4, double par6)
     {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
-        motionX *= 0.8D;
-        motionY *= 0.8D;
-        motionZ *= 0.8D;
+        motionX *= 0.80000001192092896D;
+        motionY *= 0.80000001192092896D;
+        motionZ *= 0.80000001192092896D;
         motionY = rand.nextFloat() * 0.4F + 0.05F;
         particleRed = particleGreen = particleBlue = 1.0F;
         particleScale *= rand.nextFloat() * 2.0F + 0.2F;
         lavaParticleScale = particleScale;
-        particleMaxAge = (int)(16D / (Math.random() * 0.8D + 0.2D));
+        particleMaxAge = (int)(16D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
         noClip = false;
         setParticleTextureIndex(49);
     }
@@ -77,16 +77,16 @@ public class EntityLavaFX extends EntityFX
             worldObj.spawnParticle("smoke", posX, posY, posZ, motionX, motionY, motionZ);
         }
 
-        motionY -= 0.03D;
+        motionY -= 0.029999999999999999D;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.999D;
-        motionY *= 0.999D;
-        motionZ *= 0.999D;
+        motionX *= 0.99900001287460327D;
+        motionY *= 0.99900001287460327D;
+        motionZ *= 0.99900001287460327D;
 
         if (onGround)
         {
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
         }
     }
 }

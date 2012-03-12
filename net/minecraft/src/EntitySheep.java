@@ -55,7 +55,7 @@ public class EntitySheep extends EntityAnimal
         texture = "/mob/sheep.png";
         setSize(0.9F, 1.3F);
         float f = 0.23F;
-        func_48084_aL().func_48664_a(true);
+        getNavigator().func_48664_a(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIPanic(this, 0.38F));
         tasks.addTask(2, new EntityAIMate(this, f));
@@ -317,7 +317,7 @@ public class EntitySheep extends EntityAnimal
     }
 
     /**
-     * [This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.]
+     * This function is used when two same-species animals in 'love mode' breed to generate the new baby animal.
      */
     public EntityAnimal spawnBabyAnimal(EntityAnimal par1EntityAnimal)
     {
@@ -342,14 +342,14 @@ public class EntitySheep extends EntityAnimal
 
         if (isChild())
         {
-            int i = func_48123_at() + 1200;
+            int i = getGrowingAge() + 1200;
 
             if (i > 0)
             {
                 i = 0;
             }
 
-            func_48122_d(i);
+            setGrowingAge(i);
         }
     }
 }

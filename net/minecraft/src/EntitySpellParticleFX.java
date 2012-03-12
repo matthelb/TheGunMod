@@ -8,16 +8,16 @@ public class EntitySpellParticleFX extends EntityFX
     {
         super(par1World, par2, par4, par6, par8, par10, par12);
         field_40111_a = 128;
-        motionY *= 0.2D;
+        motionY *= 0.20000000298023224D;
 
         if (par8 == 0.0D && par12 == 0.0D)
         {
-            motionX *= 0.1D;
-            motionZ *= 0.1D;
+            motionX *= 0.10000000149011612D;
+            motionZ *= 0.10000000149011612D;
         }
 
         particleScale *= 0.75F;
-        particleMaxAge = (int)(8D / (Math.random() * 0.8D + 0.2D));
+        particleMaxAge = (int)(8D / (Math.random() * 0.80000000000000004D + 0.20000000000000001D));
         noClip = false;
     }
 
@@ -53,23 +53,23 @@ public class EntitySpellParticleFX extends EntityFX
         }
 
         setParticleTextureIndex(field_40111_a + (7 - (particleAge * 8) / particleMaxAge));
-        motionY += 0.004D;
+        motionY += 0.0040000000000000001D;
         moveEntity(motionX, motionY, motionZ);
 
         if (posY == prevPosY)
         {
-            motionX *= 1.1D;
-            motionZ *= 1.1D;
+            motionX *= 1.1000000000000001D;
+            motionZ *= 1.1000000000000001D;
         }
 
-        motionX *= 0.96D;
-        motionY *= 0.96D;
-        motionZ *= 0.96D;
+        motionX *= 0.95999997854232788D;
+        motionY *= 0.95999997854232788D;
+        motionZ *= 0.95999997854232788D;
 
         if (onGround)
         {
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
         }
     }
 

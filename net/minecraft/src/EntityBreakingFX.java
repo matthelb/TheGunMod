@@ -14,9 +14,9 @@ public class EntityBreakingFX extends EntityFX
     public EntityBreakingFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, Item par14Item)
     {
         this(par1World, par2, par4, par6, par14Item);
-        motionX *= 0.1D;
-        motionY *= 0.1D;
-        motionZ *= 0.1D;
+        motionX *= 0.10000000149011612D;
+        motionY *= 0.10000000149011612D;
+        motionZ *= 0.10000000149011612D;
         motionX += par8;
         motionY += par10;
         motionZ += par12;

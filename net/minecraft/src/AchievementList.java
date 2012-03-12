@@ -68,6 +68,8 @@ public class AchievementList
 
     /** Is the 'when pig fly' achievement. */
     public static Achievement flyPig;
+
+    /** The achievement for killing a Skeleton from 50 meters aways. */
     public static Achievement snipeSkeleton;
 
     /** Is the 'DIAMONDS!' achievement */
