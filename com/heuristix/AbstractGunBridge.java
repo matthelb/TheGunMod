@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public abstract class AbstractGunBridge implements GunBridge {
 
-    public static final String VERSION = "0.9.8";
+    public static final String VERSION = "0.9.82";
 
     public static final List<Pair<String, String>> OBFUSCATED_CLASS_NAMES = new LinkedList<Pair<String, String>>();
 
@@ -47,19 +47,21 @@ public abstract class AbstractGunBridge implements GunBridge {
 
                 String projectileType = ClassDescriptor.getClassDescription(gunClasses.get(0).getSecond()).getSuperName();
                 HashMap<String, Method> methods = new HashMap<String, Method>();
+                String worldClass = (deobfuscate) ? "net/minecraft/src/World" : OBFUSCATED_CLASS_NAMES.get(0).getFirst(), entityLivingClass = (deobfuscate) ? "net/minecraft/src/EntityLiving" : OBFUSCATED_CLASS_NAMES.get(0).getSecond();
+                for (int i = 0; i < OBFUSCATED_CLASS_NAMES.size(); i++) {
+                    Pair<String, String> obfuscatedNames = OBFUSCATED_CLASS_NAMES.get(i);
+                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V",
+                            new Method("(L" + worldClass + ";L" + entityLivingClass +";)V",
+                                    new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass + ";L" + entityLivingClass + ";)V", false, true, false)));
+                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V",
+                            new Method("(L" + worldClass + ";)V",
+                                    new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass + ";)V", false, true, false)));
+                    methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V",
+                            new Method("(L" + worldClass + ";DDD)V",
+                                    new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(L" + worldClass + ";DDD)V", false, true, false)));
+                }
                 if (deobfuscate) {
-                    for (int i = 0; i < OBFUSCATED_CLASS_NAMES.size(); i++) {
-                        Pair<String, String> obfuscatedNames = OBFUSCATED_CLASS_NAMES.get(i);
-                        methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V",
-                                new Method("(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
-                                        new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V", false, true, false)));
-                        methods.put("<init>(L" + obfuscatedNames.getFirst() + ";)V",
-                                new Method("(Lnet/minecraft/src/World;)V",
-                                        new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;)V", false, true, false)));
-                        methods.put("<init>(L" + obfuscatedNames.getFirst() + ";DDD)V",
-                                new Method("(Lnet/minecraft/src/World;DDD)V",
-                                        new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, projectileType, "<init>", "(Lnet/minecraft/src/World;DDD)V", false, true, false)));
-                    }
+
                 }
                 byte[] entityProjectileClassBytes = ExtensibleClassAdapter.modifyClassBytes(gunClasses.get(0).getSecond(), gunClasses.get(0).getFirst(), methods, false);
                 Class entityProjectileClass = null;
