@@ -16,33 +16,30 @@ public class BytecodeValue {
 
     public BytecodeValue(Object value) {
         this.value = value;
-        if (value instanceof Float || value instanceof Double) {
-            double realValue = Double.parseDouble(value.toString());
-            int exponent = (int) ((Double.doubleToLongBits(realValue) >> 23) & 0xFF);
-            if (exponent >= Float.MIN_EXPONENT && exponent <= Float.MAX_EXPONENT) {
-                if (realValue == 0) {
-                    valueCode = new int[1];
-                    valueCode[0] = Opcodes.FCONST_0;
-                } else if (realValue == 1) {
-                    valueCode = new int[1];
-                    valueCode[0] = Opcodes.FCONST_1;
-                } else if (realValue == 2) {
-                    valueCode = new int[1];
-                    valueCode[0] = Opcodes.FCONST_2;
-                } else {
-                    valueCode = new int[2];
-                    valueCode[0] = Opcodes.LDC;
-                }
-                returnCode = Opcodes.FRETURN;
+        if (value instanceof Float) {
+            float realValue = Float.parseFloat(value.toString());
+            if (realValue == 0) {
+                valueCode = new int[1];
+                valueCode[0] = Opcodes.FCONST_0;
+            } else if (realValue == 1) {
+                valueCode = new int[1];
+                valueCode[0] = Opcodes.FCONST_1;
+            } else if (realValue == 2) {
+                valueCode = new int[1];
+                valueCode[0] = Opcodes.FCONST_2;
             } else {
-                valueCode = new int[3];
-                valueCode[0] = Opcodes.LDC2_W;
-                returnCode = Opcodes.DRETURN;
+                valueCode = new int[2];
+                valueCode[0] = Opcodes.LDC;
             }
+            returnCode = Opcodes.FRETURN;
+        } else if (value instanceof Double) {
+            valueCode = new int[3];
+            valueCode[0] = Opcodes.LDC2_W;
+            returnCode = Opcodes.DRETURN;
         } else if (value instanceof Byte || value instanceof Short || value instanceof Integer || value instanceof Long) {
-            int realValue = Integer.parseInt(value.toString());
+            long realValue = Long.parseLong(value.toString());
             if (realValue >= Byte.MIN_VALUE && realValue <= Byte.MAX_VALUE) {
-                switch (realValue) {
+                switch ((int) realValue) {
                     case -1:
                         valueCode = new int[1];
                         valueCode[0] = Opcodes.ICONST_M1;
@@ -74,15 +71,15 @@ public class BytecodeValue {
                     default:
                         valueCode = new int[2];
                         valueCode[0] = Opcodes.BIPUSH;
-                        valueCode[1] = realValue & 0xFF;
+                        valueCode[1] = (int) realValue & 0xFF;
                         break;
                 }
                 returnCode = Opcodes.IRETURN;
             } else if (realValue >= Short.MIN_VALUE && realValue <= Short.MAX_VALUE) {
                 valueCode = new int[3];
                 valueCode[0] = Opcodes.SIPUSH;
-                valueCode[1] = (realValue >> 8) & 0xFF;
-                valueCode[2] = realValue & 0xFF;
+                valueCode[1] = ((int) realValue >> 8) & 0xFF;
+                valueCode[2] = (int) realValue & 0xFF;
                 returnCode = Opcodes.IRETURN;
             } else if (realValue >= Integer.MIN_VALUE && realValue <= Integer.MAX_VALUE) {
                 valueCode = new int[2];
@@ -90,7 +87,7 @@ public class BytecodeValue {
                 returnCode = Opcodes.IRETURN;
             } else {
                 valueCode = new int[3];
-                valueCode[0] = 0x14;
+                valueCode[0] = Opcodes.LDC2_W;
                 returnCode = Opcodes.LRETURN;
             }
         } else {
