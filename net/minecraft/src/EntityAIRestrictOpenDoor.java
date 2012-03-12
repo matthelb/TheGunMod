@@ -2,12 +2,12 @@ package net.minecraft.src;
 
 public class EntityAIRestrictOpenDoor extends EntityAIBase
 {
-    private EntityCreature field_48160_a;
-    private VillageDoorInfo field_48159_b;
+    private EntityCreature entityObj;
+    private VillageDoorInfo frontDoor;
 
     public EntityAIRestrictOpenDoor(EntityCreature par1EntityCreature)
     {
-        field_48160_a = par1EntityCreature;
+        entityObj = par1EntityCreature;
     }
 
     /**
@@ -15,27 +15,27 @@ public class EntityAIRestrictOpenDoor extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (field_48160_a.worldObj.isDaytime())
+        if (entityObj.worldObj.isDaytime())
         {
             return false;
         }
 
-        Village village = field_48160_a.worldObj.field_48096_A.func_48632_a(MathHelper.floor_double(field_48160_a.posX), MathHelper.floor_double(field_48160_a.posY), MathHelper.floor_double(field_48160_a.posZ), 16);
+        Village village = entityObj.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(entityObj.posX), MathHelper.floor_double(entityObj.posY), MathHelper.floor_double(entityObj.posZ), 16);
 
         if (village == null)
         {
             return false;
         }
 
-        field_48159_b = village.func_48533_b(MathHelper.floor_double(field_48160_a.posX), MathHelper.floor_double(field_48160_a.posY), MathHelper.floor_double(field_48160_a.posZ));
+        frontDoor = village.findNearestDoor(MathHelper.floor_double(entityObj.posX), MathHelper.floor_double(entityObj.posY), MathHelper.floor_double(entityObj.posZ));
 
-        if (field_48159_b == null)
+        if (frontDoor == null)
         {
             return false;
         }
         else
         {
-            return (double)field_48159_b.func_48486_b(MathHelper.floor_double(field_48160_a.posX), MathHelper.floor_double(field_48160_a.posY), MathHelper.floor_double(field_48160_a.posZ)) < 2.25D;
+            return (double)frontDoor.getInsideDistanceSquare(MathHelper.floor_double(entityObj.posX), MathHelper.floor_double(entityObj.posY), MathHelper.floor_double(entityObj.posZ)) < 2.25D;
         }
     }
 
@@ -44,31 +44,40 @@ public class EntityAIRestrictOpenDoor extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        if (field_48160_a.worldObj.isDaytime())
+        if (entityObj.worldObj.isDaytime())
         {
             return false;
         }
         else
         {
-            return !field_48159_b.field_48488_g && field_48159_b.func_48479_a(MathHelper.floor_double(field_48160_a.posX), MathHelper.floor_double(field_48160_a.posZ));
+            return !frontDoor.isDetachedFromVillageFlag && frontDoor.isInside(MathHelper.floor_double(entityObj.posX), MathHelper.floor_double(entityObj.posZ));
         }
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48160_a.func_48333_ak().func_48663_b(false);
-        field_48160_a.func_48333_ak().func_48655_c(false);
+        entityObj.getNavigator().func_48663_b(false);
+        entityObj.getNavigator().func_48655_c(false);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
-        field_48160_a.func_48333_ak().func_48663_b(true);
-        field_48160_a.func_48333_ak().func_48655_c(true);
-        field_48159_b = null;
+        entityObj.getNavigator().func_48663_b(true);
+        entityObj.getNavigator().func_48655_c(true);
+        frontDoor = null;
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
-        field_48159_b.func_48482_e();
+        frontDoor.incrementDoorOpeningRestrictionCounter();
     }
 }

@@ -54,6 +54,9 @@ public class MathHelper
         return par0 >= (double)i ? i : i - 1;
     }
 
+    /**
+     * Long version of floor_double
+     */
     public static long floor_double_long(double par0)
     {
         long l = (long)par0;
@@ -73,6 +76,10 @@ public class MathHelper
         return par0 < 0 ? -par0 : par0;
     }
 
+    /**
+     * Returns the value of the first parameter, clamped to be within the lower and upper limits given by the second and
+     * third parameters.
+     */
     public static int clamp_int(int par0, int par1, int par2)
     {
         if (par0 < par1)

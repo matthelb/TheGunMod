@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class Item
 {
+    /** The RNG used by the Item subclasses. */
     protected static Random itemRand = new Random();
     public static Item itemsList[] = new Item[32000];
     public static Item shovelSteel;
@@ -109,6 +110,8 @@ public class Item
 
     /** The bed as an inventory item. */
     public static Item bed = (new ItemBed(99)).setMaxStackSize(1).setIconCoord(13, 2).setItemName("bed");
+
+    /** Is the redstone repeater (diode) in item form. */
     public static Item redstoneRepeater;
 
     /** The cookie inventory item. */
@@ -116,6 +119,10 @@ public class Item
 
     /** The map item */
     public static ItemMap map = (ItemMap)(new ItemMap(102)).setIconCoord(12, 3).setItemName("map");
+
+    /**
+     * Item introduced on 1.7 version, is a shear to cut leaves (you can keep the block) or get wool from sheeps.
+     */
     public static ItemShears shears = (ItemShears)(new ItemShears(103)).setIconCoord(13, 5).setItemName("shears");
     public static Item melon = (new ItemFood(104, 2, 0.3F, false)).setIconCoord(13, 6).setItemName("melon");
     public static Item pumpkinSeeds;
@@ -141,8 +148,16 @@ public class Item
     public static Item eyeOfEnder = (new ItemEnderEye(125)).setIconCoord(11, 9).setItemName("eyeOfEnder");
     public static Item speckledMelon;
     public static Item monsterPlacer = (new ItemMonsterPlacer(127)).setIconCoord(9, 9).setItemName("monsterPlacer");
-    public static Item field_48389_bC = (new ItemExpBottle(128)).setIconCoord(11, 10).setItemName("expBottle");
-    public static Item field_48388_bD = (new ItemFireball(129)).setIconCoord(14, 2).setItemName("fireball");
+
+    /**
+     * Bottle o' Enchanting. Drops between 1 and 3 experience orbs when thrown.
+     */
+    public static Item expBottle = (new ItemExpBottle(128)).setIconCoord(11, 10).setItemName("expBottle");
+
+    /**
+     * Fire Charge. When used in a dispenser it fires a fireball similiar to a Ghast's.
+     */
+    public static Item fireballCharge = (new ItemFireball(129)).setIconCoord(14, 2).setItemName("fireball");
     public static Item record13 = (new ItemRecord(2000, "13")).setIconCoord(0, 15).setItemName("record");
     public static Item recordCat = (new ItemRecord(2001, "cat")).setIconCoord(1, 15).setItemName("record");
     public static Item recordBlocks = (new ItemRecord(2002, "blocks")).setIconCoord(2, 15).setItemName("record");
@@ -303,6 +318,10 @@ public class Item
         return maxDamage > 0 && !hasSubtypes;
     }
 
+    /**
+     * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
+     * the damage on the stack.
+     */
     public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
     {
         return false;
@@ -313,6 +332,9 @@ public class Item
         return false;
     }
 
+    /**
+     * Returns the damage against a given entity.
+     */
     public int getDamageVsEntity(Entity par1Entity)
     {
         return 1;
@@ -399,10 +421,17 @@ public class Item
         return StatCollector.translateToLocal((new StringBuilder()).append(getItemName()).append(".name").toString());
     }
 
+    /**
+     * Called each tick as long the item is on a player inventory. Uses by maps to check if is on a player hand and
+     * update it's contents.
+     */
     public void onUpdate(ItemStack itemstack, World world, Entity entity, int i, boolean flag)
     {
     }
 
+    /**
+     * Called when item is crafted/smelted. Used only by maps so far.
+     */
     public void onCreated(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
     }
@@ -428,6 +457,9 @@ public class Item
         return 0;
     }
 
+    /**
+     * called when the player releases the use item button. Args: itemstack, world, entityplayer, itemInUseCount
+     */
     public void onPlayerStoppedUsing(ItemStack itemstack, World world, EntityPlayer entityplayer, int i)
     {
     }
@@ -471,7 +503,7 @@ public class Item
         float f1 = par2EntityPlayer.prevRotationPitch + (par2EntityPlayer.rotationPitch - par2EntityPlayer.prevRotationPitch) * f;
         float f2 = par2EntityPlayer.prevRotationYaw + (par2EntityPlayer.rotationYaw - par2EntityPlayer.prevRotationYaw) * f;
         double d = par2EntityPlayer.prevPosX + (par2EntityPlayer.posX - par2EntityPlayer.prevPosX) * (double)f;
-        double d1 = (par2EntityPlayer.prevPosY + (par2EntityPlayer.posY - par2EntityPlayer.prevPosY) * (double)f + 1.62D) - (double)par2EntityPlayer.yOffset;
+        double d1 = (par2EntityPlayer.prevPosY + (par2EntityPlayer.posY - par2EntityPlayer.prevPosY) * (double)f + 1.6200000000000001D) - (double)par2EntityPlayer.yOffset;
         double d2 = par2EntityPlayer.prevPosZ + (par2EntityPlayer.posZ - par2EntityPlayer.prevPosZ) * (double)f;
         Vec3D vec3d = Vec3D.createVector(d, d1, d2);
         float f3 = MathHelper.cos(-f2 * 0.01745329F - (float)Math.PI);
@@ -487,6 +519,9 @@ public class Item
         return movingobjectposition;
     }
 
+    /**
+     * Return the enchantability factor of the item, most of the time is based on material.
+     */
     public int getItemEnchantability()
     {
         return 0;

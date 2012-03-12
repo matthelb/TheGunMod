@@ -150,7 +150,7 @@ public class NetLoginHandler extends NetHandler
             ChunkCoordinates chunkcoordinates = worldserver.getSpawnPoint();
             entityplayermp.itemInWorldManager.func_35695_b(worldserver.getWorldInfo().getGameType());
             NetServerHandler netserverhandler = new NetServerHandler(mcServer, netManager, entityplayermp);
-            netserverhandler.sendPacket(new Packet1Login("", entityplayermp.entityId, worldserver.getWorldInfo().getTerrainType(), entityplayermp.itemInWorldManager.getGameType(), worldserver.worldProvider.worldType, (byte)worldserver.difficultySetting, (byte)worldserver.func_48095_y(), (byte)mcServer.configManager.getMaxPlayers()));
+            netserverhandler.sendPacket(new Packet1Login("", entityplayermp.entityId, worldserver.getWorldInfo().getTerrainType(), entityplayermp.itemInWorldManager.getGameType(), worldserver.worldProvider.worldType, (byte)worldserver.difficultySetting, (byte)worldserver.getWorldHeight(), (byte)mcServer.configManager.getMaxPlayers()));
             netserverhandler.sendPacket(new Packet6SpawnPosition(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
             mcServer.configManager.func_28170_a(entityplayermp, worldserver);
             mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat((new StringBuilder()).append("\247e").append(entityplayermp.username).append(" joined the game.").toString()));

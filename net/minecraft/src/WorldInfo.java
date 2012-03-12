@@ -4,6 +4,7 @@ import java.util.List;
 
 public class WorldInfo
 {
+    /** Holds the seed of the currently world. */
     private long randomSeed;
     private WorldType terrainType;
 
@@ -21,9 +22,13 @@ public class WorldInfo
 
     /** The last time the player was in this world. */
     private long lastTimePlayed;
+
+    /** The size of entire save of current world on the disk, isn't exactly. */
     private long sizeOnDisk;
     private NBTTagCompound playerTag;
     private int dimension;
+
+    /** The name of the save defined at world creation. */
     private String levelName;
 
     /** Introduced in beta 1.3, is the save version for future control. */
@@ -34,6 +39,8 @@ public class WorldInfo
 
     /** holds the time of the rain */
     private int rainTime;
+
+    /** Is thunderbolts failing now? */
     private boolean thundering;
 
     /** hold the during of the thunder */
@@ -145,6 +152,9 @@ public class WorldInfo
         hardcore = par1WorldInfo.hardcore;
     }
 
+    /**
+     * Gets the NBTTagCompound for the worldInfo
+     */
     public NBTTagCompound getNBTTagCompound()
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
@@ -203,26 +213,41 @@ public class WorldInfo
         }
     }
 
+    /**
+     * Returns the seed of current world.
+     */
     public long getSeed()
     {
         return randomSeed;
     }
 
+    /**
+     * Returns the x spawn position
+     */
     public int getSpawnX()
     {
         return spawnX;
     }
 
+    /**
+     * Return the Y axis spawning point of the player.
+     */
     public int getSpawnY()
     {
         return spawnY;
     }
 
+    /**
+     * Returns the z spawn position
+     */
     public int getSpawnZ()
     {
         return spawnZ;
     }
 
+    /**
+     * Get current world time
+     */
     public long getWorldTime()
     {
         return worldTime;
@@ -233,6 +258,9 @@ public class WorldInfo
         return dimension;
     }
 
+    /**
+     * Set current world time
+     */
     public void setWorldTime(long par1)
     {
         worldTime = par1;
@@ -253,11 +281,17 @@ public class WorldInfo
         levelName = par1Str;
     }
 
+    /**
+     * Returns the save version of this world
+     */
     public int getSaveVersion()
     {
         return saveVersion;
     }
 
+    /**
+     * Sets the save version of the world
+     */
     public void setSaveVersion(int par1)
     {
         saveVersion = par1;

@@ -7,8 +7,16 @@ public class BiomeCache
 {
     /** The world chunk manager object. */
     private final WorldChunkManager chunkManager;
+
+    /** The last time this BiomeCache was cleaned, in milliseconds. */
     private long lastCleanupTime;
+
+    /**
+     * The map of keys to BiomeCacheBlocks. Keys are based on the chunk x, z coordinates as (x | z << 32).
+     */
     private LongHashMap cacheMap;
+
+    /** The list of cached BiomeCacheBlocks */
     private List cache;
 
     public BiomeCache(WorldChunkManager par1WorldChunkManager)
@@ -75,6 +83,9 @@ public class BiomeCache
         }
     }
 
+    /**
+     * Returns the array of cached biome types in the BiomeCacheBlock at the given location.
+     */
     public BiomeGenBase[] getCachedBiomes(int par1, int par2)
     {
         return getBiomeCacheBlock(par1, par2).biomes;

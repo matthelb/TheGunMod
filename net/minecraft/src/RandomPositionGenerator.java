@@ -41,10 +41,10 @@ public class RandomPositionGenerator
         float f = -99999F;
         boolean flag1;
 
-        if (par0EntityCreature.func_48329_ax())
+        if (par0EntityCreature.hasHome())
         {
-            double d = par0EntityCreature.func_48323_au().getSqDistanceTo(MathHelper.floor_double(par0EntityCreature.posX), MathHelper.floor_double(par0EntityCreature.posY), MathHelper.floor_double(par0EntityCreature.posZ)) + 4D;
-            flag1 = d < (double)(par0EntityCreature.func_48330_av() + (float)par1);
+            double d = par0EntityCreature.getHomePosition().getEuclideanDistanceTo(MathHelper.floor_double(par0EntityCreature.posX), MathHelper.floor_double(par0EntityCreature.posY), MathHelper.floor_double(par0EntityCreature.posZ)) + 4D;
+            flag1 = d < (double)(par0EntityCreature.getMaximumHomeDistance() + (float)par1);
         }
         else
         {
@@ -66,7 +66,7 @@ public class RandomPositionGenerator
             j1 += MathHelper.floor_double(par0EntityCreature.posY);
             k1 += MathHelper.floor_double(par0EntityCreature.posZ);
 
-            if (flag1 && !par0EntityCreature.func_48328_e(i1, j1, k1))
+            if (flag1 && !par0EntityCreature.isWithinHomeDistance(i1, j1, k1))
             {
                 continue;
             }

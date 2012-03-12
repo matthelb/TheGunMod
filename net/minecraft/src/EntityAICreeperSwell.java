@@ -8,7 +8,7 @@ public class EntityAICreeperSwell extends EntityAIBase
     public EntityAICreeperSwell(EntityCreeper par1EntityCreeper)
     {
         field_48244_a = par1EntityCreeper;
-        func_46087_a(1);
+        setMutexBits(1);
     }
 
     /**
@@ -16,21 +16,30 @@ public class EntityAICreeperSwell extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLiving entityliving = field_48244_a.func_48331_as();
+        EntityLiving entityliving = field_48244_a.getAttackTarget();
         return field_48244_a.getCreeperState() > 0 || entityliving != null && field_48244_a.getDistanceSqToEntity(entityliving) < 9D;
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48244_a.func_48333_ak().func_48662_f();
-        field_48243_b = field_48244_a.func_48331_as();
+        field_48244_a.getNavigator().func_48662_f();
+        field_48243_b = field_48244_a.getAttackTarget();
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48243_b = null;
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         if (field_48243_b == null)
@@ -45,7 +54,7 @@ public class EntityAICreeperSwell extends EntityAIBase
             return;
         }
 
-        if (!field_48244_a.func_48318_al().func_48546_a(field_48243_b))
+        if (!field_48244_a.func_48318_al().canSee(field_48243_b))
         {
             field_48244_a.setCreeperState(-1);
             return;

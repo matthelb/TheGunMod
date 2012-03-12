@@ -70,11 +70,11 @@ public class ContainerWorkbench extends Container
 
         for (int i = 0; i < 9; i++)
         {
-            ItemStack itemstack = craftMatrix.func_48315_b(i);
+            ItemStack itemstack = craftMatrix.getStackInSlotOnClosing(i);
 
             if (itemstack != null)
             {
-                par1EntityPlayer.func_48348_b(itemstack);
+                par1EntityPlayer.dropPlayerItem(itemstack);
             }
         }
     }

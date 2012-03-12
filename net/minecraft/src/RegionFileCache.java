@@ -80,12 +80,18 @@ public class RegionFileCache
         regionsByFilename.clear();
     }
 
+    /**
+     * Returns an input stream for the specified chunk. Args: worldDir, chunkX, chunkZ
+     */
     public static DataInputStream getChunkInputStream(File par0File, int par1, int par2)
     {
         RegionFile regionfile = createOrLoadRegionFile(par0File, par1, par2);
         return regionfile.getChunkDataInputStream(par1 & 0x1f, par2 & 0x1f);
     }
 
+    /**
+     * Returns an output stream for the specified chunk. Args: worldDir, chunkX, chunkZ
+     */
     public static DataOutputStream getChunkOutputStream(File par0File, int par1, int par2)
     {
         RegionFile regionfile = createOrLoadRegionFile(par0File, par1, par2);

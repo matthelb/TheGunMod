@@ -17,7 +17,7 @@ public class EntityAIWatchClosest extends EntityAIBase
         field_48240_f = par2Class;
         field_46106_d = par3;
         field_48241_e = 0.02F;
-        func_46087_a(2);
+        setMutexBits(2);
     }
 
     public EntityAIWatchClosest(EntityLiving par1EntityLiving, Class par2Class, float par3, float par4)
@@ -26,7 +26,7 @@ public class EntityAIWatchClosest extends EntityAIBase
         field_48240_f = par2Class;
         field_46106_d = par3;
         field_48241_e = par4;
-        func_46087_a(2);
+        setMutexBits(2);
     }
 
     /**
@@ -45,7 +45,7 @@ public class EntityAIWatchClosest extends EntityAIBase
         }
         else
         {
-            field_48242_b = field_46110_a.worldObj.func_48085_a(field_48240_f, field_46110_a.boundingBox.expand(field_46106_d, 3D, field_46106_d), field_46110_a);
+            field_48242_b = field_46110_a.worldObj.findNearestEntityWithinAABB(field_48240_f, field_46110_a.boundingBox.expand(field_46106_d, 3D, field_46106_d), field_46110_a);
         }
 
         return field_48242_b != null;
@@ -71,16 +71,25 @@ public class EntityAIWatchClosest extends EntityAIBase
         }
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_46107_e = 40 + field_46110_a.getRNG().nextInt(40);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48242_b = null;
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         field_46110_a.getLookHelper().setLookPosition(field_48242_b.posX, field_48242_b.posY + (double)field_48242_b.getEyeHeight(), field_48242_b.posZ, 10F, field_46110_a.getVerticalFaceSpeed());

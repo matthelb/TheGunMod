@@ -23,6 +23,9 @@ public class MapData extends WorldSavedData
         playersVisibleOnMap = new ArrayList();
     }
 
+    /**
+     * reads in data from the NBTTagCompound into this MapDataBase
+     */
     public void readFromNBT(NBTTagCompound par1NBTTagCompound)
     {
         dimension = par1NBTTagCompound.getByte("dimension");
@@ -76,6 +79,9 @@ public class MapData extends WorldSavedData
         }
     }
 
+    /**
+     * write data to NBTTagCompound from this MapDataBase, similar to Entities and TileEntities
+     */
     public void writeToNBT(NBTTagCompound par1NBTTagCompound)
     {
         par1NBTTagCompound.setByte("dimension", dimension);

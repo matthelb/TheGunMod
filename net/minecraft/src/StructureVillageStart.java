@@ -4,6 +4,7 @@ import java.util.*;
 
 class StructureVillageStart extends StructureStart
 {
+    /** 'well ... thats what it does' */
     private boolean hasMoreThanTwoComponents;
 
     public StructureVillageStart(World par1World, Random par2Random, int par3, int par4, int par5)
@@ -55,6 +56,9 @@ class StructureVillageStart extends StructureStart
         hasMoreThanTwoComponents = l > 2;
     }
 
+    /**
+     * 'currently only defined for Villages, returns true if Village has more than 2 non-road components'
+     */
     public boolean isSizeableStructure()
     {
         return hasMoreThanTwoComponents;

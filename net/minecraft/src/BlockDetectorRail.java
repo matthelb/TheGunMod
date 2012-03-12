@@ -96,6 +96,9 @@ public class BlockDetectorRail extends BlockRail
         }
     }
 
+    /**
+     * Update the detector rail power state if a minecart enter, stays or leave the block.
+     */
     private void setStateIfMinecartInteractsWithRail(World par1World, int par2, int par3, int par4, int par5)
     {
         boolean flag = (par5 & 8) != 0;

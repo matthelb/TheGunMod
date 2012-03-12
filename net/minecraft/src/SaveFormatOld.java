@@ -67,6 +67,9 @@ public class SaveFormatOld implements ISaveFormat
         return null;
     }
 
+    /**
+     * Returns back a loader for the specified save directory
+     */
     public ISaveHandler getSaveLoader(String par1Str, boolean par2)
     {
         return new SaveHandler(savesDirectory, par1Str, par2);

@@ -45,7 +45,7 @@ public class EntityFishHook extends Entity
         ticksCatchable = 0;
         bobber = null;
         setSize(0.25F, 0.25F);
-        ignoreFrustrumCheck = true;
+        ignoreFrustumCheck = true;
     }
 
     public EntityFishHook(World par1World, EntityPlayer par2EntityPlayer)
@@ -60,13 +60,13 @@ public class EntityFishHook extends Entity
         ticksInAir = 0;
         ticksCatchable = 0;
         bobber = null;
-        ignoreFrustrumCheck = true;
+        ignoreFrustumCheck = true;
         angler = par2EntityPlayer;
         angler.fishEntity = this;
         setSize(0.25F, 0.25F);
-        setLocationAndAngles(par2EntityPlayer.posX, (par2EntityPlayer.posY + 1.62D) - (double)par2EntityPlayer.yOffset, par2EntityPlayer.posZ, par2EntityPlayer.rotationYaw, par2EntityPlayer.rotationPitch);
+        setLocationAndAngles(par2EntityPlayer.posX, (par2EntityPlayer.posY + 1.6200000000000001D) - (double)par2EntityPlayer.yOffset, par2EntityPlayer.posZ, par2EntityPlayer.rotationYaw, par2EntityPlayer.rotationPitch);
         posX -= MathHelper.cos((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
-        posY -= 0.1D;
+        posY -= 0.10000000149011612D;
         posZ -= MathHelper.sin((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
         setPosition(posX, posY, posZ);
         yOffset = 0.0F;
@@ -87,9 +87,9 @@ public class EntityFishHook extends Entity
         par1 /= f;
         par3 /= f;
         par5 /= f;
-        par1 += rand.nextGaussian() * 0.0075D * (double)par8;
-        par3 += rand.nextGaussian() * 0.0075D * (double)par8;
-        par5 += rand.nextGaussian() * 0.0075D * (double)par8;
+        par1 += rand.nextGaussian() * 0.0074999998323619366D * (double)par8;
+        par3 += rand.nextGaussian() * 0.0074999998323619366D * (double)par8;
+        par5 += rand.nextGaussian() * 0.0074999998323619366D * (double)par8;
         par1 *= par7;
         par3 *= par7;
         par5 *= par7;
@@ -148,7 +148,7 @@ public class EntityFishHook extends Entity
                 else
                 {
                     posX = bobber.posX;
-                    posY = bobber.boundingBox.minY + (double)bobber.height * 0.8D;
+                    posY = bobber.boundingBox.minY + (double)bobber.height * 0.80000000000000004D;
                     posZ = bobber.posZ;
                     return;
                 }
@@ -311,7 +311,7 @@ public class EntityFishHook extends Entity
                 if (rand.nextInt(c) == 0)
                 {
                     ticksCatchable = rand.nextInt(30) + 10;
-                    motionY -= 0.2D;
+                    motionY -= 0.20000000298023224D;
                     worldObj.playSoundAtEntity(this, "random.splash", 0.25F, 1.0F + (rand.nextFloat() - rand.nextFloat()) * 0.4F);
                     float f3 = MathHelper.floor_double(boundingBox.minY);
 
@@ -334,16 +334,16 @@ public class EntityFishHook extends Entity
 
         if (ticksCatchable > 0)
         {
-            motionY -= (double)(rand.nextFloat() * rand.nextFloat() * rand.nextFloat()) * 0.2D;
+            motionY -= (double)(rand.nextFloat() * rand.nextFloat() * rand.nextFloat()) * 0.20000000000000001D;
         }
 
         double d7 = d5 * 2D - 1.0D;
-        motionY += 0.04D * d7;
+        motionY += 0.039999999105930328D * d7;
 
         if (d5 > 0.0D)
         {
-            f1 = (float)((double)f1 * 0.9D);
-            motionY *= 0.8D;
+            f1 = (float)((double)f1 * 0.90000000000000002D);
+            motionY *= 0.80000000000000004D;
         }
 
         motionX *= f1;
@@ -388,9 +388,9 @@ public class EntityFishHook extends Entity
             double d2 = angler.posY - posY;
             double d4 = angler.posZ - posZ;
             double d6 = MathHelper.sqrt_double(d * d + d2 * d2 + d4 * d4);
-            double d8 = 0.1D;
+            double d8 = 0.10000000000000001D;
             bobber.motionX += d * d8;
-            bobber.motionY += d2 * d8 + (double)MathHelper.sqrt_double(d6) * 0.08D;
+            bobber.motionY += d2 * d8 + (double)MathHelper.sqrt_double(d6) * 0.080000000000000002D;
             bobber.motionZ += d4 * d8;
             byte0 = 3;
         }
@@ -401,9 +401,9 @@ public class EntityFishHook extends Entity
             double d3 = angler.posY - posY;
             double d5 = angler.posZ - posZ;
             double d7 = MathHelper.sqrt_double(d1 * d1 + d3 * d3 + d5 * d5);
-            double d9 = 0.1D;
+            double d9 = 0.10000000000000001D;
             entityitem.motionX = d1 * d9;
-            entityitem.motionY = d3 * d9 + (double)MathHelper.sqrt_double(d7) * 0.08D;
+            entityitem.motionY = d3 * d9 + (double)MathHelper.sqrt_double(d7) * 0.080000000000000002D;
             entityitem.motionZ = d5 * d9;
             worldObj.spawnEntityInWorld(entityitem);
             angler.addStat(StatList.fishCaughtStat, 1);

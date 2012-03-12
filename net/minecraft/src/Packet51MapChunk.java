@@ -38,7 +38,7 @@ public class Packet51MapChunk extends Packet
 
         for (int k = 0; k < aextendedblockstorage.length; k++)
         {
-            if (aextendedblockstorage[k] == null || par2 && aextendedblockstorage[k].func_48595_a() || (par3 & 1 << k) == 0)
+            if (aextendedblockstorage[k] == null || par2 && aextendedblockstorage[k].getIsEmpty() || (par3 & 1 << k) == 0)
             {
                 continue;
             }
@@ -46,7 +46,7 @@ public class Packet51MapChunk extends Packet
             field_48108_c |= 1 << k;
             i++;
 
-            if (aextendedblockstorage[k].func_48601_h() != null)
+            if (aextendedblockstorage[k].getBlockMSBArray() != null)
             {
                 field_48105_d |= 1 << k;
                 j++;
@@ -70,7 +70,7 @@ public class Packet51MapChunk extends Packet
 
         for (int j1 = 0; j1 < aextendedblockstorage.length; j1++)
         {
-            if (aextendedblockstorage[j1] != null && (!par2 || !aextendedblockstorage[j1].func_48595_a()) && (par3 & 1 << j1) != 0)
+            if (aextendedblockstorage[j1] != null && (!par2 || !aextendedblockstorage[j1].getIsEmpty()) && (par3 & 1 << j1) != 0)
             {
                 byte abyte2[] = aextendedblockstorage[j1].func_48590_g();
                 System.arraycopy(abyte2, 0, abyte0, i1, abyte2.length);
@@ -80,7 +80,7 @@ public class Packet51MapChunk extends Packet
 
         for (int k1 = 0; k1 < aextendedblockstorage.length; k1++)
         {
-            if (aextendedblockstorage[k1] != null && (!par2 || !aextendedblockstorage[k1].func_48595_a()) && (par3 & 1 << k1) != 0)
+            if (aextendedblockstorage[k1] != null && (!par2 || !aextendedblockstorage[k1].getIsEmpty()) && (par3 & 1 << k1) != 0)
             {
                 NibbleArray nibblearray = aextendedblockstorage[k1].func_48594_i();
                 System.arraycopy(nibblearray.data, 0, abyte0, i1, nibblearray.data.length);
@@ -90,9 +90,9 @@ public class Packet51MapChunk extends Packet
 
         for (int l1 = 0; l1 < aextendedblockstorage.length; l1++)
         {
-            if (aextendedblockstorage[l1] != null && (!par2 || !aextendedblockstorage[l1].func_48595_a()) && (par3 & 1 << l1) != 0)
+            if (aextendedblockstorage[l1] != null && (!par2 || !aextendedblockstorage[l1].getIsEmpty()) && (par3 & 1 << l1) != 0)
             {
-                NibbleArray nibblearray1 = aextendedblockstorage[l1].func_48600_j();
+                NibbleArray nibblearray1 = aextendedblockstorage[l1].getBlocklightArray();
                 System.arraycopy(nibblearray1.data, 0, abyte0, i1, nibblearray1.data.length);
                 i1 += nibblearray1.data.length;
             }
@@ -100,9 +100,9 @@ public class Packet51MapChunk extends Packet
 
         for (int i2 = 0; i2 < aextendedblockstorage.length; i2++)
         {
-            if (aextendedblockstorage[i2] != null && (!par2 || !aextendedblockstorage[i2].func_48595_a()) && (par3 & 1 << i2) != 0)
+            if (aextendedblockstorage[i2] != null && (!par2 || !aextendedblockstorage[i2].getIsEmpty()) && (par3 & 1 << i2) != 0)
             {
-                NibbleArray nibblearray2 = aextendedblockstorage[i2].func_48605_k();
+                NibbleArray nibblearray2 = aextendedblockstorage[i2].getSkylightArray();
                 System.arraycopy(nibblearray2.data, 0, abyte0, i1, nibblearray2.data.length);
                 i1 += nibblearray2.data.length;
             }
@@ -112,9 +112,9 @@ public class Packet51MapChunk extends Packet
         {
             for (int j2 = 0; j2 < aextendedblockstorage.length; j2++)
             {
-                if (aextendedblockstorage[j2] != null && (!par2 || !aextendedblockstorage[j2].func_48595_a()) && aextendedblockstorage[j2].func_48601_h() != null && (par3 & 1 << j2) != 0)
+                if (aextendedblockstorage[j2] != null && (!par2 || !aextendedblockstorage[j2].getIsEmpty()) && aextendedblockstorage[j2].getBlockMSBArray() != null && (par3 & 1 << j2) != 0)
                 {
-                    NibbleArray nibblearray3 = aextendedblockstorage[j2].func_48601_h();
+                    NibbleArray nibblearray3 = aextendedblockstorage[j2].getBlockMSBArray();
                     System.arraycopy(nibblearray3.data, 0, abyte0, i1, nibblearray3.data.length);
                     i1 += nibblearray3.data.length;
                 }

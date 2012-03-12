@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 public class SpawnListEntry extends WeightedRandomChoice
 {
+    /** Holds the class of the entity to be spawned. */
     public Class entityClass;
     public int minGroupCount;
     public int maxGroupCount;

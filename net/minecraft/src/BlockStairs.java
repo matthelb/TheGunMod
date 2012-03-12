@@ -124,6 +124,9 @@ public class BlockStairs extends Block
         modelBlock.onBlockDestroyedByPlayer(par1World, par2, par3, par4, par5);
     }
 
+    /**
+     * Returns how much this block can resist explosions from the passed in entity.
+     */
     public float getExplosionResistance(Entity par1Entity)
     {
         return modelBlock.getExplosionResistance(par1Entity);

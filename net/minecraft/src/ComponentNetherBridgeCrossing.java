@@ -12,6 +12,9 @@ public class ComponentNetherBridgeCrossing extends ComponentNetherBridgePiece
         boundingBox = par3StructureBoundingBox;
     }
 
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
         getNextComponentNormal((ComponentNetherBridgeStartPiece)par1StructureComponent, par2List, par3Random, 2, 0, false);
@@ -36,6 +39,10 @@ public class ComponentNetherBridgeCrossing extends ComponentNetherBridgePiece
         }
     }
 
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         fillWithBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 6, 1, 6, Block.netherBrick.blockID, Block.netherBrick.blockID, false);

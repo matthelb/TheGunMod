@@ -40,6 +40,10 @@ public class ItemTool extends Item
         return 1.0F;
     }
 
+    /**
+     * Current implementations of this method in child classes do not use the entry argument beside ev. They just raise
+     * the damage on the stack.
+     */
     public boolean hitEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving, EntityLiving par3EntityLiving)
     {
         par1ItemStack.damageItem(2, par3EntityLiving);
@@ -52,11 +56,17 @@ public class ItemTool extends Item
         return true;
     }
 
+    /**
+     * Returns the damage against a given entity.
+     */
     public int getDamageVsEntity(Entity par1Entity)
     {
         return damageVsEntity;
     }
 
+    /**
+     * Return the enchantability factor of the item, most of the time is based on material.
+     */
     public int getItemEnchantability()
     {
         return toolMaterial.getEnchantability();

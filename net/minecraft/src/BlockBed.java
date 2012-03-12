@@ -257,16 +257,25 @@ public class BlockBed extends BlockDirectional
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5625F, 1.0F);
     }
 
+    /**
+     * Returns whether or not this bed block is the foot of the bed.
+     */
     public static boolean isBlockFootOfBed(int par0)
     {
         return (par0 & 8) != 0;
     }
 
+    /**
+     * Return whether or not the bed is occupied.
+     */
     public static boolean isBedOccupied(int par0)
     {
         return (par0 & 4) != 0;
     }
 
+    /**
+     * Sets whether or not the bed is occupied.
+     */
     public static void setBedOccupied(World par0World, int par1, int par2, int par3, boolean par4)
     {
         int i = par0World.getBlockMetadata(par1, par2, par3);
@@ -283,6 +292,9 @@ public class BlockBed extends BlockDirectional
         par0World.setBlockMetadataWithNotify(par1, par2, par3, i);
     }
 
+    /**
+     * Gets the nearest empty chunk coordinates for the player to wake up from a bed into.
+     */
     public static ChunkCoordinates getNearestEmptyChunkCoordinates(World par0World, int par1, int par2, int par3, int par4)
     {
         int i = par0World.getBlockMetadata(par1, par2, par3);

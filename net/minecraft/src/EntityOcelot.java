@@ -12,9 +12,9 @@ public class EntityOcelot extends EntityTameable
         super(par1World);
         texture = "/mob/ozelot.png";
         setSize(0.6F, 0.8F);
-        func_48333_ak().func_48656_a(true);
+        getNavigator().func_48656_a(true);
         tasks.addTask(1, new EntityAISwimming(this));
-        tasks.addTask(2, field_48374_a);
+        tasks.addTask(2, aiSit);
         tasks.addTask(3, field_48377_b = new EntityAITempt(this, 0.18F, Item.fishRaw.shiftedIndex, true));
         tasks.addTask(4, new EntityAIAvoidEntity(this, net.minecraft.src.EntityPlayer.class, 16F, 0.23F, 0.4F));
         tasks.addTask(5, new EntityAIFollowOwner(this, 0.3F, 10F, 5F));
@@ -23,7 +23,7 @@ public class EntityOcelot extends EntityTameable
         tasks.addTask(8, new EntityAIMate(this, 0.23F));
         tasks.addTask(9, new EntityAIWander(this, 0.23F));
         tasks.addTask(10, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 10F));
-        field_48337_aM.addTask(1, new EntityAITargetNonTamed(this, net.minecraft.src.EntityChicken.class, 14F, 750, false));
+        targetTasks.addTask(1, new EntityAITargetNonTamed(this, net.minecraft.src.EntityChicken.class, 14F, 750, false));
     }
 
     protected void entityInit()
@@ -32,7 +32,10 @@ public class EntityOcelot extends EntityTameable
         dataWatcher.addObject(18, Byte.valueOf((byte)0));
     }
 
-    public void func_48326_g()
+    /**
+     * main AI tick function, replaces updateEntityActionState
+     */
+    public void updateAITick()
     {
         if (!getMoveHelper().func_48438_a())
         {
@@ -41,7 +44,7 @@ public class EntityOcelot extends EntityTameable
         }
         else
         {
-            float f = getMoveHelper().func_48436_b();
+            float f = getMoveHelper().getSpeed();
 
             if (f == 0.18F)
             {
@@ -66,7 +69,7 @@ public class EntityOcelot extends EntityTameable
      */
     protected boolean canDespawn()
     {
-        return !func_48373_u_();
+        return !isTamed();
     }
 
     /**
@@ -112,7 +115,7 @@ public class EntityOcelot extends EntityTameable
      */
     protected String getLivingSound()
     {
-        if (func_48373_u_())
+        if (isTamed())
         {
             if (func_48363_r_())
             {
@@ -176,7 +179,7 @@ public class EntityOcelot extends EntityTameable
      */
     public boolean attackEntityFrom(DamageSource par1DamageSource, int par2)
     {
-        field_48374_a.func_48210_a(false);
+        aiSit.func_48210_a(false);
         return super.attackEntityFrom(par1DamageSource, par2);
     }
 
@@ -194,7 +197,7 @@ public class EntityOcelot extends EntityTameable
     {
         ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
 
-        if (!func_48373_u_())
+        if (!isTamed())
         {
             if (field_48377_b.func_48261_f() && itemstack != null && itemstack.itemID == Item.fishRaw.shiftedIndex && par1EntityPlayer.getDistanceSqToEntity(this) < 9D)
             {
@@ -209,11 +212,11 @@ public class EntityOcelot extends EntityTameable
                 {
                     if (rand.nextInt(3) == 0)
                     {
-                        func_48366_b(true);
+                        setTamed(true);
                         func_48376_c_(1 + worldObj.rand.nextInt(3));
-                        func_48372_a(par1EntityPlayer.username);
+                        setOwner(par1EntityPlayer.username);
                         func_48370_a(true);
-                        field_48374_a.func_48210_a(true);
+                        aiSit.func_48210_a(true);
                         worldObj.setEntityState(this, (byte)7);
                     }
                     else
@@ -227,9 +230,9 @@ public class EntityOcelot extends EntityTameable
             return true;
         }
 
-        if (par1EntityPlayer.username.equalsIgnoreCase(func_48367_A()) && !worldObj.isRemote && !isWheat(itemstack))
+        if (par1EntityPlayer.username.equalsIgnoreCase(getOwnerName()) && !worldObj.isRemote && !isWheat(itemstack))
         {
-            field_48374_a.func_48210_a(!func_48371_v_());
+            aiSit.func_48210_a(!isSitting());
         }
 
         return super.interact(par1EntityPlayer);
@@ -242,10 +245,10 @@ public class EntityOcelot extends EntityTameable
     {
         EntityOcelot entityocelot = new EntityOcelot(worldObj);
 
-        if (func_48373_u_())
+        if (isTamed())
         {
-            entityocelot.func_48372_a(func_48367_A());
-            entityocelot.func_48366_b(true);
+            entityocelot.setOwner(getOwnerName());
+            entityocelot.setTamed(true);
             entityocelot.func_48376_c_(func_48375_r());
         }
 
@@ -267,7 +270,7 @@ public class EntityOcelot extends EntityTameable
             return false;
         }
 
-        if (!func_48373_u_())
+        if (!isTamed())
         {
             return false;
         }
@@ -279,7 +282,7 @@ public class EntityOcelot extends EntityTameable
 
         EntityOcelot entityocelot = (EntityOcelot)par1EntityAnimal;
 
-        if (!entityocelot.func_48373_u_())
+        if (!entityocelot.isTamed())
         {
             return false;
         }
@@ -333,7 +336,7 @@ public class EntityOcelot extends EntityTameable
 
     public String getUsername()
     {
-        if (func_48373_u_())
+        if (isTamed())
         {
             return "entity.Cat.name";
         }

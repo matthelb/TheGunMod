@@ -6,6 +6,9 @@ public class WorldProviderEnd extends WorldProvider
     {
     }
 
+    /**
+     * creates a new world chunk manager for WorldProvider
+     */
     public void registerWorldChunkManager()
     {
         worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.sky, 0.5F, 0.0F);
@@ -21,11 +24,17 @@ public class WorldProviderEnd extends WorldProvider
         return new ChunkProviderEnd(worldObj, worldObj.getSeed());
     }
 
+    /**
+     * Calculates the angle of sun and moon in the sky relative to a specified time (usually worldTime)
+     */
     public float calculateCelestialAngle(long par1, float par3)
     {
         return 0.0F;
     }
 
+    /**
+     * True if the player can respawn in this dimension (true = overworld, false = nether).
+     */
     public boolean canRespawnHere()
     {
         return false;

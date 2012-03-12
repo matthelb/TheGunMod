@@ -4,11 +4,35 @@ import java.util.List;
 
 public class Achievement extends StatBase
 {
+    /**
+     * Is the column (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed.
+     */
     public final int displayColumn;
+
+    /**
+     * Is the row (related to center of achievement gui, in 24 pixels unit) that the achievement will be displayed.
+     */
     public final int displayRow;
+
+    /**
+     * Holds the parent achievement, that must be taken before this achievement is avaiable.
+     */
     public final Achievement parentAchievement;
+
+    /**
+     * Holds the description of the achievement, ready to be formatted and/or displayed.
+     */
     private final String achievementDescription;
+
+    /**
+     * Holds the ItemStack that will be used to draw the achievement into the GUI.
+     */
     public final ItemStack theItemStack;
+
+    /**
+     * Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to
+     * achieve.
+     */
     private boolean isSpecial;
 
     public Achievement(int par1, String par2Str, int par3, int par4, Item par5Item, Achievement par6Achievement)
@@ -52,18 +76,29 @@ public class Achievement extends StatBase
         parentAchievement = par6Achievement;
     }
 
+    /**
+     * Indicates whether or not the given achievement or statistic is independent (i.e., lacks prerequisites for being
+     * update).
+     */
     public Achievement setIndependent()
     {
         isIndependent = true;
         return this;
     }
 
+    /**
+     * Special achievements have a 'spiked' (on normal texture pack) frame, special achievements are the hardest ones to
+     * achieve.
+     */
     public Achievement setSpecial()
     {
         isSpecial = true;
         return this;
     }
 
+    /**
+     * Adds the achievement on the internal list of registered achievements, also, it's check for duplicated id's.
+     */
     public Achievement registerAchievement()
     {
         super.registerStat();
@@ -71,11 +106,18 @@ public class Achievement extends StatBase
         return this;
     }
 
+    /**
+     * Register the stat into StatList.
+     */
     public StatBase registerStat()
     {
         return registerAchievement();
     }
 
+    /**
+     * Initializes the current stat as independent (i.e., lacking prerequisites for being updated) and returns the
+     * current instance.
+     */
     public StatBase initIndependentStat()
     {
         return setIndependent();

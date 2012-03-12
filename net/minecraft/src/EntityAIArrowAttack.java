@@ -5,8 +5,10 @@ import java.util.Random;
 public class EntityAIArrowAttack extends EntityAIBase
 {
     World field_48183_a;
-    EntityLiving field_48181_b;
-    EntityLiving field_48182_c;
+
+    /** The entity the AI instance has been applied to */
+    EntityLiving entityHost;
+    EntityLiving attackTarget;
     int field_48179_d;
     float field_48180_e;
     int field_48177_f;
@@ -17,12 +19,12 @@ public class EntityAIArrowAttack extends EntityAIBase
     {
         field_48179_d = 0;
         field_48177_f = 0;
-        field_48181_b = par1EntityLiving;
+        entityHost = par1EntityLiving;
         field_48183_a = par1EntityLiving.worldObj;
         field_48180_e = par2;
         field_48178_g = par3;
         field_48184_h = par4;
-        func_46087_a(3);
+        setMutexBits(3);
     }
 
     /**
@@ -30,7 +32,7 @@ public class EntityAIArrowAttack extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLiving entityliving = field_48181_b.func_48331_as();
+        EntityLiving entityliving = entityHost.getAttackTarget();
 
         if (entityliving == null)
         {
@@ -38,7 +40,7 @@ public class EntityAIArrowAttack extends EntityAIBase
         }
         else
         {
-            field_48182_c = entityliving;
+            attackTarget = entityliving;
             return true;
         }
     }
@@ -48,19 +50,25 @@ public class EntityAIArrowAttack extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return shouldExecute() || !field_48181_b.func_48333_ak().func_46034_b();
+        return shouldExecute() || !entityHost.getNavigator().noPath();
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
-        field_48182_c = null;
+        attackTarget = null;
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         double d = 100D;
-        double d1 = field_48181_b.getDistanceSq(field_48182_c.posX, field_48182_c.boundingBox.minY, field_48182_c.posZ);
-        boolean flag = field_48181_b.func_48318_al().func_48546_a(field_48182_c);
+        double d1 = entityHost.getDistanceSq(attackTarget.posX, attackTarget.boundingBox.minY, attackTarget.posZ);
+        boolean flag = entityHost.func_48318_al().canSee(attackTarget);
 
         if (flag)
         {
@@ -73,14 +81,14 @@ public class EntityAIArrowAttack extends EntityAIBase
 
         if (d1 > d || field_48177_f < 20)
         {
-            field_48181_b.func_48333_ak().func_48652_a(field_48182_c, field_48180_e);
+            entityHost.getNavigator().func_48652_a(attackTarget, field_48180_e);
         }
         else
         {
-            field_48181_b.func_48333_ak().func_48662_f();
+            entityHost.getNavigator().func_48662_f();
         }
 
-        field_48181_b.getLookHelper().setLookPositionWithEntity(field_48182_c, 30F, 30F);
+        entityHost.getLookHelper().setLookPositionWithEntity(attackTarget, 30F, 30F);
         field_48179_d = Math.max(field_48179_d - 1, 0);
 
         if (field_48179_d > 0)
@@ -104,19 +112,19 @@ public class EntityAIArrowAttack extends EntityAIBase
     {
         if (field_48178_g == 1)
         {
-            EntityArrow entityarrow = new EntityArrow(field_48183_a, field_48181_b, field_48182_c, 1.6F, 12F);
-            field_48183_a.playSoundAtEntity(field_48181_b, "random.bow", 1.0F, 1.0F / (field_48181_b.getRNG().nextFloat() * 0.4F + 0.8F));
+            EntityArrow entityarrow = new EntityArrow(field_48183_a, entityHost, attackTarget, 1.6F, 12F);
+            field_48183_a.playSoundAtEntity(entityHost, "random.bow", 1.0F, 1.0F / (entityHost.getRNG().nextFloat() * 0.4F + 0.8F));
             field_48183_a.spawnEntityInWorld(entityarrow);
         }
         else if (field_48178_g == 2)
         {
-            EntitySnowball entitysnowball = new EntitySnowball(field_48183_a, field_48181_b);
-            double d = field_48182_c.posX - field_48181_b.posX;
-            double d1 = (field_48182_c.posY + (double)field_48182_c.getEyeHeight()) - 1.1D - entitysnowball.posY;
-            double d2 = field_48182_c.posZ - field_48181_b.posZ;
+            EntitySnowball entitysnowball = new EntitySnowball(field_48183_a, entityHost);
+            double d = attackTarget.posX - entityHost.posX;
+            double d1 = (attackTarget.posY + (double)attackTarget.getEyeHeight()) - 1.1000000238418579D - entitysnowball.posY;
+            double d2 = attackTarget.posZ - entityHost.posZ;
             float f = MathHelper.sqrt_double(d * d + d2 * d2) * 0.2F;
             entitysnowball.setThrowableHeading(d, d1 + (double)f, d2, 1.6F, 12F);
-            field_48183_a.playSoundAtEntity(field_48181_b, "random.bow", 1.0F, 1.0F / (field_48181_b.getRNG().nextFloat() * 0.4F + 0.8F));
+            field_48183_a.playSoundAtEntity(entityHost, "random.bow", 1.0F, 1.0F / (entityHost.getRNG().nextFloat() * 0.4F + 0.8F));
             field_48183_a.spawnEntityInWorld(entitysnowball);
         }
     }

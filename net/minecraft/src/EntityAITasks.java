@@ -7,6 +7,8 @@ import java.util.Iterator;
 public class EntityAITasks
 {
     private ArrayList tasksToDo;
+
+    /** Tasks currently being executed */
     private ArrayList executingTasks;
 
     public EntityAITasks()
@@ -63,7 +65,7 @@ public class EntityAITasks
 
         EntityAITaskEntry entityaitaskentry1;
 
-        for (Iterator iterator1 = arraylist.iterator(); iterator1.hasNext(); entityaitaskentry1.action.func_46088_e())
+        for (Iterator iterator1 = arraylist.iterator(); iterator1.hasNext(); entityaitaskentry1.action.startExecuting())
         {
             entityaitaskentry1 = (EntityAITaskEntry)iterator1.next();
 
@@ -123,7 +125,7 @@ public class EntityAITasks
 
                 return false;
             }
-            while (!executingTasks.contains(entityaitaskentry) || entityaitaskentry.action.isContinous());
+            while (!executingTasks.contains(entityaitaskentry) || entityaitaskentry.action.isContinuous());
 
             return false;
         }
@@ -135,6 +137,6 @@ public class EntityAITasks
      */
     private boolean areTasksCompatible(EntityAITaskEntry par1EntityAITaskEntry, EntityAITaskEntry par2EntityAITaskEntry)
     {
-        return (par1EntityAITaskEntry.action.func_46091_c() & par2EntityAITaskEntry.action.func_46091_c()) == 0;
+        return (par1EntityAITaskEntry.action.getMutexBits() & par2EntityAITaskEntry.action.getMutexBits()) == 0;
     }
 }

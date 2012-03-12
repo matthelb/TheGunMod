@@ -22,6 +22,8 @@ public abstract class BiomeGenBase
     /** The river biome generator. */
     public static final BiomeGenBase river = (new BiomeGenRiver(7)).setColor(255).setBiomeName("River").setMinMaxHeight(-0.5F, 0.0F);
     public static final BiomeGenBase hell = (new BiomeGenHell(8)).setColor(0xff0000).setBiomeName("Hell").setDisableRain().setTemperatureRainfall(2.0F, 0.0F);
+
+    /** Is the biome used for sky world. */
     public static final BiomeGenBase sky = (new BiomeGenEnd(9)).setColor(0x8080ff).setBiomeName("Sky").setDisableRain();
     public static final BiomeGenBase frozenOcean = (new BiomeGenOcean(10)).setColor(0x9090a0).setBiomeName("FrozenOcean").setMinMaxHeight(-1F, 0.5F).setTemperatureRainfall(0.0F, 0.5F);
     public static final BiomeGenBase frozenRiver = (new BiomeGenRiver(11)).setColor(0xa0a0ff).setBiomeName("FrozenRiver").setMinMaxHeight(-0.5F, 0.0F).setTemperatureRainfall(0.0F, 0.5F);
@@ -55,9 +57,17 @@ public abstract class BiomeGenBase
     /** The block to fill spots in when not on the top */
     public byte fillerBlock;
     public int field_6161_q;
+
+    /** The minimum height of this biome. Default 0.1. */
     public float minHeight;
+
+    /** The maximum height of this biome. Default 0.3. */
     public float maxHeight;
+
+    /** The temperature of this biome. */
     public float temperature;
+
+    /** The rainfall in this biome. */
     public float rainfall;
 
     /** color tint applied to water depending on biome */
@@ -65,11 +75,33 @@ public abstract class BiomeGenBase
 
     /** The biome decorator. */
     public BiomeDecorator biomeDecorator;
+
+    /**
+     * Holds the classes of IMobs (hostile mobs) that can be spawned in the biome.
+     */
     protected List spawnableMonsterList;
+
+    /**
+     * Holds the classes of any creature that can be spawned in the biome as friendly creature.
+     */
     protected List spawnableCreatureList;
+
+    /**
+     * Holds the classes of any aquatic creature that can be spawned in the water of the biome.
+     */
     protected List spawnableWaterCreatureList;
+
+    /**
+     * If the biome have snowfall instead a rain, this field is true (tundra or taiga)
+     */
     private boolean enableSnow;
+
+    /**
+     * Is true (default) if the biome support rain (desert and nether can't have rain)
+     */
     private boolean enableRain;
+
+    /** The id number to this biome, and its index in the biomeList array. */
     public final int biomeID;
 
     /** The tree generator. */
@@ -118,11 +150,17 @@ public abstract class BiomeGenBase
         spawnableWaterCreatureList.add(new SpawnListEntry(net.minecraft.src.EntitySquid.class, 10, 4, 4));
     }
 
+    /**
+     * Allocate a new BiomeDecorator for this BiomeGenBase
+     */
     protected BiomeDecorator createBiomeDecorator()
     {
         return new BiomeDecorator(this);
     }
 
+    /**
+     * Sets the temperature and rainfall of this biome.
+     */
     private BiomeGenBase setTemperatureRainfall(float par1, float par2)
     {
         if (par1 > 0.1F && par1 < 0.2F)
@@ -137,6 +175,9 @@ public abstract class BiomeGenBase
         }
     }
 
+    /**
+     * Sets the minimum and maximum height of this biome. Seems to go from -2.0 to 2.0.
+     */
     private BiomeGenBase setMinMaxHeight(float par1, float par2)
     {
         minHeight = par1;
@@ -144,6 +185,9 @@ public abstract class BiomeGenBase
         return this;
     }
 
+    /**
+     * Disable the rain for the biome.
+     */
     private BiomeGenBase setDisableRain()
     {
         enableRain = false;
@@ -188,6 +232,9 @@ public abstract class BiomeGenBase
         return this;
     }
 
+    /**
+     * Returns the correspondent list of the EnumCreatureType informed.
+     */
     public List getSpawnableList(EnumCreatureType par1EnumCreatureType)
     {
         if (par1EnumCreatureType == EnumCreatureType.monster)
@@ -210,11 +257,17 @@ public abstract class BiomeGenBase
         }
     }
 
+    /**
+     * Returns true if the biome have snowfall instead a normal rain.
+     */
     public boolean getEnableSnow()
     {
         return enableSnow;
     }
 
+    /**
+     * Return true if the biome supports lightning bolt spawn, either by have the bolts enabled and have rain enabled.
+     */
     public boolean canSpawnLightningBolt()
     {
         if (enableSnow)
@@ -256,7 +309,10 @@ public abstract class BiomeGenBase
         return (int)(temperature * 65536F);
     }
 
-    public final float func_48442_h()
+    /**
+     * Gets a floating point representation of this biome's temperature
+     */
+    public final float getFloatTemperature()
     {
         return temperature;
     }

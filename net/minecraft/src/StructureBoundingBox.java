@@ -115,6 +115,9 @@ public class StructureBoundingBox
         maxZ = Math.max(maxZ, par1StructureBoundingBox.maxZ);
     }
 
+    /**
+     * Offsets the current bounding box by the specified coordinates. Args: x, y, z
+     */
     public void offset(int par1, int par2, int par3)
     {
         minX += par1;

@@ -23,6 +23,9 @@ public class TileEntityFurnace extends TileEntity implements IInventory
         furnaceCookTime = 0;
     }
 
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public int getSizeInventory()
     {
         return furnaceItemStacks.length;
@@ -66,7 +69,11 @@ public class TileEntityFurnace extends TileEntity implements IInventory
         }
     }
 
-    public ItemStack func_48315_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (furnaceItemStacks[par1] != null)
         {

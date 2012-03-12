@@ -9,6 +9,9 @@ public class InventoryCraftResult implements IInventory
         stackResult = new ItemStack[1];
     }
 
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public int getSizeInventory()
     {
         return 1;
@@ -48,7 +51,11 @@ public class InventoryCraftResult implements IInventory
         }
     }
 
-    public ItemStack func_48315_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (stackResult[par1] != null)
         {

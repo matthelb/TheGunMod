@@ -6,10 +6,16 @@ public class TileEntityPiston extends TileEntity
 {
     private int storedBlockID;
     private int storedMetadata;
+
+    /** the side the front of the piston is on */
     private int storedOrientation;
+
+    /** if this piston is extending or not */
     private boolean extending;
     private boolean shouldHeadBeRendered;
     private float progress;
+
+    /** the progress in (de)extending */
     private float lastProgress;
     private static List pushedObjects = new ArrayList();
 
@@ -31,6 +37,9 @@ public class TileEntityPiston extends TileEntity
         return storedBlockID;
     }
 
+    /**
+     * Returns block data at the location of this entity (client-only).
+     */
     public int getBlockMetadata()
     {
         return storedMetadata;
@@ -52,6 +61,10 @@ public class TileEntityPiston extends TileEntity
         return storedOrientation;
     }
 
+    /**
+     * Get interpolated progress value (between lastProgress and progress) given the fractional time between ticks as an
+     * argument.
+     */
     public float getProgress(float par1)
     {
         if (par1 > 1.0F)

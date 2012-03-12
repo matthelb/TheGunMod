@@ -41,7 +41,7 @@ public class EntityEgg extends EntityThrowable
             for (int j = 0; j < byte0; j++)
             {
                 EntityChicken entitychicken = new EntityChicken(worldObj);
-                entitychicken.func_48350_c(-24000);
+                entitychicken.setGrowingAge(-24000);
                 entitychicken.setLocationAndAngles(posX, posY, posZ, rotationYaw, 0.0F);
                 worldObj.spawnEntityInWorld(entitychicken);
             }

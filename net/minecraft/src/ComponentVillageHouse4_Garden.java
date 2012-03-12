@@ -17,6 +17,9 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
         field_35402_b = par2Random.nextBoolean();
     }
 
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
     }
@@ -35,6 +38,10 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
         }
     }
 
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         if (averageGroundLevel < 0)

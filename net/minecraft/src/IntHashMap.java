@@ -18,6 +18,8 @@ public class IntHashMap
 
     /** A serial stamp used to mark changes */
     private volatile transient int versionStamp;
+
+    /** The set of all the keys stored in this MCHash object */
     private Set keySet;
 
     public IntHashMap()

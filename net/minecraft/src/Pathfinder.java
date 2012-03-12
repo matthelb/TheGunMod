@@ -11,10 +11,18 @@ public class PathFinder
     /** The points in the path */
     private IntHashMap pointMap;
     private PathPoint pathOptions[];
-    private boolean field_48412_e;
-    private boolean field_48410_f;
-    private boolean field_48411_g;
-    private boolean field_48413_h;
+
+    /** should the PathFinder go through wodden door blocks */
+    private boolean isWoddenDoorAllowed;
+
+    /**
+     * should the PathFinder disregard BlockMovement type materials in its path
+     */
+    private boolean isMovementBlockAllowed;
+    private boolean isPathingInWater;
+
+    /** tells the FathFinder to not stop pathing underwater */
+    private boolean canEntityDrown;
 
     public PathFinder(IBlockAccess par1IBlockAccess, boolean par2, boolean par3, boolean par4, boolean par5)
     {
@@ -22,10 +30,10 @@ public class PathFinder
         pointMap = new IntHashMap();
         pathOptions = new PathPoint[32];
         worldMap = par1IBlockAccess;
-        field_48412_e = par2;
-        field_48410_f = par3;
-        field_48411_g = par4;
-        field_48413_h = par5;
+        isWoddenDoorAllowed = par2;
+        isMovementBlockAllowed = par3;
+        isPathingInWater = par4;
+        canEntityDrown = par5;
     }
 
     /**
@@ -51,10 +59,10 @@ public class PathFinder
     {
         path.clearPath();
         pointMap.clearMap();
-        boolean flag = field_48411_g;
+        boolean flag = isPathingInWater;
         int i = MathHelper.floor_double(par1Entity.boundingBox.minY + 0.5D);
 
-        if (field_48413_h && par1Entity.isInWater())
+        if (canEntityDrown && par1Entity.isInWater())
         {
             i = (int)par1Entity.boundingBox.minY;
 
@@ -63,8 +71,8 @@ public class PathFinder
                 i++;
             }
 
-            flag = field_48411_g;
-            field_48411_g = false;
+            flag = isPathingInWater;
+            isPathingInWater = false;
         }
         else
         {
@@ -75,7 +83,7 @@ public class PathFinder
         PathPoint pathpoint1 = openPoint(MathHelper.floor_double(par2 - (double)(par1Entity.width / 2.0F)), MathHelper.floor_double(par4), MathHelper.floor_double(par6 - (double)(par1Entity.width / 2.0F)));
         PathPoint pathpoint2 = new PathPoint(MathHelper.floor_float(par1Entity.width + 1.0F), MathHelper.floor_float(par1Entity.height + 1.0F), MathHelper.floor_float(par1Entity.width + 1.0F));
         PathEntity pathentity = addToPath(par1Entity, pathpoint, pathpoint1, pathpoint2, par8);
-        field_48411_g = flag;
+        isPathingInWater = flag;
         return pathentity;
     }
 
@@ -225,7 +233,7 @@ public class PathFinder
 
                 k = getVerticalOffset(par1Entity, par2, par3 - 1, par4, par5PathPoint);
 
-                if (field_48411_g && k == -1)
+                if (isPathingInWater && k == -1)
                 {
                     return null;
                 }
@@ -299,7 +307,7 @@ public class PathFinder
                     }
                     else if (l == Block.waterMoving.blockID || l == Block.waterStill.blockID)
                     {
-                        if (!field_48411_g)
+                        if (!isPathingInWater)
                         {
                             flag = true;
                         }
@@ -308,14 +316,14 @@ public class PathFinder
                             return -1;
                         }
                     }
-                    else if (!field_48412_e && l == Block.doorWood.blockID)
+                    else if (!isWoddenDoorAllowed && l == Block.doorWood.blockID)
                     {
                         return 0;
                     }
 
                     Block block = Block.blocksList[l];
 
-                    if (block.func_48127_b(worldMap, i, j, k) || field_48410_f && l == Block.doorWood.blockID)
+                    if (block.getBlocksMovement(worldMap, i, j, k) || isMovementBlockAllowed && l == Block.doorWood.blockID)
                     {
                         continue;
                     }

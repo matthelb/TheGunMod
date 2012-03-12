@@ -19,8 +19,8 @@ public class EntitySkeleton extends EntityMob
         tasks.addTask(5, new EntityAIWander(this, moveSpeed));
         tasks.addTask(6, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 8F));
         tasks.addTask(6, new EntityAILookIdle(this));
-        field_48337_aM.addTask(1, new EntityAIHurtByTarget(this, false));
-        field_48337_aM.addTask(2, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, false));
+        targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, false));
     }
 
     /**
@@ -135,7 +135,7 @@ public class EntitySkeleton extends EntityMob
         }
     }
 
-    protected void func_48321_b(int par1)
+    protected void dropRareDrop(int par1)
     {
         if (par1 > 0)
         {

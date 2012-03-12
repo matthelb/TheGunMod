@@ -2,14 +2,14 @@ package net.minecraft.src;
 
 public class EntityAIDefendVillage extends EntityAITarget
 {
-    EntityIronGolem field_48302_a;
+    EntityIronGolem irongolem;
     EntityLiving field_48301_b;
 
     public EntityAIDefendVillage(EntityIronGolem par1EntityIronGolem)
     {
         super(par1EntityIronGolem, 16F, false, true);
-        field_48302_a = par1EntityIronGolem;
-        func_46087_a(1);
+        irongolem = par1EntityIronGolem;
+        setMutexBits(1);
     }
 
     /**
@@ -17,7 +17,7 @@ public class EntityAIDefendVillage extends EntityAITarget
      */
     public boolean shouldExecute()
     {
-        Village village = field_48302_a.func_48380_l_();
+        Village village = irongolem.getVillage();
 
         if (village == null)
         {
@@ -25,14 +25,17 @@ public class EntityAIDefendVillage extends EntityAITarget
         }
         else
         {
-            field_48301_b = village.func_48534_b(field_48302_a);
+            field_48301_b = village.findNearestVillageAggressor(irongolem);
             return func_48284_a(field_48301_b, false);
         }
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48302_a.func_48327_b(field_48301_b);
-        super.func_46088_e();
+        irongolem.setAttackTarget(field_48301_b);
+        super.startExecuting();
     }
 }

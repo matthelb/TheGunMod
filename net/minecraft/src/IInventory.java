@@ -2,6 +2,9 @@ package net.minecraft.src;
 
 public interface IInventory
 {
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public abstract int getSizeInventory();
 
     /**
@@ -15,7 +18,11 @@ public interface IInventory
      */
     public abstract ItemStack decrStackSize(int i, int j);
 
-    public abstract ItemStack func_48315_b(int i);
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public abstract ItemStack getStackInSlotOnClosing(int i);
 
     /**
      * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).

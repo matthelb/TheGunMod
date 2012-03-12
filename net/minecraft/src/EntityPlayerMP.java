@@ -122,7 +122,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
     }
 
     /**
-     * Removes i number of levels
+     * Removes the specified number of experience levels.
      */
     public void removeExperience(int par1)
     {
@@ -509,6 +509,9 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         return enumstatus;
     }
 
+    /**
+     * Wake up the player if they're sleeping.
+     */
     public void wakeUpPlayer(boolean par1, boolean par2, boolean par3)
     {
         if (isPlayerSleeping())
@@ -616,6 +619,9 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         craftingInventory.onCraftGuiOpened(this);
     }
 
+    /**
+     * Displays the GUI for interacting with a brewing stand.
+     */
     public void displayGUIBrewingStand(TileEntityBrewingStand par1TileEntityBrewingStand)
     {
         getNextWidowId();
@@ -750,6 +756,9 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         lastHealth = 0xfa0a1f01;
     }
 
+    /**
+     * Add a chat message to the player
+     */
     public void addChatMessage(String par1Str)
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();

@@ -20,12 +20,18 @@ public class EntityAIOpenDoor extends EntityAIDoorInteract
         return field_48196_i && field_48195_j > 0 && super.continueExecuting();
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48195_j = 20;
         field_48189_e.onPoweredBlockChange(field_48192_a.worldObj, field_48190_b, field_48191_c, field_48188_d, true);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         if (field_48196_i)
@@ -34,6 +40,9 @@ public class EntityAIOpenDoor extends EntityAIDoorInteract
         }
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         field_48195_j--;

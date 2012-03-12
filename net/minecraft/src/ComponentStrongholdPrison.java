@@ -5,16 +5,19 @@ import java.util.Random;
 
 public class ComponentStrongholdPrison extends ComponentStronghold
 {
-    protected final EnumDoor field_35333_a;
+    protected final EnumDoor doorType;
 
     public ComponentStrongholdPrison(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
         super(par1);
         coordBaseMode = par4;
-        field_35333_a = getRandomDoor(par2Random);
+        doorType = getRandomDoor(par2Random);
         boundingBox = par3StructureBoundingBox;
     }
 
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
         getNextComponentNormal((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 1, 1);
@@ -34,6 +37,10 @@ public class ComponentStrongholdPrison extends ComponentStronghold
         }
     }
 
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))
@@ -43,7 +50,7 @@ public class ComponentStrongholdPrison extends ComponentStronghold
         else
         {
             fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 8, 4, 10, true, par2Random, StructureStrongholdPieces.getStrongholdStones());
-            placeDoor(par1World, par2Random, par3StructureBoundingBox, field_35333_a, 1, 1, 0);
+            placeDoor(par1World, par2Random, par3StructureBoundingBox, doorType, 1, 1, 0);
             fillWithBlocks(par1World, par3StructureBoundingBox, 1, 1, 10, 3, 3, 10, 0, 0, false);
             fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 4, 1, 1, 4, 3, 1, false, par2Random, StructureStrongholdPieces.getStrongholdStones());
             fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 4, 1, 3, 4, 3, 3, false, par2Random, StructureStrongholdPieces.getStrongholdStones());

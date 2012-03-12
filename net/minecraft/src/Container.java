@@ -10,7 +10,7 @@ public abstract class Container
     /** the list of all slots in the inventory */
     public List inventorySlots;
     public int windowId;
-    private short field_20132_a;
+    private short transactionID;
 
     /**
      * list of all people that need to be notified when this craftinventory changes
@@ -23,7 +23,7 @@ public abstract class Container
         inventoryItemStacks = new ArrayList();
         inventorySlots = new ArrayList();
         windowId = 0;
-        field_20132_a = 0;
+        transactionID = 0;
         crafters = new ArrayList();
         field_20131_b = new HashSet();
     }
@@ -157,13 +157,13 @@ public abstract class Container
                 {
                     if (par2 == 0)
                     {
-                        par4EntityPlayer.func_48348_b(inventoryplayer.getItemStack());
+                        par4EntityPlayer.dropPlayerItem(inventoryplayer.getItemStack());
                         inventoryplayer.setItemStack(null);
                     }
 
                     if (par2 == 1)
                     {
-                        par4EntityPlayer.func_48348_b(inventoryplayer.getItemStack().splitStack(1));
+                        par4EntityPlayer.dropPlayerItem(inventoryplayer.getItemStack().splitStack(1));
 
                         if (inventoryplayer.getItemStack().stackSize == 0)
                         {
@@ -313,7 +313,7 @@ public abstract class Container
 
         if (inventoryplayer.getItemStack() != null)
         {
-            par1EntityPlayer.func_48348_b(inventoryplayer.getItemStack());
+            par1EntityPlayer.dropPlayerItem(inventoryplayer.getItemStack());
             inventoryplayer.setItemStack(null);
         }
     }
@@ -359,6 +359,9 @@ public abstract class Container
 
     public abstract boolean canInteractWith(EntityPlayer entityplayer);
 
+    /**
+     * merges provided ItemStack with the first avaliable one in the container/player inventory
+     */
     protected boolean mergeItemStack(ItemStack par1ItemStack, int par2, int par3, boolean par4)
     {
         boolean flag = false;

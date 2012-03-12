@@ -34,7 +34,7 @@ public class GenLayerVoronoiZoom extends GenLayer
 
             for (int l2 = 0; l2 < l - 1; l2++)
             {
-                double d = (double)i * 0.9D;
+                double d = (double)i * 0.90000000000000002D;
                 initChunkSeed(l2 + j << byte0, l1 + k << byte0);
                 double d1 = ((double)nextInt(1024) / 1024D - 0.5D) * d;
                 double d2 = ((double)nextInt(1024) / 1024D - 0.5D) * d;

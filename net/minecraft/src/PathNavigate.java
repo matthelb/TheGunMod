@@ -7,7 +7,7 @@ public class PathNavigate
     private PathEntity field_46038_c;
     private float field_46036_d;
     private float field_48672_e;
-    private boolean field_48670_f;
+    private boolean noSunPathfind;
     private int field_48671_g;
     private int field_48677_h;
     private Vec3D field_48678_i;
@@ -18,7 +18,7 @@ public class PathNavigate
 
     public PathNavigate(EntityLiving par1EntityLiving, World par2World, float par3)
     {
-        field_48670_f = false;
+        noSunPathfind = false;
         field_48678_i = Vec3D.createVectorHelper(0.0D, 0.0D, 0.0D);
         field_48675_j = true;
         field_48676_k = false;
@@ -56,7 +56,7 @@ public class PathNavigate
 
     public void func_48669_d(boolean par1)
     {
-        field_48670_f = par1;
+        noSunPathfind = par1;
     }
 
     public void func_48654_a(float par1)
@@ -71,31 +71,31 @@ public class PathNavigate
 
     public PathEntity func_48650_a(double par1, double par3, double par5)
     {
-        if (!func_48651_j())
+        if (!canNavigate())
         {
             return null;
         }
         else
         {
-            return field_46037_b.func_48088_a(field_46039_a, MathHelper.floor_double(par1), (int)par3, MathHelper.floor_double(par5), field_48672_e, field_48675_j, field_48676_k, field_48673_l, field_48674_m);
+            return field_46037_b.getEntityPathToXYZ(field_46039_a, MathHelper.floor_double(par1), (int)par3, MathHelper.floor_double(par5), field_48672_e, field_48675_j, field_48676_k, field_48673_l, field_48674_m);
         }
     }
 
     public boolean func_48658_a(double par1, double par3, double par5, float par7)
     {
         PathEntity pathentity = func_48650_a(MathHelper.floor_double(par1), (int)par3, MathHelper.floor_double(par5));
-        return func_48647_a(pathentity, par7);
+        return setPath(pathentity, par7);
     }
 
     public PathEntity func_48661_a(EntityLiving par1EntityLiving)
     {
-        if (!func_48651_j())
+        if (!canNavigate())
         {
             return null;
         }
         else
         {
-            return field_46037_b.func_48083_a(field_46039_a, par1EntityLiving, field_48672_e, field_48675_j, field_48676_k, field_48673_l, field_48674_m);
+            return field_46037_b.getPathEntityToEntity(field_46039_a, par1EntityLiving, field_48672_e, field_48675_j, field_48676_k, field_48673_l, field_48674_m);
         }
     }
 
@@ -105,7 +105,7 @@ public class PathNavigate
 
         if (pathentity != null)
         {
-            return func_48647_a(pathentity, par2);
+            return setPath(pathentity, par2);
         }
         else
         {
@@ -113,7 +113,11 @@ public class PathNavigate
         }
     }
 
-    public boolean func_48647_a(PathEntity par1PathEntity, float par2)
+    /**
+     * sets the active path data if path is 100% unique compared to old path, checks to adjust path for sun avoiding
+     * ents and stores end coords
+     */
+    public boolean setPath(PathEntity par1PathEntity, float par2)
     {
         if (par1PathEntity == null)
         {
@@ -126,12 +130,12 @@ public class PathNavigate
             field_46038_c = par1PathEntity;
         }
 
-        if (field_48670_f)
+        if (noSunPathfind)
         {
-            func_48667_l();
+            removeSunnyPath();
         }
 
-        if (field_46038_c.func_48424_d() == 0)
+        if (field_46038_c.getCurrentPathLength() == 0)
         {
             return false;
         }
@@ -156,22 +160,22 @@ public class PathNavigate
     {
         field_48671_g++;
 
-        if (func_46034_b())
+        if (noPath())
         {
             return;
         }
 
-        if (func_48651_j())
+        if (canNavigate())
         {
-            func_48664_g();
+            pathFollow();
         }
 
-        if (func_46034_b())
+        if (noPath())
         {
             return;
         }
 
-        Vec3D vec3d = field_46038_c.func_48420_a(field_46039_a);
+        Vec3D vec3d = field_46038_c.getPosition(field_46039_a);
 
         if (vec3d == null)
         {
@@ -184,20 +188,20 @@ public class PathNavigate
         }
     }
 
-    private void func_48664_g()
+    private void pathFollow()
     {
         Vec3D vec3d = func_48665_h();
-        int i = field_46038_c.func_48424_d();
-        int f = field_46038_c.func_48423_e();
+        int i = field_46038_c.getCurrentPathLength();
+        int f = field_46038_c.getCurrentPathIndex();
 
         do
         {
-            if (f >= field_46038_c.func_48424_d())
+            if (f >= field_46038_c.getCurrentPathLength())
             {
                 break;
             }
 
-            if (field_46038_c.func_48429_a(f).yCoord != (int)vec3d.yCoord)
+            if (field_46038_c.getPathPointFromIndex(f).yCoord != (int)vec3d.yCoord)
             {
                 i = f;
                 break;
@@ -209,11 +213,11 @@ public class PathNavigate
 
         float fa = field_46039_a.width * field_46039_a.width;
 
-        for (int j = field_46038_c.func_48423_e(); j < i; j++)
+        for (int j = field_46038_c.getCurrentPathIndex(); j < i; j++)
         {
             if (vec3d.squareDistanceTo(field_46038_c.func_48428_a(field_46039_a, j)) < (double)fa)
             {
-                field_46038_c.func_48422_c(j + 1);
+                field_46038_c.setCurrentPathIndex(j + 1);
             }
         }
 
@@ -224,14 +228,14 @@ public class PathNavigate
 
         do
         {
-            if (j1 < field_46038_c.func_48423_e())
+            if (j1 < field_46038_c.getCurrentPathIndex())
             {
                 break;
             }
 
             if (func_48653_a(vec3d, field_46038_c.func_48428_a(field_46039_a, j1), k, l, i1))
             {
-                field_46038_c.func_48422_c(j1);
+                field_46038_c.setCurrentPathIndex(j1);
                 break;
             }
 
@@ -253,7 +257,10 @@ public class PathNavigate
         }
     }
 
-    public boolean func_46034_b()
+    /**
+     * If null path or reached the end
+     */
+    public boolean noPath()
     {
         return field_46038_c == null || field_46038_c.isFinished();
     }
@@ -293,7 +300,10 @@ public class PathNavigate
         return i;
     }
 
-    private boolean func_48651_j()
+    /**
+     * If on ground or swimming and can swim
+     */
+    private boolean canNavigate()
     {
         return field_46039_a.onGround || field_48674_m && func_48648_k();
     }
@@ -303,20 +313,23 @@ public class PathNavigate
         return field_46039_a.isInWater() || field_46039_a.handleLavaMovement();
     }
 
-    private void func_48667_l()
+    /**
+     * Trims path data from the end to the first sun covered block
+     */
+    private void removeSunnyPath()
     {
         if (field_46037_b.canBlockSeeTheSky(MathHelper.floor_double(field_46039_a.posX), (int)(field_46039_a.boundingBox.minY + 0.5D), MathHelper.floor_double(field_46039_a.posZ)))
         {
             return;
         }
 
-        for (int i = 0; i < field_46038_c.func_48424_d(); i++)
+        for (int i = 0; i < field_46038_c.getCurrentPathLength(); i++)
         {
-            PathPoint pathpoint = field_46038_c.func_48429_a(i);
+            PathPoint pathpoint = field_46038_c.getPathPointFromIndex(i);
 
             if (field_46037_b.canBlockSeeTheSky(pathpoint.xCoord, pathpoint.yCoord, pathpoint.zCoord))
             {
-                field_46038_c.func_48421_b(i - 1);
+                field_46038_c.setCurrentPathLength(i - 1);
                 return;
             }
         }
@@ -459,7 +472,7 @@ public class PathNavigate
 
                     int l = field_46037_b.getBlockId(i, j, k);
 
-                    if (l > 0 && !Block.blocksList[l].func_48127_b(field_46037_b, i, j, k))
+                    if (l > 0 && !Block.blocksList[l].getBlocksMovement(field_46037_b, i, j, k))
                     {
                         return false;
                     }

@@ -181,7 +181,7 @@ public class EntityPigZombie extends EntityZombie
         }
     }
 
-    protected void func_48321_b(int par1)
+    protected void dropRareDrop(int par1)
     {
         if (par1 > 0)
         {

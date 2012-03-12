@@ -104,6 +104,9 @@ public class StructureVillagePieces
         return ((ComponentVillage)(obj));
     }
 
+    /**
+     * 'attempts to find a next Village Component to be spawned'
+     */
     private static ComponentVillage getNextVillageComponent(ComponentVillageStartPiece par0ComponentVillageStartPiece, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
         int var8 = getAvailablePieceWeight(par0ComponentVillageStartPiece.structureVillageWeightedPieceList);
@@ -165,6 +168,9 @@ public class StructureVillagePieces
         }
     }
 
+    /**
+     * 'attempts to find a next Structure Component to be spawned, private Village function'
+     */
     private static StructureComponent getNextVillageStructureComponent(ComponentVillageStartPiece par0ComponentVillageStartPiece, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
         if (par7 > 50)
@@ -232,6 +238,9 @@ public class StructureVillagePieces
         return null;
     }
 
+    /**
+     * 'attempts to find a next Structure Component to be spawned'
+     */
     static StructureComponent getNextStructureComponent(ComponentVillageStartPiece par0ComponentVillageStartPiece, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
         return getNextVillageStructureComponent(par0ComponentVillageStartPiece, par1List, par2Random, par3, par4, par5, par6, par7);

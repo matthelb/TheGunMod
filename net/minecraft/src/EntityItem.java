@@ -28,11 +28,15 @@ public class EntityItem extends Entity
         setPosition(par2, par4, par6);
         item = par8ItemStack;
         rotationYaw = (float)(Math.random() * 360D);
-        motionX = (float)(Math.random() * 0.2D - 0.1D);
-        motionY = 0.2D;
-        motionZ = (float)(Math.random() * 0.2D - 0.1D);
+        motionX = (float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D);
+        motionY = 0.20000000298023224D;
+        motionZ = (float)(Math.random() * 0.20000000298023224D - 0.10000000149011612D);
     }
 
+    /**
+     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+     * prevent them from trampling crops
+     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -67,11 +71,11 @@ public class EntityItem extends Entity
         prevPosX = posX;
         prevPosY = posY;
         prevPosZ = posZ;
-        motionY -= 0.04D;
+        motionY -= 0.039999999105930328D;
 
         if (worldObj.getBlockMaterial(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) == Material.lava)
         {
-            motionY = 0.2D;
+            motionY = 0.20000000298023224D;
             motionX = (rand.nextFloat() - rand.nextFloat()) * 0.2F;
             motionZ = (rand.nextFloat() - rand.nextFloat()) * 0.2F;
             worldObj.playSoundAtEntity(this, "random.fizz", 0.4F, 2.0F + rand.nextFloat() * 0.4F);
@@ -93,7 +97,7 @@ public class EntityItem extends Entity
         }
 
         motionX *= f;
-        motionY *= 0.98D;
+        motionY *= 0.98000001907348633D;
         motionZ *= f;
 
         if (onGround)
@@ -222,7 +226,10 @@ public class EntityItem extends Entity
         return StatCollector.translateToLocal((new StringBuilder()).append("item.").append(item.getItemName()).toString());
     }
 
-    public boolean func_48313_k_()
+    /**
+     * If returns false, the item will not inflict any damage against entities.
+     */
+    public boolean canAttackWithItem()
     {
         return false;
     }

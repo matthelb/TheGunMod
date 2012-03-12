@@ -4,6 +4,10 @@ import java.util.Random;
 
 public class BlockFlowing extends BlockFluid
 {
+    /**
+     * Number of horizontally adjacent liquid source blocks. Diagonal doesn't count. Only source blocks of the same
+     * liquid as the block using the field are counted.
+     */
     int numAdjacentSources;
     boolean isOptimalFlowDirection[];
     int flowCost[];
@@ -27,7 +31,7 @@ public class BlockFlowing extends BlockFluid
         par1World.markBlockNeedsUpdate(par2, par3, par4);
     }
 
-    public boolean func_48127_b(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         return blockMaterial != Material.lava;
     }
@@ -174,6 +178,10 @@ public class BlockFlowing extends BlockFluid
         }
     }
 
+    /**
+     * flowIntoBlock(World world, int x, int y, int z, int newFlowDecay) - Flows into the block at the coordinates and
+     * changes the block type to the liquid.
+     */
     private void flowIntoBlock(World par1World, int par2, int par3, int par4, int par5)
     {
         if (liquidCanDisplaceBlock(par1World, par2, par3, par4))
@@ -196,6 +204,11 @@ public class BlockFlowing extends BlockFluid
         }
     }
 
+    /**
+     * calculateFlowCost(World world, int x, int y, int z, int accumulatedCost, int previousDirectionOfFlow) - Used to
+     * determine the path of least resistance, this method returns the lowest possible flow cost for the direction of
+     * flow indicated. Each necessary horizontal flow adds to the flow cost.
+     */
     private int calculateFlowCost(World par1World, int par2, int par3, int par4, int par5, int par6)
     {
         int i = 1000;
@@ -257,6 +270,11 @@ public class BlockFlowing extends BlockFluid
         return i;
     }
 
+    /**
+     * Returns a boolean array indicating which flow directions are optimal based on each direction's calculated flow
+     * cost. Each array index corresponds to one of the four cardinal directions. A value of true indicates the
+     * direction is optimal.
+     */
     private boolean[] getOptimalFlowDirections(World par1World, int par2, int par3, int par4)
     {
         for (int i = 0; i < 4; i++)
@@ -319,6 +337,9 @@ public class BlockFlowing extends BlockFluid
         return isOptimalFlowDirection;
     }
 
+    /**
+     * Returns true if block at coords blocks fluids
+     */
     private boolean blockBlocksFlow(World par1World, int par2, int par3, int par4)
     {
         int i = par1World.getBlockId(par2, par3, par4);
@@ -343,6 +364,12 @@ public class BlockFlowing extends BlockFluid
         return material.blocksMovement();
     }
 
+    /**
+     * getSmallestFlowDecay(World world, intx, int y, int z, int currentSmallestFlowDecay) - Looks up the flow decay at
+     * the coordinates given and returns the smaller of this value or the provided currentSmallestFlowDecay. If one
+     * value is valid and the other isn't, the valid value will be returned. Valid values are >= 0. Flow decay is the
+     * amount that a liquid has dissipated. 0 indicates a source block.
+     */
     protected int getSmallestFlowDecay(World par1World, int par2, int par3, int par4, int par5)
     {
         int i = getFlowDecay(par1World, par2, par3, par4);
@@ -365,6 +392,9 @@ public class BlockFlowing extends BlockFluid
         return par5 >= 0 && i >= par5 ? par5 : i;
     }
 
+    /**
+     * Returns true if the block at the coordinates can be displaced by the liquid.
+     */
     private boolean liquidCanDisplaceBlock(World par1World, int par2, int par3, int par4)
     {
         Material material = par1World.getBlockMaterial(par2, par3, par4);

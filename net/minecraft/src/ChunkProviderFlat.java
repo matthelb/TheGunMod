@@ -57,6 +57,10 @@ public class ChunkProviderFlat implements IChunkProvider
         return provideChunk(par1, par2);
     }
 
+    /**
+     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
+     * specified chunk from the map seed and chunk seed
+     */
     public Chunk provideChunk(int par1, int par2)
     {
         byte abyte0[] = new byte[32768];
@@ -105,11 +109,18 @@ public class ChunkProviderFlat implements IChunkProvider
         return true;
     }
 
+    /**
+     * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
+     * is always empty and will not remove any chunks.
+     */
     public boolean unload100OldestChunks()
     {
         return false;
     }
 
+    /**
+     * Returns if the IChunkProvider supports saving.
+     */
     public boolean canSave()
     {
         return true;

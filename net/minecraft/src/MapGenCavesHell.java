@@ -8,11 +8,17 @@ public class MapGenCavesHell extends MapGenBase
     {
     }
 
+    /**
+     * Generates a larger initial cave node than usual. Called 25% of the time.
+     */
     protected void generateLargeCaveNode(int par1, int par2, byte par3ArrayOfByte[], double par4, double par6, double par8)
     {
         generateCaveNode(par1, par2, par3ArrayOfByte, par4, par6, par8, 1.0F + rand.nextFloat() * 6F, 0.0F, 0.0F, -1, -1, 0.5D);
     }
 
+    /**
+     * Generates a node in the current cave system recursion tree.
+     */
     protected void generateCaveNode(int par1, int par2, byte par3ArrayOfByte[], double par4, double par6, double par8, float par10, float par11, float par12, int par13, int par14, double par15)
     {
         double d = par1 * 16 + 8;
@@ -174,7 +180,7 @@ public class MapGenCavesHell extends MapGenBase
                     {
                         double d10 = (((double)i3 + 0.5D) - par6) / d3;
 
-                        if (d10 > -0.7D && d8 * d8 + d10 * d10 + d9 * d9 < 1.0D)
+                        if (d10 > -0.69999999999999996D && d8 * d8 + d10 * d10 + d9 * d9 < 1.0D)
                         {
                             byte byte0 = par3ArrayOfByte[l2];
 
@@ -196,6 +202,9 @@ public class MapGenCavesHell extends MapGenBase
         }
     }
 
+    /**
+     * Recursively called by generate() (func_867_a) and optionally by itself.
+     */
     protected void recursiveGenerate(World par1World, int par2, int par3, int par4, int par5, byte par6ArrayOfByte[])
     {
         int i = rand.nextInt(rand.nextInt(rand.nextInt(10) + 1) + 1);

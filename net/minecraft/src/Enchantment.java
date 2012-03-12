@@ -111,36 +111,57 @@ public abstract class Enchantment
         return weight;
     }
 
+    /**
+     * Returns the minimum level that the enchantment can have.
+     */
     public int getMinLevel()
     {
         return 1;
     }
 
+    /**
+     * Returns the maximum level that the enchantment can have.
+     */
     public int getMaxLevel()
     {
         return 1;
     }
 
+    /**
+     * Returns the minimal value of enchantability nedded on the enchantment level passed.
+     */
     public int getMinEnchantability(int par1)
     {
         return 1 + par1 * 10;
     }
 
+    /**
+     * Returns the maximum value of enchantability nedded on the enchantment level passed.
+     */
     public int getMaxEnchantability(int par1)
     {
         return getMinEnchantability(par1) + 5;
     }
 
+    /**
+     * Calculates de damage protection of the enchantment based on level and damage source passed.
+     */
     public int calcModifierDamage(int par1, DamageSource par2DamageSource)
     {
         return 0;
     }
 
+    /**
+     * Calculates de (magic) damage done by the enchantment on a living entity based on level and entity passed.
+     */
     public int calcModifierLiving(int par1, EntityLiving par2EntityLiving)
     {
         return 0;
     }
 
+    /**
+     * Determines if the enchantment passed can be applyied together with this enchantment.
+     */
     public boolean canApplyTogether(Enchantment par1Enchantment)
     {
         return this != par1Enchantment;

@@ -24,6 +24,9 @@ public abstract class EntityCreature extends EntityLiving
         fleeingTick = 0;
     }
 
+    /**
+     * Disables a mob's ability to move on its own while true.
+     */
     protected boolean isMovementCeased()
     {
         return false;
@@ -47,7 +50,7 @@ public abstract class EntityCreature extends EntityLiving
 
             if (entityToAttack != null)
             {
-                pathToEntity = worldObj.func_48083_a(this, entityToAttack, f, true, false, false, true);
+                pathToEntity = worldObj.getPathEntityToEntity(this, entityToAttack, f, true, false, false, true);
             }
         }
         else if (!entityToAttack.isEntityAlive())
@@ -72,7 +75,7 @@ public abstract class EntityCreature extends EntityLiving
 
         if (!hasAttacked && entityToAttack != null && (pathToEntity == null || rand.nextInt(20) == 0))
         {
-            pathToEntity = worldObj.func_48083_a(this, entityToAttack, f, true, false, false, true);
+            pathToEntity = worldObj.getPathEntityToEntity(this, entityToAttack, f, true, false, false, true);
         }
         else if (!hasAttacked && (pathToEntity == null && rand.nextInt(180) == 0 || rand.nextInt(120) == 0 || fleeingTick > 0) && entityAge < 100)
         {
@@ -92,7 +95,7 @@ public abstract class EntityCreature extends EntityLiving
         }
 
         Profiler.startSection("followpath");
-        Vec3D vec3d = pathToEntity.func_48420_a(this);
+        Vec3D vec3d = pathToEntity.getPosition(this);
 
         for (double d = width * 2.0F; vec3d != null && vec3d.squareDistanceTo(posX, vec3d.yCoord, posZ) < d * d;)
         {
@@ -105,7 +108,7 @@ public abstract class EntityCreature extends EntityLiving
             }
             else
             {
-                vec3d = pathToEntity.func_48420_a(this);
+                vec3d = pathToEntity.getPosition(this);
             }
         }
 
@@ -171,6 +174,9 @@ public abstract class EntityCreature extends EntityLiving
         Profiler.endSection();
     }
 
+    /**
+     * Time remaining during which the Animal is sped up and flees.
+     */
     protected void updateWanderPath()
     {
         Profiler.startSection("stroll");
@@ -199,7 +205,7 @@ public abstract class EntityCreature extends EntityLiving
 
         if (flag)
         {
-            pathToEntity = worldObj.func_48088_a(this, i, j, k, 10F, true, false, false, true);
+            pathToEntity = worldObj.getEntityPathToXYZ(this, i, j, k, 10F, true, false, false, true);
         }
 
         Profiler.endSection();
@@ -212,6 +218,9 @@ public abstract class EntityCreature extends EntityLiving
     {
     }
 
+    /**
+     * Used when an entity is close enough to attack but cannot be seen (Creeper de-fuse)
+     */
     protected void attackBlockedEntity(Entity entity, float f)
     {
     }

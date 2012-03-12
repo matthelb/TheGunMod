@@ -11,6 +11,9 @@ public class ItemBow extends Item
         setMaxDamage(384);
     }
 
+    /**
+     * called when the player releases the use item button. Args: itemstack, world, entityplayer, itemInUseCount
+     */
     public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, int par4)
     {
         boolean flag = par3EntityPlayer.capabilities.depleteBuckets || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, par1ItemStack) > 0;
@@ -21,7 +24,7 @@ public class ItemBow extends Item
             float f = (float)i / 20F;
             f = (f * f + f * 2.0F) / 3F;
 
-            if ((double)f < 0.1D)
+            if ((double)f < 0.10000000000000001D)
             {
                 return;
             }
@@ -110,6 +113,9 @@ public class ItemBow extends Item
         return par1ItemStack;
     }
 
+    /**
+     * Return the enchantability factor of the item, most of the time is based on material.
+     */
     public int getItemEnchantability()
     {
         return 1;

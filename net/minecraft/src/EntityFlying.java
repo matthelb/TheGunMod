@@ -23,9 +23,9 @@ public abstract class EntityFlying extends EntityLiving
         {
             moveFlying(par1, par2, 0.02F);
             moveEntity(motionX, motionY, motionZ);
-            motionX *= 0.8D;
-            motionY *= 0.8D;
-            motionZ *= 0.8D;
+            motionX *= 0.80000001192092896D;
+            motionY *= 0.80000001192092896D;
+            motionZ *= 0.80000001192092896D;
         }
         else if (handleLavaMovement())
         {

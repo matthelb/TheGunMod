@@ -4,6 +4,7 @@ import java.util.*;
 
 public abstract class StructureStart
 {
+    /** List of all StructureComponents that are part of this structure */
     protected LinkedList components;
     protected StructureBoundingBox boundingBox;
 
@@ -22,6 +23,9 @@ public abstract class StructureStart
         return components;
     }
 
+    /**
+     * 'Keeps iterating Structure Pieces and spawning them until the checks tell it to stop'
+     */
     public void generateStructure(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         Iterator iterator = components.iterator();
@@ -43,6 +47,9 @@ public abstract class StructureStart
         while (true);
     }
 
+    /**
+     * Calculates total bounding box based on components' bounding boxes and saves it to boundingBox
+     */
     protected void updateBoundingBox()
     {
         boundingBox = StructureBoundingBox.getNewBoundingBox();
@@ -101,6 +108,9 @@ public abstract class StructureStart
         }
     }
 
+    /**
+     * 'currently only defined for Villages, returns true if Village has more than 2 non-road components'
+     */
     public boolean isSizeableStructure()
     {
         return true;

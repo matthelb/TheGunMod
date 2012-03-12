@@ -4,12 +4,15 @@ import java.util.List;
 
 public class MapInfo
 {
+    /** Reference for EntityPlayer object in MapInfo */
     public final EntityPlayer entityplayerObj;
     public int field_28119_b[];
     public int field_28125_c[];
     private int field_28123_e;
     private int field_28122_f;
     private byte field_28121_g[];
+
+    /** reference in MapInfo to MapData object */
     final MapData mapDataObj;
 
     public MapInfo(MapData par1MapData, EntityPlayer par2EntityPlayer)

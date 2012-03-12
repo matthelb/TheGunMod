@@ -15,13 +15,16 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
         averageGroundLevel = Math.max(par3StructureBoundingBox.getXSize(), par3StructureBoundingBox.getZSize());
     }
 
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
         boolean flag = false;
 
         for (int i = par3Random.nextInt(5); i < averageGroundLevel - 8; i += 2 + par3Random.nextInt(5))
         {
-            StructureComponent structurecomponent = getNextComponenetNN((ComponentVillageStartPiece)par1StructureComponent, par2List, par3Random, 0, i);
+            StructureComponent structurecomponent = getNextComponentNN((ComponentVillageStartPiece)par1StructureComponent, par2List, par3Random, 0, i);
 
             if (structurecomponent != null)
             {
@@ -32,7 +35,7 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
 
         for (int j = par3Random.nextInt(5); j < averageGroundLevel - 8; j += 2 + par3Random.nextInt(5))
         {
-            StructureComponent structurecomponent1 = getNextComponenetPP((ComponentVillageStartPiece)par1StructureComponent, par2List, par3Random, 0, j);
+            StructureComponent structurecomponent1 = getNextComponentPP((ComponentVillageStartPiece)par1StructureComponent, par2List, par3Random, 0, j);
 
             if (structurecomponent1 != null)
             {
@@ -101,6 +104,10 @@ public class ComponentVillagePathGen extends ComponentVillageRoadPiece
         return null;
     }
 
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         for (int i = boundingBox.minX; i <= boundingBox.maxX; i++)

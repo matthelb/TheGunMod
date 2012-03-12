@@ -12,6 +12,9 @@ public class ItemBlock extends Item
         setIconIndex(Block.blocksList[par1 + 256].getBlockTextureFromSide(2));
     }
 
+    /**
+     * Returns the blockID for this Item
+     */
     public int getBlockID()
     {
         return blockID;

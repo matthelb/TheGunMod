@@ -221,7 +221,7 @@ public class ConsoleCommandHandler
                             k2 = 64;
                         }
 
-                        entityplayermp4.func_48348_b(new ItemStack(j1, k2, l2));
+                        entityplayermp4.dropPlayerItem(new ItemStack(j1, k2, l2));
                     }
                     else
                     {

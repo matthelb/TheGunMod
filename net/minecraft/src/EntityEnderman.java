@@ -6,7 +6,13 @@ import java.util.Random;
 public class EntityEnderman extends EntityMob
 {
     private static boolean canCarryBlocks[];
+
+    /** Is the enderman attacking another entity? */
     public boolean isAttacking;
+
+    /**
+     * Counter to delay the teleportation of an enderman towards the currently attacked target
+     */
     private int teleportDelay;
     private int field_35236_h;
 
@@ -108,7 +114,7 @@ public class EntityEnderman extends EntityMob
         vec3d1 = vec3d1.normalize();
         double d1 = vec3d.dotProduct(vec3d1);
 
-        if (d1 > 1.0D - 0.025D / d)
+        if (d1 > 1.0D - 0.025000000000000001D / d)
         {
             return par1EntityPlayer.canEntityBeSeen(this);
         }

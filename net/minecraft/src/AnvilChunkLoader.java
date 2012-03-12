@@ -18,6 +18,9 @@ public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO
         field_48466_d = par1File;
     }
 
+    /**
+     * Loads the specified(XZ) chunk into the specified world.
+     */
     public Chunk loadChunk(World par1World, int par2, int par3) throws IOException
     {
         NBTTagCompound nbttagcompound = null;
@@ -225,14 +228,14 @@ public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO
             nbttagcompound.setByte("Y", (byte)(extendedblockstorage.func_48597_c() >> 4 & 0xff));
             nbttagcompound.setByteArray("Blocks", extendedblockstorage.func_48590_g());
 
-            if (extendedblockstorage.func_48601_h() != null)
+            if (extendedblockstorage.getBlockMSBArray() != null)
             {
-                nbttagcompound.setByteArray("Add", extendedblockstorage.func_48601_h().data);
+                nbttagcompound.setByteArray("Add", extendedblockstorage.getBlockMSBArray().data);
             }
 
             nbttagcompound.setByteArray("Data", extendedblockstorage.func_48594_i().data);
-            nbttagcompound.setByteArray("SkyLight", extendedblockstorage.func_48605_k().data);
-            nbttagcompound.setByteArray("BlockLight", extendedblockstorage.func_48600_j().data);
+            nbttagcompound.setByteArray("SkyLight", extendedblockstorage.getSkylightArray().data);
+            nbttagcompound.setByteArray("BlockLight", extendedblockstorage.getBlocklightArray().data);
             nbttaglist.appendTag(nbttagcompound);
         }
 
@@ -324,8 +327,8 @@ public class AnvilChunkLoader implements IChunkLoader, IThreadedFileIO
             }
 
             extendedblockstorage.func_48586_b(new NibbleArray(nbttagcompound.getByteArray("Data"), 4));
-            extendedblockstorage.func_48589_d(new NibbleArray(nbttagcompound.getByteArray("SkyLight"), 4));
-            extendedblockstorage.func_48606_c(new NibbleArray(nbttagcompound.getByteArray("BlockLight"), 4));
+            extendedblockstorage.setSkylightArray(new NibbleArray(nbttagcompound.getByteArray("SkyLight"), 4));
+            extendedblockstorage.setBlocklightArray(new NibbleArray(nbttagcompound.getByteArray("BlockLight"), 4));
             extendedblockstorage.func_48599_d();
             aextendedblockstorage[byte1] = extendedblockstorage;
         }

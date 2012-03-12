@@ -2,10 +2,18 @@ package net.minecraft.src;
 
 public interface IWorldAccess
 {
+    /**
+     * Will mark the block and neighbors that their renderers need an update (could be all the same renderer
+     * potentially) Args: x, y, z
+     */
     public abstract void markBlockNeedsUpdate(int i, int j, int k);
 
     public abstract void func_48414_b(int i, int j, int k);
 
+    /**
+     * Called across all registered IWorldAccess instances when a block range is invalidated. Args: minX, minY, minZ,
+     * maxX, maxY, maxZ
+     */
     public abstract void markBlockRangeNeedsUpdate(int i, int j, int k, int l, int i1, int j1);
 
     /**
@@ -18,6 +26,9 @@ public interface IWorldAccess
      */
     public abstract void spawnParticle(String s, double d, double d1, double d2, double d3, double d4, double d5);
 
+    /**
+     * Start the skin for this entity downloading, if necessary, and increment its reference counter
+     */
     public abstract void obtainEntitySkin(Entity entity);
 
     /**
@@ -35,5 +46,8 @@ public interface IWorldAccess
      */
     public abstract void doNothingWithTileEntity(int i, int j, int k, TileEntity tileentity);
 
+    /**
+     * Plays a pre-canned sound effect along with potentially auxiliary data-driven one-shot behaviour (particles, etc).
+     */
     public abstract void playAuxSFX(EntityPlayer entityplayer, int i, int j, int k, int l, int i1);
 }

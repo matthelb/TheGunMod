@@ -12,6 +12,8 @@ public class BlockRedstoneRepeater extends BlockDirectional
     {
         1, 2, 3, 4
     };
+
+    /** Tells whether the repeater is powered or not */
     private final boolean isRepeaterPowered;
 
     protected BlockRedstoneRepeater(int par1, boolean par2)

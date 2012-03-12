@@ -5,8 +5,19 @@ import java.util.Random;
 
 public class EntityLightningBolt extends EntityWeatherEffect
 {
+    /**
+     * Declares which state the lightning bolt is in. Whether it's in the air, hit the ground, etc.
+     */
     private int lightningState;
+
+    /**
+     * A random long that is used to change the vertex of the lightning rendered in RenderLightningBolt
+     */
     public long boltVertex;
+
+    /**
+     * Determines the time before the EntityLightningBolt is destroyed. It is a random integer decremented over time.
+     */
     private int boltLivingTime;
 
     public EntityLightningBolt(World par1World, double par2, double par4, double par6)

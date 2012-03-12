@@ -13,7 +13,7 @@ public class EntityAIEatGrass extends EntityAIBase
         field_48230_a = 0;
         field_48228_b = par1EntityLiving;
         field_48229_c = par1EntityLiving.worldObj;
-        func_46087_a(7);
+        setMutexBits(7);
     }
 
     /**
@@ -38,13 +38,19 @@ public class EntityAIEatGrass extends EntityAIBase
         return field_48229_c.getBlockId(i, j - 1, k) == Block.grass.blockID;
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48230_a = 40;
         field_48229_c.setEntityState(field_48228_b, (byte)10);
-        field_48228_b.func_48333_ak().func_48662_f();
+        field_48228_b.getNavigator().func_48662_f();
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48230_a = 0;
@@ -63,6 +69,9 @@ public class EntityAIEatGrass extends EntityAIBase
         return field_48230_a;
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         field_48230_a = Math.max(0, field_48230_a - 1);

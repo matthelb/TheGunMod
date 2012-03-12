@@ -16,6 +16,9 @@ public class AnvilSaveConverter extends SaveFormatOld
         return 19133;
     }
 
+    /**
+     * Returns back a loader for the specified save directory
+     */
     public ISaveHandler getSaveLoader(String par1Str, boolean par2)
     {
         return new AnvilSaveHandler(savesDirectory, par1Str, par2);
@@ -152,11 +155,11 @@ public class AnvilSaveConverter extends SaveFormatOld
                         NBTTagCompound nbttagcompound = CompressedStreamTools.read(datainputstream);
                         datainputstream.close();
                         NBTTagCompound nbttagcompound1 = nbttagcompound.getCompoundTag("Level");
-                        AnvilConverterData anvilconverterdata = ChunkLoader.func_48624_a(nbttagcompound1);
+                        AnvilConverterData anvilconverterdata = ChunkLoader.load(nbttagcompound1);
                         NBTTagCompound nbttagcompound2 = new NBTTagCompound();
                         NBTTagCompound nbttagcompound3 = new NBTTagCompound();
                         nbttagcompound2.setTag("Level", nbttagcompound3);
-                        ChunkLoader.func_48623_a(anvilconverterdata, nbttagcompound3, par3WorldChunkManager);
+                        ChunkLoader.convertToAnvilFormat(anvilconverterdata, nbttagcompound3, par3WorldChunkManager);
                         DataOutputStream dataoutputstream = regionfile1.getChunkDataOutputStream(i, j);
                         CompressedStreamTools.write(nbttagcompound2, dataoutputstream);
                         dataoutputstream.close();

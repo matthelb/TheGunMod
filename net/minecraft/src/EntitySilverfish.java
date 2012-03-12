@@ -23,6 +23,10 @@ public class EntitySilverfish extends EntityMob
         return 8;
     }
 
+    /**
+     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+     * prevent them from trampling crops
+     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -87,6 +91,9 @@ public class EntitySilverfish extends EntityMob
         }
     }
 
+    /**
+     * Plays step sound at given x, y, z for the entity
+     */
     protected void playStepSound(int par1, int par2, int par3, int par4)
     {
         worldObj.playSoundAtEntity(this, "mob.silverfish.step", 1.0F, 1.0F);
@@ -216,6 +223,9 @@ public class EntitySilverfish extends EntityMob
         }
     }
 
+    /**
+     * Checks to make sure the light is not too bright where the mob is spawning
+     */
     protected boolean isValidLightLevel()
     {
         return true;

@@ -16,6 +16,9 @@ public class EntityLookHelper
         entity = par1EntityLiving;
     }
 
+    /**
+     * Sets position to look at using entity
+     */
     public void setLookPositionWithEntity(Entity par1Entity, float par2, float par3)
     {
         posX = par1Entity.posX;
@@ -35,6 +38,9 @@ public class EntityLookHelper
         field_46064_d = true;
     }
 
+    /**
+     * Sets position to look at
+     */
     public void setLookPosition(double par1, double par3, double par5, float par7, float par8)
     {
         posX = par1;
@@ -45,6 +51,9 @@ public class EntityLookHelper
         field_46064_d = true;
     }
 
+    /**
+     * Updates look
+     */
     public void onUpdateLook()
     {
         entity.rotationPitch = 0.0F;
@@ -58,12 +67,12 @@ public class EntityLookHelper
             double d3 = MathHelper.sqrt_double(d * d + d2 * d2);
             float f1 = (float)((Math.atan2(d2, d) * 180D) / Math.PI) - 90F;
             float f2 = (float)(-((Math.atan2(d1, d3) * 180D) / Math.PI));
-            entity.rotationPitch = func_46061_a(entity.rotationPitch, f2, field_46067_c);
-            entity.prevRotationYaw2 = func_46061_a(entity.prevRotationYaw2, f1, field_46066_b);
+            entity.rotationPitch = updateRotation(entity.rotationPitch, f2, field_46067_c);
+            entity.prevRotationYaw2 = updateRotation(entity.prevRotationYaw2, f1, field_46066_b);
         }
         else
         {
-            entity.prevRotationYaw2 = func_46061_a(entity.prevRotationYaw2, entity.renderYawOffset, 10F);
+            entity.prevRotationYaw2 = updateRotation(entity.prevRotationYaw2, entity.renderYawOffset, 10F);
         }
 
         float f;
@@ -72,7 +81,7 @@ public class EntityLookHelper
 
         for (; f >= 180F; f -= 360F) { }
 
-        if (!entity.func_48333_ak().func_46034_b())
+        if (!entity.getNavigator().noPath())
         {
             if (f < -75F)
             {
@@ -86,7 +95,7 @@ public class EntityLookHelper
         }
     }
 
-    private float func_46061_a(float par1, float par2, float par3)
+    private float updateRotation(float par1, float par2, float par3)
     {
         float f;
 

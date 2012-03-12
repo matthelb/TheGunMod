@@ -39,6 +39,9 @@ public class MapGenBase
         }
     }
 
+    /**
+     * Recursively called by generate() (func_867_a) and optionally by itself.
+     */
     protected void recursiveGenerate(World world, int i, int j, int k, int l, byte abyte0[])
     {
     }

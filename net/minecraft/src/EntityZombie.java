@@ -10,7 +10,7 @@ public class EntityZombie extends EntityMob
         texture = "/mob/zombie.png";
         moveSpeed = 0.23F;
         attackStrength = 4;
-        func_48333_ak().func_48663_b(true);
+        getNavigator().func_48663_b(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIBreakDoor(this));
         tasks.addTask(2, new EntityAIAttackOnCollide(this, net.minecraft.src.EntityPlayer.class, moveSpeed, false));
@@ -20,9 +20,9 @@ public class EntityZombie extends EntityMob
         tasks.addTask(6, new EntityAIWander(this, moveSpeed));
         tasks.addTask(7, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 8F));
         tasks.addTask(7, new EntityAILookIdle(this));
-        field_48337_aM.addTask(1, new EntityAIHurtByTarget(this, false));
-        field_48337_aM.addTask(2, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, true));
-        field_48337_aM.addTask(2, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityVillager.class, 16F, 0, false));
+        targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, true));
+        targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityVillager.class, 16F, 0, false));
     }
 
     public int getMaxHealth()
@@ -105,7 +105,7 @@ public class EntityZombie extends EntityMob
         return EnumCreatureAttribute.UNDEAD;
     }
 
-    protected void func_48321_b(int par1)
+    protected void dropRareDrop(int par1)
     {
         switch (rand.nextInt(4))
         {

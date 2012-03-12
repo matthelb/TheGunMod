@@ -54,6 +54,9 @@ public class WorldChunkManagerHell extends WorldChunkManager
         return par1ArrayOfFloat;
     }
 
+    /**
+     * Returns a list of rainfall values for the specified blocks. Args: listToReuse, x, z, width, length.
+     */
     public float[] getRainfall(float par1ArrayOfFloat[], int par2, int par3, int par4, int par5)
     {
         if (par1ArrayOfFloat == null || par1ArrayOfFloat.length < par4 * par5)

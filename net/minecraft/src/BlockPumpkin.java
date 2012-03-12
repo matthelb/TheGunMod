@@ -143,7 +143,7 @@ public class BlockPumpkin extends BlockDirectional
 
                 for (int j = 0; j < 120; j++)
                 {
-                    par1World.spawnParticle("snowballpoof", (double)par2 + par1World.rand.nextDouble(), (double)(par3 - 2) + par1World.rand.nextDouble() * 3.9D, (double)par4 + par1World.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
+                    par1World.spawnParticle("snowballpoof", (double)par2 + par1World.rand.nextDouble(), (double)(par3 - 2) + par1World.rand.nextDouble() * 3.8999999999999999D, (double)par4 + par1World.rand.nextDouble(), 0.0D, 0.0D, 0.0D);
                 }
 
                 par1World.notifyBlockChange(par2, par3, par4, 0);

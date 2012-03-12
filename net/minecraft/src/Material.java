@@ -3,6 +3,8 @@ package net.minecraft.src;
 public class Material
 {
     public static final Material air;
+
+    /** The material used by BlockGrass */
     public static final Material grass;
     public static final Material ground;
     public static final Material wood;
@@ -24,23 +26,43 @@ public class Material
     public static final Material field_4215_q;
     public static final Material ice;
     public static final Material snow;
+
+    /** The material for crafted snow. */
     public static final Material craftedSnow;
     public static final Material cactus;
     public static final Material clay;
+
+    /** pumpkin */
     public static final Material pumpkin;
     public static final Material dragonEgg;
+
+    /** Material used for portals */
     public static final Material portal;
 
     /** Cake's material, see BlockCake */
     public static final Material cake;
+
+    /** Web's material. */
     public static final Material web;
+
+    /** Pistons' material. */
     public static final Material piston;
 
     /** Bool defining if the block can burn or not. */
     private boolean canBurn;
+
+    /** Indicates if the material is a form of ground cover, e.g. Snow */
     private boolean groundCover;
+
+    /** Indicates if the material is translucent */
     private boolean isTranslucent;
+
+    /** The color index used to draw the blocks of this material on maps. */
     public final MapColor materialMapColor;
+
+    /**
+     * Determines if the materials is one that can be collected by the player.
+     */
     private boolean canHarvest;
 
     /**
@@ -83,12 +105,18 @@ public class Material
         return true;
     }
 
+    /**
+     * Marks the material as translucent
+     */
     private Material setTranslucent()
     {
         isTranslucent = true;
         return this;
     }
 
+    /**
+     * Disables the ability to harvest this material.
+     */
     protected Material setNoHarvest()
     {
         canHarvest = false;
@@ -112,12 +140,18 @@ public class Material
         return canBurn;
     }
 
+    /**
+     * Sets the material as a form of ground cover, e.g. Snow
+     */
     public Material setGroundCover()
     {
         groundCover = true;
         return this;
     }
 
+    /**
+     * Return whether the material is a form of ground cover, e.g. Snow
+     */
     public boolean isGroundCover()
     {
         return groundCover;
@@ -138,6 +172,9 @@ public class Material
         }
     }
 
+    /**
+     * Returns true if material can be harvested by player.
+     */
     public boolean isHarvestable()
     {
         return canHarvest;

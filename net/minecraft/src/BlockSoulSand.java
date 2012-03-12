@@ -22,7 +22,7 @@ public class BlockSoulSand extends Block
      */
     public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
     {
-        par5Entity.motionX *= 0.4D;
-        par5Entity.motionZ *= 0.4D;
+        par5Entity.motionX *= 0.40000000000000002D;
+        par5Entity.motionZ *= 0.40000000000000002D;
     }
 }

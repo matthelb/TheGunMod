@@ -46,9 +46,9 @@ public class EntityFireball extends Entity
         setLocationAndAngles(par2, par4, par6, rotationYaw, rotationPitch);
         setPosition(par2, par4, par6);
         double d = MathHelper.sqrt_double(par8 * par8 + par10 * par10 + par12 * par12);
-        accelerationX = (par8 / d) * 0.1D;
-        accelerationY = (par10 / d) * 0.1D;
-        accelerationZ = (par12 / d) * 0.1D;
+        accelerationX = (par8 / d) * 0.10000000000000001D;
+        accelerationY = (par10 / d) * 0.10000000000000001D;
+        accelerationZ = (par12 / d) * 0.10000000000000001D;
     }
 
     public EntityFireball(World par1World, EntityLiving par2EntityLiving, double par3, double par5, double par7)
@@ -66,13 +66,13 @@ public class EntityFireball extends Entity
         setPosition(posX, posY, posZ);
         yOffset = 0.0F;
         motionX = motionY = motionZ = 0.0D;
-        par3 += rand.nextGaussian() * 0.4D;
-        par5 += rand.nextGaussian() * 0.4D;
-        par7 += rand.nextGaussian() * 0.4D;
+        par3 += rand.nextGaussian() * 0.40000000000000002D;
+        par5 += rand.nextGaussian() * 0.40000000000000002D;
+        par7 += rand.nextGaussian() * 0.40000000000000002D;
         double d = MathHelper.sqrt_double(par3 * par3 + par5 * par5 + par7 * par7);
-        accelerationX = (par3 / d) * 0.1D;
-        accelerationY = (par5 / d) * 0.1D;
-        accelerationZ = (par7 / d) * 0.1D;
+        accelerationX = (par3 / d) * 0.10000000000000001D;
+        accelerationY = (par5 / d) * 0.10000000000000001D;
+        accelerationZ = (par7 / d) * 0.10000000000000001D;
     }
 
     /**
@@ -248,6 +248,9 @@ public class EntityFireball extends Entity
         inGround = par1NBTTagCompound.getByte("inGround") == 1;
     }
 
+    /**
+     * Returns true if other Entities should be prevented from moving through this Entity.
+     */
     public boolean canBeCollidedWith()
     {
         return true;
@@ -274,9 +277,9 @@ public class EntityFireball extends Entity
                 motionX = vec3d.xCoord;
                 motionY = vec3d.yCoord;
                 motionZ = vec3d.zCoord;
-                accelerationX = motionX * 0.1D;
-                accelerationY = motionY * 0.1D;
-                accelerationZ = motionZ * 0.1D;
+                accelerationX = motionX * 0.10000000000000001D;
+                accelerationY = motionY * 0.10000000000000001D;
+                accelerationZ = motionZ * 0.10000000000000001D;
             }
 
             if (par1DamageSource.getEntity() instanceof EntityLiving)

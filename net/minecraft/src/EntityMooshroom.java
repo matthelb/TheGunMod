@@ -16,13 +16,13 @@ public class EntityMooshroom extends EntityCow
     {
         ItemStack itemstack = par1EntityPlayer.inventory.getCurrentItem();
 
-        if (itemstack != null && itemstack.itemID == Item.bowlEmpty.shiftedIndex && func_48351_J() >= 0)
+        if (itemstack != null && itemstack.itemID == Item.bowlEmpty.shiftedIndex && getGrowingAge() >= 0)
         {
             par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, new ItemStack(Item.bowlSoup));
             return true;
         }
 
-        if (itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && func_48351_J() >= 0)
+        if (itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && getGrowingAge() >= 0)
         {
             setEntityDead();
             worldObj.spawnParticle("largeexplode", posX, posY + (double)(height / 2.0F), posZ, 0.0D, 0.0D, 0.0D);

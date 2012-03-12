@@ -68,7 +68,7 @@ public class ChunkCoordinates implements Comparable
         }
     }
 
-    public void func_48474_a(int par1, int par2, int par3)
+    public void set(int par1, int par2, int par3)
     {
         posX = par1;
         posY = par2;
@@ -76,9 +76,9 @@ public class ChunkCoordinates implements Comparable
     }
 
     /**
-     * Returns the Square distance of the chunk coordinate to the x, y, z parameters passed.
+     * Returns the euclidean distance of the chunk coordinate to the x, y, z parameters passed.
      */
-    public double getSqDistanceTo(int par1, int par2, int par3)
+    public double getEuclideanDistanceTo(int par1, int par2, int par3)
     {
         int i = posX - par1;
         int j = posY - par2;
@@ -86,7 +86,10 @@ public class ChunkCoordinates implements Comparable
         return Math.sqrt(i * i + j * j + k * k);
     }
 
-    public float func_48473_c(int par1, int par2, int par3)
+    /**
+     * Returns the squared distance between this coordinates and the coordinates given as argument.
+     */
+    public float getDistanceSquared(int par1, int par2, int par3)
     {
         int i = posX - par1;
         int j = posY - par2;

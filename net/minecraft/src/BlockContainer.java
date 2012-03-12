@@ -5,13 +5,13 @@ public abstract class BlockContainer extends Block
     protected BlockContainer(int par1, Material par2Material)
     {
         super(par1, par2Material);
-        field_48128_bU = true;
+        isBlockContainer = true;
     }
 
     protected BlockContainer(int par1, int par2, Material par3Material)
     {
         super(par1, par2, par3Material);
-        field_48128_bU = true;
+        isBlockContainer = true;
     }
 
     /**

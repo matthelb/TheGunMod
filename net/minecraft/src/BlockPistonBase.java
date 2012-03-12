@@ -5,6 +5,7 @@ import java.util.Random;
 
 public class BlockPistonBase extends Block
 {
+    /** This pistons is the sticky one? */
     private boolean isSticky;
     private static boolean ignoreUpdates;
 
@@ -371,6 +372,9 @@ public class BlockPistonBase extends Block
         return par0 & 7;
     }
 
+    /**
+     * Determine if the metadata is related to something powered.
+     */
     public static boolean isExtended(int par0)
     {
         return (par0 & 8) != 0;
@@ -383,7 +387,7 @@ public class BlockPistonBase extends Block
     {
         if (MathHelper.abs((float)par4EntityPlayer.posX - (float)par1) < 2.0F && MathHelper.abs((float)par4EntityPlayer.posZ - (float)par3) < 2.0F)
         {
-            double d = (par4EntityPlayer.posY + 1.82D) - (double)par4EntityPlayer.yOffset;
+            double d = (par4EntityPlayer.posY + 1.8200000000000001D) - (double)par4EntityPlayer.yOffset;
 
             if (d - (double)par2 > 2D)
             {

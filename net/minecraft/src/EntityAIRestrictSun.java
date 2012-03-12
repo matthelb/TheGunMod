@@ -17,13 +17,19 @@ public class EntityAIRestrictSun extends EntityAIBase
         return field_48239_a.worldObj.isDaytime();
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48239_a.func_48333_ak().func_48669_d(true);
+        field_48239_a.getNavigator().func_48669_d(true);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
-        field_48239_a.func_48333_ak().func_48669_d(false);
+        field_48239_a.getNavigator().func_48669_d(false);
     }
 }

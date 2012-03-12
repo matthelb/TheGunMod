@@ -25,6 +25,8 @@ public enum EnumToolMaterial
 
     /** Damage versus entities. */
     private final int damageVsEntity;
+
+    /** Defines the natural enchantability factor of the material. */
     private final int enchantability;
 
     private EnumToolMaterial(int par3, int par4, float par5, int par6, int par7)
@@ -68,6 +70,9 @@ public enum EnumToolMaterial
         return harvestLevel;
     }
 
+    /**
+     * Return the natural enchantability factor of the material.
+     */
     public int getEnchantability()
     {
         return enchantability;

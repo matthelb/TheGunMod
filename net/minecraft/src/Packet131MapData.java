@@ -5,6 +5,10 @@ import java.io.*;
 public class Packet131MapData extends Packet
 {
     public short itemID;
+
+    /**
+     * Contains a unique ID for the item that this packet will be populating.
+     */
     public short uniqueID;
     public byte itemData[];
 

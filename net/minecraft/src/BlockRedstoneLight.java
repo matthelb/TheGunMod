@@ -25,11 +25,11 @@ public class BlockRedstoneLight extends Block
         {
             if (field_48137_a && !par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
             {
-                par1World.setBlockWithNotify(par2, par3, par4, Block.field_48130_bL.blockID);
+                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampU.blockID);
             }
             else if (!field_48137_a && par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
             {
-                par1World.setBlockWithNotify(par2, par3, par4, Block.field_48131_bM.blockID);
+                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampP.blockID);
             }
         }
     }
@@ -44,11 +44,11 @@ public class BlockRedstoneLight extends Block
         {
             if (field_48137_a && !par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
             {
-                par1World.setBlockWithNotify(par2, par3, par4, Block.field_48130_bL.blockID);
+                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampU.blockID);
             }
             else if (!field_48137_a && par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
             {
-                par1World.setBlockWithNotify(par2, par3, par4, Block.field_48131_bM.blockID);
+                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampP.blockID);
             }
         }
     }

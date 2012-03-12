@@ -7,7 +7,11 @@ public class PlayerCapabilities
 
     /** Sets/indicates whether the player is flying. */
     public boolean isFlying;
+
+    /** whether or not to allow the player to fly when they double jump. */
     public boolean allowFlying;
+
+    /** Used by ItemBucket to say if it should empty when used or not. */
     public boolean depleteBuckets;
 
     public PlayerCapabilities()

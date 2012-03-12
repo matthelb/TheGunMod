@@ -4,12 +4,12 @@ import java.util.Random;
 
 public abstract class EntityTameable extends EntityAnimal
 {
-    protected EntityAISit field_48374_a;
+    protected EntityAISit aiSit;
 
     public EntityTameable(World par1World)
     {
         super(par1World);
-        field_48374_a = new EntityAISit(this);
+        aiSit = new EntityAISit(this);
     }
 
     protected void entityInit()
@@ -26,16 +26,16 @@ public abstract class EntityTameable extends EntityAnimal
     {
         super.writeEntityToNBT(par1NBTTagCompound);
 
-        if (func_48367_A() == null)
+        if (getOwnerName() == null)
         {
             par1NBTTagCompound.setString("Owner", "");
         }
         else
         {
-            par1NBTTagCompound.setString("Owner", func_48367_A());
+            par1NBTTagCompound.setString("Owner", getOwnerName());
         }
 
-        par1NBTTagCompound.setBoolean("Sitting", func_48371_v_());
+        par1NBTTagCompound.setBoolean("Sitting", isSitting());
     }
 
     /**
@@ -48,11 +48,11 @@ public abstract class EntityTameable extends EntityAnimal
 
         if (s.length() > 0)
         {
-            func_48372_a(s);
-            func_48366_b(true);
+            setOwner(s);
+            setTamed(true);
         }
 
-        field_48374_a.func_48210_a(true);
+        aiSit.func_48210_a(true);
     }
 
     protected void func_48370_a(boolean par1)
@@ -73,12 +73,12 @@ public abstract class EntityTameable extends EntityAnimal
         }
     }
 
-    public boolean func_48373_u_()
+    public boolean isTamed()
     {
         return (dataWatcher.getWatchableObjectByte(16) & 4) != 0;
     }
 
-    public void func_48366_b(boolean par1)
+    public void setTamed(boolean par1)
     {
         byte byte0 = dataWatcher.getWatchableObjectByte(16);
 
@@ -92,7 +92,7 @@ public abstract class EntityTameable extends EntityAnimal
         }
     }
 
-    public boolean func_48371_v_()
+    public boolean isSitting()
     {
         return (dataWatcher.getWatchableObjectByte(16) & 1) != 0;
     }
@@ -111,18 +111,18 @@ public abstract class EntityTameable extends EntityAnimal
         }
     }
 
-    public String func_48367_A()
+    public String getOwnerName()
     {
         return dataWatcher.getWatchableObjectString(17);
     }
 
-    public void func_48372_a(String par1Str)
+    public void setOwner(String par1Str)
     {
         dataWatcher.updateObject(17, par1Str);
     }
 
-    public EntityLiving func_48368_w_()
+    public EntityLiving getOwner()
     {
-        return worldObj.getPlayerEntityByName(func_48367_A());
+        return worldObj.getPlayerEntityByName(getOwnerName());
     }
 }

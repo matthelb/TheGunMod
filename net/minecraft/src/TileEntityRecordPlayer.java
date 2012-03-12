@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 public class TileEntityRecordPlayer extends TileEntity
 {
+    /** ID of record which is in Jukebox */
     public int record;
 
     public TileEntityRecordPlayer()

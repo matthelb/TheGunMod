@@ -4,8 +4,13 @@ import java.io.PrintStream;
 
 public class PotionEffect
 {
+    /** ID value of the potion this effect matches. */
     private int potionID;
+
+    /** The duration of the potion effect */
     private int duration;
+
+    /** The amplifier of the potion effect */
     private int amplifier;
 
     public PotionEffect(int par1, int par2, int par3)
@@ -22,6 +27,10 @@ public class PotionEffect
         amplifier = par1PotionEffect.amplifier;
     }
 
+    /**
+     * merges the input PotionEffect into this one if this.amplifier <= tomerge.amplifier. The duration in the supplied
+     * potion effect is assumed to be greater.
+     */
     public void combine(PotionEffect par1PotionEffect)
     {
         if (potionID != par1PotionEffect.potionID)
@@ -40,6 +49,9 @@ public class PotionEffect
         }
     }
 
+    /**
+     * Retrieve the ID of the potion this effect matches.
+     */
     public int getPotionID()
     {
         return potionID;

@@ -4,10 +4,18 @@ import java.util.Random;
 
 public class BlockFurnace extends BlockContainer
 {
+    /**
+     * Is the random generator used by furnace to drop the inventory contents in random directions.
+     */
     private Random furnaceRand;
 
     /** True if this is an active furnace, false if idle */
     private final boolean isActive;
+
+    /**
+     * This flag is used to prevent the furnace inventory to be dropped upon block removal, is used internally when the
+     * furnace block changes from idle to active and vice-versa.
+     */
     private static boolean keepFurnaceInventory = false;
 
     protected BlockFurnace(int par1, boolean par2)
@@ -35,6 +43,9 @@ public class BlockFurnace extends BlockContainer
         setDefaultDirection(par1World, par2, par3, par4);
     }
 
+    /**
+     * set a blocks direction
+     */
     private void setDefaultDirection(World par1World, int par2, int par3, int par4)
     {
         if (par1World.isRemote)

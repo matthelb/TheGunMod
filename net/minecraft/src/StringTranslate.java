@@ -5,7 +5,13 @@ import java.util.*;
 
 public class StringTranslate
 {
+    /** Is the private singleton instance of StringTranslate. */
     private static StringTranslate instance = new StringTranslate();
+
+    /**
+     * Contains all key/value pairs to be translated - is loaded from '/lang/en_US.lang' when the StringTranslate is
+     * created.
+     */
     private Properties translateTable;
     private TreeMap languageList;
     private String currentLanguage;
@@ -18,6 +24,9 @@ public class StringTranslate
         setLanguage("en_US");
     }
 
+    /**
+     * Return the StringTranslate singleton instance
+     */
     public static StringTranslate getInstance()
     {
         return instance;
@@ -128,11 +137,17 @@ public class StringTranslate
         }
     }
 
+    /**
+     * Translate a key to current language.
+     */
     public String translateKey(String par1Str)
     {
         return translateTable.getProperty(par1Str, par1Str);
     }
 
+    /**
+     * Translate a key to current language applying String.format()
+     */
     public String translateKeyFormat(String par1Str, Object par2ArrayOfObj[])
     {
         String s = translateTable.getProperty(par1Str, par1Str);

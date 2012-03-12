@@ -172,15 +172,15 @@ public class ItemMap extends ItemMapBase
                     }
                 }
 
-                double d2 = ((d1 - d) * 4D) / (double)(i + 4) + ((double)(k1 + j2 & 1) - 0.5D) * 0.4D;
+                double d2 = ((d1 - d) * 4D) / (double)(i + 4) + ((double)(k1 + j2 & 1) - 0.5D) * 0.40000000000000002D;
                 byte byte0 = 1;
 
-                if (d2 > 0.6D)
+                if (d2 > 0.59999999999999998D)
                 {
                     byte0 = 2;
                 }
 
-                if (d2 < -0.6D)
+                if (d2 < -0.59999999999999998D)
                 {
                     byte0 = 0;
                 }
@@ -193,7 +193,7 @@ public class ItemMap extends ItemMapBase
 
                     if (mapcolor == MapColor.waterColor)
                     {
-                        double d3 = (double)l4 * 0.1D + (double)(k1 + j2 & 1) * 0.2D;
+                        double d3 = (double)l4 * 0.10000000000000001D + (double)(k1 + j2 & 1) * 0.20000000000000001D;
                         byte0 = 1;
 
                         if (d3 < 0.5D)
@@ -201,7 +201,7 @@ public class ItemMap extends ItemMapBase
                             byte0 = 2;
                         }
 
-                        if (d3 > 0.9D)
+                        if (d3 > 0.90000000000000002D)
                         {
                             byte0 = 0;
                         }
@@ -245,6 +245,10 @@ public class ItemMap extends ItemMapBase
         }
     }
 
+    /**
+     * Called each tick as long the item is on a player inventory. Uses by maps to check if is on a player hand and
+     * update it's contents.
+     */
     public void onUpdate(ItemStack par1ItemStack, World par2World, Entity par3Entity, int par4, boolean par5)
     {
         if (par2World.isRemote)
@@ -266,6 +270,9 @@ public class ItemMap extends ItemMapBase
         }
     }
 
+    /**
+     * Called when item is crafted/smelted. Used only by maps so far.
+     */
     public void onCreated(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
         par1ItemStack.setItemDamage(par2World.getUniqueDataId("map"));

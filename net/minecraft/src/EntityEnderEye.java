@@ -87,12 +87,12 @@ public class EntityEnderEye extends Entity
             double d1 = field_40058_d - posZ;
             float f2 = (float)Math.sqrt(d * d + d1 * d1);
             float f3 = (float)Math.atan2(d1, d);
-            double d2 = (double)f + (double)(f2 - f) * 0.0025D;
+            double d2 = (double)f + (double)(f2 - f) * 0.0025000000000000001D;
 
             if (f2 < 1.0F)
             {
-                d2 *= 0.8D;
-                motionY *= 0.8D;
+                d2 *= 0.80000000000000004D;
+                motionY *= 0.80000000000000004D;
             }
 
             motionX = Math.cos(f3) * d2;
@@ -100,11 +100,11 @@ public class EntityEnderEye extends Entity
 
             if (posY < field_40061_c)
             {
-                motionY = motionY + (1.0D - motionY) * 0.015D;
+                motionY = motionY + (1.0D - motionY) * 0.014999999664723873D;
             }
             else
             {
-                motionY = motionY + (-1D - motionY) * 0.015D;
+                motionY = motionY + (-1D - motionY) * 0.014999999664723873D;
             }
         }
 
@@ -119,7 +119,7 @@ public class EntityEnderEye extends Entity
         }
         else
         {
-            worldObj.spawnParticle("portal", ((posX - motionX * (double)f1) + rand.nextDouble() * 0.6D) - 0.3D, posY - motionY * (double)f1 - 0.5D, ((posZ - motionZ * (double)f1) + rand.nextDouble() * 0.6D) - 0.3D, motionX, motionY, motionZ);
+            worldObj.spawnParticle("portal", ((posX - motionX * (double)f1) + rand.nextDouble() * 0.59999999999999998D) - 0.29999999999999999D, posY - motionY * (double)f1 - 0.5D, ((posZ - motionZ * (double)f1) + rand.nextDouble() * 0.59999999999999998D) - 0.29999999999999999D, motionX, motionY, motionZ);
         }
 
         if (!worldObj.isRemote)
@@ -172,7 +172,10 @@ public class EntityEnderEye extends Entity
         return 1.0F;
     }
 
-    public boolean func_48313_k_()
+    /**
+     * If returns false, the item will not inflict any damage against entities.
+     */
+    public boolean canAttackWithItem()
     {
         return false;
     }

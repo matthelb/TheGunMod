@@ -30,6 +30,10 @@ public class EntityFallingSand extends Entity
         prevPosZ = par6;
     }
 
+    /**
+     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+     * prevent them from trampling crops
+     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -39,6 +43,9 @@ public class EntityFallingSand extends Entity
     {
     }
 
+    /**
+     * Returns true if other Entities should be prevented from moving through this Entity.
+     */
     public boolean canBeCollidedWith()
     {
         return !isDead;
@@ -59,11 +66,11 @@ public class EntityFallingSand extends Entity
         prevPosY = posY;
         prevPosZ = posZ;
         fallTime++;
-        motionY -= 0.04D;
+        motionY -= 0.039999999105930328D;
         moveEntity(motionX, motionY, motionZ);
-        motionX *= 0.98D;
-        motionY *= 0.98D;
-        motionZ *= 0.98D;
+        motionX *= 0.98000001907348633D;
+        motionY *= 0.98000001907348633D;
+        motionZ *= 0.98000001907348633D;
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posY);
         int k = MathHelper.floor_double(posZ);
@@ -79,8 +86,8 @@ public class EntityFallingSand extends Entity
 
         if (onGround)
         {
-            motionX *= 0.7D;
-            motionZ *= 0.7D;
+            motionX *= 0.69999998807907104D;
+            motionZ *= 0.69999998807907104D;
             motionY *= -0.5D;
 
             if (worldObj.getBlockId(i, j, k) != Block.pistonMoving.blockID)

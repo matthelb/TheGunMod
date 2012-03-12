@@ -5,7 +5,15 @@ import java.util.Random;
 
 public class BlockPane extends Block
 {
+    /**
+     * Holds the texture index of the side of the pane (the thin lateral side)
+     */
     private int sideTextureIndex;
+
+    /**
+     * If this field is true, the pane block drops itself when destroyed (like the iron fences), otherwise, it's just
+     * destroyed (like glass panes)
+     */
     private final boolean canDropItself;
 
     protected BlockPane(int par1, int par2, int par3, Material par4Material, boolean par5)
@@ -61,10 +69,10 @@ public class BlockPane extends Block
      */
     public void getCollidingBoundingBoxes(World par1World, int par2, int par3, int par4, AxisAlignedBB par5AxisAlignedBB, ArrayList par6ArrayList)
     {
-        boolean flag = func_35063_c(par1World.getBlockId(par2, par3, par4 - 1));
-        boolean flag1 = func_35063_c(par1World.getBlockId(par2, par3, par4 + 1));
-        boolean flag2 = func_35063_c(par1World.getBlockId(par2 - 1, par3, par4));
-        boolean flag3 = func_35063_c(par1World.getBlockId(par2 + 1, par3, par4));
+        boolean flag = canThisPaneConnectToThisBlockID(par1World.getBlockId(par2, par3, par4 - 1));
+        boolean flag1 = canThisPaneConnectToThisBlockID(par1World.getBlockId(par2, par3, par4 + 1));
+        boolean flag2 = canThisPaneConnectToThisBlockID(par1World.getBlockId(par2 - 1, par3, par4));
+        boolean flag3 = canThisPaneConnectToThisBlockID(par1World.getBlockId(par2 + 1, par3, par4));
 
         if (flag2 && flag3 || !flag2 && !flag3 && !flag && !flag1)
         {
@@ -116,10 +124,10 @@ public class BlockPane extends Block
         float f1 = 0.5625F;
         float f2 = 0.4375F;
         float f3 = 0.5625F;
-        boolean flag = func_35063_c(par1IBlockAccess.getBlockId(par2, par3, par4 - 1));
-        boolean flag1 = func_35063_c(par1IBlockAccess.getBlockId(par2, par3, par4 + 1));
-        boolean flag2 = func_35063_c(par1IBlockAccess.getBlockId(par2 - 1, par3, par4));
-        boolean flag3 = func_35063_c(par1IBlockAccess.getBlockId(par2 + 1, par3, par4));
+        boolean flag = canThisPaneConnectToThisBlockID(par1IBlockAccess.getBlockId(par2, par3, par4 - 1));
+        boolean flag1 = canThisPaneConnectToThisBlockID(par1IBlockAccess.getBlockId(par2, par3, par4 + 1));
+        boolean flag2 = canThisPaneConnectToThisBlockID(par1IBlockAccess.getBlockId(par2 - 1, par3, par4));
+        boolean flag3 = canThisPaneConnectToThisBlockID(par1IBlockAccess.getBlockId(par2 + 1, par3, par4));
 
         if (flag2 && flag3 || !flag2 && !flag3 && !flag && !flag1)
         {
@@ -152,7 +160,11 @@ public class BlockPane extends Block
         setBlockBounds(f, 0.0F, f2, f1, 1.0F, f3);
     }
 
-    public final boolean func_35063_c(int par1)
+    /**
+     * Gets passed in the blockID of the block adjacent and supposed to return true if its allowed to connect to the
+     * type of blockID passed in. Args: blockID
+     */
+    public final boolean canThisPaneConnectToThisBlockID(int par1)
     {
         return Block.opaqueCubeLookup[par1] || par1 == blockID || par1 == Block.glass.blockID;
     }

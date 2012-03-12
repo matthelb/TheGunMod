@@ -63,12 +63,20 @@ public class Block
 
     /** Minecart detector rail track. */
     public static final Block railDetector;
+
+    /** Is the sticky piston block. */
     public static final Block pistonStickyBase;
 
     /** Slows entities on collision. */
     public static final Block web;
+
+    /** BlockTallGrass */
     public static final BlockTallGrass tallGrass;
+
+    /** BlockDeadBush */
     public static final BlockDeadBush deadBush;
+
+    /** Is the normal piston block. */
     public static final Block pistonBase;
     public static final BlockPistonExtension pistonExtension;
     public static final Block cloth;
@@ -133,12 +141,18 @@ public class Block
 
     /** A pumpkin */
     public static final Block pumpkin;
+
+    /** Red block, main part of the nether */
     public static final Block netherrack;
     public static final Block slowSand;
+
+    /** a brittle glass like substance found only in the nether */
     public static final Block glowStone;
 
     /** The purple teleport blocks inside the obsidian circle */
     public static final BlockPortal portal;
+
+    /** The Jack-O-Lantern */
     public static final Block pumpkinLantern;
     public static final Block cake;
 
@@ -152,6 +166,8 @@ public class Block
      * April fools secret locked chest, only spawns on new chunks on 1st April.
      */
     public static final Block lockedChest;
+
+    /** Trapdoor block. */
     public static final Block trapdoor;
     public static final Block silverfish;
     public static final Block stoneBrick;
@@ -169,6 +185,10 @@ public class Block
     public static final BlockMycelium mycelium;
     public static final Block waterlily;
     public static final Block netherBrick;
+
+    /**
+     * The Block ID that the generator is allowed to replace while generating the terrain.
+     */
     public static final Block netherFence;
     public static final Block stairsNetherBrick;
     public static final Block netherStalk;
@@ -179,8 +199,12 @@ public class Block
     public static final Block endPortalFrame;
     public static final Block whiteStone;
     public static final Block dragonEgg;
-    public static final Block field_48130_bL;
-    public static final Block field_48131_bM;
+
+    /** Redstone Lamp (unpowered state) */
+    public static final Block redstoneLampU;
+
+    /** Redstone Lamp (powered state) */
+    public static final Block redstoneLampP;
 
     /**
      * The index of the texture to be displayed for this block. May vary based on graphics settings. Mostly seems to
@@ -201,9 +225,18 @@ public class Block
      * set to true when Block's constructor is called through the chain of super()'s. Note: Never used
      */
     protected boolean blockConstructorCalled;
+
+    /**
+     * If this field is true, the block is counted for statistics (mined or placed)
+     */
     protected boolean enableStats;
-    protected boolean field_48129_bT;
-    protected boolean field_48128_bU;
+
+    /**
+     * Flags whether or not this block is of a type that needs random ticking. Ref-counted by ExtendedBlockStorage in
+     * order to broadly cull a chunk from the random chunk update list for efficiency's sake.
+     */
+    protected boolean needsRandomTick;
+    protected boolean isBlockContainer;
 
     /** minimum X for the block bounds (local coordinates) */
     public double minX;
@@ -261,6 +294,10 @@ public class Block
         }
     }
 
+    /**
+     * Blocks with this attribute will not notify all near blocks when it's metadata change. The default behavior is
+     * always notify every neightbor block when anything changes.
+     */
     protected Block setRequiresSelfNotify()
     {
         requiresSelfNotify[blockID] = true;
@@ -317,7 +354,7 @@ public class Block
         return this;
     }
 
-    public static boolean func_48126_g(int par0)
+    public static boolean isNormalCube(int par0)
     {
         Block block = blocksList[par0];
 
@@ -339,7 +376,7 @@ public class Block
         return true;
     }
 
-    public boolean func_48127_b(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         return !blockMaterial.blocksMovement();
     }
@@ -367,6 +404,9 @@ public class Block
         return this;
     }
 
+    /**
+     * This method will make the hardness of the block equals to -1, and the block is indestructible.
+     */
     protected Block setBlockUnbreakable()
     {
         setHardness(-1F);
@@ -386,18 +426,22 @@ public class Block
      */
     protected Block setTickRandomly(boolean par1)
     {
-        field_48129_bT = par1;
+        needsRandomTick = par1;
         return this;
     }
 
-    public boolean func_48125_m()
+    /**
+     * Returns whether or not this block is of a type that needs random ticking. Called for ref-counting purposes by
+     * ExtendedBlockStorage in order to broadly cull a chunk from the random chunk update list for efficiency's sake.
+     */
+    public boolean getTickRandomly()
     {
-        return field_48129_bT;
+        return needsRandomTick;
     }
 
     public boolean func_48124_n()
     {
-        return field_48128_bU;
+        return isBlockContainer;
     }
 
     /**
@@ -632,6 +676,9 @@ public class Block
         return 0;
     }
 
+    /**
+     * Returns how much this block can resist explosions from the passed in entity.
+     */
     public float getExplosionResistance(Entity par1Entity)
     {
         return blockResistance / 5F;
@@ -916,7 +963,7 @@ public class Block
         par2EntityPlayer.addStat(StatList.mineBlockStatArray[blockID], 1);
         par2EntityPlayer.addExhaustion(0.025F);
 
-        if (renderAsNormalBlock() && !field_48128_bU && EnchantmentHelper.getSilkTouchModifier(par2EntityPlayer.inventory))
+        if (renderAsNormalBlock() && !isBlockContainer && EnchantmentHelper.getSilkTouchModifier(par2EntityPlayer.inventory))
         {
             ItemStack itemstack = createStackedBlock(par6);
 
@@ -998,11 +1045,17 @@ public class Block
     {
     }
 
+    /**
+     * Return the state of blocks statistics flags - if the block is counted for mined and placed.
+     */
     public boolean getEnableStats()
     {
         return enableStats;
     }
 
+    /**
+     * Disable statistics for the block, the block will no count for mined or placed.
+     */
     protected Block disableStats()
     {
         enableStats = false;
@@ -1160,8 +1213,8 @@ public class Block
         endPortalFrame = (new BlockEndPortalFrame(120)).setStepSound(soundGlassFootstep).setLightValue(0.125F).setHardness(-1F).setBlockName("endPortalFrame").setRequiresSelfNotify().setResistance(6000000F);
         whiteStone = (new Block(121, 175, Material.rock)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setBlockName("whiteStone");
         dragonEgg = (new BlockDragonEgg(122, 167)).setHardness(3F).setResistance(15F).setStepSound(soundStoneFootstep).setLightValue(0.125F).setBlockName("dragonEgg");
-        field_48130_bL = (new BlockRedstoneLight(123, false)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
-        field_48131_bM = (new BlockRedstoneLight(124, true)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
+        redstoneLampU = (new BlockRedstoneLight(123, false)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
+        redstoneLampP = (new BlockRedstoneLight(124, true)).setHardness(0.3F).setStepSound(soundGlassFootstep).setBlockName("redstoneLight");
         Item.itemsList[cloth.blockID] = (new ItemCloth(cloth.blockID - 256)).setItemName("cloth");
         Item.itemsList[wood.blockID] = (new ItemMetadata(wood.blockID - 256, wood)).setItemName("log");
         Item.itemsList[stoneBrick.blockID] = (new ItemMetadata(stoneBrick.blockID - 256, stoneBrick)).setItemName("stonebricksmooth");

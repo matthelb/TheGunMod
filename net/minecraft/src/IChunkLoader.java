@@ -4,6 +4,9 @@ import java.io.IOException;
 
 public interface IChunkLoader
 {
+    /**
+     * Loads the specified(XZ) chunk into the specified world.
+     */
     public abstract Chunk loadChunk(World world, int i, int j) throws IOException;
 
     public abstract void saveChunk(World world, Chunk chunk) throws IOException;

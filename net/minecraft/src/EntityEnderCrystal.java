@@ -19,6 +19,10 @@ public class EntityEnderCrystal extends Entity
         innerRotation = rand.nextInt(0x186a0);
     }
 
+    /**
+     * returns if this entity triggers Block.onEntityWalking on the blocks they walk on. used for spiders and wolves to
+     * prevent them from trampling crops
+     */
     protected boolean canTriggerWalking()
     {
         return false;
@@ -63,6 +67,9 @@ public class EntityEnderCrystal extends Entity
     {
     }
 
+    /**
+     * Returns true if other Entities should be prevented from moving through this Entity.
+     */
     public boolean canBeCollidedWith()
     {
         return true;

@@ -46,7 +46,7 @@ public class ItemGlassBottle extends Item
 
                 if (!par3EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.potion)))
                 {
-                    par3EntityPlayer.func_48348_b(new ItemStack(Item.potion.shiftedIndex, 1, 0));
+                    par3EntityPlayer.dropPlayerItem(new ItemStack(Item.potion.shiftedIndex, 1, 0));
                 }
             }
         }

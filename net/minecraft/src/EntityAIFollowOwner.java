@@ -17,10 +17,10 @@ public class EntityAIFollowOwner extends EntityAIBase
         field_48247_d = par1EntityTameable;
         field_48251_a = par1EntityTameable.worldObj;
         field_48245_f = par2;
-        field_48246_g = par1EntityTameable.func_48333_ak();
+        field_48246_g = par1EntityTameable.getNavigator();
         field_48250_c = par3;
         field_48249_b = par4;
-        func_46087_a(3);
+        setMutexBits(3);
     }
 
     /**
@@ -28,14 +28,14 @@ public class EntityAIFollowOwner extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLiving entityliving = field_48247_d.func_48368_w_();
+        EntityLiving entityliving = field_48247_d.getOwner();
 
         if (entityliving == null)
         {
             return false;
         }
 
-        if (field_48247_d.func_48371_v_())
+        if (field_48247_d.isSitting())
         {
             return false;
         }
@@ -56,28 +56,37 @@ public class EntityAIFollowOwner extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48246_g.func_46034_b() && field_48247_d.getDistanceSqToEntity(field_48248_e) > (double)(field_48249_b * field_48249_b) && !field_48247_d.func_48371_v_();
+        return !field_48246_g.noPath() && field_48247_d.getDistanceSqToEntity(field_48248_e) > (double)(field_48249_b * field_48249_b) && !field_48247_d.isSitting();
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48252_h = 0;
-        field_48253_i = field_48247_d.func_48333_ak().func_48649_a();
-        field_48247_d.func_48333_ak().func_48656_a(false);
+        field_48253_i = field_48247_d.getNavigator().func_48649_a();
+        field_48247_d.getNavigator().func_48656_a(false);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48248_e = null;
         field_48246_g.func_48662_f();
-        field_48247_d.func_48333_ak().func_48656_a(field_48253_i);
+        field_48247_d.getNavigator().func_48656_a(field_48253_i);
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         field_48247_d.getLookHelper().setLookPositionWithEntity(field_48248_e, 10F, field_48247_d.getVerticalFaceSpeed());
 
-        if (field_48247_d.func_48371_v_())
+        if (field_48247_d.isSitting())
         {
             return;
         }

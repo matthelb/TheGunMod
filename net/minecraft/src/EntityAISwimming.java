@@ -9,8 +9,8 @@ public class EntityAISwimming extends EntityAIBase
     public EntityAISwimming(EntityLiving par1EntityLiving)
     {
         field_46105_a = par1EntityLiving;
-        func_46087_a(4);
-        par1EntityLiving.func_48333_ak().func_48660_e(true);
+        setMutexBits(4);
+        par1EntityLiving.getNavigator().func_48660_e(true);
     }
 
     /**
@@ -21,6 +21,9 @@ public class EntityAISwimming extends EntityAIBase
         return field_46105_a.isInWater() || field_46105_a.handleLavaMovement();
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         if (field_46105_a.getRNG().nextFloat() < 0.8F)

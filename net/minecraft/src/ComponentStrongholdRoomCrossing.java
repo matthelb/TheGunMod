@@ -18,6 +18,9 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
         field_35347_b = par2Random.nextInt(5);
     }
 
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
         getNextComponentNormal((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 4, 1);
@@ -39,6 +42,10 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
         }
     }
 
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))

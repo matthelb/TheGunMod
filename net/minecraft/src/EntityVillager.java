@@ -4,10 +4,10 @@ import java.util.Random;
 
 public class EntityVillager extends EntityAgeable implements INpc
 {
-    private int field_48359_b;
-    private boolean field_48360_c;
-    private boolean field_48358_g;
-    Village field_48361_a;
+    private int randomTickDivider;
+    private boolean isMatingFlag;
+    private boolean isPlayingFlag;
+    Village villageObj;
 
     public EntityVillager(World par1World)
     {
@@ -17,15 +17,15 @@ public class EntityVillager extends EntityAgeable implements INpc
     public EntityVillager(World par1World, int par2)
     {
         super(par1World);
-        field_48359_b = 0;
-        field_48360_c = false;
-        field_48358_g = false;
-        field_48361_a = null;
-        func_48357_f_(par2);
+        randomTickDivider = 0;
+        isMatingFlag = false;
+        isPlayingFlag = false;
+        villageObj = null;
+        setProfession(par2);
         setTextureByProfession();
         moveSpeed = 0.5F;
-        func_48333_ak().func_48663_b(true);
-        func_48333_ak().func_48656_a(true);
+        getNavigator().func_48663_b(true);
+        getNavigator().func_48656_a(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIAvoidEntity(this, net.minecraft.src.EntityZombie.class, 8F, 0.3F, 0.35F));
         tasks.addTask(2, new EntityAIMoveIndoors(this));
@@ -49,26 +49,29 @@ public class EntityVillager extends EntityAgeable implements INpc
         return true;
     }
 
-    protected void func_48326_g()
+    /**
+     * main AI tick function, replaces updateEntityActionState
+     */
+    protected void updateAITick()
     {
-        if (--field_48359_b <= 0)
+        if (--randomTickDivider <= 0)
         {
-            worldObj.field_48096_A.func_48639_a(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
-            field_48359_b = 70 + rand.nextInt(50);
-            field_48361_a = worldObj.field_48096_A.func_48632_a(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ), 32);
+            worldObj.villageCollectionObj.addVillagerPosition(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ));
+            randomTickDivider = 70 + rand.nextInt(50);
+            villageObj = worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ), 32);
 
-            if (field_48361_a == null)
+            if (villageObj == null)
             {
-                func_48322_aw();
+                detachHome();
             }
             else
             {
-                ChunkCoordinates chunkcoordinates = field_48361_a.func_48526_a();
-                func_48317_b(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, field_48361_a.func_48527_b());
+                ChunkCoordinates chunkcoordinates = villageObj.getCenter();
+                setHomeArea(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, villageObj.getVillageRadius());
             }
         }
 
-        super.func_48326_g();
+        super.updateAITick();
     }
 
     protected void entityInit()
@@ -97,7 +100,7 @@ public class EntityVillager extends EntityAgeable implements INpc
     public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
         super.writeEntityToNBT(par1NBTTagCompound);
-        par1NBTTagCompound.setInteger("Profession", func_48352_x());
+        par1NBTTagCompound.setInteger("Profession", getProfession());
     }
 
     /**
@@ -106,38 +109,38 @@ public class EntityVillager extends EntityAgeable implements INpc
     public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
         super.readEntityFromNBT(par1NBTTagCompound);
-        func_48357_f_(par1NBTTagCompound.getInteger("Profession"));
+        setProfession(par1NBTTagCompound.getInteger("Profession"));
         setTextureByProfession();
     }
 
     /**
-     * [This is the function which sets a Villager's skin based on its profession value]
+     * This is the function which sets a Villager's skin based on its profession value
      */
     private void setTextureByProfession()
     {
         texture = "/mob/villager/villager.png";
 
-        if (func_48352_x() == 0)
+        if (getProfession() == 0)
         {
             texture = "/mob/villager/farmer.png";
         }
 
-        if (func_48352_x() == 1)
+        if (getProfession() == 1)
         {
             texture = "/mob/villager/librarian.png";
         }
 
-        if (func_48352_x() == 2)
+        if (getProfession() == 2)
         {
             texture = "/mob/villager/priest.png";
         }
 
-        if (func_48352_x() == 3)
+        if (getProfession() == 3)
         {
             texture = "/mob/villager/smith.png";
         }
 
-        if (func_48352_x() == 4)
+        if (getProfession() == 4)
         {
             texture = "/mob/villager/butcher.png";
         }
@@ -175,43 +178,43 @@ public class EntityVillager extends EntityAgeable implements INpc
         return "mob.villager.defaultdeath";
     }
 
-    public void func_48357_f_(int par1)
+    public void setProfession(int par1)
     {
         dataWatcher.updateObject(16, Integer.valueOf(par1));
     }
 
-    public int func_48352_x()
+    public int getProfession()
     {
         return dataWatcher.getWatchableObjectInt(16);
     }
 
-    public boolean func_48355_A()
+    public boolean getIsMatingFlag()
     {
-        return field_48360_c;
+        return isMatingFlag;
     }
 
-    public void func_48356_a(boolean par1)
+    public void setIsMatingFlag(boolean par1)
     {
-        field_48360_c = par1;
+        isMatingFlag = par1;
     }
 
-    public void func_48354_b(boolean par1)
+    public void setIsPlayingFlag(boolean par1)
     {
-        field_48358_g = par1;
+        isPlayingFlag = par1;
     }
 
-    public boolean func_48353_E_()
+    public boolean getIsPlayingFlag()
     {
-        return field_48358_g;
+        return isPlayingFlag;
     }
 
-    public void func_48334_a(EntityLiving par1EntityLiving)
+    public void setRevengeTarget(EntityLiving par1EntityLiving)
     {
-        super.func_48334_a(par1EntityLiving);
+        super.setRevengeTarget(par1EntityLiving);
 
-        if (field_48361_a != null && par1EntityLiving != null)
+        if (villageObj != null && par1EntityLiving != null)
         {
-            field_48361_a.func_48530_a(par1EntityLiving);
+            villageObj.addOrRenewAgressor(par1EntityLiving);
         }
     }
 }

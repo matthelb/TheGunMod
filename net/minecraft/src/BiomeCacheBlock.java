@@ -5,8 +5,14 @@ public class BiomeCacheBlock
     public float temperatureValues[];
     public float rainfallValues[];
     public BiomeGenBase biomes[];
+
+    /** The x coordinate of the BiomeCacheBlock. */
     public int xPosition;
+
+    /** The z coordinate of the BiomeCacheBlock. */
     public int zPosition;
+
+    /** The last time this BiomeCacheBlock was accessed, in milliseconds. */
     public long lastAccessTime;
 
     /** The BiomeCache object that contains this BiomeCacheBlock */

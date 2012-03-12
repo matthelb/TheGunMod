@@ -47,6 +47,9 @@ public class InventoryPlayer implements IInventory
         return 9;
     }
 
+    /**
+     * Returns a slot index in main inventory containing a specific itemID
+     */
     private int getInventorySlotContainItem(int par1)
     {
         for (int i = 0; i < mainInventory.length; i++)
@@ -60,6 +63,9 @@ public class InventoryPlayer implements IInventory
         return -1;
     }
 
+    /**
+     * stores an itemstack in the users inventory
+     */
     private int storeItemStack(ItemStack par1ItemStack)
     {
         for (int i = 0; i < mainInventory.length; i++)
@@ -89,6 +95,10 @@ public class InventoryPlayer implements IInventory
         return -1;
     }
 
+    /**
+     * This function stores as many items of an ItemStack as possible in a matching slot and returns the quantity of
+     * left over items.
+     */
     private int storePartialItemStack(ItemStack par1ItemStack)
     {
         int i = par1ItemStack.itemID;
@@ -173,6 +183,9 @@ public class InventoryPlayer implements IInventory
         }
     }
 
+    /**
+     * removed one item of specified itemID from inventory (if it is in a stack, the stack size will reduce with 1)
+     */
     public boolean consumeInventoryItem(int par1)
     {
         int i = getInventorySlotContainItem(par1);
@@ -285,7 +298,11 @@ public class InventoryPlayer implements IInventory
         }
     }
 
-    public ItemStack func_48315_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         ItemStack aitemstack[] = mainInventory;
 
@@ -400,6 +417,9 @@ public class InventoryPlayer implements IInventory
         }
     }
 
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public int getSizeInventory()
     {
         return mainInventory.length + 4;
@@ -534,7 +554,7 @@ public class InventoryPlayer implements IInventory
         {
             if (mainInventory[i] != null)
             {
-                player.func_48349_a(mainInventory[i], true);
+                player.dropPlayerItemWithRandomChoice(mainInventory[i], true);
                 mainInventory[i] = null;
             }
         }
@@ -543,7 +563,7 @@ public class InventoryPlayer implements IInventory
         {
             if (armorInventory[j] != null)
             {
-                player.func_48349_a(armorInventory[j], true);
+                player.dropPlayerItemWithRandomChoice(armorInventory[j], true);
                 armorInventory[j] = null;
             }
         }

@@ -10,6 +10,10 @@ class RailLogic
     private int trackX;
     private int trackY;
     private int trackZ;
+
+    /**
+     * A boolean value that is true if the rail is powered, and false if its not.
+     */
     private final boolean isPoweredRail;
     private List connectedTracks;
     final BlockRail rail;
@@ -166,6 +170,9 @@ class RailLogic
         return false;
     }
 
+    /**
+     * Returns true if the specified block is in the same railway.
+     */
     private boolean isInTrack(int par1, int par2, int par3)
     {
         for (int i = 0; i < connectedTracks.size(); i++)

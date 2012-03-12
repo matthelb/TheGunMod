@@ -167,7 +167,7 @@ public class Vec3D
         double d1 = par1Vec3D.yCoord - yCoord;
         double d2 = par1Vec3D.zCoord - zCoord;
 
-        if (d * d < 1.0E-007D)
+        if (d * d < 1.0000000116860974E-007D)
         {
             return null;
         }
@@ -194,7 +194,7 @@ public class Vec3D
         double d1 = par1Vec3D.yCoord - yCoord;
         double d2 = par1Vec3D.zCoord - zCoord;
 
-        if (d1 * d1 < 1.0E-007D)
+        if (d1 * d1 < 1.0000000116860974E-007D)
         {
             return null;
         }
@@ -221,7 +221,7 @@ public class Vec3D
         double d1 = par1Vec3D.yCoord - yCoord;
         double d2 = par1Vec3D.zCoord - zCoord;
 
-        if (d2 * d2 < 1.0E-007D)
+        if (d2 * d2 < 1.0000000116860974E-007D)
         {
             return null;
         }
@@ -243,6 +243,9 @@ public class Vec3D
         return (new StringBuilder()).append("(").append(xCoord).append(", ").append(yCoord).append(", ").append(zCoord).append(")").toString();
     }
 
+    /**
+     * Rotates the vector around the x axis by the specified angle.
+     */
     public void rotateAroundX(float par1)
     {
         float f = MathHelper.cos(par1);
@@ -255,6 +258,9 @@ public class Vec3D
         zCoord = d2;
     }
 
+    /**
+     * Rotates the vector around the y axis by the specified angle.
+     */
     public void rotateAroundY(float par1)
     {
         float f = MathHelper.cos(par1);

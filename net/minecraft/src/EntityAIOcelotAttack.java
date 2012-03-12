@@ -12,7 +12,7 @@ public class EntityAIOcelotAttack extends EntityAIBase
         field_48168_d = 0;
         field_48169_b = par1EntityLiving;
         field_48171_a = par1EntityLiving.worldObj;
-        func_46087_a(3);
+        setMutexBits(3);
     }
 
     /**
@@ -20,7 +20,7 @@ public class EntityAIOcelotAttack extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLiving entityliving = field_48169_b.func_48331_as();
+        EntityLiving entityliving = field_48169_b.getAttackTarget();
 
         if (entityliving == null)
         {
@@ -49,16 +49,22 @@ public class EntityAIOcelotAttack extends EntityAIBase
         }
         else
         {
-            return !field_48169_b.func_48333_ak().func_46034_b() || shouldExecute();
+            return !field_48169_b.getNavigator().noPath() || shouldExecute();
         }
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48170_c = null;
-        field_48169_b.func_48333_ak().func_48662_f();
+        field_48169_b.getNavigator().func_48662_f();
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         field_48169_b.getLookHelper().setLookPositionWithEntity(field_48170_c, 30F, 30F);
@@ -75,7 +81,7 @@ public class EntityAIOcelotAttack extends EntityAIBase
             f = 0.18F;
         }
 
-        field_48169_b.func_48333_ak().func_48652_a(field_48170_c, f);
+        field_48169_b.getNavigator().func_48652_a(field_48170_c, f);
         field_48168_d = Math.max(field_48168_d - 1, 0);
 
         if (d1 > d)

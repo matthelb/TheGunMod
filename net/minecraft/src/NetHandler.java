@@ -113,6 +113,9 @@ public abstract class NetHandler
         registerPacket(par1Packet18Animation);
     }
 
+    /**
+     * runs registerPacket on the given Packet19EntityAction
+     */
     public void handleEntityAction(Packet19EntityAction par1Packet19EntityAction)
     {
         registerPacket(par1Packet19EntityAction);
@@ -138,16 +141,25 @@ public abstract class NetHandler
         registerPacket(par1Packet6SpawnPosition);
     }
 
+    /**
+     * Packet handler
+     */
     public void handleEntityVelocity(Packet28EntityVelocity par1Packet28EntityVelocity)
     {
         registerPacket(par1Packet28EntityVelocity);
     }
 
+    /**
+     * Packet handler
+     */
     public void handleEntityMetadata(Packet40EntityMetadata par1Packet40EntityMetadata)
     {
         registerPacket(par1Packet40EntityMetadata);
     }
 
+    /**
+     * Packet handler
+     */
     public void handleAttachEntity(Packet39AttachEntity par1Packet39AttachEntity)
     {
         registerPacket(par1Packet39AttachEntity);
@@ -158,11 +170,17 @@ public abstract class NetHandler
         registerPacket(par1Packet7UseEntity);
     }
 
+    /**
+     * Packet handler
+     */
     public void handleEntityStatus(Packet38EntityStatus par1Packet38EntityStatus)
     {
         registerPacket(par1Packet38EntityStatus);
     }
 
+    /**
+     * Recieves player health from the server and then proceeds to set it locally on the client.
+     */
     public void handleUpdateHealth(Packet8UpdateHealth par1Packet8UpdateHealth)
     {
         registerPacket(par1Packet8UpdateHealth);
@@ -206,6 +224,9 @@ public abstract class NetHandler
         registerPacket(par1Packet104WindowItems);
     }
 
+    /**
+     * Updates Client side signs
+     */
     public void handleUpdateSign(Packet130UpdateSign par1Packet130UpdateSign)
     {
         registerPacket(par1Packet130UpdateSign);
@@ -226,6 +247,9 @@ public abstract class NetHandler
         registerPacket(par1Packet106Transaction);
     }
 
+    /**
+     * Packet handler
+     */
     public void handleEntityPainting(Packet25EntityPainting par1Packet25EntityPainting)
     {
         registerPacket(par1Packet25EntityPainting);
@@ -236,6 +260,9 @@ public abstract class NetHandler
         registerPacket(par1Packet54PlayNoteBlock);
     }
 
+    /**
+     * runs registerPacket on the given Packet200Statistic
+     */
     public void handleStatistic(Packet200Statistic par1Packet200Statistic)
     {
         registerPacket(par1Packet200Statistic);
@@ -251,6 +278,9 @@ public abstract class NetHandler
         registerPacket(par1Packet70Bed);
     }
 
+    /**
+     * Handles weather packet
+     */
     public void handleWeather(Packet71Weather par1Packet71Weather)
     {
         registerPacket(par1Packet71Weather);

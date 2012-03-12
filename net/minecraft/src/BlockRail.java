@@ -4,14 +4,22 @@ import java.util.Random;
 
 public class BlockRail extends Block
 {
+    /** Power related rails have this field at true. */
     private final boolean isPowered;
 
+    /**
+     * Returns true if the block at the coordinates of world passed is a valid rail block (current is rail, powered or
+     * detector).
+     */
     public static final boolean isRailBlockAt(World par0World, int par1, int par2, int par3)
     {
         int i = par0World.getBlockId(par1, par2, par3);
         return i == Block.rail.blockID || i == Block.railPowered.blockID || i == Block.railDetector.blockID;
     }
 
+    /**
+     * Return true if the parameter is a blockID for a valid rail block (current is rail, powered or detector).
+     */
     public static final boolean isRailBlock(int par0)
     {
         return par0 == Block.rail.blockID || par0 == Block.railPowered.blockID || par0 == Block.railDetector.blockID;
@@ -24,6 +32,9 @@ public class BlockRail extends Block
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
     }
 
+    /**
+     * Returns true if the block is power related rail.
+     */
     public boolean isPowered()
     {
         return isPowered;
@@ -396,6 +407,9 @@ public class BlockRail extends Block
         return 0;
     }
 
+    /**
+     * Return true if the blocks passed is a power related rail.
+     */
     static boolean isPoweredBlockRail(BlockRail par0BlockRail)
     {
         return par0BlockRail.isPowered;

@@ -41,7 +41,7 @@ public class GuiStatsComponent extends JComponent
         System.gc();
         displayStrings[0] = (new StringBuilder()).append("Memory use: ").append(l / 1024L / 1024L).append(" mb (").append((Runtime.getRuntime().freeMemory() * 100L) / Runtime.getRuntime().maxMemory()).append("% free)").toString();
         displayStrings[1] = (new StringBuilder()).append("Threads: ").append(NetworkManager.numReadThreads).append(" + ").append(NetworkManager.numWriteThreads).toString();
-        displayStrings[2] = (new StringBuilder()).append("Avg tick: ").append(field_40573_a.format(func_48551_a(field_40572_e.field_40027_f) * 10.0E-007D)).append(" ms").toString();
+        displayStrings[2] = (new StringBuilder()).append("Avg tick: ").append(field_40573_a.format(func_48551_a(field_40572_e.field_40027_f) * 9.9999999999999995E-007D)).append(" ms").toString();
         displayStrings[3] = (new StringBuilder()).append("Avg sent: ").append((int)func_48551_a(field_40572_e.field_48080_u)).append(", Avg size: ").append((int)func_48551_a(field_40572_e.field_48079_v)).toString();
         displayStrings[4] = (new StringBuilder()).append("Avg rec: ").append((int)func_48551_a(field_40572_e.field_48078_w)).append(", Avg size: ").append((int)func_48551_a(field_40572_e.field_48082_x)).toString();
 
@@ -54,7 +54,7 @@ public class GuiStatsComponent extends JComponent
 
         while (!(i >= field_40572_e.worldMngr.length))
         {
-            displayStrings[5 + i] = (new StringBuilder()).append("Lvl ").append(i).append(" tick: ").append(field_40573_a.format(func_48551_a(field_40572_e.field_40028_g[i]) * 10.0E-007D)).append(" ms").toString();
+            displayStrings[5 + i] = (new StringBuilder()).append("Lvl ").append(i).append(" tick: ").append(field_40573_a.format(func_48551_a(field_40572_e.field_40028_g[i]) * 9.9999999999999995E-007D)).append(" ms").toString();
 
             if (field_40572_e.worldMngr[i] == null || field_40572_e.worldMngr[i].chunkProviderServer == null)
             {

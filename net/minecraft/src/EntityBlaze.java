@@ -4,7 +4,10 @@ import java.util.Random;
 
 public class EntityBlaze extends EntityMob
 {
+    /** Random offset used in floating behaviour */
     private float heightOffset;
+
+    /** ticks until heightOffset is randomized */
     private int heightOffsetUpdateTime;
     private int field_40128_g;
 
@@ -100,7 +103,7 @@ public class EntityBlaze extends EntityMob
 
             if (getEntityToAttack() != null && getEntityToAttack().posY + (double)getEntityToAttack().getEyeHeight() > posY + (double)getEyeHeight() + (double)heightOffset)
             {
-                motionY = motionY + (0.3D - motionY) * 0.3D;
+                motionY = motionY + (0.30000001192092896D - motionY) * 0.30000001192092896D;
             }
         }
 
@@ -111,7 +114,7 @@ public class EntityBlaze extends EntityMob
 
         if (!onGround && motionY < 0.0D)
         {
-            motionY *= 0.6D;
+            motionY *= 0.59999999999999998D;
         }
 
         for (int i = 0; i < 2; i++)
@@ -253,6 +256,9 @@ public class EntityBlaze extends EntityMob
         dataWatcher.updateObject(16, Byte.valueOf(byte0));
     }
 
+    /**
+     * Checks to make sure the light is not too bright where the mob is spawning
+     */
     protected boolean isValidLightLevel()
     {
         return true;

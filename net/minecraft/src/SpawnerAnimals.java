@@ -5,6 +5,7 @@ import java.util.*;
 
 public final class SpawnerAnimals
 {
+    /** The 17x17 area around the player where mobs can spawn */
     private static HashMap eligibleChunksForSpawning = new HashMap();
     protected static final Class nightSpawnEntities[];
 
@@ -12,6 +13,9 @@ public final class SpawnerAnimals
     {
     }
 
+    /**
+     * Given a chunk, find a random position in it.
+     */
     protected static ChunkPosition getRandomSpawningPointInChunk(World par0World, int par1, int par2)
     {
         Chunk chunk = par0World.getChunkFromChunkCoords(par1, par2);
@@ -21,6 +25,9 @@ public final class SpawnerAnimals
         return new ChunkPosition(i, j, k);
     }
 
+    /**
+     * The main spawning algorithm, spawns three random creatures of types in the subclass array
+     */
     public static final int performSpawning(World par0World, boolean par1, boolean par2)
     {
         if (!par1 && !par2)
@@ -184,6 +191,9 @@ public final class SpawnerAnimals
         }
     }
 
+    /**
+     * Returns whether or not the specified creature type can spawn at the specified location.
+     */
     public static boolean canCreatureTypeSpawnAtLocation(EnumCreatureType par0EnumCreatureType, World par1World, int par2, int par3, int par4)
     {
         if (par0EnumCreatureType.getCreatureMaterial() == Material.water)
@@ -193,7 +203,7 @@ public final class SpawnerAnimals
         else
         {
             int i = par1World.getBlockId(par2, par3 - 1, par4);
-            return Block.func_48126_g(i) && i != Block.bedrock.blockID && !par1World.isBlockNormalCube(par2, par3, par4) && !par1World.getBlockMaterial(par2, par3, par4).isLiquid() && !par1World.isBlockNormalCube(par2, par3 + 1, par4);
+            return Block.isNormalCube(i) && i != Block.bedrock.blockID && !par1World.isBlockNormalCube(par2, par3, par4) && !par1World.getBlockMaterial(par2, par3, par4).isLiquid() && !par1World.isBlockNormalCube(par2, par3 + 1, par4);
         }
     }
 
@@ -219,7 +229,7 @@ public final class SpawnerAnimals
             {
                 EntityOcelot entityocelot = new EntityOcelot(par1World);
                 entityocelot.setLocationAndAngles(par2, par3, par4, par0EntityLiving.rotationYaw, 0.0F);
-                entityocelot.func_48350_c(-24000);
+                entityocelot.setGrowingAge(-24000);
                 par1World.spawnEntityInWorld(entityocelot);
             }
         }

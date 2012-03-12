@@ -218,7 +218,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
                 d7 = par1Packet10Flying.zPosition;
                 double d10 = par1Packet10Flying.stance - par1Packet10Flying.yPosition;
 
-                if (!playerEntity.isPlayerSleeping() && (d10 > 1.65D || d10 < 0.1D))
+                if (!playerEntity.isPlayerSleeping() && (d10 > 1.6499999999999999D || d10 < 0.10000000000000001D))
                 {
                     kickPlayer("Illegal stance");
                     logger.warning((new StringBuilder()).append(playerEntity.username).append(" had an illegal stance: ").append(d10).toString());
@@ -300,7 +300,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
                 return;
             }
 
-            AxisAlignedBB axisalignedbb = playerEntity.boundingBox.copy().expand(f4, f4, f4).addCoord(0.0D, -0.55D, 0.0D);
+            AxisAlignedBB axisalignedbb = playerEntity.boundingBox.copy().expand(f4, f4, f4).addCoord(0.0D, -0.55000000000000004D, 0.0D);
 
             if (!mcServer.allowFlight && !playerEntity.itemInWorldManager.isCreative() && !worldserver.isAABBEmpty(axisalignedbb))
             {
@@ -337,7 +337,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
         lastPosY = par3;
         lastPosZ = par5;
         playerEntity.setPositionAndRotation(par1, par3, par5, par7, par8);
-        playerEntity.playerNetServerHandler.sendPacket(new Packet13PlayerLookMove(par1, par3 + 1.62D, par3, par5, par7, par8, false));
+        playerEntity.playerNetServerHandler.sendPacket(new Packet13PlayerLookMove(par1, par3 + 1.6200000047683716D, par3, par5, par7, par8, false));
     }
 
     public void handleBlockDig(Packet14BlockDig par1Packet14BlockDig)
@@ -385,7 +385,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
                 return;
             }
 
-            if (j >= mcServer.field_48081_t)
+            if (j >= mcServer.buildLimit)
             {
                 return;
             }
@@ -456,7 +456,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
 
             playerEntity.itemInWorldManager.itemUsed(playerEntity, worldserver, itemstack);
         }
-        else if (par1Packet15Place.yPosition < mcServer.field_48081_t - 1 || par1Packet15Place.direction != 1 && par1Packet15Place.yPosition < mcServer.field_48081_t)
+        else if (par1Packet15Place.yPosition < mcServer.buildLimit - 1 || par1Packet15Place.direction != 1 && par1Packet15Place.yPosition < mcServer.buildLimit)
         {
             ChunkCoordinates chunkcoordinates = worldserver.getSpawnPoint();
             int i1 = MathHelper.abs(i - chunkcoordinates.posX);
@@ -476,7 +476,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
         }
         else
         {
-            playerEntity.playerNetServerHandler.sendPacket(new Packet3Chat((new StringBuilder()).append("\2477Height limit for building is ").append(mcServer.field_48081_t).toString()));
+            playerEntity.playerNetServerHandler.sendPacket(new Packet3Chat((new StringBuilder()).append("\2477Height limit for building is ").append(mcServer.buildLimit).toString()));
             flag = true;
         }
 
@@ -675,6 +675,9 @@ public class NetServerHandler extends NetHandler implements ICommandListener
         }
     }
 
+    /**
+     * runs registerPacket on the given Packet19EntityAction
+     */
     public void handleEntityAction(Packet19EntityAction par1Packet19EntityAction)
     {
         if (par1Packet19EntityAction.state == 1)
@@ -852,7 +855,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
             else if (flag && flag2 && flag3 && field_48073_n < 200)
             {
                 field_48073_n += 20;
-                EntityItem entityitem = playerEntity.func_48348_b(itemstack);
+                EntityItem entityitem = playerEntity.dropPlayerItem(itemstack);
 
                 if (entityitem != null)
                 {
@@ -872,6 +875,9 @@ public class NetServerHandler extends NetHandler implements ICommandListener
         }
     }
 
+    /**
+     * Updates Client side signs
+     */
     public void handleUpdateSign(Packet130UpdateSign par1Packet130UpdateSign)
     {
         WorldServer worldserver = mcServer.getWorldManager(playerEntity.dimension);

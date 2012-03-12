@@ -62,6 +62,9 @@ public class ComponentMineshaftCross extends StructureComponent
         }
     }
 
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
         int i = getComponentType();
@@ -117,6 +120,10 @@ public class ComponentMineshaftCross extends StructureComponent
         }
     }
 
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))

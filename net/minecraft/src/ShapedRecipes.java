@@ -2,10 +2,17 @@ package net.minecraft.src;
 
 public class ShapedRecipes implements IRecipe
 {
+    /** How many horizontal slots this recipe is wide. */
     private int recipeWidth;
+
+    /** How many vertical slots this recipe uses. */
     private int recipeHeight;
     private ItemStack recipeItems[];
+
+    /** Is the ItemStack that you get when craft the recipe. */
     private ItemStack recipeOutput;
+
+    /** Is the itemID of the output item that you get when craft the recipe. */
     public final int recipeOutputItemID;
 
     public ShapedRecipes(int par1, int par2, ItemStack par3ArrayOfItemStack[], ItemStack par4ItemStack)
@@ -22,6 +29,9 @@ public class ShapedRecipes implements IRecipe
         return recipeOutput;
     }
 
+    /**
+     * Used to check if a recipe matches current crafting inventory
+     */
     public boolean matches(InventoryCrafting par1InventoryCrafting)
     {
         for (int i = 0; i <= 3 - recipeWidth; i++)
@@ -95,6 +105,9 @@ public class ShapedRecipes implements IRecipe
         return true;
     }
 
+    /**
+     * Returns an Item that is the result of this recipe
+     */
     public ItemStack getCraftingResult(InventoryCrafting par1InventoryCrafting)
     {
         return new ItemStack(recipeOutput.itemID, recipeOutput.stackSize, recipeOutput.getItemDamage());

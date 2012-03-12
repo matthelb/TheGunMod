@@ -4,6 +4,7 @@ import java.util.Random;
 
 public class Teleporter
 {
+    /** A private Random() function in Teleporter */
     private Random random;
 
     public Teleporter()

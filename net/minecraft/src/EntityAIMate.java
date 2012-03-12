@@ -16,7 +16,7 @@ public class EntityAIMate extends EntityAIBase
         field_48199_d = par1EntityAnimal;
         field_48203_a = par1EntityAnimal.worldObj;
         field_48202_c = par2;
-        func_46087_a(3);
+        setMutexBits(3);
     }
 
     /**
@@ -43,16 +43,22 @@ public class EntityAIMate extends EntityAIBase
         return field_48200_e.isEntityAlive() && field_48200_e.func_48363_r_() && field_48201_b < 60;
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48200_e = null;
         field_48201_b = 0;
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         field_48199_d.getLookHelper().setLookPositionWithEntity(field_48200_e, 10F, field_48199_d.getVerticalFaceSpeed());
-        field_48199_d.func_48333_ak().func_48652_a(field_48200_e, field_48202_c);
+        field_48199_d.getNavigator().func_48652_a(field_48200_e, field_48202_c);
         field_48201_b++;
 
         if (field_48201_b == 60)
@@ -89,11 +95,11 @@ public class EntityAIMate extends EntityAIBase
             return;
         }
 
-        field_48199_d.func_48350_c(6000);
-        field_48200_e.func_48350_c(6000);
+        field_48199_d.setGrowingAge(6000);
+        field_48200_e.setGrowingAge(6000);
         field_48199_d.func_48364_s_();
         field_48200_e.func_48364_s_();
-        entityanimal.func_48350_c(-24000);
+        entityanimal.setGrowingAge(-24000);
         entityanimal.setLocationAndAngles(field_48199_d.posX, field_48199_d.posY, field_48199_d.posZ, 0.0F, 0.0F);
         field_48203_a.spawnEntityInWorld(entityanimal);
         Random random = field_48199_d.getRNG();

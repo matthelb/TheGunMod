@@ -55,7 +55,7 @@ public class EntitySheep extends EntityAnimal
         texture = "/mob/sheep.png";
         setSize(0.9F, 1.3F);
         float f = 0.23F;
-        func_48333_ak().func_48656_a(true);
+        getNavigator().func_48656_a(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIPanic(this, 0.38F));
         tasks.addTask(2, new EntityAIMate(this, f));
@@ -209,6 +209,9 @@ public class EntitySheep extends EntityAnimal
         dataWatcher.updateObject(16, Byte.valueOf((byte)(byte0 & 0xf0 | par1 & 0xf)));
     }
 
+    /**
+     * returns true if a sheeps wool has been sheared
+     */
     public boolean getSheared()
     {
         return (dataWatcher.getWatchableObjectByte(16) & 0x10) != 0;
@@ -231,6 +234,9 @@ public class EntitySheep extends EntityAnimal
         }
     }
 
+    /**
+     * This method is called when a sheep spawns in the world to select the color of sheep fleece.
+     */
     public static int getRandomFleeceColor(Random par0Random)
     {
         int i = par0Random.nextInt(100);
@@ -284,14 +290,14 @@ public class EntitySheep extends EntityAnimal
 
         if (isChild())
         {
-            int i = func_48351_J() + 1200;
+            int i = getGrowingAge() + 1200;
 
             if (i > 0)
             {
                 i = 0;
             }
 
-            func_48350_c(i);
+            setGrowingAge(i);
         }
     }
 }

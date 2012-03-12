@@ -26,9 +26,12 @@ public class EntityAIBreakDoor extends EntityAIDoorInteract
         }
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        super.func_46088_e();
+        super.startExecuting();
         field_48194_i = 240;
     }
 
@@ -41,6 +44,9 @@ public class EntityAIBreakDoor extends EntityAIDoorInteract
         return field_48194_i >= 0 && !field_48189_e.func_48135_d(field_48192_a.worldObj, field_48190_b, field_48191_c, field_48188_d) && d < 4D;
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         super.updateTask();

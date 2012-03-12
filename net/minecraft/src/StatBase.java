@@ -6,9 +6,14 @@ import java.util.*;
 
 public class StatBase
 {
+    /** The Stat ID */
     public final int statId;
+
+    /** The Stat name */
     private final String statName;
     public boolean isIndependent;
+
+    /** Holds the GUID of the stat. */
     public String statGuid;
     private final IStatType type;
     private static NumberFormat numberFormat;
@@ -30,12 +35,19 @@ public class StatBase
         this(par1, par2Str, simpleStatType);
     }
 
+    /**
+     * Initializes the current stat as independent (i.e., lacking prerequisites for being updated) and returns the
+     * current instance.
+     */
     public StatBase initIndependentStat()
     {
         isIndependent = true;
         return this;
     }
 
+    /**
+     * Register the stat into StatList.
+     */
     public StatBase registerStat()
     {
         if (StatList.oneShotStats.containsKey(Integer.valueOf(statId)))

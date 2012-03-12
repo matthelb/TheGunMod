@@ -2,7 +2,10 @@ package net.minecraft.src;
 
 public class ChunkCoordIntPair
 {
+    /** The X position of this Chunk Coordinate Pair */
     public final int chunkXPos;
+
+    /** The Z position of this Chunk Coordinate Pair */
     public final int chunkZPos;
 
     public ChunkCoordIntPair(int par1, int par2)

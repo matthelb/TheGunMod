@@ -4,6 +4,8 @@ public class Slot
 {
     /** The index of the slot in the inventory. */
     private final int slotIndex;
+
+    /** The inventory we want to extract a slot from. */
     public final IInventory inventory;
 
     /** the id of the slot(also the index in the inventory arraylist) */
@@ -75,6 +77,9 @@ public class Slot
         return inventory.getStackInSlot(slotIndex);
     }
 
+    /**
+     * Returns if this slot contains a stack.
+     */
     public boolean getHasStack()
     {
         return getStack() != null;

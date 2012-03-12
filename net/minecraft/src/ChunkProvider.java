@@ -5,6 +5,7 @@ import java.util.*;
 
 public class ChunkProvider implements IChunkProvider
 {
+    /** A set of dropped chunks. Currently not used in single player. */
     private Set droppedChunksSet;
 
     /** Just an empty chunk to start fresh. */
@@ -13,8 +14,16 @@ public class ChunkProvider implements IChunkProvider
     /** ChunkProvider object. */
     private IChunkProvider chunkProvider;
     private IChunkLoader chunkLoader;
+
+    /**
+     * A map of all the currently loaded chunks, uses the chunk id as the key.
+     */
     private LongHashMap chunkMap;
+
+    /** A list of all the currently loaded chunks. */
     private List chunkList;
+
+    /** The World object which this ChunkProvider was constructed with */
     private World worldObj;
     private int field_35557_h;
 
@@ -100,6 +109,10 @@ public class ChunkProvider implements IChunkProvider
         return chunk;
     }
 
+    /**
+     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
+     * specified chunk from the map seed and chunk seed
+     */
     public Chunk provideChunk(int par1, int par2)
     {
         Chunk chunk = (Chunk)chunkMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
@@ -114,6 +127,9 @@ public class ChunkProvider implements IChunkProvider
         }
     }
 
+    /**
+     * Attemps to load the chunk from the save file, returns null if the chunk is not available.
+     */
     private Chunk loadChunkFromFile(int par1, int par2)
     {
         if (chunkLoader == null)
@@ -238,6 +254,10 @@ public class ChunkProvider implements IChunkProvider
         return true;
     }
 
+    /**
+     * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
+     * is always empty and will not remove any chunks.
+     */
     public boolean unload100OldestChunks()
     {
         for (int i = 0; i < 100; i++)
@@ -280,6 +300,9 @@ public class ChunkProvider implements IChunkProvider
         return chunkProvider.unload100OldestChunks();
     }
 
+    /**
+     * Returns if the IChunkProvider supports saving.
+     */
     public boolean canSave()
     {
         return true;

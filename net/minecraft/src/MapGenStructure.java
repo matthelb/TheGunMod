@@ -16,6 +16,9 @@ public abstract class MapGenStructure extends MapGenBase
         super.generate(par1IChunkProvider, par2World, par3, par4, par5ArrayOfByte);
     }
 
+    /**
+     * Recursively called by generate() (func_867_a) and optionally by itself.
+     */
     protected void recursiveGenerate(World par1World, int par2, int par3, int par4, int par5, byte par6ArrayOfByte[])
     {
         if (coordMap.containsKey(Long.valueOf(ChunkCoordIntPair.chunkXZ2Int(par2, par3))))

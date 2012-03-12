@@ -150,6 +150,9 @@ public class BlockVine extends Block
         }
     }
 
+    /**
+     * returns true if a vine can be placed on that block (checks for render as normal block and if it is solid)
+     */
     private boolean canBePlacedOn(int par1)
     {
         if (par1 == 0)
@@ -161,6 +164,9 @@ public class BlockVine extends Block
         return block.renderAsNormalBlock() && block.blockMaterial.blocksMovement();
     }
 
+    /**
+     * Returns if the vine can stay in the world. It also changes the metadata according to neighboring blocks.
+     */
     private boolean canVineStay(World par1World, int par2, int par3, int par4)
     {
         int i = par1World.getBlockMetadata(par2, par3, par4);

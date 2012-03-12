@@ -43,6 +43,9 @@ public class EntitySlime extends EntityLiving implements IMob
         return i * i;
     }
 
+    /**
+     * Returns the size of the slime.
+     */
     public int getSlimeSize()
     {
         return dataWatcher.getWatchableObjectByte(16);
@@ -208,7 +211,7 @@ public class EntitySlime extends EntityLiving implements IMob
         {
             int i = getSlimeSize();
 
-            if (canEntityBeSeen(par1EntityPlayer) && (double)getDistanceToEntity(par1EntityPlayer) < 0.6D * (double)i && par1EntityPlayer.attackEntityFrom(DamageSource.causeMobDamage(this), func_40113_D()))
+            if (canEntityBeSeen(par1EntityPlayer) && (double)getDistanceToEntity(par1EntityPlayer) < 0.59999999999999998D * (double)i && par1EntityPlayer.attackEntityFrom(DamageSource.causeMobDamage(this), func_40113_D()))
             {
                 worldObj.playSoundAtEntity(this, "mob.slimeattack", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
             }
@@ -281,6 +284,10 @@ public class EntitySlime extends EntityLiving implements IMob
         return 0.4F * (float)getSlimeSize();
     }
 
+    /**
+     * The speed it takes to move the entityliving's rotationPitch through the faceEntity method. This is only currently
+     * use in wolves.
+     */
     public int getVerticalFaceSpeed()
     {
         return 0;

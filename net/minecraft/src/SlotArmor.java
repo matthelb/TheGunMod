@@ -2,7 +2,12 @@ package net.minecraft.src;
 
 class SlotArmor extends Slot
 {
+    /**
+     * The armor type that can be placed on that slot, it uses the same values of armorType field on ItemArmor.
+     */
     final int armorType;
+
+    /** The inventory we want to extract a slot from. */
     final ContainerPlayer inventory;
 
     SlotArmor(ContainerPlayer par1ContainerPlayer, IInventory par2IInventory, int par3, int par4, int par5, int par6)

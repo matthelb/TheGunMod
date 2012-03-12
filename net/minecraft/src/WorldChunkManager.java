@@ -11,6 +11,8 @@ public class WorldChunkManager
 
     /** The biome list. */
     private BiomeCache biomeCache;
+
+    /** A list of biomes that the player can spawn in. */
     private List biomesToSpawnIn;
 
     protected WorldChunkManager()
@@ -55,6 +57,9 @@ public class WorldChunkManager
         return biomeCache.getBiomeGenAt(par1, par2);
     }
 
+    /**
+     * Returns a list of rainfall values for the specified blocks. Args: listToReuse, x, z, width, length.
+     */
     public float[] getRainfall(float par1ArrayOfFloat[], int par2, int par3, int par4, int par5)
     {
         IntCache.resetIntCache();

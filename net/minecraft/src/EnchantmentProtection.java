@@ -18,6 +18,11 @@ public class EnchantmentProtection extends Enchantment
     {
         20, 12, 10, 12, 15
     };
+
+    /**
+     * Defines the type of protection of the enchantment, 0 = all, 1 = fire, 2 = fall (feather fall), 3 = explosion and
+     * 4 = projectile.
+     */
     public final int protectionType;
 
     public EnchantmentProtection(int par1, int par2, int par3)
@@ -31,21 +36,33 @@ public class EnchantmentProtection extends Enchantment
         }
     }
 
+    /**
+     * Returns the minimal value of enchantability nedded on the enchantment level passed.
+     */
     public int getMinEnchantability(int par1)
     {
         return baseEnchantability[protectionType] + (par1 - 1) * levelEnchantability[protectionType];
     }
 
+    /**
+     * Returns the maximum value of enchantability nedded on the enchantment level passed.
+     */
     public int getMaxEnchantability(int par1)
     {
         return getMinEnchantability(par1) + thresholdEnchantability[protectionType];
     }
 
+    /**
+     * Returns the maximum level that the enchantment can have.
+     */
     public int getMaxLevel()
     {
         return 4;
     }
 
+    /**
+     * Calculates de damage protection of the enchantment based on level and damage source passed.
+     */
     public int calcModifierDamage(int par1, DamageSource par2DamageSource)
     {
         if (par2DamageSource.canHarmInCreative())
@@ -85,6 +102,9 @@ public class EnchantmentProtection extends Enchantment
         }
     }
 
+    /**
+     * Determines if the enchantment passed can be applyied together with this enchantment.
+     */
     public boolean canApplyTogether(Enchantment par1Enchantment)
     {
         if (par1Enchantment instanceof EnchantmentProtection)

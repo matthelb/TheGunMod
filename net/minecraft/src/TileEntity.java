@@ -127,6 +127,9 @@ public class TileEntity
         return tileentity;
     }
 
+    /**
+     * Returns block data at the location of this entity (client-only).
+     */
     public int getBlockMetadata()
     {
         if (blockMetadata == -1)

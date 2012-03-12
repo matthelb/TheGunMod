@@ -9,10 +9,12 @@ public class Chunk
      * Determines if the chunk is lit or not at a light value greater than 0.
      */
     public static boolean isLit;
-    private ExtendedBlockStorage field_48566_p[];
+    private ExtendedBlockStorage storageArrays[];
     private byte field_48565_q[];
     public int precipitationHeightMap[];
     public boolean updateSkylightColumns[];
+
+    /** Whether or not this Chunk is currently loaded into the World */
     public boolean isChunkLoaded;
 
     /** Reference to the World object. */
@@ -25,6 +27,8 @@ public class Chunk
     /** The z coordinate of the chunk. */
     public final int zPosition;
     private boolean field_40544_v;
+
+    /** A Map of ChunkPositions to TileEntities in this chunk */
     public Map chunkTileEntityMap;
     public List field_48563_j[];
 
@@ -35,14 +39,20 @@ public class Chunk
      * Set to true if the chunk has been modified and needs to be updated internally.
      */
     public boolean isModified;
+
+    /**
+     * Whether this Chunk has any Entities and thus requires saving on every tick
+     */
     public boolean hasEntities;
+
+    /** The time according to World.worldTime when this chunk was last saved */
     public long lastSaveTime;
     private int field_48564_s;
     boolean field_35638_u;
 
     public Chunk(World par1World, int par2, int par3)
     {
-        field_48566_p = new ExtendedBlockStorage[16];
+        storageArrays = new ExtendedBlockStorage[16];
         field_48565_q = new byte[256];
         precipitationHeightMap = new int[256];
         updateSkylightColumns = new boolean[256];
@@ -89,17 +99,20 @@ public class Chunk
 
                     int i1 = l >> 4;
 
-                    if (field_48566_p[i1] == null)
+                    if (storageArrays[i1] == null)
                     {
-                        field_48566_p[i1] = new ExtendedBlockStorage(i1 << 4);
+                        storageArrays[i1] = new ExtendedBlockStorage(i1 << 4);
                     }
 
-                    field_48566_p[i1].func_48588_a(j, l & 0xf, k, byte0);
+                    storageArrays[i1].setExtBlockID(j, l & 0xf, k, byte0);
                 }
             }
         }
     }
 
+    /**
+     * Checks whether the chunk is at the X/Z location specified
+     */
     public boolean isAtLocation(int par1, int par2)
     {
         return par1 == xPosition && par2 == zPosition;
@@ -115,11 +128,11 @@ public class Chunk
 
     public int func_48561_g()
     {
-        for (int i = field_48566_p.length - 1; i >= 0; i--)
+        for (int i = storageArrays.length - 1; i >= 0; i--)
         {
-            if (field_48566_p[i] != null)
+            if (storageArrays[i] != null)
             {
-                return field_48566_p[i].func_48597_c();
+                return storageArrays[i].func_48597_c();
             }
         }
 
@@ -128,9 +141,12 @@ public class Chunk
 
     public ExtendedBlockStorage[] func_48553_h()
     {
-        return field_48566_p;
+        return storageArrays;
     }
 
+    /**
+     * Generates the initial skylight map for the chunk upon generation or load.
+     */
     public void generateSkylightMap()
     {
         int i = func_48561_g();
@@ -173,11 +189,11 @@ public class Chunk
 
                     if (j1 > 0)
                     {
-                        ExtendedBlockStorage extendedblockstorage = field_48566_p[k1 >> 4];
+                        ExtendedBlockStorage extendedblockstorage = storageArrays[k1 >> 4];
 
                         if (extendedblockstorage != null)
                         {
-                            extendedblockstorage.func_48592_c(j, k1 & 0xf, l, j1);
+                            extendedblockstorage.setExtSkylightValue(j, k1 & 0xf, l, j1);
                             worldObj.func_48086_o((xPosition << 4) + j, k1, (zPosition << 4) + l);
                         }
                     }
@@ -201,6 +217,9 @@ public class Chunk
     {
     }
 
+    /**
+     * Propagates a given sky-visible block's light value downward and upward to neighboring blocks as necessary.
+     */
     private void propagateSkylightOcclusion(int par1, int par2)
     {
         updateSkylightColumns[par1 + par2 * 16] = true;
@@ -263,6 +282,9 @@ public class Chunk
         Profiler.endSection();
     }
 
+    /**
+     * Checks the height of a block next to a sky-visible block and schedules a lighting update as necessary.
+     */
     private void checkSkylightNeighborHeight(int par1, int par2, int par3)
     {
         int i = worldObj.getHeightValue(par1, par2);
@@ -290,6 +312,9 @@ public class Chunk
         }
     }
 
+    /**
+     * Initiates the recalculation of both the block-light and sky-light for a given block inside a chunk.
+     */
     private void relightBlock(int par1, int par2, int par3)
     {
         int i = field_48562_f[par3 << 4 | par1];
@@ -318,11 +343,11 @@ public class Chunk
             {
                 for (int i1 = j; i1 < i; i1++)
                 {
-                    ExtendedBlockStorage extendedblockstorage = field_48566_p[i1 >> 4];
+                    ExtendedBlockStorage extendedblockstorage = storageArrays[i1 >> 4];
 
                     if (extendedblockstorage != null)
                     {
-                        extendedblockstorage.func_48592_c(par1, i1 & 0xf, par3, 15);
+                        extendedblockstorage.setExtSkylightValue(par1, i1 & 0xf, par3, 15);
                         worldObj.func_48086_o((xPosition << 4) + par1, i1, (zPosition << 4) + par3);
                     }
                 }
@@ -331,11 +356,11 @@ public class Chunk
             {
                 for (int j1 = i; j1 < j; j1++)
                 {
-                    ExtendedBlockStorage extendedblockstorage1 = field_48566_p[j1 >> 4];
+                    ExtendedBlockStorage extendedblockstorage1 = storageArrays[j1 >> 4];
 
                     if (extendedblockstorage1 != null)
                     {
-                        extendedblockstorage1.func_48592_c(par1, j1 & 0xf, par3, 0);
+                        extendedblockstorage1.setExtSkylightValue(par1, j1 & 0xf, par3, 0);
                         worldObj.func_48086_o((xPosition << 4) + par1, j1, (zPosition << 4) + par3);
                     }
                 }
@@ -365,11 +390,11 @@ public class Chunk
                     k1 = 0;
                 }
 
-                ExtendedBlockStorage extendedblockstorage2 = field_48566_p[j >> 4];
+                ExtendedBlockStorage extendedblockstorage2 = storageArrays[j >> 4];
 
                 if (extendedblockstorage2 != null)
                 {
-                    extendedblockstorage2.func_48592_c(par1, j & 0xf, par3, k1);
+                    extendedblockstorage2.setExtSkylightValue(par1, j & 0xf, par3, k1);
                 }
             }
             while (true);
@@ -408,11 +433,11 @@ public class Chunk
      */
     public int getBlockID(int par1, int par2, int par3)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48566_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage != null)
         {
-            return extendedblockstorage.func_48591_a(par1, par2 & 0xf, par3);
+            return extendedblockstorage.getExtBlockID(par1, par2 & 0xf, par3);
         }
         else
         {
@@ -425,7 +450,7 @@ public class Chunk
      */
     public int getBlockMetadata(int par1, int par2, int par3)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48566_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage != null)
         {
@@ -465,7 +490,7 @@ public class Chunk
             return false;
         }
 
-        ExtendedBlockStorage extendedblockstorage = field_48566_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
         boolean flag = false;
 
         if (extendedblockstorage == null)
@@ -475,11 +500,11 @@ public class Chunk
                 return false;
             }
 
-            extendedblockstorage = field_48566_p[par2 >> 4] = new ExtendedBlockStorage((par2 >> 4) << 4);
+            extendedblockstorage = storageArrays[par2 >> 4] = new ExtendedBlockStorage((par2 >> 4) << 4);
             flag = par2 >= j;
         }
 
-        extendedblockstorage.func_48588_a(par1, par2 & 0xf, par3, par4);
+        extendedblockstorage.setExtBlockID(par1, par2 & 0xf, par3, par4);
         int l = xPosition * 16 + par1;
         int i1 = zPosition * 16 + par3;
 
@@ -560,7 +585,7 @@ public class Chunk
      */
     public boolean setBlockMetadata(int par1, int par2, int par3, int par4)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48566_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage == null)
         {
@@ -576,7 +601,7 @@ public class Chunk
 
         isModified = true;
         extendedblockstorage.func_48585_b(par1, par2 & 0xf, par3, par4);
-        int j = extendedblockstorage.func_48591_a(par1, par2 & 0xf, par3);
+        int j = extendedblockstorage.getExtBlockID(par1, par2 & 0xf, par3);
 
         if (j > 0 && (Block.blocksList[j] instanceof BlockContainer))
         {
@@ -597,7 +622,7 @@ public class Chunk
      */
     public int getSavedLightValue(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int par4)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48566_p[par3 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par3 >> 4];
 
         if (extendedblockstorage == null)
         {
@@ -606,12 +631,12 @@ public class Chunk
 
         if (par1EnumSkyBlock == EnumSkyBlock.Sky)
         {
-            return extendedblockstorage.func_48602_c(par2, par3 & 0xf, par4);
+            return extendedblockstorage.getExtSkylightValue(par2, par3 & 0xf, par4);
         }
 
         if (par1EnumSkyBlock == EnumSkyBlock.Block)
         {
-            return extendedblockstorage.func_48604_d(par2, par3 & 0xf, par4);
+            return extendedblockstorage.getExtBlocklightValue(par2, par3 & 0xf, par4);
         }
         else
         {
@@ -625,11 +650,11 @@ public class Chunk
      */
     public void setLightValue(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int par4, int par5)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48566_p[par3 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par3 >> 4];
 
         if (extendedblockstorage == null)
         {
-            extendedblockstorage = field_48566_p[par3 >> 4] = new ExtendedBlockStorage((par3 >> 4) << 4);
+            extendedblockstorage = storageArrays[par3 >> 4] = new ExtendedBlockStorage((par3 >> 4) << 4);
             generateSkylightMap();
         }
 
@@ -639,12 +664,12 @@ public class Chunk
         {
             if (!worldObj.worldProvider.hasNoSky)
             {
-                extendedblockstorage.func_48592_c(par2, par3 & 0xf, par4, par5);
+                extendedblockstorage.setExtSkylightValue(par2, par3 & 0xf, par4, par5);
             }
         }
         else if (par1EnumSkyBlock == EnumSkyBlock.Block)
         {
-            extendedblockstorage.func_48608_d(par2, par3 & 0xf, par4, par5);
+            extendedblockstorage.setExtBlocklightValue(par2, par3 & 0xf, par4, par5);
         }
         else
         {
@@ -657,7 +682,7 @@ public class Chunk
      */
     public int getBlockLightValue(int par1, int par2, int par3, int par4)
     {
-        ExtendedBlockStorage extendedblockstorage = field_48566_p[par2 >> 4];
+        ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage == null)
         {
@@ -671,7 +696,7 @@ public class Chunk
             }
         }
 
-        int i = worldObj.worldProvider.hasNoSky ? 0 : extendedblockstorage.func_48602_c(par1, par2 & 0xf, par3);
+        int i = worldObj.worldProvider.hasNoSky ? 0 : extendedblockstorage.getExtSkylightValue(par1, par2 & 0xf, par3);
 
         if (i > 0)
         {
@@ -679,7 +704,7 @@ public class Chunk
         }
 
         i -= par4;
-        int j = extendedblockstorage.func_48604_d(par1, par2 & 0xf, par3);
+        int j = extendedblockstorage.getExtBlocklightValue(par1, par2 & 0xf, par3);
 
         if (j > i)
         {
@@ -732,7 +757,7 @@ public class Chunk
     }
 
     /**
-     * removes entity at index i from entity array
+     * Removes entity at the specified index from the entity array.
      */
     public void removeEntityAtIndex(Entity par1Entity, int par2)
     {
@@ -833,6 +858,9 @@ public class Chunk
         }
     }
 
+    /**
+     * Removes the TileEntity for a given block in this chunk
+     */
     public void removeChunkBlockTileEntity(int par1, int par2, int par3)
     {
         ChunkPosition chunkposition = new ChunkPosition(par1, par2, par3);
@@ -848,6 +876,9 @@ public class Chunk
         }
     }
 
+    /**
+     * Called when this Chunk is loaded by the ChunkProvider
+     */
     public void onChunkLoad()
     {
         isChunkLoaded = true;
@@ -859,6 +890,9 @@ public class Chunk
         }
     }
 
+    /**
+     * Called when this Chunk is unloaded by the ChunkProvider
+     */
     public void onChunkUnload()
     {
         isChunkLoaded = false;
@@ -875,6 +909,9 @@ public class Chunk
         }
     }
 
+    /**
+     * Sets the isModified flag for this Chunk
+     */
     public void setChunkModified()
     {
         isModified = true;
@@ -1010,7 +1047,7 @@ public class Chunk
      */
     public void removeUnknownBlocks()
     {
-        ExtendedBlockStorage aextendedblockstorage[] = field_48566_p;
+        ExtendedBlockStorage aextendedblockstorage[] = storageArrays;
         int i = aextendedblockstorage.length;
 
         for (int j = 0; j < i; j++)
@@ -1113,9 +1150,9 @@ public class Chunk
 
         for (int i = par1; i <= par2; i += 16)
         {
-            ExtendedBlockStorage extendedblockstorage = field_48566_p[i >> 4];
+            ExtendedBlockStorage extendedblockstorage = storageArrays[i >> 4];
 
-            if (extendedblockstorage != null && !extendedblockstorage.func_48595_a())
+            if (extendedblockstorage != null && !extendedblockstorage.getIsEmpty())
             {
                 return false;
             }
@@ -1126,7 +1163,7 @@ public class Chunk
 
     public void func_48558_a(ExtendedBlockStorage par1ArrayOfExtendedBlockStorage[])
     {
-        field_48566_p = par1ArrayOfExtendedBlockStorage;
+        storageArrays = par1ArrayOfExtendedBlockStorage;
     }
 
     public BiomeGenBase func_48560_a(int par1, int par2, WorldChunkManager par3WorldChunkManager)
@@ -1185,7 +1222,7 @@ public class Chunk
             {
                 int l1 = (j << 4) + k1;
 
-                if ((field_48566_p[j] != null || k1 != 0 && k1 != 15 && k != 0 && k != 15 && l != 0 && l != 15) && (field_48566_p[j] == null || field_48566_p[j].func_48591_a(k, k1, l) != 0))
+                if ((storageArrays[j] != null || k1 != 0 && k1 != 15 && k != 0 && k != 15 && l != 0 && l != 15) && (storageArrays[j] == null || storageArrays[j].getExtBlockID(k, k1, l) != 0))
                 {
                     continue;
                 }

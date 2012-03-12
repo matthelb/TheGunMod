@@ -4,6 +4,8 @@ public class SlotCrafting extends Slot
 {
     /** The craft matrix inventory linked to this result slot. */
     private final IInventory craftMatrix;
+
+    /** The player that is using the GUI where this slot resides. */
     private EntityPlayer thePlayer;
     private int field_48418_g;
 
@@ -44,7 +46,7 @@ public class SlotCrafting extends Slot
 
     protected void func_48416_b(ItemStack par1ItemStack)
     {
-        par1ItemStack.func_48584_a(thePlayer.worldObj, thePlayer, field_48418_g);
+        par1ItemStack.onCrafting(thePlayer.worldObj, thePlayer, field_48418_g);
         field_48418_g = 0;
 
         if (par1ItemStack.itemID == Block.workbench.blockID)
@@ -127,7 +129,7 @@ public class SlotCrafting extends Slot
             }
             else
             {
-                thePlayer.func_48348_b(itemstack1);
+                thePlayer.dropPlayerItem(itemstack1);
             }
         }
     }

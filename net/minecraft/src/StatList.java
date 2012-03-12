@@ -4,10 +4,13 @@ import java.util.*;
 
 public class StatList
 {
+    /** Tracks one-off stats. */
     protected static Map oneShotStats = new HashMap();
     public static List allStats = new ArrayList();
     public static List generalStats = new ArrayList();
     public static List itemStats = new ArrayList();
+
+    /** Tracks the number of times a given block or item has been mined. */
     public static List objectMineStats = new ArrayList();
 
     /** times the game has been started */
@@ -91,6 +94,9 @@ public class StatList
     {
     }
 
+    /**
+     * Initializes statistic fields related to breakable items and blocks.
+     */
     public static void initBreakableStats()
     {
         objectUseStats = initUsableStats(objectUseStats, "stat.useItem", 0x1020000, 0, 256);
@@ -107,6 +113,10 @@ public class StatList
         initCraftableStats();
     }
 
+    /**
+     * Initializes statistics related to craftable items. Is only called after both block and item stats have been
+     * initialized.
+     */
     public static void initCraftableStats()
     {
         if (!blockStatsInitialized || !itemStatsInitialized)
@@ -155,6 +165,9 @@ public class StatList
         replaceAllSimilarBlocks(objectCraftStats);
     }
 
+    /**
+     * Initializes statistic fields related to minable items and blocks.
+     */
     private static StatBase[] initMinableStats(String par0Str, int par1)
     {
         StatBase astatbase[] = new StatBase[256];
@@ -176,6 +189,9 @@ public class StatList
         return astatbase;
     }
 
+    /**
+     * Initializes statistic fields related to usable items and blocks.
+     */
     private static StatBase[] initUsableStats(StatBase par0ArrayOfStatBase[], String par1Str, int par2, int par3, int par4)
     {
         if (par0ArrayOfStatBase == null)
@@ -229,6 +245,9 @@ public class StatList
         return par0ArrayOfStatBase;
     }
 
+    /**
+     * Forces all dual blocks to count for each other on the stats list
+     */
     private static void replaceAllSimilarBlocks(StatBase par0ArrayOfStatBase[])
     {
         replaceSimilarBlocks(par0ArrayOfStatBase, Block.waterStill.blockID, Block.waterMoving.blockID);
@@ -244,6 +263,9 @@ public class StatList
         replaceSimilarBlocks(par0ArrayOfStatBase, Block.tilledField.blockID, Block.dirt.blockID);
     }
 
+    /**
+     * Forces stats for one block to add to another block, such as idle and active furnaces
+     */
     private static void replaceSimilarBlocks(StatBase par0ArrayOfStatBase[], int par1, int par2)
     {
         if (par0ArrayOfStatBase[par1] != null && par0ArrayOfStatBase[par2] == null)

@@ -23,6 +23,9 @@ public class WorldManager implements IWorldAccess
     {
     }
 
+    /**
+     * Start the skin for this entity downloading, if necessary, and increment its reference counter
+     */
     public void obtainEntitySkin(Entity par1Entity)
     {
         mcServer.getEntityTracker(world.worldProvider.worldType).trackEntity(par1Entity);
@@ -43,10 +46,18 @@ public class WorldManager implements IWorldAccess
     {
     }
 
+    /**
+     * Called across all registered IWorldAccess instances when a block range is invalidated. Args: minX, minY, minZ,
+     * maxX, maxY, maxZ
+     */
     public void markBlockRangeNeedsUpdate(int i, int j, int k, int l, int i1, int j1)
     {
     }
 
+    /**
+     * Will mark the block and neighbors that their renderers need an update (could be all the same renderer
+     * potentially) Args: x, y, z
+     */
     public void markBlockNeedsUpdate(int par1, int par2, int par3)
     {
         mcServer.configManager.markBlockNeedsUpdate(par1, par2, par3, world.worldProvider.worldType);
@@ -71,6 +82,9 @@ public class WorldManager implements IWorldAccess
         mcServer.configManager.sentTileEntityToPlayer(par1, par2, par3, par4TileEntity);
     }
 
+    /**
+     * Plays a pre-canned sound effect along with potentially auxiliary data-driven one-shot behaviour (particles, etc).
+     */
     public void playAuxSFX(EntityPlayer par1EntityPlayer, int par2, int par3, int par4, int par5, int par6)
     {
         mcServer.configManager.func_28171_a(par1EntityPlayer, par3, par4, par5, 64D, world.worldProvider.worldType, new Packet61DoorChange(par2, par3, par4, par5, par6));

@@ -14,6 +14,8 @@ public class DamageSource
     public static DamageSource generic = (new DamageSource("generic")).setDamageBypassesArmor();
     public static DamageSource explosion = new DamageSource("explosion");
     public static DamageSource magic = (new DamageSource("magic")).setDamageBypassesArmor();
+
+    /** This kind of damage can be blocked or not. */
     private boolean isUnblockable;
     private boolean isDamageAllowedInCreativeMode;
     private float hungerDamage;
@@ -30,16 +32,25 @@ public class DamageSource
         return new EntityDamageSource("mob", par0EntityLiving);
     }
 
+    /**
+     * returns an EntityDamageSource of type player
+     */
     public static DamageSource causePlayerDamage(EntityPlayer par0EntityPlayer)
     {
         return new EntityDamageSource("player", par0EntityPlayer);
     }
 
+    /**
+     * returns EntityDamageSourceIndirect of an arrow
+     */
     public static DamageSource causeArrowDamage(EntityArrow par0EntityArrow, Entity par1Entity)
     {
         return (new EntityDamageSourceIndirect("arrow", par0EntityArrow, par1Entity)).setProjectile();
     }
 
+    /**
+     * returns EntityDamageSourceIndirect of a fireball
+     */
     public static DamageSource causeFireballDamage(EntityFireball par0EntityFireball, Entity par1Entity)
     {
         return (new EntityDamageSourceIndirect("fireball", par0EntityFireball, par1Entity)).setFireDamage().setProjectile();
@@ -55,6 +66,9 @@ public class DamageSource
         return (new EntityDamageSourceIndirect("indirectMagic", par0Entity, par1Entity)).setDamageBypassesArmor();
     }
 
+    /**
+     * Returns true if the damage is projectile based.
+     */
     public boolean isProjectile()
     {
         return projectile;
@@ -74,6 +88,9 @@ public class DamageSource
         return isUnblockable;
     }
 
+    /**
+     * How much satiate(food) is consumed by this DamageSource
+     */
     public float getHungerDamage()
     {
         return hungerDamage;

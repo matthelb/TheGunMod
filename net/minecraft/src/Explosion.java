@@ -163,7 +163,7 @@ public class Explosion
                 d3 /= d6;
                 d4 /= d6;
                 d5 /= d6;
-                double d7 = 0.5D / (d6 / (double)explosionSize + 0.1D);
+                double d7 = 0.5D / (d6 / (double)explosionSize + 0.10000000000000001D);
                 d7 *= worldObj.rand.nextFloat() * worldObj.rand.nextFloat() + 0.3F;
                 d3 *= d7;
                 d4 *= d7;

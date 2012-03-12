@@ -24,6 +24,9 @@ public class ConvertProgressUpdater implements IProgressUpdate
     {
     }
 
+    /**
+     * Updates the progress bar on the loading screen to the specified amount. Args: loadProgress
+     */
     public void setLoadingProgress(int par1)
     {
         if (System.currentTimeMillis() - lastTimeMillis >= 1000L)
@@ -33,6 +36,9 @@ public class ConvertProgressUpdater implements IProgressUpdate
         }
     }
 
+    /**
+     * Displays a string on the loading screen supposed to indicate what is being done currently.
+     */
     public void displayLoadingString(String s)
     {
     }

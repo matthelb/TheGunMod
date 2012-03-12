@@ -13,7 +13,7 @@ public abstract class BlockFluid extends Block
         setTickRandomly(true);
     }
 
-    public boolean func_48127_b(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         return blockMaterial != Material.lava;
     }
@@ -47,6 +47,10 @@ public abstract class BlockFluid extends Block
         }
     }
 
+    /**
+     * Returns the amount of fluid decay at the coordinates, or -1 if the block at the coordinates is not the same
+     * material as the fluid.
+     */
     protected int getFlowDecay(World par1World, int par2, int par3, int par4)
     {
         if (par1World.getBlockMaterial(par2, par3, par4) != blockMaterial)
@@ -59,6 +63,10 @@ public abstract class BlockFluid extends Block
         }
     }
 
+    /**
+     * Returns the flow decay but converts values indicating falling liquid (values >=8) to their effective source block
+     * value of zero.
+     */
     protected int getEffectiveFlowDecay(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         if (par1IBlockAccess.getBlockMaterial(par2, par3, par4) != blockMaterial)
@@ -162,6 +170,9 @@ public abstract class BlockFluid extends Block
         return 0;
     }
 
+    /**
+     * Returns a vector indicating the direction and intensity of fluid flow.
+     */
     private Vec3D getFlowVector(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         Vec3D vec3d = Vec3D.createVector(0.0D, 0.0D, 0.0D);
@@ -380,6 +391,9 @@ public abstract class BlockFluid extends Block
         }
     }
 
+    /**
+     * Creates fizzing sound and smoke. Used when lava flows over block or mixes with water.
+     */
     protected void triggerLavaMixEffects(World par1World, int par2, int par3, int par4)
     {
         par1World.playSoundEffect((float)par2 + 0.5F, (float)par3 + 0.5F, (float)par4 + 0.5F, "random.fizz", 0.5F, 2.6F + (par1World.rand.nextFloat() - par1World.rand.nextFloat()) * 0.8F);

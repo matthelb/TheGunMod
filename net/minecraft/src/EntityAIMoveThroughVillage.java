@@ -17,7 +17,7 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
         field_48283_a = par1EntityCreature;
         field_48281_b = par2;
         field_48280_e = par3;
-        func_46087_a(1);
+        setMutexBits(1);
     }
 
     /**
@@ -32,7 +32,7 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
             return false;
         }
 
-        Village village = field_48283_a.worldObj.field_48096_A.func_48632_a(MathHelper.floor_double(field_48283_a.posX), MathHelper.floor_double(field_48283_a.posY), MathHelper.floor_double(field_48283_a.posZ), 0);
+        Village village = field_48283_a.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(field_48283_a.posX), MathHelper.floor_double(field_48283_a.posY), MathHelper.floor_double(field_48283_a.posZ), 0);
 
         if (village == null)
         {
@@ -46,17 +46,17 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
             return false;
         }
 
-        boolean flag = field_48283_a.func_48333_ak().func_48657_b();
-        field_48283_a.func_48333_ak().func_48663_b(false);
-        field_48282_c = field_48283_a.func_48333_ak().func_48650_a(field_48279_d.field_48493_a, field_48279_d.field_48491_b, field_48279_d.field_48492_c);
-        field_48283_a.func_48333_ak().func_48663_b(flag);
+        boolean flag = field_48283_a.getNavigator().func_48657_b();
+        field_48283_a.getNavigator().func_48663_b(false);
+        field_48282_c = field_48283_a.getNavigator().func_48650_a(field_48279_d.posX, field_48279_d.posY, field_48279_d.posZ);
+        field_48283_a.getNavigator().func_48663_b(flag);
 
         if (field_48282_c != null)
         {
             return true;
         }
 
-        Vec3D vec3d = RandomPositionGenerator.func_48395_a(field_48283_a, 10, 7, Vec3D.createVector(field_48279_d.field_48493_a, field_48279_d.field_48491_b, field_48279_d.field_48492_c));
+        Vec3D vec3d = RandomPositionGenerator.func_48395_a(field_48283_a, 10, 7, Vec3D.createVector(field_48279_d.posX, field_48279_d.posY, field_48279_d.posZ));
 
         if (vec3d == null)
         {
@@ -64,9 +64,9 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
         }
         else
         {
-            field_48283_a.func_48333_ak().func_48663_b(false);
-            field_48282_c = field_48283_a.func_48333_ak().func_48650_a(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord);
-            field_48283_a.func_48333_ak().func_48663_b(flag);
+            field_48283_a.getNavigator().func_48663_b(false);
+            field_48282_c = field_48283_a.getNavigator().func_48650_a(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord);
+            field_48283_a.getNavigator().func_48663_b(flag);
             return field_48282_c != null;
         }
     }
@@ -76,25 +76,31 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        if (field_48283_a.func_48333_ak().func_46034_b())
+        if (field_48283_a.getNavigator().noPath())
         {
             return false;
         }
         else
         {
             float f = field_48283_a.width + 4F;
-            return field_48283_a.getDistanceSq(field_48279_d.field_48493_a, field_48279_d.field_48491_b, field_48279_d.field_48492_c) > (double)(f * f);
+            return field_48283_a.getDistanceSq(field_48279_d.posX, field_48279_d.posY, field_48279_d.posZ) > (double)(f * f);
         }
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48283_a.func_48333_ak().func_48647_a(field_48282_c, field_48281_b);
+        field_48283_a.getNavigator().setPath(field_48282_c, field_48281_b);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
-        if (field_48283_a.func_48333_ak().func_46034_b() || field_48283_a.getDistanceSq(field_48279_d.field_48493_a, field_48279_d.field_48491_b, field_48279_d.field_48492_c) < 16D)
+        if (field_48283_a.getNavigator().noPath() || field_48283_a.getDistanceSq(field_48279_d.posX, field_48279_d.posY, field_48279_d.posZ) < 16D)
         {
             field_48278_f.add(field_48279_d);
         }
@@ -104,7 +110,7 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
     {
         VillageDoorInfo villagedoorinfo = null;
         int i = 0x7fffffff;
-        List list = par1Village.func_48517_f();
+        List list = par1Village.getVillageDoorInfoList();
         Iterator iterator = list.iterator();
 
         do
@@ -115,7 +121,7 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
             }
 
             VillageDoorInfo villagedoorinfo1 = (VillageDoorInfo)iterator.next();
-            int j = villagedoorinfo1.func_48481_a(MathHelper.floor_double(field_48283_a.posX), MathHelper.floor_double(field_48283_a.posY), MathHelper.floor_double(field_48283_a.posZ));
+            int j = villagedoorinfo1.getDistanceSquared(MathHelper.floor_double(field_48283_a.posX), MathHelper.floor_double(field_48283_a.posY), MathHelper.floor_double(field_48283_a.posZ));
 
             if (j < i && !func_48275_a(villagedoorinfo1))
             {
@@ -134,7 +140,7 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
         {
             VillageDoorInfo villagedoorinfo = (VillageDoorInfo)iterator.next();
 
-            if (par1VillageDoorInfo.field_48493_a == villagedoorinfo.field_48493_a && par1VillageDoorInfo.field_48491_b == villagedoorinfo.field_48491_b && par1VillageDoorInfo.field_48492_c == villagedoorinfo.field_48492_c)
+            if (par1VillageDoorInfo.posX == villagedoorinfo.posX && par1VillageDoorInfo.posY == villagedoorinfo.posY && par1VillageDoorInfo.posZ == villagedoorinfo.posZ)
             {
                 return true;
             }

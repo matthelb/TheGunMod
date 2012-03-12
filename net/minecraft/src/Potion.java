@@ -102,6 +102,9 @@ public class Potion
         return this;
     }
 
+    /**
+     * returns the ID of the potion
+     */
     public int getId()
     {
         return id;
@@ -170,6 +173,9 @@ public class Potion
         return false;
     }
 
+    /**
+     * checks if Potion effect is ready to be applied this tick.
+     */
     public boolean isReady(int par1, int par2)
     {
         if (id == regeneration.id || id == poison.id)
@@ -198,6 +204,9 @@ public class Potion
         return this;
     }
 
+    /**
+     * returns the name of the potion
+     */
     public String getName()
     {
         return name;
@@ -225,6 +234,9 @@ public class Potion
         return usable;
     }
 
+    /**
+     * Returns the color of the potion liquid.
+     */
     public int getLiquidColor()
     {
         return liquidColor;

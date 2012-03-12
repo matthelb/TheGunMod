@@ -3,6 +3,8 @@ package net.minecraft.src;
 public class InventoryCrafting implements IInventory
 {
     private ItemStack stackList[];
+
+    /** the width of the crafting inventory */
     private int inventoryWidth;
 
     /**
@@ -18,6 +20,9 @@ public class InventoryCrafting implements IInventory
         inventoryWidth = par2;
     }
 
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public int getSizeInventory()
     {
         return stackList.length;
@@ -38,6 +43,9 @@ public class InventoryCrafting implements IInventory
         }
     }
 
+    /**
+     * Returns the itemstack in the slot specified (Top left is 0, 0). Args: row, column
+     */
     public ItemStack getStackInRowAndColumn(int par1, int par2)
     {
         if (par1 < 0 || par1 >= inventoryWidth)
@@ -59,7 +67,11 @@ public class InventoryCrafting implements IInventory
         return "container.crafting";
     }
 
-    public ItemStack func_48315_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (stackList[par1] != null)
         {

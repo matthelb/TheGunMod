@@ -60,7 +60,7 @@ public class Packet23VehicleSpawn extends Packet
             double d = par1Entity.motionX;
             double d1 = par1Entity.motionY;
             double d2 = par1Entity.motionZ;
-            double d3 = 3.9D;
+            double d3 = 3.8999999999999999D;
 
             if (d < -d3)
             {

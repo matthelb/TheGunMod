@@ -5,6 +5,10 @@ import java.util.Random;
 public class TileEntityDispenser extends TileEntity implements IInventory
 {
     private ItemStack dispenserContents[];
+
+    /**
+     * random number generator for instance. Used in random item stack selection.
+     */
     private Random dispenserRandom;
 
     public TileEntityDispenser()
@@ -13,6 +17,9 @@ public class TileEntityDispenser extends TileEntity implements IInventory
         dispenserRandom = new Random();
     }
 
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public int getSizeInventory()
     {
         return 9;
@@ -58,7 +65,11 @@ public class TileEntityDispenser extends TileEntity implements IInventory
         }
     }
 
-    public ItemStack func_48315_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (dispenserContents[par1] != null)
         {

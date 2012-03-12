@@ -227,6 +227,9 @@ public class EntityPainting extends Entity
         return true;
     }
 
+    /**
+     * Returns true if other Entities should be prevented from moving through this Entity.
+     */
     public boolean canBeCollidedWith()
     {
         return true;

@@ -5,16 +5,19 @@ import java.util.Random;
 
 public class ComponentStrongholdStairsStraight extends ComponentStronghold
 {
-    private final EnumDoor field_35345_a;
+    private final EnumDoor doorType;
 
     public ComponentStrongholdStairsStraight(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
         super(par1);
         coordBaseMode = par4;
-        field_35345_a = getRandomDoor(par2Random);
+        doorType = getRandomDoor(par2Random);
         boundingBox = par3StructureBoundingBox;
     }
 
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
         getNextComponentNormal((ComponentStrongholdStairs2)par1StructureComponent, par2List, par3Random, 1, 1);
@@ -34,6 +37,10 @@ public class ComponentStrongholdStairsStraight extends ComponentStronghold
         }
     }
 
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))
@@ -42,7 +49,7 @@ public class ComponentStrongholdStairsStraight extends ComponentStronghold
         }
 
         fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 4, 10, 7, true, par2Random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(par1World, par2Random, par3StructureBoundingBox, field_35345_a, 1, 7, 0);
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, doorType, 1, 7, 0);
         placeDoor(par1World, par2Random, par3StructureBoundingBox, EnumDoor.OPENING, 1, 1, 7);
         int i = getMetadataWithOffset(Block.stairCompactCobblestone.blockID, 2);
 

@@ -105,7 +105,7 @@ public class MapGenStronghold extends MapGenStructure
     {
         StructureStrongholdStart structurestrongholdstart;
 
-        for (structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2); structurestrongholdstart.getComponents().isEmpty() || ((ComponentStrongholdStairs2)structurestrongholdstart.getComponents().get(0)).field_40317_b == null; structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2)) { }
+        for (structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2); structurestrongholdstart.getComponents().isEmpty() || ((ComponentStrongholdStairs2)structurestrongholdstart.getComponents().get(0)).portalRoom == null; structurestrongholdstart = new StructureStrongholdStart(worldObj, rand, par1, par2)) { }
 
         return structurestrongholdstart;
     }

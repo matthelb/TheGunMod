@@ -23,6 +23,9 @@ public class FoodStats
         foodSaturationLevel = 5F;
     }
 
+    /**
+     * Args: int foodLevel, float foodSaturationModifier
+     */
     public void addStats(int par1, float par2)
     {
         foodLevel = Math.min(par1 + foodLevel, 20);

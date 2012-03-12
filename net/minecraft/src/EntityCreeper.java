@@ -26,8 +26,8 @@ public class EntityCreeper extends EntityMob
         tasks.addTask(5, new EntityAIWander(this, 0.2F));
         tasks.addTask(6, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 8F));
         tasks.addTask(6, new EntityAILookIdle(this));
-        field_48337_aM.addTask(1, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, false));
-        field_48337_aM.addTask(2, new EntityAIHurtByTarget(this, false));
+        targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, false));
+        targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
     }
 
     /**
@@ -151,6 +151,9 @@ public class EntityCreeper extends EntityMob
         return true;
     }
 
+    /**
+     * Returns true if the creeper is powered by a lightning bolt.
+     */
     public boolean getPowered()
     {
         return dataWatcher.getWatchableObjectByte(17) == 1;
@@ -164,11 +167,17 @@ public class EntityCreeper extends EntityMob
         return Item.gunpowder.shiftedIndex;
     }
 
+    /**
+     * Returns the current state of creeper, -1 is idle, 1 is 'in fuse'
+     */
     public int getCreeperState()
     {
         return dataWatcher.getWatchableObjectByte(16);
     }
 
+    /**
+     * Sets the state of creeper, -1 to idle and 1 to be 'in fuse'
+     */
     public void setCreeperState(int par1)
     {
         dataWatcher.updateObject(16, Byte.valueOf((byte)par1));

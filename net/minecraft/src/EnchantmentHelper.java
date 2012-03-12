@@ -52,6 +52,9 @@ public class EnchantmentHelper
         return 0;
     }
 
+    /**
+     * Returns the biggest level of the enchantment on the array of ItemStack passed.
+     */
     private static int getMaxEnchantmentLevel(int par0, ItemStack par1ArrayOfItemStack[])
     {
         int i = 0;
@@ -200,6 +203,9 @@ public class EnchantmentHelper
         return getEnchantmentLevel(Enchantment.silkTouch.effectId, par0InventoryPlayer.getCurrentItem()) > 0;
     }
 
+    /**
+     * Returns the fortune enchantment modifier of the current equipped item of player.
+     */
     public static int getFortuneModifier(InventoryPlayer par0InventoryPlayer)
     {
         return getEnchantmentLevel(Enchantment.fortune.effectId, par0InventoryPlayer.getCurrentItem());

@@ -115,7 +115,9 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
 
     /** The server MOTD string. */
     public String motd;
-    public int field_48081_t;
+
+    /** Maximum build height */
+    public int buildLimit;
     private long field_48074_E;
     private long field_48075_F;
     private long field_48076_G;
@@ -235,10 +237,10 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
             worldtype = WorldType.field_48457_b;
         }
 
-        field_48081_t = propertyManagerObj.getIntProperty("max-build-height", 256);
-        field_48081_t = ((field_48081_t + 8) / 16) * 16;
-        field_48081_t = MathHelper.clamp_int(field_48081_t, 64, 256);
-        propertyManagerObj.setProperty("max-build-height", Integer.valueOf(field_48081_t));
+        buildLimit = propertyManagerObj.getIntProperty("max-build-height", 256);
+        buildLimit = ((buildLimit + 8) / 16) * 16;
+        buildLimit = MathHelper.clamp_int(buildLimit, 64, 256);
+        propertyManagerObj.setProperty("max-build-height", Integer.valueOf(buildLimit));
         logger.info((new StringBuilder()).append("Preparing level \"").append(s).append("\"").toString());
         initWorld(new AnvilSaveConverter(new File(".")), s, l1, worldtype);
         logger.info((new StringBuilder()).append("Done (").append(System.nanoTime() - l).append("ns)! For help, type \"help\" or \"?\"").toString());
@@ -511,6 +513,8 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
             {
                 System.exit(0);
             }
+
+            break MISSING_BLOCK_LABEL_350;
         }
 
         try
@@ -527,6 +531,10 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
             System.exit(0);
         }
 
+        break MISSING_BLOCK_LABEL_350;
+        Exception exception2;
+        exception2;
+
         try
         {
             stopServer();
@@ -540,6 +548,9 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
         {
             System.exit(0);
         }
+
+        throw exception2;
+        * /
     }
 
     private void doTick()

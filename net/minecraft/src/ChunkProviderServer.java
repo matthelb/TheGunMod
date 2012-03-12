@@ -117,6 +117,10 @@ public class ChunkProviderServer implements IChunkProvider
         return chunk;
     }
 
+    /**
+     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
+     * specified chunk from the map seed and chunk seed
+     */
     public Chunk provideChunk(int par1, int par2)
     {
         Chunk chunk = (Chunk)id2ChunkMap.getValueByKey(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
@@ -263,6 +267,10 @@ public class ChunkProviderServer implements IChunkProvider
         return true;
     }
 
+    /**
+     * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
+     * is always empty and will not remove any chunks.
+     */
     public boolean unload100OldestChunks()
     {
         if (!world.levelSaving)
@@ -291,6 +299,9 @@ public class ChunkProviderServer implements IChunkProvider
         return serverChunkGenerator.unload100OldestChunks();
     }
 
+    /**
+     * Returns if the IChunkProvider supports saving.
+     */
     public boolean canSave()
     {
         return !world.levelSaving;

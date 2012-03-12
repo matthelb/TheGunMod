@@ -188,9 +188,9 @@ public class BlockRedstoneTorch extends BlockTorch
 
                     for (int i = 0; i < 5; i++)
                     {
-                        double d = (double)par2 + par5Random.nextDouble() * 0.6D + 0.2D;
-                        double d1 = (double)par3 + par5Random.nextDouble() * 0.6D + 0.2D;
-                        double d2 = (double)par4 + par5Random.nextDouble() * 0.6D + 0.2D;
+                        double d = (double)par2 + par5Random.nextDouble() * 0.59999999999999998D + 0.20000000000000001D;
+                        double d1 = (double)par3 + par5Random.nextDouble() * 0.59999999999999998D + 0.20000000000000001D;
+                        double d2 = (double)par4 + par5Random.nextDouble() * 0.59999999999999998D + 0.20000000000000001D;
                         par1World.spawnParticle("smoke", d, d1, d2, 0.0D, 0.0D, 0.0D);
                     }
                 }

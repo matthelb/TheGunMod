@@ -168,6 +168,10 @@ public class ChunkProviderEnd implements IChunkProvider
         return provideChunk(par1, par2);
     }
 
+    /**
+     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
+     * specified chunk from the map seed and chunk seed
+     */
     public Chunk provideChunk(int par1, int par2)
     {
         endRNG.setSeed((long)par1 * 0x4f9939f508L + (long)par2 * 0x1ef1565bd5L);
@@ -187,8 +191,8 @@ public class ChunkProviderEnd implements IChunkProvider
             par1ArrayOfDouble = new double[par5 * par6 * par7];
         }
 
-        double d = 684.412D;
-        double d1 = 684.412D;
+        double d = 684.41200000000003D;
+        double d1 = 684.41200000000003D;
         field_40187_f = field_40193_a.generateNoiseOctaves(field_40187_f, par2, par4, par5, par7, 1.121D, 1.121D, 0.5D);
         field_40188_g = field_40191_b.generateNoiseOctaves(field_40188_g, par2, par4, par5, par7, 200D, 200D, 0.5D);
         d *= 2D;
@@ -213,7 +217,7 @@ public class ChunkProviderEnd implements IChunkProvider
 
                 if (d3 < 0.0D)
                 {
-                    d3 = -d3 * 0.3D;
+                    d3 = -d3 * 0.29999999999999999D;
                 }
 
                 d3 = d3 * 3D - 2D;
@@ -344,11 +348,18 @@ public class ChunkProviderEnd implements IChunkProvider
         return true;
     }
 
+    /**
+     * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
+     * is always empty and will not remove any chunks.
+     */
     public boolean unload100OldestChunks()
     {
         return false;
     }
 
+    /**
+     * Returns if the IChunkProvider supports saving.
+     */
     public boolean canSave()
     {
         return true;

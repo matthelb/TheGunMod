@@ -10,6 +10,9 @@ abstract class ComponentStronghold extends StructureComponent
         super(par1);
     }
 
+    /**
+     * 'builds a door of the enumerated types (empty opening is a door)'
+     */
     protected void placeDoor(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox, EnumDoor par4EnumDoor, int par5, int par6, int par7)
     {
         switch (EnumDoorHelper.doorEnum[par4EnumDoor.ordinal()])

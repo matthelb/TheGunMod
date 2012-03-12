@@ -7,7 +7,10 @@ import java.util.Map;
 
 public class AchievementMap
 {
+    /** Holds the singleton instance of AchievementMap. */
     public static AchievementMap instance = new AchievementMap();
+
+    /** Maps a achievement id with it's unique GUID. */
     private Map guidMap;
 
     private AchievementMap()
@@ -34,6 +37,9 @@ public class AchievementMap
         }
     }
 
+    /**
+     * Returns the unique GUID of a achievement id.
+     */
     public static String getGuid(int par0)
     {
         return (String)instance.guidMap.get(Integer.valueOf(par0));

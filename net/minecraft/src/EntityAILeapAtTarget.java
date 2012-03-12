@@ -4,15 +4,15 @@ import java.util.Random;
 
 public class EntityAILeapAtTarget extends EntityAIBase
 {
-    EntityLiving field_48163_a;
-    EntityLiving field_48161_b;
-    float field_48162_c;
+    EntityLiving leaper;
+    EntityLiving leapTarget;
+    float leapMotionY;
 
     public EntityAILeapAtTarget(EntityLiving par1EntityLiving, float par2)
     {
-        field_48163_a = par1EntityLiving;
-        field_48162_c = par2;
-        func_46087_a(5);
+        leaper = par1EntityLiving;
+        leapMotionY = par2;
+        setMutexBits(5);
     }
 
     /**
@@ -20,26 +20,26 @@ public class EntityAILeapAtTarget extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        field_48161_b = field_48163_a.func_48331_as();
+        leapTarget = leaper.getAttackTarget();
 
-        if (field_48161_b == null)
+        if (leapTarget == null)
         {
             return false;
         }
 
-        double d = field_48163_a.getDistanceSqToEntity(field_48161_b);
+        double d = leaper.getDistanceSqToEntity(leapTarget);
 
         if (d < 4D || d > 16D)
         {
             return false;
         }
 
-        if (!field_48163_a.onGround)
+        if (!leaper.onGround)
         {
             return false;
         }
 
-        return field_48163_a.getRNG().nextInt(5) == 0;
+        return leaper.getRNG().nextInt(5) == 0;
     }
 
     /**
@@ -47,16 +47,19 @@ public class EntityAILeapAtTarget extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48163_a.onGround;
+        return !leaper.onGround;
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        double d = field_48161_b.posX - field_48163_a.posX;
-        double d1 = field_48161_b.posZ - field_48163_a.posZ;
+        double d = leapTarget.posX - leaper.posX;
+        double d1 = leapTarget.posZ - leaper.posZ;
         float f = MathHelper.sqrt_double(d * d + d1 * d1);
-        field_48163_a.motionX += (d / (double)f) * 0.5D * 0.8D + field_48163_a.motionX * 0.2D;
-        field_48163_a.motionZ += (d1 / (double)f) * 0.5D * 0.8D + field_48163_a.motionZ * 0.2D;
-        field_48163_a.motionY = field_48162_c;
+        leaper.motionX += (d / (double)f) * 0.5D * 0.80000001192092896D + leaper.motionX * 0.20000000298023224D;
+        leaper.motionZ += (d1 / (double)f) * 0.5D * 0.80000001192092896D + leaper.motionZ * 0.20000000298023224D;
+        leaper.motionY = leapMotionY;
     }
 }

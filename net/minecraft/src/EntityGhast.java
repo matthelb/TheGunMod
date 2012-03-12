@@ -95,9 +95,9 @@ public class EntityGhast extends EntityFlying implements IMob
 
             if (isCourseTraversable(waypointX, waypointY, waypointZ, d3))
             {
-                motionX += (d / d3) * 0.1D;
-                motionY += (d1 / d3) * 0.1D;
-                motionZ += (d2 / d3) * 0.1D;
+                motionX += (d / d3) * 0.10000000000000001D;
+                motionY += (d1 / d3) * 0.10000000000000001D;
+                motionZ += (d2 / d3) * 0.10000000000000001D;
             }
             else
             {

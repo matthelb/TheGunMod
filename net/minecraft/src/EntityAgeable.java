@@ -13,12 +13,21 @@ public abstract class EntityAgeable extends EntityCreature
         dataWatcher.addObject(12, new Integer(0));
     }
 
-    public int func_48351_J()
+    /**
+     * The age value may be negative or positive or zero. If it's negative, it get's incremented on each tick, if it's
+     * positive, it get's decremented each tick. Don't confuse this with EntityLiving.getAge. With a negative value the
+     * Entity is considered a child.
+     */
+    public int getGrowingAge()
     {
         return dataWatcher.getWatchableObjectInt(12);
     }
 
-    public void func_48350_c(int par1)
+    /**
+     * The age value may be negative or positive or zero. If it's negative, it get's incremented on each tick, if it's
+     * positive, it get's decremented each tick. With a negative value the Entity is considered a child.
+     */
+    public void setGrowingAge(int par1)
     {
         dataWatcher.updateObject(12, Integer.valueOf(par1));
     }
@@ -29,7 +38,7 @@ public abstract class EntityAgeable extends EntityCreature
     public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound)
     {
         super.writeEntityToNBT(par1NBTTagCompound);
-        par1NBTTagCompound.setInteger("Age", func_48351_J());
+        par1NBTTagCompound.setInteger("Age", getGrowingAge());
     }
 
     /**
@@ -38,7 +47,7 @@ public abstract class EntityAgeable extends EntityCreature
     public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound)
     {
         super.readEntityFromNBT(par1NBTTagCompound);
-        func_48350_c(par1NBTTagCompound.getInteger("Age"));
+        setGrowingAge(par1NBTTagCompound.getInteger("Age"));
     }
 
     /**
@@ -48,17 +57,17 @@ public abstract class EntityAgeable extends EntityCreature
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
-        int i = func_48351_J();
+        int i = getGrowingAge();
 
         if (i < 0)
         {
             i++;
-            func_48350_c(i);
+            setGrowingAge(i);
         }
         else if (i > 0)
         {
             i--;
-            func_48350_c(i);
+            setGrowingAge(i);
         }
     }
 
@@ -67,6 +76,6 @@ public abstract class EntityAgeable extends EntityCreature
      */
     public boolean isChild()
     {
-        return func_48351_J() < 0;
+        return getGrowingAge() < 0;
     }
 }

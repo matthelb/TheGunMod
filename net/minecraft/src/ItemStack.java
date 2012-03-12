@@ -14,6 +14,10 @@ public final class ItemStack
 
     /** ID of the item. */
     public int itemID;
+
+    /**
+     * A NBTTagMap containing data about an ItemStack. Can only be used for non stackable items
+     */
     public NBTTagCompound stackTagCompound;
 
     /** Damage dealt to the item or number of use. Raise when using items. */
@@ -171,6 +175,9 @@ public final class ItemStack
         return getItem().getItemStackLimit();
     }
 
+    /**
+     * Returns true if the ItemStack can hold 2 or more units of the item.
+     */
     public boolean isStackable()
     {
         return getMaxStackSize() > 1 && (!isItemStackDamageable() || !isItemDamaged());
@@ -205,11 +212,17 @@ public final class ItemStack
         return itemDamage;
     }
 
+    /**
+     * gets the damage of an itemstack
+     */
     public int getItemDamage()
     {
         return itemDamage;
     }
 
+    /**
+     * Sets the item damage of the ItemStack.
+     */
     public void setItemDamage(int par1)
     {
         itemDamage = par1;
@@ -265,6 +278,9 @@ public final class ItemStack
         }
     }
 
+    /**
+     * Calls the corresponding fct in di
+     */
     public void hitEntity(EntityLiving par1EntityLiving, EntityPlayer par2EntityPlayer)
     {
         boolean flag = Item.itemsList[itemID].hitEntity(this, par1EntityLiving, par2EntityPlayer);
@@ -285,16 +301,26 @@ public final class ItemStack
         }
     }
 
+    /**
+     * Returns the damage against a given entity.
+     */
     public int getDamageVsEntity(Entity par1Entity)
     {
         return Item.itemsList[itemID].getDamageVsEntity(par1Entity);
     }
 
+    /**
+     * Checks if the itemStack object can harvest a specified block
+     */
     public boolean canHarvestBlock(Block par1Block)
     {
         return Item.itemsList[itemID].canHarvestBlock(par1Block);
     }
 
+    /**
+     * Called when a given item stack is about to be destroyed due to its damage level expiring when used on a block or
+     * entity. Typically used by tools.
+     */
     public void onItemDestroyedByUse(EntityPlayer entityplayer)
     {
     }
@@ -409,6 +435,9 @@ public final class ItemStack
         return Item.itemsList[itemID].getItemNameIS(this);
     }
 
+    /**
+     * Creates a copy of a ItemStack, a null parameters will return a null.
+     */
     public static ItemStack copyItemStack(ItemStack par0ItemStack)
     {
         return par0ItemStack != null ? par0ItemStack.copy() : null;
@@ -419,6 +448,10 @@ public final class ItemStack
         return (new StringBuilder()).append(stackSize).append("x").append(Item.itemsList[itemID].getItemName()).append("@").append(itemDamage).toString();
     }
 
+    /**
+     * Called each tick as long the ItemStack in on player inventory. Used to progress the pickup animation and update
+     * maps.
+     */
     public void updateAnimation(World par1World, Entity par2Entity, int par3, boolean par4)
     {
         if (animationsToGo > 0)
@@ -429,7 +462,7 @@ public final class ItemStack
         Item.itemsList[itemID].onUpdate(this, par1World, par2Entity, par3, par4);
     }
 
-    public void func_48584_a(World par1World, EntityPlayer par2EntityPlayer, int par3)
+    public void onCrafting(World par1World, EntityPlayer par2EntityPlayer, int par3)
     {
         par2EntityPlayer.addStat(StatList.objectCraftStats[itemID], par3);
         Item.itemsList[itemID].onCreated(this, par1World, par2EntityPlayer);

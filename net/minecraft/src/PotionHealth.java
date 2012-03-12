@@ -15,6 +15,9 @@ public class PotionHealth extends Potion
         return true;
     }
 
+    /**
+     * checks if Potion effect is ready to be applied this tick.
+     */
     public boolean isReady(int par1, int par2)
     {
         return par1 >= 1;

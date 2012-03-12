@@ -28,6 +28,9 @@ public class CompressedStreamTools
         }
     }
 
+    /**
+     * Write the compound, gzipped, to the outputstream.
+     */
     public static void writeCompressed(NBTTagCompound par0NBTTagCompound, OutputStream par1OutputStream) throws IOException
     {
         DataOutputStream dataoutputstream = new DataOutputStream(new GZIPOutputStream(par1OutputStream));

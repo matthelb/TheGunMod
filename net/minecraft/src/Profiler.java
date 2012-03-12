@@ -5,16 +5,28 @@ import java.util.*;
 
 public class Profiler
 {
+    /** Flag profiling enabled */
     public static boolean profilingEnabled = false;
+
+    /** List of parent sections */
     private static List sectionList = new ArrayList();
+
+    /** List of timestamps (System.nanoTime) */
     private static List timestampList = new ArrayList();
+
+    /** Current profiling section */
     private static String profilingSection = "";
+
+    /** Profiling map */
     private static Map profilingMap = new HashMap();
 
     public Profiler()
     {
     }
 
+    /**
+     * Start section
+     */
     public static void startSection(String par0Str)
     {
         if (!profilingEnabled)
@@ -32,6 +44,9 @@ public class Profiler
         timestampList.add(Long.valueOf(System.nanoTime()));
     }
 
+    /**
+     * End section
+     */
     public static void endSection()
     {
         if (!profilingEnabled)
@@ -61,6 +76,9 @@ public class Profiler
         }
     }
 
+    /**
+     * End current section and start a new section
+     */
     public static void endStartSection(String par0Str)
     {
         endSection();

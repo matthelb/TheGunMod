@@ -2,6 +2,7 @@ package net.minecraft.src;
 
 public class SlotFurnace extends Slot
 {
+    /** The player that is using the GUI where this slot resides. */
     private EntityPlayer thePlayer;
     private int field_48419_f;
 
@@ -50,7 +51,7 @@ public class SlotFurnace extends Slot
 
     protected void func_48416_b(ItemStack par1ItemStack)
     {
-        par1ItemStack.func_48584_a(thePlayer.worldObj, thePlayer, field_48419_f);
+        par1ItemStack.onCrafting(thePlayer.worldObj, thePlayer, field_48419_f);
         field_48419_f = 0;
 
         if (par1ItemStack.itemID == Item.ingotIron.shiftedIndex)

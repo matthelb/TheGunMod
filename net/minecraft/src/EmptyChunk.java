@@ -10,6 +10,9 @@ public class EmptyChunk extends Chunk
         super(par1World, par2, par3);
     }
 
+    /**
+     * Checks whether the chunk is at the X/Z location specified
+     */
     public boolean isAtLocation(int par1, int par2)
     {
         return par1 == xPosition && par2 == zPosition;
@@ -23,6 +26,9 @@ public class EmptyChunk extends Chunk
         return 0;
     }
 
+    /**
+     * Generates the initial skylight map for the chunk upon generation or load.
+     */
     public void generateSkylightMap()
     {
     }
@@ -115,7 +121,7 @@ public class EmptyChunk extends Chunk
     }
 
     /**
-     * removes entity at index i from entity array
+     * Removes entity at the specified index from the entity array.
      */
     public void removeEntityAtIndex(Entity entity, int i)
     {
@@ -151,18 +157,30 @@ public class EmptyChunk extends Chunk
     {
     }
 
+    /**
+     * Removes the TileEntity for a given block in this chunk
+     */
     public void removeChunkBlockTileEntity(int i, int j, int k)
     {
     }
 
+    /**
+     * Called when this Chunk is loaded by the ChunkProvider
+     */
     public void onChunkLoad()
     {
     }
 
+    /**
+     * Called when this Chunk is unloaded by the ChunkProvider
+     */
     public void onChunkUnload()
     {
     }
 
+    /**
+     * Sets the isModified flag for this Chunk
+     */
     public void setChunkModified()
     {
     }

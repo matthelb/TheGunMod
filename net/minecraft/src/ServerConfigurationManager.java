@@ -275,7 +275,7 @@ public class ServerConfigurationManager
 
         for (; worldserver.getCollidingBoundingBoxes(entityplayermp, entityplayermp.boundingBox).size() != 0; entityplayermp.setPosition(entityplayermp.posX, entityplayermp.posY + 1.0D, entityplayermp.posZ)) { }
 
-        entityplayermp.playerNetServerHandler.sendPacket(new Packet9Respawn(entityplayermp.dimension, (byte)entityplayermp.worldObj.difficultySetting, entityplayermp.worldObj.getWorldInfo().getTerrainType(), entityplayermp.worldObj.func_48095_y(), entityplayermp.itemInWorldManager.getGameType()));
+        entityplayermp.playerNetServerHandler.sendPacket(new Packet9Respawn(entityplayermp.dimension, (byte)entityplayermp.worldObj.difficultySetting, entityplayermp.worldObj.getWorldInfo().getTerrainType(), entityplayermp.worldObj.getWorldHeight(), entityplayermp.itemInWorldManager.getGameType()));
         entityplayermp.playerNetServerHandler.teleportTo(entityplayermp.posX, entityplayermp.posY, entityplayermp.posZ, entityplayermp.rotationYaw, entityplayermp.rotationPitch);
         func_28170_a(entityplayermp, worldserver);
         getPlayerManager(entityplayermp.dimension).addPlayer(entityplayermp);
@@ -295,7 +295,7 @@ public class ServerConfigurationManager
         WorldServer worldserver = mcServer.getWorldManager(par1EntityPlayerMP.dimension);
         par1EntityPlayerMP.dimension = par2;
         WorldServer worldserver1 = mcServer.getWorldManager(par1EntityPlayerMP.dimension);
-        par1EntityPlayerMP.playerNetServerHandler.sendPacket(new Packet9Respawn(par1EntityPlayerMP.dimension, (byte)par1EntityPlayerMP.worldObj.difficultySetting, worldserver1.getWorldInfo().getTerrainType(), worldserver1.func_48095_y(), par1EntityPlayerMP.itemInWorldManager.getGameType()));
+        par1EntityPlayerMP.playerNetServerHandler.sendPacket(new Packet9Respawn(par1EntityPlayerMP.dimension, (byte)par1EntityPlayerMP.worldObj.difficultySetting, worldserver1.getWorldInfo().getTerrainType(), worldserver1.getWorldHeight(), par1EntityPlayerMP.itemInWorldManager.getGameType()));
         worldserver.removePlayer(par1EntityPlayerMP);
         par1EntityPlayerMP.isDead = false;
         double d = par1EntityPlayerMP.posX;

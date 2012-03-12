@@ -183,7 +183,7 @@ public class ItemEnderEye extends Item
 
             if (chunkposition != null)
             {
-                EntityEnderEye entityendereye = new EntityEnderEye(par2World, par3EntityPlayer.posX, (par3EntityPlayer.posY + 1.62D) - (double)par3EntityPlayer.yOffset, par3EntityPlayer.posZ);
+                EntityEnderEye entityendereye = new EntityEnderEye(par2World, par3EntityPlayer.posX, (par3EntityPlayer.posY + 1.6200000000000001D) - (double)par3EntityPlayer.yOffset, par3EntityPlayer.posZ);
                 entityendereye.func_40056_a(chunkposition.x, chunkposition.y, chunkposition.z);
                 par2World.spawnEntityInWorld(entityendereye);
                 par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));

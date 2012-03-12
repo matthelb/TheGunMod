@@ -11,6 +11,9 @@ public abstract class StructurePieceBlockSelector
     {
     }
 
+    /**
+     * 'picks Block Ids and Metadata (Silverfish)'
+     */
     public abstract void selectBlocks(Random random, int i, int j, int k, boolean flag);
 
     public int getSelectedBlockId()

@@ -38,7 +38,7 @@ class NetworkWriterThread extends Thread
                 {
                     if (!NetworkManager.isTerminating(netManager))
                     {
-                        NetworkManager.func_30007_a(netManager, ioexception);
+                        NetworkManager.sendError(netManager, ioexception);
                     }
 
                     ioexception.printStackTrace();

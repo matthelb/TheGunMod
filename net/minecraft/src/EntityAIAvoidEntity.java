@@ -20,8 +20,8 @@ public class EntityAIAvoidEntity extends EntityAIBase
         field_48234_e = par3;
         field_48235_b = par4;
         field_48236_c = par5;
-        field_48232_g = par1EntityCreature.func_48333_ak();
-        func_46087_a(1);
+        field_48232_g = par1EntityCreature.getNavigator();
+        setMutexBits(1);
     }
 
     /**
@@ -31,7 +31,7 @@ public class EntityAIAvoidEntity extends EntityAIBase
     {
         if (field_48238_h == (net.minecraft.src.EntityPlayer.class))
         {
-            if ((field_48237_a instanceof EntityTameable) && ((EntityTameable)field_48237_a).func_48373_u_())
+            if ((field_48237_a instanceof EntityTameable) && ((EntityTameable)field_48237_a).isTamed())
             {
                 return false;
             }
@@ -55,7 +55,7 @@ public class EntityAIAvoidEntity extends EntityAIBase
             field_48233_d = (Entity)list.get(0);
         }
 
-        if (!field_48237_a.func_48318_al().func_48546_a(field_48233_d))
+        if (!field_48237_a.func_48318_al().canSee(field_48233_d))
         {
             return false;
         }
@@ -87,28 +87,37 @@ public class EntityAIAvoidEntity extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48232_g.func_46034_b();
+        return !field_48232_g.noPath();
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48232_g.func_48647_a(field_48231_f, field_48235_b);
+        field_48232_g.setPath(field_48231_f, field_48235_b);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48233_d = null;
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         if (field_48237_a.getDistanceSqToEntity(field_48233_d) < 49D)
         {
-            field_48237_a.func_48333_ak().func_48654_a(field_48236_c);
+            field_48237_a.getNavigator().func_48654_a(field_48236_c);
         }
         else
         {
-            field_48237_a.func_48333_ak().func_48654_a(field_48235_b);
+            field_48237_a.getNavigator().func_48654_a(field_48235_b);
         }
     }
 }

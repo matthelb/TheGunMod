@@ -15,7 +15,7 @@ public class EntityAIMoveTowardsTarget extends EntityAIBase
         field_48223_a = par1EntityCreature;
         field_48217_f = par2;
         field_48218_g = par3;
-        func_46087_a(1);
+        setMutexBits(1);
     }
 
     /**
@@ -23,7 +23,7 @@ public class EntityAIMoveTowardsTarget extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        field_48221_b = field_48223_a.func_48331_as();
+        field_48221_b = field_48223_a.getAttackTarget();
 
         if (field_48221_b == null)
         {
@@ -55,16 +55,22 @@ public class EntityAIMoveTowardsTarget extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48223_a.func_48333_ak().func_46034_b() && field_48221_b.isEntityAlive() && field_48221_b.getDistanceSqToEntity(field_48223_a) < (double)(field_48218_g * field_48218_g);
+        return !field_48223_a.getNavigator().noPath() && field_48221_b.isEntityAlive() && field_48221_b.getDistanceSqToEntity(field_48223_a) < (double)(field_48218_g * field_48218_g);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48221_b = null;
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48223_a.func_48333_ak().func_48658_a(field_48222_c, field_48219_d, field_48220_e, field_48217_f);
+        field_48223_a.getNavigator().func_48658_a(field_48222_c, field_48219_d, field_48220_e, field_48217_f);
     }
 }

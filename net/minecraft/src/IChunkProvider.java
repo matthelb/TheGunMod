@@ -9,6 +9,10 @@ public interface IChunkProvider
      */
     public abstract boolean chunkExists(int i, int j);
 
+    /**
+     * Will return back a chunk, if it doesn't exist and its not a MP client it will generates all the blocks for the
+     * specified chunk from the map seed and chunk seed
+     */
     public abstract Chunk provideChunk(int i, int j);
 
     /**
@@ -27,8 +31,15 @@ public interface IChunkProvider
      */
     public abstract boolean saveChunks(boolean flag, IProgressUpdate iprogressupdate);
 
+    /**
+     * Unloads the 100 oldest chunks from memory, due to a bug with chunkSet.add() never being called it thinks the list
+     * is always empty and will not remove any chunks.
+     */
     public abstract boolean unload100OldestChunks();
 
+    /**
+     * Returns if the IChunkProvider supports saving.
+     */
     public abstract boolean canSave();
 
     /**

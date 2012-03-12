@@ -35,6 +35,9 @@ public class ItemArmor extends Item
         maxStackSize = 1;
     }
 
+    /**
+     * Return the enchantability factor of the item, most of the time is based on material.
+     */
     public int getItemEnchantability()
     {
         return material.getEnchantability();

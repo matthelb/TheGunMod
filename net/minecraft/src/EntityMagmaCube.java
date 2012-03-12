@@ -153,6 +153,9 @@ public class EntityMagmaCube extends EntitySlime
         }
     }
 
+    /**
+     * Whether or not the current entity is in lava
+     */
     public boolean handleLavaMovement()
     {
         return false;

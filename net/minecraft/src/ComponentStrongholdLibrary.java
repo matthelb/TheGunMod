@@ -18,6 +18,9 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
         field_35336_c = par3StructureBoundingBox.getYSize() > 6;
     }
 
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
     }
@@ -39,6 +42,10 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
         return new ComponentStrongholdLibrary(par6, par1Random, structureboundingbox, par5);
     }
 
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         if (isLiquidInStructureBoundingBox(par1World, par3StructureBoundingBox))

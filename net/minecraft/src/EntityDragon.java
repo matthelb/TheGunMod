@@ -53,7 +53,7 @@ public class EntityDragon extends EntityDragonBase
         noClip = true;
         isImmuneToFire = true;
         targetY = 100D;
-        ignoreFrustrumCheck = true;
+        ignoreFrustumCheck = true;
     }
 
     protected void entityInit()
@@ -178,7 +178,7 @@ public class EntityDragon extends EntityDragonBase
                 double d8 = targetX - posX;
                 double d10 = targetZ - posZ;
                 double d12 = Math.sqrt(d8 * d8 + d10 * d10);
-                double d13 = (0.4D + d12 / 80D) - 1.0D;
+                double d13 = (0.40000000596046448D + d12 / 80D) - 1.0D;
 
                 if (d13 > 10D)
                 {
@@ -211,7 +211,7 @@ public class EntityDragon extends EntityDragonBase
                 d3 = f10;
             }
 
-            motionY += d3 * 0.1D;
+            motionY += d3 * 0.10000000149011612D;
 
             for (; rotationYaw < -180F; rotationYaw += 360F) { }
 
@@ -252,7 +252,7 @@ public class EntityDragon extends EntityDragonBase
                 d14 = 40D;
             }
 
-            randomYawVelocity += d11 * (0.7D / d14 / (double)f19);
+            randomYawVelocity += d11 * (0.69999998807907104D / d14 / (double)f19);
             rotationYaw += randomYawVelocity * 0.1F;
             float f20 = (float)(2D / (d14 + 1.0D));
             float f21 = 0.06F;
@@ -260,7 +260,7 @@ public class EntityDragon extends EntityDragonBase
 
             if (field_40159_q)
             {
-                moveEntity(motionX * 0.8D, motionY * 0.8D, motionZ * 0.8D);
+                moveEntity(motionX * 0.80000001192092896D, motionY * 0.80000001192092896D, motionZ * 0.80000001192092896D);
             }
             else
             {
@@ -272,7 +272,7 @@ public class EntityDragon extends EntityDragonBase
             f22 = 0.8F + 0.15F * f22;
             motionX *= f22;
             motionZ *= f22;
-            motionY *= 0.91D;
+            motionY *= 0.9100000262260437D;
         }
 
         renderYawOffset = rotationYaw;
@@ -432,7 +432,7 @@ public class EntityDragon extends EntityDragonBase
                 double d2 = entity.posX - d;
                 double d3 = entity.posZ - d1;
                 double d4 = d2 * d2 + d3 * d3;
-                entity.addVelocity((d2 / d4) * 4D, 0.2D, (d3 / d4) * 4D);
+                entity.addVelocity((d2 / d4) * 4D, 0.20000000298023224D, (d3 / d4) * 4D);
             }
         }
         while (true);
@@ -595,7 +595,7 @@ public class EntityDragon extends EntityDragonBase
             }
         }
 
-        moveEntity(0.0D, 0.1D, 0.0D);
+        moveEntity(0.0D, 0.10000000149011612D, 0.0D);
         renderYawOffset = rotationYaw += 20F;
 
         if (field_40158_r == 200)
@@ -677,6 +677,9 @@ public class EntityDragon extends EntityDragonBase
         BlockEndPortal.bossDefeated = false;
     }
 
+    /**
+     * Makes the entity despawn if requirements are reached
+     */
     protected void despawnEntity()
     {
     }
@@ -689,6 +692,9 @@ public class EntityDragon extends EntityDragonBase
         return dragonPartArray;
     }
 
+    /**
+     * Returns true if other Entities should be prevented from moving through this Entity.
+     */
     public boolean canBeCollidedWith()
     {
         return false;

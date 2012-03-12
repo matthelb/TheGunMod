@@ -5,7 +5,7 @@ import java.util.Random;
 
 public class ComponentStrongholdPortalRoom extends ComponentStronghold
 {
-    private boolean field_40316_a;
+    private boolean hasSpawner;
 
     public ComponentStrongholdPortalRoom(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
@@ -14,11 +14,14 @@ public class ComponentStrongholdPortalRoom extends ComponentStronghold
         boundingBox = par3StructureBoundingBox;
     }
 
+    /**
+     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
         if (par1StructureComponent != null)
         {
-            ((ComponentStrongholdStairs2)par1StructureComponent).field_40317_b = this;
+            ((ComponentStrongholdStairs2)par1StructureComponent).portalRoom = this;
         }
     }
 
@@ -36,6 +39,10 @@ public class ComponentStrongholdPortalRoom extends ComponentStronghold
         }
     }
 
+    /**
+     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...'
+     */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
         fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 10, 7, 15, false, par2Random, StructureStrongholdPieces.getStrongholdStones());
@@ -115,7 +122,7 @@ public class ComponentStrongholdPortalRoom extends ComponentStronghold
         placeBlockAtCurrentPosition(par1World, Block.endPortalFrame.blockID, byte4 + (par2Random.nextFloat() <= 0.9F ? 0 : 4), 7, 3, 10, par3StructureBoundingBox);
         placeBlockAtCurrentPosition(par1World, Block.endPortalFrame.blockID, byte4 + (par2Random.nextFloat() <= 0.9F ? 0 : 4), 7, 3, 11, par3StructureBoundingBox);
 
-        if (!field_40316_a)
+        if (!hasSpawner)
         {
             int i = getYWithOffset(3);
             int j1 = getXWithOffset(5, 6);
@@ -123,7 +130,7 @@ public class ComponentStrongholdPortalRoom extends ComponentStronghold
 
             if (par3StructureBoundingBox.isVecInside(j1, i, k1))
             {
-                field_40316_a = true;
+                hasSpawner = true;
                 par1World.setBlockWithNotify(j1, i, k1, Block.mobSpawner.blockID);
                 TileEntityMobSpawner tileentitymobspawner = (TileEntityMobSpawner)par1World.getBlockTileEntity(j1, i, k1);
 

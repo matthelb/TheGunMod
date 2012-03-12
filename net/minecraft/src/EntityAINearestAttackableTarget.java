@@ -21,7 +21,7 @@ public class EntityAINearestAttackableTarget extends EntityAITarget
         field_48288_d = par3;
         field_48295_f = par4;
         field_48296_g = new EntityAINearestAttackableTargetSorter(this, par1EntityLiving);
-        func_46087_a(1);
+        setMutexBits(1);
     }
 
     /**
@@ -31,14 +31,14 @@ public class EntityAINearestAttackableTarget extends EntityAITarget
     {
         label0:
         {
-            if (field_48295_f > 0 && field_48291_c.getRNG().nextInt(field_48295_f) != 0)
+            if (field_48295_f > 0 && taskOwner.getRNG().nextInt(field_48295_f) != 0)
             {
                 return false;
             }
 
             if (field_48297_b == (net.minecraft.src.EntityPlayer.class))
             {
-                EntityPlayer entityplayer = field_48291_c.worldObj.getClosestVulnerablePlayerToEntity(field_48291_c, field_48288_d);
+                EntityPlayer entityplayer = taskOwner.worldObj.getClosestVulnerablePlayerToEntity(taskOwner, field_48288_d);
 
                 if (func_48284_a(entityplayer, false))
                 {
@@ -49,7 +49,7 @@ public class EntityAINearestAttackableTarget extends EntityAITarget
                 break label0;
             }
 
-            List list = field_48291_c.worldObj.getEntitiesWithinAABB(field_48297_b, field_48291_c.boundingBox.expand(field_48288_d, 4D, field_48288_d));
+            List list = taskOwner.worldObj.getEntitiesWithinAABB(field_48297_b, taskOwner.boundingBox.expand(field_48288_d, 4D, field_48288_d));
             Collections.sort(list, field_48296_g);
             Iterator iterator = list.iterator();
             EntityLiving entityliving;
@@ -72,9 +72,12 @@ public class EntityAINearestAttackableTarget extends EntityAITarget
         return false;
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48291_c.func_48327_b(field_48298_a);
-        super.func_46088_e();
+        taskOwner.setAttackTarget(field_48298_a);
+        super.startExecuting();
     }
 }

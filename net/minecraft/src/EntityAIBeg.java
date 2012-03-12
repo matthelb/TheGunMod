@@ -15,7 +15,7 @@ public class EntityAIBeg extends EntityAIBase
         field_48147_a = par1EntityWolf;
         field_48146_c = par1EntityWolf.worldObj;
         field_48143_d = par2;
-        func_46087_a(2);
+        setMutexBits(2);
     }
 
     /**
@@ -55,18 +55,27 @@ public class EntityAIBeg extends EntityAIBase
         }
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48147_a.func_48378_e(true);
         field_48144_e = 40 + field_48147_a.getRNG().nextInt(40);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48147_a.func_48378_e(false);
         field_48145_b = null;
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
         field_48147_a.getLookHelper().setLookPosition(field_48145_b.posX, field_48145_b.posY + (double)field_48145_b.getEyeHeight(), field_48145_b.posZ, 10F, field_48147_a.getVerticalFaceSpeed());
@@ -82,7 +91,7 @@ public class EntityAIBeg extends EntityAIBase
             return false;
         }
 
-        if (!field_48147_a.func_48373_u_() && itemstack.itemID == Item.bone.shiftedIndex)
+        if (!field_48147_a.isTamed() && itemstack.itemID == Item.bone.shiftedIndex)
         {
             return true;
         }

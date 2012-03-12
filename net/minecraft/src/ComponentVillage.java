@@ -16,7 +16,7 @@ abstract class ComponentVillage extends StructureComponent
     /**
      * Gets the next village component, with the bounding box shift -1 in the X and Z direction.
      */
-    protected StructureComponent getNextComponenetNN(ComponentVillageStartPiece par1ComponentVillageStartPiece, List par2List, Random par3Random, int par4, int par5)
+    protected StructureComponent getNextComponentNN(ComponentVillageStartPiece par1ComponentVillageStartPiece, List par2List, Random par3Random, int par4, int par5)
     {
         switch (coordBaseMode)
         {
@@ -39,7 +39,7 @@ abstract class ComponentVillage extends StructureComponent
     /**
      * Gets the next village component, with the bounding box shift +1 in the X and Z direction.
      */
-    protected StructureComponent getNextComponenetPP(ComponentVillageStartPiece par1ComponentVillageStartPiece, List par2List, Random par3Random, int par4, int par5)
+    protected StructureComponent getNextComponentPP(ComponentVillageStartPiece par1ComponentVillageStartPiece, List par2List, Random par3Random, int par4, int par5)
     {
         switch (coordBaseMode)
         {

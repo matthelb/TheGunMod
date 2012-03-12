@@ -34,6 +34,9 @@ public class EntityDragonPart extends Entity
     {
     }
 
+    /**
+     * Returns true if other Entities should be prevented from moving through this Entity.
+     */
     public boolean canBeCollidedWith()
     {
         return true;
@@ -47,6 +50,9 @@ public class EntityDragonPart extends Entity
         return entityDragonObj.attackEntityFromPart(this, par1DamageSource, par2);
     }
 
+    /**
+     * Returns true if Entity argument is equal to this Entity
+     */
     public boolean isEntityEqual(Entity par1Entity)
     {
         return this == par1Entity || entityDragonObj == par1Entity;

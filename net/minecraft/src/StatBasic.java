@@ -14,6 +14,9 @@ public class StatBasic extends StatBase
         super(par1, par2Str);
     }
 
+    /**
+     * Register the stat into StatList.
+     */
     public StatBase registerStat()
     {
         super.registerStat();

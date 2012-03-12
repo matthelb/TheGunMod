@@ -16,7 +16,7 @@ public class EntityAIFleeSun extends EntityAIBase
         field_48260_a = par1EntityCreature;
         field_48257_e = par2;
         field_48255_f = par1EntityCreature.worldObj;
-        func_46087_a(1);
+        setMutexBits(1);
     }
 
     /**
@@ -59,12 +59,15 @@ public class EntityAIFleeSun extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48260_a.func_48333_ak().func_46034_b();
+        return !field_48260_a.getNavigator().noPath();
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
-        field_48260_a.func_48333_ak().func_48658_a(field_48258_b, field_48259_c, field_48256_d, field_48257_e);
+        field_48260_a.getNavigator().func_48658_a(field_48258_b, field_48259_c, field_48256_d, field_48257_e);
     }
 
     private Vec3D func_48254_f()

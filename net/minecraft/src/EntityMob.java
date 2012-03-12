@@ -142,6 +142,9 @@ public abstract class EntityMob extends EntityCreature implements IMob
         super.readEntityFromNBT(par1NBTTagCompound);
     }
 
+    /**
+     * Checks to make sure the light is not too bright where the mob is spawning
+     */
     protected boolean isValidLightLevel()
     {
         int i = MathHelper.floor_double(posX);

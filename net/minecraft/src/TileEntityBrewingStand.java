@@ -24,6 +24,9 @@ public class TileEntityBrewingStand extends TileEntity implements IInventory
         return "container.brewing";
     }
 
+    /**
+     * Returns the number of slots in the inventory.
+     */
     public int getSizeInventory()
     {
         return brewingItemStacks.length;
@@ -275,7 +278,11 @@ public class TileEntityBrewingStand extends TileEntity implements IInventory
         }
     }
 
-    public ItemStack func_48315_b(int par1)
+    /**
+     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
+     * like when you close a workbench GUI.
+     */
+    public ItemStack getStackInSlotOnClosing(int par1)
     {
         if (par1 >= 0 && par1 < brewingItemStacks.length)
         {

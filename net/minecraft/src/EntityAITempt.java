@@ -2,7 +2,7 @@ package net.minecraft.src;
 
 public class EntityAITempt extends EntityAIBase
 {
-    private EntityCreature field_48268_a;
+    private EntityCreature temptedEntity;
     private float field_48266_b;
     private double field_48267_c;
     private double field_48264_d;
@@ -13,17 +13,17 @@ public class EntityAITempt extends EntityAIBase
     private int field_48274_i;
     private boolean field_48271_j;
     private int field_48272_k;
-    private boolean field_48269_l;
+    private boolean scaredByPlayerMovement;
     private boolean field_48270_m;
 
     public EntityAITempt(EntityCreature par1EntityCreature, float par2, int par3, boolean par4)
     {
         field_48274_i = 0;
-        field_48268_a = par1EntityCreature;
+        temptedEntity = par1EntityCreature;
         field_48266_b = par2;
         field_48272_k = par3;
-        field_48269_l = par4;
-        func_46087_a(3);
+        scaredByPlayerMovement = par4;
+        setMutexBits(3);
     }
 
     /**
@@ -37,7 +37,7 @@ public class EntityAITempt extends EntityAIBase
             return false;
         }
 
-        field_48273_h = field_48268_a.worldObj.getClosestPlayerToEntity(field_48268_a, 10D);
+        field_48273_h = temptedEntity.worldObj.getClosestPlayerToEntity(temptedEntity, 10D);
 
         if (field_48273_h == null)
         {
@@ -59,11 +59,11 @@ public class EntityAITempt extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        if (field_48269_l)
+        if (scaredByPlayerMovement)
         {
-            if (field_48268_a.getDistanceSqToEntity(field_48273_h) < 36D)
+            if (temptedEntity.getDistanceSqToEntity(field_48273_h) < 36D)
             {
-                if (field_48273_h.getDistanceSq(field_48267_c, field_48264_d, field_48265_e) > 0.01D)
+                if (field_48273_h.getDistanceSq(field_48267_c, field_48264_d, field_48265_e) > 0.010000000000000002D)
                 {
                     return false;
                 }
@@ -87,36 +87,45 @@ public class EntityAITempt extends EntityAIBase
         return shouldExecute();
     }
 
-    public void func_46088_e()
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting()
     {
         field_48267_c = field_48273_h.posX;
         field_48264_d = field_48273_h.posY;
         field_48265_e = field_48273_h.posZ;
         field_48271_j = true;
-        field_48270_m = field_48268_a.func_48333_ak().func_48649_a();
-        field_48268_a.func_48333_ak().func_48656_a(false);
+        field_48270_m = temptedEntity.getNavigator().func_48649_a();
+        temptedEntity.getNavigator().func_48656_a(false);
     }
 
+    /**
+     * Resets the task
+     */
     public void resetTask()
     {
         field_48273_h = null;
-        field_48268_a.func_48333_ak().func_48662_f();
+        temptedEntity.getNavigator().func_48662_f();
         field_48274_i = 100;
         field_48271_j = false;
-        field_48268_a.func_48333_ak().func_48656_a(field_48270_m);
+        temptedEntity.getNavigator().func_48656_a(field_48270_m);
     }
 
+    /**
+     * Updates the task
+     */
     public void updateTask()
     {
-        field_48268_a.getLookHelper().setLookPositionWithEntity(field_48273_h, 30F, field_48268_a.getVerticalFaceSpeed());
+        temptedEntity.getLookHelper().setLookPositionWithEntity(field_48273_h, 30F, temptedEntity.getVerticalFaceSpeed());
 
-        if (field_48268_a.getDistanceSqToEntity(field_48273_h) < 6.25D)
+        if (temptedEntity.getDistanceSqToEntity(field_48273_h) < 6.25D)
         {
-            field_48268_a.func_48333_ak().func_48662_f();
+            temptedEntity.getNavigator().func_48662_f();
         }
         else
         {
-            field_48268_a.func_48333_ak().func_48652_a(field_48273_h, field_48266_b);
+            temptedEntity.getNavigator().func_48652_a(field_48273_h, field_48266_b);
         }
     }
 

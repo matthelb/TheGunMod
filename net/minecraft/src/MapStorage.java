@@ -7,8 +7,16 @@ import java.util.*;
 public class MapStorage
 {
     private ISaveHandler saveHandler;
+
+    /** Map of item data String id to loaded MapDataBases */
     private Map loadedDataMap;
+
+    /** List of loaded MapDataBases. */
     private List loadedDataList;
+
+    /**
+     * Map of MapDataBase id String prefixes ('map' etc) to max known unique Short id (the 0 part etc) for that prefix
+     */
     private Map idCounts;
 
     public MapStorage(ISaveHandler par1ISaveHandler)
@@ -20,6 +28,10 @@ public class MapStorage
         loadIdCounts();
     }
 
+    /**
+     * Loads an existing MapDataBase corresponding to the given String id from disk, instantiating the given Class, or
+     * returns null if none such file exists. args: Class to instantiate, String dataid
+     */
     public WorldSavedData loadData(Class par1Class, String par2Str)
     {
         WorldSavedData worldsaveddata = (WorldSavedData)loadedDataMap.get(par2Str);
@@ -73,6 +85,9 @@ public class MapStorage
         return worldsaveddata;
     }
 
+    /**
+     * Assigns the given String id to the given MapDataBase, removing any existing ones of the same id.
+     */
     public void setData(String par1Str, WorldSavedData par2WorldSavedData)
     {
         if (par2WorldSavedData == null)
@@ -89,6 +104,9 @@ public class MapStorage
         loadedDataList.add(par2WorldSavedData);
     }
 
+    /**
+     * Saves all dirty loaded MapDataBases to disk.
+     */
     public void saveAllData()
     {
         for (int i = 0; i < loadedDataList.size(); i++)
@@ -103,6 +121,9 @@ public class MapStorage
         }
     }
 
+    /**
+     * Saves the given MapDataBase to disk.
+     */
     private void saveData(WorldSavedData par1WorldSavedData)
     {
         if (saveHandler == null)
@@ -131,6 +152,9 @@ public class MapStorage
         }
     }
 
+    /**
+     * Loads the idCounts Map from the 'idcounts' file.
+     */
     private void loadIdCounts()
     {
         try
@@ -177,6 +201,9 @@ public class MapStorage
         }
     }
 
+    /**
+     * Returns an unique new data id for the given prefix and saves the idCounts map to the 'idcounts' file.
+     */
     public int getUniqueDataId(String par1Str)
     {
         Short short1 = (Short)idCounts.get(par1Str);

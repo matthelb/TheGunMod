@@ -30,6 +30,10 @@ public class WorldServer extends World
         }
     }
 
+    /**
+     * Will update the entity in the world if the chunk the entity is in is currently loaded or its forced to update.
+     * Args: entity, forceUpdate
+     */
     public void updateEntityWithOptionalForce(Entity par1Entity, boolean par2)
     {
         if (!mcServer.spawnPeacefulMobs && ((par1Entity instanceof EntityAnimal) || (par1Entity instanceof EntityWaterMob)))
@@ -112,6 +116,9 @@ public class WorldServer extends World
         super.generateSpawnPoint();
     }
 
+    /**
+     * Start the skin for this entity downloading, if necessary, and increment its reference counter
+     */
     protected void obtainEntitySkin(Entity par1Entity)
     {
         super.obtainEntitySkin(par1Entity);
@@ -127,6 +134,9 @@ public class WorldServer extends World
         }
     }
 
+    /**
+     * Decrement the reference counter for this entity's skin image data
+     */
     protected void releaseEntitySkin(Entity par1Entity)
     {
         super.releaseEntitySkin(par1Entity);

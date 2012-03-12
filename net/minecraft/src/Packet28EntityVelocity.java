@@ -21,7 +21,7 @@ public class Packet28EntityVelocity extends Packet
     public Packet28EntityVelocity(int par1, double par2, double par4, double par6)
     {
         entityId = par1;
-        double d = 3.9D;
+        double d = 3.8999999999999999D;
 
         if (par2 < -d)
         {

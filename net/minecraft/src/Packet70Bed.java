@@ -8,6 +8,10 @@ public class Packet70Bed extends Packet
     {
         "tile.bed.notValid", null, null, "gameMode.changed"
     };
+
+    /**
+     * Either 1 or 2. 1 indicates to begin raining, 2 indicates to stop raining.
+     */
     public int bedState;
 
     /** Used only when reason = 3. 0 is survival, 1 is creative. */

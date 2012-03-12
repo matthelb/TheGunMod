@@ -207,6 +207,9 @@ public class NetworkManager
         return flag;
     }
 
+    /**
+     * Wakes reader and writer threads
+     */
     public void wakeThreads()
     {
         readThread.interrupt();
@@ -430,7 +433,10 @@ public class NetworkManager
         return par0NetworkManager.isTerminating;
     }
 
-    static void func_30007_a(NetworkManager par0NetworkManager, Exception par1Exception)
+    /**
+     * Sends the network manager an error
+     */
+    static void sendError(NetworkManager par0NetworkManager, Exception par1Exception)
     {
         par0NetworkManager.onNetworkError(par1Exception);
     }
