@@ -73,7 +73,7 @@ public class mod_Guns extends ModMP {
     }
 
     public String getModVersion() {
-        return "0.9.9";
+        return "0.9.941";
     }
 
     @Override
@@ -114,7 +114,7 @@ public class mod_Guns extends ModMP {
             block.setSideTextureIndex(textureIndices[1]);
             block.setBottomTextureIndex(textureIndices[2]);
         } else {
-            Log.fine("Missing block textures file blocks.png in minecraft.jar/heuristix/", getClass());
+            Log.fine("Missing block textures file gun-blocks.png in minecraft.jar/heuristix/", getClass());
         }
         ModLoader.registerKey(this, reloadKeybinding, false);
         ModLoader.registerKey(this, zoomKeybinding, false);
@@ -272,7 +272,8 @@ public class mod_Guns extends ModMP {
         return true;
     }
 
-    public void KeyboardEvent(KeyBinding key) {
+    @Override
+    public void keyboardEvent(KeyBinding key) {
         Minecraft mc = ModLoader.getMinecraftInstance();
         if (mc != null && mc.inGameHasFocus) {
             EntityPlayer player = mc.thePlayer;
