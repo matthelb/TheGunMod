@@ -16,14 +16,15 @@ class ContainerCreative extends Container
             Block.stoneBrick, Block.stoneBrick, Block.blockClay, Block.blockDiamond, Block.blockGold, Block.blockSteel, Block.bedrock, Block.blockLapis, Block.brick, Block.cobblestoneMossy,
             Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.stairSingle, Block.obsidian, Block.netherrack, Block.slowSand, Block.glowStone,
             Block.wood, Block.wood, Block.wood, Block.wood, Block.leaves, Block.leaves, Block.leaves, Block.leaves, Block.dirt, Block.grass,
-            Block.sand, Block.sandStone, Block.gravel, Block.web, Block.planks, Block.sapling, Block.sapling, Block.sapling, Block.sapling, Block.deadBush,
-            Block.sponge, Block.ice, Block.blockSnow, Block.plantYellow, Block.plantRed, Block.mushroomBrown, Block.mushroomRed, Block.cactus, Block.melon, Block.pumpkin,
-            Block.pumpkinLantern, Block.vine, Block.fenceIron, Block.thinGlass, Block.netherBrick, Block.netherFence, Block.stairsNetherBrick, Block.whiteStone, Block.mycelium, Block.waterlily,
-            Block.tallGrass, Block.tallGrass, Block.chest, Block.workbench, Block.glass, Block.tnt, Block.bookShelf, Block.cloth, Block.cloth, Block.cloth,
-            Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth,
-            Block.cloth, Block.cloth, Block.cloth, Block.dispenser, Block.stoneOvenIdle, Block.music, Block.jukebox, Block.pistonStickyBase, Block.pistonBase, Block.fence,
-            Block.fenceGate, Block.ladder, Block.rail, Block.railPowered, Block.railDetector, Block.torchWood, Block.stairCompactPlanks, Block.stairCompactCobblestone, Block.stairsBrick, Block.stairsStoneBrickSmooth,
-            Block.lever, Block.pressurePlateStone, Block.pressurePlatePlanks, Block.torchRedstoneActive, Block.button, Block.trapdoor, Block.enchantmentTable, Block.redstoneLampU
+            Block.sand, Block.sandStone, Block.sandStone, Block.sandStone, Block.gravel, Block.web, Block.planks, Block.planks, Block.planks, Block.planks,
+            Block.sapling, Block.sapling, Block.sapling, Block.sapling, Block.deadBush, Block.sponge, Block.ice, Block.blockSnow, Block.plantYellow, Block.plantRed,
+            Block.mushroomBrown, Block.mushroomRed, Block.cactus, Block.melon, Block.pumpkin, Block.pumpkinLantern, Block.vine, Block.fenceIron, Block.thinGlass, Block.netherBrick,
+            Block.netherFence, Block.stairsNetherBrick, Block.whiteStone, Block.mycelium, Block.waterlily, Block.tallGrass, Block.tallGrass, Block.chest, Block.workbench, Block.glass,
+            Block.tnt, Block.bookShelf, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth,
+            Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.cloth, Block.dispenser, Block.stoneOvenIdle,
+            Block.music, Block.jukebox, Block.pistonStickyBase, Block.pistonBase, Block.fence, Block.fenceGate, Block.ladder, Block.rail, Block.railPowered, Block.railDetector,
+            Block.torchWood, Block.stairCompactPlanks, Block.stairCompactCobblestone, Block.stairsBrick, Block.stairsStoneBrickSmooth, Block.lever, Block.pressurePlateStone, Block.pressurePlatePlanks, Block.torchRedstoneActive, Block.button,
+            Block.trapdoor, Block.enchantmentTable, Block.redstoneLampIdle
         };
         int i = 0;
         int j = 0;
@@ -31,55 +32,65 @@ class ContainerCreative extends Container
         int l = 0;
         int i1 = 0;
         int j1 = 0;
-        int k1 = 1;
+        int k1 = 0;
+        int l1 = 0;
+        int i2 = 1;
 
-        for (int l1 = 0; l1 < ablock.length; l1++)
+        for (int j2 = 0; j2 < ablock.length; j2++)
         {
-            int k2 = 0;
+            int i3 = 0;
 
-            if (ablock[l1] == Block.cloth)
+            if (ablock[j2] == Block.cloth)
             {
-                k2 = i++;
+                i3 = i++;
             }
-            else if (ablock[l1] == Block.stairSingle)
+            else if (ablock[j2] == Block.stairSingle)
             {
-                k2 = j++;
+                i3 = j++;
             }
-            else if (ablock[l1] == Block.wood)
+            else if (ablock[j2] == Block.wood)
             {
-                k2 = k++;
+                i3 = k++;
             }
-            else if (ablock[l1] == Block.sapling)
+            else if (ablock[j2] == Block.planks)
             {
-                k2 = l++;
+                i3 = l++;
             }
-            else if (ablock[l1] == Block.stoneBrick)
+            else if (ablock[j2] == Block.sapling)
             {
-                k2 = i1++;
+                i3 = i1++;
             }
-            else if (ablock[l1] == Block.tallGrass)
+            else if (ablock[j2] == Block.stoneBrick)
             {
-                k2 = k1++;
+                i3 = j1++;
             }
-            else if (ablock[l1] == Block.leaves)
+            else if (ablock[j2] == Block.sandStone)
             {
-                k2 = j1++;
+                i3 = k1++;
+            }
+            else if (ablock[j2] == Block.tallGrass)
+            {
+                i3 = i2++;
+            }
+            else if (ablock[j2] == Block.leaves)
+            {
+                i3 = l1++;
             }
 
-            itemList.add(new ItemStack(ablock[l1], 1, k2));
+            itemList.add(new ItemStack(ablock[j2], 1, i3));
         }
 
-        for (int i2 = 256; i2 < Item.itemsList.length; i2++)
+        for (int k2 = 256; k2 < Item.itemsList.length; k2++)
         {
-            if (Item.itemsList[i2] != null && Item.itemsList[i2].shiftedIndex != Item.potion.shiftedIndex && Item.itemsList[i2].shiftedIndex != Item.monsterPlacer.shiftedIndex)
+            if (Item.itemsList[k2] != null && Item.itemsList[k2].shiftedIndex != Item.potion.shiftedIndex && Item.itemsList[k2].shiftedIndex != Item.monsterPlacer.shiftedIndex)
             {
-                itemList.add(new ItemStack(Item.itemsList[i2]));
+                itemList.add(new ItemStack(Item.itemsList[k2]));
             }
         }
 
-        for (int j2 = 1; j2 < 16; j2++)
+        for (int l2 = 1; l2 < 16; l2++)
         {
-            itemList.add(new ItemStack(Item.dyePowder.shiftedIndex, 1, j2));
+            itemList.add(new ItemStack(Item.dyePowder.shiftedIndex, 1, l2));
         }
 
         Integer integer;
@@ -91,17 +102,17 @@ class ContainerCreative extends Container
 
         InventoryPlayer inventoryplayer = par1EntityPlayer.inventory;
 
-        for (int l2 = 0; l2 < 9; l2++)
+        for (int j3 = 0; j3 < 9; j3++)
         {
-            for (int j3 = 0; j3 < 8; j3++)
+            for (int l3 = 0; l3 < 8; l3++)
             {
-                addSlot(new Slot(GuiContainerCreative.getInventory(), j3 + l2 * 8, 8 + j3 * 18, 18 + l2 * 18));
+                addSlot(new Slot(GuiContainerCreative.getInventory(), l3 + j3 * 8, 8 + l3 * 18, 18 + j3 * 18));
             }
         }
 
-        for (int i3 = 0; i3 < 9; i3++)
+        for (int k3 = 0; k3 < 9; k3++)
         {
-            addSlot(new Slot(inventoryplayer, i3, 8 + i3 * 18, 184));
+            addSlot(new Slot(inventoryplayer, k3, 8 + k3 * 18, 184));
         }
 
         scrollTo(0.0F);

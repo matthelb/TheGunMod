@@ -8,7 +8,7 @@ public class EntityAIOpenDoor extends EntityAIDoorInteract
     public EntityAIOpenDoor(EntityLiving par1EntityLiving, boolean par2)
     {
         super(par1EntityLiving);
-        field_48325_a = par1EntityLiving;
+        theEntity = par1EntityLiving;
         field_48328_i = par2;
     }
 
@@ -26,7 +26,7 @@ public class EntityAIOpenDoor extends EntityAIDoorInteract
     public void startExecuting()
     {
         field_48327_j = 20;
-        field_48322_e.onPoweredBlockChange(field_48325_a.worldObj, field_48323_b, field_48324_c, field_48321_d, true);
+        targetDoor.onPoweredBlockChange(theEntity.worldObj, entityPosX, entityPosY, entityPosZ, true);
     }
 
     /**
@@ -36,7 +36,7 @@ public class EntityAIOpenDoor extends EntityAIDoorInteract
     {
         if (field_48328_i)
         {
-            field_48322_e.onPoweredBlockChange(field_48325_a.worldObj, field_48323_b, field_48324_c, field_48321_d, false);
+            targetDoor.onPoweredBlockChange(theEntity.worldObj, entityPosX, entityPosY, entityPosZ, false);
         }
     }
 

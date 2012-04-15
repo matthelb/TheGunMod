@@ -5,25 +5,25 @@ import java.util.Random;
 public class EntityAIAttackOnCollide extends EntityAIBase
 {
     World worldObj;
-    EntityLiving field_48267_b;
+    EntityLiving attacker;
     EntityLiving entityTarget;
     int field_46091_d;
     float field_48266_e;
     boolean field_48264_f;
     PathEntity field_48265_g;
-    Class field_48268_h;
+    Class classTarget;
     private int field_48269_i;
 
     public EntityAIAttackOnCollide(EntityLiving par1EntityLiving, Class par2Class, float par3, boolean par4)
     {
         this(par1EntityLiving, par3, par4);
-        field_48268_h = par2Class;
+        classTarget = par2Class;
     }
 
     public EntityAIAttackOnCollide(EntityLiving par1EntityLiving, float par2, boolean par3)
     {
         field_46091_d = 0;
-        field_48267_b = par1EntityLiving;
+        attacker = par1EntityLiving;
         worldObj = par1EntityLiving.worldObj;
         field_48266_e = par2;
         field_48264_f = par3;
@@ -35,21 +35,21 @@ public class EntityAIAttackOnCollide extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLiving entityliving = field_48267_b.getAttackTarget();
+        EntityLiving entityliving = attacker.getAttackTarget();
 
         if (entityliving == null)
         {
             return false;
         }
 
-        if (field_48268_h != null && !field_48268_h.isAssignableFrom(entityliving.getClass()))
+        if (classTarget != null && !classTarget.isAssignableFrom(entityliving.getClass()))
         {
             return false;
         }
         else
         {
             entityTarget = entityliving;
-            field_48265_g = field_48267_b.getNavigator().func_48679_a(entityTarget);
+            field_48265_g = attacker.getNavigator().func_48679_a(entityTarget);
             return field_48265_g != null;
         }
     }
@@ -59,7 +59,7 @@ public class EntityAIAttackOnCollide extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        EntityLiving entityliving = field_48267_b.getAttackTarget();
+        EntityLiving entityliving = attacker.getAttackTarget();
 
         if (entityliving == null)
         {
@@ -73,10 +73,10 @@ public class EntityAIAttackOnCollide extends EntityAIBase
 
         if (!field_48264_f)
         {
-            return !field_48267_b.getNavigator().noPath();
+            return !attacker.getNavigator().noPath();
         }
 
-        return field_48267_b.isWithinHomeDistance(MathHelper.floor_double(entityTarget.posX), MathHelper.floor_double(entityTarget.posY), MathHelper.floor_double(entityTarget.posZ));
+        return attacker.isWithinHomeDistance(MathHelper.floor_double(entityTarget.posX), MathHelper.floor_double(entityTarget.posY), MathHelper.floor_double(entityTarget.posZ));
     }
 
     /**
@@ -84,7 +84,7 @@ public class EntityAIAttackOnCollide extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48267_b.getNavigator().setPath(field_48265_g, field_48266_e);
+        attacker.getNavigator().setPath(field_48265_g, field_48266_e);
         field_48269_i = 0;
     }
 
@@ -94,7 +94,7 @@ public class EntityAIAttackOnCollide extends EntityAIBase
     public void resetTask()
     {
         entityTarget = null;
-        field_48267_b.getNavigator().func_48672_f();
+        attacker.getNavigator().clearPathEntity();
     }
 
     /**
@@ -102,18 +102,18 @@ public class EntityAIAttackOnCollide extends EntityAIBase
      */
     public void updateTask()
     {
-        field_48267_b.getLookHelper().setLookPositionWithEntity(entityTarget, 30F, 30F);
+        attacker.getLookHelper().setLookPositionWithEntity(entityTarget, 30F, 30F);
 
-        if ((field_48264_f || field_48267_b.func_48090_aM().canSee(entityTarget)) && --field_48269_i <= 0)
+        if ((field_48264_f || attacker.getEntitySenses().canSee(entityTarget)) && --field_48269_i <= 0)
         {
-            field_48269_i = 4 + field_48267_b.getRNG().nextInt(7);
-            field_48267_b.getNavigator().func_48667_a(entityTarget, field_48266_e);
+            field_48269_i = 4 + attacker.getRNG().nextInt(7);
+            attacker.getNavigator().func_48667_a(entityTarget, field_48266_e);
         }
 
         field_46091_d = Math.max(field_46091_d - 1, 0);
-        double d = field_48267_b.width * 2.0F * (field_48267_b.width * 2.0F);
+        double d = attacker.width * 2.0F * (attacker.width * 2.0F);
 
-        if (field_48267_b.getDistanceSq(entityTarget.posX, entityTarget.boundingBox.minY, entityTarget.posZ) > d)
+        if (attacker.getDistanceSq(entityTarget.posX, entityTarget.boundingBox.minY, entityTarget.posZ) > d)
         {
             return;
         }
@@ -125,7 +125,7 @@ public class EntityAIAttackOnCollide extends EntityAIBase
         else
         {
             field_46091_d = 20;
-            field_48267_b.attackEntityAsMob(entityTarget);
+            attacker.attackEntityAsMob(entityTarget);
             return;
         }
     }

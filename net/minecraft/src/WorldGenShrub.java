@@ -22,7 +22,7 @@ public class WorldGenShrub extends WorldGenerator
         if (j == Block.dirt.blockID || j == Block.grass.blockID)
         {
             par4++;
-            par1World.setBlockAndMetadata(par3, par4, par5, Block.wood.blockID, field_48196_b);
+            setBlockAndMetadata(par1World, par3, par4, par5, Block.wood.blockID, field_48196_b);
 
             for (int k = par4; k <= par4 + 2; k++)
             {

@@ -38,7 +38,7 @@ public class Gui
     /**
      * Draws a solid color rectangle with the specified coordinates and color.
      */
-    protected void drawRect(int par1, int par2, int par3, int par4, int par5)
+    public static void drawRect(int par1, int par2, int par3, int par4, int par5)
     {
         if (par1 < par3)
         {

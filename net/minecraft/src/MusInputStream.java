@@ -1,6 +1,5 @@
 package net.minecraft.src;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -41,7 +40,7 @@ class MusInputStream extends InputStream
         {
             par3 = inputStream.read(par1ArrayOfByte, par2, par3);
         }
-        catch (IOException e)
+        catch (Throwable t)
         {
             return 0;
         }

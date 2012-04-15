@@ -55,7 +55,7 @@ public abstract class EntityGolem extends EntityCreature
     }
 
     /**
-     * Get number of ticks, at least during which the living entity will be silent
+     * Get number of ticks, at least during which the living entity will be silent.
      */
     public int getTalkInterval()
     {

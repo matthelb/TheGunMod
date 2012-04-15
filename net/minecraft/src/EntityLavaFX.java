@@ -21,7 +21,7 @@ public class EntityLavaFX extends EntityFX
         setParticleTextureIndex(49);
     }
 
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
         float f = ((float)particleAge + par1) / (float)particleMaxAge;
 
@@ -35,7 +35,7 @@ public class EntityLavaFX extends EntityFX
             f = 1.0F;
         }
 
-        int i = super.getEntityBrightnessForRender(par1);
+        int i = super.getBrightnessForRender(par1);
         char c = '\360';
         int j = i >> 16 & 0xff;
         return c | j << 16;
@@ -44,7 +44,7 @@ public class EntityLavaFX extends EntityFX
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         return 1.0F;
     }
@@ -67,7 +67,7 @@ public class EntityLavaFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
 
         float f = (float)particleAge / (float)particleMaxAge;

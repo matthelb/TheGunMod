@@ -28,14 +28,9 @@ public class EntityEnchantmentTableParticleFX extends EntityFX
         setParticleTextureIndex((int)(Math.random() * 26D + 1.0D + 224D));
     }
 
-    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
+    public int getBrightnessForRender(float par1)
     {
-        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
-    }
-
-    public int getEntityBrightnessForRender(float par1)
-    {
-        int i = super.getEntityBrightnessForRender(par1);
+        int i = super.getBrightnessForRender(par1);
         float f = (float)particleAge / (float)particleMaxAge;
         f *= f;
         f *= f;
@@ -54,9 +49,9 @@ public class EntityEnchantmentTableParticleFX extends EntityFX
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
-        float f = super.getEntityBrightness(par1);
+        float f = super.getBrightness(par1);
         float f1 = (float)particleAge / (float)particleMaxAge;
         f1 *= f1;
         f1 *= f1;
@@ -82,7 +77,7 @@ public class EntityEnchantmentTableParticleFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
     }
 }

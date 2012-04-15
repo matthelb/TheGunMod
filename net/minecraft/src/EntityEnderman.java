@@ -88,17 +88,17 @@ public class EntityEnderman extends EntityMob
         return null;
     }
 
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
-        return super.getEntityBrightnessForRender(par1);
+        return super.getBrightnessForRender(par1);
     }
 
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
-        return super.getEntityBrightness(par1);
+        return super.getBrightness(par1);
     }
 
     /**
@@ -185,7 +185,7 @@ public class EntityEnderman extends EntityMob
 
         if (worldObj.isDaytime() && !worldObj.isRemote)
         {
-            float f = getEntityBrightness(1.0F);
+            float f = getBrightness(1.0F);
 
             if (f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
             {

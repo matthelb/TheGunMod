@@ -92,7 +92,7 @@ public class BiomeCache
     }
 
     /**
-     * Gives WorldChunkManager passed into BiomeChunk constructor.
+     * Get the world chunk manager object for a biome list.
      */
     static WorldChunkManager getChunkManager(BiomeCache par0BiomeCache)
     {

@@ -50,7 +50,9 @@ public class GuiMultiplayer extends GuiScreen
 
     /** The 'Direct Connect' button was clicked */
     private boolean directClicked;
-    private String field_35350_v;
+
+    /** This GUI's lag tooltip text or null if no lag icon is being hovered. */
+    private String lagTooltip;
 
     /**
      * Temporary ServerNBTStorage used by the Edit/Add/Direct Connect dialogs
@@ -65,7 +67,7 @@ public class GuiMultiplayer extends GuiScreen
         addClicked = false;
         editClicked = false;
         directClicked = false;
-        field_35350_v = null;
+        lagTooltip = null;
         tempServer = null;
         parentScreen = par1GuiScreen;
     }
@@ -222,10 +224,7 @@ public class GuiMultiplayer extends GuiScreen
         }
     }
 
-    /**
-     * Deletes the selected world.
-     */
-    public void deleteWorld(boolean par1, int par2)
+    public void confirmClicked(boolean par1, int par2)
     {
         if (deleteClicked)
         {
@@ -316,16 +315,16 @@ public class GuiMultiplayer extends GuiScreen
      */
     public void drawScreen(int par1, int par2, float par3)
     {
-        field_35350_v = null;
+        lagTooltip = null;
         StringTranslate stringtranslate = StringTranslate.getInstance();
         drawDefaultBackground();
         serverSlotContainer.drawScreen(par1, par2, par3);
         drawCenteredString(fontRenderer, stringtranslate.translateKey("multiplayer.title"), width / 2, 20, 0xffffff);
         super.drawScreen(par1, par2, par3);
 
-        if (field_35350_v != null)
+        if (lagTooltip != null)
         {
-            func_35325_a(field_35350_v, par1, par2);
+            func_35325_a(lagTooltip, par1, par2);
         }
     }
 
@@ -617,8 +616,11 @@ public class GuiMultiplayer extends GuiScreen
         return threadsPending--;
     }
 
-    static String func_35327_a(GuiMultiplayer par0GuiMultiplayer, String par1Str)
+    /**
+     * Sets a GUI's lag tooltip text.
+     */
+    static String setTooltipText(GuiMultiplayer par0GuiMultiplayer, String par1Str)
     {
-        return par0GuiMultiplayer.field_35350_v = par1Str;
+        return par0GuiMultiplayer.lagTooltip = par1Str;
     }
 }

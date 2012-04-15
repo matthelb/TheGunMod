@@ -86,7 +86,7 @@ public class GuiInventory extends GuiContainer
         int j = guiLeft;
         int k = guiTop;
         drawTexturedModalRect(j, k, 0, 0, xSize, ySize);
-        func_40218_g();
+        displayDebuffEffects();
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         GL11.glEnable(GL11.GL_COLOR_MATERIAL);
         GL11.glPushMatrix();
@@ -106,7 +106,7 @@ public class GuiInventory extends GuiContainer
         mc.thePlayer.renderYawOffset = (float)Math.atan(f4 / 40F) * 20F;
         mc.thePlayer.rotationYaw = (float)Math.atan(f4 / 40F) * 40F;
         mc.thePlayer.rotationPitch = -(float)Math.atan(f5 / 40F) * 20F;
-        mc.thePlayer.prevRotationYaw2 = mc.thePlayer.rotationYaw;
+        mc.thePlayer.rotationYawHead = mc.thePlayer.rotationYaw;
         GL11.glTranslatef(0.0F, mc.thePlayer.yOffset, 0.0F);
         RenderManager.instance.playerViewY = 180F;
         RenderManager.instance.renderEntityWithPosYaw(mc.thePlayer, 0.0D, 0.0D, 0.0D, 0.0F, 1.0F);
@@ -134,7 +134,10 @@ public class GuiInventory extends GuiContainer
         }
     }
 
-    private void func_40218_g()
+    /**
+     * Displays debuff/potion effects that are currently being applied to the player
+     */
+    private void displayDebuffEffects()
     {
         int i = guiLeft - 124;
         int j = guiTop;

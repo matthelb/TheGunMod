@@ -106,7 +106,7 @@ public class EffectRenderer
             for (int k = 0; k < fxLayers[i].size(); k++)
             {
                 EntityFX entityfx = (EntityFX)fxLayers[i].get(k);
-                tessellator.setBrightness(entityfx.getEntityBrightnessForRender(par2));
+                tessellator.setBrightness(entityfx.getBrightnessForRender(par2));
                 entityfx.renderParticle(tessellator, par2, f, f4, f1, f2, f3);
             }
 
@@ -116,11 +116,11 @@ public class EffectRenderer
 
     public void func_1187_b(Entity par1Entity, float par2)
     {
-        float f = MathHelper.cos((par1Entity.rotationYaw * (float)Math.PI) / 180F);
-        float f1 = MathHelper.sin((par1Entity.rotationYaw * (float)Math.PI) / 180F);
-        float f2 = -f1 * MathHelper.sin((par1Entity.rotationPitch * (float)Math.PI) / 180F);
-        float f3 = f * MathHelper.sin((par1Entity.rotationPitch * (float)Math.PI) / 180F);
-        float f4 = MathHelper.cos((par1Entity.rotationPitch * (float)Math.PI) / 180F);
+        float f = MathHelper.cos(par1Entity.rotationYaw * 0.01745329F);
+        float f1 = MathHelper.sin(par1Entity.rotationYaw * 0.01745329F);
+        float f2 = -f1 * MathHelper.sin(par1Entity.rotationPitch * 0.01745329F);
+        float f3 = f * MathHelper.sin(par1Entity.rotationPitch * 0.01745329F);
+        float f4 = MathHelper.cos(par1Entity.rotationPitch * 0.01745329F);
         byte byte0 = 3;
 
         if (fxLayers[byte0].size() == 0)
@@ -133,7 +133,7 @@ public class EffectRenderer
         for (int i = 0; i < fxLayers[byte0].size(); i++)
         {
             EntityFX entityfx = (EntityFX)fxLayers[byte0].get(i);
-            tessellator.setBrightness(entityfx.getEntityBrightnessForRender(par2));
+            tessellator.setBrightness(entityfx.getBrightnessForRender(par2));
             entityfx.renderParticle(tessellator, par2, f, f4, f1, f2, f3);
         }
     }

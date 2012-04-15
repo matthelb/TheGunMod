@@ -9,13 +9,11 @@ public class EntityOtherPlayerMP extends EntityPlayer
     private double otherPlayerMPZ;
     private double otherPlayerMPYaw;
     private double otherPlayerMPPitch;
-    float field_20924_a;
 
     public EntityOtherPlayerMP(World par1World, String par2Str)
     {
         super(par1World);
         isItemInUse = false;
-        field_20924_a = 0.0F;
         username = par2Str;
         yOffset = 0.0F;
         stepHeight = 0.0F;
@@ -133,12 +131,12 @@ public class EntityOtherPlayerMP extends EntityPlayer
             f = 0.1F;
         }
 
-        if (!onGround || getEntityHealth() <= 0)
+        if (!onGround || getHealth() <= 0)
         {
             f = 0.0F;
         }
 
-        if (onGround || getEntityHealth() <= 0)
+        if (onGround || getHealth() <= 0)
         {
             f1 = 0.0F;
         }

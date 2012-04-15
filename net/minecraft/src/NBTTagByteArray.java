@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class NBTTagByteArray extends NBTBase
 {
@@ -49,19 +50,6 @@ public class NBTTagByteArray extends NBTBase
         return (new StringBuilder()).append("[").append(byteArray.length).append(" bytes]").toString();
     }
 
-    public boolean equals(Object par1Obj)
-    {
-        if (super.equals(par1Obj))
-        {
-            NBTTagByteArray nbttagbytearray = (NBTTagByteArray)par1Obj;
-            return byteArray == null && nbttagbytearray.byteArray == null || byteArray != null && byteArray.equals(nbttagbytearray.byteArray);
-        }
-        else
-        {
-            return false;
-        }
-    }
-
     /**
      * Creates a clone of the tag.
      */
@@ -70,5 +58,22 @@ public class NBTTagByteArray extends NBTBase
         byte abyte0[] = new byte[byteArray.length];
         System.arraycopy(byteArray, 0, abyte0, 0, byteArray.length);
         return new NBTTagByteArray(getName(), abyte0);
+    }
+
+    public boolean equals(Object par1Obj)
+    {
+        if (super.equals(par1Obj))
+        {
+            return Arrays.equals(byteArray, ((NBTTagByteArray)par1Obj).byteArray);
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public int hashCode()
+    {
+        return super.hashCode() ^ Arrays.hashCode(byteArray);
     }
 }

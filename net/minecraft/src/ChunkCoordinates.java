@@ -47,7 +47,7 @@ public class ChunkCoordinates implements Comparable
     }
 
     /**
-     * Compare the coordinate with another coordinate;
+     * Compare the coordinate with another coordinate
      */
     public int compareChunkCoordinate(ChunkCoordinates par1ChunkCoordinates)
     {

@@ -6,8 +6,8 @@ import java.util.Random;
 public class ComponentVillageWoodHut extends ComponentVillage
 {
     private int averageGroundLevel;
-    private final boolean field_35092_b;
-    private final int field_35093_c;
+    private final boolean isTallHouse;
+    private final int tablePosition;
 
     public ComponentVillageWoodHut(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
@@ -15,12 +15,12 @@ public class ComponentVillageWoodHut extends ComponentVillage
         averageGroundLevel = -1;
         coordBaseMode = par4;
         boundingBox = par3StructureBoundingBox;
-        field_35092_b = par2Random.nextBoolean();
-        field_35093_c = par2Random.nextInt(3);
+        isTallHouse = par2Random.nextBoolean();
+        tablePosition = par2Random.nextInt(3);
     }
 
     /**
-     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     * Initiates construction of the Structure Component picked, at the current Location of StructGen
      */
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
@@ -41,8 +41,8 @@ public class ComponentVillageWoodHut extends ComponentVillage
     }
 
     /**
-     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
-     * the end, it adds Fences...'
+     * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...
      */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
@@ -62,7 +62,7 @@ public class ComponentVillageWoodHut extends ComponentVillage
         fillWithBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 3, 0, 4, Block.cobblestone.blockID, Block.cobblestone.blockID, false);
         fillWithBlocks(par1World, par3StructureBoundingBox, 1, 0, 1, 2, 0, 3, Block.dirt.blockID, Block.dirt.blockID, false);
 
-        if (field_35092_b)
+        if (isTallHouse)
         {
             fillWithBlocks(par1World, par3StructureBoundingBox, 1, 4, 1, 2, 4, 3, Block.wood.blockID, Block.wood.blockID, false);
         }
@@ -92,10 +92,10 @@ public class ComponentVillageWoodHut extends ComponentVillage
         placeBlockAtCurrentPosition(par1World, Block.thinGlass.blockID, 0, 0, 2, 2, par3StructureBoundingBox);
         placeBlockAtCurrentPosition(par1World, Block.thinGlass.blockID, 0, 3, 2, 2, par3StructureBoundingBox);
 
-        if (field_35093_c > 0)
+        if (tablePosition > 0)
         {
-            placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, field_35093_c, 1, 3, par3StructureBoundingBox);
-            placeBlockAtCurrentPosition(par1World, Block.pressurePlatePlanks.blockID, 0, field_35093_c, 2, 3, par3StructureBoundingBox);
+            placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, tablePosition, 1, 3, par3StructureBoundingBox);
+            placeBlockAtCurrentPosition(par1World, Block.pressurePlatePlanks.blockID, 0, tablePosition, 2, 3, par3StructureBoundingBox);
         }
 
         placeBlockAtCurrentPosition(par1World, 0, 0, 1, 1, 0, par3StructureBoundingBox);

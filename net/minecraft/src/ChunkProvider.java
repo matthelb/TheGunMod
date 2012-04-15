@@ -63,7 +63,7 @@ public class ChunkProvider implements IChunkProvider
     }
 
     /**
-     * Creates an empty chunk ready to put data from the server in
+     * loads or generates the chunk at the chunk location specified
      */
     public Chunk loadChunk(int par1, int par2)
     {

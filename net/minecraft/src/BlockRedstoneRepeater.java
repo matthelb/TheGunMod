@@ -148,7 +148,7 @@ public class BlockRedstoneRepeater extends BlockDirectional
             return false;
         }
 
-        int i = func_48216_a(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
+        int i = getDirection(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
 
         if (i == 0 && par5 == 3)
         {
@@ -178,6 +178,12 @@ public class BlockRedstoneRepeater extends BlockDirectional
         {
             dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
             par1World.setBlockWithNotify(par2, par3, par4, 0);
+            par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
             return;
         }
 
@@ -197,7 +203,7 @@ public class BlockRedstoneRepeater extends BlockDirectional
 
     private boolean ignoreTick(World par1World, int par2, int par3, int par4, int par5)
     {
-        int i = func_48216_a(par5);
+        int i = getDirection(par5);
 
         switch (i)
         {
@@ -239,8 +245,7 @@ public class BlockRedstoneRepeater extends BlockDirectional
     }
 
     /**
-     * Called when a block is placed by using an ItemStack from inventory and passed in who placed it. Args:
-     * x,y,z,entityliving
+     * Called when the block is placed in the world.
      */
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
@@ -274,6 +279,11 @@ public class BlockRedstoneRepeater extends BlockDirectional
     {
         if (isRepeaterPowered)
         {
+            par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
             par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
         }
 
@@ -308,7 +318,7 @@ public class BlockRedstoneRepeater extends BlockDirectional
         }
 
         int i = par1World.getBlockMetadata(par2, par3, par4);
-        int j = func_48216_a(i);
+        int j = getDirection(i);
         double d = (double)((float)par2 + 0.5F) + (double)(par5Random.nextFloat() - 0.5F) * 0.20000000000000001D;
         double d1 = (double)((float)par3 + 0.4F) + (double)(par5Random.nextFloat() - 0.5F) * 0.20000000000000001D;
         double d2 = (double)((float)par4 + 0.5F) + (double)(par5Random.nextFloat() - 0.5F) * 0.20000000000000001D;

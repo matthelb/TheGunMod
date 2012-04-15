@@ -11,7 +11,7 @@ abstract class ComponentStronghold extends StructureComponent
     }
 
     /**
-     * 'builds a door of the enumerated types (empty opening is a door)'
+     * builds a door of the enumerated types (empty opening is a door)
      */
     protected void placeDoor(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox, EnumDoor par4EnumDoor, int par5, int par6, int par7)
     {
@@ -154,7 +154,7 @@ abstract class ComponentStronghold extends StructureComponent
     }
 
     /**
-     * 'returns false if the Structure Bounding Box goes below 10'
+     * returns false if the Structure Bounding Box goes below 10
      */
     protected static boolean canStrongholdGoDeeper(StructureBoundingBox par0StructureBoundingBox)
     {

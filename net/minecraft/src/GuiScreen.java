@@ -71,13 +71,25 @@ public class GuiScreen extends Gui
 
             if (transferable != null && transferable.isDataFlavorSupported(java.awt.datatransfer.DataFlavor.stringFlavor))
             {
-                String s = (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
-                return s;
+                return (String)transferable.getTransferData(java.awt.datatransfer.DataFlavor.stringFlavor);
             }
         }
         catch (Exception exception) { }
 
-        return null;
+        return "";
+    }
+
+    /**
+     * store a string in the system clipboard
+     */
+    public static void setClipboardString(String par0Str)
+    {
+        try
+        {
+            java.awt.datatransfer.StringSelection stringselection = new java.awt.datatransfer.StringSelection(par0Str);
+            java.awt.Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringselection, null);
+        }
+        catch (Exception exception) { }
     }
 
     /**
@@ -238,8 +250,8 @@ public class GuiScreen extends Gui
         tessellator.setColorOpaque_I(0x404040);
         tessellator.addVertexWithUV(0.0D, height, 0.0D, 0.0D, (float)height / f + (float)par1);
         tessellator.addVertexWithUV(width, height, 0.0D, (float)width / f, (float)height / f + (float)par1);
-        tessellator.addVertexWithUV(width, 0.0D, 0.0D, (float)width / f, 0 + par1);
-        tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, 0 + par1);
+        tessellator.addVertexWithUV(width, 0.0D, 0.0D, (float)width / f, par1);
+        tessellator.addVertexWithUV(0.0D, 0.0D, 0.0D, 0.0D, par1);
         tessellator.draw();
     }
 
@@ -251,14 +263,17 @@ public class GuiScreen extends Gui
         return true;
     }
 
-    /**
-     * Deletes the selected world.
-     */
-    public void deleteWorld(boolean flag, int i)
+    public void confirmClicked(boolean flag, int i)
     {
     }
 
-    public void selectNextField()
+    public static boolean func_50051_l()
     {
+        return Keyboard.isKeyDown(29) || Keyboard.isKeyDown(157);
+    }
+
+    public static boolean func_50049_m()
+    {
+        return Keyboard.isKeyDown(42) || Keyboard.isKeyDown(54);
     }
 }

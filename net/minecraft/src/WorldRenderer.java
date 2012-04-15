@@ -199,10 +199,10 @@ public class WorldRenderer
                                 GL11.glScalef(f, f, f);
                                 GL11.glTranslatef(8F, 8F, 8F);
                                 tessellator.startDrawingQuads();
-                                tessellator.setTranslationD(-posX, -posY, -posZ);
+                                tessellator.setTranslation(-posX, -posY, -posZ);
                             }
 
-                            if (i2 == 0 && Block.blocksList[i3].func_48205_p())
+                            if (i2 == 0 && Block.blocksList[i3].hasTileEntity())
                             {
                                 TileEntity tileentity = chunkcache.getBlockTileEntity(l2, j2, k2);
 
@@ -234,7 +234,7 @@ public class WorldRenderer
                     bytesDrawn += tessellator.draw();
                     GL11.glPopMatrix();
                     GL11.glEndList();
-                    tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
+                    tessellator.setTranslation(0.0D, 0.0D, 0.0D);
                 }
                 else
                 {

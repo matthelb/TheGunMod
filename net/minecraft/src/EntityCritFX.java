@@ -2,7 +2,6 @@ package net.minecraft.src;
 
 public class EntityCritFX extends EntityFX
 {
-    private boolean field_35136_ay;
     float field_35137_a;
 
     public EntityCritFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12)
@@ -13,7 +12,6 @@ public class EntityCritFX extends EntityFX
     public EntityCritFX(World par1World, double par2, double par4, double par6, double par8, double par10, double par12, float par14)
     {
         super(par1World, par2, par4, par6, 0.0D, 0.0D, 0.0D);
-        field_35136_ay = true;
         motionX *= 0.10000000149011612D;
         motionY *= 0.10000000149011612D;
         motionZ *= 0.10000000149011612D;
@@ -33,11 +31,6 @@ public class EntityCritFX extends EntityFX
 
     public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        if (!field_35136_ay)
-        {
-            return;
-        }
-
         float f = (((float)particleAge + par2) / (float)particleMaxAge) * 32F;
 
         if (f < 0.0F)
@@ -65,7 +58,7 @@ public class EntityCritFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
 
         moveEntity(motionX, motionY, motionZ);

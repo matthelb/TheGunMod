@@ -67,7 +67,7 @@ public class WorldGenTaiga1 extends WorldGenerator
             return false;
         }
 
-        par1World.setBlock(par3, par4 - 1, par5, Block.dirt.blockID);
+        setBlock(par1World, par3, par4 - 1, par5, Block.dirt.blockID);
         int l1 = 0;
 
         for (int j2 = par4 + i; j2 >= par4 + j; j2--)
@@ -82,7 +82,7 @@ public class WorldGenTaiga1 extends WorldGenerator
 
                     if ((Math.abs(l3) != l1 || Math.abs(j4) != l1 || l1 <= 0) && !Block.opaqueCubeLookup[par1World.getBlockId(i3, j2, i4)])
                     {
-                        par1World.setBlockAndMetadata(i3, j2, i4, Block.leaves.blockID, 1);
+                        setBlockAndMetadata(par1World, i3, j2, i4, Block.leaves.blockID, 1);
                     }
                 }
             }
@@ -105,7 +105,7 @@ public class WorldGenTaiga1 extends WorldGenerator
 
             if (j3 == 0 || j3 == Block.leaves.blockID)
             {
-                par1World.setBlockAndMetadata(par3, par4 + k2, par5, Block.wood.blockID, 1);
+                setBlockAndMetadata(par1World, par3, par4 + k2, par5, Block.wood.blockID, 1);
             }
         }
 

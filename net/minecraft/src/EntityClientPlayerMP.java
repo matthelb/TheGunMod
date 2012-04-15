@@ -1,5 +1,6 @@
 package net.minecraft.src;
 
+import java.util.List;
 import net.minecraft.client.Minecraft;
 
 public class EntityClientPlayerMP extends EntityPlayerSP
@@ -10,9 +11,6 @@ public class EntityClientPlayerMP extends EntityPlayerSP
      * Tick counter that resets every 20 ticks, used for sending inventory updates
      */
     private int inventoryUpdateTickCounter;
-
-    /** has the client player's health been set? */
-    private boolean hasSetHealth;
     private double oldPosX;
 
     /** Old Minimum Y of the bounding box */
@@ -32,15 +30,18 @@ public class EntityClientPlayerMP extends EntityPlayerSP
     /** The time since the client player moved */
     private int timeSinceMoved;
 
+    /** has the client player's health been set? */
+    private boolean hasSetHealth;
+
     public EntityClientPlayerMP(Minecraft par1Minecraft, World par2World, Session par3Session, NetClientHandler par4NetClientHandler)
     {
         super(par1Minecraft, par2World, par3Session, 0);
         inventoryUpdateTickCounter = 0;
-        hasSetHealth = false;
         wasOnGround = false;
         shouldStopSneaking = false;
         wasSneaking = false;
         timeSinceMoved = 0;
+        hasSetHealth = false;
         sendQueue = par4NetClientHandler;
     }
 
@@ -83,7 +84,6 @@ public class EntityClientPlayerMP extends EntityPlayerSP
     {
         if (inventoryUpdateTickCounter++ == 20)
         {
-            sendInventoryChanged();
             inventoryUpdateTickCounter = 0;
         }
 
@@ -187,17 +187,13 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         }
     }
 
-    public EntityItem func_48152_as()
+    /**
+     * Called when player presses the drop item key
+     */
+    public EntityItem dropOneItem()
     {
         sendQueue.addToSendQueue(new Packet14BlockDig(4, 0, 0, 0, 0));
         return null;
-    }
-
-    /**
-     * Send a inventory changed message to the server if the current inventory has been modified.
-     */
-    public void sendInventoryChanged()
-    {
     }
 
     /**
@@ -212,6 +208,11 @@ public class EntityClientPlayerMP extends EntityPlayerSP
      */
     public void sendChatMessage(String par1Str)
     {
+        if (mc.ingameGUI.getSentMessageList().size() == 0 || !((String)mc.ingameGUI.getSentMessageList().get(mc.ingameGUI.getSentMessageList().size() - 1)).equals(par1Str))
+        {
+            mc.ingameGUI.getSentMessageList().add(par1Str);
+        }
+
         sendQueue.addToSendQueue(new Packet3Chat(par1Str));
     }
 
@@ -226,8 +227,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
 
     public void respawnPlayer()
     {
-        sendInventoryChanged();
-        sendQueue.addToSendQueue(new Packet9Respawn(dimension, (byte)worldObj.difficultySetting, worldObj.getWorldInfo().getTerrainType(), worldObj.getWorldHeight(), 0));
+        sendQueue.addToSendQueue(new Packet9Respawn(dimension, (byte)worldObj.difficultySetting, worldObj.getWorldInfo().getTerrainType(), worldObj.getHeight(), 0));
     }
 
     /**
@@ -236,7 +236,7 @@ public class EntityClientPlayerMP extends EntityPlayerSP
      */
     protected void damageEntity(DamageSource par1DamageSource, int par2)
     {
-        setEntityHealth(getEntityHealth() - par2);
+        setEntityHealth(getHealth() - par2);
     }
 
     /**
@@ -295,5 +295,10 @@ public class EntityClientPlayerMP extends EntityPlayerSP
         {
             super.addStat(par1StatBase, par2);
         }
+    }
+
+    public void func_50009_aI()
+    {
+        sendQueue.addToSendQueue(new Packet202PlayerAbilities(capabilities));
     }
 }

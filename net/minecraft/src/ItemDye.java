@@ -150,7 +150,7 @@ public class ItemDye extends Item
     }
 
     /**
-     * Called from ItemStack.useItemOnEntity
+     * Called when a player right clicks a entity with a item.
      */
     public void useItemOnEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving)
     {

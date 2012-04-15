@@ -205,10 +205,7 @@ public class GuiSelectWorld extends GuiScreen
         mc.displayGuiScreen(null);
     }
 
-    /**
-     * Deletes the selected world.
-     */
-    public void deleteWorld(boolean par1, int par2)
+    public void confirmClicked(boolean par1, int par2)
     {
         if (deleting)
         {

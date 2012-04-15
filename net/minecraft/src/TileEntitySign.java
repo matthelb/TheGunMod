@@ -50,4 +50,14 @@ public class TileEntitySign extends TileEntity
             }
         }
     }
+
+    public boolean isEditable()
+    {
+        return isEditable;
+    }
+
+    public void func_50006_a(boolean par1)
+    {
+        isEditable = par1;
+    }
 }

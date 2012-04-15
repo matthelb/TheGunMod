@@ -52,7 +52,7 @@ public abstract class EntityTameable extends EntityAnimal
             setTamed(true);
         }
 
-        aiSit.func_48407_a(true);
+        aiSit.func_48407_a(par1NBTTagCompound.getBoolean("Sitting"));
     }
 
     protected void func_48142_a(boolean par1)
@@ -113,7 +113,7 @@ public abstract class EntityTameable extends EntityAnimal
         return (dataWatcher.getWatchableObjectByte(16) & 1) != 0;
     }
 
-    public void func_48140_f(boolean par1)
+    public void setSitting(boolean par1)
     {
         byte byte0 = dataWatcher.getWatchableObjectByte(16);
 
@@ -140,5 +140,10 @@ public abstract class EntityTameable extends EntityAnimal
     public EntityLiving getOwner()
     {
         return worldObj.getPlayerEntityByName(getOwnerName());
+    }
+
+    public EntityAISit func_50008_ai()
+    {
+        return aiSit;
     }
 }

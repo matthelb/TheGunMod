@@ -75,7 +75,10 @@ public class PathEntity
         currentPathIndex = par1;
     }
 
-    public Vec3D func_48646_a(Entity par1Entity, int par2)
+    /**
+     * Gets the vector of the PathPoint associated with the given index.
+     */
+    public Vec3D getVectorFromIndex(Entity par1Entity, int par2)
     {
         double d = (double)points[par2].xCoord + (double)(int)(par1Entity.width + 1.0F) * 0.5D;
         double d1 = points[par2].yCoord;
@@ -88,7 +91,7 @@ public class PathEntity
      */
     public Vec3D getCurrentNodeVec3d(Entity par1Entity)
     {
-        return func_48646_a(par1Entity, currentPathIndex);
+        return getVectorFromIndex(par1Entity, currentPathIndex);
     }
 
     public boolean func_48647_a(PathEntity par1PathEntity)

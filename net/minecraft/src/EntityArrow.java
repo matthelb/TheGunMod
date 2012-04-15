@@ -18,11 +18,7 @@ public class EntityArrow extends Entity
 
     /** The owner of this arrow. */
     public Entity shootingEntity;
-
-    /** the time until an arrow dies */
     private int ticksInGround;
-
-    /** the amount of time an arrow has been in the air */
     private int ticksInAir;
     private double damage;
     private int field_46027_au;
@@ -237,7 +233,7 @@ public class EntityArrow extends Entity
 
             if (ticksInGround == 1200)
             {
-                setEntityDead();
+                setDead();
             }
 
             return;
@@ -337,7 +333,7 @@ public class EntityArrow extends Entity
                     }
 
                     worldObj.playSoundAtEntity(this, "random.bowhit", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
-                    setEntityDead();
+                    setDead();
                 }
                 else
                 {
@@ -465,7 +461,7 @@ public class EntityArrow extends Entity
         {
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
             par1EntityPlayer.onItemPickup(this, 1);
-            setEntityDead();
+            setDead();
         }
     }
 

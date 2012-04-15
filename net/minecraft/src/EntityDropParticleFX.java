@@ -35,16 +35,11 @@ public class EntityDropParticleFX extends EntityFX
         motionX = motionY = motionZ = 0.0D;
     }
 
-    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
-    {
-        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
-    }
-
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
         if (materialType == Material.water)
         {
-            return super.getEntityBrightnessForRender(par1);
+            return super.getBrightnessForRender(par1);
         }
         else
         {
@@ -55,11 +50,11 @@ public class EntityDropParticleFX extends EntityFX
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         if (materialType == Material.water)
         {
-            return super.getEntityBrightness(par1);
+            return super.getBrightness(par1);
         }
         else
         {
@@ -110,14 +105,14 @@ public class EntityDropParticleFX extends EntityFX
 
         if (particleMaxAge-- <= 0)
         {
-            setEntityDead();
+            setDead();
         }
 
         if (onGround)
         {
             if (materialType == Material.water)
             {
-                setEntityDead();
+                setDead();
                 worldObj.spawnParticle("splash", posX, posY, posZ, 0.0D, 0.0D, 0.0D);
             }
             else
@@ -137,7 +132,7 @@ public class EntityDropParticleFX extends EntityFX
 
             if (posY < d)
             {
-                setEntityDead();
+                setDead();
             }
         }
     }

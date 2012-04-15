@@ -4,12 +4,19 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.Bidi;
+import java.util.Arrays;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 import org.lwjgl.opengl.GL11;
 
 public class FontRenderer
 {
+    /**
+     * Compiled regular expression pattern for matching color codes in a string
+     */
+    private static final Pattern colorCodeRegex = Pattern.compile("(?i)\\u00A7[0-9A-FK-OR]");
     private int charWidth[];
     public int fontTextureName;
 
@@ -17,7 +24,7 @@ public class FontRenderer
     public int FONT_HEIGHT;
     public Random fontRandom;
     private byte glyphWidth[];
-    private final int glyphTextureName[] = new int[256];
+    private final int glyphTextureName[];
     private int colorCode[];
 
     /**
@@ -44,6 +51,30 @@ public class FontRenderer
      */
     private boolean bidiFlag;
 
+    /** Used to specify new red value for the current color. */
+    private float red;
+
+    /** Used to specify new blue value for the current color. */
+    private float blue;
+
+    /** Used to specify new green value for the current color. */
+    private float green;
+
+    /** Used to speify new alpha value for the current color. */
+    private float alpha;
+
+    FontRenderer()
+    {
+        charWidth = new int[256];
+        fontTextureName = 0;
+        FONT_HEIGHT = 8;
+        fontRandom = new Random();
+        glyphWidth = new byte[0x10000];
+        glyphTextureName = new int[256];
+        colorCode = new int[32];
+        renderEngine = null;
+    }
+
     public FontRenderer(GameSettings par1GameSettings, String par2Str, RenderEngine par3RenderEngine, boolean par4)
     {
         charWidth = new int[256];
@@ -51,6 +82,7 @@ public class FontRenderer
         FONT_HEIGHT = 8;
         fontRandom = new Random();
         glyphWidth = new byte[0x10000];
+        glyphTextureName = new int[256];
         colorCode = new int[32];
         renderEngine = par3RenderEngine;
         unicodeFlag = par4;
@@ -152,12 +184,33 @@ public class FontRenderer
     }
 
     /**
-     * Render a single character with the default.png font at current (posX,posY) location.
+     * Pick how to render a single character and return the width used.
      */
-    private void renderDefaultChar(int par1)
+    private float renderCharAtPos(int par1, char par2, boolean par3)
+    {
+        if (par2 == ' ')
+        {
+            return 4F;
+        }
+
+        if (par1 > 0 && !unicodeFlag)
+        {
+            return renderDefaultChar(par1 + 32, par3);
+        }
+        else
+        {
+            return renderUnicodeChar(par2, par3);
+        }
+    }
+
+    /**
+     * Render a single character with the default.png font at current (posX,posY) location...
+     */
+    private float renderDefaultChar(int par1, boolean par2)
     {
         float f = (par1 % 16) * 8;
         float f1 = (par1 / 16) * 8;
+        float f2 = par2 ? 1.0F : 0.0F;
 
         if (boundTextureName != fontTextureName)
         {
@@ -165,18 +218,18 @@ public class FontRenderer
             boundTextureName = fontTextureName;
         }
 
-        float f2 = (float)charWidth[par1] - 0.01F;
+        float f3 = (float)charWidth[par1] - 0.01F;
         GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
         GL11.glTexCoord2f(f / 128F, f1 / 128F);
-        GL11.glVertex3f(posX, posY, 0.0F);
-        GL11.glTexCoord2f(f / 128F, (f1 + 7.99F) / 128F);
-        GL11.glVertex3f(posX, posY + 7.99F, 0.0F);
-        GL11.glTexCoord2f((f + f2) / 128F, f1 / 128F);
         GL11.glVertex3f(posX + f2, posY, 0.0F);
-        GL11.glTexCoord2f((f + f2) / 128F, (f1 + 7.99F) / 128F);
-        GL11.glVertex3f(posX + f2, posY + 7.99F, 0.0F);
+        GL11.glTexCoord2f(f / 128F, (f1 + 7.99F) / 128F);
+        GL11.glVertex3f(posX - f2, posY + 7.99F, 0.0F);
+        GL11.glTexCoord2f((f + f3) / 128F, f1 / 128F);
+        GL11.glVertex3f(posX + f3 + f2, posY, 0.0F);
+        GL11.glTexCoord2f((f + f3) / 128F, (f1 + 7.99F) / 128F);
+        GL11.glVertex3f((posX + f3) - f2, posY + 7.99F, 0.0F);
         GL11.glEnd();
-        posX += charWidth[par1];
+        return (float)charWidth[par1];
     }
 
     /**
@@ -192,7 +245,7 @@ public class FontRenderer
 
         try
         {
-            bufferedimage = ImageIO.read((net.minecraft.src.RenderEngine.class).getResourceAsStream(s.toString()));
+            bufferedimage = ImageIO.read((net.minecraft.src.RenderEngine.class).getResourceAsStream(s));
         }
         catch (IOException ioexception)
         {
@@ -204,13 +257,13 @@ public class FontRenderer
     }
 
     /**
-     * Render a single Unicode character at current (posX,posY) location using one of the /font/glyph_XX.png files.
+     * Render a single Unicode character at current (posX,posY) location using one of the /font/glyph_XX.png files...
      */
-    private void renderUnicodeChar(char par1)
+    private float renderUnicodeChar(char par1, boolean par2)
     {
         if (glyphWidth[par1] == 0)
         {
-            return;
+            return 0.0F;
         }
 
         int i = par1 / 256;
@@ -233,31 +286,33 @@ public class FontRenderer
         float f2 = (float)((par1 % 16) * 16) + f;
         float f3 = ((par1 & 0xff) / 16) * 16;
         float f4 = f1 - f - 0.02F;
+        float f5 = par2 ? 1.0F : 0.0F;
         GL11.glBegin(GL11.GL_TRIANGLE_STRIP);
         GL11.glTexCoord2f(f2 / 256F, f3 / 256F);
-        GL11.glVertex3f(posX, posY, 0.0F);
+        GL11.glVertex3f(posX + f5, posY, 0.0F);
         GL11.glTexCoord2f(f2 / 256F, (f3 + 15.98F) / 256F);
-        GL11.glVertex3f(posX, posY + 7.99F, 0.0F);
+        GL11.glVertex3f(posX - f5, posY + 7.99F, 0.0F);
         GL11.glTexCoord2f((f2 + f4) / 256F, f3 / 256F);
-        GL11.glVertex3f(posX + f4 / 2.0F, posY, 0.0F);
+        GL11.glVertex3f(posX + f4 / 2.0F + f5, posY, 0.0F);
         GL11.glTexCoord2f((f2 + f4) / 256F, (f3 + 15.98F) / 256F);
-        GL11.glVertex3f(posX + f4 / 2.0F, posY + 7.99F, 0.0F);
+        GL11.glVertex3f((posX + f4 / 2.0F) - f5, posY + 7.99F, 0.0F);
         GL11.glEnd();
-        posX += (f1 - f) / 2.0F + 1.0F;
+        return (f1 - f) / 2.0F + 1.0F;
     }
 
     /**
-     * Draws the specified string with a drop shadow.
+     * Draws the specified string with a shadow.
      */
-    public void drawStringWithShadow(String par1Str, int par2, int par3, int par4)
+    public int drawStringWithShadow(String par1Str, int par2, int par3, int par4)
     {
         if (bidiFlag)
         {
             par1Str = bidiReorder(par1Str);
         }
 
-        renderString(par1Str, par2 + 1, par3 + 1, par4, true);
-        renderString(par1Str, par2, par3, par4, false);
+        int i = renderString(par1Str, par2 + 1, par3 + 1, par4, true);
+        i = Math.max(i, renderString(par1Str, par2, par3, par4, false));
+        return i;
     }
 
     /**
@@ -365,6 +420,10 @@ public class FontRenderer
     private void renderStringAtPos(String par1Str, boolean par2)
     {
         boolean flag = false;
+        boolean flag1 = false;
+        boolean flag2 = false;
+        boolean flag3 = false;
+        boolean flag4 = false;
 
         for (int i = 0; i < par1Str.length(); i++)
         {
@@ -372,15 +431,15 @@ public class FontRenderer
 
             if (c == '\247' && i + 1 < par1Str.length())
             {
-                int j = "0123456789abcdefk".indexOf(par1Str.toLowerCase().charAt(i + 1));
+                int j = "0123456789abcdefklmnor".indexOf(par1Str.toLowerCase().charAt(i + 1));
 
-                if (j == 16)
-                {
-                    flag = true;
-                }
-                else
+                if (j < 16)
                 {
                     flag = false;
+                    flag1 = false;
+                    flag4 = false;
+                    flag3 = false;
+                    flag2 = false;
 
                     if (j < 0 || j > 15)
                     {
@@ -394,6 +453,35 @@ public class FontRenderer
 
                     int l = colorCode[j];
                     GL11.glColor3f((float)(l >> 16) / 255F, (float)(l >> 8 & 0xff) / 255F, (float)(l & 0xff) / 255F);
+                }
+                else if (j == 16)
+                {
+                    flag = true;
+                }
+                else if (j == 17)
+                {
+                    flag1 = true;
+                }
+                else if (j == 18)
+                {
+                    flag4 = true;
+                }
+                else if (j == 19)
+                {
+                    flag3 = true;
+                }
+                else if (j == 20)
+                {
+                    flag2 = true;
+                }
+                else if (j == 21)
+                {
+                    flag = false;
+                    flag1 = false;
+                    flag4 = false;
+                    flag3 = false;
+                    flag2 = false;
+                    GL11.glColor4f(red, blue, green, alpha);
                 }
 
                 i++;
@@ -415,27 +503,48 @@ public class FontRenderer
                 k = i1;
             }
 
-            if (c == ' ')
+            float f = renderCharAtPos(k, c, flag2);
+
+            if (flag1)
             {
-                posX += 4F;
-                continue;
+                posX++;
+                renderCharAtPos(k, c, flag2);
+                posX--;
+                f++;
             }
 
-            if (k > 0 && !unicodeFlag)
+            if (flag4)
             {
-                renderDefaultChar(k + 32);
+                Tessellator tessellator = Tessellator.instance;
+                GL11.glDisable(GL11.GL_TEXTURE_2D);
+                tessellator.startDrawingQuads();
+                tessellator.addVertex(posX, posY + (float)(FONT_HEIGHT / 2), 0.0D);
+                tessellator.addVertex(posX + f, posY + (float)(FONT_HEIGHT / 2), 0.0D);
+                tessellator.addVertex(posX + f, (posY + (float)(FONT_HEIGHT / 2)) - 1.0F, 0.0D);
+                tessellator.addVertex(posX, (posY + (float)(FONT_HEIGHT / 2)) - 1.0F, 0.0D);
+                tessellator.draw();
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
             }
-            else
+
+            if (flag3)
             {
-                renderUnicodeChar(c);
+                Tessellator tessellator1 = Tessellator.instance;
+                GL11.glDisable(GL11.GL_TEXTURE_2D);
+                tessellator1.startDrawingQuads();
+                int j1 = flag3 ? -1 : 0;
+                tessellator1.addVertex(posX + (float)j1, posY + (float)FONT_HEIGHT, 0.0D);
+                tessellator1.addVertex(posX + f, posY + (float)FONT_HEIGHT, 0.0D);
+                tessellator1.addVertex(posX + f, (posY + (float)FONT_HEIGHT) - 1.0F, 0.0D);
+                tessellator1.addVertex(posX + (float)j1, (posY + (float)FONT_HEIGHT) - 1.0F, 0.0D);
+                tessellator1.draw();
+                GL11.glEnable(GL11.GL_TEXTURE_2D);
             }
+
+            posX += f;
         }
     }
 
-    /**
-     * The actual rendering takes place here.
-     */
-    private void renderString(String par1Str, int par2, int par3, int par4, boolean par5)
+    public int renderString(String par1Str, int par2, int par3, int par4, boolean par5)
     {
         if (par1Str != null)
         {
@@ -451,10 +560,19 @@ public class FontRenderer
                 par4 = (par4 & 0xfcfcfc) >> 2 | par4 & 0xff000000;
             }
 
-            GL11.glColor4f((float)(par4 >> 16 & 0xff) / 255F, (float)(par4 >> 8 & 0xff) / 255F, (float)(par4 & 0xff) / 255F, (float)(par4 >> 24 & 0xff) / 255F);
+            red = (float)(par4 >> 16 & 0xff) / 255F;
+            blue = (float)(par4 >> 8 & 0xff) / 255F;
+            green = (float)(par4 & 0xff) / 255F;
+            alpha = (float)(par4 >> 24 & 0xff) / 255F;
+            GL11.glColor4f(red, blue, green, alpha);
             posX = par2;
             posY = par3;
             renderStringAtPos(par1Str, par5);
+            return (int)posX;
+        }
+        else
+        {
+            return 0;
         }
     }
 
@@ -469,44 +587,144 @@ public class FontRenderer
         }
 
         int i = 0;
+        boolean flag = false;
 
         for (int j = 0; j < par1Str.length(); j++)
         {
             char c = par1Str.charAt(j);
+            int k = getCharWidth(c);
 
-            if (c == '\247')
+            if (k < 0 && j < par1Str.length() - 1)
             {
-                j++;
-                continue;
+                char c1 = par1Str.charAt(++j);
+
+                if (c1 == 'l' || c1 == 'L')
+                {
+                    flag = true;
+                }
+                else if (c1 == 'r' || c1 == 'R')
+                {
+                    flag = false;
+                }
+
+                k = getCharWidth(c1);
             }
 
-            int k = ChatAllowedCharacters.allowedCharacters.indexOf(c);
+            i += k;
 
-            if (k >= 0 && !unicodeFlag)
+            if (flag)
             {
-                i += charWidth[k + 32];
-                continue;
+                i++;
             }
-
-            if (glyphWidth[c] == 0)
-            {
-                continue;
-            }
-
-            int l = glyphWidth[c] >> 4;
-            int i1 = glyphWidth[c] & 0xf;
-
-            if (i1 > 7)
-            {
-                i1 = 15;
-                l = 0;
-            }
-
-            i1++;
-            i += (i1 - l) / 2 + 1;
         }
 
         return i;
+    }
+
+    /**
+     * Returns the width of this character as rendered.
+     */
+    public int getCharWidth(char par1)
+    {
+        if (par1 == '\247')
+        {
+            return -1;
+        }
+
+        int i = ChatAllowedCharacters.allowedCharacters.indexOf(par1);
+
+        if (i >= 0 && !unicodeFlag)
+        {
+            return charWidth[i + 32];
+        }
+
+        if (glyphWidth[par1] != 0)
+        {
+            int j = glyphWidth[par1] >> 4;
+            int k = glyphWidth[par1] & 0xf;
+
+            if (k > 7)
+            {
+                k = 15;
+                j = 0;
+            }
+
+            return (++k - j) / 2 + 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    /**
+     * Trims a string to fit a specified Width.
+     */
+    public String trimStringToWidth(String par1Str, int par2)
+    {
+        return trimStringToWidth(par1Str, par2, false);
+    }
+
+    /**
+     * Trims a string to a specified width, and will reverse it if par3 is set.
+     */
+    public String trimStringToWidth(String par1Str, int par2, boolean par3)
+    {
+        StringBuilder stringbuilder = new StringBuilder();
+        int i = 0;
+        int j = par3 ? par1Str.length() - 1 : 0;
+        byte byte0 = ((byte)(par3 ? -1 : 1));
+        boolean flag = false;
+        boolean flag1 = false;
+
+        for (int k = j; k >= 0 && k < par1Str.length() && i < par2; k += byte0)
+        {
+            char c = par1Str.charAt(k);
+            int l = getCharWidth(c);
+
+            if (flag)
+            {
+                flag = false;
+
+                if (c == 'l' || c == 'L')
+                {
+                    flag1 = true;
+                }
+                else if (c == 'r' || c == 'R')
+                {
+                    flag1 = false;
+                }
+            }
+            else if (l < 0)
+            {
+                flag = true;
+            }
+            else
+            {
+                i += l;
+
+                if (flag1)
+                {
+                    i++;
+                }
+            }
+
+            if (i > par2)
+            {
+                break;
+            }
+
+            if (par3)
+            {
+                stringbuilder.insert(0, c);
+            }
+            else
+            {
+                stringbuilder.append(c);
+            }
+        }
+
+        return stringbuilder.toString();
     }
 
     /**
@@ -528,20 +746,6 @@ public class FontRenderer
     private void renderSplitStringNoShadow(String par1Str, int par2, int par3, int par4, int par5)
     {
         renderSplitString(par1Str, par2, par3, par4, par5, false);
-    }
-
-    /**
-     * Splits and draws a String with wordwrap (maximum length is parameter k) and with darker drop shadow color if flag
-     * is set
-     */
-    public void drawSplitString(String par1Str, int par2, int par3, int par4, int par5, boolean par6)
-    {
-        if (bidiFlag)
-        {
-            par1Str = bidiReorder(par1Str);
-        }
-
-        renderSplitString(par1Str, par2, par3, par4, par5, par6);
     }
 
     /**
@@ -690,5 +894,169 @@ public class FontRenderer
     public void setBidiFlag(boolean par1)
     {
         bidiFlag = par1;
+    }
+
+    /**
+     * Breaks a string into a list of pieces that will fit a specified width.
+     */
+    public java.util.List listFormattedStringToWidth(String par1Str, int par2)
+    {
+        return Arrays.asList(wrapFormattedStringToWidth(par1Str, par2).split("\n"));
+    }
+
+    /**
+     * Inserts newline and formatting into a string to wrap it within the specified width.
+     */
+    String wrapFormattedStringToWidth(String par1Str, int par2)
+    {
+        int i = sizeStringToWidth(par1Str, par2);
+
+        if (par1Str.length() <= i)
+        {
+            return par1Str;
+        }
+        else
+        {
+            String s = par1Str.substring(0, i);
+            String s1 = (new StringBuilder()).append(getFormatFromString(s)).append(par1Str.substring(i + (par1Str.charAt(i) != ' ' ? 0 : 1))).toString();
+            return (new StringBuilder()).append(s).append("\n").append(wrapFormattedStringToWidth(s1, par2)).toString();
+        }
+    }
+
+    /**
+     * Determines how many characters from the string will fit into the specified width.
+     */
+    private int sizeStringToWidth(String par1Str, int par2)
+    {
+        int i = par1Str.length();
+        int j = 0;
+        int k = 0;
+        int l = -1;
+        boolean flag = false;
+
+        do
+        {
+            if (k >= i)
+            {
+                break;
+            }
+
+            char c = par1Str.charAt(k);
+
+            switch (c)
+            {
+                case 167:
+                    if (k != i)
+                    {
+                        char c1 = par1Str.charAt(++k);
+
+                        if (c1 == 'l' || c1 == 'L')
+                        {
+                            flag = true;
+                        }
+                        else if (c1 == 'r' || c1 == 'R')
+                        {
+                            flag = false;
+                        }
+                    }
+
+                    break;
+
+                case 32:
+                    l = k;
+
+                default:
+                    j += getCharWidth(c);
+
+                    if (flag)
+                    {
+                        j++;
+                    }
+
+                    break;
+            }
+
+            if (c == '\n')
+            {
+                l = ++k;
+                break;
+            }
+
+            if (j > par2)
+            {
+                break;
+            }
+
+            k++;
+        }
+        while (true);
+
+        if (k != i && l != -1 && l < k)
+        {
+            return l;
+        }
+        else
+        {
+            return k;
+        }
+    }
+
+    /**
+     * Checks if the char code is a hexadecimal character, used to set colour.
+     */
+    private static boolean isFormatColor(char par0)
+    {
+        return par0 >= '0' && par0 <= '9' || par0 >= 'a' && par0 <= 'f' || par0 >= 'A' && par0 <= 'F';
+    }
+
+    /**
+     * Checks if the char code is O-K...lLrRk-o... used to set special formatting.
+     */
+    private static boolean isFormatSpecial(char par0)
+    {
+        return par0 >= 'k' && par0 <= 'o' || par0 >= 'K' && par0 <= 'O' || par0 == 'r' || par0 == 'R';
+    }
+
+    /**
+     * Digests a string for nonprinting formatting characters then returns a string containing only that formatting.
+     */
+    private static String getFormatFromString(String par0Str)
+    {
+        String s = "";
+        int i = -1;
+        int j = par0Str.length();
+
+        do
+        {
+            if ((i = par0Str.indexOf('\247', i + 1)) == -1)
+            {
+                break;
+            }
+
+            if (i < j - 1)
+            {
+                char c = par0Str.charAt(i + 1);
+
+                if (isFormatColor(c))
+                {
+                    s = (new StringBuilder()).append("\247").append(c).toString();
+                }
+                else if (isFormatSpecial(c))
+                {
+                    s = (new StringBuilder()).append(s).append("\247").append(c).toString();
+                }
+            }
+        }
+        while (true);
+
+        return s;
+    }
+
+    /**
+     * Remove all embedded color codes from a string
+     */
+    public static String stripColorCodes(String par0Str)
+    {
+        return colorCodeRegex.matcher(par0Str).replaceAll("");
     }
 }

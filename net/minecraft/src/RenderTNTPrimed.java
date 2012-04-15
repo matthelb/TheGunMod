@@ -39,7 +39,7 @@ public class RenderTNTPrimed extends Render
 
         float f1 = (1.0F - (((float)par1EntityTNTPrimed.fuse - par9) + 1.0F) / 100F) * 0.8F;
         loadTexture("/terrain.png");
-        blockRenderer.renderBlockAsItem(Block.tnt, 0, par1EntityTNTPrimed.getEntityBrightness(par9));
+        blockRenderer.renderBlockAsItem(Block.tnt, 0, par1EntityTNTPrimed.getBrightness(par9));
 
         if ((par1EntityTNTPrimed.fuse / 5) % 2 == 0)
         {

@@ -18,20 +18,29 @@ public class EntityMooshroom extends EntityCow
 
         if (itemstack != null && itemstack.itemID == Item.bowlEmpty.shiftedIndex && getGrowingAge() >= 0)
         {
-            par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, new ItemStack(Item.bowlSoup));
-            return true;
+            if (itemstack.stackSize == 1)
+            {
+                par1EntityPlayer.inventory.setInventorySlotContents(par1EntityPlayer.inventory.currentItem, new ItemStack(Item.bowlSoup));
+                return true;
+            }
+
+            if (par1EntityPlayer.inventory.addItemStackToInventory(new ItemStack(Item.bowlSoup)) && !par1EntityPlayer.capabilities.isCreativeMode)
+            {
+                par1EntityPlayer.inventory.decrStackSize(par1EntityPlayer.inventory.currentItem, 1);
+                return true;
+            }
         }
 
         if (itemstack != null && itemstack.itemID == Item.shears.shiftedIndex && getGrowingAge() >= 0)
         {
-            setEntityDead();
+            setDead();
             worldObj.spawnParticle("largeexplode", posX, posY + (double)(height / 2.0F), posZ, 0.0D, 0.0D, 0.0D);
 
             if (!worldObj.isRemote)
             {
                 EntityCow entitycow = new EntityCow(worldObj);
                 entitycow.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
-                entitycow.setEntityHealth(getEntityHealth());
+                entitycow.setEntityHealth(getHealth());
                 entitycow.renderYawOffset = renderYawOffset;
                 worldObj.spawnEntityInWorld(entitycow);
 

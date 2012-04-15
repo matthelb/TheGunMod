@@ -71,9 +71,6 @@ public abstract class Container
         return false;
     }
 
-    /**
-     * gets the nth slot
-     */
     public Slot getSlot(int par1)
     {
         return (Slot)inventorySlots.get(par1);

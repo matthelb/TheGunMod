@@ -12,8 +12,8 @@ public class ComponentVillageStartPiece extends ComponentVillageWell
     public StructureVillagePieceWeight structVillagePieceWeight;
 
     /**
-     * 'Contains List of all spawnable Structure Piece Weights. If no more Pieces of a type can be spawned, they are
-     * removed from this list'
+     * Contains List of all spawnable Structure Piece Weights. If no more Pieces of a type can be spawned, they are
+     * removed from this list
      */
     public ArrayList structureVillageWeightedPieceList;
     public ArrayList field_35108_e;
@@ -29,7 +29,7 @@ public class ComponentVillageStartPiece extends ComponentVillageWell
         terrainType = par7;
     }
 
-    public WorldChunkManager getWorldChunkMngr()
+    public WorldChunkManager getWorldChunkManager()
     {
         return worldChunkMngr;
     }

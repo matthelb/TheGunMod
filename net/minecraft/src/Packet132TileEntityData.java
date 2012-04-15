@@ -4,13 +4,26 @@ import java.io.*;
 
 public class Packet132TileEntityData extends Packet
 {
-    public int field_48167_a;
-    public int field_48165_b;
-    public int field_48166_c;
-    public int field_48163_d;
-    public int field_48164_e;
-    public int field_48161_f;
-    public int field_48162_g;
+    /** The X position of the tile entity to update. */
+    public int xPosition;
+
+    /** The Y position of the tile entity to update. */
+    public int yPosition;
+
+    /** The Z position of the tile entity to update. */
+    public int zPosition;
+
+    /** The type of update to perform on the tile entity. */
+    public int actionType;
+
+    /** Custom parameter 1 passed to the tile entity on update. */
+    public int customParam1;
+
+    /** Custom parameter 2 passed to the tile entity on update. */
+    public int customParam2;
+
+    /** Custom parameter 3 passed to the tile entity on update. */
+    public int customParam3;
 
     public Packet132TileEntityData()
     {
@@ -22,13 +35,13 @@ public class Packet132TileEntityData extends Packet
      */
     public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        field_48167_a = par1DataInputStream.readInt();
-        field_48165_b = par1DataInputStream.readShort();
-        field_48166_c = par1DataInputStream.readInt();
-        field_48163_d = par1DataInputStream.readByte();
-        field_48164_e = par1DataInputStream.readInt();
-        field_48161_f = par1DataInputStream.readInt();
-        field_48162_g = par1DataInputStream.readInt();
+        xPosition = par1DataInputStream.readInt();
+        yPosition = par1DataInputStream.readShort();
+        zPosition = par1DataInputStream.readInt();
+        actionType = par1DataInputStream.readByte();
+        customParam1 = par1DataInputStream.readInt();
+        customParam2 = par1DataInputStream.readInt();
+        customParam3 = par1DataInputStream.readInt();
     }
 
     /**
@@ -36,13 +49,13 @@ public class Packet132TileEntityData extends Packet
      */
     public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        par1DataOutputStream.writeInt(field_48167_a);
-        par1DataOutputStream.writeShort(field_48165_b);
-        par1DataOutputStream.writeInt(field_48166_c);
-        par1DataOutputStream.writeByte((byte)field_48163_d);
-        par1DataOutputStream.writeInt(field_48164_e);
-        par1DataOutputStream.writeInt(field_48161_f);
-        par1DataOutputStream.writeInt(field_48162_g);
+        par1DataOutputStream.writeInt(xPosition);
+        par1DataOutputStream.writeShort(yPosition);
+        par1DataOutputStream.writeInt(zPosition);
+        par1DataOutputStream.writeByte((byte)actionType);
+        par1DataOutputStream.writeInt(customParam1);
+        par1DataOutputStream.writeInt(customParam2);
+        par1DataOutputStream.writeInt(customParam3);
     }
 
     /**
@@ -50,7 +63,7 @@ public class Packet132TileEntityData extends Packet
      */
     public void processPacket(NetHandler par1NetHandler)
     {
-        par1NetHandler.func_48489_a(this);
+        par1NetHandler.handleTileEntityData(this);
     }
 
     /**

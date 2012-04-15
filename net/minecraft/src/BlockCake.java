@@ -138,7 +138,7 @@ public class BlockCake extends Block
     }
 
     /**
-     * Heals the player and removes a slice from the cake. Args: world, x, y, z, entityPlayer
+     * Heals the player and removes a slice from the cake.
      */
     private void eatCakeSlice(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {

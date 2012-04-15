@@ -124,9 +124,17 @@ public class InventoryPlayer implements IInventory
             currentItem = i;
             return;
         }
-        else
+
+        if (par4 && par1 > 0)
         {
-            return;
+            int j = getFirstEmptyStack();
+
+            if (j >= 0 && j < 9)
+            {
+                currentItem = j;
+            }
+
+            func_52006_a(Item.itemsList[par1], par2);
         }
     }
 
@@ -148,6 +156,21 @@ public class InventoryPlayer implements IInventory
         for (currentItem -= par1; currentItem < 0; currentItem += 9) { }
 
         for (; currentItem >= 9; currentItem -= 9) { }
+    }
+
+    public void func_52006_a(Item par1Item, int par2)
+    {
+        if (par1Item != null)
+        {
+            int i = getInventorySlotContainItemAndDamage(par1Item.shiftedIndex, par2);
+
+            if (i >= 0)
+            {
+                mainInventory[i] = mainInventory[currentItem];
+            }
+
+            mainInventory[currentItem] = new ItemStack(Item.itemsList[par1Item.shiftedIndex], 1, par2);
+        }
     }
 
     /**
@@ -259,7 +282,7 @@ public class InventoryPlayer implements IInventory
     }
 
     /**
-     * checks if item is in player inventory
+     * Get if a specifiied item id is inside the inventory.
      */
     public boolean hasItem(int par1)
     {
@@ -283,7 +306,7 @@ public class InventoryPlayer implements IInventory
             }
             while (par1ItemStack.stackSize > 0 && par1ItemStack.stackSize < i);
 
-            if (par1ItemStack.stackSize == i && player.capabilities.depleteBuckets)
+            if (par1ItemStack.stackSize == i && player.capabilities.isCreativeMode)
             {
                 par1ItemStack.stackSize = 0;
                 return true;
@@ -304,7 +327,7 @@ public class InventoryPlayer implements IInventory
             return true;
         }
 
-        if (player.capabilities.depleteBuckets)
+        if (player.capabilities.isCreativeMode)
         {
             par1ItemStack.stackSize = 0;
             return true;
@@ -665,7 +688,7 @@ public class InventoryPlayer implements IInventory
     }
 
     /**
-     * Returns true if the specified itemstack exists in the inventory.
+     * Returns true if the specified ItemStack exists in the inventory.
      */
     public boolean hasItemStack(ItemStack par1ItemStack)
     {

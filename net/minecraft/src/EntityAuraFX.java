@@ -36,7 +36,7 @@ public class EntityAuraFX extends EntityFX
 
         if (particleMaxAge-- <= 0)
         {
-            setEntityDead();
+            setDead();
         }
     }
 }

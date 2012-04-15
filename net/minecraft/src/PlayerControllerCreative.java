@@ -19,7 +19,7 @@ public class PlayerControllerCreative extends PlayerController
     public static void enableAbilities(EntityPlayer par0EntityPlayer)
     {
         par0EntityPlayer.capabilities.allowFlying = true;
-        par0EntityPlayer.capabilities.depleteBuckets = true;
+        par0EntityPlayer.capabilities.isCreativeMode = true;
         par0EntityPlayer.capabilities.disableDamage = true;
     }
 
@@ -30,7 +30,7 @@ public class PlayerControllerCreative extends PlayerController
     {
         par0EntityPlayer.capabilities.allowFlying = false;
         par0EntityPlayer.capabilities.isFlying = false;
-        par0EntityPlayer.capabilities.depleteBuckets = false;
+        par0EntityPlayer.capabilities.isCreativeMode = false;
         par0EntityPlayer.capabilities.disableDamage = false;
     }
 

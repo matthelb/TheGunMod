@@ -128,7 +128,7 @@ public class EntityAIPlay extends EntityAIBase
                 return;
             }
 
-            villagerObj.getNavigator().func_48666_a(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, field_48358_c);
+            villagerObj.getNavigator().tryMoveToXYZ(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, field_48358_c);
         }
     }
 }

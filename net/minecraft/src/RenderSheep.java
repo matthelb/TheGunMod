@@ -26,7 +26,7 @@ public class RenderSheep extends RenderLiving
         }
     }
 
-    public void func_40271_a(EntitySheep par1EntitySheep, double par2, double par4, double par6, float par8, float par9)
+    public void doRenderSheep(EntitySheep par1EntitySheep, double par2, double par4, double par6, float par8, float par9)
     {
         super.doRenderLiving(par1EntitySheep, par2, par4, par6, par8, par9);
     }
@@ -41,7 +41,7 @@ public class RenderSheep extends RenderLiving
 
     public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)
     {
-        func_40271_a((EntitySheep)par1EntityLiving, par2, par4, par6, par8, par9);
+        doRenderSheep((EntitySheep)par1EntityLiving, par2, par4, par6, par8, par9);
     }
 
     /**
@@ -52,6 +52,6 @@ public class RenderSheep extends RenderLiving
      */
     public void doRender(Entity par1Entity, double par2, double par4, double par6, float par8, float par9)
     {
-        func_40271_a((EntitySheep)par1Entity, par2, par4, par6, par8, par9);
+        doRenderSheep((EntitySheep)par1Entity, par2, par4, par6, par8, par9);
     }
 }

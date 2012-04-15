@@ -50,7 +50,7 @@ public class ChunkProviderFlat implements IChunkProvider
     }
 
     /**
-     * Creates an empty chunk ready to put data from the server in
+     * loads or generates the chunk at the chunk location specified
      */
     public Chunk loadChunk(int par1, int par2)
     {
@@ -70,6 +70,14 @@ public class ChunkProviderFlat implements IChunkProvider
         if (useStructures)
         {
             villageGen.generate(this, worldObj, par1, par2, abyte0);
+        }
+
+        BiomeGenBase abiomegenbase[] = worldObj.getWorldChunkManager().loadBlockGeneratorData(null, par1 * 16, par2 * 16, 16, 16);
+        byte abyte1[] = chunk.getBiomeArray();
+
+        for (int i = 0; i < abyte1.length; i++)
+        {
+            abyte1[i] = (byte)abiomegenbase[i].biomeID;
         }
 
         chunk.generateSkylightMap();
@@ -139,7 +147,7 @@ public class ChunkProviderFlat implements IChunkProvider
      */
     public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int par4)
     {
-        BiomeGenBase biomegenbase = worldObj.func_48454_a(par2, par4);
+        BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(par2, par4);
 
         if (biomegenbase == null)
         {

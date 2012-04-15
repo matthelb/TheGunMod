@@ -65,7 +65,7 @@ public class RenderLiving extends Render
         try
         {
             float f = func_48418_a(par1EntityLiving.prevRenderYawOffset, par1EntityLiving.renderYawOffset, par9);
-            float f1 = func_48418_a(par1EntityLiving.prevRotationYaw3, par1EntityLiving.prevRotationYaw2, par9);
+            float f1 = func_48418_a(par1EntityLiving.prevRotationYawHead, par1EntityLiving.rotationYawHead, par9);
             float f2 = par1EntityLiving.prevRotationPitch + (par1EntityLiving.rotationPitch - par1EntityLiving.prevRotationPitch) * par9;
             renderLivingAt(par1EntityLiving, par2, par4, par6);
             float f3 = handleRotationFloat(par1EntityLiving, par9);
@@ -146,7 +146,7 @@ public class RenderLiving extends Render
             }
 
             renderEquippedItems(par1EntityLiving, par9);
-            float f7 = par1EntityLiving.getEntityBrightness(par9);
+            float f7 = par1EntityLiving.getBrightness(par9);
             int k = getColorMultiplier(par1EntityLiving, f7, par9);
             OpenGlHelper.setActiveTexture(OpenGlHelper.lightmapTexUnit);
             GL11.glDisable(GL11.GL_TEXTURE_2D);
@@ -220,7 +220,7 @@ public class RenderLiving extends Render
      */
     protected void renderModel(EntityLiving par1EntityLiving, float par2, float par3, float par4, float par5, float par6, float par7)
     {
-        loadDownloadableImageTexture(par1EntityLiving.skinUrl, par1EntityLiving.getEntityTexture());
+        loadDownloadableImageTexture(par1EntityLiving.skinUrl, par1EntityLiving.getTexture());
         mainModel.render(par1EntityLiving, par2, par3, par4, par5, par6, par7);
     }
 

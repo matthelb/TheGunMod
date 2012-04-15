@@ -2,24 +2,24 @@ package net.minecraft.src;
 
 public class EntityAIFollowOwner extends EntityAIBase
 {
-    private EntityTameable field_48305_d;
-    private EntityLiving field_48306_e;
-    World field_48309_a;
+    private EntityTameable thePet;
+    private EntityLiving theOwner;
+    World theWorld;
     private float field_48303_f;
-    private PathNavigate field_48304_g;
+    private PathNavigate petPathfinder;
     private int field_48310_h;
-    float field_48307_b;
-    float field_48308_c;
+    float maxDist;
+    float minDist;
     private boolean field_48311_i;
 
     public EntityAIFollowOwner(EntityTameable par1EntityTameable, float par2, float par3, float par4)
     {
-        field_48305_d = par1EntityTameable;
-        field_48309_a = par1EntityTameable.worldObj;
+        thePet = par1EntityTameable;
+        theWorld = par1EntityTameable.worldObj;
         field_48303_f = par2;
-        field_48304_g = par1EntityTameable.getNavigator();
-        field_48308_c = par3;
-        field_48307_b = par4;
+        petPathfinder = par1EntityTameable.getNavigator();
+        minDist = par3;
+        maxDist = par4;
         setMutexBits(3);
     }
 
@@ -28,25 +28,25 @@ public class EntityAIFollowOwner extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        EntityLiving entityliving = field_48305_d.getOwner();
+        EntityLiving entityliving = thePet.getOwner();
 
         if (entityliving == null)
         {
             return false;
         }
 
-        if (field_48305_d.isSitting())
+        if (thePet.isSitting())
         {
             return false;
         }
 
-        if (field_48305_d.getDistanceSqToEntity(entityliving) < (double)(field_48308_c * field_48308_c))
+        if (thePet.getDistanceSqToEntity(entityliving) < (double)(minDist * minDist))
         {
             return false;
         }
         else
         {
-            field_48306_e = entityliving;
+            theOwner = entityliving;
             return true;
         }
     }
@@ -56,7 +56,7 @@ public class EntityAIFollowOwner extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48304_g.noPath() && field_48305_d.getDistanceSqToEntity(field_48306_e) > (double)(field_48307_b * field_48307_b) && !field_48305_d.isSitting();
+        return !petPathfinder.noPath() && thePet.getDistanceSqToEntity(theOwner) > (double)(maxDist * maxDist) && !thePet.isSitting();
     }
 
     /**
@@ -65,8 +65,8 @@ public class EntityAIFollowOwner extends EntityAIBase
     public void startExecuting()
     {
         field_48310_h = 0;
-        field_48311_i = field_48305_d.getNavigator().func_48658_a();
-        field_48305_d.getNavigator().func_48664_a(false);
+        field_48311_i = thePet.getNavigator().getAvoidsWater();
+        thePet.getNavigator().setAvoidsWater(false);
     }
 
     /**
@@ -74,9 +74,9 @@ public class EntityAIFollowOwner extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48306_e = null;
-        field_48304_g.func_48672_f();
-        field_48305_d.getNavigator().func_48664_a(field_48311_i);
+        theOwner = null;
+        petPathfinder.clearPathEntity();
+        thePet.getNavigator().setAvoidsWater(field_48311_i);
     }
 
     /**
@@ -84,9 +84,9 @@ public class EntityAIFollowOwner extends EntityAIBase
      */
     public void updateTask()
     {
-        field_48305_d.getLookHelper().setLookPositionWithEntity(field_48306_e, 10F, field_48305_d.getVerticalFaceSpeed());
+        thePet.getLookHelper().setLookPositionWithEntity(theOwner, 10F, thePet.getVerticalFaceSpeed());
 
-        if (field_48305_d.isSitting())
+        if (thePet.isSitting())
         {
             return;
         }
@@ -98,28 +98,28 @@ public class EntityAIFollowOwner extends EntityAIBase
 
         field_48310_h = 10;
 
-        if (field_48304_g.func_48667_a(field_48306_e, field_48303_f))
+        if (petPathfinder.func_48667_a(theOwner, field_48303_f))
         {
             return;
         }
 
-        if (field_48305_d.getDistanceSqToEntity(field_48306_e) < 144D)
+        if (thePet.getDistanceSqToEntity(theOwner) < 144D)
         {
             return;
         }
 
-        int i = MathHelper.floor_double(field_48306_e.posX) - 2;
-        int j = MathHelper.floor_double(field_48306_e.posZ) - 2;
-        int k = MathHelper.floor_double(field_48306_e.boundingBox.minY);
+        int i = MathHelper.floor_double(theOwner.posX) - 2;
+        int j = MathHelper.floor_double(theOwner.posZ) - 2;
+        int k = MathHelper.floor_double(theOwner.boundingBox.minY);
 
         for (int l = 0; l <= 4; l++)
         {
             for (int i1 = 0; i1 <= 4; i1++)
             {
-                if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && field_48309_a.isBlockNormalCube(i + l, k - 1, j + i1) && !field_48309_a.isBlockNormalCube(i + l, k, j + i1) && !field_48309_a.isBlockNormalCube(i + l, k + 1, j + i1))
+                if ((l < 1 || i1 < 1 || l > 3 || i1 > 3) && theWorld.isBlockNormalCube(i + l, k - 1, j + i1) && !theWorld.isBlockNormalCube(i + l, k, j + i1) && !theWorld.isBlockNormalCube(i + l, k + 1, j + i1))
                 {
-                    field_48305_d.setLocationAndAngles((float)(i + l) + 0.5F, k, (float)(j + i1) + 0.5F, field_48305_d.rotationYaw, field_48305_d.rotationPitch);
-                    field_48304_g.func_48672_f();
+                    thePet.setLocationAndAngles((float)(i + l) + 0.5F, k, (float)(j + i1) + 0.5F, thePet.rotationYaw, thePet.rotationPitch);
+                    petPathfinder.clearPathEntity();
                     return;
                 }
             }

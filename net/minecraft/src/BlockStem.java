@@ -102,9 +102,6 @@ public class BlockStem extends BlockFlower
         }
     }
 
-    /**
-     * Fertilizes a stem.
-     */
     public void fertilizeStem(World par1World, int par2, int par3, int par4)
     {
         par1World.setBlockMetadataWithNotify(par2, par3, par4, 7);

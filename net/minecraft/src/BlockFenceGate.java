@@ -50,7 +50,7 @@ public class BlockFenceGate extends BlockDirectional
      */
     public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        int i = func_48216_a(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
+        int i = getDirection(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
 
         if (i == 2 || i == 0)
         {
@@ -93,8 +93,7 @@ public class BlockFenceGate extends BlockDirectional
     }
 
     /**
-     * Called when a block is placed by using an ItemStack from inventory and passed in who placed it. Args:
-     * x,y,z,entityliving
+     * Called when the block is placed in the world.
      */
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
@@ -117,7 +116,7 @@ public class BlockFenceGate extends BlockDirectional
         else
         {
             int j = (MathHelper.floor_double((double)((par5EntityPlayer.rotationYaw * 4F) / 360F) + 0.5D) & 3) % 4;
-            int k = func_48216_a(i);
+            int k = getDirection(i);
 
             if (k == (j + 2) % 4)
             {

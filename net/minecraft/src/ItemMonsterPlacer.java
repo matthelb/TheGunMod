@@ -84,7 +84,7 @@ public class ItemMonsterPlacer extends Item
             d = 0.5D;
         }
 
-        if (func_48440_a(par3World, par1ItemStack.getItemDamage(), (double)par4 + 0.5D, (double)par5 + d, (double)par6 + 0.5D) && !par2EntityPlayer.capabilities.depleteBuckets)
+        if (func_48440_a(par3World, par1ItemStack.getItemDamage(), (double)par4 + 0.5D, (double)par5 + d, (double)par6 + 0.5D) && !par2EntityPlayer.capabilities.isCreativeMode)
         {
             par1ItemStack.stackSize--;
         }
@@ -99,7 +99,7 @@ public class ItemMonsterPlacer extends Item
             return false;
         }
 
-        Entity entity = EntityList.createEntity(par1, par0World);
+        Entity entity = EntityList.createEntityByID(par1, par0World);
 
         if (entity != null)
         {

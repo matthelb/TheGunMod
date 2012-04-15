@@ -30,7 +30,7 @@ public class EntityFlameFX extends EntityFX
         super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
         float f = ((float)particleAge + par1) / (float)particleMaxAge;
 
@@ -44,7 +44,7 @@ public class EntityFlameFX extends EntityFX
             f = 1.0F;
         }
 
-        int i = super.getEntityBrightnessForRender(par1);
+        int i = super.getBrightnessForRender(par1);
         int j = i & 0xff;
         int k = i >> 16 & 0xff;
         j += (int)(f * 15F * 16F);
@@ -60,7 +60,7 @@ public class EntityFlameFX extends EntityFX
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         float f = ((float)particleAge + par1) / (float)particleMaxAge;
 
@@ -74,7 +74,7 @@ public class EntityFlameFX extends EntityFX
             f = 1.0F;
         }
 
-        float f1 = super.getEntityBrightness(par1);
+        float f1 = super.getBrightness(par1);
         return f1 * f + (1.0F - f);
     }
 
@@ -89,7 +89,7 @@ public class EntityFlameFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
 
         moveEntity(motionX, motionY, motionZ);

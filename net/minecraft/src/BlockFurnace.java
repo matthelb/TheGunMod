@@ -236,8 +236,7 @@ public class BlockFurnace extends BlockContainer
     }
 
     /**
-     * Called when a block is placed by using an ItemStack from inventory and passed in who placed it. Args:
-     * x,y,z,entityliving
+     * Called when the block is placed in the world.
      */
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
@@ -306,6 +305,12 @@ public class BlockFurnace extends BlockContainer
 
                         itemstack.stackSize -= j;
                         EntityItem entityitem = new EntityItem(par1World, (float)par2 + f, (float)par3 + f1, (float)par4 + f2, new ItemStack(itemstack.itemID, j, itemstack.getItemDamage()));
+
+                        if (itemstack.hasTagCompound())
+                        {
+                            entityitem.item.setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+                        }
+
                         float f3 = 0.05F;
                         entityitem.motionX = (float)furnaceRand.nextGaussian() * f3;
                         entityitem.motionY = (float)furnaceRand.nextGaussian() * f3 + 0.2F;

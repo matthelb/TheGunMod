@@ -78,7 +78,7 @@ public class FoodStats
 
             if (foodTimer >= 80)
             {
-                if (par1EntityPlayer.getEntityHealth() > 10 || i >= 3 || par1EntityPlayer.getEntityHealth() > 1 && i >= 2)
+                if (par1EntityPlayer.getHealth() > 10 || i >= 3 || par1EntityPlayer.getHealth() > 1 && i >= 2)
                 {
                     par1EntityPlayer.attackEntityFrom(DamageSource.starve, 1);
                 }

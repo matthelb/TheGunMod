@@ -33,14 +33,7 @@ public class ChunkProviderClient implements IChunkProvider
      */
     public boolean chunkExists(int par1, int par2)
     {
-        if (this != null)
-        {
-            return true;
-        }
-        else
-        {
-            return chunkMapping.containsItem(ChunkCoordIntPair.chunkXZ2Int(par1, par2));
-        }
+        return true;
     }
 
     public void func_539_c(int par1, int par2)
@@ -57,7 +50,7 @@ public class ChunkProviderClient implements IChunkProvider
     }
 
     /**
-     * Creates an empty chunk ready to put data from the server in
+     * loads or generates the chunk at the chunk location specified
      */
     public Chunk loadChunk(int par1, int par2)
     {

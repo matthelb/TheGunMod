@@ -6,8 +6,6 @@ public class ContainerWorkbench extends Container
 {
     /** The crafting matrix inventory (3x3). */
     public InventoryCrafting craftMatrix;
-
-    /** The crafting result, size 1. */
     public IInventory craftResult;
     private World worldObj;
     private int posX;

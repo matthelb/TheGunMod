@@ -7,15 +7,6 @@ public class ModelVillager extends ModelBase
     public ModelRenderer field_40339_c;
     public ModelRenderer field_40336_d;
     public ModelRenderer field_40337_e;
-    public int field_40334_f;
-    public int field_40335_g;
-    public boolean field_40341_n;
-    public boolean field_40342_o;
-
-    public ModelVillager()
-    {
-        this(0.0F);
-    }
 
     public ModelVillager(float par1)
     {
@@ -24,10 +15,6 @@ public class ModelVillager extends ModelBase
 
     public ModelVillager(float par1, float par2)
     {
-        field_40334_f = 0;
-        field_40335_g = 0;
-        field_40341_n = false;
-        field_40342_o = false;
         byte byte0 = 64;
         byte byte1 = 64;
         field_40340_a = (new ModelRenderer(this)).setTextureSize(byte0, byte1);

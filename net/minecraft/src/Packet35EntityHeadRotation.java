@@ -4,8 +4,8 @@ import java.io.*;
 
 public class Packet35EntityHeadRotation extends Packet
 {
-    public int field_48160_a;
-    public byte field_48159_b;
+    public int entityId;
+    public byte headRotationYaw;
 
     public Packet35EntityHeadRotation()
     {
@@ -16,8 +16,8 @@ public class Packet35EntityHeadRotation extends Packet
      */
     public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        field_48160_a = par1DataInputStream.readInt();
-        field_48159_b = par1DataInputStream.readByte();
+        entityId = par1DataInputStream.readInt();
+        headRotationYaw = par1DataInputStream.readByte();
     }
 
     /**
@@ -25,8 +25,8 @@ public class Packet35EntityHeadRotation extends Packet
      */
     public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        par1DataOutputStream.writeInt(field_48160_a);
-        par1DataOutputStream.writeByte(field_48159_b);
+        par1DataOutputStream.writeInt(entityId);
+        par1DataOutputStream.writeByte(headRotationYaw);
     }
 
     /**
@@ -34,7 +34,7 @@ public class Packet35EntityHeadRotation extends Packet
      */
     public void processPacket(NetHandler par1NetHandler)
     {
-        par1NetHandler.func_48488_a(this);
+        par1NetHandler.handleEntityHeadRotation(this);
     }
 
     /**

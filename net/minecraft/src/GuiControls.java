@@ -118,28 +118,38 @@ public class GuiControls extends GuiScreen
         for (int j = 0; j < options.keyBindings.length; j++)
         {
             boolean flag = false;
+            int k = 0;
 
-            for (int k = 0; k < options.keyBindings.length; k++)
+            do
             {
+                if (k >= options.keyBindings.length)
+                {
+                    break;
+                }
+
                 if (k != j && options.keyBindings[j].keyCode == options.keyBindings[k].keyCode)
                 {
                     flag = true;
+                    break;
                 }
-            }
 
-            int l = j;
+                k++;
+            }
+            while (true);
+
+            k = j;
 
             if (buttonId == j)
             {
-                ((GuiButton)controlList.get(l)).displayString = "\247f> \247e??? \247f<";
+                ((GuiButton)controlList.get(k)).displayString = "\247f> \247e??? \247f<";
             }
             else if (flag)
             {
-                ((GuiButton)controlList.get(l)).displayString = (new StringBuilder()).append("\247c").append(options.getOptionDisplayString(l)).toString();
+                ((GuiButton)controlList.get(k)).displayString = (new StringBuilder()).append("\247c").append(options.getOptionDisplayString(k)).toString();
             }
             else
             {
-                ((GuiButton)controlList.get(l)).displayString = options.getOptionDisplayString(l);
+                ((GuiButton)controlList.get(k)).displayString = options.getOptionDisplayString(k);
             }
 
             drawString(fontRenderer, options.getKeyBindingDescription(j), i + (j % 2) * 160 + 70 + 6, height / 6 + 24 * (j >> 1) + 7, -1);

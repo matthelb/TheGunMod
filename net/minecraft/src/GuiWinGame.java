@@ -11,8 +11,9 @@ public class GuiWinGame extends GuiScreen
 {
     /** Counts the number of screen updates. */
     private int updateCounter;
-    private List field_41044_b;
-    private int field_41045_c[];
+
+    /** List of lines on the ending poem and credits. */
+    private List lines;
     private int field_41042_d;
     private float field_41043_e;
 
@@ -33,7 +34,7 @@ public class GuiWinGame extends GuiScreen
 
         if ((float)updateCounter > f)
         {
-            func_41041_e();
+            respawnPlayer();
         }
     }
 
@@ -44,17 +45,19 @@ public class GuiWinGame extends GuiScreen
     {
         if (par2 == 1)
         {
-            func_41041_e();
+            respawnPlayer();
         }
     }
 
-    private void func_41041_e()
+    /**
+     * Respawns the player.
+     */
+    private void respawnPlayer()
     {
         if (mc.theWorld.isRemote)
         {
             EntityClientPlayerMP entityclientplayermp = (EntityClientPlayerMP)mc.thePlayer;
-            entityclientplayermp.sendInventoryChanged();
-            entityclientplayermp.sendQueue.addToSendQueue(new Packet9Respawn(entityclientplayermp.dimension, (byte)mc.theWorld.difficultySetting, mc.theWorld.getWorldInfo().getTerrainType(), mc.theWorld.getWorldHeight(), 0));
+            entityclientplayermp.sendQueue.addToSendQueue(new Packet9Respawn(entityclientplayermp.dimension, (byte)mc.theWorld.difficultySetting, mc.theWorld.getWorldInfo().getTerrainType(), mc.theWorld.getHeight(), 0));
         }
         else
         {
@@ -76,17 +79,18 @@ public class GuiWinGame extends GuiScreen
      */
     public void initGui()
     {
-        if (field_41044_b != null)
+        if (lines != null)
         {
             return;
         }
 
-        field_41044_b = new ArrayList();
+        lines = new ArrayList();
 
         try
         {
             String s = "";
             String s1 = "\247f\247k\247a\247b";
+            char c = 274;
             BufferedReader bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.GuiWinGame.class).getResourceAsStream("/title/win.txt"), Charset.forName("UTF-8")));
             Random random = new Random(0x7bf7d3L);
 
@@ -102,17 +106,13 @@ public class GuiWinGame extends GuiScreen
                     s3 = s.substring(i + s1.length());
                 }
 
-                if (s.length() == 0)
-                {
-                    field_41044_b.add(s);
-                }
-
-                field_41044_b.add(s);
+                lines.addAll(mc.fontRenderer.listFormattedStringToWidth(s, c));
+                lines.add("");
             }
 
-            for (int j = 0; j < 16; j++)
+            for (int j = 0; j < 8; j++)
             {
-                field_41044_b.add("");
+                lines.add("");
             }
 
             bufferedreader = new BufferedReader(new InputStreamReader((net.minecraft.src.GuiWinGame.class).getResourceAsStream("/title/credits.txt"), Charset.forName("UTF-8")));
@@ -121,25 +121,11 @@ public class GuiWinGame extends GuiScreen
             {
                 s = s.replaceAll("PLAYERNAME", mc.session.username);
                 s = s.replaceAll("\t", "    ");
-
-                if (s.length() == 0)
-                {
-                    field_41044_b.add(s);
-                }
-
-                field_41044_b.add(s);
+                lines.addAll(mc.fontRenderer.listFormattedStringToWidth(s, c));
+                lines.add("");
             }
 
-            field_41045_c = new int[field_41044_b.size()];
-            char c = 274;
-            fontRenderer.FONT_HEIGHT = 12;
-
-            for (int k = 0; k < field_41044_b.size(); k++)
-            {
-                field_41042_d += field_41045_c[k] = fontRenderer.splitStringWidth((String)field_41044_b.get(k), c);
-            }
-
-            fontRenderer.FONT_HEIGHT = 8;
+            field_41042_d = lines.size() * 12;
         }
         catch (Exception exception)
         {
@@ -203,19 +189,16 @@ public class GuiWinGame extends GuiScreen
         GL11.glTranslatef(0.0F, f, 0.0F);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("/title/mclogo.png"));
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        drawTexturedModalRect(i + 0, j + 0, 0, 0, 155, 44);
-        drawTexturedModalRect(i + 155, j + 0, 0, 45, 155, 44);
+        drawTexturedModalRect(i, j, 0, 0, 155, 44);
+        drawTexturedModalRect(i + 155, j, 0, 45, 155, 44);
         tessellator.setColorOpaque_I(0xffffff);
-        fontRenderer.FONT_HEIGHT = 12;
         int k = j + 200;
 
-        for (int l = 0; l < field_41044_b.size(); l++)
+        for (int l = 0; l < lines.size(); l++)
         {
-            int j1 = field_41045_c[l];
-
-            if (l == field_41044_b.size() - 1)
+            if (l == lines.size() - 1)
             {
-                float f1 = ((float)k + f) - (float)(height / 2 - j1 / 2);
+                float f1 = ((float)k + f) - (float)(height / 2 - 6);
 
                 if (f1 < 0.0F)
                 {
@@ -223,9 +206,9 @@ public class GuiWinGame extends GuiScreen
                 }
             }
 
-            if ((float)k + f + (float)j1 + 8F > 0.0F && (float)k + f < (float)height)
+            if ((float)k + f + 12F + 8F > 0.0F && (float)k + f < (float)height)
             {
-                String s = (String)field_41044_b.get(l);
+                String s = (String)lines.get(l);
 
                 if (s.startsWith("[C]"))
                 {
@@ -234,16 +217,15 @@ public class GuiWinGame extends GuiScreen
                 else
                 {
                     fontRenderer.fontRandom.setSeed((long)l * 0xfca99533L + (long)(updateCounter / 4));
-                    fontRenderer.drawSplitString(s, i + 1, k + 1, c, 0xffffff, true);
+                    fontRenderer.renderString(s, i + 1, k + 1, 0xffffff, true);
                     fontRenderer.fontRandom.setSeed((long)l * 0xfca99533L + (long)(updateCounter / 4));
-                    fontRenderer.drawSplitString(s, i, k, c, 0xffffff, false);
+                    fontRenderer.renderString(s, i, k, 0xffffff, false);
                 }
             }
 
-            k += j1;
+            k += 12;
         }
 
-        fontRenderer.FONT_HEIGHT = 8;
         GL11.glPopMatrix();
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTexture("%blur%/misc/vignette.png"));
         GL11.glEnable(GL11.GL_BLEND);
@@ -251,9 +233,9 @@ public class GuiWinGame extends GuiScreen
         tessellator.startDrawingQuads();
         tessellator.setColorRGBA_F(1.0F, 1.0F, 1.0F, 1.0F);
         int i1 = width;
-        int k1 = height;
-        tessellator.addVertexWithUV(0.0D, k1, zLevel, 0.0D, 1.0D);
-        tessellator.addVertexWithUV(i1, k1, zLevel, 1.0D, 1.0D);
+        int j1 = height;
+        tessellator.addVertexWithUV(0.0D, j1, zLevel, 0.0D, 1.0D);
+        tessellator.addVertexWithUV(i1, j1, zLevel, 1.0D, 1.0D);
         tessellator.addVertexWithUV(i1, 0.0D, zLevel, 1.0D, 0.0D);
         tessellator.addVertexWithUV(0.0D, 0.0D, zLevel, 0.0D, 0.0D);
         tessellator.draw();

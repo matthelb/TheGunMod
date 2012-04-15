@@ -16,7 +16,7 @@ public class BiomeDecorator
     /** The Z-coordinate of the chunk currently being decorated */
     protected int chunk_Z;
 
-    /** The biome to generate trees for */
+    /** The biome generator object. */
     protected BiomeGenBase biome;
 
     /** The clay generator. */
@@ -115,7 +115,7 @@ public class BiomeDecorator
 
     /**
      * The number of sand patches to generate per chunk. Sand patches only generate when part of it is underwater. There
-     * appear to be two seperate fields for this.
+     * appear to be two separate fields for this.
      */
     protected int sandPerChunk2;
 

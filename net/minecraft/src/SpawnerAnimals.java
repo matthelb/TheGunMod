@@ -78,14 +78,15 @@ public final class SpawnerAnimals
                 if ((!var34.getPeacefulCreature() || par2) && (var34.getPeacefulCreature() || par1) && par0World.countEntities(var34.getCreatureClass()) <= var34.getMaxNumberOfCreature() * eligibleChunksForSpawning.size() / 256)
                 {
                     Iterator var35 = eligibleChunksForSpawning.keySet().iterator();
+                    label108:
 
-                    label108: while (var35.hasNext())
+                    while (var35.hasNext())
                     {
                         ChunkCoordIntPair var37 = (ChunkCoordIntPair)var35.next();
 
                         if (!((Boolean)eligibleChunksForSpawning.get(var37)).booleanValue())
                         {
-                            ChunkPosition var36 = getRandomSpawningPointInChunk(par0World, var37.chunkXPos, var37.chunkZPos);
+                            ChunkPosition var36 = getRandomSpawningPointInChunk(par0World, var37.chunkXPos, var37.chunkZPosition);
                             int var12 = var36.x;
                             int var13 = var36.y;
                             int var14 = var36.z;
@@ -143,9 +144,7 @@ public final class SpawnerAnimals
 
                                                             try
                                                             {
-                                                                var38 = (EntityLiving)var21.entityClass.getConstructor(new Class[]
-                                                                        { World.class }).newInstance(new Object[]
-                                                                                { par0World });
+                                                                var38 = (EntityLiving)var21.entityClass.getConstructor(new Class[] {World.class}).newInstance(new Object[] {par0World});
                                                             }
                                                             catch (Exception var30)
                                                             {

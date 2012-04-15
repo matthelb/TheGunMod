@@ -76,4 +76,9 @@ public class NBTTagString extends NBTBase
             return false;
         }
     }
+
+    public int hashCode()
+    {
+        return super.hashCode() ^ data.hashCode();
+    }
 }

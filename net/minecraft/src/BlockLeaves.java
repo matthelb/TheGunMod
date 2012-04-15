@@ -71,7 +71,7 @@ public class BlockLeaves extends BlockLeavesBase
         {
             for (int j1 = -1; j1 <= 1; j1++)
             {
-                int k1 = par1IBlockAccess.func_48454_a(par2 + j1, par4 + i1).func_48412_k();
+                int k1 = par1IBlockAccess.getBiomeGenForCoords(par2 + j1, par4 + i1).getBiomeFoliageColor();
                 j += (k1 & 0xff0000) >> 16;
                 k += (k1 & 0xff00) >> 8;
                 l += k1 & 0xff;

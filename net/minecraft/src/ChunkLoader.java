@@ -20,7 +20,16 @@ public class ChunkLoader
         anvilconverterdata.entities = par0NBTTagCompound.getTagList("Entities");
         anvilconverterdata.tileEntities = par0NBTTagCompound.getTagList("TileEntities");
         anvilconverterdata.tileTicks = par0NBTTagCompound.getTagList("TileTicks");
-        anvilconverterdata.lastUpdated = par0NBTTagCompound.getLong("LastUpdate");
+
+        try
+        {
+            anvilconverterdata.lastUpdated = par0NBTTagCompound.getLong("LastUpdate");
+        }
+        catch (ClassCastException classcastexception)
+        {
+            anvilconverterdata.lastUpdated = par0NBTTagCompound.getInteger("LastUpdate");
+        }
+
         return anvilconverterdata;
     }
 

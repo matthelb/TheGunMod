@@ -53,7 +53,7 @@ public class EntityHeartFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
 
         moveEntity(motionX, motionY, motionZ);

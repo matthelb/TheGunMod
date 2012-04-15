@@ -16,13 +16,24 @@ public class GuiYesNo extends GuiScreen
     private String message2;
 
     /** The text shown for the first button in GuiYesNo */
-    private String buttonText1;
+    protected String buttonText1;
 
     /** The text shown for the second button in GuiYesNo */
-    private String buttonText2;
+    protected String buttonText2;
 
     /** World number to be deleted. */
     private int worldNumber;
+
+    public GuiYesNo(GuiScreen par1GuiScreen, String par2Str, String par3Str, int par4)
+    {
+        parentScreen = par1GuiScreen;
+        message1 = par2Str;
+        message2 = par3Str;
+        worldNumber = par4;
+        StringTranslate stringtranslate = StringTranslate.getInstance();
+        buttonText1 = stringtranslate.translateKey("gui.yes");
+        buttonText2 = stringtranslate.translateKey("gui.no");
+    }
 
     public GuiYesNo(GuiScreen par1GuiScreen, String par2Str, String par3Str, String par4Str, String par5Str, int par6)
     {
@@ -39,7 +50,7 @@ public class GuiYesNo extends GuiScreen
      */
     public void initGui()
     {
-        controlList.add(new GuiSmallButton(0, (width / 2 - 155) + 0, height / 6 + 96, buttonText1));
+        controlList.add(new GuiSmallButton(0, width / 2 - 155, height / 6 + 96, buttonText1));
         controlList.add(new GuiSmallButton(1, (width / 2 - 155) + 160, height / 6 + 96, buttonText2));
     }
 
@@ -48,7 +59,7 @@ public class GuiYesNo extends GuiScreen
      */
     protected void actionPerformed(GuiButton par1GuiButton)
     {
-        parentScreen.deleteWorld(par1GuiButton.id == 0, worldNumber);
+        parentScreen.confirmClicked(par1GuiButton.id == 0, worldNumber);
     }
 
     /**

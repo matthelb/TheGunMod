@@ -173,7 +173,7 @@ public abstract class EntityThrowable extends Entity
 
                 if (ticksInGround == 1200)
                 {
-                    setEntityDead();
+                    setDead();
                 }
 
                 return;
@@ -282,7 +282,7 @@ public abstract class EntityThrowable extends Entity
     }
 
     /**
-     * Called when the throwable hits a block or entity.
+     * Called when this EntityThrowable hits a block or entity.
      */
     protected abstract void onImpact(MovingObjectPosition movingobjectposition);
 

@@ -67,4 +67,9 @@ public class NBTTagFloat extends NBTBase
             return false;
         }
     }
+
+    public int hashCode()
+    {
+        return super.hashCode() ^ Float.floatToIntBits(data);
+    }
 }

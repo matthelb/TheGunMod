@@ -6,8 +6,6 @@ public class ContainerPlayer extends Container
 {
     /** The crafting matrix inventory. */
     public InventoryCrafting craftMatrix;
-
-    /** The crafting result. */
     public IInventory craftResult;
 
     /** Determines if inventory manipulation should be handled. */

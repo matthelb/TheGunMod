@@ -72,7 +72,7 @@ public class BlockTallGrass extends BlockFlower
         }
         else
         {
-            return par1IBlockAccess.func_48454_a(par2, par4).func_48415_j();
+            return par1IBlockAccess.getBiomeGenForCoords(par2, par4).getBiomeGrassColor();
         }
     }
 

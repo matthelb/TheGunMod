@@ -116,7 +116,7 @@ public class EntityBoat extends Entity
                 dropItemWithOffset(Item.stick.shiftedIndex, 1, 0.0F);
             }
 
-            setEntityDead();
+            setDead();
         }
 
         return true;
@@ -326,7 +326,7 @@ public class EntityBoat extends Entity
         {
             if (!worldObj.isRemote)
             {
-                setEntityDead();
+                setDead();
 
                 for (int k = 0; k < 3; k++)
                 {

@@ -7,6 +7,11 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiEditSign extends GuiScreen
 {
+    /**
+     * This String is just a local copy of the characters allowed in text rendering of minecraft.
+     */
+    private static final String allowedCharacters;
+
     /** The title string that is displayed in the top-center of the screen. */
     protected String screenTitle;
 
@@ -18,11 +23,6 @@ public class GuiEditSign extends GuiScreen
 
     /** The number of the line that is being edited. */
     private int editLine;
-
-    /**
-     * This String is just a local copy of the characters allowed in text rendering of minecraft.
-     */
-    private static final String allowedCharacters;
 
     public GuiEditSign(TileEntitySign par1TileEntitySign)
     {
@@ -39,6 +39,7 @@ public class GuiEditSign extends GuiScreen
         controlList.clear();
         Keyboard.enableRepeatEvents(true);
         controlList.add(new GuiButton(0, width / 2 - 100, height / 4 + 120, "Done"));
+        entitySign.func_50006_a(false);
     }
 
     /**
@@ -52,6 +53,8 @@ public class GuiEditSign extends GuiScreen
         {
             mc.getSendQueue().addToSendQueue(new Packet130UpdateSign(entitySign.xCoord, entitySign.yCoord, entitySign.zCoord, entitySign.signText));
         }
+
+        entitySign.func_50006_a(true);
     }
 
     /**

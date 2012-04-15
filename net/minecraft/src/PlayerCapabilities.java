@@ -11,24 +11,26 @@ public class PlayerCapabilities
     /** whether or not to allow the player to fly when they double jump. */
     public boolean allowFlying;
 
-    /** Used by ItemBucket to say if it should empty when used or not. */
-    public boolean depleteBuckets;
+    /**
+     * Used to determine if creative mode is enabled, and therefore if items should be depleted on usage
+     */
+    public boolean isCreativeMode;
 
     public PlayerCapabilities()
     {
         disableDamage = false;
         isFlying = false;
         allowFlying = false;
-        depleteBuckets = false;
+        isCreativeMode = false;
     }
 
     public void writeCapabilitiesToNBT(NBTTagCompound par1NBTTagCompound)
     {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         nbttagcompound.setBoolean("invulnerable", disableDamage);
-        nbttagcompound.setBoolean("flying", disableDamage);
+        nbttagcompound.setBoolean("flying", isFlying);
         nbttagcompound.setBoolean("mayfly", allowFlying);
-        nbttagcompound.setBoolean("instabuild", depleteBuckets);
+        nbttagcompound.setBoolean("instabuild", isCreativeMode);
         par1NBTTagCompound.setTag("abilities", nbttagcompound);
     }
 
@@ -40,7 +42,7 @@ public class PlayerCapabilities
             disableDamage = nbttagcompound.getBoolean("invulnerable");
             isFlying = nbttagcompound.getBoolean("flying");
             allowFlying = nbttagcompound.getBoolean("mayfly");
-            depleteBuckets = nbttagcompound.getBoolean("instabuild");
+            isCreativeMode = nbttagcompound.getBoolean("instabuild");
         }
     }
 }

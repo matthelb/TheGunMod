@@ -185,7 +185,7 @@ public class EntityFishHook extends Entity
 
             if (angler.isDead || !angler.isEntityAlive() || itemstack == null || itemstack.getItem() != Item.fishingRod || getDistanceSqToEntity(angler) > 1024D)
             {
-                setEntityDead();
+                setDead();
                 angler.fishEntity = null;
                 return;
             }
@@ -230,7 +230,7 @@ public class EntityFishHook extends Entity
 
                 if (ticksInGround == 1200)
                 {
-                    setEntityDead();
+                    setDead();
                 }
 
                 return;
@@ -471,7 +471,7 @@ public class EntityFishHook extends Entity
             byte0 = 2;
         }
 
-        setEntityDead();
+        setDead();
         angler.fishEntity = null;
         return byte0;
     }

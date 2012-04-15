@@ -7,12 +7,13 @@ public enum EnumRarity
     rare(11, "Rare"),
     epic(13, "Epic");
 
-    public final int field_40535_e;
+    /** The color given to the name of items with that rarity. */
+    public final int nameColor;
     public final String field_40532_f;
 
     private EnumRarity(int par3, String par4Str)
     {
-        field_40535_e = par3;
+        nameColor = par3;
         field_40532_f = par4Str;
     }
 }

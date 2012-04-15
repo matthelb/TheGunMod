@@ -5,11 +5,11 @@ import java.io.FilenameFilter;
 
 class AnvilSaveConverterFileFilter implements FilenameFilter
 {
-    final AnvilSaveConverter field_48552_a;
+    final AnvilSaveConverter parent;
 
     AnvilSaveConverterFileFilter(AnvilSaveConverter par1AnvilSaveConverter)
     {
-        field_48552_a = par1AnvilSaveConverter;
+        parent = par1AnvilSaveConverter;
     }
 
     public boolean accept(File par1File, String par2Str)

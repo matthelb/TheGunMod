@@ -22,10 +22,10 @@ public class EntityVillager extends EntityAgeable
         isPlayingFlag = false;
         villageObj = null;
         setProfession(par2);
-        setTextureByProfession();
+        texture = "/mob/villager/villager.png";
         moveSpeed = 0.5F;
-        getNavigator().func_48673_b(true);
-        getNavigator().func_48664_a(true);
+        getNavigator().setBreakDoors(true);
+        getNavigator().setAvoidsWater(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIAvoidEntity(this, net.minecraft.src.EntityZombie.class, 8F, 0.3F, 0.35F));
         tasks.addTask(2, new EntityAIMoveIndoors(this));
@@ -110,40 +110,32 @@ public class EntityVillager extends EntityAgeable
     {
         super.readEntityFromNBT(par1NBTTagCompound);
         setProfession(par1NBTTagCompound.getInteger("Profession"));
-        setTextureByProfession();
     }
 
     /**
-     * This is the function which sets a Villager's skin based on its villagerProfession value
+     * Returns the texture's file path as a String.
      */
-    private void setTextureByProfession()
+    public String getTexture()
     {
-        texture = "/mob/villager/villager.png";
-
-        if (getProfession() == 0)
+        switch (getProfession())
         {
-            texture = "/mob/villager/farmer.png";
+            case 0:
+                return "/mob/villager/farmer.png";
+
+            case 1:
+                return "/mob/villager/librarian.png";
+
+            case 2:
+                return "/mob/villager/priest.png";
+
+            case 3:
+                return "/mob/villager/smith.png";
+
+            case 4:
+                return "/mob/villager/butcher.png";
         }
 
-        if (getProfession() == 1)
-        {
-            texture = "/mob/villager/librarian.png";
-        }
-
-        if (getProfession() == 2)
-        {
-            texture = "/mob/villager/priest.png";
-        }
-
-        if (getProfession() == 3)
-        {
-            texture = "/mob/villager/smith.png";
-        }
-
-        if (getProfession() == 4)
-        {
-            texture = "/mob/villager/butcher.png";
-        }
+        return super.getTexture();
     }
 
     /**

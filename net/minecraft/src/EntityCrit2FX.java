@@ -53,7 +53,7 @@ public class EntityCrit2FX extends EntityFX
 
         if (currentLife >= maximumLife)
         {
-            setEntityDead();
+            setDead();
         }
     }
 

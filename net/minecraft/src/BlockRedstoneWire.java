@@ -5,7 +5,7 @@ import java.util.*;
 public class BlockRedstoneWire extends Block
 {
     /**
-     * When false, power transmission methods do not look at other redstone wires.  Used internally during
+     * When false, power transmission methods do not look at other redstone wires. Used internally during
      * updateCurrentStrength.
      */
     private boolean wiresProvidePower;
@@ -387,7 +387,7 @@ public class BlockRedstoneWire extends Block
 
     /**
      * Returns the current strength at the specified block if it is greater than the passed value, or the passed value
-     * otherwise.  Signature: (world, x, y, z, strength)
+     * otherwise. Signature: (world, x, y, z, strength)
      */
     private int getMaxCurrentStrength(World par1World, int par2, int par3, int par4, int par5)
     {
@@ -575,7 +575,7 @@ public class BlockRedstoneWire extends Block
     }
 
     /**
-     * Calls canProvidePower() on the specified block and returns the result, but bypasses the wiresProvidePower flag
+     * Returns true if the block coordinate passed can provide power, or is a redstone wire.
      */
     public static boolean isPowerProviderOrWire(IBlockAccess par0IBlockAccess, int par1, int par2, int par3, int par4)
     {

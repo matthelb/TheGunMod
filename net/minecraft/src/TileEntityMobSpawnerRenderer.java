@@ -24,7 +24,7 @@ public class TileEntityMobSpawnerRenderer extends TileEntitySpecialRenderer
 
         if (entity == null)
         {
-            entity = EntityList.createEntityInWorld(par1TileEntityMobSpawner.getMobID(), null);
+            entity = EntityList.createEntityByName(par1TileEntityMobSpawner.getMobID(), null);
             entityHashMap.put(par1TileEntityMobSpawner.getMobID(), entity);
         }
 

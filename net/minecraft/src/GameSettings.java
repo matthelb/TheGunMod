@@ -69,6 +69,7 @@ public class GameSettings
 
     /** true if debug info should be displayed instead of version */
     public boolean showDebugInfo;
+    public boolean field_50119_G;
 
     /** The lastServer string. */
     public String lastServer;
@@ -134,6 +135,7 @@ public class GameSettings
         hideGUI = false;
         thirdPersonView = 0;
         showDebugInfo = false;
+        field_50119_G = false;
         lastServer = "";
         noclip = false;
         smoothCamera = false;
@@ -187,6 +189,7 @@ public class GameSettings
         hideGUI = false;
         thirdPersonView = 0;
         showDebugInfo = false;
+        field_50119_G = false;
         lastServer = "";
         noclip = false;
         smoothCamera = false;

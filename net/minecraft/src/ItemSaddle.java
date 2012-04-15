@@ -9,7 +9,7 @@ public class ItemSaddle extends Item
     }
 
     /**
-     * Called from ItemStack.useItemOnEntity
+     * Called when a player right clicks a entity with a item.
      */
     public void useItemOnEntity(ItemStack par1ItemStack, EntityLiving par2EntityLiving)
     {
@@ -17,7 +17,7 @@ public class ItemSaddle extends Item
         {
             EntityPig entitypig = (EntityPig)par2EntityLiving;
 
-            if (!entitypig.getSaddled())
+            if (!entitypig.getSaddled() && !entitypig.isChild())
             {
                 entitypig.setSaddled(true);
                 par1ItemStack.stackSize--;

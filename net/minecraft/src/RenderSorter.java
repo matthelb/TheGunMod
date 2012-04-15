@@ -14,15 +14,12 @@ public class RenderSorter implements Comparator
 
     public int doCompare(WorldRenderer par1WorldRenderer, WorldRenderer par2WorldRenderer)
     {
-        boolean flag = par1WorldRenderer.isInFrustum;
-        boolean flag1 = par2WorldRenderer.isInFrustum;
-
-        if (flag && !flag1)
+        if (par1WorldRenderer.isInFrustum && !par2WorldRenderer.isInFrustum)
         {
             return 1;
         }
 
-        if (flag1 && !flag)
+        if (par2WorldRenderer.isInFrustum && !par1WorldRenderer.isInFrustum)
         {
             return -1;
         }

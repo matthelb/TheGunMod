@@ -39,7 +39,7 @@ public abstract class BlockFluid extends Block
             {
                 for (int i1 = -1; i1 <= 1; i1++)
                 {
-                    int j1 = par1IBlockAccess.func_48454_a(par2 + i1, par4 + l).waterColorMultiplier;
+                    int j1 = par1IBlockAccess.getBiomeGenForCoords(par2 + i1, par4 + l).waterColorMultiplier;
                     i += (j1 & 0xff0000) >> 16;
                     j += (j1 & 0xff00) >> 8;
                     k += j1 & 0xff;
@@ -374,7 +374,7 @@ public abstract class BlockFluid extends Block
     }
 
     /**
-     * 'Goes straight to getLightBrightnessForSkyBlocks for Blocks, does some fancy computing for Fluids'
+     * Goes straight to getLightBrightnessForSkyBlocks for Blocks, does some fancy computing for Fluids
      */
     public int getMixedBrightnessForBlock(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {

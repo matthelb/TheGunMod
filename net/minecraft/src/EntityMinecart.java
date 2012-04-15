@@ -185,7 +185,7 @@ public class EntityMinecart extends Entity implements IInventory
                 riddenByEntity.mountEntity(this);
             }
 
-            setEntityDead();
+            setDead();
             dropItemWithOffset(Item.minecartEmpty.shiftedIndex, 1, 0.0F);
 
             if (minecartType == 1)
@@ -261,9 +261,9 @@ public class EntityMinecart extends Entity implements IInventory
     }
 
     /**
-     * Will get destroyed next tick
+     * Will get destroyed next tick.
      */
-    public void setEntityDead()
+    public void setDead()
     {
         label0:
 
@@ -296,6 +296,12 @@ public class EntityMinecart extends Entity implements IInventory
 
                 itemstack.stackSize -= j;
                 EntityItem entityitem = new EntityItem(worldObj, posX + (double)f, posY + (double)f1, posZ + (double)f2, new ItemStack(itemstack.itemID, j, itemstack.getItemDamage()));
+
+                if (itemstack.hasTagCompound())
+                {
+                    entityitem.item.setTagCompound((NBTTagCompound)itemstack.getTagCompound().copy());
+                }
+
                 float f3 = 0.05F;
                 entityitem.motionX = (float)rand.nextGaussian() * f3;
                 entityitem.motionY = (float)rand.nextGaussian() * f3 + 0.2F;
@@ -305,7 +311,7 @@ public class EntityMinecart extends Entity implements IInventory
             while (true);
         }
 
-        super.setEntityDead();
+        super.setDead();
     }
 
     /**
@@ -321,6 +327,11 @@ public class EntityMinecart extends Entity implements IInventory
         if (func_41025_i() > 0)
         {
             func_41024_b(func_41025_i() - 1);
+        }
+
+        if (posY < -64D)
+        {
+            kill();
         }
 
         if (isMinecartPowered() && rand.nextInt(4) == 0)

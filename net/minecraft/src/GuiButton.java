@@ -5,10 +5,10 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiButton extends Gui
 {
-    /** The width of this control. */
+    /** Button width in pixels */
     protected int width;
 
-    /** The height of this control. */
+    /** Button height in pixels */
     protected int height;
 
     /** The x position of this control. */
@@ -86,19 +86,18 @@ public class GuiButton extends Gui
         drawTexturedModalRect(xPosition, yPosition, 0, 46 + i * 20, width / 2, height);
         drawTexturedModalRect(xPosition + width / 2, yPosition, 200 - width / 2, 46 + i * 20, width / 2, height);
         mouseDragged(par1Minecraft, par2, par3);
+        int j = 0xe0e0e0;
 
         if (!enabled)
         {
-            drawCenteredString(fontrenderer, displayString, xPosition + width / 2, yPosition + (height - 8) / 2, 0xffa0a0a0);
+            j = 0xffa0a0a0;
         }
         else if (flag)
         {
-            drawCenteredString(fontrenderer, displayString, xPosition + width / 2, yPosition + (height - 8) / 2, 0xffffa0);
+            j = 0xffffa0;
         }
-        else
-        {
-            drawCenteredString(fontrenderer, displayString, xPosition + width / 2, yPosition + (height - 8) / 2, 0xe0e0e0);
-        }
+
+        drawCenteredString(fontrenderer, displayString, xPosition + width / 2, yPosition + (height - 8) / 2, j);
     }
 
     /**

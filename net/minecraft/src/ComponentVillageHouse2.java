@@ -5,9 +5,9 @@ import java.util.Random;
 
 public class ComponentVillageHouse2 extends ComponentVillage
 {
-    private static final StructurePieceTreasure field_46002_a[];
+    private static final StructurePieceTreasure chestLoot[];
     private int averageGroundLevel;
-    private boolean field_46001_c;
+    private boolean hasMadeChest;
 
     public ComponentVillageHouse2(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
@@ -18,7 +18,7 @@ public class ComponentVillageHouse2 extends ComponentVillage
     }
 
     /**
-     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     * Initiates construction of the Structure Component picked, at the current Location of StructGen
      */
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
@@ -39,8 +39,8 @@ public class ComponentVillageHouse2 extends ComponentVillage
     }
 
     /**
-     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
-     * the end, it adds Fences...'
+     * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...
      */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
@@ -92,7 +92,7 @@ public class ComponentVillageHouse2 extends ComponentVillage
         placeBlockAtCurrentPosition(par1World, Block.stairCompactPlanks.blockID, getMetadataWithOffset(Block.stairCompactPlanks.blockID, 3), 2, 1, 5, par3StructureBoundingBox);
         placeBlockAtCurrentPosition(par1World, Block.stairCompactPlanks.blockID, getMetadataWithOffset(Block.stairCompactPlanks.blockID, 1), 1, 1, 4, par3StructureBoundingBox);
 
-        if (!field_46001_c)
+        if (!hasMadeChest)
         {
             int i = getYWithOffset(1);
             int l = getXWithOffset(5, 5);
@@ -100,8 +100,8 @@ public class ComponentVillageHouse2 extends ComponentVillage
 
             if (par3StructureBoundingBox.isVecInside(l, i, j1))
             {
-                field_46001_c = true;
-                createTreasureChestAtCurrentPosition(par1World, par3StructureBoundingBox, par2Random, 5, 1, 5, field_46002_a, 3 + par2Random.nextInt(6));
+                hasMadeChest = true;
+                createTreasureChestAtCurrentPosition(par1World, par3StructureBoundingBox, par2Random, 5, 1, 5, chestLoot, 3 + par2Random.nextInt(6));
             }
         }
 
@@ -136,7 +136,7 @@ public class ComponentVillageHouse2 extends ComponentVillage
 
     static
     {
-        field_46002_a = (new StructurePieceTreasure[]
+        chestLoot = (new StructurePieceTreasure[]
                 {
                     new StructurePieceTreasure(Item.diamond.shiftedIndex, 0, 1, 3, 3), new StructurePieceTreasure(Item.ingotIron.shiftedIndex, 0, 1, 5, 10), new StructurePieceTreasure(Item.ingotGold.shiftedIndex, 0, 1, 3, 5), new StructurePieceTreasure(Item.bread.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.appleRed.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.pickaxeSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.swordSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.plateSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.helmetSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.legsSteel.shiftedIndex, 0, 1, 1, 5),
                     new StructurePieceTreasure(Item.bootsSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Block.obsidian.blockID, 0, 3, 7, 5), new StructurePieceTreasure(Block.sapling.blockID, 0, 3, 7, 5)

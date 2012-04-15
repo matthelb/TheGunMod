@@ -4,19 +4,19 @@ import java.util.Comparator;
 
 public class EntityAINearestAttackableTargetSorter implements Comparator
 {
-    private Entity field_48470_b;
-    final EntityAINearestAttackableTarget field_48471_a;
+    private Entity theEntity;
+    final EntityAINearestAttackableTarget parent;
 
     public EntityAINearestAttackableTargetSorter(EntityAINearestAttackableTarget par1EntityAINearestAttackableTarget, Entity par2Entity)
     {
-        field_48471_a = par1EntityAINearestAttackableTarget;
-        field_48470_b = par2Entity;
+        parent = par1EntityAINearestAttackableTarget;
+        theEntity = par2Entity;
     }
 
     public int func_48469_a(Entity par1Entity, Entity par2Entity)
     {
-        double d = field_48470_b.getDistanceSqToEntity(par1Entity);
-        double d1 = field_48470_b.getDistanceSqToEntity(par2Entity);
+        double d = theEntity.getDistanceSqToEntity(par1Entity);
+        double d1 = theEntity.getDistanceSqToEntity(par2Entity);
 
         if (d < d1)
         {

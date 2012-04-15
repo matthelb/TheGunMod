@@ -10,6 +10,7 @@ class NetworkMasterThread extends Thread
         netManager = par1NetworkManager;
     }
 
+    @SuppressWarnings("deprecation")
     public void run()
     {
         try

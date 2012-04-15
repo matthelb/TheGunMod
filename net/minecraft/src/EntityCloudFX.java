@@ -52,7 +52,7 @@ public class EntityCloudFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
 
         setParticleTextureIndex(7 - (particleAge * 8) / particleMaxAge);

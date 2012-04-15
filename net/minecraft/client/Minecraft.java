@@ -21,6 +21,7 @@ import net.minecraft.src.ChunkProviderLoadOrGenerate;
 import net.minecraft.src.ColorizerFoliage;
 import net.minecraft.src.ColorizerGrass;
 import net.minecraft.src.ColorizerWater;
+import net.minecraft.src.Container;
 import net.minecraft.src.EffectRenderer;
 import net.minecraft.src.EntityClientPlayerMP;
 import net.minecraft.src.EntityLiving;
@@ -52,6 +53,7 @@ import net.minecraft.src.GuiSleepMP;
 import net.minecraft.src.ISaveFormat;
 import net.minecraft.src.InventoryPlayer;
 import net.minecraft.src.Item;
+import net.minecraft.src.ItemBlock;
 import net.minecraft.src.ItemRenderer;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.KeyBinding;
@@ -67,11 +69,9 @@ import net.minecraft.src.MovingObjectPosition;
 import net.minecraft.src.NetClientHandler;
 import net.minecraft.src.OpenGlCapsChecker;
 import net.minecraft.src.OpenGlHelper;
+import net.minecraft.src.Packet3Chat;
+import net.minecraft.src.PlayerCapabilities;
 import net.minecraft.src.PlayerController;
-import net.minecraft.src.PlayerControllerCreative;
-import net.minecraft.src.PlayerControllerDemo;
-import net.minecraft.src.PlayerControllerMP;
-import net.minecraft.src.PlayerControllerSP;
 import net.minecraft.src.PlayerUsageSnooper;
 import net.minecraft.src.Profiler;
 import net.minecraft.src.ProfilerResult;
@@ -116,7 +116,6 @@ import org.lwjgl.Sys;
 import org.lwjgl.input.Controllers;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.AWTGLCanvas;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
@@ -308,6 +307,7 @@ public abstract class Minecraft implements Runnable
         tempDisplayHeight = par5;
         fullscreen = par6;
         mcApplet = par3MinecraftApplet;
+        Packet3Chat.field_52010_b = 32767;
         new ThreadClientSleep(this, "Timer hack thread");
         mcCanvas = par2Canvas;
         displayWidth = par4;
@@ -378,7 +378,8 @@ public abstract class Minecraft implements Runnable
             Display.setDisplayMode(new DisplayMode(displayWidth, displayHeight));
         }
 
-        Display.setTitle("Minecraft Minecraft 1.2.3");
+        Display.setTitle("Minecraft Minecraft 1.2.5");
+        System.out.println((new StringBuilder()).append("LWJGL Version: ").append(Sys.getVersion()).toString());
 
         try
         {
@@ -436,6 +437,7 @@ public abstract class Minecraft implements Runnable
             exception.printStackTrace();
         }
 
+        createAndSendReport();
         checkGLError("Pre startup");
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glShadeModel(GL11.GL_SMOOTH);
@@ -675,7 +677,7 @@ public abstract class Minecraft implements Runnable
         {
             par1GuiScreen = new GuiMainMenu();
         }
-        else if (par1GuiScreen == null && thePlayer.getEntityHealth() <= 0)
+        else if (par1GuiScreen == null && thePlayer.getHealth() <= 0)
         {
             par1GuiScreen = new GuiGameOver();
         }
@@ -838,29 +840,6 @@ public abstract class Minecraft implements Runnable
 
         AxisAlignedBB.clearBoundingBoxPool();
         Vec3D.initialize();
-        PlayerUsageSnooper.field_48478_a.func_48472_a();
-
-        if (playerController == null)
-        {
-            PlayerUsageSnooper.field_48478_a.func_48474_a("mode", "title");
-        }
-        else if (playerController instanceof PlayerControllerCreative)
-        {
-            PlayerUsageSnooper.field_48478_a.func_48474_a("mode", "single_creative");
-        }
-        else if (playerController instanceof PlayerControllerDemo)
-        {
-            PlayerUsageSnooper.field_48478_a.func_48474_a("mode", "single_demo");
-        }
-        else if (playerController instanceof PlayerControllerSP)
-        {
-            PlayerUsageSnooper.field_48478_a.func_48474_a("mode", "single_survival");
-        }
-        else if (playerController instanceof PlayerControllerMP)
-        {
-            PlayerUsageSnooper.field_48478_a.func_48474_a("mode", "multiplayer");
-        }
-
         Profiler.startSection("root");
 
         if (mcCanvas == null && Display.isCloseRequested())
@@ -954,7 +933,7 @@ public abstract class Minecraft implements Runnable
 
         Profiler.endSection();
 
-        if (gameSettings.showDebugInfo)
+        if (gameSettings.showDebugInfo && gameSettings.field_50119_G)
         {
             if (!Profiler.profilingEnabled)
             {
@@ -1088,17 +1067,14 @@ public abstract class Minecraft implements Runnable
                 }
             }
         }
-        else
+        else if (!(--par1 >= list.size() || ((ProfilerResult)list.get(par1)).name.equals("unspecified")))
         {
-            if (!(--par1 >= list.size() || ((ProfilerResult)list.get(par1)).name.equals("unspecified")))
+            if (!(debugProfilerName.length() <= 0))
             {
-                if (!(debugProfilerName.length() <= 0))
-                {
-                    debugProfilerName += ".";
-                }
-
-                debugProfilerName += ((ProfilerResult)list.get(par1)).name;
+                debugProfilerName += ".";
             }
+
+            debugProfilerName += ((ProfilerResult)list.get(par1)).name;
         }
     }
 
@@ -1618,7 +1594,7 @@ public abstract class Minecraft implements Runnable
 
         if (currentScreen == null && thePlayer != null)
         {
-            if (thePlayer.getEntityHealth() <= 0)
+            if (thePlayer.getHealth() <= 0)
             {
                 displayGuiScreen(null);
             }
@@ -1776,6 +1752,7 @@ public abstract class Minecraft implements Runnable
                             if (Keyboard.getEventKey() == 61)
                             {
                                 gameSettings.showDebugInfo = !gameSettings.showDebugInfo;
+                                gameSettings.field_50119_G = !GuiScreen.func_50049_m();
                             }
 
                             if (Keyboard.getEventKey() == 63)
@@ -1802,7 +1779,7 @@ public abstract class Minecraft implements Runnable
                             }
                         }
 
-                        if (gameSettings.showDebugInfo)
+                        if (gameSettings.showDebugInfo && gameSettings.field_50119_G)
                         {
                             if (Keyboard.getEventKey() == 11)
                             {
@@ -1828,9 +1805,14 @@ public abstract class Minecraft implements Runnable
 
             for (; gameSettings.keyBindInventory.isPressed(); displayGuiScreen(new GuiInventory(thePlayer))) { }
 
-            for (; gameSettings.keyBindDrop.isPressed(); thePlayer.func_48152_as()) { }
+            for (; gameSettings.keyBindDrop.isPressed(); thePlayer.dropOneItem()) { }
 
             for (; isMultiplayerWorld() && gameSettings.keyBindChat.isPressed(); displayGuiScreen(new GuiChat())) { }
+
+            if (isMultiplayerWorld() && currentScreen == null && (Keyboard.isKeyDown(53) || Keyboard.isKeyDown(181)))
+            {
+                displayGuiScreen(new GuiChat("/"));
+            }
 
             if (thePlayer.isUsingItem())
             {
@@ -2225,7 +2207,7 @@ public abstract class Minecraft implements Runnable
         loadingScreen.printText((new StringBuilder()).append("Converting World to ").append(saveLoader.getFormatName()).toString());
         loadingScreen.displayLoadingString("This may take a while :)");
         saveLoader.convertMapFormat(par1Str, loadingScreen);
-        startWorld(par1Str, par2Str, new WorldSettings(0L, 0, true, false, WorldType.field_48635_b));
+        startWorld(par1Str, par2Str, new WorldSettings(0L, 0, true, false, WorldType.DEFAULT));
     }
 
     /**
@@ -2447,27 +2429,21 @@ public abstract class Minecraft implements Runnable
 
     public static void startMainThread1(String par0Str, String par1Str)
     {
-        try
-        {
-            startMainThread(par0Str, par1Str, null);
-        }
-        catch (LWJGLException e)
-        {
-        }
+        startMainThread(par0Str, par1Str, null);
     }
 
-    public static void startMainThread(String par0Str, String par1Str, String par2Str) throws LWJGLException
+    public static void startMainThread(String par0Str, String par1Str, String par2Str)
     {
         boolean flag = false;
         String s = par0Str;
         Frame frame = new Frame("Minecraft");
-        Canvas awtglcanvas = new Canvas();
+        Canvas canvas = new Canvas();
         frame.setLayout(new BorderLayout());
-        frame.add(awtglcanvas, "Center");
-        awtglcanvas.setPreferredSize(new Dimension(854, 480));
+        frame.add(canvas, "Center");
+        canvas.setPreferredSize(new Dimension(854, 480));
         frame.pack();
         frame.setLocationRelativeTo(null);
-        MinecraftImpl minecraftimpl = new MinecraftImpl(frame, awtglcanvas, null, 854, 480, flag, frame);
+        MinecraftImpl minecraftimpl = new MinecraftImpl(frame, canvas, null, 854, 480, flag, frame);
         Thread thread = new Thread(minecraftimpl, "Minecraft main thread");
         thread.setPriority(10);
         minecraftimpl.minecraftUri = "www.minecraft.net";
@@ -2489,7 +2465,6 @@ public abstract class Minecraft implements Runnable
 
         frame.setVisible(true);
         frame.addWindowListener(new GameWindowListener(minecraftimpl, thread));
-        System.out.println((new StringBuilder()).append("LWJGL Version: ").append(Sys.getVersion()).toString());
         thread.start();
     }
 
@@ -2569,33 +2544,80 @@ public abstract class Minecraft implements Runnable
     {
         if (objectMouseOver != null)
         {
+            boolean flag = thePlayer.capabilities.isCreativeMode;
             int i = theWorld.getBlockId(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
 
-            if (i == Block.grass.blockID)
+            if (!flag)
             {
-                i = Block.dirt.blockID;
-            }
+                if (i == Block.grass.blockID)
+                {
+                    i = Block.dirt.blockID;
+                }
 
-            if (i == Block.stairDouble.blockID)
-            {
-                i = Block.stairSingle.blockID;
-            }
+                if (i == Block.stairDouble.blockID)
+                {
+                    i = Block.stairSingle.blockID;
+                }
 
-            if (i == Block.bedrock.blockID)
-            {
-                i = Block.stone.blockID;
+                if (i == Block.bedrock.blockID)
+                {
+                    i = Block.stone.blockID;
+                }
             }
 
             int j = 0;
-            boolean flag = false;
+            boolean flag1 = false;
 
             if (Item.itemsList[i] != null && Item.itemsList[i].getHasSubtypes())
             {
                 j = theWorld.getBlockMetadata(objectMouseOver.blockX, objectMouseOver.blockY, objectMouseOver.blockZ);
-                flag = true;
+                flag1 = true;
             }
 
-            thePlayer.inventory.setCurrentItem(i, j, flag, playerController instanceof PlayerControllerCreative);
+            if (Item.itemsList[i] != null && (Item.itemsList[i] instanceof ItemBlock))
+            {
+                Block block = Block.blocksList[i];
+                int l = block.idDropped(j, thePlayer.worldObj.rand, 0);
+
+                if (l > 0)
+                {
+                    i = l;
+                }
+            }
+
+            thePlayer.inventory.setCurrentItem(i, j, flag1, flag);
+
+            if (flag)
+            {
+                int k = (thePlayer.inventorySlots.inventorySlots.size() - 9) + thePlayer.inventory.currentItem;
+                playerController.sendSlotPacket(thePlayer.inventory.getStackInSlot(thePlayer.inventory.currentItem), k);
+            }
         }
+    }
+
+    /**
+     * Returns the client version string
+     */
+    public static String getVersion()
+    {
+        return "1.2.5";
+    }
+
+    /**
+     * Creates and sends anonymous system information to Mojang's stats server
+     */
+    public static void createAndSendReport()
+    {
+        PlayerUsageSnooper playerusagesnooper = new PlayerUsageSnooper("client");
+        playerusagesnooper.addData("version", getVersion());
+        playerusagesnooper.addData("os_name", System.getProperty("os.name"));
+        playerusagesnooper.addData("os_version", System.getProperty("os.version"));
+        playerusagesnooper.addData("os_architecture", System.getProperty("os.arch"));
+        playerusagesnooper.addData("memory_total", Long.valueOf(Runtime.getRuntime().totalMemory()));
+        playerusagesnooper.addData("memory_max", Long.valueOf(Runtime.getRuntime().maxMemory()));
+        playerusagesnooper.addData("java_version", System.getProperty("java.version"));
+        playerusagesnooper.addData("opengl_version", GL11.glGetString(GL11.GL_VERSION));
+        playerusagesnooper.addData("opengl_vendor", GL11.glGetString(GL11.GL_VENDOR));
+        playerusagesnooper.sendReport();
     }
 }

@@ -109,7 +109,7 @@ public class EntityItem extends Entity
 
         if (age >= 6000)
         {
-            setEntityDead();
+            setDead();
         }
     }
 
@@ -140,7 +140,7 @@ public class EntityItem extends Entity
 
         if (health <= 0)
         {
-            setEntityDead();
+            setDead();
         }
 
         return false;
@@ -168,7 +168,7 @@ public class EntityItem extends Entity
 
         if (item == null)
         {
-            setEntityDead();
+            setDead();
         }
     }
 
@@ -212,7 +212,7 @@ public class EntityItem extends Entity
 
             if (item.stackSize <= 0)
             {
-                setEntityDead();
+                setDead();
             }
         }
     }

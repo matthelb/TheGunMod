@@ -12,9 +12,9 @@ public class RenderWolf extends RenderLiving
         super.doRenderLiving(par1EntityWolf, par2, par4, par6, par8, par9);
     }
 
-    protected float func_25004_a(EntityWolf par1EntityWolf, float par2)
+    protected float getTailRotation(EntityWolf par1EntityWolf, float par2)
     {
-        return par1EntityWolf.setTailRotation();
+        return par1EntityWolf.getTailRotation();
     }
 
     protected void func_25006_b(EntityWolf entitywolf, float f)
@@ -35,7 +35,7 @@ public class RenderWolf extends RenderLiving
      */
     protected float handleRotationFloat(EntityLiving par1EntityLiving, float par2)
     {
-        return func_25004_a((EntityWolf)par1EntityLiving, par2);
+        return getTailRotation((EntityWolf)par1EntityLiving, par2);
     }
 
     public void doRenderLiving(EntityLiving par1EntityLiving, double par2, double par4, double par6, float par8, float par9)

@@ -298,7 +298,7 @@ public class AxisAlignedBB
     }
 
     /**
-     * Checks if the specified vector is within bounds of the bounding box. Args: vec3D
+     * Returns if the supplied Vec3D is completely inside the bounding box
      */
     public boolean isVecInside(Vec3D par1Vec3D)
     {

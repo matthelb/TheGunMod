@@ -13,7 +13,7 @@ public interface IBlockAccess
     public abstract TileEntity getBlockTileEntity(int i, int j, int k);
 
     /**
-     * 'Any Light rendered on a 1.8 Block goes through here'
+     * Any Light rendered on a 1.8 Block goes through here
      */
     public abstract int getLightBrightnessForSkyBlocks(int i, int j, int k, int l);
 
@@ -50,12 +50,15 @@ public interface IBlockAccess
      */
     public abstract boolean isAirBlock(int i, int j, int k);
 
-    public abstract BiomeGenBase func_48454_a(int i, int j);
+    /**
+     * Gets the biome for a given set of x/z coordinates
+     */
+    public abstract BiomeGenBase getBiomeGenForCoords(int i, int j);
 
     /**
-     * Returns current world height
+     * Returns current world height.
      */
-    public abstract int getWorldHeight();
+    public abstract int getHeight();
 
     public abstract boolean func_48452_a();
 }

@@ -55,8 +55,27 @@ public class ChatAllowedCharacters
         return s;
     }
 
-    public static final boolean func_48614_a(char par0)
+    public static final boolean isAllowedCharacter(char par0)
     {
         return par0 != '\247' && (allowedCharacters.indexOf(par0) >= 0 || par0 > ' ');
+    }
+
+    public static String func_52019_a(String par0Str)
+    {
+        StringBuilder stringbuilder = new StringBuilder();
+        char ac[] = par0Str.toCharArray();
+        int i = ac.length;
+
+        for (int j = 0; j < i; j++)
+        {
+            char c = ac[j];
+
+            if (isAllowedCharacter(c))
+            {
+                stringbuilder.append(c);
+            }
+        }
+
+        return stringbuilder.toString();
     }
 }

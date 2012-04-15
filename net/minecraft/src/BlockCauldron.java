@@ -101,7 +101,7 @@ public class BlockCauldron extends Block
         {
             if (i < 3)
             {
-                if (!par5EntityPlayer.capabilities.depleteBuckets)
+                if (!par5EntityPlayer.capabilities.isCreativeMode)
                 {
                     par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, new ItemStack(Item.bucketEmpty));
                 }

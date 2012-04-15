@@ -1,95 +1,63 @@
 package net.minecraft.src;
 
-import java.io.PrintStream;
-import java.net.URLEncoder;
-import java.util.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PlayerUsageSnooper
 {
-    public static final PlayerUsageSnooper field_48478_a = new PlayerUsageSnooper();
-    private long field_48476_b;
-    private Map field_48477_c;
-    private Map field_48475_d;
+    /** String map for report data */
+    private Map dataMap;
 
-    private PlayerUsageSnooper()
+    /** URL of the server to send the report to */
+    private final URL serverUrl;
+
+    public PlayerUsageSnooper(String par1Str)
     {
-        field_48476_b = -1L;
-        field_48477_c = new HashMap();
-        field_48475_d = new HashMap();
-    }
+        dataMap = new HashMap();
 
-    public void func_48472_a()
-    {
-        long l = System.currentTimeMillis();
-
-        if (field_48476_b == -1L)
+        try
         {
-            field_48476_b = System.currentTimeMillis();
-            return;
+            serverUrl = new URL((new StringBuilder()).append("http://snoop.minecraft.net/").append(par1Str).toString());
         }
-
-        long l1 = l - field_48476_b;
-
-        if (l1 < 0xfffffffffff6d840L || l1 > 0x124f80L)
+        catch (MalformedURLException malformedurlexception)
         {
-            System.out.println("Skipping snoop interval");
-            field_48476_b = l;
-            return;
-        }
-
-        if (l1 > 0x927c0L)
-        {
-            func_48473_b();
-            field_48476_b += 0x927c0L;
+            throw new IllegalArgumentException();
         }
     }
 
-    public void func_48474_a(String par1Str, String par2Str)
+    /**
+     * Adds information to the report
+     */
+    public void addData(String par1Str, Object par2Obj)
     {
-        field_48475_d.put(par1Str, par2Str);
+        dataMap.put(par1Str, par2Obj);
     }
 
-    private void func_48473_b()
+    /**
+     * Starts a new thread to send the information to the report server
+     */
+    public void sendReport()
     {
-        String s = "";
-
-        for (Iterator iterator = field_48475_d.keySet().iterator(); iterator.hasNext();)
-        {
-            String s1 = (String)iterator.next();
-            String s3 = (String)field_48475_d.get(s1);
-
-            if (s.length() > 0)
-            {
-                s = (new StringBuilder()).append(s).append("&").toString();
-            }
-
-            try
-            {
-                s = (new StringBuilder()).append(s).append(s1).append("=").append(URLEncoder.encode(s3, "UTF-8")).toString();
-            }
-            catch (Exception exception) { }
-        }
-
-        for (Iterator iterator1 = field_48477_c.keySet().iterator(); iterator1.hasNext();)
-        {
-            String s2 = (String)iterator1.next();
-            String s4 = ((Integer)field_48477_c.get(s2)).toString();
-
-            if (s.length() > 0)
-            {
-                s = (new StringBuilder()).append(s).append("&").toString();
-            }
-
-            try
-            {
-                s = (new StringBuilder()).append(s).append(s2).append("=").append(URLEncoder.encode(s4, "UTF-8")).toString();
-            }
-            catch (Exception exception1) { }
-        }
-
-        field_48477_c.clear();
         PlayerUsageSnooperThread playerusagesnooperthread = new PlayerUsageSnooperThread(this, "reporter");
         playerusagesnooperthread.setDaemon(true);
         playerusagesnooperthread.start();
+    }
+
+    /**
+     * Returns the server URL for the given usage snooper
+     */
+    static URL getServerURL(PlayerUsageSnooper par0PlayerUsageSnooper)
+    {
+        return par0PlayerUsageSnooper.serverUrl;
+    }
+
+    /**
+     * Returns the data map for the given usage snooper
+     */
+    static Map getDataMap(PlayerUsageSnooper par0PlayerUsageSnooper)
+    {
+        return par0PlayerUsageSnooper.dataMap;
     }
 }

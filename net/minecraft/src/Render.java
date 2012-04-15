@@ -259,7 +259,7 @@ public abstract class Render
         Tessellator tessellator = Tessellator.instance;
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         tessellator.startDrawingQuads();
-        tessellator.setTranslationD(par1, par3, par5);
+        tessellator.setTranslation(par1, par3, par5);
         tessellator.setNormal(0.0F, 0.0F, -1F);
         tessellator.addVertex(par0AxisAlignedBB.minX, par0AxisAlignedBB.maxY, par0AxisAlignedBB.minZ);
         tessellator.addVertex(par0AxisAlignedBB.maxX, par0AxisAlignedBB.maxY, par0AxisAlignedBB.minZ);
@@ -290,7 +290,7 @@ public abstract class Render
         tessellator.addVertex(par0AxisAlignedBB.maxX, par0AxisAlignedBB.maxY, par0AxisAlignedBB.minZ);
         tessellator.addVertex(par0AxisAlignedBB.maxX, par0AxisAlignedBB.maxY, par0AxisAlignedBB.maxZ);
         tessellator.addVertex(par0AxisAlignedBB.maxX, par0AxisAlignedBB.minY, par0AxisAlignedBB.maxZ);
-        tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
+        tessellator.setTranslation(0.0D, 0.0D, 0.0D);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }

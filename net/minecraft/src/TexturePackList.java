@@ -32,7 +32,15 @@ public class TexturePackList
         mc = par1Minecraft;
         texturePackDir = new File(par2File, "texturepacks");
 
-        if (!texturePackDir.exists())
+        if (texturePackDir.exists())
+        {
+            if (!texturePackDir.isDirectory())
+            {
+                texturePackDir.delete();
+                texturePackDir.mkdirs();
+            }
+        }
+        else
         {
             texturePackDir.mkdirs();
         }

@@ -29,7 +29,7 @@ public class EntityMagmaCube extends EntitySlime
         return getSlimeSize() * 3;
     }
 
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
         return 0xf000f0;
     }
@@ -37,7 +37,7 @@ public class EntityMagmaCube extends EntitySlime
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         return 1.0F;
     }
@@ -105,7 +105,7 @@ public class EntityMagmaCube extends EntitySlime
     }
 
     /**
-     * jump, Causes this entity to do an upwards motion (jumping)
+     * Causes this entity to do an upwards motion (jumping).
      */
     protected void jump()
     {

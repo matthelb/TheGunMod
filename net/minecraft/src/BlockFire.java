@@ -142,7 +142,7 @@ public class BlockFire extends Block
             return;
         }
 
-        boolean flag1 = par1World.func_48455_z(par2, par3, par4);
+        boolean flag1 = par1World.isBlockHighHumidity(par2, par3, par4);
         byte byte0 = 0;
 
         if (flag1)
@@ -150,12 +150,12 @@ public class BlockFire extends Block
             byte0 = -50;
         }
 
-        func_48211_a(par1World, par2 + 1, par3, par4, 300 + byte0, par5Random, i);
-        func_48211_a(par1World, par2 - 1, par3, par4, 300 + byte0, par5Random, i);
-        func_48211_a(par1World, par2, par3 - 1, par4, 250 + byte0, par5Random, i);
-        func_48211_a(par1World, par2, par3 + 1, par4, 250 + byte0, par5Random, i);
-        func_48211_a(par1World, par2, par3, par4 - 1, 300 + byte0, par5Random, i);
-        func_48211_a(par1World, par2, par3, par4 + 1, 300 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2 + 1, par3, par4, 300 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2 - 1, par3, par4, 300 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2, par3 - 1, par4, 250 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2, par3 + 1, par4, 250 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2, par3, par4 - 1, 300 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2, par3, par4 + 1, 300 + byte0, par5Random, i);
 
         for (int j = par2 - 1; j <= par2 + 1; j++)
         {
@@ -207,7 +207,7 @@ public class BlockFire extends Block
         }
     }
 
-    private void func_48211_a(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7)
+    private void tryToCatchBlockOnFire(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7)
     {
         int i = abilityToCatchFire[par1World.getBlockId(par2, par3, par4)];
 

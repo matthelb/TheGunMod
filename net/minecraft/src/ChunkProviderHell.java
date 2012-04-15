@@ -9,8 +9,8 @@ public class ChunkProviderHell implements IChunkProvider
 
     /** A NoiseGeneratorOctaves used in generating nether terrain */
     private NoiseGeneratorOctaves netherNoiseGen1;
-    private NoiseGeneratorOctaves field_4168_j;
-    private NoiseGeneratorOctaves field_4167_k;
+    private NoiseGeneratorOctaves netherNoiseGen2;
+    private NoiseGeneratorOctaves netherNoiseGen3;
 
     /** Determines whether slowsand or gravel can be generated at a location */
     private NoiseGeneratorOctaves slowsandGravelNoiseGen;
@@ -19,8 +19,8 @@ public class ChunkProviderHell implements IChunkProvider
      * Determines whether something other than nettherack can be generated at a location
      */
     private NoiseGeneratorOctaves netherrackExculsivityNoiseGen;
-    public NoiseGeneratorOctaves field_4177_a;
-    public NoiseGeneratorOctaves field_4176_b;
+    public NoiseGeneratorOctaves netherNoiseGen6;
+    public NoiseGeneratorOctaves netherNoiseGen7;
 
     /** Is the world that the nether is getting generated. */
     private World worldObj;
@@ -30,11 +30,11 @@ public class ChunkProviderHell implements IChunkProvider
     private double gravelNoise[];
     private double netherrackExclusivityNoise[];
     private MapGenBase netherCaveGenerator;
-    double field_4175_c[];
-    double field_4174_d[];
-    double field_4173_e[];
-    double field_4172_f[];
-    double field_4171_g[];
+    double noiseData1[];
+    double noiseData2[];
+    double noiseData3[];
+    double noiseData4[];
+    double noiseData5[];
 
     public ChunkProviderHell(World par1World, long par2)
     {
@@ -46,12 +46,12 @@ public class ChunkProviderHell implements IChunkProvider
         worldObj = par1World;
         hellRNG = new Random(par2);
         netherNoiseGen1 = new NoiseGeneratorOctaves(hellRNG, 16);
-        field_4168_j = new NoiseGeneratorOctaves(hellRNG, 16);
-        field_4167_k = new NoiseGeneratorOctaves(hellRNG, 8);
+        netherNoiseGen2 = new NoiseGeneratorOctaves(hellRNG, 16);
+        netherNoiseGen3 = new NoiseGeneratorOctaves(hellRNG, 8);
         slowsandGravelNoiseGen = new NoiseGeneratorOctaves(hellRNG, 4);
         netherrackExculsivityNoiseGen = new NoiseGeneratorOctaves(hellRNG, 4);
-        field_4177_a = new NoiseGeneratorOctaves(hellRNG, 10);
-        field_4176_b = new NoiseGeneratorOctaves(hellRNG, 16);
+        netherNoiseGen6 = new NoiseGeneratorOctaves(hellRNG, 10);
+        netherNoiseGen7 = new NoiseGeneratorOctaves(hellRNG, 16);
     }
 
     /**
@@ -242,7 +242,7 @@ public class ChunkProviderHell implements IChunkProvider
     }
 
     /**
-     * Creates an empty chunk ready to put data from the server in
+     * loads or generates the chunk at the chunk location specified
      */
     public Chunk loadChunk(int par1, int par2)
     {
@@ -262,6 +262,14 @@ public class ChunkProviderHell implements IChunkProvider
         netherCaveGenerator.generate(this, worldObj, par1, par2, abyte0);
         genNetherBridge.generate(this, worldObj, par1, par2, abyte0);
         Chunk chunk = new Chunk(worldObj, abyte0, par1, par2);
+        BiomeGenBase abiomegenbase[] = worldObj.getWorldChunkManager().loadBlockGeneratorData(null, par1 * 16, par2 * 16, 16, 16);
+        byte abyte1[] = chunk.getBiomeArray();
+
+        for (int i = 0; i < abyte1.length; i++)
+        {
+            abyte1[i] = (byte)abiomegenbase[i].biomeID;
+        }
+
         chunk.resetRelightChecks();
         return chunk;
     }
@@ -275,11 +283,11 @@ public class ChunkProviderHell implements IChunkProvider
 
         double d = 684.41200000000003D;
         double d1 = 2053.2359999999999D;
-        field_4172_f = field_4177_a.generateNoiseOctaves(field_4172_f, par2, par3, par4, par5, 1, par7, 1.0D, 0.0D, 1.0D);
-        field_4171_g = field_4176_b.generateNoiseOctaves(field_4171_g, par2, par3, par4, par5, 1, par7, 100D, 0.0D, 100D);
-        field_4175_c = field_4167_k.generateNoiseOctaves(field_4175_c, par2, par3, par4, par5, par6, par7, d / 80D, d1 / 60D, d / 80D);
-        field_4174_d = netherNoiseGen1.generateNoiseOctaves(field_4174_d, par2, par3, par4, par5, par6, par7, d, d1, d);
-        field_4173_e = field_4168_j.generateNoiseOctaves(field_4173_e, par2, par3, par4, par5, par6, par7, d, d1, d);
+        noiseData4 = netherNoiseGen6.generateNoiseOctaves(noiseData4, par2, par3, par4, par5, 1, par7, 1.0D, 0.0D, 1.0D);
+        noiseData5 = netherNoiseGen7.generateNoiseOctaves(noiseData5, par2, par3, par4, par5, 1, par7, 100D, 0.0D, 100D);
+        noiseData1 = netherNoiseGen3.generateNoiseOctaves(noiseData1, par2, par3, par4, par5, par6, par7, d / 80D, d1 / 60D, d / 80D);
+        noiseData2 = netherNoiseGen1.generateNoiseOctaves(noiseData2, par2, par3, par4, par5, par6, par7, d, d1, d);
+        noiseData3 = netherNoiseGen2.generateNoiseOctaves(noiseData3, par2, par3, par4, par5, par6, par7, d, d1, d);
         int i = 0;
         int j = 0;
         double ad[] = new double[par6];
@@ -305,7 +313,7 @@ public class ChunkProviderHell implements IChunkProvider
         {
             for (int i1 = 0; i1 < par7; i1++)
             {
-                double d3 = (field_4172_f[j] + 256D) / 512D;
+                double d3 = (noiseData4[j] + 256D) / 512D;
 
                 if (d3 > 1.0D)
                 {
@@ -313,7 +321,7 @@ public class ChunkProviderHell implements IChunkProvider
                 }
 
                 double d4 = 0.0D;
-                double d5 = field_4171_g[j] / 8000D;
+                double d5 = noiseData5[j] / 8000D;
 
                 if (d5 < 0.0D)
                 {
@@ -353,9 +361,9 @@ public class ChunkProviderHell implements IChunkProvider
                 {
                     double d6 = 0.0D;
                     double d7 = ad[j1];
-                    double d8 = field_4174_d[i] / 512D;
-                    double d9 = field_4173_e[i] / 512D;
-                    double d10 = (field_4175_c[i] / 10D + 1.0D) / 2D;
+                    double d8 = noiseData2[i] / 512D;
+                    double d9 = noiseData3[i] / 512D;
+                    double d10 = (noiseData1[i] / 10D + 1.0D) / 2D;
 
                     if (d10 < 0.0D)
                     {
@@ -521,7 +529,7 @@ public class ChunkProviderHell implements IChunkProvider
             return genNetherBridge.getSpawnList();
         }
 
-        BiomeGenBase biomegenbase = worldObj.func_48454_a(par2, par4);
+        BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(par2, par4);
 
         if (biomegenbase == null)
         {

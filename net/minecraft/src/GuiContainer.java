@@ -86,6 +86,7 @@ public abstract class GuiContainer extends GuiScreen
             }
         }
 
+        drawGuiContainerForegroundLayer();
         InventoryPlayer inventoryplayer = mc.thePlayer.inventory;
 
         if (inventoryplayer.getItemStack() != null)
@@ -103,7 +104,6 @@ public abstract class GuiContainer extends GuiScreen
         RenderHelper.disableStandardItemLighting();
         GL11.glDisable(GL11.GL_LIGHTING);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
-        drawGuiContainerForegroundLayer();
 
         if (inventoryplayer.getItemStack() == null && slot != null && slot.getHasStack())
         {
@@ -155,7 +155,7 @@ public abstract class GuiContainer extends GuiScreen
 
                     if (j4 == 0)
                     {
-                        s = (new StringBuilder()).append("\247").append(Integer.toHexString(itemstack.getRarity().field_40535_e)).append(s).toString();
+                        s = (new StringBuilder()).append("\247").append(Integer.toHexString(itemstack.getRarity().nameColor)).append(s).toString();
                     }
                     else
                     {
@@ -205,19 +205,19 @@ public abstract class GuiContainer extends GuiScreen
         ItemStack itemstack = par1Slot.getStack();
         boolean flag = false;
         int k = i;
-        int i1 = j;
+        int l = j;
         zLevel = 100F;
         itemRenderer.zLevel = 100F;
 
         if (itemstack == null)
         {
-            int j1 = par1Slot.getBackgroundIconIndex();
+            int i1 = par1Slot.getBackgroundIconIndex();
 
-            if (j1 >= 0)
+            if (i1 >= 0)
             {
                 GL11.glDisable(GL11.GL_LIGHTING);
                 mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/gui/items.png"));
-                drawTexturedModalRect(k, i1, (j1 % 16) * 16, (j1 / 16) * 16, 16, 16);
+                drawTexturedModalRect(k, l, (i1 % 16) * 16, (i1 / 16) * 16, 16, 16);
                 GL11.glEnable(GL11.GL_LIGHTING);
                 flag = true;
             }
@@ -225,41 +225,12 @@ public abstract class GuiContainer extends GuiScreen
 
         if (!flag)
         {
-            itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, itemstack, k, i1);
-            itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, itemstack, k, i1);
+            itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, itemstack, k, l);
+            itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, itemstack, k, l);
         }
 
         itemRenderer.zLevel = 0.0F;
         zLevel = 0.0F;
-
-        if (this == null)
-        {
-            zLevel = 100F;
-            itemRenderer.zLevel = 100F;
-
-            if (itemstack == null)
-            {
-                int l = par1Slot.getBackgroundIconIndex();
-
-                if (l >= 0)
-                {
-                    GL11.glDisable(GL11.GL_LIGHTING);
-                    mc.renderEngine.bindTexture(mc.renderEngine.getTexture("/gui/items.png"));
-                    drawTexturedModalRect(i, j, (l % 16) * 16, (l / 16) * 16, 16, 16);
-                    GL11.glEnable(GL11.GL_LIGHTING);
-                    flag = true;
-                }
-            }
-
-            if (!flag)
-            {
-                itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, itemstack, i, j);
-                itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, itemstack, i, j);
-            }
-
-            itemRenderer.zLevel = 0.0F;
-            zLevel = 0.0F;
-        }
     }
 
     /**

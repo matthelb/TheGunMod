@@ -13,9 +13,9 @@ import org.lwjgl.opengl.GL11;
 //            ModLoader, IBlockAccess, BlockEndPortalFrame, Tessellator,
 //            BlockBed, Direction, EntityRenderer, BlockRedstoneRepeater,
 //            BlockPistonBase, BlockPistonExtension, Vec3D, BlockFire,
-//            BlockRedstoneWire, BlockStem, Material, BlockFluid,
-//            MathHelper, World, BlockDirectional, BlockDoor,
-//            BlockGrass, ChestItemRenderHelper
+//            BlockRedstoneWire, BlockStem, BlockFluid, MathHelper,
+//            Material, BlockDirectional, BlockDoor, BlockGrass,
+//            ChestItemRenderHelper, World
 
 public class RenderBlocks
 {

@@ -39,7 +39,7 @@ public class ModelDragon extends ModelBase
 
     /** The wing tip Model renderer of the dragon */
     private ModelRenderer wingTip;
-    private float field_40317_s;
+    private float partialTicks;
 
     public ModelDragon(float par1)
     {
@@ -126,7 +126,7 @@ public class ModelDragon extends ModelBase
      */
     public void setLivingAnimations(EntityLiving par1EntityLiving, float par2, float par3, float par4)
     {
-        field_40317_s = par4;
+        partialTicks = par4;
     }
 
     /**
@@ -136,31 +136,29 @@ public class ModelDragon extends ModelBase
     {
         GL11.glPushMatrix();
         EntityDragon entitydragon = (EntityDragon)par1Entity;
-        float f = entitydragon.field_40173_aw + (entitydragon.field_40172_ax - entitydragon.field_40173_aw) * field_40317_s;
+        float f = entitydragon.prevAnimTime + (entitydragon.animTime - entitydragon.prevAnimTime) * partialTicks;
         jaw.rotateAngleX = (float)(Math.sin(f * (float)Math.PI * 2.0F) + 1.0D) * 0.2F;
         float f1 = (float)(Math.sin(f * (float)Math.PI * 2.0F - 1.0F) + 1.0D);
         f1 = (f1 * f1 * 1.0F + f1 * 2.0F) * 0.05F;
         GL11.glTranslatef(0.0F, f1 - 2.0F, -3F);
         GL11.glRotatef(f1 * 2.0F, 1.0F, 0.0F, 0.0F);
         float f2 = -30F;
-        float f3 = 22F;
         float f4 = 0.0F;
         float f5 = 1.5F;
-        double ad[] = entitydragon.func_40160_a(6, field_40317_s);
-        float f6 = updateRotations(entitydragon.func_40160_a(5, field_40317_s)[0] - entitydragon.func_40160_a(10, field_40317_s)[0]);
-        float f7 = updateRotations(entitydragon.func_40160_a(5, field_40317_s)[0] + (double)(f6 / 2.0F));
+        double ad[] = entitydragon.getMovementOffsets(6, partialTicks);
+        float f6 = updateRotations(entitydragon.getMovementOffsets(5, partialTicks)[0] - entitydragon.getMovementOffsets(10, partialTicks)[0]);
+        float f7 = updateRotations(entitydragon.getMovementOffsets(5, partialTicks)[0] + (double)(f6 / 2.0F));
         f2 += 2.0F;
-        float f8 = 0.0F;
-        float f9 = f * (float)Math.PI * 2.0F;
+        float f8 = f * (float)Math.PI * 2.0F;
         f2 = 20F;
-        f3 = -12F;
+        float f3 = -12F;
 
         for (int i = 0; i < 5; i++)
         {
-            double ad3[] = entitydragon.func_40160_a(5 - i, field_40317_s);
-            f8 = (float)Math.cos((float)i * 0.45F + f9) * 0.15F;
+            double ad3[] = entitydragon.getMovementOffsets(5 - i, partialTicks);
+            float f10 = (float)Math.cos((float)i * 0.45F + f8) * 0.15F;
             neck.rotateAngleY = ((updateRotations(ad3[0] - ad[0]) * (float)Math.PI) / 180F) * f5;
-            neck.rotateAngleX = f8 + (((float)(ad3[1] - ad[1]) * (float)Math.PI) / 180F) * f5 * 5F;
+            neck.rotateAngleX = f10 + (((float)(ad3[1] - ad[1]) * (float)Math.PI) / 180F) * f5 * 5F;
             neck.rotateAngleZ = ((-updateRotations(ad3[0] - (double)f7) * (float)Math.PI) / 180F) * f5;
             neck.rotationPointY = f2;
             neck.rotationPointZ = f3;
@@ -174,7 +172,7 @@ public class ModelDragon extends ModelBase
         head.rotationPointY = f2;
         head.rotationPointZ = f3;
         head.rotationPointX = f4;
-        double ad1[] = entitydragon.func_40160_a(0, field_40317_s);
+        double ad1[] = entitydragon.getMovementOffsets(0, partialTicks);
         head.rotateAngleY = ((updateRotations(ad1[0] - ad[0]) * (float)Math.PI) / 180F) * 1.0F;
         head.rotateAngleZ = ((-updateRotations(ad1[0] - (double)f7) * (float)Math.PI) / 180F) * 1.0F;
         head.render(par7);
@@ -188,11 +186,11 @@ public class ModelDragon extends ModelBase
         for (int j = 0; j < 2; j++)
         {
             GL11.glEnable(GL11.GL_CULL_FACE);
-            float f10 = f * (float)Math.PI * 2.0F;
-            wing.rotateAngleX = 0.125F - (float)Math.cos(f10) * 0.2F;
+            float f11 = f * (float)Math.PI * 2.0F;
+            wing.rotateAngleX = 0.125F - (float)Math.cos(f11) * 0.2F;
             wing.rotateAngleY = 0.25F;
-            wing.rotateAngleZ = (float)(Math.sin(f10) + 0.125D) * 0.8F;
-            wingTip.rotateAngleZ = -(float)(Math.sin(f10 + 2.0F) + 0.5D) * 0.75F;
+            wing.rotateAngleZ = (float)(Math.sin(f11) + 0.125D) * 0.8F;
+            wingTip.rotateAngleZ = -(float)(Math.sin(f11 + 2.0F) + 0.5D) * 0.75F;
             rearLeg.rotateAngleX = 1.0F + f1 * 0.1F;
             rearLegTip.rotateAngleX = 0.5F + f1 * 0.1F;
             rearFoot.rotateAngleX = 0.75F + f1 * 0.1F;
@@ -213,19 +211,19 @@ public class ModelDragon extends ModelBase
         GL11.glPopMatrix();
         GL11.glCullFace(GL11.GL_BACK);
         GL11.glDisable(GL11.GL_CULL_FACE);
-        f8 = -(float)Math.sin(f * (float)Math.PI * 2.0F) * 0.0F;
-        f9 = f * (float)Math.PI * 2.0F;
+        float f9 = -(float)Math.sin(f * (float)Math.PI * 2.0F) * 0.0F;
+        f8 = f * (float)Math.PI * 2.0F;
         f2 = 10F;
         f3 = 60F;
         f4 = 0.0F;
-        ad = entitydragon.func_40160_a(11, field_40317_s);
+        ad = entitydragon.getMovementOffsets(11, partialTicks);
 
         for (int k = 0; k < 12; k++)
         {
-            double ad2[] = entitydragon.func_40160_a(12 + k, field_40317_s);
-            f8 = (float)((double)f8 + Math.sin((float)k * 0.45F + f9) * 0.05000000074505806D);
+            double ad2[] = entitydragon.getMovementOffsets(12 + k, partialTicks);
+            f9 = (float)((double)f9 + Math.sin((float)k * 0.45F + f8) * 0.05000000074505806D);
             neck.rotateAngleY = ((updateRotations(ad2[0] - ad[0]) * f5 + 180F) * (float)Math.PI) / 180F;
-            neck.rotateAngleX = f8 + (((float)(ad2[1] - ad[1]) * (float)Math.PI) / 180F) * f5 * 5F;
+            neck.rotateAngleX = f9 + (((float)(ad2[1] - ad[1]) * (float)Math.PI) / 180F) * f5 * 5F;
             neck.rotateAngleZ = ((updateRotations(ad2[0] - (double)f7) * (float)Math.PI) / 180F) * f5;
             neck.rotationPointY = f2;
             neck.rotationPointZ = f3;

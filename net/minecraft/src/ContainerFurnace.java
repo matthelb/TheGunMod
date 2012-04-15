@@ -110,6 +110,27 @@ public class ContainerFurnace extends Container
 
                 slot.func_48433_a(itemstack1, itemstack);
             }
+            else if (par1 == 1 || par1 == 0)
+            {
+                if (!mergeItemStack(itemstack1, 3, 39, false))
+                {
+                    return null;
+                }
+            }
+            else if (FurnaceRecipes.smelting().getSmeltingResult(itemstack1.getItem().shiftedIndex) != null)
+            {
+                if (!mergeItemStack(itemstack1, 0, 1, false))
+                {
+                    return null;
+                }
+            }
+            else if (TileEntityFurnace.func_52005_b(itemstack1))
+            {
+                if (!mergeItemStack(itemstack1, 1, 2, false))
+                {
+                    return null;
+                }
+            }
             else if (par1 >= 3 && par1 < 30)
             {
                 if (!mergeItemStack(itemstack1, 30, 39, false))
@@ -117,14 +138,7 @@ public class ContainerFurnace extends Container
                     return null;
                 }
             }
-            else if (par1 >= 30 && par1 < 39)
-            {
-                if (!mergeItemStack(itemstack1, 3, 30, false))
-                {
-                    return null;
-                }
-            }
-            else if (!mergeItemStack(itemstack1, 3, 39, false))
+            else if (par1 >= 30 && par1 < 39 && !mergeItemStack(itemstack1, 3, 30, false))
             {
                 return null;
             }

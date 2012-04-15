@@ -43,7 +43,7 @@ public abstract class PlayerController
         int i = world.getBlockMetadata(par1, par2, par3);
         boolean flag = world.setBlockWithNotify(par1, par2, par3, 0);
 
-        if (block != null && flag)
+        if (flag)
         {
             block.onBlockDestroyedByPlayer(world, par1, par2, par3, i);
         }

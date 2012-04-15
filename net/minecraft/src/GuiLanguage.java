@@ -5,16 +5,26 @@ import net.minecraft.client.Minecraft;
 
 public class GuiLanguage extends GuiScreen
 {
-    protected GuiScreen field_44009_a;
-    private int field_44007_b;
-    private GuiSlotLanguage field_44008_c;
+    /** This GUI's parent GUI. */
+    protected GuiScreen parentGui;
+
+    /**
+     * Timer used to update texture packs, decreases every tick and is reset to 20 and updates texture packs upon
+     * reaching 0.
+     */
+    private int updateTimer;
+
+    /** This GUI's language list. */
+    private GuiSlotLanguage languageList;
     private final GameSettings field_44006_d;
-    private GuiSmallButton field_46029_e;
+
+    /** This GUI's 'Done' button. */
+    private GuiSmallButton doneButton;
 
     public GuiLanguage(GuiScreen par1GuiScreen, GameSettings par2GameSettings)
     {
-        field_44007_b = -1;
-        field_44009_a = par1GuiScreen;
+        updateTimer = -1;
+        parentGui = par1GuiScreen;
         field_44006_d = par2GameSettings;
     }
 
@@ -24,9 +34,9 @@ public class GuiLanguage extends GuiScreen
     public void initGui()
     {
         StringTranslate stringtranslate = StringTranslate.getInstance();
-        controlList.add(field_46029_e = new GuiSmallButton(6, width / 2 - 75, height - 38, stringtranslate.translateKey("gui.done")));
-        field_44008_c = new GuiSlotLanguage(this);
-        field_44008_c.registerScrollButtons(controlList, 7, 8);
+        controlList.add(doneButton = new GuiSmallButton(6, width / 2 - 75, height - 38, stringtranslate.translateKey("gui.done")));
+        languageList = new GuiSlotLanguage(this);
+        languageList.registerScrollButtons(controlList, 7, 8);
     }
 
     /**
@@ -39,17 +49,19 @@ public class GuiLanguage extends GuiScreen
             return;
         }
 
-        if (par1GuiButton.id != 5)
+        switch (par1GuiButton.id)
         {
-            if (par1GuiButton.id == 6)
-            {
+            case 6:
                 field_44006_d.saveOptions();
-                mc.displayGuiScreen(field_44009_a);
-            }
-            else
-            {
-                field_44008_c.actionPerformed(par1GuiButton);
-            }
+                mc.displayGuiScreen(parentGui);
+                break;
+
+            default:
+                languageList.actionPerformed(par1GuiButton);
+                break;
+
+            case 5:
+                break;
         }
     }
 
@@ -75,12 +87,12 @@ public class GuiLanguage extends GuiScreen
      */
     public void drawScreen(int par1, int par2, float par3)
     {
-        field_44008_c.drawScreen(par1, par2, par3);
+        languageList.drawScreen(par1, par2, par3);
 
-        if (field_44007_b <= 0)
+        if (updateTimer <= 0)
         {
             mc.texturePackList.updateAvaliableTexturePacks();
-            field_44007_b += 20;
+            updateTimer += 20;
         }
 
         StringTranslate stringtranslate = StringTranslate.getInstance();
@@ -95,7 +107,7 @@ public class GuiLanguage extends GuiScreen
     public void updateScreen()
     {
         super.updateScreen();
-        field_44007_b--;
+        updateTimer--;
     }
 
     static GameSettings func_44005_a(GuiLanguage par0GuiLanguage)
@@ -105,6 +117,6 @@ public class GuiLanguage extends GuiScreen
 
     static GuiSmallButton func_46028_b(GuiLanguage par0GuiLanguage)
     {
-        return par0GuiLanguage.field_46029_e;
+        return par0GuiLanguage.doneButton;
     }
 }

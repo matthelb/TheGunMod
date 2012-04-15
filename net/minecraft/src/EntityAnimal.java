@@ -20,12 +20,30 @@ public abstract class EntityAnimal extends EntityAgeable
     }
 
     /**
+     * main AI tick function, replaces updateEntityActionState
+     */
+    protected void updateAITick()
+    {
+        if (getGrowingAge() != 0)
+        {
+            inLove = 0;
+        }
+
+        super.updateAITick();
+    }
+
+    /**
      * Called frequently so the entity can update its state every tick as required. For example, zombies and skeletons
      * use this to react to sunlight and start to burn.
      */
     public void onLivingUpdate()
     {
         super.onLivingUpdate();
+
+        if (getGrowingAge() != 0)
+        {
+            inLove = 0;
+        }
 
         if (inLove > 0)
         {
@@ -276,7 +294,7 @@ public abstract class EntityAnimal extends EntityAgeable
     }
 
     /**
-     * Get number of ticks, at least during which the living entity will be silent
+     * Get number of ticks, at least during which the living entity will be silent.
      */
     public int getTalkInterval()
     {
@@ -316,7 +334,7 @@ public abstract class EntityAnimal extends EntityAgeable
 
         if (itemstack != null && isWheat(itemstack) && getGrowingAge() == 0)
         {
-            if (worldObj.getWorldInfo().getGameType() != 1)
+            if (!par1EntityPlayer.capabilities.isCreativeMode)
             {
                 itemstack.stackSize--;
 
@@ -345,12 +363,15 @@ public abstract class EntityAnimal extends EntityAgeable
         }
     }
 
-    public boolean func_48136_o_()
+    /**
+     * Returns if the entity is currently in 'love mode'.
+     */
+    public boolean isInLove()
     {
         return inLove > 0;
     }
 
-    public void func_48134_p_()
+    public void resetInLove()
     {
         inLove = 0;
     }
@@ -368,7 +389,7 @@ public abstract class EntityAnimal extends EntityAgeable
         }
         else
         {
-            return func_48136_o_() && par1EntityAnimal.func_48136_o_();
+            return isInLove() && par1EntityAnimal.isInLove();
         }
     }
 }

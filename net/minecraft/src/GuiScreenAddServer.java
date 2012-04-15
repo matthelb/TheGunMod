@@ -5,14 +5,15 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiScreenAddServer extends GuiScreen
 {
-    private GuiScreen field_35362_a;
+    /** This GUI's parent GUI. */
+    private GuiScreen parentGui;
     private GuiTextField serverAddress;
     private GuiTextField serverName;
     private ServerNBTStorage serverNBTStorage;
 
     public GuiScreenAddServer(GuiScreen par1GuiScreen, ServerNBTStorage par2ServerNBTStorage)
     {
-        field_35362_a = par1GuiScreen;
+        parentGui = par1GuiScreen;
         serverNBTStorage = par2ServerNBTStorage;
     }
 
@@ -35,12 +36,13 @@ public class GuiScreenAddServer extends GuiScreen
         controlList.clear();
         controlList.add(new GuiButton(0, width / 2 - 100, height / 4 + 96 + 12, stringtranslate.translateKey("addServer.add")));
         controlList.add(new GuiButton(1, width / 2 - 100, height / 4 + 120 + 12, stringtranslate.translateKey("gui.cancel")));
-        serverName = new GuiTextField(this, fontRenderer, width / 2 - 100, 76, 200, 20, serverNBTStorage.name);
-        serverName.isFocused = true;
-        serverName.setMaxStringLength(32);
-        serverAddress = new GuiTextField(this, fontRenderer, width / 2 - 100, 116, 200, 20, serverNBTStorage.host);
+        serverName = new GuiTextField(fontRenderer, width / 2 - 100, 76, 200, 20);
+        serverName.setFocused(true);
+        serverName.setText(serverNBTStorage.name);
+        serverAddress = new GuiTextField(fontRenderer, width / 2 - 100, 116, 200, 20);
         serverAddress.setMaxStringLength(128);
-        ((GuiButton)controlList.get(0)).enabled = serverAddress.getText().length() > 0 && serverName.getText().length() > 0;
+        serverAddress.setText(serverNBTStorage.host);
+        ((GuiButton)controlList.get(0)).enabled = serverAddress.getText().length() > 0 && serverAddress.getText().split(":").length > 0 && serverName.getText().length() > 0;
     }
 
     /**
@@ -63,13 +65,13 @@ public class GuiScreenAddServer extends GuiScreen
 
         if (par1GuiButton.id == 1)
         {
-            field_35362_a.deleteWorld(false, 0);
+            parentGui.confirmClicked(false, 0);
         }
         else if (par1GuiButton.id == 0)
         {
             serverNBTStorage.name = serverName.getText();
             serverNBTStorage.host = serverAddress.getText();
-            field_35362_a.deleteWorld(true, 0);
+            parentGui.confirmClicked(true, 0);
         }
     }
 
@@ -83,15 +85,15 @@ public class GuiScreenAddServer extends GuiScreen
 
         if (par1 == '\t')
         {
-            if (serverName.isFocused)
+            if (serverName.getIsFocused())
             {
-                serverName.isFocused = false;
-                serverAddress.isFocused = true;
+                serverName.setFocused(false);
+                serverAddress.setFocused(true);
             }
             else
             {
-                serverName.isFocused = true;
-                serverAddress.isFocused = false;
+                serverName.setFocused(true);
+                serverAddress.setFocused(false);
             }
         }
 
@@ -100,7 +102,7 @@ public class GuiScreenAddServer extends GuiScreen
             actionPerformed((GuiButton)controlList.get(0));
         }
 
-        ((GuiButton)controlList.get(0)).enabled = serverAddress.getText().length() > 0 && serverName.getText().length() > 0;
+        ((GuiButton)controlList.get(0)).enabled = serverAddress.getText().length() > 0 && serverAddress.getText().split(":").length > 0 && serverName.getText().length() > 0;
 
         if (((GuiButton)controlList.get(0)).enabled)
         {

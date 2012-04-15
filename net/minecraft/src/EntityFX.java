@@ -113,7 +113,7 @@ public class EntityFX extends Entity
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
 
         motionY -= 0.040000000000000001D * (double)particleGravity;

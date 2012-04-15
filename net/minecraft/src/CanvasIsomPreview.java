@@ -48,7 +48,7 @@ public class CanvasIsomPreview extends Canvas implements KeyListener, MouseListe
         String s = System.getProperty("user.home", ".");
         File file;
 
-        switch (OsMap.field_1193_a[getPlatform().ordinal()])
+        switch (OsMap.osValues[getPlatform().ordinal()])
         {
             case 1:
             case 2:
@@ -156,7 +156,7 @@ public class CanvasIsomPreview extends Canvas implements KeyListener, MouseListe
     public void loadLevel(String par1Str)
     {
         field_1785_i = field_1784_j = 0;
-        level = new World(new SaveHandler(new File(workDir, "saves"), par1Str, false), par1Str, new WorldSettings((new Random()).nextLong(), 0, true, false, WorldType.field_48635_b));
+        level = new World(new SaveHandler(new File(workDir, "saves"), par1Str, false), par1Str, new WorldSettings((new Random()).nextLong(), 0, true, false, WorldType.DEFAULT));
         level.skylightSubtracted = 0;
 
         synchronized (zonesToRender)

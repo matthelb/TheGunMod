@@ -110,17 +110,9 @@ public class Item
     public static Item bone = (new Item(96)).setIconCoord(12, 1).setItemName("bone").setFull3D();
     public static Item sugar;
     public static Item cake;
-
-    /** Is the bed as item on the inventory. */
     public static Item bed = (new ItemBed(99)).setMaxStackSize(1).setIconCoord(13, 2).setItemName("bed");
-
-    /** Is the redstone repeater (diode) in item form. */
     public static Item redstoneRepeater;
-
-    /** The cookie inventory item. */
     public static Item cookie = (new ItemFood(101, 1, 0.1F, false)).setIconCoord(12, 5).setItemName("cookie");
-
-    /** ItemMap */
     public static ItemMap map = (ItemMap)(new ItemMap(102)).setIconCoord(12, 3).setItemName("map");
 
     /**
@@ -364,7 +356,7 @@ public class Item
     }
 
     /**
-     * Called from ItemStack.useItemOnEntity
+     * Called when a player right clicks a entity with a item.
      */
     public void useItemOnEntity(ItemStack itemstack, EntityLiving entityliving)
     {
@@ -511,7 +503,7 @@ public class Item
     }
 
     /**
-     * gives this item the effects represented by the string for use in potion recipies
+     * Sets the string representing this item's effect on a potion when used as an ingredient.
      */
     protected Item setPotionEffect(String par1Str)
     {

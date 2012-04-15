@@ -72,7 +72,7 @@ public class MapGenStronghold extends MapGenStructure
         {
             ChunkCoordIntPair chunkcoordintpair = achunkcoordintpair[j];
 
-            if (par1 == chunkcoordintpair.chunkXPos && par2 == chunkcoordintpair.chunkZPos)
+            if (par1 == chunkcoordintpair.chunkXPos && par2 == chunkcoordintpair.chunkZPosition)
             {
                 System.out.println((new StringBuilder()).append(par1).append(", ").append(par2).toString());
                 return true;

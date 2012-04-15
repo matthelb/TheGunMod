@@ -38,7 +38,7 @@ public class EntityHugeExplodeFX extends EntityFX
 
         if (timeSinceStart == maximumTime)
         {
-            setEntityDead();
+            setDead();
         }
     }
 

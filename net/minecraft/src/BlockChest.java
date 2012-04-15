@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import java.util.*;
 
 public class BlockChest extends BlockContainer
 {
@@ -72,8 +72,7 @@ public class BlockChest extends BlockContainer
     }
 
     /**
-     * Called when a block is placed by using an ItemStack from inventory and passed in who placed it. Args:
-     * x,y,z,entityliving
+     * Called when the block is placed in the world.
      */
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
@@ -552,22 +551,27 @@ public class BlockChest extends BlockContainer
             return true;
         }
 
-        if (par1World.getBlockId(par2 - 1, par3, par4) == blockID && par1World.isBlockNormalCube(par2 - 1, par3 + 1, par4))
+        if (func_50075_j(par1World, par2, par3, par4))
         {
             return true;
         }
 
-        if (par1World.getBlockId(par2 + 1, par3, par4) == blockID && par1World.isBlockNormalCube(par2 + 1, par3 + 1, par4))
+        if (par1World.getBlockId(par2 - 1, par3, par4) == blockID && (par1World.isBlockNormalCube(par2 - 1, par3 + 1, par4) || func_50075_j(par1World, par2 - 1, par3, par4)))
         {
             return true;
         }
 
-        if (par1World.getBlockId(par2, par3, par4 - 1) == blockID && par1World.isBlockNormalCube(par2, par3 + 1, par4 - 1))
+        if (par1World.getBlockId(par2 + 1, par3, par4) == blockID && (par1World.isBlockNormalCube(par2 + 1, par3 + 1, par4) || func_50075_j(par1World, par2 + 1, par3, par4)))
         {
             return true;
         }
 
-        if (par1World.getBlockId(par2, par3, par4 + 1) == blockID && par1World.isBlockNormalCube(par2, par3 + 1, par4 + 1))
+        if (par1World.getBlockId(par2, par3, par4 - 1) == blockID && (par1World.isBlockNormalCube(par2, par3 + 1, par4 - 1) || func_50075_j(par1World, par2, par3, par4 - 1)))
+        {
+            return true;
+        }
+
+        if (par1World.getBlockId(par2, par3, par4 + 1) == blockID && (par1World.isBlockNormalCube(par2, par3 + 1, par4 + 1) || func_50075_j(par1World, par2, par3, par4 + 1)))
         {
             return true;
         }
@@ -609,5 +613,21 @@ public class BlockChest extends BlockContainer
     public TileEntity getBlockEntity()
     {
         return new TileEntityChest();
+    }
+
+    private static boolean func_50075_j(World par0World, int par1, int par2, int par3)
+    {
+        for (Iterator iterator = par0World.getEntitiesWithinAABB(net.minecraft.src.EntityOcelot.class, AxisAlignedBB.getBoundingBoxFromPool(par1, par2 + 1, par3, par1 + 1, par2 + 2, par3 + 1)).iterator(); iterator.hasNext();)
+        {
+            Entity entity = (Entity)iterator.next();
+            EntityOcelot entityocelot = (EntityOcelot)entity;
+
+            if (entityocelot.isSitting())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

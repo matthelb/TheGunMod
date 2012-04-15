@@ -37,9 +37,9 @@ public class GuiRenameWorld extends GuiScreen
         ISaveFormat isaveformat = mc.getSaveLoader();
         WorldInfo worldinfo = isaveformat.getWorldInfo(worldName);
         String s = worldinfo.getWorldName();
-        theGuiTextField = new GuiTextField(this, fontRenderer, width / 2 - 100, 60, 200, 20, s);
-        theGuiTextField.isFocused = true;
-        theGuiTextField.setMaxStringLength(32);
+        theGuiTextField = new GuiTextField(fontRenderer, width / 2 - 100, 60, 200, 20);
+        theGuiTextField.setFocused(true);
+        theGuiTextField.setText(s);
     }
 
     /**

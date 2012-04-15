@@ -35,8 +35,12 @@ public abstract class GuiSlot
 
     /** the buttonID of the button used to scroll down */
     private int scrollDownButtonID;
-    protected int field_35409_k;
-    protected int field_35408_l;
+
+    /** X axis position of the mouse */
+    protected int mouseX;
+
+    /** Y axis position of the mouse */
+    protected int mouseY;
 
     /** where the mouse was in the window when you first clicked to scroll */
     private float initialClickY;
@@ -204,8 +208,8 @@ public abstract class GuiSlot
      */
     public void drawScreen(int par1, int par2, float par3)
     {
-        field_35409_k = par1;
-        field_35408_l = par2;
+        mouseX = par1;
+        mouseY = par2;
         drawBackground();
         int i = getSize();
         int j = width / 2 + 124;

@@ -50,10 +50,13 @@ public class ModelGhast extends ModelBase
         GL11.glPushMatrix();
         GL11.glTranslatef(0.0F, 0.6F, 0.0F);
         body.render(par7);
+        ModelRenderer amodelrenderer[] = tentacles;
+        int i = amodelrenderer.length;
 
-        for (int i = 0; i < tentacles.length; i++)
+        for (int j = 0; j < i; j++)
         {
-            tentacles[i].render(par7);
+            ModelRenderer modelrenderer = amodelrenderer[j];
+            modelrenderer.render(par7);
         }
 
         GL11.glPopMatrix();

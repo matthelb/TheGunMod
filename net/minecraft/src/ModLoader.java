@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.charset.Charset;
 import java.security.CodeSource;
 import java.security.DigestException;
 import java.security.NoSuchAlgorithmException;
@@ -77,6 +78,7 @@ public final class ModLoader
     private static final LinkedList modList = new LinkedList();
     private static int nextBlockModelID = 1000;
     private static final Map overrides = new HashMap();
+    private static final Map packetChannels = new HashMap();
     public static final Properties props = new Properties();
     private static BiomeGenBase standardBiomes[];
     private static int terrainSpriteIndex = 0;
@@ -85,7 +87,8 @@ public final class ModLoader
     private static boolean texturesAdded = false;
     private static final boolean usedItemSprites[] = new boolean[256];
     private static final boolean usedTerrainSprites[] = new boolean[256];
-    public static final String VERSION = "ModLoader 1.2.3";
+    public static final String VERSION = "ModLoader 1.2.5";
+    private static NetClientHandler netHandler = null;
 
     public static void addAchievementDesc(Achievement achievement, String s, String s1)
     {
@@ -698,7 +701,7 @@ public final class ModLoader
     {
         hasInit = true;
         String s = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111110111111111111111000111111111111101111111110000000101111111000000010101111100000000000000110000000000000000000000000000000000000000000000001111111111111111";
-        String s1 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110000001111111111000000001111110000000111111111000000001111111110000001111111111111111111";
+        String s1 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110000001111111111000000001111111100000111111111100000001111111110000001111111111111111111";
 
         for (int i = 0; i < 256; i++)
         {
@@ -839,8 +842,8 @@ public final class ModLoader
                 logger.addHandler(logHandler);
             }
 
-            logger.fine("ModLoader 1.2.3 Initializing...");
-            System.out.println("ModLoader 1.2.3 Initializing...");
+            logger.fine("ModLoader 1.2.5 Initializing...");
+            System.out.println("ModLoader 1.2.5 Initializing...");
             File file = new File((net.minecraft.src.ModLoader.class).getProtectionDomain().getCodeSource().getLocation().toURI());
             modDir.mkdirs();
             readFromClassPath(file);
@@ -895,9 +898,9 @@ public final class ModLoader
         {
             if (!StatList.oneShotStats.containsKey(Integer.valueOf(0x1000000 + i)) && Block.blocksList[i] != null && Block.blocksList[i].getEnableStats())
             {
-                String s = StringTranslate.getInstance().translateKeyFormat("stat.mineBlock", new Object[]
+                String s = StatCollector.translateToLocalFormatted("stat.mineBlock", new Object[]
                         {
-                            Boolean.valueOf(Block.blocksList[i].getTickRandomly())
+                            Block.blocksList[i].translateBlockName()
                         });
                 StatList.mineBlockStatArray[i] = (new StatCrafting(0x1000000 + i, s, i)).registerStat();
                 StatList.objectMineStats.add(StatList.mineBlockStatArray[i]);
@@ -908,7 +911,7 @@ public final class ModLoader
         {
             if (!StatList.oneShotStats.containsKey(Integer.valueOf(0x1020000 + j)) && Item.itemsList[j] != null)
             {
-                String s1 = StringTranslate.getInstance().translateKeyFormat("stat.useItem", new Object[]
+                String s1 = StatCollector.translateToLocalFormatted("stat.useItem", new Object[]
                         {
                             Item.itemsList[j].getStatName()
                         });
@@ -922,7 +925,7 @@ public final class ModLoader
 
             if (!StatList.oneShotStats.containsKey(Integer.valueOf(0x1030000 + j)) && Item.itemsList[j] != null && Item.itemsList[j].isDamageable())
             {
-                String s2 = StringTranslate.getInstance().translateKeyFormat("stat.breakItem", new Object[]
+                String s2 = StatCollector.translateToLocalFormatted("stat.breakItem", new Object[]
                         {
                             Item.itemsList[j].getStatName()
                         });
@@ -951,7 +954,7 @@ public final class ModLoader
 
             if (!StatList.oneShotStats.containsKey(Integer.valueOf(0x1010000 + k)) && Item.itemsList[k] != null)
             {
-                String s3 = StringTranslate.getInstance().translateKeyFormat("stat.craftItem", new Object[]
+                String s3 = StatCollector.translateToLocalFormatted("stat.craftItem", new Object[]
                         {
                             Item.itemsList[k].getStatName()
                         });
@@ -981,27 +984,13 @@ public final class ModLoader
 
     public static boolean isModLoaded(String s)
     {
-        Class class1 = null;
+        for (Iterator iterator = modList.iterator(); iterator.hasNext();)
+        {
+            BaseMod basemod = (BaseMod)iterator.next();
 
-        try
-        {
-            class1 = Class.forName(s);
-        }
-        catch (ClassNotFoundException classnotfoundexception)
-        {
-            return false;
-        }
-
-        if (class1 != null)
-        {
-            for (Iterator iterator = modList.iterator(); iterator.hasNext();)
+            if (s.contentEquals(basemod.getName()))
             {
-                BaseMod basemod = (BaseMod)iterator.next();
-
-                if (class1.isInstance(basemod))
-                {
-                    return true;
-                }
+                return true;
             }
         }
 
@@ -1393,6 +1382,19 @@ public final class ModLoader
         }
     }
 
+    public static void receivePacket(Packet250CustomPayload packet250custompayload)
+    {
+        if (packetChannels.containsKey(packet250custompayload.channel))
+        {
+            BaseMod basemod = (BaseMod)packetChannels.get(packet250custompayload.channel);
+
+            if (basemod != null)
+            {
+                basemod.receiveCustomPacket(packet250custompayload);
+            }
+        }
+    }
+
     public static KeyBinding[] registerAllKeys(KeyBinding akeybinding[])
     {
         LinkedList linkedlist = new LinkedList();
@@ -1568,6 +1570,21 @@ public final class ModLoader
         keyList.put(basemod, obj);
     }
 
+    public static void registerPacketChannel(BaseMod basemod, String s)
+    {
+        if (s.length() < 16)
+        {
+            packetChannels.put(s, basemod);
+        }
+        else
+        {
+            throw new RuntimeException(String.format("Invalid channel name: %s. Must be less than 16 characters.", new Object[]
+                    {
+                        s
+                    }));
+        }
+    }
+
     public static void registerTileEntity(Class class1, String s)
     {
         registerTileEntity(class1, s, null);
@@ -1733,6 +1750,66 @@ public final class ModLoader
             FileOutputStream fileoutputstream = new FileOutputStream(cfgfile);
             props.store(fileoutputstream, "ModLoader Config");
             fileoutputstream.close();
+        }
+    }
+
+    public static void serverChat(String s)
+    {
+        BaseMod basemod;
+
+        for (Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.receiveChatPacket(s))
+        {
+            basemod = (BaseMod)iterator.next();
+        }
+    }
+
+    public static void serverConnect(NetClientHandler netclienthandler, Packet1Login packet1login)
+    {
+        netHandler = netclienthandler;
+
+        if (packetChannels.size() > 0)
+        {
+            Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
+            packet250custompayload.channel = "REGISTER";
+            StringBuilder stringbuilder = new StringBuilder();
+            Iterator iterator1 = packetChannels.keySet().iterator();
+            stringbuilder.append((String)iterator1.next());
+
+            for (; iterator1.hasNext(); stringbuilder.append((String)iterator1.next()))
+            {
+                stringbuilder.append("\0");
+            }
+
+            packet250custompayload.data = stringbuilder.toString().getBytes(Charset.forName("UTF8"));
+            packet250custompayload.length = packet250custompayload.data.length;
+            sendPacket(packet250custompayload);
+        }
+
+        BaseMod basemod;
+
+        for (Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.serverConnect(netHandler))
+        {
+            basemod = (BaseMod)iterator.next();
+        }
+    }
+
+    public static void serverDisconnect()
+    {
+        BaseMod basemod;
+
+        for (Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.serverDisconnect())
+        {
+            basemod = (BaseMod)iterator.next();
+        }
+
+        netHandler = null;
+    }
+
+    public static void sendPacket(Packet packet)
+    {
+        if (netHandler != null)
+        {
+            netHandler.addToSendQueue(packet);
         }
     }
 

@@ -371,13 +371,21 @@ public abstract class NetHandler
     {
     }
 
-    public void func_48488_a(Packet35EntityHeadRotation par1Packet35EntityHeadRotation)
+    public void handleEntityHeadRotation(Packet35EntityHeadRotation par1Packet35EntityHeadRotation)
     {
         registerPacket(par1Packet35EntityHeadRotation);
     }
 
-    public void func_48489_a(Packet132TileEntityData par1Packet132TileEntityData)
+    public void handleTileEntityData(Packet132TileEntityData par1Packet132TileEntityData)
     {
         registerPacket(par1Packet132TileEntityData);
+    }
+
+    /**
+     * Handle a player abilities packet.
+     */
+    public void handlePlayerAbilities(Packet202PlayerAbilities par1Packet202PlayerAbilities)
+    {
+        registerPacket(par1Packet202PlayerAbilities);
     }
 }

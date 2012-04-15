@@ -51,7 +51,7 @@ public class EntityPotion extends EntityThrowable
     }
 
     /**
-     * Called when the throwable hits a block or entity.
+     * Called when this EntityThrowable hits a block or entity.
      */
     protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
     {
@@ -107,7 +107,7 @@ public class EntityPotion extends EntityThrowable
             }
 
             worldObj.playAuxSFX(2002, (int)Math.round(posX), (int)Math.round(posY), (int)Math.round(posZ), potionDamage);
-            setEntityDead();
+            setDead();
         }
     }
 }

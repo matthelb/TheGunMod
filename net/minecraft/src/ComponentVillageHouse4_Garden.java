@@ -6,7 +6,7 @@ import java.util.Random;
 public class ComponentVillageHouse4_Garden extends ComponentVillage
 {
     private int averageGroundLevel;
-    private final boolean field_35083_b;
+    private final boolean isRoofAccessible;
 
     public ComponentVillageHouse4_Garden(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
@@ -14,11 +14,11 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
         averageGroundLevel = -1;
         coordBaseMode = par4;
         boundingBox = par3StructureBoundingBox;
-        field_35083_b = par2Random.nextBoolean();
+        isRoofAccessible = par2Random.nextBoolean();
     }
 
     /**
-     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     * Initiates construction of the Structure Component picked, at the current Location of StructGen
      */
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
@@ -39,8 +39,8 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
     }
 
     /**
-     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
-     * the end, it adds Fences...'
+     * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...
      */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
@@ -92,7 +92,7 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
 
         fillWithBlocks(par1World, par3StructureBoundingBox, 1, 1, 1, 3, 3, 3, 0, 0, false);
 
-        if (field_35083_b)
+        if (isRoofAccessible)
         {
             placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 0, 5, 0, par3StructureBoundingBox);
             placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 1, 5, 0, par3StructureBoundingBox);
@@ -112,7 +112,7 @@ public class ComponentVillageHouse4_Garden extends ComponentVillage
             placeBlockAtCurrentPosition(par1World, Block.fence.blockID, 0, 0, 5, 3, par3StructureBoundingBox);
         }
 
-        if (field_35083_b)
+        if (isRoofAccessible)
         {
             int i = getMetadataWithOffset(Block.ladder.blockID, 3);
             placeBlockAtCurrentPosition(par1World, Block.ladder.blockID, i, 3, 1, 3, par3StructureBoundingBox);

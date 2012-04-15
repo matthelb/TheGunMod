@@ -34,9 +34,13 @@ public class ModelSquid extends ModelBase
      */
     public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6)
     {
-        for (int i = 0; i < squidTentacles.length; i++)
+        ModelRenderer amodelrenderer[] = squidTentacles;
+        int i = amodelrenderer.length;
+
+        for (int j = 0; j < i; j++)
         {
-            squidTentacles[i].rotateAngleX = par3;
+            ModelRenderer modelrenderer = amodelrenderer[j];
+            modelrenderer.rotateAngleX = par3;
         }
     }
 

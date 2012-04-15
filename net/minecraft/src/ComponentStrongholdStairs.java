@@ -6,8 +6,6 @@ import java.util.Random;
 public class ComponentStrongholdStairs extends ComponentStronghold
 {
     private final boolean field_35036_a;
-
-    /** 'randomly chosen opening type to use' */
     private final EnumDoor doorType;
 
     public ComponentStrongholdStairs(int par1, Random par2Random, int par3, int par4)
@@ -40,7 +38,7 @@ public class ComponentStrongholdStairs extends ComponentStronghold
     }
 
     /**
-     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     * Initiates construction of the Structure Component picked, at the current Location of StructGen
      */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
@@ -53,7 +51,7 @@ public class ComponentStrongholdStairs extends ComponentStronghold
     }
 
     /**
-     * 'performs some checks, then gives out a fresh Stairs component'
+     * performs some checks, then gives out a fresh Stairs component
      */
     public static ComponentStrongholdStairs getStrongholdStairsComponent(List par0List, Random par1Random, int par2, int par3, int par4, int par5, int par6)
     {
@@ -70,8 +68,8 @@ public class ComponentStrongholdStairs extends ComponentStronghold
     }
 
     /**
-     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
-     * the end, it adds Fences...'
+     * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...
      */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {

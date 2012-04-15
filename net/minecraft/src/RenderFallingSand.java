@@ -29,9 +29,9 @@ public class RenderFallingSand extends Render
             renderBlocks.blockAccess = world;
             Tessellator tessellator = Tessellator.instance;
             tessellator.startDrawingQuads();
-            tessellator.setTranslationD((float)(-MathHelper.floor_double(par1EntityFallingSand.posX)) - 0.5F, (float)(-MathHelper.floor_double(par1EntityFallingSand.posY)) - 0.5F, (float)(-MathHelper.floor_double(par1EntityFallingSand.posZ)) - 0.5F);
+            tessellator.setTranslation((float)(-MathHelper.floor_double(par1EntityFallingSand.posX)) - 0.5F, (float)(-MathHelper.floor_double(par1EntityFallingSand.posY)) - 0.5F, (float)(-MathHelper.floor_double(par1EntityFallingSand.posZ)) - 0.5F);
             renderBlocks.renderBlockByRenderType(block, MathHelper.floor_double(par1EntityFallingSand.posX), MathHelper.floor_double(par1EntityFallingSand.posY), MathHelper.floor_double(par1EntityFallingSand.posZ));
-            tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
+            tessellator.setTranslation(0.0D, 0.0D, 0.0D);
             tessellator.draw();
         }
         else

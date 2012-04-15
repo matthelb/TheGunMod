@@ -4,17 +4,17 @@ import java.util.*;
 
 public class EntityAIMoveThroughVillage extends EntityAIBase
 {
-    private EntityCreature field_48292_a;
+    private EntityCreature theEntity;
     private float field_48290_b;
     private PathEntity field_48291_c;
-    private VillageDoorInfo field_48288_d;
+    private VillageDoorInfo doorInfo;
     private boolean field_48289_e;
-    private List field_48287_f;
+    private List doorList;
 
     public EntityAIMoveThroughVillage(EntityCreature par1EntityCreature, float par2, boolean par3)
     {
-        field_48287_f = new ArrayList();
-        field_48292_a = par1EntityCreature;
+        doorList = new ArrayList();
+        theEntity = par1EntityCreature;
         field_48290_b = par2;
         field_48289_e = par3;
         setMutexBits(1);
@@ -27,36 +27,36 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
     {
         func_48286_h();
 
-        if (field_48289_e && field_48292_a.worldObj.isDaytime())
+        if (field_48289_e && theEntity.worldObj.isDaytime())
         {
             return false;
         }
 
-        Village village = field_48292_a.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(field_48292_a.posX), MathHelper.floor_double(field_48292_a.posY), MathHelper.floor_double(field_48292_a.posZ), 0);
+        Village village = theEntity.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(theEntity.posX), MathHelper.floor_double(theEntity.posY), MathHelper.floor_double(theEntity.posZ), 0);
 
         if (village == null)
         {
             return false;
         }
 
-        field_48288_d = func_48284_a(village);
+        doorInfo = func_48284_a(village);
 
-        if (field_48288_d == null)
+        if (doorInfo == null)
         {
             return false;
         }
 
-        boolean flag = field_48292_a.getNavigator().func_48665_b();
-        field_48292_a.getNavigator().func_48673_b(false);
-        field_48291_c = field_48292_a.getNavigator().func_48671_a(field_48288_d.posX, field_48288_d.posY, field_48288_d.posZ);
-        field_48292_a.getNavigator().func_48673_b(flag);
+        boolean flag = theEntity.getNavigator().getCanBreakDoors();
+        theEntity.getNavigator().setBreakDoors(false);
+        field_48291_c = theEntity.getNavigator().getPathToXYZ(doorInfo.posX, doorInfo.posY, doorInfo.posZ);
+        theEntity.getNavigator().setBreakDoors(flag);
 
         if (field_48291_c != null)
         {
             return true;
         }
 
-        Vec3D vec3d = RandomPositionGenerator.func_48620_a(field_48292_a, 10, 7, Vec3D.createVector(field_48288_d.posX, field_48288_d.posY, field_48288_d.posZ));
+        Vec3D vec3d = RandomPositionGenerator.func_48620_a(theEntity, 10, 7, Vec3D.createVector(doorInfo.posX, doorInfo.posY, doorInfo.posZ));
 
         if (vec3d == null)
         {
@@ -64,9 +64,9 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
         }
         else
         {
-            field_48292_a.getNavigator().func_48673_b(false);
-            field_48291_c = field_48292_a.getNavigator().func_48671_a(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord);
-            field_48292_a.getNavigator().func_48673_b(flag);
+            theEntity.getNavigator().setBreakDoors(false);
+            field_48291_c = theEntity.getNavigator().getPathToXYZ(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord);
+            theEntity.getNavigator().setBreakDoors(flag);
             return field_48291_c != null;
         }
     }
@@ -76,14 +76,14 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        if (field_48292_a.getNavigator().noPath())
+        if (theEntity.getNavigator().noPath())
         {
             return false;
         }
         else
         {
-            float f = field_48292_a.width + 4F;
-            return field_48292_a.getDistanceSq(field_48288_d.posX, field_48288_d.posY, field_48288_d.posZ) > (double)(f * f);
+            float f = theEntity.width + 4F;
+            return theEntity.getDistanceSq(doorInfo.posX, doorInfo.posY, doorInfo.posZ) > (double)(f * f);
         }
     }
 
@@ -92,7 +92,7 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48292_a.getNavigator().setPath(field_48291_c, field_48290_b);
+        theEntity.getNavigator().setPath(field_48291_c, field_48290_b);
     }
 
     /**
@@ -100,9 +100,9 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
      */
     public void resetTask()
     {
-        if (field_48292_a.getNavigator().noPath() || field_48292_a.getDistanceSq(field_48288_d.posX, field_48288_d.posY, field_48288_d.posZ) < 16D)
+        if (theEntity.getNavigator().noPath() || theEntity.getDistanceSq(doorInfo.posX, doorInfo.posY, doorInfo.posZ) < 16D)
         {
-            field_48287_f.add(field_48288_d);
+            doorList.add(doorInfo);
         }
     }
 
@@ -121,7 +121,7 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
             }
 
             VillageDoorInfo villagedoorinfo1 = (VillageDoorInfo)iterator.next();
-            int j = villagedoorinfo1.getDistanceSquared(MathHelper.floor_double(field_48292_a.posX), MathHelper.floor_double(field_48292_a.posY), MathHelper.floor_double(field_48292_a.posZ));
+            int j = villagedoorinfo1.getDistanceSquared(MathHelper.floor_double(theEntity.posX), MathHelper.floor_double(theEntity.posY), MathHelper.floor_double(theEntity.posZ));
 
             if (j < i && !func_48285_a(villagedoorinfo1))
             {
@@ -136,7 +136,7 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
 
     private boolean func_48285_a(VillageDoorInfo par1VillageDoorInfo)
     {
-        for (Iterator iterator = field_48287_f.iterator(); iterator.hasNext();)
+        for (Iterator iterator = doorList.iterator(); iterator.hasNext();)
         {
             VillageDoorInfo villagedoorinfo = (VillageDoorInfo)iterator.next();
 
@@ -151,9 +151,9 @@ public class EntityAIMoveThroughVillage extends EntityAIBase
 
     private void func_48286_h()
     {
-        if (field_48287_f.size() > 15)
+        if (doorList.size() > 15)
         {
-            field_48287_f.remove(0);
+            doorList.remove(0);
         }
     }
 }

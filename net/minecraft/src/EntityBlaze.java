@@ -72,7 +72,7 @@ public class EntityBlaze extends EntityMob
         super.onDeath(par1DamageSource);
     }
 
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
         return 0xf000f0;
     }
@@ -80,7 +80,7 @@ public class EntityBlaze extends EntityMob
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         return 1.0F;
     }

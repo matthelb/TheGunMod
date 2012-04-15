@@ -553,9 +553,9 @@ public class Tessellator
     }
 
     /**
-     * Sets the translation for all vertices in the current draw call. (D suffix indicates double parameters)
+     * Sets the translation for all vertices in the current draw call.
      */
-    public void setTranslationD(double par1, double par3, double par5)
+    public void setTranslation(double par1, double par3, double par5)
     {
         xOffset = par1;
         yOffset = par3;
@@ -563,9 +563,9 @@ public class Tessellator
     }
 
     /**
-     * Sets the translation for all vertices in the current draw call. (F suffix indicates float parameters)
+     * Offsets the translation for all vertices in the current draw call.
      */
-    public void setTranslationF(float par1, float par2, float par3)
+    public void addTranslation(float par1, float par2, float par3)
     {
         xOffset += par1;
         yOffset += par2;

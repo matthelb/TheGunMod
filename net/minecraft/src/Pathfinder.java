@@ -282,7 +282,9 @@ public class PathFinder
     }
 
     /**
-     * Given an x y z, returns a vertical offset needed to search to find a block to stand on
+     * Checks if an entity collides with blocks at a position. Returns 1 if clear, 0 for colliding with any solid block,
+     * -1 for water(if avoiding water) but otherwise clear, -2 for lava, -3 for fence, -4 for closed trapdoor, 2 if
+     * otherwise clear except for open trapdoor or water(if not avoiding)
      */
     private int getVerticalOffset(Entity par1Entity, int par2, int par3, int par4, PathPoint par5PathPoint)
     {

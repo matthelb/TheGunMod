@@ -208,9 +208,6 @@ public class BlockPistonMoving extends BlockContainer
         }
     }
 
-    /**
-     * gets the axis-alignedbb of this piston
-     */
     public AxisAlignedBB getAxisAlignedBB(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
         if (par5 == 0 || par5 == blockID)

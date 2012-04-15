@@ -152,8 +152,6 @@ public class ModelBiped extends ModelBase
         if (isSneak)
         {
             bipedBody.rotateAngleX = 0.5F;
-            bipedRightLeg.rotateAngleX -= 0.0F;
-            bipedLeftLeg.rotateAngleX -= 0.0F;
             bipedRightArm.rotateAngleX += 0.4F;
             bipedLeftArm.rotateAngleX += 0.4F;
             bipedRightLeg.rotationPointZ = 4F;

@@ -59,7 +59,7 @@ public class EntityFootStepFX extends EntityFX
 
         if (field_27018_a == field_27020_o)
         {
-            setEntityDead();
+            setDead();
         }
     }
 

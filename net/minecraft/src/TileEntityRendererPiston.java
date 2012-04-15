@@ -35,7 +35,7 @@ public class TileEntityRendererPiston extends TileEntitySpecialRenderer
             }
 
             tessellator.startDrawingQuads();
-            tessellator.setTranslationD(((float)par2 - (float)par1TileEntityPiston.xCoord) + par1TileEntityPiston.getOffsetX(par8), ((float)par4 - (float)par1TileEntityPiston.yCoord) + par1TileEntityPiston.getOffsetY(par8), ((float)par6 - (float)par1TileEntityPiston.zCoord) + par1TileEntityPiston.getOffsetZ(par8));
+            tessellator.setTranslation(((float)par2 - (float)par1TileEntityPiston.xCoord) + par1TileEntityPiston.getOffsetX(par8), ((float)par4 - (float)par1TileEntityPiston.yCoord) + par1TileEntityPiston.getOffsetY(par8), ((float)par6 - (float)par1TileEntityPiston.zCoord) + par1TileEntityPiston.getOffsetZ(par8));
             tessellator.setColorOpaque(1, 1, 1);
 
             if (block == Block.pistonExtension && par1TileEntityPiston.getProgress(par8) < 0.5F)
@@ -47,7 +47,7 @@ public class TileEntityRendererPiston extends TileEntitySpecialRenderer
                 Block.pistonExtension.setHeadTexture(((BlockPistonBase)block).getPistonExtensionTexture());
                 blockRenderer.renderPistonExtensionAllFaces(Block.pistonExtension, par1TileEntityPiston.xCoord, par1TileEntityPiston.yCoord, par1TileEntityPiston.zCoord, par1TileEntityPiston.getProgress(par8) < 0.5F);
                 Block.pistonExtension.clearHeadTexture();
-                tessellator.setTranslationD((float)par2 - (float)par1TileEntityPiston.xCoord, (float)par4 - (float)par1TileEntityPiston.yCoord, (float)par6 - (float)par1TileEntityPiston.zCoord);
+                tessellator.setTranslation((float)par2 - (float)par1TileEntityPiston.xCoord, (float)par4 - (float)par1TileEntityPiston.yCoord, (float)par6 - (float)par1TileEntityPiston.zCoord);
                 blockRenderer.renderPistonBaseAllFaces(block, par1TileEntityPiston.xCoord, par1TileEntityPiston.yCoord, par1TileEntityPiston.zCoord);
             }
             else
@@ -55,7 +55,7 @@ public class TileEntityRendererPiston extends TileEntitySpecialRenderer
                 blockRenderer.renderBlockAllFaces(block, par1TileEntityPiston.xCoord, par1TileEntityPiston.yCoord, par1TileEntityPiston.zCoord);
             }
 
-            tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
+            tessellator.setTranslation(0.0D, 0.0D, 0.0D);
             tessellator.draw();
             RenderHelper.enableStandardItemLighting();
         }

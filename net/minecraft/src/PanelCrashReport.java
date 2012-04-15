@@ -29,7 +29,7 @@ public class PanelCrashReport extends Panel
         {
             s2 = (new StringBuilder(String.valueOf(s2))).append("Generated ").append((new SimpleDateFormat()).format(new Date())).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("\n").toString();
-            s2 = (new StringBuilder(String.valueOf(s2))).append("Minecraft: Minecraft 1.2.3\n").toString();
+            s2 = (new StringBuilder(String.valueOf(s2))).append("Minecraft: Minecraft 1.2.5\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("OS: ").append(System.getProperty("os.name")).append(" (").append(System.getProperty("os.arch")).append(") version ").append(System.getProperty("os.version")).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("Java: ").append(System.getProperty("java.version")).append(", ").append(System.getProperty("java.vendor")).append("\n").toString();
             s2 = (new StringBuilder(String.valueOf(s2))).append("VM: ").append(System.getProperty("java.vm.name")).append(" (").append(System.getProperty("java.vm.info")).append("), ").append(System.getProperty("java.vm.vendor")).append("\n").toString();
@@ -46,7 +46,7 @@ public class PanelCrashReport extends Panel
         s2 = (new StringBuilder(String.valueOf(s2))).append(s).toString();
         String s3 = "";
         s3 = (new StringBuilder(String.valueOf(s3))).append("Mods loaded: ").append(ModLoader.getLoadedMods().size() + 1).append("\n").toString();
-        s3 = (new StringBuilder(String.valueOf(s3))).append("ModLoader 1.2.3").append("\n").toString();
+        s3 = (new StringBuilder(String.valueOf(s3))).append("ModLoader 1.2.5").append("\n").toString();
 
         for (Iterator iterator = ModLoader.getLoadedMods().iterator(); iterator.hasNext();)
         {

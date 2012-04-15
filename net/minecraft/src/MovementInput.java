@@ -11,7 +11,6 @@ public class MovementInput
      * The speed at which the player is moving forward. Negative numbers will move backwards.
      */
     public float moveForward;
-    public boolean field_1177_c;
     public boolean jump;
     public boolean sneak;
 
@@ -19,12 +18,11 @@ public class MovementInput
     {
         moveStrafe = 0.0F;
         moveForward = 0.0F;
-        field_1177_c = false;
         jump = false;
         sneak = false;
     }
 
-    public void updatePlayerMoveState(EntityPlayer entityplayer)
+    public void updatePlayerMoveState()
     {
     }
 }

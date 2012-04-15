@@ -56,7 +56,7 @@ public class EntityNoteFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
 
         moveEntity(motionX, motionY, motionZ);

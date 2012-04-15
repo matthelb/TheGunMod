@@ -74,15 +74,15 @@ public class ModelBox
         quadList[1] = new TexturedQuad(new PositionTextureVertex[]
                 {
                     positiontexturevertex, positiontexturevertex4, positiontexturevertex7, positiontexturevertex3
-                }, par2 + 0, par3 + par9, par2 + par9, par3 + par9 + par8, par1ModelRenderer.textureWidth, par1ModelRenderer.textureHeight);
+                }, par2, par3 + par9, par2 + par9, par3 + par9 + par8, par1ModelRenderer.textureWidth, par1ModelRenderer.textureHeight);
         quadList[2] = new TexturedQuad(new PositionTextureVertex[]
                 {
                     positiontexturevertex5, positiontexturevertex4, positiontexturevertex, positiontexturevertex1
-                }, par2 + par9, par3 + 0, par2 + par9 + par7, par3 + par9, par1ModelRenderer.textureWidth, par1ModelRenderer.textureHeight);
+                }, par2 + par9, par3, par2 + par9 + par7, par3 + par9, par1ModelRenderer.textureWidth, par1ModelRenderer.textureHeight);
         quadList[3] = new TexturedQuad(new PositionTextureVertex[]
                 {
                     positiontexturevertex2, positiontexturevertex3, positiontexturevertex7, positiontexturevertex6
-                }, par2 + par9 + par7, par3 + par9, par2 + par9 + par7 + par7, par3 + 0, par1ModelRenderer.textureWidth, par1ModelRenderer.textureHeight);
+                }, par2 + par9 + par7, par3 + par9, par2 + par9 + par7 + par7, par3, par1ModelRenderer.textureWidth, par1ModelRenderer.textureHeight);
         quadList[4] = new TexturedQuad(new PositionTextureVertex[]
                 {
                     positiontexturevertex1, positiontexturevertex, positiontexturevertex3, positiontexturevertex2

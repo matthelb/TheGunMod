@@ -4,13 +4,13 @@ import java.util.Random;
 
 public class EntityAILookAtVillager extends EntityAIBase
 {
-    private EntityIronGolem field_48406_a;
-    private EntityVillager field_48404_b;
+    private EntityIronGolem theGolem;
+    private EntityVillager theVillager;
     private int field_48405_c;
 
     public EntityAILookAtVillager(EntityIronGolem par1EntityIronGolem)
     {
-        field_48406_a = par1EntityIronGolem;
+        theGolem = par1EntityIronGolem;
         setMutexBits(3);
     }
 
@@ -19,19 +19,19 @@ public class EntityAILookAtVillager extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (!field_48406_a.worldObj.isDaytime())
+        if (!theGolem.worldObj.isDaytime())
         {
             return false;
         }
 
-        if (field_48406_a.getRNG().nextInt(8000) != 0)
+        if (theGolem.getRNG().nextInt(8000) != 0)
         {
             return false;
         }
         else
         {
-            field_48404_b = (EntityVillager)field_48406_a.worldObj.findNearestEntityWithinAABB(net.minecraft.src.EntityVillager.class, field_48406_a.boundingBox.expand(6D, 2D, 6D), field_48406_a);
-            return field_48404_b != null;
+            theVillager = (EntityVillager)theGolem.worldObj.findNearestEntityWithinAABB(net.minecraft.src.EntityVillager.class, theGolem.boundingBox.expand(6D, 2D, 6D), theGolem);
+            return theVillager != null;
         }
     }
 
@@ -49,7 +49,7 @@ public class EntityAILookAtVillager extends EntityAIBase
     public void startExecuting()
     {
         field_48405_c = 400;
-        field_48406_a.func_48116_a(true);
+        theGolem.func_48116_a(true);
     }
 
     /**
@@ -57,8 +57,8 @@ public class EntityAILookAtVillager extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48406_a.func_48116_a(false);
-        field_48404_b = null;
+        theGolem.func_48116_a(false);
+        theVillager = null;
     }
 
     /**
@@ -66,7 +66,7 @@ public class EntityAILookAtVillager extends EntityAIBase
      */
     public void updateTask()
     {
-        field_48406_a.getLookHelper().setLookPositionWithEntity(field_48404_b, 30F, 30F);
+        theGolem.getLookHelper().setLookPositionWithEntity(theVillager, 30F, 30F);
         field_48405_c--;
     }
 }

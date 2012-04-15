@@ -205,7 +205,7 @@ public class TileEntity
     }
 
     /**
-     * causes the TileEntity to reset all it's cached values for it's container block, blockID, metaData and in the case
+     * Causes the TileEntity to reset all it's cached values for it's container block, blockID, metaData and in the case
      * of chests, the adjcacent chest check
      */
     public void updateContainingBlockInfo()

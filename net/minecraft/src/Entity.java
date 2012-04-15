@@ -71,8 +71,6 @@ public abstract class Entity
      * True if after a move this entity has collided with something either vertically or horizontally
      */
     public boolean isCollided;
-
-    /** Not used by client. Server sends Packet28EntityVelocity if set */
     public boolean velocityChanged;
     protected boolean isInWeb;
     public boolean field_9293_aM;
@@ -148,8 +146,6 @@ public abstract class Entity
      */
     protected boolean inWater;
     public int heartsLife;
-
-    /** Whether or not the entity is on its first update. */
     private boolean firstUpdate;
 
     /** downloadable location of player's skin */
@@ -274,9 +270,9 @@ public abstract class Entity
     }
 
     /**
-     * Will get destroyed next tick
+     * Will get destroyed next tick.
      */
-    public void setEntityDead()
+    public void setDead()
     {
         isDead = true;
     }
@@ -497,7 +493,7 @@ public abstract class Entity
      */
     protected void kill()
     {
-        setEntityDead();
+        setDead();
     }
 
     /**
@@ -590,6 +586,38 @@ public abstract class Entity
                 {
                     par5 += d5;
                 }
+            }
+
+            while (par1 != 0.0D && par5 != 0.0D && worldObj.getCollidingBoundingBoxes(this, boundingBox.getOffsetBoundingBox(par1, -1D, par5)).size() == 0)
+            {
+                if (par1 < d5 && par1 >= -d5)
+                {
+                    par1 = 0.0D;
+                }
+                else if (par1 > 0.0D)
+                {
+                    par1 -= d5;
+                }
+                else
+                {
+                    par1 += d5;
+                }
+
+                if (par5 < d5 && par5 >= -d5)
+                {
+                    par5 = 0.0D;
+                }
+                else if (par5 > 0.0D)
+                {
+                    par5 -= d5;
+                }
+                else
+                {
+                    par5 += d5;
+                }
+
+                d2 = par1;
+                d4 = par5;
             }
         }
 
@@ -1009,7 +1037,7 @@ public abstract class Entity
         motionZ += par2 * f2 + par1 * f1;
     }
 
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posZ);
@@ -1029,7 +1057,7 @@ public abstract class Entity
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posZ);
@@ -1258,9 +1286,9 @@ public abstract class Entity
     }
 
     /**
-     * returns the directory and filename as a String
+     * Returns the texture's file path as a String.
      */
-    public String getEntityTexture()
+    public String getTexture()
     {
         return null;
     }
@@ -1386,7 +1414,7 @@ public abstract class Entity
     }
 
     /**
-     * creates a NBT list from the array of floats passed to this function
+     * Returns a new NBTTagList filled with the specified floats
      */
     protected NBTTagList newFloatNBTList(float par1ArrayOfFloat[])
     {
@@ -1733,7 +1761,7 @@ public abstract class Entity
     }
 
     /**
-     * Sets the player's sprinting state.
+     * Set sprinting switch for Entity.
      */
     public void setSprinting(boolean par1)
     {
@@ -1907,7 +1935,7 @@ public abstract class Entity
     }
 
     /**
-     * Sets isInWeb to true
+     * Sets the Entity inside a web block.
      */
     public void setInWeb()
     {

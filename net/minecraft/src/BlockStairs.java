@@ -142,7 +142,7 @@ public class BlockStairs extends Block
     }
 
     /**
-     * 'Goes straight to getLightBrightnessForSkyBlocks for Blocks, does some fancy computing for Fluids'
+     * Goes straight to getLightBrightnessForSkyBlocks for Blocks, does some fancy computing for Fluids
      */
     public int getMixedBrightnessForBlock(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
@@ -288,8 +288,7 @@ public class BlockStairs extends Block
     }
 
     /**
-     * Called when a block is placed by using an ItemStack from inventory and passed in who placed it. Args:
-     * x,y,z,entityliving
+     * Called when the block is placed in the world.
      */
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {

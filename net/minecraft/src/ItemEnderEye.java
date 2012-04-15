@@ -189,7 +189,7 @@ public class ItemEnderEye extends Item
                 par2World.playSoundAtEntity(par3EntityPlayer, "random.bow", 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
                 par2World.playAuxSFXAtEntity(null, 1002, (int)par3EntityPlayer.posX, (int)par3EntityPlayer.posY, (int)par3EntityPlayer.posZ, 0);
 
-                if (!par3EntityPlayer.capabilities.depleteBuckets)
+                if (!par3EntityPlayer.capabilities.isCreativeMode)
                 {
                     par1ItemStack.stackSize--;
                 }

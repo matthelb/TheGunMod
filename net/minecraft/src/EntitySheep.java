@@ -46,22 +46,24 @@ public class EntitySheep extends EntityAnimal
      * tick.
      */
     private int sheepTimer;
-    private EntityAIEatGrass field_48137_c;
+
+    /** The eat grass AI task for this mob. */
+    private EntityAIEatGrass aiEatGrass;
 
     public EntitySheep(World par1World)
     {
         super(par1World);
-        field_48137_c = new EntityAIEatGrass(this);
+        aiEatGrass = new EntityAIEatGrass(this);
         texture = "/mob/sheep.png";
         setSize(0.9F, 1.3F);
         float f = 0.23F;
-        getNavigator().func_48664_a(true);
+        getNavigator().setAvoidsWater(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIPanic(this, 0.38F));
         tasks.addTask(2, new EntityAIMate(this, f));
         tasks.addTask(3, new EntityAITempt(this, 0.25F, Item.wheat.shiftedIndex, false));
         tasks.addTask(4, new EntityAIFollowParent(this, 0.25F));
-        tasks.addTask(5, field_48137_c);
+        tasks.addTask(5, aiEatGrass);
         tasks.addTask(6, new EntityAIWander(this, f));
         tasks.addTask(7, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 6F));
         tasks.addTask(8, new EntityAILookIdle(this));
@@ -77,7 +79,7 @@ public class EntitySheep extends EntityAnimal
 
     protected void updateAITasks()
     {
-        sheepTimer = field_48137_c.func_48396_h();
+        sheepTimer = aiEatGrass.func_48396_h();
         super.updateAITasks();
     }
 
@@ -336,7 +338,11 @@ public class EntitySheep extends EntityAnimal
         return entitysheep1;
     }
 
-    public void func_48095_u()
+    /**
+     * This function applies the benefits of growing back wool and faster growing up to the acting entity. (This
+     * function is used in the AIEatGrass)
+     */
+    public void eatGrassBonus()
     {
         setSheared(false);
 

@@ -8,7 +8,8 @@ import org.lwjgl.util.glu.GLU;
 
 public class GuiEnchantment extends GuiContainer
 {
-    private static ModelBook field_40220_w = new ModelBook();
+    /** The book model used on the GUI. */
+    private static ModelBook bookModel = new ModelBook();
     private Random field_40230_x;
 
     /** ContainerEnchantment object associated with this gui */
@@ -136,7 +137,7 @@ public class GuiEnchantment extends GuiContainer
         }
 
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
-        field_40220_w.render(null, 0.0F, f3, f4, f2, 0.0F, 0.0625F);
+        bookModel.render(null, 0.0F, f3, f4, f2, 0.0F, 0.0625F);
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
         RenderHelper.disableStandardItemLighting();
         GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -147,11 +148,11 @@ public class GuiEnchantment extends GuiContainer
         RenderHelper.disableStandardItemLighting();
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         mc.renderEngine.bindTexture(i);
-        EnchantmentNameParts.field_40253_a.func_40250_a(containerEnchantment.nameSeed);
+        EnchantmentNameParts.instance.setRandSeed(containerEnchantment.nameSeed);
 
         for (int l = 0; l < 3; l++)
         {
-            String s = EnchantmentNameParts.field_40253_a.func_40249_a();
+            String s = EnchantmentNameParts.instance.generateRandomEnchantName();
             zLevel = 0.0F;
             mc.renderEngine.bindTexture(i);
             int i1 = containerEnchantment.enchantLevels[l];
@@ -167,7 +168,7 @@ public class GuiEnchantment extends GuiContainer
             FontRenderer fontrenderer = mc.standardGalacticFontRenderer;
             int j1 = 0x685e4a;
 
-            if (mc.thePlayer.experienceLevel < i1 && !mc.thePlayer.capabilities.depleteBuckets)
+            if (mc.thePlayer.experienceLevel < i1 && !mc.thePlayer.capabilities.isCreativeMode)
             {
                 drawTexturedModalRect(j + 60, k + 14 + 19 * l, 0, 185, 108, 19);
                 fontrenderer.drawSplitString(s, j + 62, k + 16 + 19 * l, 104, (j1 & 0xfefefe) >> 1);

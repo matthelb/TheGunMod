@@ -22,7 +22,7 @@ public class EntityAIBreakDoor extends EntityAIDoorInteract
         }
         else
         {
-            return !field_48322_e.func_48213_h(field_48325_a.worldObj, field_48323_b, field_48324_c, field_48321_d);
+            return !targetDoor.func_48213_h(theEntity.worldObj, entityPosX, entityPosY, entityPosZ);
         }
     }
 
@@ -40,8 +40,8 @@ public class EntityAIBreakDoor extends EntityAIDoorInteract
      */
     public boolean continueExecuting()
     {
-        double d = field_48325_a.getDistanceSq(field_48323_b, field_48324_c, field_48321_d);
-        return field_48329_i >= 0 && !field_48322_e.func_48213_h(field_48325_a.worldObj, field_48323_b, field_48324_c, field_48321_d) && d < 4D;
+        double d = theEntity.getDistanceSq(entityPosX, entityPosY, entityPosZ);
+        return field_48329_i >= 0 && !targetDoor.func_48213_h(theEntity.worldObj, entityPosX, entityPosY, entityPosZ) && d < 4D;
     }
 
     /**
@@ -51,16 +51,16 @@ public class EntityAIBreakDoor extends EntityAIDoorInteract
     {
         super.updateTask();
 
-        if (field_48325_a.getRNG().nextInt(20) == 0)
+        if (theEntity.getRNG().nextInt(20) == 0)
         {
-            field_48325_a.worldObj.playAuxSFX(1010, field_48323_b, field_48324_c, field_48321_d, 0);
+            theEntity.worldObj.playAuxSFX(1010, entityPosX, entityPosY, entityPosZ, 0);
         }
 
-        if (--field_48329_i == 0 && field_48325_a.worldObj.difficultySetting == 3)
+        if (--field_48329_i == 0 && theEntity.worldObj.difficultySetting == 3)
         {
-            field_48325_a.worldObj.setBlockWithNotify(field_48323_b, field_48324_c, field_48321_d, 0);
-            field_48325_a.worldObj.playAuxSFX(1012, field_48323_b, field_48324_c, field_48321_d, 0);
-            field_48325_a.worldObj.playAuxSFX(2001, field_48323_b, field_48324_c, field_48321_d, field_48322_e.blockID);
+            theEntity.worldObj.setBlockWithNotify(entityPosX, entityPosY, entityPosZ, 0);
+            theEntity.worldObj.playAuxSFX(1012, entityPosX, entityPosY, entityPosZ, 0);
+            theEntity.worldObj.playAuxSFX(2001, entityPosX, entityPosY, entityPosZ, targetDoor.blockID);
         }
     }
 }

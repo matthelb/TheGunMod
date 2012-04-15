@@ -15,7 +15,7 @@ public class ItemSnowball extends Item
      */
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        if (!par3EntityPlayer.capabilities.depleteBuckets)
+        if (!par3EntityPlayer.capabilities.isCreativeMode)
         {
             par1ItemStack.stackSize--;
         }

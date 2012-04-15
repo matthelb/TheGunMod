@@ -123,9 +123,9 @@ public class WorldClient extends World
         {
             ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair)iterator.next();
             int i = chunkcoordintpair.chunkXPos * 16;
-            int j = chunkcoordintpair.chunkZPos * 16;
+            int j = chunkcoordintpair.chunkZPosition * 16;
             Profiler.startSection("getChunk");
-            Chunk chunk = getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
+            Chunk chunk = getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPosition);
             func_48458_a(i, j, chunk);
         }
     }
@@ -179,7 +179,8 @@ public class WorldClient extends World
     }
 
     /**
-     * Not sure what this does 100%, but from the calling methods this method should be called like this.
+     * Dismounts the entity (and anything riding the entity), sets the dead flag, and removes the player entity from the
+     * player entity list. Called by the playerLoggedOut function.
      */
     public void setEntityDead(Entity par1Entity)
     {
@@ -209,7 +210,14 @@ public class WorldClient extends World
 
         if (entityList.contains(par1Entity))
         {
-            entitySpawnQueue.add(par1Entity);
+            if (par1Entity.isEntityAlive())
+            {
+                entitySpawnQueue.add(par1Entity);
+            }
+            else
+            {
+                entityList.remove(par1Entity);
+            }
         }
     }
 
@@ -257,36 +265,6 @@ public class WorldClient extends World
         return entity;
     }
 
-    /**
-     * Set the metadata of a block in global coordinates
-     */
-    public boolean setBlockMetadata(int par1, int par2, int par3, int par4)
-    {
-        int i = getBlockId(par1, par2, par3);
-        int j = getBlockMetadata(par1, par2, par3);
-        return super.setBlockMetadata(par1, par2, par3, par4);
-    }
-
-    /**
-     * Sets the block ID and metadata of a block in global coordinates
-     */
-    public boolean setBlockAndMetadata(int par1, int par2, int par3, int par4, int par5)
-    {
-        int i = getBlockId(par1, par2, par3);
-        int j = getBlockMetadata(par1, par2, par3);
-        return super.setBlockAndMetadata(par1, par2, par3, par4, par5);
-    }
-
-    /**
-     * Sets the block to the specified blockID at the block coordinates Args x, y, z, blockID
-     */
-    public boolean setBlock(int par1, int par2, int par3, int par4)
-    {
-        int i = getBlockId(par1, par2, par3);
-        int j = getBlockMetadata(par1, par2, par3);
-        return super.setBlock(par1, par2, par3, par4);
-    }
-
     public boolean setBlockAndMetadataAndInvalidate(int par1, int par2, int par3, int par4, int par5)
     {
         invalidateBlockReceiveRegion(par1, par2, par3, par1, par2, par3);
@@ -302,7 +280,7 @@ public class WorldClient extends World
     }
 
     /**
-     * update's all weather states.
+     * Updates all weather states.
      */
     protected void updateWeather()
     {

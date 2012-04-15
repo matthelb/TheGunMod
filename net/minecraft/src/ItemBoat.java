@@ -82,7 +82,7 @@ public class ItemBoat extends Item
                 par2World.spawnEntityInWorld(new EntityBoat(par2World, (float)i + 0.5F, (float)j + 1.0F, (float)k + 0.5F));
             }
 
-            if (!par3EntityPlayer.capabilities.depleteBuckets)
+            if (!par3EntityPlayer.capabilities.isCreativeMode)
             {
                 par1ItemStack.stackSize--;
             }

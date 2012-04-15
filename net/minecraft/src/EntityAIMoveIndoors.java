@@ -5,14 +5,14 @@ import java.util.Random;
 public class EntityAIMoveIndoors extends EntityAIBase
 {
     private EntityCreature entityObj;
-    private VillageDoorInfo field_48254_b;
-    private int field_48255_c;
-    private int field_48253_d;
+    private VillageDoorInfo doorInfo;
+    private int insidePosX;
+    private int insidePosZ;
 
     public EntityAIMoveIndoors(EntityCreature par1EntityCreature)
     {
-        field_48255_c = -1;
-        field_48253_d = -1;
+        insidePosX = -1;
+        insidePosZ = -1;
         entityObj = par1EntityCreature;
         setMutexBits(1);
     }
@@ -32,7 +32,7 @@ public class EntityAIMoveIndoors extends EntityAIBase
             return false;
         }
 
-        if (field_48255_c != -1 && entityObj.getDistanceSq(field_48255_c, entityObj.posY, field_48253_d) < 4D)
+        if (insidePosX != -1 && entityObj.getDistanceSq(insidePosX, entityObj.posY, insidePosZ) < 4D)
         {
             return false;
         }
@@ -45,8 +45,8 @@ public class EntityAIMoveIndoors extends EntityAIBase
         }
         else
         {
-            field_48254_b = village.findNearestDoorUnrestricted(MathHelper.floor_double(entityObj.posX), MathHelper.floor_double(entityObj.posY), MathHelper.floor_double(entityObj.posZ));
-            return field_48254_b != null;
+            doorInfo = village.findNearestDoorUnrestricted(MathHelper.floor_double(entityObj.posX), MathHelper.floor_double(entityObj.posY), MathHelper.floor_double(entityObj.posZ));
+            return doorInfo != null;
         }
     }
 
@@ -63,20 +63,20 @@ public class EntityAIMoveIndoors extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48255_c = -1;
+        insidePosX = -1;
 
-        if (entityObj.getDistanceSq(field_48254_b.getInsidePosX(), field_48254_b.posY, field_48254_b.getInsidePosZ()) > 256D)
+        if (entityObj.getDistanceSq(doorInfo.getInsidePosX(), doorInfo.posY, doorInfo.getInsidePosZ()) > 256D)
         {
-            Vec3D vec3d = RandomPositionGenerator.func_48620_a(entityObj, 14, 3, Vec3D.createVector((double)field_48254_b.getInsidePosX() + 0.5D, field_48254_b.getInsidePosY(), (double)field_48254_b.getInsidePosZ() + 0.5D));
+            Vec3D vec3d = RandomPositionGenerator.func_48620_a(entityObj, 14, 3, Vec3D.createVector((double)doorInfo.getInsidePosX() + 0.5D, doorInfo.getInsidePosY(), (double)doorInfo.getInsidePosZ() + 0.5D));
 
             if (vec3d != null)
             {
-                entityObj.getNavigator().func_48666_a(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, 0.3F);
+                entityObj.getNavigator().tryMoveToXYZ(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, 0.3F);
             }
         }
         else
         {
-            entityObj.getNavigator().func_48666_a((double)field_48254_b.getInsidePosX() + 0.5D, field_48254_b.getInsidePosY(), (double)field_48254_b.getInsidePosZ() + 0.5D, 0.3F);
+            entityObj.getNavigator().tryMoveToXYZ((double)doorInfo.getInsidePosX() + 0.5D, doorInfo.getInsidePosY(), (double)doorInfo.getInsidePosZ() + 0.5D, 0.3F);
         }
     }
 
@@ -85,8 +85,8 @@ public class EntityAIMoveIndoors extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48255_c = field_48254_b.getInsidePosX();
-        field_48253_d = field_48254_b.getInsidePosZ();
-        field_48254_b = null;
+        insidePosX = doorInfo.getInsidePosX();
+        insidePosZ = doorInfo.getInsidePosZ();
+        doorInfo = null;
     }
 }

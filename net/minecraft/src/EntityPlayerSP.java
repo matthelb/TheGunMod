@@ -186,7 +186,7 @@ public class EntityPlayerSP extends EntityPlayer
         boolean flag = movementInput.jump;
         float f = 0.8F;
         boolean flag1 = movementInput.moveForward >= f;
-        movementInput.updatePlayerMoveState(this);
+        movementInput.updatePlayerMoveState();
 
         if (isUsingItem())
         {
@@ -238,6 +238,7 @@ public class EntityPlayerSP extends EntityPlayer
             else
             {
                 capabilities.isFlying = !capabilities.isFlying;
+                func_50009_aI();
                 flyToggleTimer = 0;
             }
         }
@@ -260,24 +261,27 @@ public class EntityPlayerSP extends EntityPlayer
         if (onGround && capabilities.isFlying)
         {
             capabilities.isFlying = false;
+            func_50009_aI();
         }
     }
 
     public void travelToTheEnd(int par1)
     {
-        if (!worldObj.isRemote)
+        if (worldObj.isRemote)
         {
-            if (dimension == 1 && par1 == 1)
-            {
-                triggerAchievement(AchievementList.theEnd2);
-                mc.displayGuiScreen(new GuiWinGame());
-            }
-            else
-            {
-                triggerAchievement(AchievementList.theEnd);
-                mc.sndManager.playSoundFX("portal.travel", 1.0F, rand.nextFloat() * 0.4F + 0.8F);
-                mc.usePortal(1);
-            }
+            return;
+        }
+
+        if (dimension == 1 && par1 == 1)
+        {
+            triggerAchievement(AchievementList.theEnd2);
+            mc.displayGuiScreen(new GuiWinGame());
+        }
+        else
+        {
+            triggerAchievement(AchievementList.theEnd);
+            mc.sndManager.playSoundFX("portal.travel", 1.0F, rand.nextFloat() * 0.4F + 0.8F);
+            mc.usePortal(1);
         }
     }
 
@@ -396,7 +400,7 @@ public class EntityPlayerSP extends EntityPlayer
     }
 
     /**
-     * is called when the player performs a critical hit on the Entity. Args: entity that was hit critically
+     * Called when the player performs a critical hit on the Entity. Args: entity that was hit critically
      */
     public void onCriticalHit(Entity par1Entity)
     {
@@ -437,7 +441,7 @@ public class EntityPlayerSP extends EntityPlayer
      */
     public void setHealth(int par1)
     {
-        int i = getEntityHealth() - par1;
+        int i = getHealth() - par1;
 
         if (i <= 0)
         {
@@ -451,7 +455,7 @@ public class EntityPlayerSP extends EntityPlayer
         else
         {
             naturalArmorRating = i;
-            setEntityHealth(getEntityHealth());
+            setEntityHealth(getHealth());
             heartsLife = heartsHalvesLife;
             damageEntity(DamageSource.generic, i);
             hurtTime = maxHurtTime = 10;
@@ -581,20 +585,12 @@ public class EntityPlayerSP extends EntityPlayer
     }
 
     /**
-     * Sets the player's sprinting state.
+     * Set sprinting switch for Entity.
      */
     public void setSprinting(boolean par1)
     {
         super.setSprinting(par1);
-
-        if (!par1)
-        {
-            sprintingTicksLeft = 0;
-        }
-        else
-        {
-            sprintingTicksLeft = 600;
-        }
+        sprintingTicksLeft = par1 ? 600 : 0;
     }
 
     /**

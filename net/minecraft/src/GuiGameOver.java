@@ -7,7 +7,10 @@ import org.lwjgl.opengl.GL11;
 
 public class GuiGameOver extends GuiScreen
 {
-    private int field_48154_a;
+    /**
+     * The cooldown timer for the buttons, increases every tick and enables all buttons when reaching 20.
+     */
+    private int cooldownTimer;
 
     public GuiGameOver()
     {
@@ -54,35 +57,38 @@ public class GuiGameOver extends GuiScreen
      */
     protected void actionPerformed(GuiButton par1GuiButton)
     {
-        if (par1GuiButton.id != 0);
-
-        if (par1GuiButton.id == 1)
+        switch (par1GuiButton.id)
         {
-            if (mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
-            {
-                World world = mc.theWorld;
-                mc.exitToMainMenu("Deleting world");
-                ISaveFormat isaveformat = mc.getSaveLoader();
-                isaveformat.flushCache();
-                isaveformat.deleteWorldDirectory(world.getSaveHandler().getSaveDirectoryName());
+            default:
+                break;
+
+            case 1:
+                if (mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
+                {
+                    String s = mc.theWorld.getSaveHandler().getSaveDirectoryName();
+                    mc.exitToMainMenu("Deleting world");
+                    ISaveFormat isaveformat = mc.getSaveLoader();
+                    isaveformat.flushCache();
+                    isaveformat.deleteWorldDirectory(s);
+                    mc.displayGuiScreen(new GuiMainMenu());
+                }
+                else
+                {
+                    mc.thePlayer.respawnPlayer();
+                    mc.displayGuiScreen(null);
+                }
+
+                break;
+
+            case 2:
+                if (mc.isMultiplayerWorld())
+                {
+                    mc.theWorld.sendQuittingDisconnectingPacket();
+                }
+
+                mc.changeWorld1(null);
                 mc.displayGuiScreen(new GuiMainMenu());
-            }
-            else
-            {
-                mc.thePlayer.respawnPlayer();
-                mc.displayGuiScreen(null);
-            }
-        }
-
-        if (par1GuiButton.id == 2)
-        {
-            if (mc.isMultiplayerWorld())
-            {
-                mc.theWorld.sendQuittingDisconnectingPacket();
-            }
-
-            mc.changeWorld1(null);
-            mc.displayGuiScreen(new GuiMainMenu());
+                break;
         }
     }
 
@@ -94,19 +100,12 @@ public class GuiGameOver extends GuiScreen
         drawGradientRect(0, 0, width, height, 0x60500000, 0xa0803030);
         GL11.glPushMatrix();
         GL11.glScalef(2.0F, 2.0F, 2.0F);
-
-        if (mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
-        {
-            drawCenteredString(fontRenderer, StatCollector.translateToLocal("deathScreen.title.hardcore"), width / 2 / 2, 30, 0xffffff);
-        }
-        else
-        {
-            drawCenteredString(fontRenderer, StatCollector.translateToLocal("deathScreen.title"), width / 2 / 2, 30, 0xffffff);
-        }
-
+        boolean flag = mc.theWorld.getWorldInfo().isHardcoreModeEnabled();
+        String s = flag ? StatCollector.translateToLocal("deathScreen.title.hardcore") : StatCollector.translateToLocal("deathScreen.title");
+        drawCenteredString(fontRenderer, s, width / 2 / 2, 30, 0xffffff);
         GL11.glPopMatrix();
 
-        if (mc.theWorld.getWorldInfo().isHardcoreModeEnabled())
+        if (flag)
         {
             drawCenteredString(fontRenderer, StatCollector.translateToLocal("deathScreen.hardcoreInfo"), width / 2, 144, 0xffffff);
         }
@@ -129,9 +128,9 @@ public class GuiGameOver extends GuiScreen
     public void updateScreen()
     {
         super.updateScreen();
-        field_48154_a++;
+        cooldownTimer++;
 
-        if (field_48154_a == 20)
+        if (cooldownTimer == 20)
         {
             for (Iterator iterator = controlList.iterator(); iterator.hasNext();)
             {

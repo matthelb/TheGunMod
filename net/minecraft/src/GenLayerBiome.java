@@ -11,7 +11,7 @@ public class GenLayerBiome extends GenLayer
         allowedBiomes = biomeArray;
         parent = par3GenLayer;
 
-        if (par4WorldType == WorldType.field_48634_d)
+        if (par4WorldType == WorldType.DEFAULT_1_1)
         {
             allowedBiomes = (new BiomeGenBase[]
                     {

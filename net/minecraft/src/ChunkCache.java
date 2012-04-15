@@ -33,7 +33,7 @@ public class ChunkCache implements IBlockAccess
 
                 chunkArray[k - chunkX][l - chunkZ] = chunk;
 
-                if (!chunk.func_48492_c(par3, par6))
+                if (!chunk.getAreLevelsEmpty(par3, par6))
                 {
                     field_48467_d = false;
                 }
@@ -104,7 +104,7 @@ public class ChunkCache implements IBlockAccess
     }
 
     /**
-     * 'Any Light rendered on a 1.8 Block goes through here'
+     * Any Light rendered on a 1.8 Block goes through here
      */
     public int getLightBrightnessForSkyBlocks(int par1, int par2, int par3, int par4)
     {
@@ -245,9 +245,12 @@ public class ChunkCache implements IBlockAccess
         }
     }
 
-    public BiomeGenBase func_48454_a(int par1, int par2)
+    /**
+     * Gets the biome for a given set of x/z coordinates
+     */
+    public BiomeGenBase getBiomeGenForCoords(int par1, int par2)
     {
-        return worldObj.func_48454_a(par1, par2);
+        return worldObj.getBiomeGenForCoords(par1, par2);
     }
 
     /**
@@ -353,7 +356,7 @@ public class ChunkCache implements IBlockAccess
     }
 
     /**
-     * 'is only used on stairs and tilled fields'
+     * is only used on stairs and tilled fields
      */
     public int getSpecialBlockBrightness(EnumSkyBlock par1EnumSkyBlock, int par2, int par3, int par4)
     {
@@ -380,9 +383,9 @@ public class ChunkCache implements IBlockAccess
     }
 
     /**
-     * Returns current world height
+     * Returns current world height.
      */
-    public int getWorldHeight()
+    public int getHeight()
     {
         return 256;
     }

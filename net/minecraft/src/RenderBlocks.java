@@ -449,7 +449,7 @@ public class RenderBlocks
     {
         Tessellator tessellator = Tessellator.instance;
         int i = blockAccess.getBlockMetadata(par2, par3, par4);
-        int j = BlockBed.func_48216_a(i);
+        int j = BlockBed.getDirection(i);
         boolean flag = BlockBed.isBlockFootOfBed(i);
         float f = 0.5F;
         float f1 = 1.0F;
@@ -2052,7 +2052,7 @@ public class RenderBlocks
 
     public boolean renderBlockPane(BlockPane par1BlockPane, int par2, int par3, int par4)
     {
-        int i = blockAccess.getWorldHeight();
+        int i = blockAccess.getHeight();
         Tessellator tessellator = Tessellator.instance;
         tessellator.setBrightness(par1BlockPane.getMixedBrightnessForBlock(blockAccess, par2, par3, par4));
         float f = 1.0F;
@@ -4248,9 +4248,9 @@ public class RenderBlocks
         {
             tessellator.setBrightness(par1Block.minZ <= 0.0D ? par1Block.getMixedBrightnessForBlock(blockAccess, par2, par3, par4 - 1) : i);
             tessellator.setColorOpaque_F(f6, f10, f14);
-            tessellator.setTranslationF(0.0F, 0.0F, f16);
+            tessellator.addTranslation(0.0F, 0.0F, f16);
             renderEastFace(par1Block, par2, par3, par4, par1Block.getBlockTexture(blockAccess, par2, par3, par4, 2));
-            tessellator.setTranslationF(0.0F, 0.0F, -f16);
+            tessellator.addTranslation(0.0F, 0.0F, -f16);
             flag = true;
         }
 
@@ -4258,9 +4258,9 @@ public class RenderBlocks
         {
             tessellator.setBrightness(par1Block.maxZ >= 1.0D ? par1Block.getMixedBrightnessForBlock(blockAccess, par2, par3, par4 + 1) : i);
             tessellator.setColorOpaque_F(f6, f10, f14);
-            tessellator.setTranslationF(0.0F, 0.0F, -f16);
+            tessellator.addTranslation(0.0F, 0.0F, -f16);
             renderWestFace(par1Block, par2, par3, par4, par1Block.getBlockTexture(blockAccess, par2, par3, par4, 3));
-            tessellator.setTranslationF(0.0F, 0.0F, f16);
+            tessellator.addTranslation(0.0F, 0.0F, f16);
             flag = true;
         }
 
@@ -4268,9 +4268,9 @@ public class RenderBlocks
         {
             tessellator.setBrightness(par1Block.minX <= 0.0D ? par1Block.getMixedBrightnessForBlock(blockAccess, par2 - 1, par3, par4) : i);
             tessellator.setColorOpaque_F(f7, f11, f15);
-            tessellator.setTranslationF(f16, 0.0F, 0.0F);
+            tessellator.addTranslation(f16, 0.0F, 0.0F);
             renderNorthFace(par1Block, par2, par3, par4, par1Block.getBlockTexture(blockAccess, par2, par3, par4, 4));
-            tessellator.setTranslationF(-f16, 0.0F, 0.0F);
+            tessellator.addTranslation(-f16, 0.0F, 0.0F);
             flag = true;
         }
 
@@ -4278,9 +4278,9 @@ public class RenderBlocks
         {
             tessellator.setBrightness(par1Block.maxX >= 1.0D ? par1Block.getMixedBrightnessForBlock(blockAccess, par2 + 1, par3, par4) : i);
             tessellator.setColorOpaque_F(f7, f11, f15);
-            tessellator.setTranslationF(-f16, 0.0F, 0.0F);
+            tessellator.addTranslation(-f16, 0.0F, 0.0F);
             renderSouthFace(par1Block, par2, par3, par4, par1Block.getBlockTexture(blockAccess, par2, par3, par4, 5));
-            tessellator.setTranslationF(f16, 0.0F, 0.0F);
+            tessellator.addTranslation(f16, 0.0F, 0.0F);
             flag = true;
         }
 
@@ -4437,7 +4437,7 @@ public class RenderBlocks
         boolean flag = true;
         int i = blockAccess.getBlockMetadata(par2, par3, par4);
         boolean flag1 = BlockFenceGate.isFenceGateOpen(i);
-        int j = BlockDirectional.func_48216_a(i);
+        int j = BlockDirectional.getDirection(i);
 
         if (j != 3 && j != 1)
         {
@@ -5424,27 +5424,27 @@ public class RenderBlocks
                 tessellator.draw();
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(0.0F, 0.0F, -1F);
-                tessellator.setTranslationF(0.0F, 0.0F, f1);
+                tessellator.addTranslation(0.0F, 0.0F, f1);
                 renderEastFace(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getBlockTextureFromSide(2));
-                tessellator.setTranslationF(0.0F, 0.0F, -f1);
+                tessellator.addTranslation(0.0F, 0.0F, -f1);
                 tessellator.draw();
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(0.0F, 0.0F, 1.0F);
-                tessellator.setTranslationF(0.0F, 0.0F, -f1);
+                tessellator.addTranslation(0.0F, 0.0F, -f1);
                 renderWestFace(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getBlockTextureFromSide(3));
-                tessellator.setTranslationF(0.0F, 0.0F, f1);
+                tessellator.addTranslation(0.0F, 0.0F, f1);
                 tessellator.draw();
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(-1F, 0.0F, 0.0F);
-                tessellator.setTranslationF(f1, 0.0F, 0.0F);
+                tessellator.addTranslation(f1, 0.0F, 0.0F);
                 renderNorthFace(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getBlockTextureFromSide(4));
-                tessellator.setTranslationF(-f1, 0.0F, 0.0F);
+                tessellator.addTranslation(-f1, 0.0F, 0.0F);
                 tessellator.draw();
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(1.0F, 0.0F, 0.0F);
-                tessellator.setTranslationF(-f1, 0.0F, 0.0F);
+                tessellator.addTranslation(-f1, 0.0F, 0.0F);
                 renderSouthFace(par1Block, 0.0D, 0.0D, 0.0D, par1Block.getBlockTextureFromSide(5));
-                tessellator.setTranslationF(f1, 0.0F, 0.0F);
+                tessellator.addTranslation(f1, 0.0F, 0.0F);
                 tessellator.draw();
                 GL11.glTranslatef(0.5F, 0.5F, 0.5F);
             }

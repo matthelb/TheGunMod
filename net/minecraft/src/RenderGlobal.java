@@ -1003,11 +1003,11 @@ public class RenderGlobal implements IWorldAccess
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE);
         GL11.glPushMatrix();
-        float da = 1.0F - worldObj.getRainStrength(par1);
+        double d = 1.0F - worldObj.getRainStrength(par1);
         float f7 = 0.0F;
         float f9 = 0.0F;
         float f12 = 0.0F;
-        GL11.glColor4f(1.0F, 1.0F, 1.0F, da);
+        GL11.glColor4f(1.0F, 1.0F, 1.0F, (float) d);
         GL11.glTranslatef(f7, f9, f12);
         GL11.glRotatef(-90F, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(worldObj.getCelestialAngle(par1) * 360F, 1.0F, 0.0F, 0.0F);
@@ -1021,9 +1021,9 @@ public class RenderGlobal implements IWorldAccess
         tessellator1.draw();
         f15 = 20F;
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, renderEngine.getTexture("/terrain/moon_phases.png"));
-        int f18a = worldObj.getMoonPhase(par1);
-        int l = f18a % 4;
-        int i1 = (f18a / 4) % 2;
+        int i18 = worldObj.getMoonPhase(par1);
+        int l = i18 % 4;
+        int i1 = (i18 / 4) % 2;
         float f24 = (float)(l + 0) / 4F;
         float f25 = (float)(i1 + 0) / 2.0F;
         float f26 = (float)(l + 1) / 4F;
@@ -1035,7 +1035,7 @@ public class RenderGlobal implements IWorldAccess
         tessellator1.addVertexWithUV(-f15, -100D, -f15, f26, f25);
         tessellator1.draw();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
-        float f18 = worldObj.getStarBrightness(par1) * da;
+        float f18 = (float)(worldObj.getStarBrightness(par1) * d);
 
         if (f18 > 0.0F)
         {
@@ -1050,7 +1050,7 @@ public class RenderGlobal implements IWorldAccess
         GL11.glPopMatrix();
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         GL11.glColor3f(0.0F, 0.0F, 0.0F);
-        double d = mc.thePlayer.getPosition(par1).yCoord - worldObj.getSeaLevel();
+        d = mc.thePlayer.getPosition(par1).yCoord - worldObj.getSeaLevel();
 
         if (d < 0.0D)
         {
@@ -1551,11 +1551,11 @@ public class RenderGlobal implements IWorldAccess
 
                 GL11.glEnable(GL11.GL_ALPHA_TEST);
                 tessellator.startDrawingQuads();
-                tessellator.setTranslationD(-d, -d1, -d2);
+                tessellator.setTranslation(-d, -d1, -d2);
                 tessellator.disableColor();
                 globalRenderBlocks.renderBlockUsingTexture(block, par2MovingObjectPosition.blockX, par2MovingObjectPosition.blockY, par2MovingObjectPosition.blockZ, 240 + (int)(damagePartialTime * 10F));
                 tessellator.draw();
-                tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
+                tessellator.setTranslation(0.0D, 0.0D, 0.0D);
                 GL11.glDisable(GL11.GL_ALPHA_TEST);
                 GL11.glPolygonOffset(0.0F, 0.0F);
                 GL11.glDisable(GL11.GL_POLYGON_OFFSET_FILL);
@@ -1734,7 +1734,10 @@ public class RenderGlobal implements IWorldAccess
         markBlocksForUpdate(par1 - 1, par2 - 1, par3 - 1, par1 + 1, par2 + 1, par3 + 1);
     }
 
-    public void func_48180_b(int par1, int par2, int par3)
+    /**
+     * As of mc 1.2.3 this method has exactly the same signature and does exactly the same as markBlockNeedsUpdate
+     */
+    public void markBlockNeedsUpdate2(int par1, int par2, int par3)
     {
         markBlocksForUpdate(par1 - 1, par2 - 1, par3 - 1, par1 + 1, par2 + 1, par3 + 1);
     }

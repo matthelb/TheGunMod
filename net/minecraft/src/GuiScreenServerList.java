@@ -5,15 +5,19 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiScreenServerList extends GuiScreen
 {
+    private static String field_52009_d = "";
+
     /** Needed a change as a local variable was conflicting on construct */
-    private GuiScreen guiScreen;
+    private final GuiScreen guiScreen;
+
+    /** This GUI's instance to the server list's storage */
+    private final ServerNBTStorage serverListStorage;
     private GuiTextField serverTextField;
-    private ServerNBTStorage field_35318_c;
 
     public GuiScreenServerList(GuiScreen par1GuiScreen, ServerNBTStorage par2ServerNBTStorage)
     {
         guiScreen = par1GuiScreen;
-        field_35318_c = par2ServerNBTStorage;
+        serverListStorage = par2ServerNBTStorage;
     }
 
     /**
@@ -34,9 +38,11 @@ public class GuiScreenServerList extends GuiScreen
         controlList.clear();
         controlList.add(new GuiButton(0, width / 2 - 100, height / 4 + 96 + 12, stringtranslate.translateKey("selectServer.select")));
         controlList.add(new GuiButton(1, width / 2 - 100, height / 4 + 120 + 12, stringtranslate.translateKey("gui.cancel")));
-        serverTextField = new GuiTextField(this, fontRenderer, width / 2 - 100, 116, 200, 20, field_35318_c.host);
+        serverTextField = new GuiTextField(fontRenderer, width / 2 - 100, 116, 200, 20);
         serverTextField.setMaxStringLength(128);
-        ((GuiButton)controlList.get(0)).enabled = serverTextField.getText().length() > 0;
+        serverTextField.setFocused(true);
+        serverTextField.setText(field_52009_d);
+        ((GuiButton)controlList.get(0)).enabled = serverTextField.getText().length() > 0 && serverTextField.getText().split(":").length > 0;
     }
 
     /**
@@ -45,6 +51,7 @@ public class GuiScreenServerList extends GuiScreen
     public void onGuiClosed()
     {
         Keyboard.enableRepeatEvents(false);
+        field_52009_d = serverTextField.getText();
     }
 
     /**
@@ -59,12 +66,12 @@ public class GuiScreenServerList extends GuiScreen
 
         if (par1GuiButton.id == 1)
         {
-            guiScreen.deleteWorld(false, 0);
+            guiScreen.confirmClicked(false, 0);
         }
         else if (par1GuiButton.id == 0)
         {
-            field_35318_c.host = serverTextField.getText();
-            guiScreen.deleteWorld(true, 0);
+            serverListStorage.host = serverTextField.getText();
+            guiScreen.confirmClicked(true, 0);
         }
     }
 
@@ -75,12 +82,12 @@ public class GuiScreenServerList extends GuiScreen
     {
         serverTextField.textboxKeyTyped(par1, par2);
 
-        if (par1 == '\r')
+        if (par1 == '\034')
         {
             actionPerformed((GuiButton)controlList.get(0));
         }
 
-        ((GuiButton)controlList.get(0)).enabled = serverTextField.getText().length() > 0;
+        ((GuiButton)controlList.get(0)).enabled = serverTextField.getText().length() > 0 && serverTextField.getText().split(":").length > 0;
     }
 
     /**

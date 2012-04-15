@@ -2,7 +2,6 @@ package net.minecraft.src;
 
 import java.util.List;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.input.Keyboard;
 
 public class GuiSleepMP extends GuiChat
 {
@@ -15,17 +14,9 @@ public class GuiSleepMP extends GuiChat
      */
     public void initGui()
     {
-        Keyboard.enableRepeatEvents(true);
+        super.initGui();
         StringTranslate stringtranslate = StringTranslate.getInstance();
         controlList.add(new GuiButton(1, width / 2 - 100, height - 40, stringtranslate.translateKey("multiplayer.stopSleeping")));
-    }
-
-    /**
-     * Called when the screen is unloaded. Used to disable keyboard repeat events
-     */
-    public void onGuiClosed()
-    {
-        Keyboard.enableRepeatEvents(false);
     }
 
     /**
@@ -39,27 +30,20 @@ public class GuiSleepMP extends GuiChat
         }
         else if (par2 == 28)
         {
-            String s = message.trim();
+            String s = inputField.getText().trim();
 
             if (s.length() > 0)
             {
-                mc.thePlayer.sendChatMessage(message.trim());
+                mc.thePlayer.sendChatMessage(s);
             }
 
-            message = "";
+            inputField.setText("");
+            mc.ingameGUI.func_50014_d();
         }
         else
         {
             super.keyTyped(par1, par2);
         }
-    }
-
-    /**
-     * Draws the screen and all the components in it.
-     */
-    public void drawScreen(int par1, int par2, float par3)
-    {
-        super.drawScreen(par1, par2, par3);
     }
 
     /**

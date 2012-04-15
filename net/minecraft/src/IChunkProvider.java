@@ -16,7 +16,7 @@ public interface IChunkProvider
     public abstract Chunk provideChunk(int i, int j);
 
     /**
-     * Creates an empty chunk ready to put data from the server in
+     * loads or generates the chunk at the chunk location specified
      */
     public abstract Chunk loadChunk(int i, int j);
 

@@ -1,13 +1,16 @@
 package net.minecraft.src;
 
+import java.util.Random;
+
 public class BlockRedstoneLight extends Block
 {
-    private final boolean field_48215_a;
+    /** Whether this lamp block is the powered version. */
+    private final boolean powered;
 
     public BlockRedstoneLight(int par1, boolean par2)
     {
-        super(par1, 211, Material.field_48468_r);
-        field_48215_a = par2;
+        super(par1, 211, Material.redstoneLight);
+        powered = par2;
 
         if (par2)
         {
@@ -23,13 +26,13 @@ public class BlockRedstoneLight extends Block
     {
         if (!par1World.isRemote)
         {
-            if (field_48215_a && !par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
+            if (powered && !par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
             {
-                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampU.blockID);
+                par1World.scheduleBlockUpdate(par2, par3, par4, blockID, 4);
             }
-            else if (!field_48215_a && par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
+            else if (!powered && par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
             {
-                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampP.blockID);
+                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampActive.blockID);
             }
         }
     }
@@ -42,14 +45,33 @@ public class BlockRedstoneLight extends Block
     {
         if (!par1World.isRemote)
         {
-            if (field_48215_a && !par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
+            if (powered && !par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
             {
-                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampU.blockID);
+                par1World.scheduleBlockUpdate(par2, par3, par4, blockID, 4);
             }
-            else if (!field_48215_a && par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
+            else if (!powered && par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
             {
-                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampP.blockID);
+                par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampActive.blockID);
             }
         }
+    }
+
+    /**
+     * Ticks the block if it's been scheduled
+     */
+    public void updateTick(World par1World, int par2, int par3, int par4, Random par5Random)
+    {
+        if (!par1World.isRemote && powered && !par1World.isBlockIndirectlyGettingPowered(par2, par3, par4))
+        {
+            par1World.setBlockWithNotify(par2, par3, par4, Block.redstoneLampIdle.blockID);
+        }
+    }
+
+    /**
+     * Returns the ID of the items to drop on destruction.
+     */
+    public int idDropped(int par1, Random par2Random, int par3)
+    {
+        return Block.redstoneLampIdle.blockID;
     }
 }

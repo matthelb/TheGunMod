@@ -66,7 +66,7 @@ public class BlockSapling extends BlockFlower
     }
 
     /**
-     * GrowSaplingIntoTree Attempts to grow a sapling into a tree
+     * Attempts to grow a sapling into a tree
      */
     public void growTree(World par1World, int par2, int par3, int par4, Random par5Random)
     {
@@ -104,7 +104,7 @@ public class BlockSapling extends BlockFlower
                         break;
                     }
 
-                    if (par1World.getBlockId(par2 + j, par3, par4 + k) == blockID && par1World.getBlockId(par2 + j + 1, par3, par4 + k) == blockID && par1World.getBlockId(par2 + j, par3, par4 + k + 1) == blockID && par1World.getBlockId(par2 + j + 1, par3, par4 + k + 1) == blockID)
+                    if (func_50076_f(par1World, par2 + j, par3, par4 + k, 3) && func_50076_f(par1World, par2 + j + 1, par3, par4 + k, 3) && func_50076_f(par1World, par2 + j, par3, par4 + k + 1, 3) && func_50076_f(par1World, par2 + j + 1, par3, par4 + k + 1, 3))
                     {
                         obj = new WorldGenHugeTrees(true, 10 + par5Random.nextInt(20), 3, 3);
                         flag = true;
@@ -166,6 +166,11 @@ public class BlockSapling extends BlockFlower
                 par1World.setBlockAndMetadata(par2, par3, par4, blockID, i);
             }
         }
+    }
+
+    public boolean func_50076_f(World par1World, int par2, int par3, int par4, int par5)
+    {
+        return par1World.getBlockId(par2, par3, par4) == blockID && (par1World.getBlockMetadata(par2, par3, par4) & 3) == par5;
     }
 
     /**

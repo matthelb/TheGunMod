@@ -346,7 +346,7 @@ public class EntityRenderer
             f *= fovModifierHandPrev + (fovModifierHand - fovModifierHandPrev) * par1;
         }
 
-        if (entityplayer.getEntityHealth() <= 0)
+        if (entityplayer.getHealth() <= 0)
         {
             float f1 = (float)entityplayer.deathTime + par1;
             f /= (1.0F - 500F / (f1 + 500F)) * 2.0F + 1.0F;
@@ -367,7 +367,7 @@ public class EntityRenderer
         EntityLiving entityliving = mc.renderViewEntity;
         float f = (float)entityliving.hurtTime - par1;
 
-        if (entityliving.getEntityHealth() <= 0)
+        if (entityliving.getHealth() <= 0)
         {
             float f1 = (float)entityliving.deathTime + par1;
             GL11.glRotatef(40F - 8000F / (f1 + 200F), 0.0F, 0.0F, 1.0F);
@@ -543,12 +543,9 @@ public class EntityRenderer
         {
             GL11.glTranslatef((float)cameraYaw, (float)(-cameraPitch), 0.0F);
             GL11.glScaled(cameraZoom, cameraZoom, 1.0D);
-            GLU.gluPerspective(getFOVModifier(par1, true), (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, farPlaneDistance * 2.0F);
         }
-        else
-        {
-            GLU.gluPerspective(getFOVModifier(par1, true), (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, farPlaneDistance * 2.0F);
-        }
+
+        GLU.gluPerspective(getFOVModifier(par1, true), (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, farPlaneDistance * 2.0F);
 
         if (mc.playerController.func_35643_e())
         {
@@ -645,12 +642,9 @@ public class EntityRenderer
         {
             GL11.glTranslatef((float)cameraYaw, (float)(-cameraPitch), 0.0F);
             GL11.glScaled(cameraZoom, cameraZoom, 1.0D);
-            GLU.gluPerspective(getFOVModifier(par1, false), (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, farPlaneDistance * 2.0F);
         }
-        else
-        {
-            GLU.gluPerspective(getFOVModifier(par1, false), (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, farPlaneDistance * 2.0F);
-        }
+
+        GLU.gluPerspective(getFOVModifier(par1, false), (float)mc.displayWidth / (float)mc.displayHeight, 0.05F, farPlaneDistance * 2.0F);
 
         if (mc.playerController.func_35643_e())
         {
@@ -986,26 +980,22 @@ public class EntityRenderer
             GL11.glMatrixMode(GL11.GL_MODELVIEW);
             GL11.glLoadIdentity();
             setupOverlayRendering();
+            long l2 = ((renderEndNanoTime + (long)(0x3b9aca00 / c)) - System.nanoTime()) / 0xf4240L;
 
-            if (mc.gameSettings.limitFramerate == 2)
+            if (l2 < 0L)
             {
-                long l2 = ((renderEndNanoTime + (long)(0x3b9aca00 / c)) - System.nanoTime()) / 0xf4240L;
+                l2 += 10L;
+            }
 
-                if (l2 < 0L)
+            if (l2 > 0L && l2 < 500L)
+            {
+                try
                 {
-                    l2 += 10L;
+                    Thread.sleep(l2);
                 }
-
-                if (l2 > 0L && l2 < 500L)
+                catch (InterruptedException interruptedexception1)
                 {
-                    try
-                    {
-                        Thread.sleep(l2);
-                    }
-                    catch (InterruptedException interruptedexception1)
-                    {
-                        interruptedexception1.printStackTrace();
-                    }
+                    interruptedexception1.printStackTrace();
                 }
             }
 
@@ -1300,7 +1290,7 @@ public class EntityRenderer
             int l1 = (k + random.nextInt(byte0)) - random.nextInt(byte0);
             int i2 = world.getPrecipitationHeight(k1, l1);
             int j2 = world.getBlockId(k1, i2 - 1, l1);
-            BiomeGenBase biomegenbase = world.func_48454_a(k1, l1);
+            BiomeGenBase biomegenbase = world.getBiomeGenForCoords(k1, l1);
 
             if (i2 > j + byte0 || i2 < j - byte0 || !biomegenbase.canSpawnLightningBolt() || biomegenbase.getFloatTemperature() <= 0.2F)
             {
@@ -1420,7 +1410,7 @@ public class EntityRenderer
                 int j2 = ((l1 - i1) + 16) * 32 + ((i2 - k) + 16);
                 float f5 = rainXCoords[j2] * 0.5F;
                 float f6 = rainYCoords[j2] * 0.5F;
-                BiomeGenBase biomegenbase = world.func_48454_a(i2, l1);
+                BiomeGenBase biomegenbase = world.getBiomeGenForCoords(i2, l1);
 
                 if (!biomegenbase.canSpawnLightningBolt() && !biomegenbase.getEnableSnow())
                 {
@@ -1478,12 +1468,12 @@ public class EntityRenderer
                     float f14 = 1.0F;
                     tessellator.setBrightness(world.getLightBrightnessForSkyBlocks(i2, j3, l1, 0));
                     tessellator.setColorRGBA_F(f14, f14, f14, ((1.0F - f13 * f13) * 0.5F + 0.5F) * f);
-                    tessellator.setTranslationD(-d * 1.0D, -d1 * 1.0D, -d2 * 1.0D);
+                    tessellator.setTranslation(-d * 1.0D, -d1 * 1.0D, -d2 * 1.0D);
                     tessellator.addVertexWithUV((double)((float)i2 - f5) + 0.5D, l2, (double)((float)l1 - f6) + 0.5D, 0.0F * f7, ((float)l2 * f7) / 4F + f9 * f7);
                     tessellator.addVertexWithUV((double)((float)i2 + f5) + 0.5D, l2, (double)((float)l1 + f6) + 0.5D, 1.0F * f7, ((float)l2 * f7) / 4F + f9 * f7);
                     tessellator.addVertexWithUV((double)((float)i2 + f5) + 0.5D, i3, (double)((float)l1 + f6) + 0.5D, 1.0F * f7, ((float)i3 * f7) / 4F + f9 * f7);
                     tessellator.addVertexWithUV((double)((float)i2 - f5) + 0.5D, i3, (double)((float)l1 - f6) + 0.5D, 0.0F * f7, ((float)i3 * f7) / 4F + f9 * f7);
-                    tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
+                    tessellator.setTranslation(0.0D, 0.0D, 0.0D);
                     continue;
                 }
 
@@ -1508,12 +1498,12 @@ public class EntityRenderer
                 float f16 = 1.0F;
                 tessellator.setBrightness((world.getLightBrightnessForSkyBlocks(i2, j3, l1, 0) * 3 + 0xf000f0) / 4);
                 tessellator.setColorRGBA_F(f16, f16, f16, ((1.0F - f15 * f15) * 0.3F + 0.5F) * f);
-                tessellator.setTranslationD(-d * 1.0D, -d1 * 1.0D, -d2 * 1.0D);
+                tessellator.setTranslation(-d * 1.0D, -d1 * 1.0D, -d2 * 1.0D);
                 tessellator.addVertexWithUV((double)((float)i2 - f5) + 0.5D, l2, (double)((float)l1 - f6) + 0.5D, 0.0F * f7 + f11, ((float)l2 * f7) / 4F + f10 * f7 + f12);
                 tessellator.addVertexWithUV((double)((float)i2 + f5) + 0.5D, l2, (double)((float)l1 + f6) + 0.5D, 1.0F * f7 + f11, ((float)l2 * f7) / 4F + f10 * f7 + f12);
                 tessellator.addVertexWithUV((double)((float)i2 + f5) + 0.5D, i3, (double)((float)l1 + f6) + 0.5D, 1.0F * f7 + f11, ((float)i3 * f7) / 4F + f10 * f7 + f12);
                 tessellator.addVertexWithUV((double)((float)i2 - f5) + 0.5D, i3, (double)((float)l1 - f6) + 0.5D, 0.0F * f7 + f11, ((float)i3 * f7) / 4F + f10 * f7 + f12);
-                tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
+                tessellator.setTranslation(0.0D, 0.0D, 0.0D);
             }
         }
 
@@ -1529,7 +1519,7 @@ public class EntityRenderer
     }
 
     /**
-     * setup overlay rendering
+     * Setup orthogonal projection for rendering GUI screen overlays
      */
     public void setupOverlayRendering()
     {
@@ -1635,7 +1625,7 @@ public class EntityRenderer
         fogColorRed *= f10;
         fogColorGreen *= f10;
         fogColorBlue *= f10;
-        double d = (entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * (double)par1) * world.worldProvider.func_46065_j();
+        double d = (entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * (double)par1) * world.worldProvider.getVoidFogYFactor();
 
         if (entityliving.isPotionActive(Potion.blindness))
         {
@@ -1688,7 +1678,7 @@ public class EntityRenderer
 
         if (entityliving instanceof EntityPlayer)
         {
-            flag = ((EntityPlayer)entityliving).capabilities.depleteBuckets;
+            flag = ((EntityPlayer)entityliving).capabilities.isCreativeMode;
         }
 
         if (par1 == 999)
@@ -1809,7 +1799,7 @@ public class EntityRenderer
 
             if (mc.theWorld.worldProvider.getWorldHasNoSky() && !flag)
             {
-                double d = (double)((entityliving.getEntityBrightnessForRender(par2) & 0xf00000) >> 20) / 16D + (entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * (double)par2 + 4D) / 32D;
+                double d = (double)((entityliving.getBrightnessForRender(par2) & 0xf00000) >> 20) / 16D + (entityliving.lastTickPosY + (entityliving.posY - entityliving.lastTickPosY) * (double)par2 + 4D) / 32D;
 
                 if (d < 1.0D)
                 {

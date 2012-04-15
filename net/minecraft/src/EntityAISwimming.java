@@ -4,13 +4,13 @@ import java.util.Random;
 
 public class EntityAISwimming extends EntityAIBase
 {
-    private EntityLiving field_46106_a;
+    private EntityLiving theEntity;
 
     public EntityAISwimming(EntityLiving par1EntityLiving)
     {
-        field_46106_a = par1EntityLiving;
+        theEntity = par1EntityLiving;
         setMutexBits(4);
-        par1EntityLiving.getNavigator().func_48669_e(true);
+        par1EntityLiving.getNavigator().setCanSwim(true);
     }
 
     /**
@@ -18,7 +18,7 @@ public class EntityAISwimming extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        return field_46106_a.isInWater() || field_46106_a.handleLavaMovement();
+        return theEntity.isInWater() || theEntity.handleLavaMovement();
     }
 
     /**
@@ -26,9 +26,9 @@ public class EntityAISwimming extends EntityAIBase
      */
     public void updateTask()
     {
-        if (field_46106_a.getRNG().nextFloat() < 0.8F)
+        if (theEntity.getRNG().nextFloat() < 0.8F)
         {
-            field_46106_a.getJumpHelper().setJumping();
+            theEntity.getJumpHelper().setJumping();
         }
     }
 }

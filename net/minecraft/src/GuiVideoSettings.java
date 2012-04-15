@@ -35,12 +35,12 @@ public class GuiVideoSettings extends GuiScreen
         StringTranslate stringtranslate = StringTranslate.getInstance();
         screenTitle = stringtranslate.translateKey("options.videoTitle");
         int i = 0;
-        EnumOptions aobj[] = videoOptions;
+        Object aobj[] = videoOptions;
         int j = aobj.length;
 
         for (int k = 0; k < j; k++)
         {
-            EnumOptions enumoptions = aobj[k];
+            EnumOptions enumoptions = (EnumOptions) aobj[k];
 
             if (!enumoptions.getEnumFloat())
             {
@@ -56,11 +56,11 @@ public class GuiVideoSettings extends GuiScreen
 
         controlList.add(new GuiButton(200, width / 2 - 100, height / 6 + 168, stringtranslate.translateKey("gui.done")));
         is64bit = false;
-        String aobj2[] = (new String[]
+        aobj = (new String[]
                 {
                     "sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"
                 });
-        String as[] = ((String [])(aobj2));
+        String as[] = ((String [])(aobj));
         int l = as.length;
         int i1 = 0;
 

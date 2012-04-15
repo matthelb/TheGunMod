@@ -6,7 +6,7 @@ import java.util.List;
 public interface ISaveHandler
 {
     /**
-     * Returns a freshly loaded worldInfo from the save
+     * Loads and returns the world info
      */
     public abstract WorldInfo loadWorldInfo();
 

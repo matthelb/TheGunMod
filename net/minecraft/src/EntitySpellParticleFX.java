@@ -49,7 +49,7 @@ public class EntitySpellParticleFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
 
         setParticleTextureIndex(field_40111_a + (7 - (particleAge * 8) / particleMaxAge));

@@ -23,7 +23,9 @@ public class GuiMainMenu extends GuiScreen
     /** The splash message. */
     private String splashText;
     private GuiButton multiplayerButton;
-    private int field_35357_f;
+
+    /** Timer used to rotate the panorama, increases every tick. */
+    private int panoramaTimer;
 
     /**
      * Texture allocated for the current viewport of the main menu's panorama background.
@@ -33,7 +35,7 @@ public class GuiMainMenu extends GuiScreen
     public GuiMainMenu()
     {
         updateCounter = 0.0F;
-        field_35357_f = 0;
+        panoramaTimer = 0;
         splashText = "missingno";
 
         try
@@ -76,7 +78,7 @@ public class GuiMainMenu extends GuiScreen
      */
     public void updateScreen()
     {
-        field_35357_f++;
+        panoramaTimer++;
     }
 
     /**
@@ -209,8 +211,8 @@ public class GuiMainMenu extends GuiScreen
             float f1 = ((float)(j / i) / (float)i - 0.5F) / 64F;
             float f2 = 0.0F;
             GL11.glTranslatef(f, f1, f2);
-            GL11.glRotatef(MathHelper.sin(((float)field_35357_f + par3) / 400F) * 25F + 20F, 1.0F, 0.0F, 0.0F);
-            GL11.glRotatef(-((float)field_35357_f + par3) * 0.1F, 0.0F, 1.0F, 0.0F);
+            GL11.glRotatef(MathHelper.sin(((float)panoramaTimer + par3) / 400F) * 25F + 20F, 1.0F, 0.0F, 0.0F);
+            GL11.glRotatef(-((float)panoramaTimer + par3) * 0.1F, 0.0F, 1.0F, 0.0F);
 
             for (int k = 0; k < 6; k++)
             {
@@ -257,7 +259,7 @@ public class GuiMainMenu extends GuiScreen
             GL11.glColorMask(true, true, true, false);
         }
 
-        tessellator.setTranslationD(0.0D, 0.0D, 0.0D);
+        tessellator.setTranslation(0.0D, 0.0D, 0.0D);
         GL11.glColorMask(true, true, true, true);
         GL11.glMatrixMode(GL11.GL_PROJECTION);
         GL11.glPopMatrix();
@@ -372,7 +374,7 @@ public class GuiMainMenu extends GuiScreen
         GL11.glScalef(f, f, f);
         drawCenteredString(fontRenderer, splashText, 0, -8, 0xffff00);
         GL11.glPopMatrix();
-        drawString(fontRenderer, "Minecraft 1.2.3", 2, height - 10, 0xffffff);
+        drawString(fontRenderer, "Minecraft 1.2.5", 2, height - 10, 0xffffff);
         String s = "Copyright Mojang AB. Do not distribute!";
         drawString(fontRenderer, s, width - fontRenderer.getStringWidth(s) - 2, height - 10, 0xffffff);
         super.drawScreen(par1, par2, par3);

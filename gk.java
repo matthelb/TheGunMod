@@ -1,4 +1,4 @@
-public class gh
+public class gk
 {
     public static int c(double d)
     {

@@ -112,7 +112,7 @@ public class SaveHandler implements ISaveHandler
     }
 
     /**
-     * Returns a freshly loaded worldInfo from the save
+     * Loads and returns the world info
      */
     public WorldInfo loadWorldInfo()
     {

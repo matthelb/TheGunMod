@@ -7,7 +7,7 @@ public class EntityAIFollowParent extends EntityAIBase
 {
     /** The child that is following its parent. */
     EntityAnimal childAnimal;
-    EntityAnimal field_48247_b;
+    EntityAnimal parentAnimal;
     float field_48248_c;
     private int field_48246_d;
 
@@ -66,7 +66,7 @@ public class EntityAIFollowParent extends EntityAIBase
         }
         else
         {
-            field_48247_b = entityanimal;
+            parentAnimal = entityanimal;
             return true;
         }
     }
@@ -76,12 +76,12 @@ public class EntityAIFollowParent extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        if (!field_48247_b.isEntityAlive())
+        if (!parentAnimal.isEntityAlive())
         {
             return false;
         }
 
-        double d = childAnimal.getDistanceSqToEntity(field_48247_b);
+        double d = childAnimal.getDistanceSqToEntity(parentAnimal);
         return d >= 9D && d <= 256D;
     }
 
@@ -98,7 +98,7 @@ public class EntityAIFollowParent extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48247_b = null;
+        parentAnimal = null;
     }
 
     /**
@@ -113,7 +113,7 @@ public class EntityAIFollowParent extends EntityAIBase
         else
         {
             field_48246_d = 10;
-            childAnimal.getNavigator().func_48667_a(field_48247_b, field_48248_c);
+            childAnimal.getNavigator().func_48667_a(parentAnimal, field_48248_c);
             return;
         }
     }

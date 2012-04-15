@@ -80,7 +80,7 @@ public class WorldGenTrees extends WorldGenerator
             return false;
         }
 
-        par1World.setBlock(par3, par4 - 1, par5, Block.dirt.blockID);
+        setBlock(par1World, par3, par4 - 1, par5, Block.dirt.blockID);
         byte byte1 = 3;
         int i1 = 0;
 
@@ -187,11 +187,11 @@ public class WorldGenTrees extends WorldGenerator
 
     private void func_48198_a(World par1World, int par2, int par3, int par4, int par5)
     {
-        par1World.setBlockAndMetadataWithNotify(par2, par3, par4, Block.vine.blockID, par5);
+        setBlockAndMetadata(par1World, par2, par3, par4, Block.vine.blockID, par5);
 
         for (int i = 4; par1World.getBlockId(par2, --par3, par4) == 0 && i > 0; i--)
         {
-            par1World.setBlockAndMetadataWithNotify(par2, par3, par4, Block.vine.blockID, par5);
+            setBlockAndMetadata(par1World, par2, par3, par4, Block.vine.blockID, par5);
         }
     }
 }

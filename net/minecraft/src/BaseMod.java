@@ -68,6 +68,14 @@ public abstract class BaseMod
         return false;
     }
 
+    public void receiveChatPacket(String s)
+    {
+    }
+
+    public void receiveCustomPacket(Packet250CustomPayload packet250custompayload)
+    {
+    }
+
     public void registerAnimation(Minecraft minecraft)
     {
     }
@@ -79,6 +87,14 @@ public abstract class BaseMod
     public boolean renderWorldBlock(RenderBlocks renderblocks, IBlockAccess iblockaccess, int i, int j, int k, Block block, int l)
     {
         return false;
+    }
+
+    public void serverConnect(NetClientHandler netclienthandler)
+    {
+    }
+
+    public void serverDisconnect()
+    {
     }
 
     public void takenFromCrafting(EntityPlayer entityplayer, ItemStack itemstack, IInventory iinventory)

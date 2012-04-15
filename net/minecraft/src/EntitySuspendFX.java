@@ -31,12 +31,12 @@ public class EntitySuspendFX extends EntityFX
 
         if (worldObj.getBlockMaterial(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) != Material.water)
         {
-            setEntityDead();
+            setDead();
         }
 
         if (particleMaxAge-- <= 0)
         {
-            setEntityDead();
+            setDead();
         }
     }
 }

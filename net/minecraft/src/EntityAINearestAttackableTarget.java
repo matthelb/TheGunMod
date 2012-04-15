@@ -4,9 +4,9 @@ import java.util.*;
 
 public class EntityAINearestAttackableTarget extends EntityAITarget
 {
-    EntityLiving field_48389_a;
-    Class field_48388_b;
-    int field_48386_f;
+    EntityLiving targetEntity;
+    Class targetClass;
+    int targetChance;
     private EntityAINearestAttackableTargetSorter field_48387_g;
 
     public EntityAINearestAttackableTarget(EntityLiving par1EntityLiving, Class par2Class, float par3, int par4, boolean par5)
@@ -17,9 +17,9 @@ public class EntityAINearestAttackableTarget extends EntityAITarget
     public EntityAINearestAttackableTarget(EntityLiving par1EntityLiving, Class par2Class, float par3, int par4, boolean par5, boolean par6)
     {
         super(par1EntityLiving, par3, par5, par6);
-        field_48388_b = par2Class;
-        field_48379_d = par3;
-        field_48386_f = par4;
+        targetClass = par2Class;
+        targetDistance = par3;
+        targetChance = par4;
         field_48387_g = new EntityAINearestAttackableTargetSorter(this, par1EntityLiving);
         setMutexBits(1);
     }
@@ -31,25 +31,25 @@ public class EntityAINearestAttackableTarget extends EntityAITarget
     {
         label0:
         {
-            if (field_48386_f > 0 && taskOwner.getRNG().nextInt(field_48386_f) != 0)
+            if (targetChance > 0 && taskOwner.getRNG().nextInt(targetChance) != 0)
             {
                 return false;
             }
 
-            if (field_48388_b == (net.minecraft.src.EntityPlayer.class))
+            if (targetClass == (net.minecraft.src.EntityPlayer.class))
             {
-                EntityPlayer entityplayer = taskOwner.worldObj.getClosestVulnerablePlayerToEntity(taskOwner, field_48379_d);
+                EntityPlayer entityplayer = taskOwner.worldObj.getClosestVulnerablePlayerToEntity(taskOwner, targetDistance);
 
                 if (func_48376_a(entityplayer, false))
                 {
-                    field_48389_a = entityplayer;
+                    targetEntity = entityplayer;
                     return true;
                 }
 
                 break label0;
             }
 
-            List list = taskOwner.worldObj.getEntitiesWithinAABB(field_48388_b, taskOwner.boundingBox.expand(field_48379_d, 4D, field_48379_d));
+            List list = taskOwner.worldObj.getEntitiesWithinAABB(targetClass, taskOwner.boundingBox.expand(targetDistance, 4D, targetDistance));
             Collections.sort(list, field_48387_g);
             Iterator iterator = list.iterator();
             EntityLiving entityliving;
@@ -66,7 +66,7 @@ public class EntityAINearestAttackableTarget extends EntityAITarget
             }
             while (!func_48376_a(entityliving, false));
 
-            field_48389_a = entityliving;
+            targetEntity = entityliving;
             return true;
         }
         return false;
@@ -77,7 +77,7 @@ public class EntityAINearestAttackableTarget extends EntityAITarget
      */
     public void startExecuting()
     {
-        taskOwner.setAttackTarget(field_48389_a);
+        taskOwner.setAttackTarget(targetEntity);
         super.startExecuting();
     }
 }

@@ -34,28 +34,6 @@ public abstract class NBTBase
         }
     }
 
-    public boolean equals(Object par1Obj)
-    {
-        if (par1Obj == null || !(par1Obj instanceof NBTBase))
-        {
-            return false;
-        }
-
-        NBTBase nbtbase = (NBTBase)par1Obj;
-
-        if (getId() != nbtbase.getId())
-        {
-            return false;
-        }
-
-        if (name == null && nbtbase.name != null || name != null && nbtbase.name == null)
-        {
-            return false;
-        }
-
-        return name == null || name.equals(nbtbase.name);
-    }
-
     /**
      * Sets the name for this tag and returns this for convenience.
      */
@@ -226,4 +204,31 @@ public abstract class NBTBase
      * Creates a clone of the tag.
      */
     public abstract NBTBase copy();
+
+    public boolean equals(Object par1Obj)
+    {
+        if (par1Obj == null || !(par1Obj instanceof NBTBase))
+        {
+            return false;
+        }
+
+        NBTBase nbtbase = (NBTBase)par1Obj;
+
+        if (getId() != nbtbase.getId())
+        {
+            return false;
+        }
+
+        if (name == null && nbtbase.name != null || name != null && nbtbase.name == null)
+        {
+            return false;
+        }
+
+        return name == null || name.equals(nbtbase.name);
+    }
+
+    public int hashCode()
+    {
+        return name.hashCode() ^ getId();
+    }
 }

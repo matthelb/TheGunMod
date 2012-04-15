@@ -53,7 +53,7 @@ public class RenderEnderman extends RenderLiving
             GL11.glRotatef(20F, 1.0F, 0.0F, 0.0F);
             GL11.glRotatef(45F, 0.0F, 1.0F, 0.0F);
             GL11.glScalef(f, -f, f);
-            int i = par1EntityEnderman.getEntityBrightnessForRender(par2);
+            int i = par1EntityEnderman.getBrightnessForRender(par2);
             int j = i % 0x10000;
             int k = i / 0x10000;
             OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float)j / 1.0F, (float)k / 1.0F);

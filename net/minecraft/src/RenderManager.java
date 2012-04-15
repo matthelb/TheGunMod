@@ -158,7 +158,7 @@ public class RenderManager
         double d1 = par1Entity.lastTickPosY + (par1Entity.posY - par1Entity.lastTickPosY) * (double)par2;
         double d2 = par1Entity.lastTickPosZ + (par1Entity.posZ - par1Entity.lastTickPosZ) * (double)par2;
         float f = par1Entity.prevRotationYaw + (par1Entity.rotationYaw - par1Entity.prevRotationYaw) * par2;
-        int i = par1Entity.getEntityBrightnessForRender(par2);
+        int i = par1Entity.getBrightnessForRender(par2);
 
         if (par1Entity.isBurning())
         {

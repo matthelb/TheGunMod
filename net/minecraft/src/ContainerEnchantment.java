@@ -159,7 +159,7 @@ public class ContainerEnchantment extends Container
     {
         ItemStack itemstack = tableInventory.getStackInSlot(0);
 
-        if (enchantLevels[par2] > 0 && itemstack != null && (par1EntityPlayer.experienceLevel >= enchantLevels[par2] || par1EntityPlayer.capabilities.depleteBuckets))
+        if (enchantLevels[par2] > 0 && itemstack != null && (par1EntityPlayer.experienceLevel >= enchantLevels[par2] || par1EntityPlayer.capabilities.isCreativeMode))
         {
             if (!worldPointer.isRemote)
             {

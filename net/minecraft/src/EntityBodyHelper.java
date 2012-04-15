@@ -21,18 +21,18 @@ public class EntityBodyHelper
         if (d * d + d1 * d1 > 2.5000002779052011E-007D)
         {
             field_48654_a.renderYawOffset = field_48654_a.rotationYaw;
-            field_48654_a.prevRotationYaw2 = func_48651_a(field_48654_a.renderYawOffset, field_48654_a.prevRotationYaw2, 75F);
-            field_48653_c = field_48654_a.prevRotationYaw2;
+            field_48654_a.rotationYawHead = func_48651_a(field_48654_a.renderYawOffset, field_48654_a.rotationYawHead, 75F);
+            field_48653_c = field_48654_a.rotationYawHead;
             field_48652_b = 0;
             return;
         }
 
         float f = 75F;
 
-        if (Math.abs(field_48654_a.prevRotationYaw2 - field_48653_c) > 15F)
+        if (Math.abs(field_48654_a.rotationYawHead - field_48653_c) > 15F)
         {
             field_48652_b = 0;
-            field_48653_c = field_48654_a.prevRotationYaw2;
+            field_48653_c = field_48654_a.rotationYawHead;
         }
         else
         {
@@ -44,7 +44,7 @@ public class EntityBodyHelper
             }
         }
 
-        field_48654_a.renderYawOffset = func_48651_a(field_48654_a.prevRotationYaw2, field_48654_a.renderYawOffset, f);
+        field_48654_a.renderYawOffset = func_48651_a(field_48654_a.rotationYawHead, field_48654_a.renderYawOffset, f);
     }
 
     private float func_48651_a(float par1, float par2, float par3)

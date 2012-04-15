@@ -38,9 +38,9 @@ public class EntityPortalFX extends EntityFX
         super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
     }
 
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
-        int i = super.getEntityBrightnessForRender(par1);
+        int i = super.getBrightnessForRender(par1);
         float f = (float)particleAge / (float)particleMaxAge;
         f *= f;
         f *= f;
@@ -59,12 +59,11 @@ public class EntityPortalFX extends EntityFX
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
-        float f = super.getEntityBrightness(par1);
+        float f = super.getBrightness(par1);
         float f1 = (float)particleAge / (float)particleMaxAge;
-        f1 *= f1;
-        f1 *= f1;
+        f1 = f1 * f1 * f1 * f1;
         return f * (1.0F - f1) + f1;
     }
 
@@ -86,7 +85,7 @@ public class EntityPortalFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
     }
 }

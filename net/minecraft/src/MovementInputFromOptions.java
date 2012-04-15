@@ -9,7 +9,7 @@ public class MovementInputFromOptions extends MovementInput
         gameSettings = par1GameSettings;
     }
 
-    public void updatePlayerMoveState(EntityPlayer par1EntityPlayer)
+    public void updatePlayerMoveState()
     {
         moveStrafe = 0.0F;
         moveForward = 0.0F;

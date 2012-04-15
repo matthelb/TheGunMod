@@ -29,7 +29,7 @@ public class EntityWolf extends EntityTameable
         texture = "/mob/wolf.png";
         setSize(0.6F, 0.8F);
         moveSpeed = 0.3F;
-        getNavigator().func_48664_a(true);
+        getNavigator().setAvoidsWater(true);
         tasks.addTask(1, new EntityAISwimming(this));
         tasks.addTask(2, aiSit);
         tasks.addTask(3, new EntityAILeapAtTarget(this, 0.4F));
@@ -72,7 +72,7 @@ public class EntityWolf extends EntityTameable
      */
     protected void updateAITick()
     {
-        dataWatcher.updateObject(18, Integer.valueOf(getEntityHealth()));
+        dataWatcher.updateObject(18, Integer.valueOf(getHealth()));
     }
 
     public int getMaxHealth()
@@ -83,7 +83,7 @@ public class EntityWolf extends EntityTameable
     protected void entityInit()
     {
         super.entityInit();
-        dataWatcher.addObject(18, new Integer(getEntityHealth()));
+        dataWatcher.addObject(18, new Integer(getHealth()));
     }
 
     /**
@@ -96,9 +96,9 @@ public class EntityWolf extends EntityTameable
     }
 
     /**
-     * returns the directory and filename as a String
+     * Returns the texture's file path as a String.
      */
-    public String getEntityTexture()
+    public String getTexture()
     {
         if (isTamed())
         {
@@ -111,7 +111,7 @@ public class EntityWolf extends EntityTameable
         }
         else
         {
-            return super.getEntityTexture();
+            return super.getTexture();
         }
     }
 
@@ -367,7 +367,10 @@ public class EntityWolf extends EntityTameable
         {
             if (itemstack != null && itemstack.itemID == Item.bone.shiftedIndex && !isAngry())
             {
-                itemstack.stackSize--;
+                if (!par1EntityPlayer.capabilities.isCreativeMode)
+                {
+                    itemstack.stackSize--;
+                }
 
                 if (itemstack.stackSize <= 0)
                 {
@@ -405,7 +408,11 @@ public class EntityWolf extends EntityTameable
 
                 if (itemfood.isWolfsFavoriteMeat() && dataWatcher.getWatchableObjectInt(18) < 20)
                 {
-                    itemstack.stackSize--;
+                    if (!par1EntityPlayer.capabilities.isCreativeMode)
+                    {
+                        itemstack.stackSize--;
+                    }
+
                     heal(itemfood.getHealAmount());
 
                     if (itemstack.stackSize <= 0)
@@ -442,7 +449,7 @@ public class EntityWolf extends EntityTameable
         }
     }
 
-    public float setTailRotation()
+    public float getTailRotation()
     {
         if (isAngry())
         {
@@ -488,7 +495,7 @@ public class EntityWolf extends EntityTameable
     }
 
     /**
-     * gets this wolf's angry state
+     * Determines whether this wolf is angry or not.
      */
     public boolean isAngry()
     {
@@ -496,7 +503,7 @@ public class EntityWolf extends EntityTameable
     }
 
     /**
-     * sets this wolf's angry state to true if the boolean argument is true
+     * Sets whether this wolf is angry or not.
      */
     public void setAngry(boolean par1)
     {
@@ -558,7 +565,7 @@ public class EntityWolf extends EntityTameable
         }
         else
         {
-            return func_48136_o_() && entitywolf.func_48136_o_();
+            return isInLove() && entitywolf.isInLove();
         }
     }
 }

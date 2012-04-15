@@ -112,8 +112,8 @@ public class EntityAITempt extends EntityAIBase
         field_48273_d = temptingPlayer.posY;
         field_48274_e = temptingPlayer.posZ;
         field_48280_j = true;
-        field_48279_m = temptedEntity.getNavigator().func_48658_a();
-        temptedEntity.getNavigator().func_48664_a(false);
+        field_48279_m = temptedEntity.getNavigator().getAvoidsWater();
+        temptedEntity.getNavigator().setAvoidsWater(false);
     }
 
     /**
@@ -122,10 +122,10 @@ public class EntityAITempt extends EntityAIBase
     public void resetTask()
     {
         temptingPlayer = null;
-        temptedEntity.getNavigator().func_48672_f();
+        temptedEntity.getNavigator().clearPathEntity();
         delayTemptCounter = 100;
         field_48280_j = false;
-        temptedEntity.getNavigator().func_48664_a(field_48279_m);
+        temptedEntity.getNavigator().setAvoidsWater(field_48279_m);
     }
 
     /**
@@ -137,7 +137,7 @@ public class EntityAITempt extends EntityAIBase
 
         if (temptedEntity.getDistanceSqToEntity(temptingPlayer) < 6.25D)
         {
-            temptedEntity.getNavigator().func_48672_f();
+            temptedEntity.getNavigator().clearPathEntity();
         }
         else
         {

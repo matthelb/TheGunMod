@@ -58,7 +58,7 @@ public class EntityLargeExplodeFX extends EntityFX
         }
     }
 
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
         return 61680;
     }
@@ -75,7 +75,7 @@ public class EntityLargeExplodeFX extends EntityFX
 
         if (field_35130_a == field_35129_ay)
         {
-            setEntityDead();
+            setDead();
         }
     }
 

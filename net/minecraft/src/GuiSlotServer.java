@@ -6,12 +6,13 @@ import org.lwjgl.opengl.GL11;
 
 class GuiSlotServer extends GuiSlot
 {
-    final GuiMultiplayer field_35410_a;
+    /** Instance to the GUI this list is on. */
+    final GuiMultiplayer parentGui;
 
     public GuiSlotServer(GuiMultiplayer par1GuiMultiplayer)
     {
         super(par1GuiMultiplayer.mc, par1GuiMultiplayer.width, par1GuiMultiplayer.height, 32, par1GuiMultiplayer.height - 64, 36);
-        field_35410_a = par1GuiMultiplayer;
+        parentGui = par1GuiMultiplayer;
     }
 
     /**
@@ -19,7 +20,7 @@ class GuiSlotServer extends GuiSlot
      */
     protected int getSize()
     {
-        return GuiMultiplayer.getServerList(field_35410_a).size();
+        return GuiMultiplayer.getServerList(parentGui).size();
     }
 
     /**
@@ -27,15 +28,15 @@ class GuiSlotServer extends GuiSlot
      */
     protected void elementClicked(int par1, boolean par2)
     {
-        GuiMultiplayer.setSelectedServer(field_35410_a, par1);
-        boolean flag = GuiMultiplayer.getSelectedServer(field_35410_a) >= 0 && GuiMultiplayer.getSelectedServer(field_35410_a) < getSize();
-        GuiMultiplayer.getButtonSelect(field_35410_a).enabled = flag;
-        GuiMultiplayer.getButtonEdit(field_35410_a).enabled = flag;
-        GuiMultiplayer.getButtonDelete(field_35410_a).enabled = flag;
+        GuiMultiplayer.setSelectedServer(parentGui, par1);
+        boolean flag = GuiMultiplayer.getSelectedServer(parentGui) >= 0 && GuiMultiplayer.getSelectedServer(parentGui) < getSize();
+        GuiMultiplayer.getButtonSelect(parentGui).enabled = flag;
+        GuiMultiplayer.getButtonEdit(parentGui).enabled = flag;
+        GuiMultiplayer.getButtonDelete(parentGui).enabled = flag;
 
         if (par2 && flag)
         {
-            GuiMultiplayer.joinServer(field_35410_a, par1);
+            GuiMultiplayer.joinServer(parentGui, par1);
         }
     }
 
@@ -44,7 +45,7 @@ class GuiSlotServer extends GuiSlot
      */
     protected boolean isSelected(int par1)
     {
-        return par1 == GuiMultiplayer.getSelectedServer(field_35410_a);
+        return par1 == GuiMultiplayer.getSelectedServer(parentGui);
     }
 
     /**
@@ -52,17 +53,17 @@ class GuiSlotServer extends GuiSlot
      */
     protected int getContentHeight()
     {
-        return GuiMultiplayer.getServerList(field_35410_a).size() * 36;
+        return GuiMultiplayer.getServerList(parentGui).size() * 36;
     }
 
     protected void drawBackground()
     {
-        field_35410_a.drawDefaultBackground();
+        parentGui.drawDefaultBackground();
     }
 
     protected void drawSlot(int par1, int par2, int par3, int par4, Tessellator par5Tessellator)
     {
-        ServerNBTStorage servernbtstorage = (ServerNBTStorage)GuiMultiplayer.getServerList(field_35410_a).get(par1);
+        ServerNBTStorage servernbtstorage = (ServerNBTStorage)GuiMultiplayer.getServerList(parentGui).get(par1);
 
         synchronized (GuiMultiplayer.getLock())
         {
@@ -77,15 +78,15 @@ class GuiSlotServer extends GuiSlot
             }
         }
 
-        field_35410_a.drawString(field_35410_a.fontRenderer, servernbtstorage.name, par2 + 2, par3 + 1, 0xffffff);
-        field_35410_a.drawString(field_35410_a.fontRenderer, servernbtstorage.motd, par2 + 2, par3 + 12, 0x808080);
-        field_35410_a.drawString(field_35410_a.fontRenderer, servernbtstorage.playerCount, (par2 + 215) - field_35410_a.fontRenderer.getStringWidth(servernbtstorage.playerCount), par3 + 12, 0x808080);
-        field_35410_a.drawString(field_35410_a.fontRenderer, servernbtstorage.host, par2 + 2, par3 + 12 + 11, 0x303030);
+        parentGui.drawString(parentGui.fontRenderer, servernbtstorage.name, par2 + 2, par3 + 1, 0xffffff);
+        parentGui.drawString(parentGui.fontRenderer, servernbtstorage.motd, par2 + 2, par3 + 12, 0x808080);
+        parentGui.drawString(parentGui.fontRenderer, servernbtstorage.playerCount, (par2 + 215) - parentGui.fontRenderer.getStringWidth(servernbtstorage.playerCount), par3 + 12, 0x808080);
+        parentGui.drawString(parentGui.fontRenderer, servernbtstorage.host, par2 + 2, par3 + 12 + 11, 0x303030);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-        field_35410_a.mc.renderEngine.bindTexture(field_35410_a.mc.renderEngine.getTexture("/gui/icons.png"));
-        int i = 0;
-        int j = 0;
+        parentGui.mc.renderEngine.bindTexture(parentGui.mc.renderEngine.getTexture("/gui/icons.png"));
         String s = "";
+        int i;
+        int j;
 
         if (servernbtstorage.polled && servernbtstorage.lag != -2L)
         {
@@ -139,12 +140,12 @@ class GuiSlotServer extends GuiSlot
             s = "Polling..";
         }
 
-        field_35410_a.drawTexturedModalRect(par2 + 205, par3, 0 + i * 10, 176 + j * 8, 10, 8);
+        parentGui.drawTexturedModalRect(par2 + 205, par3, 0 + i * 10, 176 + j * 8, 10, 8);
         byte byte0 = 4;
 
-        if (field_35409_k >= (par2 + 205) - byte0 && field_35408_l >= par3 - byte0 && field_35409_k <= par2 + 205 + 10 + byte0 && field_35408_l <= par3 + 8 + byte0)
+        if (mouseX >= (par2 + 205) - byte0 && mouseY >= par3 - byte0 && mouseX <= par2 + 205 + 10 + byte0 && mouseY <= par3 + 8 + byte0)
         {
-            GuiMultiplayer.func_35327_a(field_35410_a, s);
+            GuiMultiplayer.setTooltipText(parentGui, s);
         }
     }
 }

@@ -72,7 +72,7 @@ public class BlockGrass extends Block
         {
             for (int i1 = -1; i1 <= 1; i1++)
             {
-                int j1 = par1IBlockAccess.func_48454_a(par2 + i1, par4 + l).func_48415_j();
+                int j1 = par1IBlockAccess.getBiomeGenForCoords(par2 + i1, par4 + l).getBiomeGrassColor();
                 i += (j1 & 0xff0000) >> 16;
                 j += (j1 & 0xff00) >> 8;
                 k += j1 & 0xff;

@@ -194,7 +194,7 @@ public class EntitySilverfish extends EntityMob
             {
                 worldObj.setBlockAndMetadataWithNotify(j + Facing.offsetsXForSide[k1], l + Facing.offsetsYForSide[k1], j1 + Facing.offsetsZForSide[k1], Block.silverfish.blockID, BlockSilverfish.getMetadataForBlockType(i2));
                 spawnExplosionParticle();
-                setEntityDead();
+                setDead();
             }
             else
             {

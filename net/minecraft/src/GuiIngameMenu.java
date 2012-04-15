@@ -43,38 +43,41 @@ public class GuiIngameMenu extends GuiScreen
      */
     protected void actionPerformed(GuiButton par1GuiButton)
     {
-        if (par1GuiButton.id == 0)
+        switch (par1GuiButton.id)
         {
-            mc.displayGuiScreen(new GuiOptions(this, mc.gameSettings));
-        }
+            case 2:
+            case 3:
+            default:
+                break;
 
-        if (par1GuiButton.id == 1)
-        {
-            mc.statFileWriter.readStat(StatList.leaveGameStat, 1);
+            case 0:
+                mc.displayGuiScreen(new GuiOptions(this, mc.gameSettings));
+                break;
 
-            if (mc.isMultiplayerWorld())
-            {
-                mc.theWorld.sendQuittingDisconnectingPacket();
-            }
+            case 1:
+                mc.statFileWriter.readStat(StatList.leaveGameStat, 1);
 
-            mc.changeWorld1(null);
-            mc.displayGuiScreen(new GuiMainMenu());
-        }
+                if (mc.isMultiplayerWorld())
+                {
+                    mc.theWorld.sendQuittingDisconnectingPacket();
+                }
 
-        if (par1GuiButton.id == 4)
-        {
-            mc.displayGuiScreen(null);
-            mc.setIngameFocus();
-        }
+                mc.changeWorld1(null);
+                mc.displayGuiScreen(new GuiMainMenu());
+                break;
 
-        if (par1GuiButton.id == 5)
-        {
-            mc.displayGuiScreen(new GuiAchievements(mc.statFileWriter));
-        }
+            case 4:
+                mc.displayGuiScreen(null);
+                mc.setIngameFocus();
+                break;
 
-        if (par1GuiButton.id == 6)
-        {
-            mc.displayGuiScreen(new GuiStats(this, mc.statFileWriter));
+            case 5:
+                mc.displayGuiScreen(new GuiAchievements(mc.statFileWriter));
+                break;
+
+            case 6:
+                mc.displayGuiScreen(new GuiStats(this, mc.statFileWriter));
+                break;
         }
     }
 

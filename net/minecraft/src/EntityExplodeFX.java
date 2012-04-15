@@ -15,11 +15,6 @@ public class EntityExplodeFX extends EntityFX
         particleMaxAge = (int)(16D / ((double)rand.nextFloat() * 0.80000000000000004D + 0.20000000000000001D)) + 2;
     }
 
-    public void renderParticle(Tessellator par1Tessellator, float par2, float par3, float par4, float par5, float par6, float par7)
-    {
-        super.renderParticle(par1Tessellator, par2, par3, par4, par5, par6, par7);
-    }
-
     /**
      * Called to update the entity's position/logic.
      */
@@ -31,7 +26,7 @@ public class EntityExplodeFX extends EntityFX
 
         if (particleAge++ >= particleMaxAge)
         {
-            setEntityDead();
+            setDead();
         }
 
         setParticleTextureIndex(7 - (particleAge * 8) / particleMaxAge);

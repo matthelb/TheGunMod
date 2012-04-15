@@ -217,7 +217,7 @@ public class BlockVine extends Block
      */
     public int colorMultiplier(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        return par1IBlockAccess.func_48454_a(par2, par4).func_48412_k();
+        return par1IBlockAccess.getBiomeGenForCoords(par2, par4).getBiomeFoliageColor();
     }
 
     /**

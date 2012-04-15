@@ -152,16 +152,15 @@ public class ModelWolf extends ModelBase
             wolfLeg4.rotateAngleX = MathHelper.cos(par2 * 0.6662F) * 1.4F * par3;
         }
 
-        float f = entitywolf.getInterestedAngle(par4) + entitywolf.getShakeAngle(par4, 0.0F);
-        wolfHeadMain.rotateAngleZ = f;
+        wolfHeadMain.rotateAngleZ = entitywolf.getInterestedAngle(par4) + entitywolf.getShakeAngle(par4, 0.0F);
         wolfMane.rotateAngleZ = entitywolf.getShakeAngle(par4, -0.08F);
         wolfBody.rotateAngleZ = entitywolf.getShakeAngle(par4, -0.16F);
         wolfTail.rotateAngleZ = entitywolf.getShakeAngle(par4, -0.2F);
 
         if (entitywolf.getWolfShaking())
         {
-            float f1 = entitywolf.getEntityBrightness(par4) * entitywolf.getShadingWhileShaking(par4);
-            GL11.glColor3f(f1, f1, f1);
+            float f = entitywolf.getBrightness(par4) * entitywolf.getShadingWhileShaking(par4);
+            GL11.glColor3f(f, f, f);
         }
     }
 

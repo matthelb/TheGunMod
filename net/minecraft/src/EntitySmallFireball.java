@@ -70,7 +70,7 @@ public class EntitySmallFireball extends EntityFireball
                 }
             }
 
-            setEntityDead();
+            setDead();
         }
     }
 

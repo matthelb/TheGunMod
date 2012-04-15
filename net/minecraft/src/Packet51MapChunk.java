@@ -6,15 +6,32 @@ import java.util.zip.Inflater;
 
 public class Packet51MapChunk extends Packet
 {
-    public int field_48177_a;
-    public int field_48175_b;
-    public int field_48176_c;
-    public int field_48173_d;
-    public byte field_48174_e[];
-    public boolean field_48171_f;
-    private int field_48172_g;
+    /** The x-position of the transmitted chunk, in chunk coordinates. */
+    public int xCh;
+
+    /** The z-position of the transmitted chunk, in chunk coordinates. */
+    public int zCh;
+
+    /**
+     * The y-position of the lowest chunk Section in the transmitted chunk, in chunk coordinates.
+     */
+    public int yChMin;
+
+    /**
+     * The y-position of the highest chunk Section in the transmitted chunk, in chunk coordinates.
+     */
+    public int yChMax;
+    public byte chunkData[];
+
+    /**
+     * Whether to initialize the Chunk before applying the effect of the Packet51MapChunk.
+     */
+    public boolean includeInitialize;
+
+    /** The length of the compressed chunk data byte array. */
+    private int tempLength;
     private int field_48178_h;
-    private static byte field_48179_i[] = new byte[0];
+    private static byte temp[] = new byte[0];
 
     public Packet51MapChunk()
     {
@@ -26,41 +43,41 @@ public class Packet51MapChunk extends Packet
      */
     public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        field_48177_a = par1DataInputStream.readInt();
-        field_48175_b = par1DataInputStream.readInt();
-        field_48171_f = par1DataInputStream.readBoolean();
-        field_48176_c = par1DataInputStream.readShort();
-        field_48173_d = par1DataInputStream.readShort();
-        field_48172_g = par1DataInputStream.readInt();
+        xCh = par1DataInputStream.readInt();
+        zCh = par1DataInputStream.readInt();
+        includeInitialize = par1DataInputStream.readBoolean();
+        yChMin = par1DataInputStream.readShort();
+        yChMax = par1DataInputStream.readShort();
+        tempLength = par1DataInputStream.readInt();
         field_48178_h = par1DataInputStream.readInt();
 
-        if (field_48179_i.length < field_48172_g)
+        if (temp.length < tempLength)
         {
-            field_48179_i = new byte[field_48172_g];
+            temp = new byte[tempLength];
         }
 
-        par1DataInputStream.readFully(field_48179_i, 0, field_48172_g);
+        par1DataInputStream.readFully(temp, 0, tempLength);
         int i = 0;
 
         for (int j = 0; j < 16; j++)
         {
-            i += field_48176_c >> j & 1;
+            i += yChMin >> j & 1;
         }
 
         int k = 12288 * i;
 
-        if (field_48171_f)
+        if (includeInitialize)
         {
             k += 256;
         }
 
-        field_48174_e = new byte[k];
+        chunkData = new byte[k];
         Inflater inflater = new Inflater();
-        inflater.setInput(field_48179_i, 0, field_48172_g);
+        inflater.setInput(temp, 0, tempLength);
 
         try
         {
-            inflater.inflate(field_48174_e);
+            inflater.inflate(chunkData);
         }
         catch (DataFormatException dataformatexception)
         {
@@ -77,14 +94,14 @@ public class Packet51MapChunk extends Packet
      */
     public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        par1DataOutputStream.writeInt(field_48177_a);
-        par1DataOutputStream.writeInt(field_48175_b);
-        par1DataOutputStream.writeBoolean(field_48171_f);
-        par1DataOutputStream.writeShort((short)(field_48176_c & 0xffff));
-        par1DataOutputStream.writeShort((short)(field_48173_d & 0xffff));
-        par1DataOutputStream.writeInt(field_48172_g);
+        par1DataOutputStream.writeInt(xCh);
+        par1DataOutputStream.writeInt(zCh);
+        par1DataOutputStream.writeBoolean(includeInitialize);
+        par1DataOutputStream.writeShort((short)(yChMin & 0xffff));
+        par1DataOutputStream.writeShort((short)(yChMax & 0xffff));
+        par1DataOutputStream.writeInt(tempLength);
         par1DataOutputStream.writeInt(field_48178_h);
-        par1DataOutputStream.write(field_48174_e, 0, field_48172_g);
+        par1DataOutputStream.write(chunkData, 0, tempLength);
     }
 
     /**
@@ -100,6 +117,6 @@ public class Packet51MapChunk extends Packet
      */
     public int getPacketSize()
     {
-        return 17 + field_48172_g;
+        return 17 + tempLength;
     }
 }

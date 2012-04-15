@@ -30,6 +30,14 @@ public abstract class WorldGenerator
     }
 
     /**
+     * Sets the block without metadata in the world, notifying neighbors if enabled.
+     */
+    protected void setBlock(World par1World, int par2, int par3, int par4, int par5)
+    {
+        setBlockAndMetadata(par1World, par2, par3, par4, par5, 0);
+    }
+
+    /**
      * Sets the block in the world, notifying neighbors if enabled.
      */
     protected void setBlockAndMetadata(World par1World, int par2, int par3, int par4, int par5, int par6)
@@ -37,6 +45,13 @@ public abstract class WorldGenerator
         if (doBlockNotify)
         {
             par1World.setBlockAndMetadataWithNotify(par2, par3, par4, par5, par6);
+        }
+        else if (par1World.blockExists(par2, par3, par4) && par1World.getChunkFromBlockCoords(par2, par4).field_50120_o)
+        {
+            if (par1World.setBlockAndMetadata(par2, par3, par4, par5, par6))
+            {
+                par1World.markBlockNeedsUpdate(par2, par3, par4);
+            }
         }
         else
         {

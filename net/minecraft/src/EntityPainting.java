@@ -178,9 +178,9 @@ public class EntityPainting extends Entity
         {
             tickCounter1 = 0;
 
-            if (!onValidSurface())
+            if (!isDead && !onValidSurface())
             {
-                setEntityDead();
+                setDead();
                 worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
             }
         }
@@ -274,7 +274,7 @@ public class EntityPainting extends Entity
     {
         if (!isDead && !worldObj.isRemote)
         {
-            setEntityDead();
+            setDead();
             setBeenAttacked();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
         }
@@ -330,9 +330,9 @@ public class EntityPainting extends Entity
      */
     public void moveEntity(double par1, double par3, double par5)
     {
-        if (!worldObj.isRemote && par1 * par1 + par3 * par3 + par5 * par5 > 0.0D)
+        if (!worldObj.isRemote && !isDead && par1 * par1 + par3 * par3 + par5 * par5 > 0.0D)
         {
-            setEntityDead();
+            setDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
         }
     }
@@ -342,9 +342,9 @@ public class EntityPainting extends Entity
      */
     public void addVelocity(double par1, double par3, double par5)
     {
-        if (!worldObj.isRemote && par1 * par1 + par3 * par3 + par5 * par5 > 0.0D)
+        if (!worldObj.isRemote && !isDead && par1 * par1 + par3 * par3 + par5 * par5 > 0.0D)
         {
-            setEntityDead();
+            setDead();
             worldObj.spawnEntityInWorld(new EntityItem(worldObj, posX, posY, posZ, new ItemStack(Item.painting)));
         }
     }

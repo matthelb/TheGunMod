@@ -20,7 +20,7 @@ public class EntityEnderPearl extends EntityThrowable
     }
 
     /**
-     * Called when the throwable hits a block or entity.
+     * Called when this EntityThrowable hits a block or entity.
      */
     protected void onImpact(MovingObjectPosition par1MovingObjectPosition)
     {
@@ -43,7 +43,7 @@ public class EntityEnderPearl extends EntityThrowable
                 thrower.attackEntityFrom(DamageSource.fall, 5);
             }
 
-            setEntityDead();
+            setDead();
         }
     }
 }

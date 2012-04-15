@@ -259,7 +259,7 @@ public class ChunkProviderGenerate implements IChunkProvider
     }
 
     /**
-     * Creates an empty chunk ready to put data from the server in
+     * loads or generates the chunk at the chunk location specified
      */
     public Chunk loadChunk(int par1, int par2)
     {
@@ -288,6 +288,13 @@ public class ChunkProviderGenerate implements IChunkProvider
         }
 
         Chunk chunk = new Chunk(worldObj, abyte0, par1, par2);
+        byte abyte1[] = chunk.getBiomeArray();
+
+        for (int i = 0; i < abyte1.length; i++)
+        {
+            abyte1[i] = (byte)biomesForGeneration[i].biomeID;
+        }
+
         chunk.generateSkylightMap();
         return chunk;
     }
@@ -458,7 +465,7 @@ public class ChunkProviderGenerate implements IChunkProvider
         BlockSand.fallInstantly = true;
         int i = par2 * 16;
         int j = par3 * 16;
-        BiomeGenBase biomegenbase = worldObj.func_48454_a(i + 16, j + 16);
+        BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(i + 16, j + 16);
         rand.setSeed(worldObj.getSeed());
         long l = (rand.nextLong() / 2L) * 2L + 1L;
         long l1 = (rand.nextLong() / 2L) * 2L + 1L;
@@ -512,7 +519,7 @@ public class ChunkProviderGenerate implements IChunkProvider
             {
                 int l3 = worldObj.getPrecipitationHeight(i + k1, j + l2);
 
-                if (worldObj.isBlockHydratedDirectly(k1 + i, l3 - 1, l2 + j))
+                if (worldObj.isBlockFreezable(k1 + i, l3 - 1, l2 + j))
                 {
                     worldObj.setBlockWithNotify(k1 + i, l3 - 1, l2 + j, Block.ice.blockID);
                 }
@@ -566,7 +573,7 @@ public class ChunkProviderGenerate implements IChunkProvider
      */
     public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int par4)
     {
-        BiomeGenBase biomegenbase = worldObj.func_48454_a(par2, par4);
+        BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(par2, par4);
 
         if (biomegenbase == null)
         {

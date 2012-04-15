@@ -8,9 +8,11 @@ class ThreadConnectToServer extends Thread
 {
     /** A reference to the Minecraft object. */
     final Minecraft mc;
-    final String field_48479_b;
 
-    /** A reference to the Minecraft object. */
+    /** The IP address or domain used to connect. */
+    final String ip;
+
+    /** The port used to connect. */
     final int port;
 
     /** A reference to the GuiConnecting object. */
@@ -20,7 +22,7 @@ class ThreadConnectToServer extends Thread
     {
         connectingGui = par1GuiConnecting;
         mc = par2Minecraft;
-        field_48479_b = par3Str;
+        ip = par3Str;
         port = par4;
     }
 
@@ -28,14 +30,14 @@ class ThreadConnectToServer extends Thread
     {
         try
         {
-            GuiConnecting.setNetClientHandler(connectingGui, new NetClientHandler(mc, field_48479_b, port));
+            GuiConnecting.setNetClientHandler(connectingGui, new NetClientHandler(mc, ip, port));
 
             if (GuiConnecting.isCancelled(connectingGui))
             {
                 return;
             }
 
-            GuiConnecting.getNetClientHandler(connectingGui).addToSendQueue(new Packet2Handshake(mc.session.username, field_48479_b, port));
+            GuiConnecting.getNetClientHandler(connectingGui).addToSendQueue(new Packet2Handshake(mc.session.username, ip, port));
         }
         catch (UnknownHostException unknownhostexception)
         {
@@ -46,7 +48,7 @@ class ThreadConnectToServer extends Thread
 
             mc.displayGuiScreen(new GuiDisconnected("connect.failed", "disconnect.genericReason", new Object[]
                     {
-                        (new StringBuilder()).append("Unknown host '").append(field_48479_b).append("'").toString()
+                        (new StringBuilder()).append("Unknown host '").append(ip).append("'").toString()
                     }));
         }
         catch (ConnectException connectexception)

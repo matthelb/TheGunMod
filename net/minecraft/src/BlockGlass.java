@@ -41,4 +41,12 @@ public class BlockGlass extends BlockBreakable
     {
         return false;
     }
+
+    /**
+     * Return true if a player with SlikTouch can harvest this block directly, and not it's normal drops.
+     */
+    protected boolean canSilkHarvest()
+    {
+        return true;
+    }
 }

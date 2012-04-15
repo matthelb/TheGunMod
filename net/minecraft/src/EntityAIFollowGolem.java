@@ -4,15 +4,15 @@ import java.util.*;
 
 public class EntityAIFollowGolem extends EntityAIBase
 {
-    private EntityVillager field_48403_a;
-    private EntityIronGolem field_48401_b;
+    private EntityVillager theVillager;
+    private EntityIronGolem theGolem;
     private int field_48402_c;
     private boolean field_48400_d;
 
     public EntityAIFollowGolem(EntityVillager par1EntityVillager)
     {
         field_48400_d = false;
-        field_48403_a = par1EntityVillager;
+        theVillager = par1EntityVillager;
         setMutexBits(3);
     }
 
@@ -21,17 +21,17 @@ public class EntityAIFollowGolem extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (field_48403_a.getGrowingAge() >= 0)
+        if (theVillager.getGrowingAge() >= 0)
         {
             return false;
         }
 
-        if (!field_48403_a.worldObj.isDaytime())
+        if (!theVillager.worldObj.isDaytime())
         {
             return false;
         }
 
-        List list = field_48403_a.worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityIronGolem.class, field_48403_a.boundingBox.expand(6D, 2D, 6D));
+        List list = theVillager.worldObj.getEntitiesWithinAABB(net.minecraft.src.EntityIronGolem.class, theVillager.boundingBox.expand(6D, 2D, 6D));
 
         if (list.size() == 0)
         {
@@ -55,12 +55,12 @@ public class EntityAIFollowGolem extends EntityAIBase
                 continue;
             }
 
-            field_48401_b = entityirongolem;
+            theGolem = entityirongolem;
             break;
         }
         while (true);
 
-        return field_48401_b != null;
+        return theGolem != null;
     }
 
     /**
@@ -68,7 +68,7 @@ public class EntityAIFollowGolem extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return field_48401_b.func_48117_D_() > 0;
+        return theGolem.func_48117_D_() > 0;
     }
 
     /**
@@ -76,9 +76,9 @@ public class EntityAIFollowGolem extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48402_c = field_48403_a.getRNG().nextInt(320);
+        field_48402_c = theVillager.getRNG().nextInt(320);
         field_48400_d = false;
-        field_48401_b.getNavigator().func_48672_f();
+        theGolem.getNavigator().clearPathEntity();
     }
 
     /**
@@ -86,8 +86,8 @@ public class EntityAIFollowGolem extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48401_b = null;
-        field_48403_a.getNavigator().func_48672_f();
+        theGolem = null;
+        theVillager.getNavigator().clearPathEntity();
     }
 
     /**
@@ -95,18 +95,18 @@ public class EntityAIFollowGolem extends EntityAIBase
      */
     public void updateTask()
     {
-        field_48403_a.getLookHelper().setLookPositionWithEntity(field_48401_b, 30F, 30F);
+        theVillager.getLookHelper().setLookPositionWithEntity(theGolem, 30F, 30F);
 
-        if (field_48401_b.func_48117_D_() == field_48402_c)
+        if (theGolem.func_48117_D_() == field_48402_c)
         {
-            field_48403_a.getNavigator().func_48667_a(field_48401_b, 0.15F);
+            theVillager.getNavigator().func_48667_a(theGolem, 0.15F);
             field_48400_d = true;
         }
 
-        if (field_48400_d && field_48403_a.getDistanceSqToEntity(field_48401_b) < 4D)
+        if (field_48400_d && theVillager.getDistanceSqToEntity(theGolem) < 4D)
         {
-            field_48401_b.func_48116_a(false);
-            field_48403_a.getNavigator().func_48672_f();
+            theGolem.func_48116_a(false);
+            theVillager.getNavigator().clearPathEntity();
         }
     }
 }

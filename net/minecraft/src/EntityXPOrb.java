@@ -56,7 +56,7 @@ public class EntityXPOrb extends Entity
     {
     }
 
-    public int getEntityBrightnessForRender(float par1)
+    public int getBrightnessForRender(float par1)
     {
         float f = 0.5F;
 
@@ -70,7 +70,7 @@ public class EntityXPOrb extends Entity
             f = 1.0F;
         }
 
-        int i = super.getEntityBrightnessForRender(par1);
+        int i = super.getBrightnessForRender(par1);
         int j = i & 0xff;
         int k = i >> 16 & 0xff;
         j += (int)(f * 15F * 16F);
@@ -157,7 +157,7 @@ public class EntityXPOrb extends Entity
 
         if (xpOrbAge >= 6000)
         {
-            setEntityDead();
+            setDead();
         }
     }
 
@@ -188,7 +188,7 @@ public class EntityXPOrb extends Entity
 
         if (xpOrbHealth <= 0)
         {
-            setEntityDead();
+            setDead();
         }
 
         return false;
@@ -230,7 +230,7 @@ public class EntityXPOrb extends Entity
             worldObj.playSoundAtEntity(this, "random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
             par1EntityPlayer.onItemPickup(this, 1);
             par1EntityPlayer.addExperience(xpValue);
-            setEntityDead();
+            setDead();
         }
     }
 
