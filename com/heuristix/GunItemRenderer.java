@@ -244,7 +244,7 @@ public class GunItemRenderer extends ItemRenderer {
             GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(f10 * -85F, 0.0F, 0.0F, 1.0F);
             GL11.glEnable(EXTRescaleNormal.GL_RESCALE_NORMAL_EXT);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getEntityTexture()));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getTexture()));
             for (f15 = 0; f15 < 2; f15++)
             {
                 f21 = f15 * 2 - 1;
@@ -392,7 +392,7 @@ public class GunItemRenderer extends ItemRenderer {
             scale = MathHelper.sin(MathHelper.sqrt_float(f13) * com.heuristix.Util.PI);
             GL11.glRotatef(scale * 70F, 0.0F, 1.0F, 0.0F);
             GL11.glRotatef(-f19 * 20F, 0.0F, 0.0F, 1.0F);
-            GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getEntityTexture()));
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, mc.renderEngine.getTextureForDownloadableImage(mc.thePlayer.skinUrl, mc.thePlayer.getTexture()));
             GL11.glTranslatef(-1F, 3.6F, 3.5F);
             GL11.glRotatef(120F, 0.0F, 0.0F, 1.0F);
             GL11.glRotatef(200F, 1.0F, 0.0F, 0.0F);

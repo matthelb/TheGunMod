@@ -49,7 +49,7 @@ public class EntityFlash extends Entity {
         brightness -= dieRate;
         if (brightness <= 0) {
             brightness = 0;
-            setEntityDead();
+            setDead();
         }
         updateLighting();
     }
