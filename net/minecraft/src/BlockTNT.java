@@ -45,7 +45,7 @@ public class BlockTNT extends Block
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, blockID
+     * their own) Args: x, y, z, neighbor blockID
      */
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
@@ -69,9 +69,17 @@ public class BlockTNT extends Block
      */
     public void onBlockDestroyedByExplosion(World par1World, int par2, int par3, int par4)
     {
-        EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(par1World, (float)par2 + 0.5F, (float)par3 + 0.5F, (float)par4 + 0.5F);
-        entitytntprimed.fuse = par1World.rand.nextInt(entitytntprimed.fuse / 4) + entitytntprimed.fuse / 8;
-        par1World.spawnEntityInWorld(entitytntprimed);
+        if (par1World.isRemote)
+        {
+            return;
+        }
+        else
+        {
+            EntityTNTPrimed entitytntprimed = new EntityTNTPrimed(par1World, (float)par2 + 0.5F, (float)par3 + 0.5F, (float)par4 + 0.5F);
+            entitytntprimed.fuse = par1World.rand.nextInt(entitytntprimed.fuse / 4) + entitytntprimed.fuse / 8;
+            par1World.spawnEntityInWorld(entitytntprimed);
+            return;
+        }
     }
 
     /**
@@ -101,11 +109,6 @@ public class BlockTNT extends Block
      */
     public void onBlockClicked(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        if (par5EntityPlayer.getCurrentEquippedItem() != null && par5EntityPlayer.getCurrentEquippedItem().itemID == Item.flintAndSteel.shiftedIndex)
-        {
-            par1World.setBlockMetadata(par2, par3, par4, 1);
-        }
-
         super.onBlockClicked(par1World, par2, par3, par4, par5EntityPlayer);
     }
 
@@ -115,7 +118,16 @@ public class BlockTNT extends Block
      */
     public boolean blockActivated(World par1World, int par2, int par3, int par4, EntityPlayer par5EntityPlayer)
     {
-        return super.blockActivated(par1World, par2, par3, par4, par5EntityPlayer);
+        if (par5EntityPlayer.getCurrentEquippedItem() != null && par5EntityPlayer.getCurrentEquippedItem().itemID == Item.flintAndSteel.shiftedIndex)
+        {
+            onBlockDestroyedByPlayer(par1World, par2, par3, par4, 1);
+            par1World.setBlockWithNotify(par2, par3, par4, 0);
+            return true;
+        }
+        else
+        {
+            return super.blockActivated(par1World, par2, par3, par4, par5EntityPlayer);
+        }
     }
 
     /**

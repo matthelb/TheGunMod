@@ -47,6 +47,14 @@ public class NBTTagByte extends NBTBase
         return (new StringBuilder()).append("").append(data).toString();
     }
 
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
+    {
+        return new NBTTagByte(getName(), data);
+    }
+
     public boolean equals(Object par1Obj)
     {
         if (super.equals(par1Obj))
@@ -60,11 +68,8 @@ public class NBTTagByte extends NBTBase
         }
     }
 
-    /**
-     * Creates a clone of the tag.
-     */
-    public NBTBase copy()
+    public int hashCode()
     {
-        return new NBTTagByte(getName(), data);
+        return super.hashCode() ^ data;
     }
 }

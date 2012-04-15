@@ -78,7 +78,7 @@ public class TileEntityMobSpawner extends TileEntity
 
             for (int i = 0; i < byte0; i++)
             {
-                EntityLiving entityliving = (EntityLiving)EntityList.createEntityInWorld(mobID, worldObj);
+                EntityLiving entityliving = (EntityLiving)EntityList.createEntityByName(mobID, worldObj);
 
                 if (entityliving == null)
                 {
@@ -149,7 +149,7 @@ public class TileEntityMobSpawner extends TileEntity
      */
     public Packet getDescriptionPacket()
     {
-        int i = EntityList.func_48582_a(mobID);
+        int i = EntityList.getIDFromString(mobID);
         return new Packet132TileEntityData(xCoord, yCoord, zCoord, 1, i);
     }
 }

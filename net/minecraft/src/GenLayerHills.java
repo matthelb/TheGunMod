@@ -48,9 +48,9 @@ public class GenLayerHills extends GenLayer
                     {
                         l = BiomeGenBase.iceMountains.biomeID;
                     }
-                    else if (k == BiomeGenBase.field_48443_w.biomeID)
+                    else if (k == BiomeGenBase.jungle.biomeID)
                     {
-                        l = BiomeGenBase.field_48444_x.biomeID;
+                        l = BiomeGenBase.jungleHills.biomeID;
                     }
 
                     if (l != k)

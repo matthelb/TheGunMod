@@ -54,7 +54,7 @@ public class EntityEgg extends EntityThrowable
 
         if (!worldObj.isRemote)
         {
-            setEntityDead();
+            setDead();
         }
     }
 }

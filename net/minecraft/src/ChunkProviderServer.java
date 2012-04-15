@@ -217,7 +217,7 @@ public class ChunkProviderServer implements IChunkProvider
             if (serverChunkGenerator != null)
             {
                 serverChunkGenerator.populate(par1IChunkProvider, par2, par3);
-                ModLoader.populateChunk(serverChunkGenerator, par2 << 4, par3 << 4, world);
+                ModLoader.populateChunk(serverChunkGenerator, par2, par3, world);
                 chunk.setChunkModified();
             }
         }

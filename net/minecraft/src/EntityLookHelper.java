@@ -68,16 +68,16 @@ public class EntityLookHelper
             float f1 = (float)((Math.atan2(d2, d) * 180D) / Math.PI) - 90F;
             float f2 = (float)(-((Math.atan2(d1, d3) * 180D) / Math.PI));
             entity.rotationPitch = updateRotation(entity.rotationPitch, f2, field_46067_c);
-            entity.prevRotationYaw2 = updateRotation(entity.prevRotationYaw2, f1, field_46066_b);
+            entity.rotationYawHead = updateRotation(entity.rotationYawHead, f1, field_46066_b);
         }
         else
         {
-            entity.prevRotationYaw2 = updateRotation(entity.prevRotationYaw2, entity.renderYawOffset, 10F);
+            entity.rotationYawHead = updateRotation(entity.rotationYawHead, entity.renderYawOffset, 10F);
         }
 
         float f;
 
-        for (f = entity.prevRotationYaw2 - entity.renderYawOffset; f < -180F; f += 360F) { }
+        for (f = entity.rotationYawHead - entity.renderYawOffset; f < -180F; f += 360F) { }
 
         for (; f >= 180F; f -= 360F) { }
 
@@ -85,12 +85,12 @@ public class EntityLookHelper
         {
             if (f < -75F)
             {
-                entity.prevRotationYaw2 = entity.renderYawOffset - 75F;
+                entity.rotationYawHead = entity.renderYawOffset - 75F;
             }
 
             if (f > 75F)
             {
-                entity.prevRotationYaw2 = entity.renderYawOffset + 75F;
+                entity.rotationYawHead = entity.renderYawOffset + 75F;
             }
         }
     }

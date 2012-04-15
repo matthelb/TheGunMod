@@ -21,10 +21,10 @@ public class AchievementList
     /** The list holding all achievements */
     public static List achievementList;
 
-    /** The open inventory achievement */
+    /** Is the 'open inventory' achievement. */
     public static Achievement openInventory;
 
-    /** The get wood achievement */
+    /** Is the 'getting wood' achievement. */
     public static Achievement mineWood;
 
     /** Is the 'benchmarking' achievement. */

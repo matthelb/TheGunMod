@@ -17,7 +17,7 @@ public class ItemSaddle extends Item
         {
             EntityPig entitypig = (EntityPig)par2EntityLiving;
 
-            if (!entitypig.getSaddled())
+            if (!entitypig.getSaddled() && !entitypig.isChild())
             {
                 entitypig.setSaddled(true);
                 par1ItemStack.stackSize--;

@@ -409,6 +409,6 @@ public class Village
             j = Math.max(villagedoorinfo.getDistanceSquared(center.posX, center.posY, center.posZ), j);
         }
 
-        villageRadius = Math.max(32, (int)Math.sqrt(j));
+        villageRadius = Math.max(32, (int)Math.sqrt(j) + 1);
     }
 }

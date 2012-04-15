@@ -5,9 +5,9 @@ import java.util.Random;
 
 public class ComponentStrongholdRoomCrossing extends ComponentStronghold
 {
-    private static final StructurePieceTreasure field_35348_c[];
+    private static final StructurePieceTreasure chestLoot[];
     protected final EnumDoor doorType;
-    protected final int field_35347_b;
+    protected final int roomType;
 
     public ComponentStrongholdRoomCrossing(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
@@ -15,11 +15,11 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
         coordBaseMode = par4;
         doorType = getRandomDoor(par2Random);
         boundingBox = par3StructureBoundingBox;
-        field_35347_b = par2Random.nextInt(5);
+        roomType = par2Random.nextInt(5);
     }
 
     /**
-     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     * Initiates construction of the Structure Component picked, at the current Location of StructGen
      */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
@@ -43,8 +43,8 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
     }
 
     /**
-     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
-     * the end, it adds Fences...'
+     * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...
      */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
@@ -59,7 +59,7 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
         fillWithBlocks(par1World, par3StructureBoundingBox, 0, 1, 4, 0, 3, 6, 0, 0, false);
         fillWithBlocks(par1World, par3StructureBoundingBox, 10, 1, 4, 10, 3, 6, 0, 0, false);
 
-        switch (field_35347_b)
+        switch (roomType)
         {
             default:
                 break;
@@ -148,7 +148,7 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
                 placeBlockAtCurrentPosition(par1World, Block.ladder.blockID, getMetadataWithOffset(Block.ladder.blockID, 4), 9, 1, 3, par3StructureBoundingBox);
                 placeBlockAtCurrentPosition(par1World, Block.ladder.blockID, getMetadataWithOffset(Block.ladder.blockID, 4), 9, 2, 3, par3StructureBoundingBox);
                 placeBlockAtCurrentPosition(par1World, Block.ladder.blockID, getMetadataWithOffset(Block.ladder.blockID, 4), 9, 3, 3, par3StructureBoundingBox);
-                createTreasureChestAtCurrentPosition(par1World, par3StructureBoundingBox, par2Random, 3, 4, 8, field_35348_c, 1 + par2Random.nextInt(4));
+                createTreasureChestAtCurrentPosition(par1World, par3StructureBoundingBox, par2Random, 3, 4, 8, chestLoot, 1 + par2Random.nextInt(4));
                 break;
         }
 
@@ -157,7 +157,7 @@ public class ComponentStrongholdRoomCrossing extends ComponentStronghold
 
     static
     {
-        field_35348_c = (new StructurePieceTreasure[]
+        chestLoot = (new StructurePieceTreasure[]
                 {
                     new StructurePieceTreasure(Item.ingotIron.shiftedIndex, 0, 1, 5, 10), new StructurePieceTreasure(Item.ingotGold.shiftedIndex, 0, 1, 3, 5), new StructurePieceTreasure(Item.redstone.shiftedIndex, 0, 4, 9, 5), new StructurePieceTreasure(Item.coal.shiftedIndex, 0, 3, 8, 10), new StructurePieceTreasure(Item.bread.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.appleRed.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.pickaxeSteel.shiftedIndex, 0, 1, 1, 1)
                 });

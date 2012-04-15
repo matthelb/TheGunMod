@@ -75,7 +75,7 @@ public class EntityBlaze extends EntityMob
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         return 1.0F;
     }
@@ -212,7 +212,7 @@ public class EntityBlaze extends EntityMob
     }
 
     /**
-     * Returns true if the furnace is currently burning
+     * Returns true if the entity is on fire. Used by render to add the fire effect on rendering.
      */
     public boolean isBurning()
     {

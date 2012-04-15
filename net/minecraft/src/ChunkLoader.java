@@ -16,11 +16,20 @@ public class ChunkLoader
         anvilconverterdata.skyLight = new NibbleArrayReader(par0NBTTagCompound.getByteArray("SkyLight"), 7);
         anvilconverterdata.blockLight = new NibbleArrayReader(par0NBTTagCompound.getByteArray("BlockLight"), 7);
         anvilconverterdata.heightmap = par0NBTTagCompound.getByteArray("HeightMap");
-        anvilconverterdata.field_48572_b = par0NBTTagCompound.getBoolean("TerrainPopulated");
+        anvilconverterdata.terrainPopulated = par0NBTTagCompound.getBoolean("TerrainPopulated");
         anvilconverterdata.entities = par0NBTTagCompound.getTagList("Entities");
         anvilconverterdata.tileEntities = par0NBTTagCompound.getTagList("TileEntities");
         anvilconverterdata.tileTicks = par0NBTTagCompound.getTagList("TileTicks");
-        anvilconverterdata.lastUpdated = par0NBTTagCompound.getLong("LastUpdate");
+
+        try
+        {
+            anvilconverterdata.lastUpdated = par0NBTTagCompound.getLong("LastUpdate");
+        }
+        catch (ClassCastException classcastexception)
+        {
+            anvilconverterdata.lastUpdated = par0NBTTagCompound.getInteger("LastUpdate");
+        }
+
         return anvilconverterdata;
     }
 
@@ -37,7 +46,7 @@ public class ChunkLoader
         }
 
         par1NBTTagCompound.func_48446_a("HeightMap", ai);
-        par1NBTTagCompound.setBoolean("TerrainPopulated", par0AnvilConverterData.field_48572_b);
+        par1NBTTagCompound.setBoolean("TerrainPopulated", par0AnvilConverterData.terrainPopulated);
         NBTTagList nbttaglist = new NBTTagList("Sections");
 
         for (int j = 0; j < 8; j++)

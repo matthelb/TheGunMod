@@ -72,7 +72,7 @@ public class EntityGhast extends EntityFlying implements IMob
     {
         if (!worldObj.isRemote && worldObj.difficultySetting == 0)
         {
-            setEntityDead();
+            setDead();
         }
 
         despawnEntity();

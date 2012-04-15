@@ -72,6 +72,14 @@ public class ChunkProviderFlat implements IChunkProvider
             villageGen.generate(this, worldObj, par1, par2, abyte0);
         }
 
+        BiomeGenBase abiomegenbase[] = worldObj.getWorldChunkManager().loadBlockGeneratorData(null, par1 * 16, par2 * 16, 16, 16);
+        byte abyte1[] = chunk.getBiomeArray();
+
+        for (int i = 0; i < abyte1.length; i++)
+        {
+            abyte1[i] = (byte)abiomegenbase[i].biomeID;
+        }
+
         chunk.generateSkylightMap();
         return chunk;
     }
@@ -131,7 +139,7 @@ public class ChunkProviderFlat implements IChunkProvider
      */
     public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int par4)
     {
-        BiomeGenBase biomegenbase = worldObj.func_48091_a(par2, par4);
+        BiomeGenBase biomegenbase = worldObj.getBiomeGenForCoords(par2, par4);
 
         if (biomegenbase == null)
         {

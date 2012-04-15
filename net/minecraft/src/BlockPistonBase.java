@@ -71,7 +71,7 @@ public class BlockPistonBase extends Block
     }
 
     /**
-     * Called when a block is using an item and passed in who placed it. Args: x, y, z, entityLiving
+     * Called when the block is placed in the world.
      */
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
@@ -86,7 +86,7 @@ public class BlockPistonBase extends Block
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, blockID
+     * their own) Args: x, y, z, neighbor blockID
      */
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
@@ -137,7 +137,7 @@ public class BlockPistonBase extends Block
     }
 
     /**
-     * returns true if a piston is powered.
+     * checks the block to that side to see if it is indirectly powered.
      */
     private boolean isIndirectlyPowered(World par1World, int par2, int par3, int par4, int par5)
     {
@@ -357,7 +357,7 @@ public class BlockPistonBase extends Block
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {
@@ -381,7 +381,7 @@ public class BlockPistonBase extends Block
     }
 
     /**
-     * determines the orientation of a piston. called upon placement
+     * gets the way this piston should face for that entity that placed it.
      */
     private static int determineOrientation(World par0World, int par1, int par2, int par3, EntityPlayer par4EntityPlayer)
     {
@@ -459,7 +459,7 @@ public class BlockPistonBase extends Block
     }
 
     /**
-     * checks whether a piston can extend
+     * checks to see if this piston could push the blocks in front of it.
      */
     private static boolean canExtend(World par0World, int par1, int par2, int par3, int par4)
     {

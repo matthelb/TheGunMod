@@ -16,13 +16,9 @@ public class EntityArrow extends Entity
     /** Seems to be some sort of timer for animating an arrow. */
     public int arrowShake;
 
-    /** the entity that shot this arrow */
+    /** The owner of this arrow. */
     public Entity shootingEntity;
-
-    /** after so long in ground entity dies */
     private int ticksInGround;
-
-    /** cant hit stuff first 5 ticks after you shoot it */
     private int ticksInAir;
     private double damage;
     private int field_46010_n;
@@ -216,7 +212,7 @@ public class EntityArrow extends Entity
 
             if (ticksInGround == 1200)
             {
-                setEntityDead();
+                setDead();
             }
 
             return;
@@ -316,7 +312,7 @@ public class EntityArrow extends Entity
                     }
 
                     worldObj.playSoundAtEntity(this, "random.bowhit", 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
-                    setEntityDead();
+                    setDead();
                 }
                 else
                 {
@@ -444,7 +440,7 @@ public class EntityArrow extends Entity
         {
             worldObj.playSoundAtEntity(this, "random.pop", 0.2F, ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.0F) * 2.0F);
             par1EntityPlayer.onItemPickup(this, 1);
-            setEntityDead();
+            setDead();
         }
     }
 

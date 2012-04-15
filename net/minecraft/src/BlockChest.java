@@ -1,6 +1,6 @@
 package net.minecraft.src;
 
-import java.util.Random;
+import java.util.*;
 
 public class BlockChest extends BlockContainer
 {
@@ -23,7 +23,7 @@ public class BlockChest extends BlockContainer
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {
@@ -72,7 +72,7 @@ public class BlockChest extends BlockContainer
     }
 
     /**
-     * Called when a block is using an item and passed in who placed it. Args: x, y, z, entityLiving
+     * Called when the block is placed in the world.
      */
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
@@ -350,7 +350,7 @@ public class BlockChest extends BlockContainer
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, blockID
+     * their own) Args: x, y, z, neighbor blockID
      */
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
@@ -432,22 +432,27 @@ public class BlockChest extends BlockContainer
             return true;
         }
 
-        if (par1World.getBlockId(par2 - 1, par3, par4) == blockID && par1World.isBlockNormalCube(par2 - 1, par3 + 1, par4))
+        if (func_50009_h(par1World, par2, par3, par4))
         {
             return true;
         }
 
-        if (par1World.getBlockId(par2 + 1, par3, par4) == blockID && par1World.isBlockNormalCube(par2 + 1, par3 + 1, par4))
+        if (par1World.getBlockId(par2 - 1, par3, par4) == blockID && (par1World.isBlockNormalCube(par2 - 1, par3 + 1, par4) || func_50009_h(par1World, par2 - 1, par3, par4)))
         {
             return true;
         }
 
-        if (par1World.getBlockId(par2, par3, par4 - 1) == blockID && par1World.isBlockNormalCube(par2, par3 + 1, par4 - 1))
+        if (par1World.getBlockId(par2 + 1, par3, par4) == blockID && (par1World.isBlockNormalCube(par2 + 1, par3 + 1, par4) || func_50009_h(par1World, par2 + 1, par3, par4)))
         {
             return true;
         }
 
-        if (par1World.getBlockId(par2, par3, par4 + 1) == blockID && par1World.isBlockNormalCube(par2, par3 + 1, par4 + 1))
+        if (par1World.getBlockId(par2, par3, par4 - 1) == blockID && (par1World.isBlockNormalCube(par2, par3 + 1, par4 - 1) || func_50009_h(par1World, par2, par3, par4 - 1)))
+        {
+            return true;
+        }
+
+        if (par1World.getBlockId(par2, par3, par4 + 1) == blockID && (par1World.isBlockNormalCube(par2, par3 + 1, par4 + 1) || func_50009_h(par1World, par2, par3, par4 + 1)))
         {
             return true;
         }
@@ -489,5 +494,21 @@ public class BlockChest extends BlockContainer
     public TileEntity getBlockEntity()
     {
         return new TileEntityChest();
+    }
+
+    private static boolean func_50009_h(World par0World, int par1, int par2, int par3)
+    {
+        for (Iterator iterator = par0World.getEntitiesWithinAABB(net.minecraft.src.EntityOcelot.class, AxisAlignedBB.getBoundingBoxFromPool(par1, par2 + 1, par3, par1 + 1, par2 + 2, par3 + 1)).iterator(); iterator.hasNext();)
+        {
+            Entity entity = (Entity)iterator.next();
+            EntityOcelot entityocelot = (EntityOcelot)entity;
+
+            if (entityocelot.isSitting())
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

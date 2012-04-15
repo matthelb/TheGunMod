@@ -51,7 +51,7 @@ public final class WorldSettings
     }
 
     /**
-     * Get whether the map features generation is enabled or disabled.
+     * Get whether the map features (e.g. strongholds) generation is enabled or disabled.
      */
     public boolean isMapFeaturesEnabled()
     {

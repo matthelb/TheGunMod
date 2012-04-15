@@ -10,7 +10,7 @@ public class ItemSlab extends ItemBlock
     }
 
     /**
-     * returns the argument if the item has metadata, 0 otherwise
+     * Returns the metadata of the block which this Item (ItemBlock) can place
      */
     public int getMetadata(int par1)
     {
@@ -52,7 +52,7 @@ public class ItemSlab extends ItemBlock
 
         if ((par7 == 1 && !flag || par7 == 0 && flag) && i == Block.stairSingle.blockID && k == par1ItemStack.getItemDamage())
         {
-            if (par3World.setBlockAndMetadataWithNotify(par4, par5, par6, Block.stairDouble.blockID, k))
+            if (par3World.checkIfAABBIsClear(Block.stairDouble.getCollisionBoundingBoxFromPool(par3World, par4, par5, par6)) && par3World.setBlockAndMetadataWithNotify(par4, par5, par6, Block.stairDouble.blockID, k))
             {
                 par3World.playSoundEffect((float)par4 + 0.5F, (float)par5 + 0.5F, (float)par6 + 0.5F, Block.stairDouble.stepSound.getStepSound(), (Block.stairDouble.stepSound.getVolume() + 1.0F) / 2.0F, Block.stairDouble.stepSound.getPitch() * 0.8F);
                 par1ItemStack.stackSize--;
@@ -60,9 +60,66 @@ public class ItemSlab extends ItemBlock
 
             return true;
         }
+
+        if (func_50020_b(par1ItemStack, par2EntityPlayer, par3World, par4, par5, par6, par7))
+        {
+            return true;
+        }
         else
         {
             return super.onItemUse(par1ItemStack, par2EntityPlayer, par3World, par4, par5, par6, par7);
+        }
+    }
+
+    private static boolean func_50020_b(ItemStack par0ItemStack, EntityPlayer par1EntityPlayer, World par2World, int par3, int par4, int par5, int par6)
+    {
+        if (par6 == 0)
+        {
+            par4--;
+        }
+
+        if (par6 == 1)
+        {
+            par4++;
+        }
+
+        if (par6 == 2)
+        {
+            par5--;
+        }
+
+        if (par6 == 3)
+        {
+            par5++;
+        }
+
+        if (par6 == 4)
+        {
+            par3--;
+        }
+
+        if (par6 == 5)
+        {
+            par3++;
+        }
+
+        int i = par2World.getBlockId(par3, par4, par5);
+        int j = par2World.getBlockMetadata(par3, par4, par5);
+        int k = j & 7;
+
+        if (i == Block.stairSingle.blockID && k == par0ItemStack.getItemDamage())
+        {
+            if (par2World.checkIfAABBIsClear(Block.stairDouble.getCollisionBoundingBoxFromPool(par2World, par3, par4, par5)) && par2World.setBlockAndMetadataWithNotify(par3, par4, par5, Block.stairDouble.blockID, k))
+            {
+                par2World.playSoundEffect((float)par3 + 0.5F, (float)par4 + 0.5F, (float)par5 + 0.5F, Block.stairDouble.stepSound.getStepSound(), (Block.stairDouble.stepSound.getVolume() + 1.0F) / 2.0F, Block.stairDouble.stepSound.getPitch() * 0.8F);
+                par0ItemStack.stackSize--;
+            }
+
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }

@@ -45,25 +45,17 @@ public class GuiStatsComponent extends JComponent
         displayStrings[3] = (new StringBuilder()).append("Avg sent: ").append((int)func_48551_a(field_40572_e.field_48080_u)).append(", Avg size: ").append((int)func_48551_a(field_40572_e.field_48079_v)).toString();
         displayStrings[4] = (new StringBuilder()).append("Avg rec: ").append((int)func_48551_a(field_40572_e.field_48078_w)).append(", Avg size: ").append((int)func_48551_a(field_40572_e.field_48082_x)).toString();
 
-        if (field_40572_e.worldMngr == null)
+        if (this.field_40572_e.worldMngr != null)
         {
-            return;
-        }
-
-        i = 0;
-
-        while (!(i >= field_40572_e.worldMngr.length))
-        {
-            displayStrings[5 + i] = (new StringBuilder()).append("Lvl ").append(i).append(" tick: ").append(field_40573_a.format(func_48551_a(field_40572_e.field_40028_g[i]) * 9.9999999999999995E-007D)).append(" ms").toString();
-
-            if (field_40572_e.worldMngr[i] == null || field_40572_e.worldMngr[i].chunkProviderServer == null)
+            for (int var3 = 0; var3 < this.field_40572_e.worldMngr.length; ++var3)
             {
-                i++;
-                continue;
-            }
+                this.displayStrings[5 + var3] = "Lvl " + var3 + " tick: " + field_40573_a.format(this.func_48551_a(this.field_40572_e.field_40028_g[var3]) * 1.0E-6D) + " ms";
 
-            displayStrings[5 + i] += ", " + field_40572_e.worldMngr[i].chunkProviderServer.func_46040_d();
-            i++;
+                if (this.field_40572_e.worldMngr[var3] != null && this.field_40572_e.worldMngr[var3].chunkProviderServer != null)
+                {
+                    this.displayStrings[5 + var3] = this.displayStrings[5 + var3] + ", " + this.field_40572_e.worldMngr[var3].chunkProviderServer.func_46040_d();
+                }
+            }
         }
 
         memoryUse[updateCounter++ & 0xff] = (int)((func_48551_a(field_40572_e.field_48079_v) * 100D) / 12500D);

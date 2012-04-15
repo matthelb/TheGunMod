@@ -63,7 +63,10 @@ public class WorldManager implements IWorldAccess
         mcServer.configManager.markBlockNeedsUpdate(par1, par2, par3, world.worldProvider.worldType);
     }
 
-    public void func_48414_b(int i, int j, int k)
+    /**
+     * As of mc 1.2.3 this method has exactly the same signature and does exactly the same as markBlockNeedsUpdate
+     */
+    public void markBlockNeedsUpdate2(int i, int j, int k)
     {
     }
 

@@ -1,5 +1,7 @@
 package net.minecraft.src;
 
+import java.io.PrintStream;
+
 public abstract class NetHandler
 {
     public NetHandler()
@@ -31,6 +33,7 @@ public abstract class NetHandler
     public void handleLogin(Packet1Login par1Packet1Login)
     {
         registerPacket(par1Packet1Login);
+        ModLoader.serverConnect((this instanceof NetServerHandler) ? (NetServerHandler)this : null, par1Packet1Login, getEntityPlayerMp());
     }
 
     public void handleFlying(Packet10Flying par1Packet10Flying)
@@ -367,17 +370,43 @@ public abstract class NetHandler
     {
     }
 
-    public void handleCustomPayload(Packet250CustomPayload packet250custompayload)
+    public void handleCustomPayload(Packet250CustomPayload par1Packet250CustomPayload)
     {
+        ModLoader.receivePacket(par1Packet250CustomPayload, getEntityPlayerMp());
     }
 
-    public void func_48072_a(Packet35EntityHeadRotation par1Packet35EntityHeadRotation)
+    private EntityPlayerMP getEntityPlayerMp()
+    {
+        EntityPlayerMP entityplayermp = null;
+
+        try
+        {
+            entityplayermp = (EntityPlayerMP)ModLoader.getPrivateValue(net.minecraft.src.NetServerHandler.class, this, 4);
+        }
+        catch (NoSuchFieldException nosuchfieldexception)
+        {
+            System.out.println("Error getting player from NetHandler.");
+            nosuchfieldexception.printStackTrace();
+        }
+
+        return entityplayermp;
+    }
+
+    public void handleEntityHeadRotation(Packet35EntityHeadRotation par1Packet35EntityHeadRotation)
     {
         registerPacket(par1Packet35EntityHeadRotation);
     }
 
-    public void func_48071_a(Packet132TileEntityData par1Packet132TileEntityData)
+    public void handleTileEntityData(Packet132TileEntityData par1Packet132TileEntityData)
     {
         registerPacket(par1Packet132TileEntityData);
+    }
+
+    /**
+     * Handle a player abilities packet.
+     */
+    public void handlePlayerAbilities(Packet202PlayerAbilities par1Packet202PlayerAbilities)
+    {
+        registerPacket(par1Packet202PlayerAbilities);
     }
 }

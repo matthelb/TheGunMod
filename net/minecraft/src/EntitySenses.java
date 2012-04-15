@@ -16,7 +16,7 @@ public class EntitySenses
     }
 
     /**
-     * Returns the squared distance between this door and the given coordinate.
+     * Clears canSeeCachePositive and canSeeCacheNegative.
      */
     public void clearSensingCache()
     {

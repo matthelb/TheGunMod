@@ -235,6 +235,7 @@ public class Packet230ModLoader extends Packet
             try
             {
                 entityplayermp = (EntityPlayerMP)ModLoader.getPrivateValue(net.minecraft.src.NetServerHandler.class, nethandler, 4);
+                playerMap.put(nethandler, entityplayermp);
             }
             catch (NoSuchFieldException nosuchfieldexception)
             {

@@ -53,6 +53,22 @@ public abstract class BaseMod
     {
     }
 
+    public void receiveChatPacket(String s, EntityPlayerMP entityplayermp)
+    {
+    }
+
+    public void receiveCustomPacket(Packet250CustomPayload packet250custompayload, EntityPlayerMP entityplayermp)
+    {
+    }
+
+    public void serverConnect(NetServerHandler netserverhandler, EntityPlayerMP entityplayermp)
+    {
+    }
+
+    public void serverDisconnect(EntityPlayerMP entityplayermp)
+    {
+    }
+
     public void takenFromCrafting(EntityPlayer entityplayer, ItemStack itemstack, IInventory iinventory)
     {
     }

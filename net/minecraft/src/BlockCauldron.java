@@ -70,7 +70,7 @@ public class BlockCauldron extends Block
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {
@@ -101,7 +101,7 @@ public class BlockCauldron extends Block
         {
             if (i < 3)
             {
-                if (!par5EntityPlayer.capabilities.depleteBuckets)
+                if (!par5EntityPlayer.capabilities.isCreativeMode)
                 {
                     par5EntityPlayer.inventory.setInventorySlotContents(par5EntityPlayer.inventory.currentItem, new ItemStack(Item.bucketEmpty));
                 }

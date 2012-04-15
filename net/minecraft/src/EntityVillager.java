@@ -22,10 +22,10 @@ public class EntityVillager extends EntityAgeable implements INpc
         isPlayingFlag = false;
         villageObj = null;
         setProfession(par2);
-        setTextureByProfession();
+        texture = "/mob/villager/villager.png";
         moveSpeed = 0.5F;
-        getNavigator().func_48663_b(true);
-        getNavigator().func_48656_a(true);
+        getNavigator().setBreakDoors(true);
+        getNavigator().setAvoidsWater(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIAvoidEntity(this, net.minecraft.src.EntityZombie.class, 8F, 0.3F, 0.35F));
         tasks.addTask(2, new EntityAIMoveIndoors(this));
@@ -110,40 +110,6 @@ public class EntityVillager extends EntityAgeable implements INpc
     {
         super.readEntityFromNBT(par1NBTTagCompound);
         setProfession(par1NBTTagCompound.getInteger("Profession"));
-        setTextureByProfession();
-    }
-
-    /**
-     * This is the function which sets a Villager's skin based on its profession value
-     */
-    private void setTextureByProfession()
-    {
-        texture = "/mob/villager/villager.png";
-
-        if (getProfession() == 0)
-        {
-            texture = "/mob/villager/farmer.png";
-        }
-
-        if (getProfession() == 1)
-        {
-            texture = "/mob/villager/librarian.png";
-        }
-
-        if (getProfession() == 2)
-        {
-            texture = "/mob/villager/priest.png";
-        }
-
-        if (getProfession() == 3)
-        {
-            texture = "/mob/villager/smith.png";
-        }
-
-        if (getProfession() == 4)
-        {
-            texture = "/mob/villager/butcher.png";
-        }
     }
 
     /**

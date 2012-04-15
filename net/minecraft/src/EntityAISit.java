@@ -2,13 +2,13 @@ package net.minecraft.src;
 
 public class EntityAISit extends EntityAIBase
 {
-    private EntityTameable field_48212_a;
+    private EntityTameable theEntity;
     private boolean field_48211_b;
 
     public EntityAISit(EntityTameable par1EntityTameable)
     {
         field_48211_b = false;
-        field_48212_a = par1EntityTameable;
+        theEntity = par1EntityTameable;
         setMutexBits(5);
     }
 
@@ -17,29 +17,29 @@ public class EntityAISit extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (!field_48212_a.isTamed())
+        if (!theEntity.isTamed())
         {
             return false;
         }
 
-        if (field_48212_a.isInWater())
+        if (theEntity.isInWater())
         {
             return false;
         }
 
-        if (!field_48212_a.onGround)
+        if (!theEntity.onGround)
         {
             return false;
         }
 
-        EntityLiving entityliving = field_48212_a.getOwner();
+        EntityLiving entityliving = theEntity.getOwner();
 
         if (entityliving == null)
         {
             return true;
         }
 
-        if (field_48212_a.getDistanceSqToEntity(entityliving) < 144D && entityliving.getAITarget() != null)
+        if (theEntity.getDistanceSqToEntity(entityliving) < 144D && entityliving.getAITarget() != null)
         {
             return false;
         }
@@ -54,8 +54,8 @@ public class EntityAISit extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48212_a.getNavigator().func_48662_f();
-        field_48212_a.func_48369_c(true);
+        theEntity.getNavigator().clearPathEntity();
+        theEntity.setSitting(true);
     }
 
     /**
@@ -63,7 +63,7 @@ public class EntityAISit extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48212_a.func_48369_c(false);
+        theEntity.setSitting(false);
     }
 
     public void func_48210_a(boolean par1)

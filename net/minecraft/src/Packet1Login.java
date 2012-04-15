@@ -52,7 +52,7 @@ public class Packet1Login extends Packet
 
         if (terrainType == null)
         {
-            terrainType = WorldType.field_48457_b;
+            terrainType = WorldType.DEFAULT;
         }
 
         serverMode = par1DataInputStream.readInt();

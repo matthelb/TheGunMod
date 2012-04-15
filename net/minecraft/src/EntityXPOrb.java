@@ -130,7 +130,7 @@ public class EntityXPOrb extends Entity
 
         if (xpOrbAge >= 6000)
         {
-            setEntityDead();
+            setDead();
         }
     }
 
@@ -161,7 +161,7 @@ public class EntityXPOrb extends Entity
 
         if (xpOrbHealth <= 0)
         {
-            setEntityDead();
+            setDead();
         }
 
         return false;
@@ -203,7 +203,7 @@ public class EntityXPOrb extends Entity
             worldObj.playSoundAtEntity(this, "random.orb", 0.1F, 0.5F * ((rand.nextFloat() - rand.nextFloat()) * 0.7F + 1.8F));
             par1EntityPlayer.onItemPickup(this, 1);
             par1EntityPlayer.addExperience(xpValue);
-            setEntityDead();
+            setDead();
         }
     }
 

@@ -21,7 +21,7 @@ public class RecipesIngots
     }
 
     /**
-     * Adds ingot recipes to the CraftingManager.
+     * Adds the ingot recipes to the CraftingManager.
      */
     public void addRecipes(CraftingManager par1CraftingManager)
     {

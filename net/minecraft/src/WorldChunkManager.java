@@ -24,8 +24,8 @@ public class WorldChunkManager
         biomesToSpawnIn.add(BiomeGenBase.taiga);
         biomesToSpawnIn.add(BiomeGenBase.taigaHills);
         biomesToSpawnIn.add(BiomeGenBase.forestHills);
-        biomesToSpawnIn.add(BiomeGenBase.field_48443_w);
-        biomesToSpawnIn.add(BiomeGenBase.field_48444_x);
+        biomesToSpawnIn.add(BiomeGenBase.jungle);
+        biomesToSpawnIn.add(BiomeGenBase.jungleHills);
     }
 
     public WorldChunkManager(long par1, WorldType par3WorldType)

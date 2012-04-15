@@ -109,9 +109,9 @@ public class NetLoginHandler extends NetHandler
     {
         username = par1Packet1Login.username;
 
-        if (par1Packet1Login.protocolVersion != 28)
+        if (par1Packet1Login.protocolVersion != 29)
         {
-            if (par1Packet1Login.protocolVersion > 28)
+            if (par1Packet1Login.protocolVersion > 29)
             {
                 kickUser("Outdated server!");
             }
@@ -150,9 +150,10 @@ public class NetLoginHandler extends NetHandler
             ChunkCoordinates chunkcoordinates = worldserver.getSpawnPoint();
             entityplayermp.itemInWorldManager.func_35695_b(worldserver.getWorldInfo().getGameType());
             NetServerHandler netserverhandler = new NetServerHandler(mcServer, netManager, entityplayermp);
-            netserverhandler.sendPacket(new Packet1Login("", entityplayermp.entityId, worldserver.getWorldInfo().getTerrainType(), entityplayermp.itemInWorldManager.getGameType(), worldserver.worldProvider.worldType, (byte)worldserver.difficultySetting, (byte)worldserver.getWorldHeight(), (byte)mcServer.configManager.getMaxPlayers()));
+            netserverhandler.sendPacket(new Packet1Login("", entityplayermp.entityId, worldserver.getWorldInfo().getTerrainType(), entityplayermp.itemInWorldManager.getGameType(), worldserver.worldProvider.worldType, (byte)worldserver.difficultySetting, (byte)worldserver.getHeight(), (byte)mcServer.configManager.getMaxPlayers()));
             netserverhandler.sendPacket(new Packet6SpawnPosition(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
-            mcServer.configManager.func_28170_a(entityplayermp, worldserver);
+            netserverhandler.sendPacket(new Packet202PlayerAbilities(entityplayermp.capabilities));
+            mcServer.configManager.updateTimeAndWeather(entityplayermp, worldserver);
             mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat((new StringBuilder()).append("\247e").append(entityplayermp.username).append(" joined the game.").toString()));
             mcServer.configManager.playerLoggedIn(entityplayermp);
             netserverhandler.teleportTo(entityplayermp.posX, entityplayermp.posY, entityplayermp.posZ, entityplayermp.rotationYaw, entityplayermp.rotationPitch);

@@ -112,7 +112,7 @@ public class SaveHandler implements IPlayerFileData, ISaveHandler
     }
 
     /**
-     * Attempts to load first level.dat, then level.dat_old from disk. Called when the server first starts.
+     * Loads and returns the world info
      */
     public WorldInfo loadWorldInfo()
     {
@@ -291,12 +291,14 @@ public class SaveHandler implements IPlayerFileData, ISaveHandler
         return null;
     }
 
-    /**
-     * does exactly what it says on the tin
-     */
     public IPlayerFileData getPlayerNBTManager()
     {
         return this;
+    }
+
+    public String[] func_52007_g()
+    {
+        return worldFile.list();
     }
 
     public void func_22093_e()

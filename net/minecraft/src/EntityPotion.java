@@ -107,7 +107,7 @@ public class EntityPotion extends EntityThrowable
             }
 
             worldObj.playAuxSFX(2002, (int)Math.round(posX), (int)Math.round(posY), (int)Math.round(posZ), potionDamage);
-            setEntityDead();
+            setDead();
         }
     }
 }

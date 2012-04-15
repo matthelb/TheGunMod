@@ -68,7 +68,7 @@ public class EntitySpider extends EntityMob
      */
     protected Entity findPlayerToAttack()
     {
-        float f = getEntityBrightness(1.0F);
+        float f = getBrightness(1.0F);
 
         if (f < 0.5F)
         {
@@ -110,7 +110,7 @@ public class EntitySpider extends EntityMob
      */
     protected void attackEntity(Entity par1Entity, float par2)
     {
-        float f = getEntityBrightness(1.0F);
+        float f = getBrightness(1.0F);
 
         if (f > 0.5F && rand.nextInt(100) == 0)
         {

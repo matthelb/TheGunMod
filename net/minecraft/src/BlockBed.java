@@ -38,7 +38,7 @@ public class BlockBed extends BlockDirectional
 
         if (!isBlockFootOfBed(i))
         {
-            int j = func_48132_b(i);
+            int j = getDirection(i);
             par2 += headBlockToFootBlockMap[j][0];
             par4 += headBlockToFootBlockMap[j][1];
 
@@ -56,7 +56,7 @@ public class BlockBed extends BlockDirectional
             double d1 = (double)par3 + 0.5D;
             double d2 = (double)par4 + 0.5D;
             par1World.setBlockWithNotify(par2, par3, par4, 0);
-            int k = func_48132_b(i);
+            int k = getDirection(i);
             par2 += headBlockToFootBlockMap[k][0];
             par4 += headBlockToFootBlockMap[k][1];
 
@@ -139,7 +139,7 @@ public class BlockBed extends BlockDirectional
             return Block.planks.blockIndexInTexture;
         }
 
-        int i = func_48132_b(par2);
+        int i = getDirection(par2);
         int j = Direction.bedDirection[i][par1];
 
         if (isBlockFootOfBed(par2))
@@ -183,7 +183,7 @@ public class BlockBed extends BlockDirectional
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {
@@ -209,12 +209,12 @@ public class BlockBed extends BlockDirectional
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, blockID
+     * their own) Args: x, y, z, neighbor blockID
      */
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
         int i = par1World.getBlockMetadata(par2, par3, par4);
-        int j = func_48132_b(i);
+        int j = getDirection(i);
 
         if (isBlockFootOfBed(i))
         {
@@ -298,7 +298,7 @@ public class BlockBed extends BlockDirectional
     public static ChunkCoordinates getNearestEmptyChunkCoordinates(World par0World, int par1, int par2, int par3, int par4)
     {
         int i = par0World.getBlockMetadata(par1, par2, par3);
-        int j = BlockDirectional.func_48132_b(i);
+        int j = BlockDirectional.getDirection(i);
 
         for (int k = 0; k <= 1; k++)
         {
@@ -343,7 +343,8 @@ public class BlockBed extends BlockDirectional
     }
 
     /**
-     * returns the mobility flag of a block's material
+     * Returns the mobility information of the block, 0 = free, 1 = can't push but can move over, 2 = total immobility
+     * and stop pistons
      */
     public int getMobilityFlag()
     {

@@ -45,7 +45,7 @@ public class EmptyChunk extends Chunk
         return 0;
     }
 
-    public int func_48555_b(int par1, int par2, int par3)
+    public int getBlockLightOpacity(int par1, int par2, int par3)
     {
         return 255;
     }
@@ -114,7 +114,7 @@ public class EmptyChunk extends Chunk
     }
 
     /**
-     * removes entity usint its y chunk coordinate as its index
+     * removes entity using its y chunk coordinate as its index
      */
     public void removeEntity(Entity entity)
     {
@@ -218,7 +218,11 @@ public class EmptyChunk extends Chunk
         return true;
     }
 
-    public boolean func_48556_c(int par1, int par2)
+    /**
+     * Returns whether the ExtendedBlockStorages containing levels (in blocks) from arg 1 to arg 2 are fully empty
+     * (true) or not (false).
+     */
+    public boolean getAreLevelsEmpty(int par1, int par2)
     {
         return true;
     }

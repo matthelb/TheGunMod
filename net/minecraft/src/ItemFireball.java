@@ -63,7 +63,7 @@ public class ItemFireball extends Item
             par3World.setBlockWithNotify(par4, par5, par6, Block.fire.blockID);
         }
 
-        if (!par2EntityPlayer.capabilities.depleteBuckets)
+        if (!par2EntityPlayer.capabilities.isCreativeMode)
         {
             par1ItemStack.stackSize--;
         }

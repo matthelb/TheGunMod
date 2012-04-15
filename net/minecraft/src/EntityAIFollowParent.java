@@ -5,8 +5,9 @@ import java.util.List;
 
 public class EntityAIFollowParent extends EntityAIBase
 {
+    /** The child that is following its parent. */
     EntityAnimal childAnimal;
-    EntityAnimal field_48139_b;
+    EntityAnimal parentAnimal;
     float field_48140_c;
     private int field_48138_d;
 
@@ -65,7 +66,7 @@ public class EntityAIFollowParent extends EntityAIBase
         }
         else
         {
-            field_48139_b = entityanimal;
+            parentAnimal = entityanimal;
             return true;
         }
     }
@@ -75,12 +76,12 @@ public class EntityAIFollowParent extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        if (!field_48139_b.isEntityAlive())
+        if (!parentAnimal.isEntityAlive())
         {
             return false;
         }
 
-        double d = childAnimal.getDistanceSqToEntity(field_48139_b);
+        double d = childAnimal.getDistanceSqToEntity(parentAnimal);
         return d >= 9D && d <= 256D;
     }
 
@@ -97,7 +98,7 @@ public class EntityAIFollowParent extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48139_b = null;
+        parentAnimal = null;
     }
 
     /**
@@ -112,7 +113,7 @@ public class EntityAIFollowParent extends EntityAIBase
         else
         {
             field_48138_d = 10;
-            childAnimal.getNavigator().func_48652_a(field_48139_b, field_48140_c);
+            childAnimal.getNavigator().func_48652_a(parentAnimal, field_48140_c);
             return;
         }
     }

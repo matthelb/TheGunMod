@@ -2,11 +2,11 @@ package net.minecraft.src;
 
 public class EntityAIRestrictSun extends EntityAIBase
 {
-    private EntityCreature field_48239_a;
+    private EntityCreature theEntity;
 
     public EntityAIRestrictSun(EntityCreature par1EntityCreature)
     {
-        field_48239_a = par1EntityCreature;
+        theEntity = par1EntityCreature;
     }
 
     /**
@@ -14,7 +14,7 @@ public class EntityAIRestrictSun extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        return field_48239_a.worldObj.isDaytime();
+        return theEntity.worldObj.isDaytime();
     }
 
     /**
@@ -22,7 +22,7 @@ public class EntityAIRestrictSun extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48239_a.getNavigator().func_48669_d(true);
+        theEntity.getNavigator().setAvoidSun(true);
     }
 
     /**
@@ -30,6 +30,6 @@ public class EntityAIRestrictSun extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48239_a.getNavigator().func_48669_d(false);
+        theEntity.getNavigator().setAvoidSun(false);
     }
 }

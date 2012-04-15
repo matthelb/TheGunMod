@@ -309,7 +309,7 @@ public class TileEntityFurnace extends TileEntity implements IInventory
      * Returns the number of ticks that the supplied fuel item will keep the furnace burning, or 0 if the item isn't
      * fuel
      */
-    private int getItemBurnTime(ItemStack par1ItemStack)
+    public static int getItemBurnTime(ItemStack par1ItemStack)
     {
         if (par1ItemStack == null)
         {
@@ -346,6 +346,11 @@ public class TileEntityFurnace extends TileEntity implements IInventory
         {
             return i == Item.blazeRod.shiftedIndex ? 2400 : ModLoader.addAllFuel(i, par1ItemStack.getItemDamage());
         }
+    }
+
+    public static boolean func_52006_b(ItemStack par0ItemStack)
+    {
+        return getItemBurnTime(par0ItemStack) > 0;
     }
 
     /**

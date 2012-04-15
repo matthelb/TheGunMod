@@ -63,7 +63,7 @@ public class AnvilSaveConverter extends SaveFormatOld
         WorldInfo worldinfo = getWorldInfo(par1Str);
         Object obj = null;
 
-        if (worldinfo.getTerrainType() == WorldType.field_48458_c)
+        if (worldinfo.getTerrainType() == WorldType.FLAT)
         {
             obj = new WorldChunkManagerHell(BiomeGenBase.plains, 0.5F, 0.5F);
         }
@@ -77,9 +77,9 @@ public class AnvilSaveConverter extends SaveFormatOld
         func_48497_a(new File(file2, "region"), arraylist2, new WorldChunkManagerHell(BiomeGenBase.sky, 0.5F, 0.0F), arraylist.size() + arraylist1.size(), i, par2IProgressUpdate);
         worldinfo.setSaveVersion(19133);
 
-        if (worldinfo.getTerrainType() == WorldType.field_48456_d)
+        if (worldinfo.getTerrainType() == WorldType.DEFAULT_1_1)
         {
-            worldinfo.func_48392_a(WorldType.field_48457_b);
+            worldinfo.setTerrainType(WorldType.DEFAULT);
         }
 
         func_48498_c(par1Str);

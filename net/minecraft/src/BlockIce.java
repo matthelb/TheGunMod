@@ -47,7 +47,8 @@ public class BlockIce extends BlockBreakable
     }
 
     /**
-     * returns the mobility flag of a block's material
+     * Returns the mobility information of the block, 0 = free, 1 = can't push but can move over, 2 = total immobility
+     * and stop pistons
      */
     public int getMobilityFlag()
     {

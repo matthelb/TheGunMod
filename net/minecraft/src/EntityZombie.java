@@ -10,7 +10,7 @@ public class EntityZombie extends EntityMob
         texture = "/mob/zombie.png";
         moveSpeed = 0.23F;
         attackStrength = 4;
-        getNavigator().func_48663_b(true);
+        getNavigator().setBreakDoors(true);
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIBreakDoor(this));
         tasks.addTask(2, new EntityAIAttackOnCollide(this, net.minecraft.src.EntityPlayer.class, moveSpeed, false));
@@ -54,7 +54,7 @@ public class EntityZombie extends EntityMob
     {
         if (worldObj.isDaytime() && !worldObj.isRemote)
         {
-            float f = getEntityBrightness(1.0F);
+            float f = getBrightness(1.0F);
 
             if (f > 0.5F && worldObj.canBlockSeeTheSky(MathHelper.floor_double(posX), MathHelper.floor_double(posY), MathHelper.floor_double(posZ)) && rand.nextFloat() * 30F < (f - 0.4F) * 2.0F)
             {

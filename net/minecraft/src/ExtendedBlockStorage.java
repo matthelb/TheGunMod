@@ -2,7 +2,10 @@ package net.minecraft.src;
 
 public class ExtendedBlockStorage
 {
-    private int field_48615_a;
+    /**
+     * Contains the bottom-most Y block represented by this ExtendedBlockStorage. Typically a multiple of 16.
+     */
+    private int yBase;
 
     /**
      * A total count of the number of non-air blocks in this block storage's Chunk.
@@ -20,7 +23,11 @@ public class ExtendedBlockStorage
      * Contains the most significant 4 bits of each block ID belonging to this block storage's parent Chunk.
      */
     private NibbleArray blockMSBArray;
-    private NibbleArray field_48609_f;
+
+    /**
+     * Stores the metadata associated with blocks in this ExtendedBlockStorage.
+     */
+    private NibbleArray blockMetadataArray;
 
     /** The NibbleArray containing a block of Block-light data. */
     private NibbleArray blocklightArray;
@@ -30,9 +37,9 @@ public class ExtendedBlockStorage
 
     public ExtendedBlockStorage(int par1)
     {
-        field_48615_a = par1;
+        yBase = par1;
         blockLSBArray = new byte[4096];
-        field_48609_f = new NibbleArray(blockLSBArray.length, 4);
+        blockMetadataArray = new NibbleArray(blockLSBArray.length, 4);
         skylightArray = new NibbleArray(blockLSBArray.length, 4);
         blocklightArray = new NibbleArray(blockLSBArray.length, 4);
     }
@@ -113,14 +120,20 @@ public class ExtendedBlockStorage
         }
     }
 
-    public int func_48598_b(int par1, int par2, int par3)
+    /**
+     * Returns the metadata associated with the block at the given coordinates in this ExtendedBlockStorage.
+     */
+    public int getExtBlockMetadata(int par1, int par2, int par3)
     {
-        return field_48609_f.get(par1, par2, par3);
+        return blockMetadataArray.get(par1, par2, par3);
     }
 
-    public void func_48585_b(int par1, int par2, int par3, int par4)
+    /**
+     * Sets the metadata of the Block at the given coordinates in this ExtendedBlockStorage to the given metadata.
+     */
+    public void setExtBlockMetadata(int par1, int par2, int par3, int par4)
     {
-        field_48609_f.set(par1, par2, par3, par4);
+        blockMetadataArray.set(par1, par2, par3, par4);
     }
 
     /**
@@ -140,9 +153,12 @@ public class ExtendedBlockStorage
         return tickRefCount > 0;
     }
 
-    public int func_48597_c()
+    /**
+     * Returns the Y location of this ExtendedBlockStorage.
+     */
+    public int getYLocation()
     {
-        return field_48615_a;
+        return yBase;
     }
 
     /**
@@ -242,7 +258,7 @@ public class ExtendedBlockStorage
 
     public NibbleArray func_48594_i()
     {
-        return field_48609_f;
+        return blockMetadataArray;
     }
 
     /**
@@ -261,19 +277,28 @@ public class ExtendedBlockStorage
         return skylightArray;
     }
 
-    public void func_48596_a(byte par1ArrayOfByte[])
+    /**
+     * Sets the array of block ID least significant bits for this ExtendedBlockStorage.
+     */
+    public void setBlockLSBArray(byte par1ArrayOfByte[])
     {
         blockLSBArray = par1ArrayOfByte;
     }
 
-    public void func_48593_a(NibbleArray par1NibbleArray)
+    /**
+     * Sets the array of blockID most significant bits (blockMSBArray) for this ExtendedBlockStorage.
+     */
+    public void setBlockMSBArray(NibbleArray par1NibbleArray)
     {
         blockMSBArray = par1NibbleArray;
     }
 
-    public void func_48586_b(NibbleArray par1NibbleArray)
+    /**
+     * Sets the NibbleArray of block metadata (blockMetadataArray) for this ExtendedBlockStorage.
+     */
+    public void setBlockMetadataArray(NibbleArray par1NibbleArray)
     {
-        field_48609_f = par1NibbleArray;
+        blockMetadataArray = par1NibbleArray;
     }
 
     /**

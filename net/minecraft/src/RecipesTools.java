@@ -35,7 +35,7 @@ public class RecipesTools
     }
 
     /**
-     * Adds tool recipes to the CraftingManager.
+     * Adds the tool recipes to the CraftingManager.
      */
     public void addRecipes(CraftingManager par1CraftingManager)
     {

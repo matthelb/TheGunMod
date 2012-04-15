@@ -228,7 +228,7 @@ public class InventoryPlayer implements IInventory
             }
             while (par1ItemStack.stackSize > 0 && par1ItemStack.stackSize < i);
 
-            if (par1ItemStack.stackSize == i && player.capabilities.depleteBuckets)
+            if (par1ItemStack.stackSize == i && player.capabilities.isCreativeMode)
             {
                 par1ItemStack.stackSize = 0;
                 return true;
@@ -249,7 +249,7 @@ public class InventoryPlayer implements IInventory
             return true;
         }
 
-        if (player.capabilities.depleteBuckets)
+        if (player.capabilities.isCreativeMode)
         {
             par1ItemStack.stackSize = 0;
             return true;

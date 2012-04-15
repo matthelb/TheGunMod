@@ -3,7 +3,7 @@ package net.minecraft.src;
 public class AnvilConverterData
 {
     public long lastUpdated;
-    public boolean field_48572_b;
+    public boolean terrainPopulated;
     public byte heightmap[];
     public NibbleArrayReader blockLight;
     public NibbleArrayReader skyLight;

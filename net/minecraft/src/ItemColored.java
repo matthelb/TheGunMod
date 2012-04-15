@@ -18,7 +18,7 @@ public class ItemColored extends ItemBlock
     }
 
     /**
-     * returns the argument if the item has metadata, 0 otherwise
+     * Returns the metadata of the block which this Item (ItemBlock) can place
      */
     public int getMetadata(int par1)
     {

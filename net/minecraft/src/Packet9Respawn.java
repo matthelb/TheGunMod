@@ -6,7 +6,9 @@ public class Packet9Respawn extends Packet
 {
     public int respawnDimension;
 
-    /** The difficulty setting of the server. */
+    /**
+     * The difficulty setting. 0 through 3 for peaceful, easy, normal, hard. The client always sends 1.
+     */
     public int difficulty;
 
     /** Defaults to 128 */
@@ -51,7 +53,7 @@ public class Packet9Respawn extends Packet
 
         if (terrainType == null)
         {
-            terrainType = WorldType.field_48457_b;
+            terrainType = WorldType.DEFAULT;
         }
     }
 

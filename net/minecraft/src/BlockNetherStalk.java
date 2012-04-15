@@ -38,7 +38,7 @@ public class BlockNetherStalk extends BlockFlower
 
         if (i < 3)
         {
-            BiomeGenBase biomegenbase = par1World.func_48091_a(par2, par4);
+            BiomeGenBase biomegenbase = par1World.getBiomeGenForCoords(par2, par4);
 
             if ((biomegenbase instanceof BiomeGenHell) && par5Random.nextInt(10) == 0)
             {

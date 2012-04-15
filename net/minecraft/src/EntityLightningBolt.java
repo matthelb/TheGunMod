@@ -73,7 +73,7 @@ public class EntityLightningBolt extends EntityWeatherEffect
         {
             if (boltLivingTime == 0)
             {
-                setEntityDead();
+                setDead();
             }
             else if (lightningState < -rand.nextInt(10))
             {

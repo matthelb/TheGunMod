@@ -50,7 +50,7 @@ public class EntityExpBottle extends EntityThrowable
                 worldObj.spawnEntityInWorld(new EntityXPOrb(worldObj, posX, posY, posZ, j));
             }
 
-            setEntityDead();
+            setDead();
         }
     }
 }

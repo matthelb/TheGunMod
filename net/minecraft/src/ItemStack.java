@@ -237,7 +237,7 @@ public final class ItemStack
     }
 
     /**
-     * damages the item in an itemstack.
+     * Damages the item in the ItemStack
      */
     public void damageItem(int par1, EntityLiving par2EntityLiving)
     {

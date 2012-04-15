@@ -67,4 +67,10 @@ public class NBTTagDouble extends NBTBase
             return false;
         }
     }
+
+    public int hashCode()
+    {
+        long l = Double.doubleToLongBits(data);
+        return super.hashCode() ^ (int)(l ^ l >>> 32);
+    }
 }

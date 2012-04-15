@@ -6,7 +6,7 @@ import java.util.List;
 public interface ISaveHandler
 {
     /**
-     * Attempts to load first level.dat, then level.dat_old from disk. Called when the server first starts.
+     * Loads and returns the world info
      */
     public abstract WorldInfo loadWorldInfo();
 
@@ -30,9 +30,6 @@ public interface ISaveHandler
      */
     public abstract void saveWorldInfo(WorldInfo worldinfo);
 
-    /**
-     * does exactly what it says on the tin
-     */
     public abstract IPlayerFileData getPlayerNBTManager();
 
     public abstract void func_22093_e();

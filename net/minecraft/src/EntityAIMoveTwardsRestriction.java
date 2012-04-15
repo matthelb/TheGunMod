@@ -2,15 +2,15 @@ package net.minecraft.src;
 
 public class EntityAIMoveTwardsRestriction extends EntityAIBase
 {
-    private EntityCreature field_48152_a;
-    private double field_48150_b;
-    private double field_48151_c;
-    private double field_48148_d;
+    private EntityCreature theEntity;
+    private double movePosX;
+    private double movePosY;
+    private double movePosZ;
     private float field_48149_e;
 
     public EntityAIMoveTwardsRestriction(EntityCreature par1EntityCreature, float par2)
     {
-        field_48152_a = par1EntityCreature;
+        theEntity = par1EntityCreature;
         field_48149_e = par2;
         setMutexBits(1);
     }
@@ -20,13 +20,13 @@ public class EntityAIMoveTwardsRestriction extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (field_48152_a.isWithinHomeDistanceCurrentPosition())
+        if (theEntity.isWithinHomeDistanceCurrentPosition())
         {
             return false;
         }
 
-        ChunkCoordinates chunkcoordinates = field_48152_a.getHomePosition();
-        Vec3D vec3d = RandomPositionGenerator.func_48395_a(field_48152_a, 16, 7, Vec3D.createVector(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
+        ChunkCoordinates chunkcoordinates = theEntity.getHomePosition();
+        Vec3D vec3d = RandomPositionGenerator.func_48395_a(theEntity, 16, 7, Vec3D.createVector(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
 
         if (vec3d == null)
         {
@@ -34,9 +34,9 @@ public class EntityAIMoveTwardsRestriction extends EntityAIBase
         }
         else
         {
-            field_48150_b = vec3d.xCoord;
-            field_48151_c = vec3d.yCoord;
-            field_48148_d = vec3d.zCoord;
+            movePosX = vec3d.xCoord;
+            movePosY = vec3d.yCoord;
+            movePosZ = vec3d.zCoord;
             return true;
         }
     }
@@ -46,7 +46,7 @@ public class EntityAIMoveTwardsRestriction extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48152_a.getNavigator().noPath();
+        return !theEntity.getNavigator().noPath();
     }
 
     /**
@@ -54,6 +54,6 @@ public class EntityAIMoveTwardsRestriction extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48152_a.getNavigator().func_48658_a(field_48150_b, field_48151_c, field_48148_d, field_48149_e);
+        theEntity.getNavigator().tryMoveToXYZ(movePosX, movePosY, movePosZ, field_48149_e);
     }
 }

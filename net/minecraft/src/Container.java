@@ -66,7 +66,7 @@ public abstract class Container
     }
 
     /**
-     * update the crafting matrix
+     * Updates crafting matrix; called from onCraftMatrixChanged. Args: none
      */
     public void updateCraftingResults()
     {
@@ -113,9 +113,6 @@ public abstract class Container
         return null;
     }
 
-    /**
-     * retrieve the slot from the crafting inventory
-     */
     public Slot getSlot(int par1)
     {
         return (Slot)inventorySlots.get(par1);

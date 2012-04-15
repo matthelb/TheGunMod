@@ -9,7 +9,7 @@ class RConThreadQueryAuth
     /** The creation timestamp for this auth */
     private long timestamp;
 
-    /** A */
+    /** A random integer value to be used for client response authentication */
     private int randomChallenge;
     private byte requestID[];
     private byte challengeValue[];

@@ -39,7 +39,7 @@ public class ItemLilyPad extends ItemColored
             {
                 par2World.setBlockWithNotify(i, j + 1, k, Block.waterlily.blockID);
 
-                if (!par3EntityPlayer.capabilities.depleteBuckets)
+                if (!par3EntityPlayer.capabilities.isCreativeMode)
                 {
                     par1ItemStack.stackSize--;
                 }

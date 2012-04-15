@@ -11,10 +11,10 @@ public abstract class Packet
     /** Maps packet class to packet id */
     private static Map packetClassToIdMap = new HashMap();
 
-    /** list of the clients packets id */
+    /** List of the client's packet IDs. */
     private static Set clientPacketIdList = new HashSet();
 
-    /** list of the servers packets id */
+    /** List of the server's packet IDs. */
     private static Set serverPacketIdList = new HashSet();
 
     /** the system time in milliseconds when this packet was created. */
@@ -156,7 +156,7 @@ public abstract class Packet
     }
 
     /**
-     * writes a string to the datastream
+     * Writes a String to the DataOutputStream
      */
     public static void writeString(String par0Str, DataOutputStream par1DataOutputStream) throws IOException
     {
@@ -173,7 +173,7 @@ public abstract class Packet
     }
 
     /**
-     * reads a string from the datastream
+     * Reads a string from a packet
      */
     public static String readString(DataInputStream par0DataInputStream, int par1) throws IOException
     {
@@ -366,6 +366,7 @@ public abstract class Packet
         addIdClassMapping(132, true, false, net.minecraft.src.Packet132TileEntityData.class);
         addIdClassMapping(200, true, false, net.minecraft.src.Packet200Statistic.class);
         addIdClassMapping(201, true, false, net.minecraft.src.Packet201PlayerInfo.class);
+        addIdClassMapping(202, true, true, net.minecraft.src.Packet202PlayerAbilities.class);
         addIdClassMapping(250, true, true, net.minecraft.src.Packet250CustomPayload.class);
         addIdClassMapping(254, false, true, net.minecraft.src.Packet254ServerPing.class);
         addIdClassMapping(255, true, true, net.minecraft.src.Packet255KickDisconnect.class);

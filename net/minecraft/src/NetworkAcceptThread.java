@@ -1,8 +1,7 @@
 package net.minecraft.src;
 
 import java.io.IOException;
-import java.net.ServerSocket;
-import java.net.Socket;
+import java.net.*;
 import java.util.HashMap;
 import net.minecraft.server.MinecraftServer;
 
@@ -41,9 +40,9 @@ class NetworkAcceptThread extends Thread
 
                 synchronized (NetworkListenThread.func_35504_b(netWorkListener))
                 {
-                    java.net.InetAddress inetaddress = socket.getInetAddress();
+                    InetAddress inetaddress = socket.getInetAddress();
 
-                    if (NetworkListenThread.func_35504_b(netWorkListener).containsKey(inetaddress) && System.currentTimeMillis() - ((Long)NetworkListenThread.func_35504_b(netWorkListener).get(inetaddress)).longValue() < 5000L)
+                    if (NetworkListenThread.func_35504_b(netWorkListener).containsKey(inetaddress) && !"127.0.0.1".equals(inetaddress.getHostAddress()) && System.currentTimeMillis() - ((Long)NetworkListenThread.func_35504_b(netWorkListener).get(inetaddress)).longValue() < 4000L)
                     {
                         NetworkListenThread.func_35504_b(netWorkListener).put(inetaddress, Long.valueOf(System.currentTimeMillis()));
                         socket.close();

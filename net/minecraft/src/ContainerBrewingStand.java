@@ -37,7 +37,7 @@ public class ContainerBrewingStand extends Container
     }
 
     /**
-     * update the crafting matrix
+     * Updates crafting matrix; called from onCraftMatrixChanged. Args: none
      */
     public void updateCraftingResults()
     {

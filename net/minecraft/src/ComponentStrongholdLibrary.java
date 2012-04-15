@@ -6,20 +6,20 @@ import java.util.Random;
 public class ComponentStrongholdLibrary extends ComponentStronghold
 {
     private static final StructurePieceTreasure field_35335_b[];
-    protected final EnumDoor field_35337_a;
-    private final boolean field_35336_c;
+    protected final EnumDoor doorType;
+    private final boolean isLargeRoom;
 
     public ComponentStrongholdLibrary(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
         super(par1);
         coordBaseMode = par4;
-        field_35337_a = getRandomDoor(par2Random);
+        doorType = getRandomDoor(par2Random);
         boundingBox = par3StructureBoundingBox;
-        field_35336_c = par3StructureBoundingBox.getYSize() > 6;
+        isLargeRoom = par3StructureBoundingBox.getYSize() > 6;
     }
 
     /**
-     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     * Initiates construction of the Structure Component picked, at the current Location of StructGen
      */
     public void buildComponent(StructureComponent structurecomponent, List list, Random random)
     {
@@ -43,8 +43,8 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
     }
 
     /**
-     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
-     * the end, it adds Fences...'
+     * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...
      */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
@@ -55,13 +55,13 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
 
         byte byte0 = 11;
 
-        if (!field_35336_c)
+        if (!isLargeRoom)
         {
             byte0 = 6;
         }
 
         fillWithRandomizedBlocks(par1World, par3StructureBoundingBox, 0, 0, 0, 13, byte0 - 1, 14, true, par2Random, StructureStrongholdPieces.getStrongholdStones());
-        placeDoor(par1World, par2Random, par3StructureBoundingBox, field_35337_a, 4, 1, 0);
+        placeDoor(par1World, par2Random, par3StructureBoundingBox, doorType, 4, 1, 0);
         randomlyFillWithBlocks(par1World, par3StructureBoundingBox, par2Random, 0.07F, 2, 1, 1, 11, 4, 13, Block.web.blockID, Block.web.blockID, false);
 
         for (int i = 1; i <= 13; i++)
@@ -73,7 +73,7 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
                 placeBlockAtCurrentPosition(par1World, Block.torchWood.blockID, 0, 2, 3, i, par3StructureBoundingBox);
                 placeBlockAtCurrentPosition(par1World, Block.torchWood.blockID, 0, 11, 3, i, par3StructureBoundingBox);
 
-                if (field_35336_c)
+                if (isLargeRoom)
                 {
                     fillWithBlocks(par1World, par3StructureBoundingBox, 1, 6, i, 1, 9, i, Block.planks.blockID, Block.planks.blockID, false);
                     fillWithBlocks(par1World, par3StructureBoundingBox, 12, 6, i, 12, 9, i, Block.planks.blockID, Block.planks.blockID, false);
@@ -85,7 +85,7 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
             fillWithBlocks(par1World, par3StructureBoundingBox, 1, 1, i, 1, 4, i, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
             fillWithBlocks(par1World, par3StructureBoundingBox, 12, 1, i, 12, 4, i, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
 
-            if (field_35336_c)
+            if (isLargeRoom)
             {
                 fillWithBlocks(par1World, par3StructureBoundingBox, 1, 6, i, 1, 9, i, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
                 fillWithBlocks(par1World, par3StructureBoundingBox, 12, 6, i, 12, 9, i, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
@@ -99,7 +99,7 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
             fillWithBlocks(par1World, par3StructureBoundingBox, 9, 1, j, 10, 3, j, Block.bookShelf.blockID, Block.bookShelf.blockID, false);
         }
 
-        if (field_35336_c)
+        if (isLargeRoom)
         {
             fillWithBlocks(par1World, par3StructureBoundingBox, 1, 5, 1, 3, 5, 13, Block.planks.blockID, Block.planks.blockID, false);
             fillWithBlocks(par1World, par3StructureBoundingBox, 10, 5, 1, 12, 5, 13, Block.planks.blockID, Block.planks.blockID, false);
@@ -147,7 +147,7 @@ public class ComponentStrongholdLibrary extends ComponentStronghold
 
         createTreasureChestAtCurrentPosition(par1World, par3StructureBoundingBox, par2Random, 3, 3, 5, field_35335_b, 1 + par2Random.nextInt(4));
 
-        if (field_35336_c)
+        if (isLargeRoom)
         {
             placeBlockAtCurrentPosition(par1World, 0, 0, 12, 9, 1, par3StructureBoundingBox);
             createTreasureChestAtCurrentPosition(par1World, par3StructureBoundingBox, par2Random, 12, 8, 1, field_35335_b, 1 + par2Random.nextInt(4));

@@ -6,19 +6,19 @@ import java.util.Random;
 public class ChunkProviderEnd implements IChunkProvider
 {
     private Random endRNG;
-    private NoiseGeneratorOctaves field_40198_j;
-    private NoiseGeneratorOctaves field_40199_k;
-    private NoiseGeneratorOctaves field_40196_l;
-    public NoiseGeneratorOctaves field_40193_a;
-    public NoiseGeneratorOctaves field_40191_b;
+    private NoiseGeneratorOctaves noiseGen1;
+    private NoiseGeneratorOctaves noiseGen2;
+    private NoiseGeneratorOctaves noiseGen3;
+    public NoiseGeneratorOctaves noiseGen4;
+    public NoiseGeneratorOctaves noiseGen5;
     private World endWorld;
     private double densities[];
     private BiomeGenBase biomesForGeneration[];
-    double field_40192_c[];
-    double field_40189_d[];
-    double field_40190_e[];
-    double field_40187_f[];
-    double field_40188_g[];
+    double noiseData1[];
+    double noiseData2[];
+    double noiseData3[];
+    double noiseData4[];
+    double noiseData5[];
     int field_40200_h[][];
 
     public ChunkProviderEnd(World par1World, long par2)
@@ -26,11 +26,11 @@ public class ChunkProviderEnd implements IChunkProvider
         field_40200_h = new int[32][32];
         endWorld = par1World;
         endRNG = new Random(par2);
-        field_40198_j = new NoiseGeneratorOctaves(endRNG, 16);
-        field_40199_k = new NoiseGeneratorOctaves(endRNG, 16);
-        field_40196_l = new NoiseGeneratorOctaves(endRNG, 8);
-        field_40193_a = new NoiseGeneratorOctaves(endRNG, 10);
-        field_40191_b = new NoiseGeneratorOctaves(endRNG, 16);
+        noiseGen1 = new NoiseGeneratorOctaves(endRNG, 16);
+        noiseGen2 = new NoiseGeneratorOctaves(endRNG, 16);
+        noiseGen3 = new NoiseGeneratorOctaves(endRNG, 8);
+        noiseGen4 = new NoiseGeneratorOctaves(endRNG, 10);
+        noiseGen5 = new NoiseGeneratorOctaves(endRNG, 16);
     }
 
     public void func_40184_a(int par1, int par2, byte par3ArrayOfByte[], BiomeGenBase par4ArrayOfBiomeGenBase[])
@@ -180,6 +180,13 @@ public class ChunkProviderEnd implements IChunkProvider
         func_40184_a(par1, par2, abyte0, biomesForGeneration);
         func_40185_b(par1, par2, abyte0, biomesForGeneration);
         Chunk chunk = new Chunk(endWorld, abyte0, par1, par2);
+        byte abyte1[] = chunk.getBiomeArray();
+
+        for (int i = 0; i < abyte1.length; i++)
+        {
+            abyte1[i] = (byte)biomesForGeneration[i].biomeID;
+        }
+
         chunk.generateSkylightMap();
         return chunk;
     }
@@ -193,12 +200,12 @@ public class ChunkProviderEnd implements IChunkProvider
 
         double d = 684.41200000000003D;
         double d1 = 684.41200000000003D;
-        field_40187_f = field_40193_a.generateNoiseOctaves(field_40187_f, par2, par4, par5, par7, 1.121D, 1.121D, 0.5D);
-        field_40188_g = field_40191_b.generateNoiseOctaves(field_40188_g, par2, par4, par5, par7, 200D, 200D, 0.5D);
+        noiseData4 = noiseGen4.generateNoiseOctaves(noiseData4, par2, par4, par5, par7, 1.121D, 1.121D, 0.5D);
+        noiseData5 = noiseGen5.generateNoiseOctaves(noiseData5, par2, par4, par5, par7, 200D, 200D, 0.5D);
         d *= 2D;
-        field_40192_c = field_40196_l.generateNoiseOctaves(field_40192_c, par2, par3, par4, par5, par6, par7, d / 80D, d1 / 160D, d / 80D);
-        field_40189_d = field_40198_j.generateNoiseOctaves(field_40189_d, par2, par3, par4, par5, par6, par7, d, d1, d);
-        field_40190_e = field_40199_k.generateNoiseOctaves(field_40190_e, par2, par3, par4, par5, par6, par7, d, d1, d);
+        noiseData1 = noiseGen3.generateNoiseOctaves(noiseData1, par2, par3, par4, par5, par6, par7, d / 80D, d1 / 160D, d / 80D);
+        noiseData2 = noiseGen1.generateNoiseOctaves(noiseData2, par2, par3, par4, par5, par6, par7, d, d1, d);
+        noiseData3 = noiseGen2.generateNoiseOctaves(noiseData3, par2, par3, par4, par5, par6, par7, d, d1, d);
         int i = 0;
         int j = 0;
 
@@ -206,14 +213,14 @@ public class ChunkProviderEnd implements IChunkProvider
         {
             for (int l = 0; l < par7; l++)
             {
-                double d2 = (field_40187_f[j] + 256D) / 512D;
+                double d2 = (noiseData4[j] + 256D) / 512D;
 
                 if (d2 > 1.0D)
                 {
                     d2 = 1.0D;
                 }
 
-                double d3 = field_40188_g[j] / 8000D;
+                double d3 = noiseData5[j] / 8000D;
 
                 if (d3 < 0.0D)
                 {
@@ -263,9 +270,9 @@ public class ChunkProviderEnd implements IChunkProvider
                         d6 *= -1D;
                     }
 
-                    double d7 = field_40189_d[i] / 512D;
-                    double d8 = field_40190_e[i] / 512D;
-                    double d9 = (field_40192_c[i] / 10D + 1.0D) / 2D;
+                    double d7 = noiseData2[i] / 512D;
+                    double d8 = noiseData3[i] / 512D;
+                    double d9 = (noiseData1[i] / 10D + 1.0D) / 2D;
 
                     if (d9 < 0.0D)
                     {
@@ -334,7 +341,7 @@ public class ChunkProviderEnd implements IChunkProvider
         BlockSand.fallInstantly = true;
         int i = par2 * 16;
         int j = par3 * 16;
-        BiomeGenBase biomegenbase = endWorld.func_48091_a(i + 16, j + 16);
+        BiomeGenBase biomegenbase = endWorld.getBiomeGenForCoords(i + 16, j + 16);
         biomegenbase.decorate(endWorld, endWorld.rand, i, j);
         BlockSand.fallInstantly = false;
     }
@@ -370,7 +377,7 @@ public class ChunkProviderEnd implements IChunkProvider
      */
     public List getPossibleCreatures(EnumCreatureType par1EnumCreatureType, int par2, int par3, int par4)
     {
-        BiomeGenBase biomegenbase = endWorld.func_48091_a(par2, par4);
+        BiomeGenBase biomegenbase = endWorld.getBiomeGenForCoords(par2, par4);
 
         if (biomegenbase == null)
         {

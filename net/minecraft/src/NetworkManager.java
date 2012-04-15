@@ -354,7 +354,7 @@ public class NetworkManager
     }
 
     /**
-     * Server-only method to shut down the network.
+     * Shuts down the server. (Only actually used on the server)
      */
     public void serverShutdown()
     {

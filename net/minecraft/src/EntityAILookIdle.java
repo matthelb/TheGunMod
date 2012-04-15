@@ -4,9 +4,18 @@ import java.util.Random;
 
 public class EntityAILookIdle extends EntityAIBase
 {
+    /** The entity that is looking idle. */
     private EntityLiving idleEntity;
-    private double field_46112_b;
-    private double field_46113_c;
+
+    /** X offset to look at */
+    private double lookX;
+
+    /** Z offset to look at */
+    private double lookZ;
+
+    /**
+     * A decrementing tick that stops the entity from being idle once it reaches 0.
+     */
     private int idleTime;
 
     public EntityAILookIdle(EntityLiving par1EntityLiving)
@@ -38,8 +47,8 @@ public class EntityAILookIdle extends EntityAIBase
     public void startExecuting()
     {
         double d = (Math.PI * 2D) * idleEntity.getRNG().nextDouble();
-        field_46112_b = Math.cos(d);
-        field_46113_c = Math.sin(d);
+        lookX = Math.cos(d);
+        lookZ = Math.sin(d);
         idleTime = 20 + idleEntity.getRNG().nextInt(20);
     }
 
@@ -49,6 +58,6 @@ public class EntityAILookIdle extends EntityAIBase
     public void updateTask()
     {
         idleTime--;
-        idleEntity.getLookHelper().setLookPosition(idleEntity.posX + field_46112_b, idleEntity.posY + (double)idleEntity.getEyeHeight(), idleEntity.posZ + field_46113_c, 10F, idleEntity.getVerticalFaceSpeed());
+        idleEntity.getLookHelper().setLookPosition(idleEntity.posX + lookX, idleEntity.posY + (double)idleEntity.getEyeHeight(), idleEntity.posZ + lookZ, 10F, idleEntity.getVerticalFaceSpeed());
     }
 }

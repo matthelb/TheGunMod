@@ -20,7 +20,7 @@ public abstract class EntityMob extends EntityCreature implements IMob
      */
     public void onLivingUpdate()
     {
-        float f = getEntityBrightness(1.0F);
+        float f = getBrightness(1.0F);
 
         if (f > 0.5F)
         {
@@ -39,7 +39,7 @@ public abstract class EntityMob extends EntityCreature implements IMob
 
         if (!worldObj.isRemote && worldObj.difficultySetting == 0)
         {
-            setEntityDead();
+            setDead();
         }
     }
 

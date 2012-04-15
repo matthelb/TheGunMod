@@ -2,13 +2,25 @@ package net.minecraft.src;
 
 public class WorldType
 {
-    public static final WorldType field_48459_a[] = new WorldType[16];
-    public static final WorldType field_48457_b = (new WorldType(0, "default", 1)).func_48448_d();
-    public static final WorldType field_48458_c = new WorldType(1, "flat");
-    public static final WorldType field_48456_d = (new WorldType(8, "default_1_1", 0)).func_48450_a(false);
+    public static final WorldType worldTypes[] = new WorldType[16];
+
+    /** Default world type. */
+    public static final WorldType DEFAULT = (new WorldType(0, "default", 1)).func_48448_d();
+
+    /** Flat world type. */
+    public static final WorldType FLAT = new WorldType(1, "flat");
+
+    /** Default (1.1) world type. */
+    public static final WorldType DEFAULT_1_1 = (new WorldType(8, "default_1_1", 0)).setCanBeCreated(false);
     private final String worldType;
-    private final int field_48454_f;
-    private boolean field_48455_g;
+
+    /** The int version of the ChunkProvider that generated this world. */
+    private final int generatorVersion;
+
+    /**
+     * Whether this world type can be generated. Normally true; set to false for out-of-date generator versions.
+     */
+    private boolean canBeCreated;
     private boolean field_48460_h;
 
     private WorldType(int par1, String par2Str)
@@ -19,9 +31,9 @@ public class WorldType
     private WorldType(int par1, String par2Str, int par3)
     {
         worldType = par2Str;
-        field_48454_f = par3;
-        field_48455_g = true;
-        field_48459_a[par1] = this;
+        generatorVersion = par3;
+        canBeCreated = true;
+        worldTypes[par1] = this;
     }
 
     public String func_48449_a()
@@ -29,16 +41,19 @@ public class WorldType
         return worldType;
     }
 
-    public int func_48452_b()
+    /**
+     * Returns generatorVersion.
+     */
+    public int getGeneratorVersion()
     {
-        return field_48454_f;
+        return generatorVersion;
     }
 
     public WorldType func_48451_a(int par1)
     {
-        if (this == field_48457_b && par1 == 0)
+        if (this == DEFAULT && par1 == 0)
         {
-            return field_48456_d;
+            return DEFAULT_1_1;
         }
         else
         {
@@ -46,9 +61,12 @@ public class WorldType
         }
     }
 
-    private WorldType func_48450_a(boolean par1)
+    /**
+     * Sets canBeCreated to the provided value, and returns this.
+     */
+    private WorldType setCanBeCreated(boolean par1)
     {
-        field_48455_g = par1;
+        canBeCreated = par1;
         return this;
     }
 
@@ -65,11 +83,11 @@ public class WorldType
 
     public static WorldType parseWorldType(String par0Str)
     {
-        for (int i = 0; i < field_48459_a.length; i++)
+        for (int i = 0; i < worldTypes.length; i++)
         {
-            if (field_48459_a[i] != null && field_48459_a[i].worldType.equalsIgnoreCase(par0Str))
+            if (worldTypes[i] != null && worldTypes[i].worldType.equalsIgnoreCase(par0Str))
             {
-                return field_48459_a[i];
+                return worldTypes[i];
             }
         }
 

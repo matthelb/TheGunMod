@@ -1,6 +1,7 @@
 package net.minecraft.src;
 
 import java.io.*;
+import java.util.Arrays;
 
 public class NBTTagIntArray extends NBTBase
 {
@@ -57,6 +58,16 @@ public class NBTTagIntArray extends NBTBase
         return (new StringBuilder()).append("[").append(field_48447_a.length).append(" bytes]").toString();
     }
 
+    /**
+     * Creates a clone of the tag.
+     */
+    public NBTBase copy()
+    {
+        int ai[] = new int[field_48447_a.length];
+        System.arraycopy(field_48447_a, 0, ai, 0, field_48447_a.length);
+        return new NBTTagIntArray(getName(), ai);
+    }
+
     public boolean equals(Object par1Obj)
     {
         if (super.equals(par1Obj))
@@ -70,13 +81,8 @@ public class NBTTagIntArray extends NBTBase
         }
     }
 
-    /**
-     * Creates a clone of the tag.
-     */
-    public NBTBase copy()
+    public int hashCode()
     {
-        int ai[] = new int[field_48447_a.length];
-        System.arraycopy(field_48447_a, 0, ai, 0, field_48447_a.length);
-        return new NBTTagIntArray(getName(), ai);
+        return super.hashCode() ^ Arrays.hashCode(field_48447_a);
     }
 }

@@ -156,7 +156,7 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
         threadcommandreader.start();
         ConsoleLogManager.init();
         ModLoader.initialize(this);
-        logger.info("Starting minecraft server version 1.2.3");
+        logger.info("Starting minecraft server version 1.2.5");
 
         if (Runtime.getRuntime().maxMemory() / 1024L / 1024L < 512L)
         {
@@ -234,7 +234,7 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
 
         if (worldtype == null)
         {
-            worldtype = WorldType.field_48457_b;
+            worldtype = WorldType.DEFAULT;
         }
 
         buildLimit = propertyManagerObj.getIntProperty("max-build-height", 256);
@@ -243,7 +243,12 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
         propertyManagerObj.setProperty("max-build-height", Integer.valueOf(buildLimit));
         logger.info((new StringBuilder()).append("Preparing level \"").append(s).append("\"").toString());
         initWorld(new AnvilSaveConverter(new File(".")), s, l1, worldtype);
-        logger.info((new StringBuilder()).append("Done (").append(System.nanoTime() - l).append("ns)! For help, type \"help\" or \"?\"").toString());
+        long l3 = System.nanoTime() - l;
+        String s3 = String.format("%.3fs", new Object[]
+                {
+                    Double.valueOf((double)l3 / 1000000000D)
+                });
+        logger.info((new StringBuilder()).append("Done (").append(s3).append(")! For help, type \"help\" or \"?\"").toString());
 
         if (propertyManagerObj.getBooleanProperty("enable-query", false))
         {
@@ -497,9 +502,7 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
                     interruptedexception1.printStackTrace();
                 }
             }
-        }
-        finally
-        {
+
             try
             {
                 stopServer();
@@ -826,9 +829,9 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
     /**
      * Returns the server version string
      */
-    public String getVersionString()
+    public String getVersion()
     {
-        return "1.2.3";
+        return "1.2.5";
     }
 
     /**
@@ -920,6 +923,14 @@ public class MinecraftServer implements Runnable, ICommandListener, IServer
     public String[] getBannedPlayersList()
     {
         return (String[])configManager.getBannedPlayersList().toArray(new String[0]);
+    }
+
+    /**
+     * Returns the brand name of this server. Usually overridden/changed by server mods, such as Bukkit.
+     */
+    public String getServerBrand()
+    {
+        return "vanilla";
     }
 
     /**

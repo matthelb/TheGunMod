@@ -50,7 +50,7 @@ public class BlockFenceGate extends BlockDirectional
      */
     public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        int i = func_48132_b(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
+        int i = getDirection(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
 
         if (i == 2 || i == 0)
         {
@@ -72,7 +72,7 @@ public class BlockFenceGate extends BlockDirectional
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {
@@ -93,7 +93,7 @@ public class BlockFenceGate extends BlockDirectional
     }
 
     /**
-     * Called when a block is using an item and passed in who placed it. Args: x, y, z, entityLiving
+     * Called when the block is placed in the world.
      */
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
@@ -116,7 +116,7 @@ public class BlockFenceGate extends BlockDirectional
         else
         {
             int j = (MathHelper.floor_double((double)((par5EntityPlayer.rotationYaw * 4F) / 360F) + 0.5D) & 3) % 4;
-            int k = func_48132_b(i);
+            int k = getDirection(i);
 
             if (k == (j + 2) % 4)
             {
@@ -132,7 +132,7 @@ public class BlockFenceGate extends BlockDirectional
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, blockID
+     * their own) Args: x, y, z, neighbor blockID
      */
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {

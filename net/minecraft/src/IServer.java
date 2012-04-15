@@ -45,7 +45,7 @@ public interface IServer
     /**
      * Returns the server version string
      */
-    public abstract String getVersionString();
+    public abstract String getVersion();
 
     /**
      * Returns the number of players on the server

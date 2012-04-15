@@ -107,17 +107,9 @@ public class Item
     public static Item bone = (new Item(96)).setIconCoord(12, 1).setItemName("bone").setFull3D();
     public static Item sugar;
     public static Item cake;
-
-    /** The bed as an inventory item. */
     public static Item bed = (new ItemBed(99)).setMaxStackSize(1).setIconCoord(13, 2).setItemName("bed");
-
-    /** Is the redstone repeater (diode) in item form. */
     public static Item redstoneRepeater;
-
-    /** The cookie inventory item. */
     public static Item cookie = (new ItemFood(101, 1, 0.1F, false)).setIconCoord(12, 5).setItemName("cookie");
-
-    /** The map item */
     public static ItemMap map = (ItemMap)(new ItemMap(102)).setIconCoord(12, 3).setItemName("map");
 
     /**
@@ -278,7 +270,7 @@ public class Item
     }
 
     /**
-     * returns the argument if the item has metadata, 0 otherwise
+     * Returns the metadata of the block which this Item (ItemBlock) can place
      */
     public int getMetadata(int par1)
     {
@@ -409,7 +401,7 @@ public class Item
     }
 
     /**
-     * returns wether the item has a containerItem
+     * True if this Item has a container item (a.k.a. crafting result)
      */
     public boolean hasContainerItem()
     {

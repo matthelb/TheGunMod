@@ -7,7 +7,7 @@ public class RecipesCrafting
     }
 
     /**
-     * Adds crafting recipes to the CraftingManager
+     * Adds the crafting recipes to the CraftingManager.
      */
     public void addRecipes(CraftingManager par1CraftingManager)
     {
@@ -27,6 +27,14 @@ public class RecipesCrafting
                 {
                     "##", "##", '#', Block.sand
                 });
+        par1CraftingManager.addRecipe(new ItemStack(Block.sandStone, 4, 2), new Object[]
+                {
+                    "##", "##", '#', Block.sandStone
+                });
+        par1CraftingManager.addRecipe(new ItemStack(Block.sandStone, 1, 1), new Object[]
+                {
+                    "#", "#", '#', new ItemStack(Block.stairSingle, 1, 1)
+                });
         par1CraftingManager.addRecipe(new ItemStack(Block.stoneBrick, 4), new Object[]
                 {
                     "##", "##", '#', Block.stone
@@ -39,7 +47,7 @@ public class RecipesCrafting
                 {
                     "###", "###", '#', Block.glass
                 });
-        par1CraftingManager.addRecipe(new ItemStack(Block.redstoneLampU, 1), new Object[]
+        par1CraftingManager.addRecipe(new ItemStack(Block.redstoneLampIdle, 1), new Object[]
                 {
                     " R ", "RGR", " R ", 'R', Item.redstone, 'G', Block.glowStone
                 });

@@ -346,7 +346,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
 
         if (par1Packet14BlockDig.status == 4)
         {
-            playerEntity.func_48347_R();
+            playerEntity.dropOneItem();
             return;
         }
 
@@ -548,6 +548,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
         mcServer.configManager.sendPacketToAllPlayers(new Packet3Chat((new StringBuilder()).append("\247e").append(playerEntity.username).append(" left the game.").toString()));
         mcServer.configManager.playerLoggedOut(playerEntity);
         connectionClosed = true;
+        ModLoader.serverDisconnect(playerEntity);
     }
 
     public void registerPacket(Packet par1Packet)
@@ -592,7 +593,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
 
         for (int i = 0; i < s.length(); i++)
         {
-            if (!ChatAllowedCharacters.func_48409_a(s.charAt(i)))
+            if (!ChatAllowedCharacters.isAllowedCharacter(s.charAt(i)))
             {
                 kickPlayer("Illegal characters in chat");
                 return;
@@ -616,6 +617,8 @@ public class NetServerHandler extends NetHandler implements ICommandListener
         {
             kickPlayer("disconnect.spam");
         }
+
+        ModLoader.serverChat(par1Packet3Chat.message, playerEntity);
     }
 
     /**
@@ -772,7 +775,7 @@ public class NetServerHandler extends NetHandler implements ICommandListener
         }
         else
         {
-            if (playerEntity.getEntityHealth() > 0)
+            if (playerEntity.getHealth() > 0)
             {
                 return;
             }
@@ -958,5 +961,13 @@ public class NetServerHandler extends NetHandler implements ICommandListener
     public boolean isServerHandler()
     {
         return true;
+    }
+
+    /**
+     * Handle a player abilities packet.
+     */
+    public void handlePlayerAbilities(Packet202PlayerAbilities par1Packet202PlayerAbilities)
+    {
+        playerEntity.capabilities.isFlying = par1Packet202PlayerAbilities.isFlying && playerEntity.capabilities.allowFlying;
     }
 }

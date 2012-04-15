@@ -33,7 +33,7 @@ public class ChunkCache implements IBlockAccess
 
                 chunkArray[k - chunkX][l - chunkZ] = chunk;
 
-                if (!chunk.func_48556_c(par3, par6))
+                if (!chunk.getAreLevelsEmpty(par3, par6))
                 {
                     field_48098_d = false;
                 }

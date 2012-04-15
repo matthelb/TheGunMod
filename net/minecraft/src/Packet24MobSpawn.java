@@ -44,7 +44,7 @@ public class Packet24MobSpawn extends Packet
         zPosition = MathHelper.floor_double(par1EntityLiving.posZ * 32D);
         yaw = (byte)(int)((par1EntityLiving.rotationYaw * 256F) / 360F);
         pitch = (byte)(int)((par1EntityLiving.rotationPitch * 256F) / 360F);
-        field_48113_h = (byte)(int)((par1EntityLiving.prevRotationYaw2 * 256F) / 360F);
+        field_48113_h = (byte)(int)((par1EntityLiving.rotationYawHead * 256F) / 360F);
         metaData = par1EntityLiving.getDataWatcher();
     }
 

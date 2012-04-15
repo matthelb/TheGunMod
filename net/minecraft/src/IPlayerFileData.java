@@ -11,4 +11,6 @@ public interface IPlayerFileData
      * Reads the player data from disk into the specified PlayerEntityMP.
      */
     public abstract void readPlayerData(EntityPlayer entityplayer);
+
+    public abstract String[] func_52007_g();
 }

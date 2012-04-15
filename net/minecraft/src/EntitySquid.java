@@ -128,7 +128,8 @@ public class EntitySquid extends EntityWaterMob
     }
 
     /**
-     * Returns whether the entity is in water.
+     * Checks if this entity is inside water (if inWater field is true as a result of handleWaterMovement() returning
+     * true)
      */
     public boolean isInWater()
     {

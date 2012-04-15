@@ -7,7 +7,7 @@ public class RecipesFood
     }
 
     /**
-     * Adds food recipes to the CraftingManager.
+     * Adds the food recipes to the CraftingManager.
      */
     public void addRecipes(CraftingManager par1CraftingManager)
     {

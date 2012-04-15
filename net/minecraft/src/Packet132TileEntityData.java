@@ -4,13 +4,26 @@ import java.io.*;
 
 public class Packet132TileEntityData extends Packet
 {
-    public int field_48122_a;
-    public int field_48120_b;
-    public int field_48121_c;
-    public int field_48118_d;
-    public int field_48119_e;
-    public int field_48116_f;
-    public int field_48117_g;
+    /** The X position of the tile entity to update. */
+    public int xPosition;
+
+    /** The Y position of the tile entity to update. */
+    public int yPosition;
+
+    /** The Z position of the tile entity to update. */
+    public int zPosition;
+
+    /** The type of update to perform on the tile entity. */
+    public int actionType;
+
+    /** Custom parameter 1 passed to the tile entity on update. */
+    public int customParam1;
+
+    /** Custom parameter 2 passed to the tile entity on update. */
+    public int customParam2;
+
+    /** Custom parameter 3 passed to the tile entity on update. */
+    public int customParam3;
 
     public Packet132TileEntityData()
     {
@@ -20,11 +33,11 @@ public class Packet132TileEntityData extends Packet
     public Packet132TileEntityData(int par1, int par2, int par3, int par4, int par5)
     {
         isChunkDataPacket = true;
-        field_48122_a = par1;
-        field_48120_b = par2;
-        field_48121_c = par3;
-        field_48118_d = par4;
-        field_48119_e = par5;
+        xPosition = par1;
+        yPosition = par2;
+        zPosition = par3;
+        actionType = par4;
+        customParam1 = par5;
     }
 
     /**
@@ -32,13 +45,13 @@ public class Packet132TileEntityData extends Packet
      */
     public void readPacketData(DataInputStream par1DataInputStream) throws IOException
     {
-        field_48122_a = par1DataInputStream.readInt();
-        field_48120_b = par1DataInputStream.readShort();
-        field_48121_c = par1DataInputStream.readInt();
-        field_48118_d = par1DataInputStream.readByte();
-        field_48119_e = par1DataInputStream.readInt();
-        field_48116_f = par1DataInputStream.readInt();
-        field_48117_g = par1DataInputStream.readInt();
+        xPosition = par1DataInputStream.readInt();
+        yPosition = par1DataInputStream.readShort();
+        zPosition = par1DataInputStream.readInt();
+        actionType = par1DataInputStream.readByte();
+        customParam1 = par1DataInputStream.readInt();
+        customParam2 = par1DataInputStream.readInt();
+        customParam3 = par1DataInputStream.readInt();
     }
 
     /**
@@ -46,13 +59,13 @@ public class Packet132TileEntityData extends Packet
      */
     public void writePacketData(DataOutputStream par1DataOutputStream) throws IOException
     {
-        par1DataOutputStream.writeInt(field_48122_a);
-        par1DataOutputStream.writeShort(field_48120_b);
-        par1DataOutputStream.writeInt(field_48121_c);
-        par1DataOutputStream.writeByte((byte)field_48118_d);
-        par1DataOutputStream.writeInt(field_48119_e);
-        par1DataOutputStream.writeInt(field_48116_f);
-        par1DataOutputStream.writeInt(field_48117_g);
+        par1DataOutputStream.writeInt(xPosition);
+        par1DataOutputStream.writeShort(yPosition);
+        par1DataOutputStream.writeInt(zPosition);
+        par1DataOutputStream.writeByte((byte)actionType);
+        par1DataOutputStream.writeInt(customParam1);
+        par1DataOutputStream.writeInt(customParam2);
+        par1DataOutputStream.writeInt(customParam3);
     }
 
     /**
@@ -60,7 +73,7 @@ public class Packet132TileEntityData extends Packet
      */
     public void processPacket(NetHandler par1NetHandler)
     {
-        par1NetHandler.func_48071_a(this);
+        par1NetHandler.handleTileEntityData(this);
     }
 
     /**

@@ -43,7 +43,7 @@ public class EntityEnderPearl extends EntityThrowable
                 thrower.attackEntityFrom(DamageSource.fall, 5);
             }
 
-            setEntityDead();
+            setDead();
         }
     }
 }

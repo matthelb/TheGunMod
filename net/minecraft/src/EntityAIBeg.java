@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class EntityAIBeg extends EntityAIBase
 {
-    private EntityWolf field_48147_a;
+    private EntityWolf theWolf;
     private EntityPlayer field_48145_b;
     private World field_48146_c;
     private float field_48143_d;
@@ -12,7 +12,7 @@ public class EntityAIBeg extends EntityAIBase
 
     public EntityAIBeg(EntityWolf par1EntityWolf, float par2)
     {
-        field_48147_a = par1EntityWolf;
+        theWolf = par1EntityWolf;
         field_48146_c = par1EntityWolf.worldObj;
         field_48143_d = par2;
         setMutexBits(2);
@@ -23,7 +23,7 @@ public class EntityAIBeg extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        field_48145_b = field_48146_c.getClosestPlayerToEntity(field_48147_a, field_48143_d);
+        field_48145_b = field_48146_c.getClosestPlayerToEntity(theWolf, field_48143_d);
 
         if (field_48145_b == null)
         {
@@ -45,7 +45,7 @@ public class EntityAIBeg extends EntityAIBase
             return false;
         }
 
-        if (field_48147_a.getDistanceSqToEntity(field_48145_b) > (double)(field_48143_d * field_48143_d))
+        if (theWolf.getDistanceSqToEntity(field_48145_b) > (double)(field_48143_d * field_48143_d))
         {
             return false;
         }
@@ -60,8 +60,8 @@ public class EntityAIBeg extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48147_a.func_48378_e(true);
-        field_48144_e = 40 + field_48147_a.getRNG().nextInt(40);
+        theWolf.func_48378_e(true);
+        field_48144_e = 40 + theWolf.getRNG().nextInt(40);
     }
 
     /**
@@ -69,7 +69,7 @@ public class EntityAIBeg extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48147_a.func_48378_e(false);
+        theWolf.func_48378_e(false);
         field_48145_b = null;
     }
 
@@ -78,7 +78,7 @@ public class EntityAIBeg extends EntityAIBase
      */
     public void updateTask()
     {
-        field_48147_a.getLookHelper().setLookPosition(field_48145_b.posX, field_48145_b.posY + (double)field_48145_b.getEyeHeight(), field_48145_b.posZ, 10F, field_48147_a.getVerticalFaceSpeed());
+        theWolf.getLookHelper().setLookPosition(field_48145_b.posX, field_48145_b.posY + (double)field_48145_b.getEyeHeight(), field_48145_b.posZ, 10F, theWolf.getVerticalFaceSpeed());
         field_48144_e--;
     }
 
@@ -91,13 +91,13 @@ public class EntityAIBeg extends EntityAIBase
             return false;
         }
 
-        if (!field_48147_a.isTamed() && itemstack.itemID == Item.bone.shiftedIndex)
+        if (!theWolf.isTamed() && itemstack.itemID == Item.bone.shiftedIndex)
         {
             return true;
         }
         else
         {
-            return field_48147_a.isWheat(itemstack);
+            return theWolf.isWheat(itemstack);
         }
     }
 }

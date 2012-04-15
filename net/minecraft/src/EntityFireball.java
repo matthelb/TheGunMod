@@ -82,7 +82,7 @@ public class EntityFireball extends Entity
     {
         if (!worldObj.isRemote && (shootingEntity != null && shootingEntity.isDead || !worldObj.blockExists((int)posX, (int)posY, (int)posZ)))
         {
-            setEntityDead();
+            setDead();
             return;
         }
 
@@ -108,7 +108,7 @@ public class EntityFireball extends Entity
 
                 if (ticksAlive == 600)
                 {
-                    setEntityDead();
+                    setDead();
                 }
 
                 return;
@@ -220,7 +220,7 @@ public class EntityFireball extends Entity
             }
 
             worldObj.newExplosion(null, posX, posY, posZ, 1.0F, true);
-            setEntityDead();
+            setDead();
         }
     }
 
@@ -298,7 +298,7 @@ public class EntityFireball extends Entity
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         return 1.0F;
     }

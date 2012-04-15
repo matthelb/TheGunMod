@@ -3,7 +3,11 @@ package net.minecraft.src;
 public class EntityAIDefendVillage extends EntityAITarget
 {
     EntityIronGolem irongolem;
-    EntityLiving field_48301_b;
+
+    /**
+     * The aggressor of the iron golem's village which is now the golem's attack target.
+     */
+    EntityLiving villageAgressorTarget;
 
     public EntityAIDefendVillage(EntityIronGolem par1EntityIronGolem)
     {
@@ -25,8 +29,8 @@ public class EntityAIDefendVillage extends EntityAITarget
         }
         else
         {
-            field_48301_b = village.findNearestVillageAggressor(irongolem);
-            return func_48284_a(field_48301_b, false);
+            villageAgressorTarget = village.findNearestVillageAggressor(irongolem);
+            return func_48284_a(villageAgressorTarget, false);
         }
     }
 
@@ -35,7 +39,7 @@ public class EntityAIDefendVillage extends EntityAITarget
      */
     public void startExecuting()
     {
-        irongolem.setAttackTarget(field_48301_b);
+        irongolem.setAttackTarget(villageAgressorTarget);
         super.startExecuting();
     }
 }

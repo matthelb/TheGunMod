@@ -16,7 +16,8 @@ public class BlockFire extends Block
     }
 
     /**
-     * called after adding all blocks, only implemented in BlockFire. Sets al the burn rates.
+     * This method is called on a block after all other blocks gets already created. You can use it to reference and
+     * configure something on the block that needs the others ones.
      */
     public void initializeBlock()
     {
@@ -33,8 +34,9 @@ public class BlockFire extends Block
     }
 
     /**
-     * Sets the burn rate for a block. The larger abilityToCatchFire the more easily it will catch on fire Args:
-     * blockID, unknown1, abilityToCatchFire
+     * Sets the burn rate for a block. The larger abilityToCatchFire the more easily it will catch. The larger
+     * chanceToEncourageFire the faster it will burn and spread to other blocks. Args: blockID, chanceToEncourageFire,
+     * abilityToCatchFire
      */
     private void setBurnRate(int par1, int par2, int par3)
     {
@@ -61,7 +63,7 @@ public class BlockFire extends Block
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {
@@ -140,7 +142,7 @@ public class BlockFire extends Block
             return;
         }
 
-        boolean flag1 = par1World.func_48089_z(par2, par3, par4);
+        boolean flag1 = par1World.isBlockHighHumidity(par2, par3, par4);
         byte byte0 = 0;
 
         if (flag1)
@@ -148,12 +150,12 @@ public class BlockFire extends Block
             byte0 = -50;
         }
 
-        func_48133_a(par1World, par2 + 1, par3, par4, 300 + byte0, par5Random, i);
-        func_48133_a(par1World, par2 - 1, par3, par4, 300 + byte0, par5Random, i);
-        func_48133_a(par1World, par2, par3 - 1, par4, 250 + byte0, par5Random, i);
-        func_48133_a(par1World, par2, par3 + 1, par4, 250 + byte0, par5Random, i);
-        func_48133_a(par1World, par2, par3, par4 - 1, 300 + byte0, par5Random, i);
-        func_48133_a(par1World, par2, par3, par4 + 1, 300 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2 + 1, par3, par4, 300 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2 - 1, par3, par4, 300 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2, par3 - 1, par4, 250 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2, par3 + 1, par4, 250 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2, par3, par4 - 1, 300 + byte0, par5Random, i);
+        tryToCatchBlockOnFire(par1World, par2, par3, par4 + 1, 300 + byte0, par5Random, i);
 
         for (int j = par2 - 1; j <= par2 + 1; j++)
         {
@@ -205,7 +207,7 @@ public class BlockFire extends Block
         }
     }
 
-    private void func_48133_a(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7)
+    private void tryToCatchBlockOnFire(World par1World, int par2, int par3, int par4, int par5, Random par6Random, int par7)
     {
         int i = abilityToCatchFire[par1World.getBlockId(par2, par3, par4)];
 
@@ -337,7 +339,7 @@ public class BlockFire extends Block
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, blockID
+     * their own) Args: x, y, z, neighbor blockID
      */
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {

@@ -53,7 +53,7 @@ public class ItemBucket extends Item
                 {
                     par2World.setBlockWithNotify(i, j, k, 0);
 
-                    if (par3EntityPlayer.capabilities.depleteBuckets)
+                    if (par3EntityPlayer.capabilities.isCreativeMode)
                     {
                         return par1ItemStack;
                     }
@@ -67,7 +67,7 @@ public class ItemBucket extends Item
                 {
                     par2World.setBlockWithNotify(i, j, k, 0);
 
-                    if (par3EntityPlayer.capabilities.depleteBuckets)
+                    if (par3EntityPlayer.capabilities.isCreativeMode)
                     {
                         return par1ItemStack;
                     }
@@ -135,7 +135,7 @@ public class ItemBucket extends Item
                         par2World.setBlockAndMetadataWithNotify(i, j, k, isFull, 0);
                     }
 
-                    if (par3EntityPlayer.capabilities.depleteBuckets)
+                    if (par3EntityPlayer.capabilities.isCreativeMode)
                     {
                         return par1ItemStack;
                     }

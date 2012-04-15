@@ -7,7 +7,7 @@ public class EntityPig extends EntityAnimal
         super(par1World);
         texture = "/mob/pig.png";
         setSize(0.9F, 0.9F);
-        getNavigator().func_48656_a(true);
+        getNavigator().setAvoidsWater(true);
         float f = 0.25F;
         tasks.addTask(0, new EntityAISwimming(this));
         tasks.addTask(1, new EntityAIPanic(this, 0.38F));
@@ -155,7 +155,7 @@ public class EntityPig extends EntityAnimal
             EntityPigZombie entitypigzombie = new EntityPigZombie(worldObj);
             entitypigzombie.setLocationAndAngles(posX, posY, posZ, rotationYaw, rotationPitch);
             worldObj.spawnEntityInWorld(entitypigzombie);
-            setEntityDead();
+            setDead();
             return;
         }
     }

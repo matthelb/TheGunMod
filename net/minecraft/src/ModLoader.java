@@ -3,6 +3,7 @@ package net.minecraft.src;
 import java.io.*;
 import java.lang.reflect.*;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.security.*;
 import java.util.*;
 import java.util.logging.*;
@@ -34,13 +35,14 @@ public final class ModLoader
     private static final LinkedList modList = new LinkedList();
     private static int nextBlockModelID = 1000;
     private static final Map overrides = new HashMap();
+    private static final Map packetChannels = new HashMap();
     public static final Properties props = new Properties();
     private static BiomeGenBase standardBiomes[];
     private static int terrainSpriteIndex = 0;
     private static int terrainSpritesLeft = 0;
     private static final boolean usedItemSprites[] = new boolean[256];
     private static final boolean usedTerrainSprites[] = new boolean[256];
-    public static final String VERSION = "ModLoader Server 1.2.3v3";
+    public static final String VERSION = "ModLoader Server 1.2.5v1";
     private static Method method_getNextWindowId;
     private static Field field_currentWindowId;
 
@@ -456,7 +458,7 @@ public final class ModLoader
     {
         hasInit = true;
         String s = "1111111111111111111111111111111111111101111111111111111111111111111111111111111111111111111111111111110111111111111111000111111111111101111111110000000101111111000000010101111100000000000000110000000000000000000000000000000000000000000000001111111111111111";
-        String s1 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110000001111111111000000001111110000000111111111000000001111111110000001111111111111111111";
+        String s1 = "1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111110000001111111111000000001111111100000111111111100000001111111110000001111111111111111111";
 
         for (int i = 0; i < 256; i++)
         {
@@ -585,9 +587,9 @@ public final class ModLoader
                 logger.addHandler(logHandler);
             }
 
-            logger.fine("ModLoader Server 1.2.3v3 Initializing...");
-            System.out.println("ModLoader Server 1.2.3v3 Initializing...");
-            MinecraftServer.logger.info("ModLoader Server 1.2.3v3 Initializing...");
+            logger.fine("ModLoader Server 1.2.5v1 Initializing...");
+            System.out.println("ModLoader Server 1.2.5v1 Initializing...");
+            MinecraftServer.logger.info("ModLoader Server 1.2.5v1 Initializing...");
             File file = new File((net.minecraft.src.ModLoader.class).getProtectionDomain().getCodeSource().getLocation().toURI());
             modDir.mkdirs();
             readFromClassPath(file);
@@ -721,40 +723,16 @@ public final class ModLoader
 
     public static boolean isModLoaded(String s)
     {
-        label0:
+        for (Iterator iterator = modList.iterator(); iterator.hasNext();)
         {
-            Class class1 = null;
+            BaseMod basemod = (BaseMod)iterator.next();
 
-            try
+            if (s.contentEquals(basemod.getName()))
             {
-                class1 = Class.forName(s);
+                return true;
             }
-            catch (ClassNotFoundException classnotfoundexception)
-            {
-                return false;
-            }
-
-            if (class1 == null)
-            {
-                break label0;
-            }
-
-            Iterator iterator = modList.iterator();
-            BaseMod basemod;
-
-            do
-            {
-                if (!iterator.hasNext())
-                {
-                    break label0;
-                }
-
-                basemod = (BaseMod)iterator.next();
-            }
-            while (!class1.isInstance(basemod));
-
-            return true;
         }
+
         return false;
     }
 
@@ -1063,6 +1041,19 @@ public final class ModLoader
         }
     }
 
+    public static void receivePacket(Packet250CustomPayload packet250custompayload, EntityPlayerMP entityplayermp)
+    {
+        if (packetChannels.containsKey(packet250custompayload.channel))
+        {
+            BaseMod basemod = (BaseMod)packetChannels.get(packet250custompayload.channel);
+
+            if (basemod != null)
+            {
+                basemod.receiveCustomPacket(packet250custompayload, entityplayermp);
+            }
+        }
+    }
+
     public static void registerBlock(Block block)
     {
         registerBlock(block, null);
@@ -1155,6 +1146,21 @@ public final class ModLoader
         {
             logger.throwing("ModLoader", "RegisterEntityID", invocationtargetexception);
             throwException(invocationtargetexception);
+        }
+    }
+
+    public static void registerPacketChannel(BaseMod basemod, String s)
+    {
+        if (s.length() < 16)
+        {
+            packetChannels.put(s, basemod);
+        }
+        else
+        {
+            throw new RuntimeException(String.format("Invalid channel name: %s. Must be less than 16 characters.", new Object[]
+                    {
+                        s
+                    }));
         }
     }
 
@@ -1270,6 +1276,59 @@ public final class ModLoader
             props.store(fileoutputstream, "ModLoader Config");
             fileoutputstream.close();
         }
+    }
+
+    public static void serverChat(String s, EntityPlayerMP entityplayermp)
+    {
+        BaseMod basemod;
+
+        for (Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.receiveChatPacket(s, entityplayermp))
+        {
+            basemod = (BaseMod)iterator.next();
+        }
+    }
+
+    public static void serverConnect(NetServerHandler netserverhandler, Packet1Login packet1login, EntityPlayerMP entityplayermp)
+    {
+        if (packetChannels.size() > 0)
+        {
+            Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
+            packet250custompayload.channel = "REGISTER";
+            StringBuilder stringbuilder = new StringBuilder();
+            Iterator iterator1 = packetChannels.keySet().iterator();
+            stringbuilder.append((String)iterator1.next());
+
+            for (; iterator1.hasNext(); stringbuilder.append((String)iterator1.next()))
+            {
+                stringbuilder.append("\0");
+            }
+
+            packet250custompayload.data = stringbuilder.toString().getBytes(Charset.forName("UTF8"));
+            packet250custompayload.length = packet250custompayload.data.length;
+            sendPacket(packet250custompayload, entityplayermp);
+        }
+
+        BaseMod basemod;
+
+        for (Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.serverConnect(netserverhandler, entityplayermp))
+        {
+            basemod = (BaseMod)iterator.next();
+        }
+    }
+
+    public static void serverDisconnect(EntityPlayerMP entityplayermp)
+    {
+        BaseMod basemod;
+
+        for (Iterator iterator = modList.iterator(); iterator.hasNext(); basemod.serverDisconnect(entityplayermp))
+        {
+            basemod = (BaseMod)iterator.next();
+        }
+    }
+
+    public static void sendPacket(Packet packet, EntityPlayerMP entityplayermp)
+    {
+        entityplayermp.playerNetServerHandler.sendPacket(packet);
     }
 
     public static void setInGameHook(BaseMod basemod, boolean flag, boolean flag1)
@@ -1704,7 +1763,7 @@ public final class ModLoader
         {
             try
             {
-                method_getNextWindowId = (net.minecraft.src.EntityPlayerMP.class).getDeclaredMethod("bb", (Class[])null);
+                method_getNextWindowId = (net.minecraft.src.EntityPlayerMP.class).getDeclaredMethod("bc", (Class[])null);
             }
             catch (NoSuchMethodException nosuchmethodexception)
             {

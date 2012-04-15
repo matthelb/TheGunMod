@@ -4,7 +4,7 @@ import java.io.*;
 
 public class Packet43Experience extends Packet
 {
-    /** Experience at the current level */
+    /** The current experience bar points. */
     public float experience;
 
     /** The total experience points. */

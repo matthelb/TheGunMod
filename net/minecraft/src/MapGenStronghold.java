@@ -18,7 +18,7 @@ public class MapGenStronghold extends MapGenStructure
         allowedBiomeGenBases = (new BiomeGenBase[]
                 {
                     BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.taiga, BiomeGenBase.icePlains, BiomeGenBase.iceMountains, BiomeGenBase.desertHills, BiomeGenBase.forestHills, BiomeGenBase.extremeHillsEdge,
-                    BiomeGenBase.field_48443_w, BiomeGenBase.field_48444_x
+                    BiomeGenBase.jungle, BiomeGenBase.jungleHills
                 });
         structureCoords = new ChunkCoordIntPair[3];
     }
@@ -72,7 +72,7 @@ public class MapGenStronghold extends MapGenStructure
         {
             ChunkCoordIntPair chunkcoordintpair = achunkcoordintpair[j];
 
-            if (par1 == chunkcoordintpair.chunkXPos && par2 == chunkcoordintpair.chunkZPos)
+            if (par1 == chunkcoordintpair.chunkXPos && par2 == chunkcoordintpair.chunkZPosition)
             {
                 System.out.println((new StringBuilder()).append(par1).append(", ").append(par2).toString());
                 return true;

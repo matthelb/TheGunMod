@@ -53,7 +53,7 @@ public enum EnumArmorMaterial
     }
 
     /**
-     * Return the enchantability factor of the material
+     * Return the enchantability factor of the material.
      */
     public int getEnchantability()
     {

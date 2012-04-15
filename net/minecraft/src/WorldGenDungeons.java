@@ -171,7 +171,7 @@ public class WorldGenDungeons extends WorldGenerator
     }
 
     /**
-     * Picks potentially a random item to add to a dungeon chest
+     * Picks potentially a random item to add to a dungeon chest.
      */
     private ItemStack pickCheckLootItem(Random par1Random)
     {

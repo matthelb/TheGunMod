@@ -7,7 +7,7 @@ public class MapGenVillage extends MapGenStructure
     /** A list of all the biomes villages can spawn in. */
     public static List villageSpawnBiomes;
 
-    /** World terrain type, 0 for normal, 1 for flap map */
+    /** World terrain type, 0 for normal, 1 for flat map */
     private final int terrainType;
 
     public MapGenVillage(int par1)

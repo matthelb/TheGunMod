@@ -15,7 +15,12 @@ public class ItemEnderPearl extends Item
      */
     public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer)
     {
-        if (par3EntityPlayer.capabilities.depleteBuckets)
+        if (par3EntityPlayer.capabilities.isCreativeMode)
+        {
+            return par1ItemStack;
+        }
+
+        if (par3EntityPlayer.ridingEntity != null)
         {
             return par1ItemStack;
         }

@@ -46,7 +46,7 @@ class PlayerInstance
         else
         {
             par1EntityPlayerMP.listeningChunks.add(currentChunk);
-            par1EntityPlayerMP.playerNetServerHandler.sendPacket(new Packet50PreChunk(currentChunk.chunkXPos, currentChunk.chunkZPos, true));
+            par1EntityPlayerMP.playerNetServerHandler.sendPacket(new Packet50PreChunk(currentChunk.chunkXPos, currentChunk.chunkZPosition, true));
             players.add(par1EntityPlayerMP);
             par1EntityPlayerMP.loadedChunks.add(currentChunk);
             return;

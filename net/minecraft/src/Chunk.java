@@ -10,7 +10,7 @@ public class Chunk
      */
     public static boolean isLit;
     private ExtendedBlockStorage storageArrays[];
-    private byte field_48565_q[];
+    private byte blockBiomeArray[];
     public int precipitationHeightMap[];
     public boolean updateSkylightColumns[];
 
@@ -19,18 +19,18 @@ public class Chunk
 
     /** Reference to the World object. */
     public World worldObj;
-    public int field_48562_f[];
+    public int heightMap[];
 
     /** The x coordinate of the chunk. */
     public final int xPosition;
 
     /** The z coordinate of the chunk. */
     public final int zPosition;
-    private boolean field_40544_v;
+    private boolean isGapLightingUpdated;
 
     /** A Map of ChunkPositions to TileEntities in this chunk */
     public Map chunkTileEntityMap;
-    public List field_48563_j[];
+    public List entityLists[];
 
     /** Boolean value indicating if the terrain is populated. */
     public boolean isTerrainPopulated;
@@ -47,36 +47,42 @@ public class Chunk
 
     /** The time according to World.worldTime when this chunk was last saved */
     public long lastSaveTime;
-    private int field_48564_s;
+    public boolean field_50025_o;
+
+    /**
+     * Contains the current round-robin relight check index, and is implied as the relight check location as well.
+     */
+    private int queuedLightChecks;
     boolean field_35638_u;
 
     public Chunk(World par1World, int par2, int par3)
     {
         storageArrays = new ExtendedBlockStorage[16];
-        field_48565_q = new byte[256];
+        blockBiomeArray = new byte[256];
         precipitationHeightMap = new int[256];
         updateSkylightColumns = new boolean[256];
-        field_40544_v = false;
+        isGapLightingUpdated = false;
         chunkTileEntityMap = new HashMap();
         isTerrainPopulated = false;
         isModified = false;
         hasEntities = false;
         lastSaveTime = 0L;
-        field_48564_s = 4096;
+        field_50025_o = false;
+        queuedLightChecks = 4096;
         field_35638_u = false;
-        field_48563_j = new List[16];
+        entityLists = new List[16];
         worldObj = par1World;
         xPosition = par2;
         zPosition = par3;
-        field_48562_f = new int[256];
+        heightMap = new int[256];
 
-        for (int i = 0; i < field_48563_j.length; i++)
+        for (int i = 0; i < entityLists.length; i++)
         {
-            field_48563_j[i] = new ArrayList();
+            entityLists[i] = new ArrayList();
         }
 
         Arrays.fill(precipitationHeightMap, -999);
-        Arrays.fill(field_48565_q, (byte) - 1);
+        Arrays.fill(blockBiomeArray, (byte) - 1);
     }
 
     public Chunk(World par1World, byte par2ArrayOfByte[], int par3, int par4)
@@ -123,23 +129,29 @@ public class Chunk
      */
     public int getHeightValue(int par1, int par2)
     {
-        return field_48562_f[par2 << 4 | par1];
+        return heightMap[par2 << 4 | par1];
     }
 
-    public int func_48561_g()
+    /**
+     * Returns the topmost ExtendedBlockStorage instance for this Chunk that actually contains a block.
+     */
+    public int getTopFilledSegment()
     {
         for (int i = storageArrays.length - 1; i >= 0; i--)
         {
             if (storageArrays[i] != null)
             {
-                return storageArrays[i].func_48597_c();
+                return storageArrays[i].getYLocation();
             }
         }
 
         return 0;
     }
 
-    public ExtendedBlockStorage[] func_48553_h()
+    /**
+     * Returns the ExtendedBlockStorage array for this Chunk.
+     */
+    public ExtendedBlockStorage[] getBlockStorageArray()
     {
         return storageArrays;
     }
@@ -149,7 +161,7 @@ public class Chunk
      */
     public void generateSkylightMap()
     {
-        int i = func_48561_g();
+        int i = getTopFilledSegment();
 
         for (int j = 0; j < 16; j++)
         {
@@ -165,9 +177,9 @@ public class Chunk
                         break;
                     }
 
-                    if (func_48555_b(j, j1 - 1, l) != 0)
+                    if (getBlockLightOpacity(j, j1 - 1, l) != 0)
                     {
-                        field_48562_f[l << 4 | j] = j1;
+                        heightMap[l << 4 | j] = j1;
                         break;
                     }
 
@@ -185,7 +197,7 @@ public class Chunk
 
                 do
                 {
-                    j1 -= func_48555_b(j, k1, l);
+                    j1 -= getBlockLightOpacity(j, k1, l);
 
                     if (j1 > 0)
                     {
@@ -223,7 +235,7 @@ public class Chunk
     private void propagateSkylightOcclusion(int par1, int par2)
     {
         updateSkylightColumns[par1 + par2 * 16] = true;
-        field_40544_v = true;
+        isGapLightingUpdated = true;
     }
 
     /**
@@ -276,7 +288,7 @@ public class Chunk
                 }
             }
 
-            field_40544_v = false;
+            isGapLightingUpdated = false;
         }
 
         Profiler.endSection();
@@ -317,7 +329,7 @@ public class Chunk
      */
     private void relightBlock(int par1, int par2, int par3)
     {
-        int i = field_48562_f[par3 << 4 | par1];
+        int i = heightMap[par3 << 4 | par1] & 0xff;
         int j = i;
 
         if (par2 > i)
@@ -325,7 +337,7 @@ public class Chunk
             j = par2;
         }
 
-        for (; j > 0 && func_48555_b(par1, j - 1, par3) == 0; j--) { }
+        for (; j > 0 && getBlockLightOpacity(par1, j - 1, par3) == 0; j--) { }
 
         if (j == i)
         {
@@ -333,7 +345,7 @@ public class Chunk
         }
 
         worldObj.markBlocksDirtyVertical(par1, par3, j, i);
-        field_48562_f[par3 << 4 | par1] = j;
+        heightMap[par3 << 4 | par1] = j;
         int k = xPosition * 16 + par1;
         int l = zPosition * 16 + par3;
 
@@ -376,7 +388,7 @@ public class Chunk
                 }
 
                 j--;
-                int i2 = func_48555_b(par1, j, par3);
+                int i2 = getBlockLightOpacity(par1, j, par3);
 
                 if (i2 == 0)
                 {
@@ -400,7 +412,7 @@ public class Chunk
             while (true);
         }
 
-        int l1 = field_48562_f[par3 << 4 | par1];
+        int l1 = heightMap[par3 << 4 | par1];
         int j2 = i;
         int k2 = l1;
 
@@ -423,7 +435,7 @@ public class Chunk
         isModified = true;
     }
 
-    public int func_48555_b(int par1, int par2, int par3)
+    public int getBlockLightOpacity(int par1, int par2, int par3)
     {
         return Block.lightOpacity[getBlockID(par1, par2, par3)];
     }
@@ -433,6 +445,11 @@ public class Chunk
      */
     public int getBlockID(int par1, int par2, int par3)
     {
+        if (par2 >> 4 >= storageArrays.length)
+        {
+            return 0;
+        }
+
         ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage != null)
@@ -450,11 +467,16 @@ public class Chunk
      */
     public int getBlockMetadata(int par1, int par2, int par3)
     {
+        if (par2 >> 4 >= storageArrays.length)
+        {
+            return 0;
+        }
+
         ExtendedBlockStorage extendedblockstorage = storageArrays[par2 >> 4];
 
         if (extendedblockstorage != null)
         {
-            return extendedblockstorage.func_48598_b(par1, par2 & 0xf, par3);
+            return extendedblockstorage.getExtBlockMetadata(par1, par2 & 0xf, par3);
         }
         else
         {
@@ -482,7 +504,7 @@ public class Chunk
             precipitationHeightMap[i] = -999;
         }
 
-        int j = field_48562_f[i];
+        int j = heightMap[i];
         int k = getBlockID(par1, par2, par3);
 
         if (k == par4 && getBlockMetadata(par1, par2, par3) == par5)
@@ -520,7 +542,12 @@ public class Chunk
             }
         }
 
-        extendedblockstorage.func_48585_b(par1, par2 & 0xf, par3, par5);
+        if (extendedblockstorage.getExtBlockID(par1, par2 & 0xf, par3) != par4)
+        {
+            return false;
+        }
+
+        extendedblockstorage.setExtBlockMetadata(par1, par2 & 0xf, par3, par5);
 
         if (flag)
         {
@@ -530,7 +557,7 @@ public class Chunk
         {
             if (Block.lightOpacity[par4 & 0xfff] > 0)
             {
-                if (par2 > j)
+                if (par2 >= j)
                 {
                     relightBlock(par1, par2 + 1, par3);
                 }
@@ -592,7 +619,7 @@ public class Chunk
             return false;
         }
 
-        int i = extendedblockstorage.func_48598_b(par1, par2 & 0xf, par3);
+        int i = extendedblockstorage.getExtBlockMetadata(par1, par2 & 0xf, par3);
 
         if (i == par4)
         {
@@ -600,7 +627,7 @@ public class Chunk
         }
 
         isModified = true;
-        extendedblockstorage.func_48585_b(par1, par2 & 0xf, par3, par4);
+        extendedblockstorage.setExtBlockMetadata(par1, par2 & 0xf, par3, par4);
         int j = extendedblockstorage.getExtBlockID(par1, par2 & 0xf, par3);
 
         if (j > 0 && (Block.blocksList[j] instanceof BlockContainer))
@@ -736,20 +763,20 @@ public class Chunk
             k = 0;
         }
 
-        if (k >= field_48563_j.length)
+        if (k >= entityLists.length)
         {
-            k = field_48563_j.length - 1;
+            k = entityLists.length - 1;
         }
 
         par1Entity.addedToChunk = true;
         par1Entity.chunkCoordX = xPosition;
         par1Entity.chunkCoordY = k;
         par1Entity.chunkCoordZ = zPosition;
-        field_48563_j[k].add(par1Entity);
+        entityLists[k].add(par1Entity);
     }
 
     /**
-     * removes entity usint its y chunk coordinate as its index
+     * removes entity using its y chunk coordinate as its index
      */
     public void removeEntity(Entity par1Entity)
     {
@@ -766,12 +793,12 @@ public class Chunk
             par2 = 0;
         }
 
-        if (par2 >= field_48563_j.length)
+        if (par2 >= entityLists.length)
         {
-            par2 = field_48563_j.length - 1;
+            par2 = entityLists.length - 1;
         }
 
-        field_48563_j[par2].remove(par1Entity);
+        entityLists[par2].remove(par1Entity);
     }
 
     /**
@@ -779,7 +806,7 @@ public class Chunk
      */
     public boolean canBlockSeeTheSky(int par1, int par2, int par3)
     {
-        return par2 >= field_48562_f[par3 << 4 | par1];
+        return par2 >= heightMap[par3 << 4 | par1];
     }
 
     /**
@@ -794,7 +821,7 @@ public class Chunk
         {
             int i = getBlockID(par1, par2, par3);
 
-            if (i <= 0 || !Block.blocksList[i].func_48124_n())
+            if (i <= 0 || !Block.blocksList[i].hasTileEntity())
             {
                 return null;
             }
@@ -884,9 +911,9 @@ public class Chunk
         isChunkLoaded = true;
         worldObj.addTileEntity(chunkTileEntityMap.values());
 
-        for (int i = 0; i < field_48563_j.length; i++)
+        for (int i = 0; i < entityLists.length; i++)
         {
-            worldObj.addLoadedEntities(field_48563_j[i]);
+            worldObj.addLoadedEntities(entityLists[i]);
         }
     }
 
@@ -903,9 +930,9 @@ public class Chunk
             tileentity = (TileEntity)iterator.next();
         }
 
-        for (int i = 0; i < field_48563_j.length; i++)
+        for (int i = 0; i < entityLists.length; i++)
         {
-            worldObj.unloadEntities(field_48563_j[i]);
+            worldObj.unloadEntities(entityLists[i]);
         }
     }
 
@@ -931,14 +958,14 @@ public class Chunk
             i = 0;
         }
 
-        if (j >= field_48563_j.length)
+        if (j >= entityLists.length)
         {
-            j = field_48563_j.length - 1;
+            j = entityLists.length - 1;
         }
 
         for (int k = i; k <= j; k++)
         {
-            List list = field_48563_j[k];
+            List list = entityLists[k];
 
             for (int l = 0; l < list.size(); l++)
             {
@@ -982,14 +1009,14 @@ public class Chunk
         {
             i = 0;
         }
-        else if (i >= field_48563_j.length)
+        else if (i >= entityLists.length)
         {
-            i = field_48563_j.length - 1;
+            i = entityLists.length - 1;
         }
 
-        if (j >= field_48563_j.length)
+        if (j >= entityLists.length)
         {
-            j = field_48563_j.length - 1;
+            j = entityLists.length - 1;
         }
         else if (j < 0)
         {
@@ -998,7 +1025,7 @@ public class Chunk
 
         for (int k = i; k <= j; k++)
         {
-            List list = field_48563_j[k];
+            List list = entityLists[k];
 
             for (int l = 0; l < list.size(); l++)
             {
@@ -1094,7 +1121,7 @@ public class Chunk
 
         if (j == -999)
         {
-            int k = func_48561_g() + 15;
+            int k = getTopFilledSegment() + 15;
 
             for (j = -1; k > 0 && j == -1;)
             {
@@ -1118,11 +1145,11 @@ public class Chunk
     }
 
     /**
-     * Checks whether skylight needs updated; if it does, calls updateSkylight_do (aka func_35839_k).
+     * Checks whether skylight needs updated; if it does, calls updateSkylight_do
      */
     public void updateSkylight()
     {
-        if (field_40544_v && !worldObj.worldProvider.hasNoSky)
+        if (isGapLightingUpdated && !worldObj.worldProvider.hasNoSky)
         {
             updateSkylight_do();
         }
@@ -1136,7 +1163,11 @@ public class Chunk
         return new ChunkCoordIntPair(xPosition, zPosition);
     }
 
-    public boolean func_48556_c(int par1, int par2)
+    /**
+     * Returns whether the ExtendedBlockStorages containing levels (in blocks) from arg 1 to arg 2 are fully empty
+     * (true) or not (false).
+     */
+    public boolean getAreLevelsEmpty(int par1, int par2)
     {
         if (par1 < 0)
         {
@@ -1161,20 +1192,20 @@ public class Chunk
         return true;
     }
 
-    public void func_48558_a(ExtendedBlockStorage par1ArrayOfExtendedBlockStorage[])
+    public void setStorageArrays(ExtendedBlockStorage par1ArrayOfExtendedBlockStorage[])
     {
         storageArrays = par1ArrayOfExtendedBlockStorage;
     }
 
     public BiomeGenBase func_48560_a(int par1, int par2, WorldChunkManager par3WorldChunkManager)
     {
-        int i = field_48565_q[par2 << 4 | par1] & 0xff;
+        int i = blockBiomeArray[par2 << 4 | par1] & 0xff;
 
         if (i == 255)
         {
             BiomeGenBase biomegenbase = par3WorldChunkManager.getBiomeGenAt((xPosition << 4) + par1, (zPosition << 4) + par2);
             i = biomegenbase.biomeID;
-            field_48565_q[par2 << 4 | par1] = (byte)(i & 0xff);
+            blockBiomeArray[par2 << 4 | par1] = (byte)(i & 0xff);
         }
 
         if (BiomeGenBase.biomeList[i] == null)
@@ -1187,34 +1218,49 @@ public class Chunk
         }
     }
 
-    public byte[] func_48552_l()
+    /**
+     * Returns an array containing a 16x16 mapping on the X/Z of block positions in this Chunk to biome IDs.
+     */
+    public byte[] getBiomeArray()
     {
-        return field_48565_q;
+        return blockBiomeArray;
     }
 
-    public void func_48559_a(byte par1ArrayOfByte[])
+    /**
+     * Accepts a 256-entry array that contains a 16x16 mapping on the X/Z plane of block positions in this Chunk to
+     * biome IDs.
+     */
+    public void setBiomeArray(byte par1ArrayOfByte[])
     {
-        field_48565_q = par1ArrayOfByte;
+        blockBiomeArray = par1ArrayOfByte;
     }
 
-    public void func_48554_m()
+    /**
+     * Resets the relight check index to 0 for this Chunk.
+     */
+    public void resetRelightChecks()
     {
-        field_48564_s = 0;
+        queuedLightChecks = 0;
     }
 
-    public void func_48557_n()
+    /**
+     * Called once-per-chunk-per-tick, and advances the round-robin relight check index by up to 8 blocks at a time. In
+     * a worst-case scenario, can potentially take up to 25.6 seconds, calculated via (4096/8)/20, to re-check all
+     * blocks in a chunk, which may explain lagging light updates on initial world generation.
+     */
+    public void enqueueRelightChecks()
     {
         for (int i = 0; i < 8; i++)
         {
-            if (field_48564_s >= 4096)
+            if (queuedLightChecks >= 4096)
             {
                 return;
             }
 
-            int j = field_48564_s % 16;
-            int k = (field_48564_s / 16) % 16;
-            int l = field_48564_s / 256;
-            field_48564_s++;
+            int j = queuedLightChecks % 16;
+            int k = (queuedLightChecks / 16) % 16;
+            int l = queuedLightChecks / 256;
+            queuedLightChecks++;
             int i1 = (xPosition << 4) + k;
             int j1 = (zPosition << 4) + l;
 

@@ -29,7 +29,7 @@ public class ComponentVillageStartPiece extends ComponentVillageWell
         terrainType = par7;
     }
 
-    public WorldChunkManager getWorldChunkMngr()
+    public WorldChunkManager getWorldChunkManager()
     {
         return worldChunkMngr;
     }

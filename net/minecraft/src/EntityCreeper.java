@@ -26,7 +26,7 @@ public class EntityCreeper extends EntityMob
         tasks.addTask(5, new EntityAIWander(this, 0.2F));
         tasks.addTask(6, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 8F));
         tasks.addTask(6, new EntityAILookIdle(this));
-        targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, false));
+        targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, net.minecraft.src.EntityPlayer.class, 16F, 0, true));
         targetTasks.addTask(2, new EntityAIHurtByTarget(this, false));
     }
 
@@ -109,7 +109,7 @@ public class EntityCreeper extends EntityMob
                         worldObj.createExplosion(this, posX, posY, posZ, 3F);
                     }
 
-                    setEntityDead();
+                    setDead();
                 }
             }
         }

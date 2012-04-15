@@ -19,7 +19,7 @@ public class TileEntityChest extends TileEntity implements IInventory
     public TileEntityChest adjacentChestXNeg;
 
     /** Contains the chest tile located adjacent to this one (if any) */
-    public TileEntityChest adjacentChestZPos;
+    public TileEntityChest adjacentChestZPosition;
 
     /** The current angle of the lid (between 0 and 1) */
     public float lidAngle;
@@ -217,7 +217,7 @@ public class TileEntityChest extends TileEntity implements IInventory
         adjacentChestZNeg = null;
         adjacentChestXPos = null;
         adjacentChestXNeg = null;
-        adjacentChestZPos = null;
+        adjacentChestZPosition = null;
 
         if (worldObj.getBlockId(xCoord - 1, yCoord, zCoord) == Block.chest.blockID)
         {
@@ -236,7 +236,7 @@ public class TileEntityChest extends TileEntity implements IInventory
 
         if (worldObj.getBlockId(xCoord, yCoord, zCoord + 1) == Block.chest.blockID)
         {
-            adjacentChestZPos = (TileEntityChest)worldObj.getBlockTileEntity(xCoord, yCoord, zCoord + 1);
+            adjacentChestZPosition = (TileEntityChest)worldObj.getBlockTileEntity(xCoord, yCoord, zCoord + 1);
         }
 
         if (adjacentChestZNeg != null)
@@ -244,9 +244,9 @@ public class TileEntityChest extends TileEntity implements IInventory
             adjacentChestZNeg.updateContainingBlockInfo();
         }
 
-        if (adjacentChestZPos != null)
+        if (adjacentChestZPosition != null)
         {
-            adjacentChestZPos.updateContainingBlockInfo();
+            adjacentChestZPosition.updateContainingBlockInfo();
         }
 
         if (adjacentChestXPos != null)
@@ -282,7 +282,7 @@ public class TileEntityChest extends TileEntity implements IInventory
             double d = (double)xCoord + 0.5D;
             double d1 = (double)zCoord + 0.5D;
 
-            if (adjacentChestZPos != null)
+            if (adjacentChestZPosition != null)
             {
                 d1 += 0.5D;
             }
@@ -320,7 +320,7 @@ public class TileEntityChest extends TileEntity implements IInventory
                 double d2 = (double)xCoord + 0.5D;
                 double d3 = (double)zCoord + 0.5D;
 
-                if (adjacentChestZPos != null)
+                if (adjacentChestZPosition != null)
                 {
                     d3 += 0.5D;
                 }

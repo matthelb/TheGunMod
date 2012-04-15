@@ -82,12 +82,12 @@ public class MapGenCaves extends MapGenBase
                 continue;
             }
 
-            double d4a = par6 - d;
-            double d5a = par10 - d1;
-            double d6a = par16 - par15;
+            double d4 = par6 - d;
+            double d5 = par10 - d1;
+            double d6 = par16 - par15;
             double d7 = par12 + 2.0F + 16F;
 
-            if ((d4a * d4a + d5a * d5a) - d6a * d6a > d7 * d7)
+            if ((d4 * d4 + d5 * d5) - d6 * d6 > d7 * d7)
             {
                 return;
             }
@@ -97,11 +97,11 @@ public class MapGenCaves extends MapGenBase
                 continue;
             }
 
-            int d4 = MathHelper.floor_double(par6 - d2) - par3 * 16 - 1;
+            d4 = MathHelper.floor_double(par6 - d2) - par3 * 16 - 1;
             int k = (MathHelper.floor_double(par6 + d2) - par3 * 16) + 1;
-            int d5 = MathHelper.floor_double(par8 - d3) - 1;
+            d5 = MathHelper.floor_double(par8 - d3) - 1;
             int l = MathHelper.floor_double(par8 + d3) + 1;
-            int d6 = MathHelper.floor_double(par10 - d2) - par4 * 16 - 1;
+            d6 = MathHelper.floor_double(par10 - d2) - par4 * 16 - 1;
             int i1 = (MathHelper.floor_double(par10 + d2) - par4 * 16) + 1;
 
             if (d4 < 0)
@@ -136,9 +136,9 @@ public class MapGenCaves extends MapGenBase
 
             boolean flag2 = false;
 
-            for (int j1 = d4; !flag2 && j1 < k; j1++)
+            for (int j1 = (int) d4; !flag2 && j1 < k; j1++)
             {
-                for (int l1 = d6; !flag2 && l1 < i1; l1++)
+                for (int l1 = (int) d6; !flag2 && l1 < i1; l1++)
                 {
                     for (int i2 = l + 1; !flag2 && i2 >= d5 - 1; i2--)
                     {
@@ -156,7 +156,7 @@ public class MapGenCaves extends MapGenBase
 
                         if (i2 != d5 - 1 && j1 != d4 && j1 != k - 1 && l1 != d6 && l1 != i1 - 1)
                         {
-                            i2 = d5;
+                            i2 = (int) d5;
                         }
                     }
                 }
@@ -167,12 +167,12 @@ public class MapGenCaves extends MapGenBase
                 continue;
             }
 
-            for (int k1 = d4; k1 < k; k1++)
+            for (int k1 = (int) d4; k1 < k; k1++)
             {
                 double d8 = (((double)(k1 + par3 * 16) + 0.5D) - par6) / d2;
                 label0:
 
-                for (int k2 = d6; k2 < i1; k2++)
+                for (int k2 = (int) d6; k2 < i1; k2++)
                 {
                     double d9 = (((double)(k2 + par4 * 16) + 0.5D) - par10) / d2;
                     int l2 = (k1 * 16 + k2) * 128 + l;
@@ -215,7 +215,7 @@ public class MapGenCaves extends MapGenBase
 
                                     if (flag3 && par5ArrayOfByte[l2 - 1] == Block.dirt.blockID)
                                     {
-                                        par5ArrayOfByte[l2 - 1] = worldObj.func_48091_a(k1 + par3 * 16, k2 + par4 * 16).topBlock;
+                                        par5ArrayOfByte[l2 - 1] = worldObj.getBiomeGenForCoords(k1 + par3 * 16, k2 + par4 * 16).topBlock;
                                     }
                                 }
                             }

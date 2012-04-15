@@ -58,7 +58,7 @@ public class EntityFallingSand extends Entity
     {
         if (blockID == 0)
         {
-            setEntityDead();
+            setDead();
             return;
         }
 
@@ -81,7 +81,7 @@ public class EntityFallingSand extends Entity
         }
         else if (!worldObj.isRemote && fallTime == 1)
         {
-            setEntityDead();
+            setDead();
         }
 
         if (onGround)
@@ -92,7 +92,7 @@ public class EntityFallingSand extends Entity
 
             if (worldObj.getBlockId(i, j, k) != Block.pistonMoving.blockID)
             {
-                setEntityDead();
+                setDead();
 
                 if ((!worldObj.canBlockBePlacedAt(blockID, i, j, k, true, 1) || BlockSand.canFallBelow(worldObj, i, j - 1, k) || !worldObj.setBlockWithNotify(i, j, k, blockID)) && !worldObj.isRemote)
                 {
@@ -103,7 +103,7 @@ public class EntityFallingSand extends Entity
         else if (fallTime > 100 && !worldObj.isRemote && (j < 1 || j > 256) || fallTime > 600)
         {
             dropItem(blockID, 1);
-            setEntityDead();
+            setDead();
         }
     }
 

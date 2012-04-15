@@ -67,4 +67,9 @@ public class NBTTagLong extends NBTBase
             return false;
         }
     }
+
+    public int hashCode()
+    {
+        return super.hashCode() ^ (int)(data ^ data >>> 32);
+    }
 }

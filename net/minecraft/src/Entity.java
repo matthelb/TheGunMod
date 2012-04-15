@@ -71,8 +71,6 @@ public abstract class Entity
      * True if after a move this entity has collided with something either vertically or horizontally
      */
     public boolean isCollided;
-
-    /** EntityTrackerEntity sends Packet28EntityVelocity if set */
     public boolean velocityChanged;
     protected boolean isInWeb;
     public boolean field_9077_F;
@@ -148,10 +146,6 @@ public abstract class Entity
      */
     protected boolean inWater;
     public int heartsLife;
-
-    /**
-     * this is true during the first update after this entity has spawned and false forever after that time
-     */
     private boolean firstUpdate;
     protected boolean isImmuneToFire;
     protected DataWatcher dataWatcher;
@@ -234,9 +228,9 @@ public abstract class Entity
     }
 
     /**
-     * Will get destroyed next tick
+     * Will get destroyed next tick.
      */
-    public void setEntityDead()
+    public void setDead()
     {
         isDead = true;
     }
@@ -436,7 +430,7 @@ public abstract class Entity
      */
     protected void kill()
     {
-        setEntityDead();
+        setDead();
     }
 
     /**
@@ -529,6 +523,38 @@ public abstract class Entity
                 {
                     par5 += d5;
                 }
+            }
+
+            while (par1 != 0.0D && par5 != 0.0D && worldObj.getCollidingBoundingBoxes(this, boundingBox.getOffsetBoundingBox(par1, -1D, par5)).size() == 0)
+            {
+                if (par1 < d5 && par1 >= -d5)
+                {
+                    par1 = 0.0D;
+                }
+                else if (par1 > 0.0D)
+                {
+                    par1 -= d5;
+                }
+                else
+                {
+                    par1 += d5;
+                }
+
+                if (par5 < d5 && par5 >= -d5)
+                {
+                    par5 = 0.0D;
+                }
+                else if (par5 > 0.0D)
+                {
+                    par5 -= d5;
+                }
+                else
+                {
+                    par5 += d5;
+                }
+
+                d2 = par1;
+                d4 = par5;
             }
         }
 
@@ -870,7 +896,8 @@ public abstract class Entity
     }
 
     /**
-     * Returns whether the entity is in water.
+     * Checks if this entity is inside water (if inWater field is true as a result of handleWaterMovement() returning
+     * true)
      */
     public boolean isInWater()
     {
@@ -950,7 +977,7 @@ public abstract class Entity
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         int i = MathHelper.floor_double(posX);
         int j = MathHelper.floor_double(posZ);
@@ -1453,7 +1480,7 @@ public abstract class Entity
     }
 
     /**
-     * set entity to null to unmount
+     * Called when a player mounts an entity. e.g. mounts a pig, mounts a boat.
      */
     public void mountEntity(Entity par1Entity)
     {
@@ -1523,7 +1550,7 @@ public abstract class Entity
     }
 
     /**
-     * Returns true if the furnace is currently burning
+     * Returns true if the entity is on fire. Used by render to add the fire effect on rendering.
      */
     public boolean isBurning()
     {
@@ -1568,7 +1595,8 @@ public abstract class Entity
     }
 
     /**
-     * Gets the specified flag from DataWatcher byte object 0
+     * Returns true if the flag is active for the entity. Known flags: 0) is burning; 1) is sneaking; 2) is riding
+     * something; 3) is sprinting; 4) is eating
      */
     protected boolean getFlag(int par1)
     {
@@ -1576,7 +1604,7 @@ public abstract class Entity
     }
 
     /**
-     * Sets the specified flag to the specified value in DataWatcher byte object 0
+     * Enable or disable a entity flag, see getEntityFlag to read the know flags.
      */
     protected void setFlag(int par1, boolean par2)
     {

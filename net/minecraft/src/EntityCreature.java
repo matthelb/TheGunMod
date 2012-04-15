@@ -6,7 +6,7 @@ public abstract class EntityCreature extends EntityLiving
 {
     private PathEntity pathToEntity;
 
-    /** The Player this EntityCreature will attack next. */
+    /** The Entity this EntityCreature is set to attack. */
     protected Entity entityToAttack;
 
     /**
@@ -279,7 +279,7 @@ public abstract class EntityCreature extends EntityLiving
     }
 
     /**
-     * sets the target Entity
+     * Sets the entity which is to be attacked.
      */
     public void setTarget(Entity par1Entity)
     {
@@ -287,7 +287,7 @@ public abstract class EntityCreature extends EntityLiving
     }
 
     /**
-     * This method return a value to be applied directly to entity speed, this factor is less than 1 when a slowdown
+     * This method returns a value to be applied directly to entity speed, this factor is less than 1 when a slowdown
      * potion effect is applied, more than 1 when a haste potion effect is applied and 2 for fleeing entities.
      */
     protected float getSpeedModifier()

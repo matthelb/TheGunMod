@@ -21,9 +21,9 @@ public class Material
     public static final Material sand;
     public static final Material circuits;
     public static final Material glass;
-    public static final Material field_48476_r;
+    public static final Material redstoneLight;
     public static final Material tnt;
-    public static final Material field_4215_q;
+    public static final Material unused;
     public static final Material ice;
     public static final Material snow;
 
@@ -66,7 +66,8 @@ public class Material
     private boolean canHarvest;
 
     /**
-     * 0 indicates normal, 1 indicates this block can't push other blocks, 2 indicates this block cant be pushed
+     * Mobility information flag. 0 indicates that this block is normal, 1 indicates that it can't push other blocks, 2
+     * indicates that it can't be pushed.
      */
     private int mobilityFlag;
 
@@ -198,7 +199,7 @@ public class Material
     }
 
     /**
-     * marks this material as being immovable
+     * This type of material can't be pushed, and pistons are blocked to move.
      */
     protected Material setImmovableMobility()
     {
@@ -225,9 +226,9 @@ public class Material
         sand = new Material(MapColor.sandColor);
         circuits = (new MaterialLogic(MapColor.airColor)).setNoPushMobility();
         glass = (new Material(MapColor.airColor)).setTranslucent();
-        field_48476_r = new Material(MapColor.airColor);
+        redstoneLight = new Material(MapColor.airColor);
         tnt = (new Material(MapColor.tntColor)).setBurning().setTranslucent();
-        field_4215_q = (new Material(MapColor.foliageColor)).setNoPushMobility();
+        unused = (new Material(MapColor.foliageColor)).setNoPushMobility();
         ice = (new Material(MapColor.iceColor)).setTranslucent();
         snow = (new MaterialLogic(MapColor.snowColor)).setGroundCover().setTranslucent().setNoHarvest().setNoPushMobility();
         craftedSnow = (new Material(MapColor.snowColor)).setNoHarvest();

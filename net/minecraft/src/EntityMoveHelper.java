@@ -31,7 +31,10 @@ public class EntityMoveHelper
         return speed;
     }
 
-    public void func_48439_a(double par1, double par3, double par5, float par7)
+    /**
+     * Sets the speed and location to move to
+     */
+    public void setMoveTo(double par1, double par3, double par5, float par7)
     {
         posX = par1;
         posY = par3;

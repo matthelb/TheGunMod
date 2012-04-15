@@ -4,8 +4,13 @@ import java.util.Random;
 
 public class EntityAILeapAtTarget extends EntityAIBase
 {
+    /** The entity that is leaping. */
     EntityLiving leaper;
+
+    /** The entity that the leaper is leaping towards. */
     EntityLiving leapTarget;
+
+    /** The entity's motionY after leaping. */
     float leapMotionY;
 
     public EntityAILeapAtTarget(EntityLiving par1EntityLiving, float par2)

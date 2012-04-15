@@ -30,12 +30,12 @@ public class BlockDoor extends Block
 
     public boolean getBlocksMovement(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        int i = func_48134_e(par1IBlockAccess, par2, par3, par4);
+        int i = getFullMetadata(par1IBlockAccess, par2, par3, par4);
         return (i & 4) != 0;
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {
@@ -65,7 +65,7 @@ public class BlockDoor extends Block
      */
     public void setBlockBoundsBasedOnState(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        setDoorRotation(func_48134_e(par1IBlockAccess, par2, par3, par4));
+        setDoorRotation(getFullMetadata(par1IBlockAccess, par2, par3, par4));
     }
 
     /**
@@ -73,12 +73,12 @@ public class BlockDoor extends Block
      */
     public int getDoorOrientation(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        return func_48134_e(par1IBlockAccess, par2, par3, par4) & 3;
+        return getFullMetadata(par1IBlockAccess, par2, par3, par4) & 3;
     }
 
     public boolean func_48135_d(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
-        return (func_48134_e(par1IBlockAccess, par2, par3, par4) & 4) != 0;
+        return (getFullMetadata(par1IBlockAccess, par2, par3, par4) & 4) != 0;
     }
 
     private void setDoorRotation(int par1)
@@ -170,7 +170,7 @@ public class BlockDoor extends Block
             return true;
         }
 
-        int i = func_48134_e(par1World, par2, par3, par4);
+        int i = getFullMetadata(par1World, par2, par3, par4);
         int j = i & 7;
         j ^= 4;
 
@@ -194,7 +194,7 @@ public class BlockDoor extends Block
      */
     public void onPoweredBlockChange(World par1World, int par2, int par3, int par4, boolean par5)
     {
-        int i = func_48134_e(par1World, par2, par3, par4);
+        int i = getFullMetadata(par1World, par2, par3, par4);
         boolean flag = (i & 4) != 0;
 
         if (flag == par5)
@@ -221,7 +221,7 @@ public class BlockDoor extends Block
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, blockID
+     * their own) Args: x, y, z, neighbor blockID
      */
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
@@ -325,14 +325,18 @@ public class BlockDoor extends Block
     }
 
     /**
-     * returns the mobility flag of a block's material
+     * Returns the mobility information of the block, 0 = free, 1 = can't push but can move over, 2 = total immobility
+     * and stop pistons
      */
     public int getMobilityFlag()
     {
         return 1;
     }
 
-    public int func_48134_e(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
+    /**
+     * Returns the full metadata value created by combining the metadata of both blocks the door takes up.
+     */
+    public int getFullMetadata(IBlockAccess par1IBlockAccess, int par2, int par3, int par4)
     {
         int i = par1IBlockAccess.getBlockMetadata(par2, par3, par4);
         boolean flag = (i & 8) != 0;

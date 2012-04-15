@@ -138,9 +138,21 @@ public class CraftingManager
                 {
                     "#", '#', Item.reed
                 });
-        addRecipe(new ItemStack(Block.planks, 4), new Object[]
+        addRecipe(new ItemStack(Block.planks, 4, 0), new Object[]
                 {
-                    "#", '#', Block.wood
+                    "#", '#', new ItemStack(Block.wood, 1, 0)
+                });
+        addRecipe(new ItemStack(Block.planks, 4, 1), new Object[]
+                {
+                    "#", '#', new ItemStack(Block.wood, 1, 1)
+                });
+        addRecipe(new ItemStack(Block.planks, 4, 2), new Object[]
+                {
+                    "#", '#', new ItemStack(Block.wood, 1, 2)
+                });
+        addRecipe(new ItemStack(Block.planks, 4, 3), new Object[]
+                {
+                    "#", '#', new ItemStack(Block.wood, 1, 3)
                 });
         addRecipe(new ItemStack(Item.stick, 4), new Object[]
                 {

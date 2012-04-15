@@ -5,13 +5,13 @@ import java.util.Random;
 
 public class EntityFishHook extends Entity
 {
-    /** The tile this entity is on, X position(unifying naming) */
+    /** The tile this entity is on, X position */
     private int xTile;
 
-    /** The tile this entity is on, Y position(unifying naming) */
+    /** The tile this entity is on, Y position */
     private int yTile;
 
-    /** The tile this entity is on, Z position(unifying naming) */
+    /** The tile this entity is on, Z position */
     private int zTile;
     private int inTile;
     private boolean inGround;
@@ -134,7 +134,7 @@ public class EntityFishHook extends Entity
 
             if (angler.isDead || !angler.isEntityAlive() || itemstack == null || itemstack.getItem() != Item.fishingRod || getDistanceSqToEntity(angler) > 1024D)
             {
-                setEntityDead();
+                setDead();
                 angler.fishEntity = null;
                 return;
             }
@@ -179,7 +179,7 @@ public class EntityFishHook extends Entity
 
                 if (ticksInGround == 1200)
                 {
-                    setEntityDead();
+                    setDead();
                 }
 
                 return;
@@ -415,7 +415,7 @@ public class EntityFishHook extends Entity
             byte0 = 2;
         }
 
-        setEntityDead();
+        setDead();
         angler.fishEntity = null;
         return byte0;
     }

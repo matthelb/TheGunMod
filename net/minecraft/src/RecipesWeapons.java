@@ -23,7 +23,7 @@ public class RecipesWeapons
     }
 
     /**
-     * Adds weapon recipes to the CraftingManager
+     * Adds the weapon recipes to the CraftingManager.
      */
     public void addRecipes(CraftingManager par1CraftingManager)
     {

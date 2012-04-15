@@ -5,7 +5,9 @@ import java.util.Random;
 public class EntityAIWatchClosest extends EntityAIBase
 {
     private EntityLiving field_46110_a;
-    private Entity field_48242_b;
+
+    /** The closest entity which is being watched by this one. */
+    private Entity closestEntity;
     private float field_46106_d;
     private int field_46107_e;
     private float field_48241_e;
@@ -41,14 +43,14 @@ public class EntityAIWatchClosest extends EntityAIBase
 
         if (field_48240_f == (net.minecraft.src.EntityPlayer.class))
         {
-            field_48242_b = field_46110_a.worldObj.getClosestPlayerToEntity(field_46110_a, field_46106_d);
+            closestEntity = field_46110_a.worldObj.getClosestPlayerToEntity(field_46110_a, field_46106_d);
         }
         else
         {
-            field_48242_b = field_46110_a.worldObj.findNearestEntityWithinAABB(field_48240_f, field_46110_a.boundingBox.expand(field_46106_d, 3D, field_46106_d), field_46110_a);
+            closestEntity = field_46110_a.worldObj.findNearestEntityWithinAABB(field_48240_f, field_46110_a.boundingBox.expand(field_46106_d, 3D, field_46106_d), field_46110_a);
         }
 
-        return field_48242_b != null;
+        return closestEntity != null;
     }
 
     /**
@@ -56,12 +58,12 @@ public class EntityAIWatchClosest extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        if (!field_48242_b.isEntityAlive())
+        if (!closestEntity.isEntityAlive())
         {
             return false;
         }
 
-        if (field_46110_a.getDistanceSqToEntity(field_48242_b) > (double)(field_46106_d * field_46106_d))
+        if (field_46110_a.getDistanceSqToEntity(closestEntity) > (double)(field_46106_d * field_46106_d))
         {
             return false;
         }
@@ -84,7 +86,7 @@ public class EntityAIWatchClosest extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48242_b = null;
+        closestEntity = null;
     }
 
     /**
@@ -92,7 +94,7 @@ public class EntityAIWatchClosest extends EntityAIBase
      */
     public void updateTask()
     {
-        field_46110_a.getLookHelper().setLookPosition(field_48242_b.posX, field_48242_b.posY + (double)field_48242_b.getEyeHeight(), field_48242_b.posZ, 10F, field_46110_a.getVerticalFaceSpeed());
+        field_46110_a.getLookHelper().setLookPosition(closestEntity.posX, closestEntity.posY + (double)closestEntity.getEyeHeight(), closestEntity.posZ, 10F, field_46110_a.getVerticalFaceSpeed());
         field_46107_e--;
     }
 }

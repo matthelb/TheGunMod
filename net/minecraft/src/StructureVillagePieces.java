@@ -105,7 +105,7 @@ public class StructureVillagePieces
     }
 
     /**
-     * 'attempts to find a next Village Component to be spawned'
+     * attempts to find a next Village Component to be spawned
      */
     private static ComponentVillage getNextVillageComponent(ComponentVillageStartPiece par0ComponentVillageStartPiece, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
@@ -169,7 +169,7 @@ public class StructureVillagePieces
     }
 
     /**
-     * 'attempts to find a next Structure Component to be spawned, private Village function'
+     * attempts to find a next Structure Component to be spawned, private Village function
      */
     private static StructureComponent getNextVillageStructureComponent(ComponentVillageStartPiece par0ComponentVillageStartPiece, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {
@@ -193,7 +193,7 @@ public class StructureVillagePieces
             int l = ((StructureComponent)(componentvillage)).boundingBox.maxZ - ((StructureComponent)(componentvillage)).boundingBox.minZ;
             int i1 = k <= l ? l : k;
 
-            if (par0ComponentVillageStartPiece.getWorldChunkMngr().areBiomesViable(i, j, i1 / 2 + 4, MapGenVillage.villageSpawnBiomes))
+            if (par0ComponentVillageStartPiece.getWorldChunkManager().areBiomesViable(i, j, i1 / 2 + 4, MapGenVillage.villageSpawnBiomes))
             {
                 par1List.add(componentvillage);
                 par0ComponentVillageStartPiece.field_35389_e.add(componentvillage);
@@ -227,7 +227,7 @@ public class StructureVillagePieces
             int l = ((StructureComponent)(componentvillagepathgen)).boundingBox.maxZ - ((StructureComponent)(componentvillagepathgen)).boundingBox.minZ;
             int i1 = k <= l ? l : k;
 
-            if (par0ComponentVillageStartPiece.getWorldChunkMngr().areBiomesViable(i, j, i1 / 2 + 4, MapGenVillage.villageSpawnBiomes))
+            if (par0ComponentVillageStartPiece.getWorldChunkManager().areBiomesViable(i, j, i1 / 2 + 4, MapGenVillage.villageSpawnBiomes))
             {
                 par1List.add(componentvillagepathgen);
                 par0ComponentVillageStartPiece.field_35387_f.add(componentvillagepathgen);
@@ -239,7 +239,7 @@ public class StructureVillagePieces
     }
 
     /**
-     * 'attempts to find a next Structure Component to be spawned'
+     * attempts to find a next Structure Component to be spawned
      */
     static StructureComponent getNextStructureComponent(ComponentVillageStartPiece par0ComponentVillageStartPiece, List par1List, Random par2Random, int par3, int par4, int par5, int par6, int par7)
     {

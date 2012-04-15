@@ -51,9 +51,9 @@ public class EntityList
     }
 
     /**
-     * Creates an entity of the given name in the world.
+     * Create a new instance of an entity in the world by using the entity name.
      */
-    public static Entity createEntityInWorld(String par0Str, World par1World)
+    public static Entity createEntityByName(String par0Str, World par1World)
     {
         Entity entity = null;
 
@@ -120,9 +120,9 @@ public class EntityList
     }
 
     /**
-     * create a new instance of an entity by using an entityID
+     * Create a new instance of an entity in the world by using an entity ID.
      */
-    public static Entity createEntity(int par0, World par1World)
+    public static Entity createEntityByID(int par0, World par1World)
     {
         Entity entity = null;
 
@@ -163,14 +163,17 @@ public class EntityList
     }
 
     /**
-     * gets the string representation of a specific entity
+     * Gets the string representation of a specific entity.
      */
     public static String getEntityString(Entity par0Entity)
     {
         return (String)classToStringMapping.get(par0Entity.getClass());
     }
 
-    public static int func_48582_a(String par0Str)
+    /**
+     * Finds the ID using stringToIDMapping
+     */
+    public static int getIDFromString(String par0Str)
     {
         Integer integer = (Integer)stringToIDMapping.get(par0Str);
 

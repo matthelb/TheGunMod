@@ -132,10 +132,15 @@ public class World implements IBlockAccess
      */
     private List entitiesWithinAABBExcludingEntity;
 
-    /** This is always false on a server */
+    /**
+     * This is set to true when you are a client connected to a multiplayer world, false otherwise.
+     */
     public boolean isRemote;
 
-    public BiomeGenBase func_48091_a(int par1, int par2)
+    /**
+     * Gets the biome for a given set of x/z coordinates
+     */
+    public BiomeGenBase getBiomeGenForCoords(int par1, int par2)
     {
         if (blockExists(par1, 0, par2))
         {
@@ -238,7 +243,7 @@ public class World implements IBlockAccess
     }
 
     /**
-     * generates a spawn point for this world
+     * Finds an initial spawn location upon creating a new world
      */
     protected void generateSpawnPoint()
     {
@@ -384,7 +389,7 @@ public class World implements IBlockAccess
         }
         else
         {
-            return getChunkFromChunkCoords(par1 >> 4, par3 >> 4).func_48555_b(par1 & 0xf, par2, par3 & 0xf);
+            return getChunkFromChunkCoords(par1 >> 4, par3 >> 4).getBlockLightOpacity(par1 & 0xf, par2, par3 & 0xf);
         }
     }
 
@@ -399,7 +404,7 @@ public class World implements IBlockAccess
     public boolean func_48084_h(int par1, int par2, int par3)
     {
         int i = getBlockId(par1, par2, par3);
-        return Block.blocksList[i] != null && Block.blocksList[i].func_48124_n();
+        return Block.blocksList[i] != null && Block.blocksList[i].hasTileEntity();
     }
 
     /**
@@ -418,7 +423,7 @@ public class World implements IBlockAccess
     }
 
     /**
-     * Checks if the chunks within (argument 4) chunks of the given block exist
+     * Checks if any of the chunks within distance (argument 4) blocks of the given block exist
      */
     public boolean doChunksNearChunkExist(int par1, int par2, int par3, int par4)
     {
@@ -463,7 +468,7 @@ public class World implements IBlockAccess
     }
 
     /**
-     * Returns a chunk looked up by block coordinates. Args: x, y
+     * Returns a chunk looked up by block coordinates. Args: x, z
      */
     public Chunk getChunkFromBlockCoords(int par1, int par2)
     {
@@ -941,7 +946,7 @@ public class World implements IBlockAccess
 
         for (int i = 0; i < worldAccesses.size(); i++)
         {
-            ((IWorldAccess)worldAccesses.get(i)).func_48414_b(par2, par3, par4);
+            ((IWorldAccess)worldAccesses.get(i)).markBlockNeedsUpdate2(par2, par3, par4);
         }
     }
 
@@ -949,13 +954,13 @@ public class World implements IBlockAccess
     {
         for (int i = 0; i < worldAccesses.size(); i++)
         {
-            ((IWorldAccess)worldAccesses.get(i)).func_48414_b(par1, par2, par3);
+            ((IWorldAccess)worldAccesses.get(i)).markBlockNeedsUpdate2(par1, par2, par3);
         }
     }
 
     /**
      * Returns how bright the block is shown as which is the block's light value looked up in a lookup table (light
-     * values aren't linear for brihgtness). Args: x, y, z
+     * values aren't linear for brightness). Args: x, y, z
      */
     public float getLightBrightness(int par1, int par2, int par3)
     {
@@ -1187,7 +1192,7 @@ public class World implements IBlockAccess
     }
 
     /**
-     * Plays a sound at the entity's position. Args: entity, sound, unknown1, unknown2
+     * Plays a sound at the entity's position. Args: entity, sound, unknown1, volume (relative to 1.0)
      */
     public void playSoundAtEntity(Entity par1Entity, String par2Str, float par3, float par4)
     {
@@ -1313,7 +1318,7 @@ public class World implements IBlockAccess
             par1Entity.mountEntity(null);
         }
 
-        par1Entity.setEntityDead();
+        par1Entity.setDead();
 
         if (par1Entity instanceof EntityPlayer)
         {
@@ -1327,7 +1332,7 @@ public class World implements IBlockAccess
      */
     public void removePlayer(Entity par1Entity)
     {
-        par1Entity.setEntityDead();
+        par1Entity.setDead();
 
         if (par1Entity instanceof EntityPlayer)
         {
@@ -1460,7 +1465,7 @@ public class World implements IBlockAccess
     public int getTopSolidOrLiquidBlock(int par1, int par2)
     {
         Chunk chunk = getChunkFromBlockCoords(par1, par2);
-        int i = chunk.func_48561_g() + 16;
+        int i = chunk.getTopFilledSegment() + 16;
         par1 &= 0xf;
         par2 &= 0xf;
 
@@ -2451,7 +2456,7 @@ public class World implements IBlockAccess
     }
 
     /**
-     * updates rainingStrength and thunderingStrength
+     * Called from World constructor to set rainingStrength and thunderingStrength
      */
     private void calculateInitialWeather()
     {
@@ -2467,7 +2472,7 @@ public class World implements IBlockAccess
     }
 
     /**
-     * update's all weather states.
+     * Updates all weather states.
      */
     protected void updateWeather()
     {
@@ -2573,7 +2578,7 @@ public class World implements IBlockAccess
     }
 
     /**
-     * stops all weather effects
+     * Stops all weather effects.
      */
     private void clearWeather()
     {
@@ -2664,7 +2669,7 @@ public class World implements IBlockAccess
         }
 
         Profiler.endStartSection("checkLight");
-        par3Chunk.func_48557_n();
+        par3Chunk.enqueueRelightChecks();
     }
 
     /**
@@ -2681,9 +2686,9 @@ public class World implements IBlockAccess
         {
             ChunkCoordIntPair chunkcoordintpair = (ChunkCoordIntPair)iterator.next();
             int k = chunkcoordintpair.chunkXPos * 16;
-            int l = chunkcoordintpair.chunkZPos * 16;
+            int l = chunkcoordintpair.chunkZPosition * 16;
             Profiler.startSection("getChunk");
-            Chunk chunk = getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
+            Chunk chunk = getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPosition);
             func_48094_a(k, l, chunk);
             Profiler.endStartSection("thunder");
 
@@ -2712,7 +2717,7 @@ public class World implements IBlockAccess
                 int k2 = j1 >> 8 & 0xf;
                 int j3 = getPrecipitationHeight(l1 + k, k2 + l);
 
-                if (isBlockHydratedIndirectly(l1 + k, j3 - 1, k2 + l))
+                if (isBlockFreezableNaturally(l1 + k, j3 - 1, k2 + l))
                 {
                     setBlockWithNotify(l1 + k, j3 - 1, k2 + l, Block.ice.blockID);
                 }
@@ -2724,7 +2729,7 @@ public class World implements IBlockAccess
             }
 
             Profiler.endStartSection("tickTiles");
-            ExtendedBlockStorage aextendedblockstorage[] = chunk.func_48553_h();
+            ExtendedBlockStorage aextendedblockstorage[] = chunk.getBlockStorageArray();
             int i2 = aextendedblockstorage.length;
 
             for (int l2 = 0; l2 < i2; l2++)
@@ -2750,7 +2755,7 @@ public class World implements IBlockAccess
                     if (block != null && block.getTickRandomly())
                     {
                         i++;
-                        block.updateTick(this, i4 + k, k4 + extendedblockstorage.func_48597_c(), j4 + l, rand);
+                        block.updateTick(this, i4 + k, k4 + extendedblockstorage.getYLocation(), j4 + l, rand);
                     }
                 }
             }
@@ -2758,27 +2763,28 @@ public class World implements IBlockAccess
     }
 
     /**
-     * Checks if the block is hydrating itself.
+     * checks to see if a given block is both water and is cold enough to freeze
      */
-    public boolean isBlockHydratedDirectly(int par1, int par2, int par3)
+    public boolean isBlockFreezable(int par1, int par2, int par3)
     {
-        return isBlockHydrated(par1, par2, par3, false);
+        return canBlockFreeze(par1, par2, par3, false);
     }
 
     /**
-     * Check if the block is being hydrated by an adjacent block.
+     * checks to see if a given block is both water and has at least one immediately adjacent non-water block
      */
-    public boolean isBlockHydratedIndirectly(int par1, int par2, int par3)
+    public boolean isBlockFreezableNaturally(int par1, int par2, int par3)
     {
-        return isBlockHydrated(par1, par2, par3, true);
+        return canBlockFreeze(par1, par2, par3, true);
     }
 
     /**
-     * (I think)
+     * checks to see if a given block is both water, and cold enough to freeze - if the par4 boolean is set, this will
+     * only return true if there is a non-water block immediately adjacent to the specified block
      */
-    public boolean isBlockHydrated(int par1, int par2, int par3, boolean par4)
+    public boolean canBlockFreeze(int par1, int par2, int par3, boolean par4)
     {
-        BiomeGenBase biomegenbase = func_48091_a(par1, par3);
+        BiomeGenBase biomegenbase = getBiomeGenForCoords(par1, par3);
         float f = biomegenbase.getFloatTemperature();
 
         if (f > 0.15F)
@@ -2834,7 +2840,7 @@ public class World implements IBlockAccess
      */
     public boolean canSnowAt(int par1, int par2, int par3)
     {
-        BiomeGenBase biomegenbase = func_48091_a(par1, par3);
+        BiomeGenBase biomegenbase = getBiomeGenForCoords(par1, par3);
         float f = biomegenbase.getFloatTemperature();
 
         if (f > 0.15F)
@@ -3233,7 +3239,7 @@ public class World implements IBlockAccess
         ChunkCoordIntPair chunkcoordintpair = par1Chunk.getChunkCoordIntPair();
         int i = chunkcoordintpair.chunkXPos << 4;
         int j = i + 16;
-        int k = chunkcoordintpair.chunkZPos << 4;
+        int k = chunkcoordintpair.chunkZPosition << 4;
         int l = k + 16;
         Iterator iterator = scheduledTickSet.iterator();
 
@@ -3917,7 +3923,7 @@ public class World implements IBlockAccess
             return false;
         }
 
-        BiomeGenBase biomegenbase = func_48091_a(par1, par3);
+        BiomeGenBase biomegenbase = getBiomeGenForCoords(par1, par3);
 
         if (biomegenbase.getEnableSnow())
         {
@@ -3929,10 +3935,13 @@ public class World implements IBlockAccess
         }
     }
 
-    public boolean func_48089_z(int par1, int par2, int par3)
+    /**
+     * Checks to see if the biome rainfall values for a given x,y,z coordinate set are extremely high
+     */
+    public boolean isBlockHighHumidity(int par1, int par2, int par3)
     {
-        BiomeGenBase biomegenbase = func_48091_a(par1, par3);
-        return biomegenbase.func_48441_d();
+        BiomeGenBase biomegenbase = getBiomeGenForCoords(par1, par3);
+        return biomegenbase.isHighHumidity();
     }
 
     /**
@@ -3982,9 +3991,9 @@ public class World implements IBlockAccess
     }
 
     /**
-     * Returns current world height
+     * Returns current world height.
      */
-    public int getWorldHeight()
+    public int getHeight()
     {
         return 256;
     }

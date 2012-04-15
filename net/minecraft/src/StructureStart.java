@@ -24,7 +24,7 @@ public abstract class StructureStart
     }
 
     /**
-     * 'Keeps iterating Structure Pieces and spawning them until the checks tell it to stop'
+     * Keeps iterating Structure Pieces and spawning them until the checks tell it to stop
      */
     public void generateStructure(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
@@ -109,7 +109,7 @@ public abstract class StructureStart
     }
 
     /**
-     * 'currently only defined for Villages, returns true if Village has more than 2 non-road components'
+     * currently only defined for Villages, returns true if Village has more than 2 non-road components
      */
     public boolean isSizeableStructure()
     {

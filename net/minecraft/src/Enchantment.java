@@ -36,7 +36,7 @@ public abstract class Enchantment
     /** Extra damage to spiders, cave spiders and silverfish */
     public static final Enchantment baneOfArthropods = new EnchantmentDamage(18, 5, 2);
 
-    /** Knocks mobs and players backwards upon hit */
+    /** Knocks mob and players backwards upon hit */
     public static final Enchantment knockback = new EnchantmentKnockback(19, 5);
 
     /** Lights mobs on fire */
@@ -83,10 +83,10 @@ public abstract class Enchantment
     public final int effectId;
     private final int weight;
 
-    /** The EnumEnchantmentType given to this Enchantment */
+    /** The EnumEnchantmentType given to this Enchantment. */
     public EnumEnchantmentType type;
 
-    /** Used in localisation and stats */
+    /** Used in localisation and stats. */
     protected String name;
 
     protected Enchantment(int par1, int par2, EnumEnchantmentType par3EnumEnchantmentType)

@@ -2,18 +2,18 @@ package net.minecraft.src;
 
 public abstract class EntityAIDoorInteract extends EntityAIBase
 {
-    protected EntityLiving field_48192_a;
-    protected int field_48190_b;
-    protected int field_48191_c;
-    protected int field_48188_d;
-    protected BlockDoor field_48189_e;
+    protected EntityLiving theEntity;
+    protected int entityPosX;
+    protected int entityPosY;
+    protected int entityPosZ;
+    protected BlockDoor targetDoor;
     boolean field_48186_f;
     float field_48187_g;
     float field_48193_h;
 
     public EntityAIDoorInteract(EntityLiving par1EntityLiving)
     {
-        field_48192_a = par1EntityLiving;
+        theEntity = par1EntityLiving;
     }
 
     /**
@@ -21,15 +21,15 @@ public abstract class EntityAIDoorInteract extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (!field_48192_a.isCollidedHorizontally)
+        if (!theEntity.isCollidedHorizontally)
         {
             return false;
         }
 
-        PathNavigate pathnavigate = field_48192_a.getNavigator();
-        PathEntity pathentity = pathnavigate.func_48668_c();
+        PathNavigate pathnavigate = theEntity.getNavigator();
+        PathEntity pathentity = pathnavigate.getPath();
 
-        if (pathentity == null || pathentity.isFinished() || !pathnavigate.func_48657_b())
+        if (pathentity == null || pathentity.isFinished() || !pathnavigate.getCanBreakDoors())
         {
             return false;
         }
@@ -37,28 +37,28 @@ public abstract class EntityAIDoorInteract extends EntityAIBase
         for (int i = 0; i < Math.min(pathentity.getCurrentPathIndex() + 2, pathentity.getCurrentPathLength()); i++)
         {
             PathPoint pathpoint = pathentity.getPathPointFromIndex(i);
-            field_48190_b = pathpoint.xCoord;
-            field_48191_c = pathpoint.yCoord + 1;
-            field_48188_d = pathpoint.zCoord;
+            entityPosX = pathpoint.xCoord;
+            entityPosY = pathpoint.yCoord + 1;
+            entityPosZ = pathpoint.zCoord;
 
-            if (field_48192_a.getDistanceSq(field_48190_b, field_48192_a.posY, field_48188_d) > 2.25D)
+            if (theEntity.getDistanceSq(entityPosX, theEntity.posY, entityPosZ) > 2.25D)
             {
                 continue;
             }
 
-            field_48189_e = func_48185_a(field_48190_b, field_48191_c, field_48188_d);
+            targetDoor = func_48185_a(entityPosX, entityPosY, entityPosZ);
 
-            if (field_48189_e != null)
+            if (targetDoor != null)
             {
                 return true;
             }
         }
 
-        field_48190_b = MathHelper.floor_double(field_48192_a.posX);
-        field_48191_c = MathHelper.floor_double(field_48192_a.posY + 1.0D);
-        field_48188_d = MathHelper.floor_double(field_48192_a.posZ);
-        field_48189_e = func_48185_a(field_48190_b, field_48191_c, field_48188_d);
-        return field_48189_e != null;
+        entityPosX = MathHelper.floor_double(theEntity.posX);
+        entityPosY = MathHelper.floor_double(theEntity.posY + 1.0D);
+        entityPosZ = MathHelper.floor_double(theEntity.posZ);
+        targetDoor = func_48185_a(entityPosX, entityPosY, entityPosZ);
+        return targetDoor != null;
     }
 
     /**
@@ -75,8 +75,8 @@ public abstract class EntityAIDoorInteract extends EntityAIBase
     public void startExecuting()
     {
         field_48186_f = false;
-        field_48187_g = (float)((double)((float)field_48190_b + 0.5F) - field_48192_a.posX);
-        field_48193_h = (float)((double)((float)field_48188_d + 0.5F) - field_48192_a.posZ);
+        field_48187_g = (float)((double)((float)entityPosX + 0.5F) - theEntity.posX);
+        field_48193_h = (float)((double)((float)entityPosZ + 0.5F) - theEntity.posZ);
     }
 
     /**
@@ -84,8 +84,8 @@ public abstract class EntityAIDoorInteract extends EntityAIBase
      */
     public void updateTask()
     {
-        float f = (float)((double)((float)field_48190_b + 0.5F) - field_48192_a.posX);
-        float f1 = (float)((double)((float)field_48188_d + 0.5F) - field_48192_a.posZ);
+        float f = (float)((double)((float)entityPosX + 0.5F) - theEntity.posX);
+        float f1 = (float)((double)((float)entityPosZ + 0.5F) - theEntity.posZ);
         float f2 = field_48187_g * f + field_48193_h * f1;
 
         if (f2 < 0.0F)
@@ -96,7 +96,7 @@ public abstract class EntityAIDoorInteract extends EntityAIBase
 
     private BlockDoor func_48185_a(int par1, int par2, int par3)
     {
-        int i = field_48192_a.worldObj.getBlockId(par1, par2, par3);
+        int i = theEntity.worldObj.getBlockId(par1, par2, par3);
 
         if (i != Block.doorWood.blockID)
         {

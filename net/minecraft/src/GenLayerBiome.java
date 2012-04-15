@@ -9,11 +9,11 @@ public class GenLayerBiome extends GenLayer
         super(par1);
         allowedBiomes = (new BiomeGenBase[]
                 {
-                    BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.plains, BiomeGenBase.taiga, BiomeGenBase.field_48443_w
+                    BiomeGenBase.desert, BiomeGenBase.forest, BiomeGenBase.extremeHills, BiomeGenBase.swampland, BiomeGenBase.plains, BiomeGenBase.taiga, BiomeGenBase.jungle
                 });
         parent = par3GenLayer;
 
-        if (par4WorldType == WorldType.field_48456_d)
+        if (par4WorldType == WorldType.DEFAULT_1_1)
         {
             allowedBiomes = (new BiomeGenBase[]
                     {

@@ -63,7 +63,7 @@ public abstract class WorldProvider
      */
     protected void registerWorldChunkManager()
     {
-        if (worldObj.getWorldInfo().getTerrainType() == WorldType.field_48458_c)
+        if (worldObj.getWorldInfo().getTerrainType() == WorldType.FLAT)
         {
             worldChunkMgr = new WorldChunkManagerHell(BiomeGenBase.plains, 0.5F, 0.5F);
         }
@@ -78,7 +78,7 @@ public abstract class WorldProvider
      */
     public IChunkProvider getChunkProvider()
     {
-        if (terrainType == WorldType.field_48458_c)
+        if (terrainType == WorldType.FLAT)
         {
             return new ChunkProviderFlat(worldObj, worldObj.getSeed(), worldObj.getWorldInfo().isMapFeaturesEnabled());
         }
@@ -166,6 +166,6 @@ public abstract class WorldProvider
 
     public int getAverageGroundLevel()
     {
-        return terrainType != WorldType.field_48458_c ? 64 : 4;
+        return terrainType != WorldType.FLAT ? 64 : 4;
     }
 }

@@ -5,24 +5,28 @@ import java.util.Random;
 
 public class EntityOcelot extends EntityTameable
 {
-    private EntityAITempt field_48377_b;
+    /**
+     * The tempt AI task for this mob, used to prevent taming while it is fleeing.
+     */
+    private EntityAITempt aiTempt;
 
     public EntityOcelot(World par1World)
     {
         super(par1World);
         texture = "/mob/ozelot.png";
         setSize(0.6F, 0.8F);
-        getNavigator().func_48656_a(true);
+        getNavigator().setAvoidsWater(true);
         tasks.addTask(1, new EntityAISwimming(this));
         tasks.addTask(2, aiSit);
-        tasks.addTask(3, field_48377_b = new EntityAITempt(this, 0.18F, Item.fishRaw.shiftedIndex, true));
+        tasks.addTask(3, aiTempt = new EntityAITempt(this, 0.18F, Item.fishRaw.shiftedIndex, true));
         tasks.addTask(4, new EntityAIAvoidEntity(this, net.minecraft.src.EntityPlayer.class, 16F, 0.23F, 0.4F));
         tasks.addTask(5, new EntityAIFollowOwner(this, 0.3F, 10F, 5F));
-        tasks.addTask(6, new EntityAILeapAtTarget(this, 0.3F));
-        tasks.addTask(7, new EntityAIOcelotAttack(this));
-        tasks.addTask(8, new EntityAIMate(this, 0.23F));
-        tasks.addTask(9, new EntityAIWander(this, 0.23F));
-        tasks.addTask(10, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 10F));
+        tasks.addTask(6, new EntityAIOcelotSit(this, 0.4F));
+        tasks.addTask(7, new EntityAILeapAtTarget(this, 0.3F));
+        tasks.addTask(8, new EntityAIOcelotAttack(this));
+        tasks.addTask(9, new EntityAIMate(this, 0.23F));
+        tasks.addTask(10, new EntityAIWander(this, 0.23F));
+        tasks.addTask(11, new EntityAIWatchClosest(this, net.minecraft.src.EntityPlayer.class, 10F));
         targetTasks.addTask(1, new EntityAITargetNonTamed(this, net.minecraft.src.EntityChicken.class, 14F, 750, false));
     }
 
@@ -117,7 +121,7 @@ public class EntityOcelot extends EntityTameable
     {
         if (isTamed())
         {
-            if (func_48363_r_())
+            if (isInLove())
             {
                 return "mob.cat.purr";
             }
@@ -199,7 +203,7 @@ public class EntityOcelot extends EntityTameable
 
         if (!isTamed())
         {
-            if (field_48377_b.func_48261_f() && itemstack != null && itemstack.itemID == Item.fishRaw.shiftedIndex && par1EntityPlayer.getDistanceSqToEntity(this) < 9D)
+            if (aiTempt.func_48261_f() && itemstack != null && itemstack.itemID == Item.fishRaw.shiftedIndex && par1EntityPlayer.getDistanceSqToEntity(this) < 9D)
             {
                 itemstack.stackSize--;
 
@@ -288,7 +292,7 @@ public class EntityOcelot extends EntityTameable
         }
         else
         {
-            return func_48363_r_() && entityocelot.func_48363_r_();
+            return isInLove() && entityocelot.isInLove();
         }
     }
 

@@ -143,7 +143,7 @@ public abstract class EntityThrowable extends Entity
 
                 if (ticksInGround == 1200)
                 {
-                    setEntityDead();
+                    setDead();
                 }
 
                 return;

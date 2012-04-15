@@ -129,7 +129,7 @@ public class EntityEnderEye extends Entity
 
             if (despawnTimer > 80 && !worldObj.isRemote)
             {
-                setEntityDead();
+                setDead();
 
                 if (shatterOrDrop)
                 {
@@ -167,7 +167,7 @@ public class EntityEnderEye extends Entity
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         return 1.0F;
     }

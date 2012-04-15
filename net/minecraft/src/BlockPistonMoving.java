@@ -76,7 +76,7 @@ public class BlockPistonMoving extends BlockContainer
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {
@@ -133,7 +133,7 @@ public class BlockPistonMoving extends BlockContainer
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, blockID
+     * their own) Args: x, y, z, neighbor blockID
      */
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
@@ -144,7 +144,7 @@ public class BlockPistonMoving extends BlockContainer
     }
 
     /**
-     * creates and returns a tile entity for the piston
+     * gets a new TileEntityPiston created with the arguments provided.
      */
     public static TileEntity getTileEntity(int par0, int par1, int par2, boolean par3, boolean par4)
     {
@@ -208,9 +208,6 @@ public class BlockPistonMoving extends BlockContainer
         }
     }
 
-    /**
-     * gets the AxisAlignedBB of this piston
-     */
     public AxisAlignedBB getAxisAlignedBB(World par1World, int par2, int par3, int par4, int par5, float par6, int par7)
     {
         if (par5 == 0 || par5 == blockID)

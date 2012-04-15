@@ -70,13 +70,18 @@ public abstract class EntityPlayer extends EntityLiving
     /** The player's capabilities. (See class PlayerCapabilities) */
     public PlayerCapabilities capabilities;
 
-    /** The player's experience level. */
+    /** The current experience level the player is on. */
     public int experienceLevel;
 
-    /** The player's experience total score. */
+    /**
+     * The total amount of experience the player has. This also includes the amount of experience within their
+     * Experience Bar.
+     */
     public int experienceTotal;
 
-    /** The player's experience score. */
+    /**
+     * The current amount of experience the player has within their Experience Bar.
+     */
     public float experience;
 
     /**
@@ -137,7 +142,7 @@ public abstract class EntityPlayer extends EntityLiving
     }
 
     /**
-     * checks if the entity is currently using an item (e.g., bow, food, sword) by holding down the useItemButton
+     * Checks if the entity is currently using an item (e.g., bow, food, sword) by holding down the useItemButton
      */
     public boolean isUsingItem()
     {
@@ -187,12 +192,12 @@ public abstract class EntityPlayer extends EntityLiving
             {
                 if (itemInUseCount <= 25 && itemInUseCount % 4 == 0)
                 {
-                    func_35208_b(itemstack, 5);
+                    updateItemUse(itemstack, 5);
                 }
 
                 if (--itemInUseCount == 0 && !worldObj.isRemote)
                 {
-                    func_35199_C();
+                    onItemUseFinish();
                 }
             }
         }
@@ -305,7 +310,10 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    protected void func_35208_b(ItemStack par1ItemStack, int par2)
+    /**
+     * Plays sounds and makes particles for item in use state
+     */
+    protected void updateItemUse(ItemStack par1ItemStack, int par2)
     {
         if (par1ItemStack.getItemUseAction() == EnumAction.drink)
         {
@@ -330,11 +338,14 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    protected void func_35199_C()
+    /**
+     * Used for when item use count runs out, ie: eating completed
+     */
+    protected void onItemUseFinish()
     {
         if (itemInUse != null)
         {
-            func_35208_b(itemInUse, 16);
+            updateItemUse(itemInUse, 16);
             int i = itemInUse.stackSize;
             ItemStack itemstack = itemInUse.onFoodEaten(worldObj, this);
 
@@ -357,7 +368,7 @@ public abstract class EntityPlayer extends EntityLiving
      */
     protected boolean isMovementBlocked()
     {
-        return getEntityHealth() <= 0 || isPlayerSleeping();
+        return getHealth() <= 0 || isPlayerSleeping();
     }
 
     /**
@@ -435,7 +446,7 @@ public abstract class EntityPlayer extends EntityLiving
             flyToggleTimer--;
         }
 
-        if (worldObj.difficultySetting == 0 && getEntityHealth() < getMaxHealth() && (ticksExisted % 20) * 12 == 0)
+        if (worldObj.difficultySetting == 0 && getHealth() < getMaxHealth() && (ticksExisted % 20) * 12 == 0)
         {
             heal(1);
         }
@@ -460,12 +471,12 @@ public abstract class EntityPlayer extends EntityLiving
             f = 0.1F;
         }
 
-        if (!onGround || getEntityHealth() <= 0)
+        if (!onGround || getHealth() <= 0)
         {
             f = 0.0F;
         }
 
-        if (onGround || getEntityHealth() <= 0)
+        if (onGround || getHealth() <= 0)
         {
             f1 = 0.0F;
         }
@@ -473,7 +484,7 @@ public abstract class EntityPlayer extends EntityLiving
         cameraYaw += (f - cameraYaw) * 0.4F;
         cameraPitch += (f1 - cameraPitch) * 0.8F;
 
-        if (getEntityHealth() > 0)
+        if (getHealth() > 0)
         {
             List list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.expand(1.0D, 0.0D, 1.0D));
 
@@ -563,13 +574,17 @@ public abstract class EntityPlayer extends EntityLiving
         }
     }
 
-    public EntityItem func_48347_R()
+    /**
+     * Called when player presses the drop item key
+     */
+    public EntityItem dropOneItem()
     {
         return dropPlayerItemWithRandomChoice(inventory.decrStackSize(inventory.currentItem, 1), false);
     }
 
     /**
-     * Args: itemstack
+     * Args: itemstack - called when player drops an item stack that's not in his inventory (like items still placed in
+     * a workbench while the workbench'es GUI gets closed)
      */
     public EntityItem dropPlayerItem(ItemStack par1ItemStack)
     {
@@ -775,7 +790,7 @@ public abstract class EntityPlayer extends EntityLiving
 
         entityAge = 0;
 
-        if (getEntityHealth() <= 0)
+        if (getHealth() <= 0)
         {
             return false;
         }
@@ -905,7 +920,7 @@ public abstract class EntityPlayer extends EntityLiving
 
             if (entitywolf1.isTamed() && entitywolf1.getEntityToAttack() == null && username.equals(entitywolf1.getOwnerName()) && (!par2 || !entitywolf1.isSitting()))
             {
-                entitywolf1.func_48369_c(false);
+                entitywolf1.setSitting(false);
                 entitywolf1.setTarget(par1EntityLiving);
             }
         }
@@ -1156,11 +1171,11 @@ public abstract class EntityPlayer extends EntityLiving
     }
 
     /**
-     * Will get destroyed next tick
+     * Will get destroyed next tick.
      */
-    public void setEntityDead()
+    public void setDead()
     {
-        super.setEntityDead();
+        super.setDead();
         inventorySlots.onCraftGuiClosed(this);
 
         if (craftingInventory != null)
@@ -1220,7 +1235,7 @@ public abstract class EntityPlayer extends EntityLiving
         if (worldObj.blockExists(par1, par2, par3))
         {
             int i = worldObj.getBlockMetadata(par1, par2, par3);
-            int j = BlockBed.func_48132_b(i);
+            int j = BlockBed.getDirection(i);
             float f = 0.5F;
             float f1 = 0.5F;
 
@@ -1389,7 +1404,7 @@ public abstract class EntityPlayer extends EntityLiving
     }
 
     /**
-     * gets the players spawn chunk
+     * Returns the coordinates to respawn the player based on last bed that the player sleep.
      */
     public ChunkCoordinates getSpawnChunk()
     {
@@ -1397,7 +1412,7 @@ public abstract class EntityPlayer extends EntityLiving
     }
 
     /**
-     * sets the players spawn chunk
+     * Defines a spawn coordinate to player spawn. Used by bed after the player sleep on it.
      */
     public void setSpawnChunk(ChunkCoordinates par1ChunkCoordinates)
     {
@@ -1427,7 +1442,7 @@ public abstract class EntityPlayer extends EntityLiving
     }
 
     /**
-     * causes this entity to jump (or at least move upwards)
+     * Causes this entity to do an upwards motion (jumping).
      */
     protected void jump()
     {
@@ -1705,7 +1720,7 @@ public abstract class EntityPlayer extends EntityLiving
      */
     public boolean shouldHeal()
     {
-        return getEntityHealth() > 0 && getEntityHealth() < getMaxHealth();
+        return getHealth() > 0 && getHealth() < getMaxHealth();
     }
 
     /**
@@ -1787,5 +1802,9 @@ public abstract class EntityPlayer extends EntityLiving
     protected boolean canTriggerWalking()
     {
         return !capabilities.isFlying;
+    }
+
+    public void func_50022_L()
+    {
     }
 }

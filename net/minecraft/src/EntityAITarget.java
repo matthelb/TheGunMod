@@ -6,7 +6,7 @@ public abstract class EntityAITarget extends EntityAIBase
 {
     /** The entity that this task belongs to */
     protected EntityLiving taskOwner;
-    protected float field_48288_d;
+    protected float targetDistance;
     protected boolean field_48289_e;
     private boolean field_48292_a;
     private int field_48290_b;
@@ -24,7 +24,7 @@ public abstract class EntityAITarget extends EntityAIBase
         field_48286_f = 0;
         field_48287_g = 0;
         taskOwner = par1EntityLiving;
-        field_48288_d = par2;
+        targetDistance = par2;
         field_48289_e = par3;
         field_48292_a = par4;
     }
@@ -46,14 +46,14 @@ public abstract class EntityAITarget extends EntityAIBase
             return false;
         }
 
-        if (taskOwner.getDistanceSqToEntity(entityliving) > (double)(field_48288_d * field_48288_d))
+        if (taskOwner.getDistanceSqToEntity(entityliving) > (double)(targetDistance * targetDistance))
         {
             return false;
         }
 
         if (field_48289_e)
         {
-            if (!taskOwner.func_48318_al().canSee(entityliving))
+            if (!taskOwner.getEntitySenses().canSee(entityliving))
             {
                 if (++field_48287_g > 60)
                 {
@@ -136,7 +136,7 @@ public abstract class EntityAITarget extends EntityAIBase
             return false;
         }
 
-        if (field_48289_e && !taskOwner.func_48318_al().canSee(par1EntityLiving))
+        if (field_48289_e && !taskOwner.getEntitySenses().canSee(par1EntityLiving))
         {
             return false;
         }

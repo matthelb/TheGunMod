@@ -55,7 +55,7 @@ public class ChatAllowedCharacters
         return s;
     }
 
-    public static final boolean func_48409_a(char par0)
+    public static final boolean isAllowedCharacter(char par0)
     {
         return par0 != '\247' && (allowedCharacters.indexOf(par0) >= 0 || par0 > ' ');
     }

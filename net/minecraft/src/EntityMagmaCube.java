@@ -32,7 +32,7 @@ public class EntityMagmaCube extends EntitySlime
     /**
      * Gets how bright this entity is.
      */
-    public float getEntityBrightness(float par1)
+    public float getBrightness(float par1)
     {
         return 1.0F;
     }
@@ -82,7 +82,7 @@ public class EntityMagmaCube extends EntitySlime
     }
 
     /**
-     * Returns true if the furnace is currently burning
+     * Returns true if the entity is on fire. Used by render to add the fire effect on rendering.
      */
     public boolean isBurning()
     {
@@ -100,7 +100,7 @@ public class EntityMagmaCube extends EntitySlime
     }
 
     /**
-     * causes this entity to jump (or at least move upwards)
+     * Causes this entity to do an upwards motion (jumping).
      */
     protected void jump()
     {

@@ -5,7 +5,7 @@ import java.util.List;
 
 public class BiomeCache
 {
-    /** The world chunk manager object. */
+    /** Reference to the WorldChunkManager */
     private final WorldChunkManager chunkManager;
 
     /** The last time this BiomeCache was cleaned, in milliseconds. */

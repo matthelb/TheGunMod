@@ -37,15 +37,17 @@ public class ItemInWorldManager
         {
             thisPlayer.capabilities.allowFlying = false;
             thisPlayer.capabilities.isFlying = false;
-            thisPlayer.capabilities.depleteBuckets = false;
+            thisPlayer.capabilities.isCreativeMode = false;
             thisPlayer.capabilities.disableDamage = false;
         }
         else
         {
             thisPlayer.capabilities.allowFlying = true;
-            thisPlayer.capabilities.depleteBuckets = true;
+            thisPlayer.capabilities.isCreativeMode = true;
             thisPlayer.capabilities.disableDamage = true;
         }
+
+        thisPlayer.func_50022_L();
     }
 
     public int getGameType()

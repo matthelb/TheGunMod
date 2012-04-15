@@ -22,26 +22,29 @@ public class ConsoleCommandHandler
     public synchronized void handleCommand(ServerCommand par1ServerCommand)
     {
         String s = par1ServerCommand.command;
+        String as[] = s.split(" ");
+        String s1 = as[0];
+        String s2 = s.substring(s1.length()).trim();
         ICommandListener icommandlistener = par1ServerCommand.commandListener;
-        String s1 = icommandlistener.getUsername();
+        String s3 = icommandlistener.getUsername();
         ServerConfigurationManager serverconfigurationmanager = minecraftServer.configManager;
 
-        if (s.toLowerCase().startsWith("help") || s.toLowerCase().startsWith("?"))
+        if (s1.equalsIgnoreCase("help") || s1.equalsIgnoreCase("?"))
         {
             printHelp(icommandlistener);
         }
-        else if (s.toLowerCase().startsWith("list"))
+        else if (s1.equalsIgnoreCase("list"))
         {
             icommandlistener.log((new StringBuilder()).append("Connected players: ").append(serverconfigurationmanager.getPlayerList()).toString());
         }
-        else if (s.toLowerCase().startsWith("stop"))
+        else if (s1.equalsIgnoreCase("stop"))
         {
-            sendNoticeToOps(s1, "Stopping the server..");
+            sendNoticeToOps(s3, "Stopping the server..");
             minecraftServer.initiateShutdown();
         }
-        else if (s.toLowerCase().startsWith("save-all"))
+        else if (s1.equalsIgnoreCase("save-all"))
         {
-            sendNoticeToOps(s1, "Forcing save..");
+            sendNoticeToOps(s3, "Forcing save..");
 
             if (serverconfigurationmanager != null)
             {
@@ -51,14 +54,17 @@ public class ConsoleCommandHandler
             for (int i = 0; i < minecraftServer.worldMngr.length; i++)
             {
                 WorldServer worldserver = minecraftServer.worldMngr[i];
+                boolean flag = worldserver.levelSaving;
+                worldserver.levelSaving = false;
                 worldserver.saveWorld(true, null);
+                worldserver.levelSaving = flag;
             }
 
-            sendNoticeToOps(s1, "Save complete.");
+            sendNoticeToOps(s3, "Save complete.");
         }
-        else if (s.toLowerCase().startsWith("save-off"))
+        else if (s1.equalsIgnoreCase("save-off"))
         {
-            sendNoticeToOps(s1, "Disabling level saving..");
+            sendNoticeToOps(s3, "Disabling level saving..");
 
             for (int j = 0; j < minecraftServer.worldMngr.length; j++)
             {
@@ -66,9 +72,9 @@ public class ConsoleCommandHandler
                 worldserver1.levelSaving = true;
             }
         }
-        else if (s.toLowerCase().startsWith("save-on"))
+        else if (s1.equalsIgnoreCase("save-on"))
         {
-            sendNoticeToOps(s1, "Enabling level saving..");
+            sendNoticeToOps(s3, "Enabling level saving..");
 
             for (int k = 0; k < minecraftServer.worldMngr.length; k++)
             {
@@ -76,85 +82,82 @@ public class ConsoleCommandHandler
                 worldserver2.levelSaving = false;
             }
         }
-        else if (s.toLowerCase().startsWith("op "))
+        else if (s1.equalsIgnoreCase("op"))
         {
-            String s2 = s.substring(s.indexOf(" ")).trim();
             serverconfigurationmanager.addOp(s2);
-            sendNoticeToOps(s1, (new StringBuilder()).append("Opping ").append(s2).toString());
+            sendNoticeToOps(s3, (new StringBuilder()).append("Opping ").append(s2).toString());
             serverconfigurationmanager.sendChatMessageToPlayer(s2, "\247eYou are now op!");
         }
-        else if (s.toLowerCase().startsWith("deop "))
+        else if (s1.equalsIgnoreCase("deop"))
         {
-            String s3 = s.substring(s.indexOf(" ")).trim();
-            serverconfigurationmanager.removeOp(s3);
-            serverconfigurationmanager.sendChatMessageToPlayer(s3, "\247eYou are no longer op!");
-            sendNoticeToOps(s1, (new StringBuilder()).append("De-opping ").append(s3).toString());
+            String s4 = s2;
+            serverconfigurationmanager.removeOp(s4);
+            serverconfigurationmanager.sendChatMessageToPlayer(s4, "\247eYou are no longer op!");
+            sendNoticeToOps(s3, (new StringBuilder()).append("De-opping ").append(s4).toString());
         }
-        else if (s.toLowerCase().startsWith("ban-ip "))
+        else if (s1.equalsIgnoreCase("ban-ip"))
         {
-            String s4 = s.substring(s.indexOf(" ")).trim();
-            serverconfigurationmanager.banIP(s4);
-            sendNoticeToOps(s1, (new StringBuilder()).append("Banning ip ").append(s4).toString());
+            String s5 = s2;
+            serverconfigurationmanager.banIP(s5);
+            sendNoticeToOps(s3, (new StringBuilder()).append("Banning ip ").append(s5).toString());
         }
-        else if (s.toLowerCase().startsWith("pardon-ip "))
+        else if (s1.equalsIgnoreCase("pardon-ip"))
         {
-            String s5 = s.substring(s.indexOf(" ")).trim();
-            serverconfigurationmanager.pardonIP(s5);
-            sendNoticeToOps(s1, (new StringBuilder()).append("Pardoning ip ").append(s5).toString());
+            String s6 = s2;
+            serverconfigurationmanager.pardonIP(s6);
+            sendNoticeToOps(s3, (new StringBuilder()).append("Pardoning ip ").append(s6).toString());
         }
-        else if (s.toLowerCase().startsWith("ban "))
+        else if (s1.equalsIgnoreCase("ban"))
         {
-            String s6 = s.substring(s.indexOf(" ")).trim();
-            serverconfigurationmanager.banPlayer(s6);
-            sendNoticeToOps(s1, (new StringBuilder()).append("Banning ").append(s6).toString());
-            EntityPlayerMP entityplayermp = serverconfigurationmanager.getPlayerEntity(s6);
-
-            if (entityplayermp != null)
-            {
-                entityplayermp.playerNetServerHandler.kickPlayer("Banned by admin");
-            }
-        }
-        else if (s.toLowerCase().startsWith("pardon "))
-        {
-            String s7 = s.substring(s.indexOf(" ")).trim();
-            serverconfigurationmanager.pardonPlayer(s7);
-            sendNoticeToOps(s1, (new StringBuilder()).append("Pardoning ").append(s7).toString());
-        }
-        else if (s.toLowerCase().startsWith("kick "))
-        {
-            String s8 = s.substring(s.indexOf(" ")).trim();
-            EntityPlayerMP entityplayermp1 = null;
-
-            for (int l = 0; l < serverconfigurationmanager.playerEntities.size(); l++)
-            {
-                EntityPlayerMP entityplayermp7 = (EntityPlayerMP)serverconfigurationmanager.playerEntities.get(l);
-
-                if (entityplayermp7.username.equalsIgnoreCase(s8))
-                {
-                    entityplayermp1 = entityplayermp7;
-                }
-            }
+            String s7 = s2;
+            serverconfigurationmanager.banPlayer(s7);
+            sendNoticeToOps(s3, (new StringBuilder()).append("Banning ").append(s7).toString());
+            EntityPlayerMP entityplayermp1 = serverconfigurationmanager.getPlayerEntity(s7);
 
             if (entityplayermp1 != null)
             {
-                entityplayermp1.playerNetServerHandler.kickPlayer("Kicked by admin");
-                sendNoticeToOps(s1, (new StringBuilder()).append("Kicking ").append(entityplayermp1.username).toString());
+                entityplayermp1.playerNetServerHandler.kickPlayer("Banned by admin");
+            }
+        }
+        else if (s1.equalsIgnoreCase("pardon"))
+        {
+            String s8 = s2;
+            serverconfigurationmanager.pardonPlayer(s8);
+            sendNoticeToOps(s3, (new StringBuilder()).append("Pardoning ").append(s8).toString());
+        }
+        else if (s1.equalsIgnoreCase("kick"))
+        {
+            String s9 = s2;
+            EntityPlayerMP entityplayermp2 = null;
+
+            for (int i1 = 0; i1 < serverconfigurationmanager.playerEntities.size(); i1++)
+            {
+                EntityPlayerMP entityplayermp7 = (EntityPlayerMP)serverconfigurationmanager.playerEntities.get(i1);
+
+                if (entityplayermp7.username.equalsIgnoreCase(s9))
+                {
+                    entityplayermp2 = entityplayermp7;
+                }
+            }
+
+            if (entityplayermp2 != null)
+            {
+                entityplayermp2.playerNetServerHandler.kickPlayer("Kicked by admin");
+                sendNoticeToOps(s3, (new StringBuilder()).append("Kicking ").append(entityplayermp2.username).toString());
             }
             else
             {
-                icommandlistener.log((new StringBuilder()).append("Can't find user ").append(s8).append(". No kick.").toString());
+                icommandlistener.log((new StringBuilder()).append("Can't find user ").append(s9).append(". No kick.").toString());
             }
         }
-        else if (s.toLowerCase().startsWith("tp "))
+        else if (s1.equalsIgnoreCase("tp"))
         {
-            String as[] = s.split(" ");
-
             if (as.length == 3)
             {
-                EntityPlayerMP entityplayermp2 = serverconfigurationmanager.getPlayerEntity(as[1]);
+                EntityPlayerMP entityplayermp = serverconfigurationmanager.getPlayerEntity(as[1]);
                 EntityPlayerMP entityplayermp3 = serverconfigurationmanager.getPlayerEntity(as[2]);
 
-                if (entityplayermp2 == null)
+                if (entityplayermp == null)
                 {
                     icommandlistener.log((new StringBuilder()).append("Can't find user ").append(as[1]).append(". No tp.").toString());
                 }
@@ -162,53 +165,51 @@ public class ConsoleCommandHandler
                 {
                     icommandlistener.log((new StringBuilder()).append("Can't find user ").append(as[2]).append(". No tp.").toString());
                 }
-                else if (entityplayermp2.dimension != entityplayermp3.dimension)
+                else if (entityplayermp.dimension != entityplayermp3.dimension)
                 {
                     icommandlistener.log((new StringBuilder()).append("User ").append(as[1]).append(" and ").append(as[2]).append(" are in different dimensions. No tp.").toString());
                 }
                 else
                 {
-                    entityplayermp2.playerNetServerHandler.teleportTo(entityplayermp3.posX, entityplayermp3.posY, entityplayermp3.posZ, entityplayermp3.rotationYaw, entityplayermp3.rotationPitch);
-                    sendNoticeToOps(s1, (new StringBuilder()).append("Teleporting ").append(as[1]).append(" to ").append(as[2]).append(".").toString());
+                    entityplayermp.playerNetServerHandler.teleportTo(entityplayermp3.posX, entityplayermp3.posY, entityplayermp3.posZ, entityplayermp3.rotationYaw, entityplayermp3.rotationPitch);
+                    sendNoticeToOps(s3, (new StringBuilder()).append("Teleporting ").append(as[1]).append(" to ").append(as[2]).append(".").toString());
                 }
             }
             else
             {
-                icommandlistener.log("Syntax error, please provice a source and a target.");
+                icommandlistener.log("Syntax error, please provide a source and a target.");
             }
         }
-        else if (s.toLowerCase().startsWith("give "))
+        else if (s1.equalsIgnoreCase("give"))
         {
-            String as1[] = s.split(" ");
-
-            if (as1.length != 3 && as1.length != 4 && as1.length != 5)
+            if (as.length != 3 && as.length != 4 && as.length != 5)
             {
                 return;
             }
 
-            String s9 = as1[1];
-            EntityPlayerMP entityplayermp4 = serverconfigurationmanager.getPlayerEntity(s9);
+            String s10 = as[1];
+            EntityPlayerMP entityplayermp4 = serverconfigurationmanager.getPlayerEntity(s10);
 
             if (entityplayermp4 != null)
             {
                 try
                 {
-                    int j1 = Integer.parseInt(as1[2]);
+                    int j1 = Integer.parseInt(as[2]);
 
                     if (Item.itemsList[j1] != null)
                     {
-                        sendNoticeToOps(s1, (new StringBuilder()).append("Giving ").append(entityplayermp4.username).append(" some ").append(j1).toString());
+                        sendNoticeToOps(s3, (new StringBuilder()).append("Giving ").append(entityplayermp4.username).append(" some ").append(j1).toString());
                         int k2 = 1;
                         int l2 = 0;
 
-                        if (as1.length > 3)
+                        if (as.length > 3)
                         {
-                            k2 = tryParse(as1[3], 1);
+                            k2 = tryParse(as[3], 1);
                         }
 
-                        if (as1.length > 4)
+                        if (as.length > 4)
                         {
-                            l2 = tryParse(as1[4], 1);
+                            l2 = tryParse(as[4], 1);
                         }
 
                         if (k2 < 1)
@@ -230,38 +231,7 @@ public class ConsoleCommandHandler
                 }
                 catch (NumberFormatException numberformatexception1)
                 {
-                    icommandlistener.log((new StringBuilder()).append("There's no item with id ").append(as1[2]).toString());
-                }
-            }
-            else
-            {
-                icommandlistener.log((new StringBuilder()).append("Can't find user ").append(s9).toString());
-            }
-        }
-        else if (s.toLowerCase().startsWith("xp"))
-        {
-            String as2[] = s.split(" ");
-
-            if (as2.length != 3)
-            {
-                return;
-            }
-
-            String s10 = as2[1];
-            EntityPlayerMP entityplayermp5 = serverconfigurationmanager.getPlayerEntity(s10);
-
-            if (entityplayermp5 != null)
-            {
-                try
-                {
-                    int k1 = Integer.parseInt(as2[2]);
-                    k1 = k1 <= 5000 ? k1 : 5000;
-                    sendNoticeToOps(s1, (new StringBuilder()).append("Giving ").append(k1).append(" orbs to ").append(entityplayermp5.username).toString());
-                    entityplayermp5.addExperience(k1);
-                }
-                catch (NumberFormatException numberformatexception2)
-                {
-                    icommandlistener.log((new StringBuilder()).append("Invalid orb count: ").append(as2[2]).toString());
+                    icommandlistener.log((new StringBuilder()).append("There's no item with id ").append(as[2]).toString());
                 }
             }
             else
@@ -269,39 +239,28 @@ public class ConsoleCommandHandler
                 icommandlistener.log((new StringBuilder()).append("Can't find user ").append(s10).toString());
             }
         }
-        else if (s.toLowerCase().startsWith("gamemode "))
+        else if (s1.equalsIgnoreCase("xp"))
         {
-            String as3[] = s.split(" ");
-
-            if (as3.length != 3)
+            if (as.length != 3)
             {
                 return;
             }
 
-            String s11 = as3[1];
-            EntityPlayerMP entityplayermp6 = serverconfigurationmanager.getPlayerEntity(s11);
+            String s11 = as[1];
+            EntityPlayerMP entityplayermp5 = serverconfigurationmanager.getPlayerEntity(s11);
 
-            if (entityplayermp6 != null)
+            if (entityplayermp5 != null)
             {
                 try
                 {
-                    int l1 = Integer.parseInt(as3[2]);
-                    l1 = WorldSettings.validGameType(l1);
-
-                    if (entityplayermp6.itemInWorldManager.getGameType() != l1)
-                    {
-                        sendNoticeToOps(s1, (new StringBuilder()).append("Setting ").append(entityplayermp6.username).append(" to game mode ").append(l1).toString());
-                        entityplayermp6.itemInWorldManager.toggleGameType(l1);
-                        entityplayermp6.playerNetServerHandler.sendPacket(new Packet70Bed(3, l1));
-                    }
-                    else
-                    {
-                        sendNoticeToOps(s1, (new StringBuilder()).append(entityplayermp6.username).append(" already has game mode ").append(l1).toString());
-                    }
+                    int k1 = Integer.parseInt(as[2]);
+                    k1 = k1 <= 5000 ? k1 : 5000;
+                    sendNoticeToOps(s3, (new StringBuilder()).append("Giving ").append(k1).append(" orbs to ").append(entityplayermp5.username).toString());
+                    entityplayermp5.addExperience(k1);
                 }
-                catch (NumberFormatException numberformatexception3)
+                catch (NumberFormatException numberformatexception2)
                 {
-                    icommandlistener.log((new StringBuilder()).append("There's no game mode with id ").append(as3[2]).toString());
+                    icommandlistener.log((new StringBuilder()).append("Invalid orb count: ").append(as[2]).toString());
                 }
             }
             else
@@ -309,40 +268,76 @@ public class ConsoleCommandHandler
                 icommandlistener.log((new StringBuilder()).append("Can't find user ").append(s11).toString());
             }
         }
-        else if (s.toLowerCase().startsWith("time "))
+        else if (s1.equalsIgnoreCase("gamemode"))
         {
-            String as4[] = s.split(" ");
-
-            if (as4.length != 3)
+            if (as.length != 3)
             {
                 return;
             }
 
-            String s12 = as4[1];
+            String s12 = as[1];
+            EntityPlayerMP entityplayermp6 = serverconfigurationmanager.getPlayerEntity(s12);
+
+            if (entityplayermp6 != null)
+            {
+                try
+                {
+                    int l1 = Integer.parseInt(as[2]);
+                    l1 = WorldSettings.validGameType(l1);
+
+                    if (entityplayermp6.itemInWorldManager.getGameType() != l1)
+                    {
+                        sendNoticeToOps(s3, (new StringBuilder()).append("Setting ").append(entityplayermp6.username).append(" to game mode ").append(l1).toString());
+                        entityplayermp6.itemInWorldManager.toggleGameType(l1);
+                        entityplayermp6.playerNetServerHandler.sendPacket(new Packet70Bed(3, l1));
+                    }
+                    else
+                    {
+                        sendNoticeToOps(s3, (new StringBuilder()).append(entityplayermp6.username).append(" already has game mode ").append(l1).toString());
+                    }
+                }
+                catch (NumberFormatException numberformatexception3)
+                {
+                    icommandlistener.log((new StringBuilder()).append("There's no game mode with id ").append(as[2]).toString());
+                }
+            }
+            else
+            {
+                icommandlistener.log((new StringBuilder()).append("Can't find user ").append(s12).toString());
+            }
+        }
+        else if (s1.equalsIgnoreCase("time"))
+        {
+            if (as.length != 3)
+            {
+                return;
+            }
+
+            String s13 = as[1];
 
             try
             {
-                int i1 = Integer.parseInt(as4[2]);
+                int l = Integer.parseInt(as[2]);
 
-                if ("add".equalsIgnoreCase(s12))
+                if ("add".equalsIgnoreCase(s13))
                 {
                     for (int i2 = 0; i2 < minecraftServer.worldMngr.length; i2++)
                     {
                         WorldServer worldserver3 = minecraftServer.worldMngr[i2];
-                        worldserver3.advanceTime(worldserver3.getWorldTime() + (long)i1);
+                        worldserver3.advanceTime(worldserver3.getWorldTime() + (long)l);
                     }
 
-                    sendNoticeToOps(s1, (new StringBuilder()).append("Added ").append(i1).append(" to time").toString());
+                    sendNoticeToOps(s3, (new StringBuilder()).append("Added ").append(l).append(" to time").toString());
                 }
-                else if ("set".equalsIgnoreCase(s12))
+                else if ("set".equalsIgnoreCase(s13))
                 {
                     for (int j2 = 0; j2 < minecraftServer.worldMngr.length; j2++)
                     {
                         WorldServer worldserver4 = minecraftServer.worldMngr[j2];
-                        worldserver4.advanceTime(i1);
+                        worldserver4.advanceTime(l);
                     }
 
-                    sendNoticeToOps(s1, (new StringBuilder()).append("Set time to ").append(i1).toString());
+                    sendNoticeToOps(s3, (new StringBuilder()).append("Set time to ").append(l).toString());
                 }
                 else
                 {
@@ -351,56 +346,51 @@ public class ConsoleCommandHandler
             }
             catch (NumberFormatException numberformatexception)
             {
-                icommandlistener.log((new StringBuilder()).append("Unable to convert time value, ").append(as4[2]).toString());
+                icommandlistener.log((new StringBuilder()).append("Unable to convert time value, ").append(as[2]).toString());
             }
         }
-        else if (s.toLowerCase().startsWith("say "))
+        else if (s1.equalsIgnoreCase("say") && s2.length() > 0)
         {
-            s = s.substring(s.indexOf(" ")).trim();
-            minecraftLogger.info((new StringBuilder()).append("[").append(s1).append("] ").append(s).toString());
-            serverconfigurationmanager.sendPacketToAllPlayers(new Packet3Chat((new StringBuilder()).append("\247d[Server] ").append(s).toString()));
+            minecraftLogger.info((new StringBuilder()).append("[").append(s3).append("] ").append(s2).toString());
+            serverconfigurationmanager.sendPacketToAllPlayers(new Packet3Chat((new StringBuilder()).append("\247d[Server] ").append(s2).toString()));
         }
-        else if (s.toLowerCase().startsWith("tell "))
+        else if (s1.equalsIgnoreCase("tell"))
         {
-            String as5[] = s.split(" ");
-
-            if (as5.length >= 3)
+            if (as.length >= 3)
             {
                 s = s.substring(s.indexOf(" ")).trim();
                 s = s.substring(s.indexOf(" ")).trim();
-                minecraftLogger.info((new StringBuilder()).append("[").append(s1).append("->").append(as5[1]).append("] ").append(s).toString());
-                s = (new StringBuilder()).append("\2477").append(s1).append(" whispers ").append(s).toString();
+                minecraftLogger.info((new StringBuilder()).append("[").append(s3).append("->").append(as[1]).append("] ").append(s).toString());
+                s = (new StringBuilder()).append("\2477").append(s3).append(" whispers ").append(s).toString();
                 minecraftLogger.info(s);
 
-                if (!serverconfigurationmanager.sendPacketToPlayer(as5[1], new Packet3Chat(s)))
+                if (!serverconfigurationmanager.sendPacketToPlayer(as[1], new Packet3Chat(s)))
                 {
                     icommandlistener.log("There's no player by that name online.");
                 }
             }
         }
-        else if (s.toLowerCase().startsWith("whitelist "))
+        else if (s1.equalsIgnoreCase("whitelist"))
         {
-            handleWhitelist(s1, s, icommandlistener);
+            handleWhitelist(s3, s, icommandlistener);
         }
-        else if (s.toLowerCase().startsWith("toggledownfall"))
+        else if (s1.equalsIgnoreCase("toggledownfall"))
         {
             minecraftServer.worldMngr[0].commandToggleDownfall();
             icommandlistener.log("Toggling rain and snow, hold on...");
         }
-        else if (s.toLowerCase().startsWith("banlist"))
+        else if (s1.equalsIgnoreCase("banlist"))
         {
-            String as6[] = s.split(" ");
-
-            if (as6.length == 2)
+            if (as.length == 2)
             {
-                if (as6[1].equals("ips"))
+                if (as[1].equals("ips"))
                 {
-                    icommandlistener.log((new StringBuilder()).append("IP Ban list:").append(func_40648_a(minecraftServer.getBannedIPsList(), ", ")).toString());
+                    icommandlistener.log((new StringBuilder()).append("IP Ban list:").append(joinStrings(minecraftServer.getBannedIPsList(), ", ")).toString());
                 }
             }
             else
             {
-                icommandlistener.log((new StringBuilder()).append("Ban list:").append(func_40648_a(minecraftServer.getBannedPlayersList(), ", ")).toString());
+                icommandlistener.log((new StringBuilder()).append("Ban list:").append(joinStrings(minecraftServer.getBannedPlayersList(), ", ")).toString());
             }
         }
         else
@@ -492,6 +482,8 @@ public class ConsoleCommandHandler
         par1ICommandListener.log("   say <message>             broadcasts a message to all players");
         par1ICommandListener.log("   time <add|set> <amount>   adds to or sets the world time (0-24000)");
         par1ICommandListener.log("   gamemode <player> <mode>  sets player's game mode (0 or 1)");
+        par1ICommandListener.log("   toggledownfall            toggles rain on or off");
+        par1ICommandListener.log("   xp <player> <amount>      gives the player the amount of xp (0-5000)");
     }
 
     /**
@@ -519,7 +511,10 @@ public class ConsoleCommandHandler
         }
     }
 
-    private String func_40648_a(String par1ArrayOfStr[], String par2Str)
+    /**
+     * Joins array elements with the delimiter String.
+     */
+    private String joinStrings(String par1ArrayOfStr[], String par2Str)
     {
         int i = par1ArrayOfStr.length;
 

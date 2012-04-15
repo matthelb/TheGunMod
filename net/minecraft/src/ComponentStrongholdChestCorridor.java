@@ -5,9 +5,9 @@ import java.util.Random;
 
 public class ComponentStrongholdChestCorridor extends ComponentStronghold
 {
-    private static final StructurePieceTreasure field_40314_a[];
+    private static final StructurePieceTreasure chestLoot[];
     private final EnumDoor doorType;
-    private boolean field_40313_c;
+    private boolean hasMadeChest;
 
     public ComponentStrongholdChestCorridor(int par1, Random par2Random, StructureBoundingBox par3StructureBoundingBox, int par4)
     {
@@ -18,7 +18,7 @@ public class ComponentStrongholdChestCorridor extends ComponentStronghold
     }
 
     /**
-     * 'Initiates construction of the Structure Component picked, at the current Location of StructGen'
+     * Initiates construction of the Structure Component picked, at the current Location of StructGen
      */
     public void buildComponent(StructureComponent par1StructureComponent, List par2List, Random par3Random)
     {
@@ -40,8 +40,8 @@ public class ComponentStrongholdChestCorridor extends ComponentStronghold
     }
 
     /**
-     * 'second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
-     * the end, it adds Fences...'
+     * second Part of Structure generating, this for example places Spiderwebs, Mob Spawners, it closes Mineshafts at
+     * the end, it adds Fences...
      */
     public boolean addComponentParts(World par1World, Random par2Random, StructureBoundingBox par3StructureBoundingBox)
     {
@@ -64,7 +64,7 @@ public class ComponentStrongholdChestCorridor extends ComponentStronghold
             placeBlockAtCurrentPosition(par1World, Block.stairSingle.blockID, 5, 2, 1, i, par3StructureBoundingBox);
         }
 
-        if (!field_40313_c)
+        if (!hasMadeChest)
         {
             int j = getYWithOffset(2);
             int k = getXWithOffset(3, 3);
@@ -72,8 +72,8 @@ public class ComponentStrongholdChestCorridor extends ComponentStronghold
 
             if (par3StructureBoundingBox.isVecInside(k, j, l))
             {
-                field_40313_c = true;
-                createTreasureChestAtCurrentPosition(par1World, par3StructureBoundingBox, par2Random, 3, 2, 3, field_40314_a, 2 + par2Random.nextInt(2));
+                hasMadeChest = true;
+                createTreasureChestAtCurrentPosition(par1World, par3StructureBoundingBox, par2Random, 3, 2, 3, chestLoot, 2 + par2Random.nextInt(2));
             }
         }
 
@@ -82,7 +82,7 @@ public class ComponentStrongholdChestCorridor extends ComponentStronghold
 
     static
     {
-        field_40314_a = (new StructurePieceTreasure[]
+        chestLoot = (new StructurePieceTreasure[]
                 {
                     new StructurePieceTreasure(Item.enderPearl.shiftedIndex, 0, 1, 1, 10), new StructurePieceTreasure(Item.diamond.shiftedIndex, 0, 1, 3, 3), new StructurePieceTreasure(Item.ingotIron.shiftedIndex, 0, 1, 5, 10), new StructurePieceTreasure(Item.ingotGold.shiftedIndex, 0, 1, 3, 5), new StructurePieceTreasure(Item.redstone.shiftedIndex, 0, 4, 9, 5), new StructurePieceTreasure(Item.bread.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.appleRed.shiftedIndex, 0, 1, 3, 15), new StructurePieceTreasure(Item.pickaxeSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.swordSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.plateSteel.shiftedIndex, 0, 1, 1, 5),
                     new StructurePieceTreasure(Item.helmetSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.legsSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.bootsSteel.shiftedIndex, 0, 1, 1, 5), new StructurePieceTreasure(Item.appleGold.shiftedIndex, 0, 1, 1, 1)

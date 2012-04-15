@@ -1,17 +1,198 @@
 ***************
-*** 416,421 ****
-              {
-                  System.exit(0);
-              }
-              break MISSING_BLOCK_LABEL_346;
+*** 334,455 ****
+          field_6025_n = false;
+      }
+  
+-     public void run()
+-     {
+-         try
+-         {
+-             if(func_6008_d())
+-             {
+-                 long l = System.currentTimeMillis();
+-                 long l1 = 0L;
+-                 while(field_6025_n)
+-                 {
+-                     long l2 = System.currentTimeMillis();
+-                     long l3 = l2 - l;
+-                     if(l3 > 2000L)
+-                     {
+-                         field_6038_a.warning("Can't keep up! Did the system time change, or is the server overloaded?");
+-                         l3 = 2000L;
+                      }
+-                     if(l3 < 0L)
+-                     {
+-                         field_6038_a.warning("Time ran backwards! Did the system time change?");
+-                         l3 = 0L;
+-                     }
+-                     l1 += l3;
+-                     l = l2;
+-                     if(field_6034_e[0].func_22084_q())
+-                     {
+-                         func_6018_h();
+-                         l1 = 0L;
+-                     } else
+-                     {
+-                         while(l1 > 50L)
+-                         {
+-                             l1 -= 50L;
+-                             func_6018_h();
+-                         }
+-                     }
+-                     Thread.sleep(1L);
+-                 }
+-             } else
+-             {
+-                 while(field_6025_n)
+-                 {
+-                     func_6021_b();
+-                     try
+-                     {
+-                         Thread.sleep(10L);
+-                     }
+-                     catch(InterruptedException interruptedexception)
+-                     {
+-                         interruptedexception.printStackTrace();
+-                     }
+-                 }
+-             }
+-         }
+-         catch(Throwable throwable1)
+-         {
+-             throwable1.printStackTrace();
+-             field_6038_a.log(Level.SEVERE, "Unexpected exception", throwable1);
+-             while(field_6025_n)
+-             {
+-                 func_6021_b();
+-                 try
+-                 {
+                      Thread.sleep(10L);
+-                 }
+-                 catch(InterruptedException interruptedexception1)
+-                 {
+-                     interruptedexception1.printStackTrace();
+-                 }
+-             }
+-             try
+-             {
+-                 func_6013_g();
+-                 field_6032_g = true;
+-             }
+-             catch(Throwable throwable2)
+-             {
+-                 throwable2.printStackTrace();
+-             }
+-             finally
+-             {
+-                 System.exit(0);
+-             }
+-             break MISSING_BLOCK_LABEL_346;
+-         }
+-         try
+-         {
+-             func_6013_g();
+-             field_6032_g = true;
+-         }
+-         catch(Throwable throwable)
+-         {
+-             throwable.printStackTrace();
+-         }
+-         finally
+-         {
+-             System.exit(0);
+-         }
+-         break MISSING_BLOCK_LABEL_346;
+-         Exception exception2;
+-         exception2;
+-         try
+-         {
+-             func_6013_g();
+-             field_6032_g = true;
+-         }
+-         catch(Throwable throwable3)
+-         {
+-             throwable3.printStackTrace();
+-         }
+-         finally
+-         {
+-             System.exit(0);
           }
-          try
---- 419,426 ----
-              {
-                  System.exit(0);
-              }
-+         }
-+ /*
-              break MISSING_BLOCK_LABEL_346;
+-         throw exception2;
+-     }
+  
+      private void func_6018_h()
+      {
+--- 334,406 ----
+          field_6025_n = false;
+      }
+  
++     public void run() {
++         try {
++            if(this.func_6008_d()) {
++               long var1 = System.currentTimeMillis();
++ 
++               for(long var3 = 0L; this.field_6025_n; Thread.sleep(1L)) {
++                  long var5 = System.currentTimeMillis();
++                  long var7 = var5 - var1;
++                  if(var7 > 2000L) {
++                     field_6038_a.warning("Can\'t keep up! Did the system time change, or is the server overloaded?");
++                     var7 = 2000L;
++                  }
++ 
++                  if(var7 < 0L) {
++                     field_6038_a.warning("Time ran backwards! Did the system time change?");
++                     var7 = 0L;
++                  }
++ 
++                  var3 += var7;
++                  var1 = var5;
++                  if(this.field_6034_e[0].func_22084_q()) {
++                     this.func_6018_h();
++                     var3 = 0L;
++                  } else {
++                     while(var3 > 50L) {
++                        var3 -= 50L;
++                        this.func_6018_h();
+                      }
++                  }
++               }
++            } else {
++               while(this.field_6025_n) {
++                  this.func_6021_b();
++ 
++                  try {
+                      Thread.sleep(10L);
++                  } catch (InterruptedException var57) {
++                     var57.printStackTrace();
++                  }
++               }
++            }
++         } catch (Throwable var58) {
++            var58.printStackTrace();
++            field_6038_a.log(Level.SEVERE, "Unexpected exception", var58);
++ 
++            while(this.field_6025_n) {
++               this.func_6021_b();
++ 
++               try {
++                  Thread.sleep(10L);
++               } catch (InterruptedException var56) {
++                  var56.printStackTrace();
++               }
++            }
++         } finally {
++            try {
++               this.func_6013_g();
++               this.field_6032_g = true;
++            } catch (Throwable var54) {
++               var54.printStackTrace();
++            } finally {
++               System.exit(0);
++            }
++ 
           }
-          try
++ 
++      }
+  
+      private void func_6018_h()
+      {

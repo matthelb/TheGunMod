@@ -8,7 +8,10 @@ public interface IWorldAccess
      */
     public abstract void markBlockNeedsUpdate(int i, int j, int k);
 
-    public abstract void func_48414_b(int i, int j, int k);
+    /**
+     * As of mc 1.2.3 this method has exactly the same signature and does exactly the same as markBlockNeedsUpdate
+     */
+    public abstract void markBlockNeedsUpdate2(int i, int j, int k);
 
     /**
      * Called across all registered IWorldAccess instances when a block range is invalidated. Args: minX, minY, minZ,

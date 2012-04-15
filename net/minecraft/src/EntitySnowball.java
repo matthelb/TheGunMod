@@ -41,7 +41,7 @@ public class EntitySnowball extends EntityThrowable
 
         if (!worldObj.isRemote)
         {
-            setEntityDead();
+            setDead();
         }
     }
 }

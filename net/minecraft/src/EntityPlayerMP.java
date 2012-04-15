@@ -305,15 +305,15 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
                 {
                     WorldServer worldserver = mcServer.getWorldManager(dimension);
 
-                    if (worldserver.blockExists(chunkcoordintpair.chunkXPos << 4, 0, chunkcoordintpair.chunkZPos << 4))
+                    if (worldserver.blockExists(chunkcoordintpair.chunkXPos << 4, 0, chunkcoordintpair.chunkZPosition << 4))
                     {
-                        Chunk chunk = worldserver.getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
+                        Chunk chunk = worldserver.getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPosition);
 
                         if (chunk.isTerrainPopulated)
                         {
                             loadedChunks.remove(chunkcoordintpair);
-                            playerNetServerHandler.sendPacket(new Packet51MapChunk(worldserver.getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos), true, 0));
-                            List list = worldserver.getTileEntityList(chunkcoordintpair.chunkXPos * 16, 0, chunkcoordintpair.chunkZPos * 16, chunkcoordintpair.chunkXPos * 16 + 16, 256, chunkcoordintpair.chunkZPos * 16 + 16);
+                            playerNetServerHandler.sendPacket(new Packet51MapChunk(worldserver.getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPosition), true, 0));
+                            List list = worldserver.getTileEntityList(chunkcoordintpair.chunkXPos * 16, 0, chunkcoordintpair.chunkZPosition * 16, chunkcoordintpair.chunkXPos * 16 + 16, 256, chunkcoordintpair.chunkZPosition * 16 + 16);
 
                             for (int k = 0; k < list.size(); k++)
                             {
@@ -386,10 +386,10 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
             timeUntilPortal--;
         }
 
-        if (getEntityHealth() != lastHealth || field_35221_cc != foodStats.getFoodLevel() || (foodStats.getSaturationLevel() == 0.0F) != field_35222_cd)
+        if (getHealth() != lastHealth || field_35221_cc != foodStats.getFoodLevel() || (foodStats.getSaturationLevel() == 0.0F) != field_35222_cd)
         {
-            playerNetServerHandler.sendPacket(new Packet8UpdateHealth(getEntityHealth(), foodStats.getFoodLevel(), foodStats.getSaturationLevel()));
-            lastHealth = getEntityHealth();
+            playerNetServerHandler.sendPacket(new Packet8UpdateHealth(getHealth(), foodStats.getFoodLevel(), foodStats.getSaturationLevel()));
+            lastHealth = getHealth();
             field_35221_cc = foodStats.getFoodLevel();
             field_35222_cd = foodStats.getSaturationLevel() == 0.0F;
         }
@@ -529,7 +529,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
     }
 
     /**
-     * set entity to null to unmount
+     * Called when a player mounts an entity. e.g. mounts a pig, mounts a boat.
      */
     public void mountEntity(Entity par1Entity)
     {
@@ -766,10 +766,13 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         playerNetServerHandler.sendPacket(new Packet3Chat(s));
     }
 
-    protected void func_35199_C()
+    /**
+     * Used for when item use count runs out, ie: eating completed
+     */
+    protected void onItemUseFinish()
     {
         playerNetServerHandler.sendPacket(new Packet38EntityStatus(entityId, (byte)9));
-        super.func_35199_C();
+        super.onItemUseFinish();
     }
 
     /**
@@ -825,5 +828,18 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
     {
         EntityTracker entitytracker = mcServer.getEntityTracker(dimension);
         entitytracker.sendPacketToTrackedPlayersAndTrackedEntity(this, new Packet18Animation(par1Entity, 7));
+    }
+
+    public void func_50022_L()
+    {
+        if (playerNetServerHandler == null)
+        {
+            return;
+        }
+        else
+        {
+            playerNetServerHandler.sendPacket(new Packet202PlayerAbilities(capabilities));
+            return;
+        }
     }
 }

@@ -2,17 +2,17 @@ package net.minecraft.src;
 
 public class EntityAIMoveTowardsTarget extends EntityAIBase
 {
-    private EntityCreature field_48223_a;
-    private EntityLiving field_48221_b;
-    private double field_48222_c;
-    private double field_48219_d;
-    private double field_48220_e;
+    private EntityCreature theEntity;
+    private EntityLiving targetEntity;
+    private double movePosX;
+    private double movePosY;
+    private double movePosZ;
     private float field_48217_f;
     private float field_48218_g;
 
     public EntityAIMoveTowardsTarget(EntityCreature par1EntityCreature, float par2, float par3)
     {
-        field_48223_a = par1EntityCreature;
+        theEntity = par1EntityCreature;
         field_48217_f = par2;
         field_48218_g = par3;
         setMutexBits(1);
@@ -23,19 +23,19 @@ public class EntityAIMoveTowardsTarget extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        field_48221_b = field_48223_a.getAttackTarget();
+        targetEntity = theEntity.getAttackTarget();
 
-        if (field_48221_b == null)
+        if (targetEntity == null)
         {
             return false;
         }
 
-        if (field_48221_b.getDistanceSqToEntity(field_48223_a) > (double)(field_48218_g * field_48218_g))
+        if (targetEntity.getDistanceSqToEntity(theEntity) > (double)(field_48218_g * field_48218_g))
         {
             return false;
         }
 
-        Vec3D vec3d = RandomPositionGenerator.func_48395_a(field_48223_a, 16, 7, Vec3D.createVector(field_48221_b.posX, field_48221_b.posY, field_48221_b.posZ));
+        Vec3D vec3d = RandomPositionGenerator.func_48395_a(theEntity, 16, 7, Vec3D.createVector(targetEntity.posX, targetEntity.posY, targetEntity.posZ));
 
         if (vec3d == null)
         {
@@ -43,9 +43,9 @@ public class EntityAIMoveTowardsTarget extends EntityAIBase
         }
         else
         {
-            field_48222_c = vec3d.xCoord;
-            field_48219_d = vec3d.yCoord;
-            field_48220_e = vec3d.zCoord;
+            movePosX = vec3d.xCoord;
+            movePosY = vec3d.yCoord;
+            movePosZ = vec3d.zCoord;
             return true;
         }
     }
@@ -55,7 +55,7 @@ public class EntityAIMoveTowardsTarget extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48223_a.getNavigator().noPath() && field_48221_b.isEntityAlive() && field_48221_b.getDistanceSqToEntity(field_48223_a) < (double)(field_48218_g * field_48218_g);
+        return !theEntity.getNavigator().noPath() && targetEntity.isEntityAlive() && targetEntity.getDistanceSqToEntity(theEntity) < (double)(field_48218_g * field_48218_g);
     }
 
     /**
@@ -63,7 +63,7 @@ public class EntityAIMoveTowardsTarget extends EntityAIBase
      */
     public void resetTask()
     {
-        field_48221_b = null;
+        targetEntity = null;
     }
 
     /**
@@ -71,6 +71,6 @@ public class EntityAIMoveTowardsTarget extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48223_a.getNavigator().func_48658_a(field_48222_c, field_48219_d, field_48220_e, field_48217_f);
+        theEntity.getNavigator().tryMoveToXYZ(movePosX, movePosY, movePosZ, field_48217_f);
     }
 }

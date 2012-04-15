@@ -20,7 +20,6 @@ public class EntitySlime extends EntityLiving implements IMob
         yOffset = 0.0F;
         slimeJumpDelay = rand.nextInt(20) + 10;
         setSlimeSize(i);
-        experienceValue = i;
     }
 
     protected void entityInit()
@@ -35,6 +34,7 @@ public class EntitySlime extends EntityLiving implements IMob
         setSize(0.6F * (float)par1, 0.6F * (float)par1);
         setPosition(posX, posY, posZ);
         setEntityHealth(getMaxHealth());
+        experienceValue = par1;
     }
 
     public int getMaxHealth()
@@ -178,13 +178,13 @@ public class EntitySlime extends EntityLiving implements IMob
     }
 
     /**
-     * Will get destroyed next tick
+     * Will get destroyed next tick.
      */
-    public void setEntityDead()
+    public void setDead()
     {
         int i = getSlimeSize();
 
-        if (!worldObj.isRemote && i > 1 && getEntityHealth() <= 0)
+        if (!worldObj.isRemote && i > 1 && getHealth() <= 0)
         {
             int j = 2 + rand.nextInt(3);
 
@@ -199,7 +199,7 @@ public class EntitySlime extends EntityLiving implements IMob
             }
         }
 
-        super.setEntityDead();
+        super.setDead();
     }
 
     /**

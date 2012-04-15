@@ -38,7 +38,9 @@ public class RConThreadQuery extends RConThreadBase
     /** The hostname of the running server */
     private String serverHostname;
 
-    /** A map */
+    /**
+     * A map of pending client SocketAddresses to the RConThreadQueryAuth that has been sent to them
+     */
     private HashMap queryClients;
     private long field_40448_t;
 
@@ -196,7 +198,7 @@ public class RConThreadQuery extends RConThreadBase
         output.writeString("game_id");
         output.writeString("MINECRAFT");
         output.writeString("version");
-        output.writeString(server.getVersionString());
+        output.writeString(server.getVersion());
         output.writeString("plugins");
         output.writeString(server.getPlugin());
         output.writeString("map");

@@ -7,13 +7,15 @@ class SlotArmor extends Slot
      */
     final int armorType;
 
-    /** The inventory we want to extract a slot from. */
-    final ContainerPlayer inventory;
+    /**
+     * The parent class of this clot, ContainerPlayer, SlotArmor is a Anon inner class.
+     */
+    final ContainerPlayer parent;
 
     SlotArmor(ContainerPlayer par1ContainerPlayer, IInventory par2IInventory, int par3, int par4, int par5, int par6)
     {
         super(par2IInventory, par3, par4, par5);
-        inventory = par1ContainerPlayer;
+        parent = par1ContainerPlayer;
         armorType = par6;
     }
 
@@ -27,7 +29,7 @@ class SlotArmor extends Slot
     }
 
     /**
-     * Check if the stack is a valid item for this slot.
+     * Check if the stack is a valid item for this slot. Always true beside for the armor slots.
      */
     public boolean isItemValid(ItemStack par1ItemStack)
     {

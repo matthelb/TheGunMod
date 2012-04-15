@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class BiomeDecorator
 {
-    /** The current world object. */
+    /** The world the BiomeDecorator is currently decorating */
     protected World currentWorld;
 
     /** The Biome Decorator's random number generator. */
@@ -400,7 +400,7 @@ public class BiomeDecorator
     }
 
     /**
-     * facilitates the replacement of stone with ores during worldgen
+     * Generates ores in the current chunk
      */
     protected void generateOres()
     {

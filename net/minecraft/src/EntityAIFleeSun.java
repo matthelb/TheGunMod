@@ -4,18 +4,18 @@ import java.util.Random;
 
 public class EntityAIFleeSun extends EntityAIBase
 {
-    private EntityCreature field_48260_a;
-    private double field_48258_b;
-    private double field_48259_c;
-    private double field_48256_d;
+    private EntityCreature theCreature;
+    private double shelterX;
+    private double shelterY;
+    private double shelterZ;
     private float field_48257_e;
-    private World field_48255_f;
+    private World theWorld;
 
     public EntityAIFleeSun(EntityCreature par1EntityCreature, float par2)
     {
-        field_48260_a = par1EntityCreature;
+        theCreature = par1EntityCreature;
         field_48257_e = par2;
-        field_48255_f = par1EntityCreature.worldObj;
+        theWorld = par1EntityCreature.worldObj;
         setMutexBits(1);
     }
 
@@ -24,22 +24,22 @@ public class EntityAIFleeSun extends EntityAIBase
      */
     public boolean shouldExecute()
     {
-        if (!field_48255_f.isDaytime())
+        if (!theWorld.isDaytime())
         {
             return false;
         }
 
-        if (!field_48260_a.isBurning())
+        if (!theCreature.isBurning())
         {
             return false;
         }
 
-        if (!field_48255_f.canBlockSeeTheSky(MathHelper.floor_double(field_48260_a.posX), (int)field_48260_a.boundingBox.minY, MathHelper.floor_double(field_48260_a.posZ)))
+        if (!theWorld.canBlockSeeTheSky(MathHelper.floor_double(theCreature.posX), (int)theCreature.boundingBox.minY, MathHelper.floor_double(theCreature.posZ)))
         {
             return false;
         }
 
-        Vec3D vec3d = func_48254_f();
+        Vec3D vec3d = findPossibleShelter();
 
         if (vec3d == null)
         {
@@ -47,9 +47,9 @@ public class EntityAIFleeSun extends EntityAIBase
         }
         else
         {
-            field_48258_b = vec3d.xCoord;
-            field_48259_c = vec3d.yCoord;
-            field_48256_d = vec3d.zCoord;
+            shelterX = vec3d.xCoord;
+            shelterY = vec3d.yCoord;
+            shelterZ = vec3d.zCoord;
             return true;
         }
     }
@@ -59,7 +59,7 @@ public class EntityAIFleeSun extends EntityAIBase
      */
     public boolean continueExecuting()
     {
-        return !field_48260_a.getNavigator().noPath();
+        return !theCreature.getNavigator().noPath();
     }
 
     /**
@@ -67,20 +67,20 @@ public class EntityAIFleeSun extends EntityAIBase
      */
     public void startExecuting()
     {
-        field_48260_a.getNavigator().func_48658_a(field_48258_b, field_48259_c, field_48256_d, field_48257_e);
+        theCreature.getNavigator().tryMoveToXYZ(shelterX, shelterY, shelterZ, field_48257_e);
     }
 
-    private Vec3D func_48254_f()
+    private Vec3D findPossibleShelter()
     {
-        Random random = field_48260_a.getRNG();
+        Random random = theCreature.getRNG();
 
         for (int i = 0; i < 10; i++)
         {
-            int j = MathHelper.floor_double((field_48260_a.posX + (double)random.nextInt(20)) - 10D);
-            int k = MathHelper.floor_double((field_48260_a.boundingBox.minY + (double)random.nextInt(6)) - 3D);
-            int l = MathHelper.floor_double((field_48260_a.posZ + (double)random.nextInt(20)) - 10D);
+            int j = MathHelper.floor_double((theCreature.posX + (double)random.nextInt(20)) - 10D);
+            int k = MathHelper.floor_double((theCreature.boundingBox.minY + (double)random.nextInt(6)) - 3D);
+            int l = MathHelper.floor_double((theCreature.posZ + (double)random.nextInt(20)) - 10D);
 
-            if (!field_48255_f.canBlockSeeTheSky(j, k, l) && field_48260_a.getBlockPathWeight(j, k, l) < 0.0F)
+            if (!theWorld.canBlockSeeTheSky(j, k, l) && theCreature.getBlockPathWeight(j, k, l) < 0.0F)
             {
                 return Vec3D.createVector(j, k, l);
             }

@@ -157,6 +157,7 @@ public class ServerConfigurationManager
 
         worldserver.spawnEntityInWorld(par1EntityPlayerMP);
         getPlayerManager(par1EntityPlayerMP.dimension).addPlayer(par1EntityPlayerMP);
+        func_52018_u();
 
         for (int i = 0; i < playerEntities.size(); i++)
         {
@@ -275,9 +276,9 @@ public class ServerConfigurationManager
 
         for (; worldserver.getCollidingBoundingBoxes(entityplayermp, entityplayermp.boundingBox).size() != 0; entityplayermp.setPosition(entityplayermp.posX, entityplayermp.posY + 1.0D, entityplayermp.posZ)) { }
 
-        entityplayermp.playerNetServerHandler.sendPacket(new Packet9Respawn(entityplayermp.dimension, (byte)entityplayermp.worldObj.difficultySetting, entityplayermp.worldObj.getWorldInfo().getTerrainType(), entityplayermp.worldObj.getWorldHeight(), entityplayermp.itemInWorldManager.getGameType()));
+        entityplayermp.playerNetServerHandler.sendPacket(new Packet9Respawn(entityplayermp.dimension, (byte)entityplayermp.worldObj.difficultySetting, entityplayermp.worldObj.getWorldInfo().getTerrainType(), entityplayermp.worldObj.getHeight(), entityplayermp.itemInWorldManager.getGameType()));
         entityplayermp.playerNetServerHandler.teleportTo(entityplayermp.posX, entityplayermp.posY, entityplayermp.posZ, entityplayermp.rotationYaw, entityplayermp.rotationPitch);
-        func_28170_a(entityplayermp, worldserver);
+        updateTimeAndWeather(entityplayermp, worldserver);
         getPlayerManager(entityplayermp.dimension).addPlayer(entityplayermp);
         worldserver.spawnEntityInWorld(entityplayermp);
         playerEntities.add(entityplayermp);
@@ -295,7 +296,7 @@ public class ServerConfigurationManager
         WorldServer worldserver = mcServer.getWorldManager(par1EntityPlayerMP.dimension);
         par1EntityPlayerMP.dimension = par2;
         WorldServer worldserver1 = mcServer.getWorldManager(par1EntityPlayerMP.dimension);
-        par1EntityPlayerMP.playerNetServerHandler.sendPacket(new Packet9Respawn(par1EntityPlayerMP.dimension, (byte)par1EntityPlayerMP.worldObj.difficultySetting, worldserver1.getWorldInfo().getTerrainType(), worldserver1.getWorldHeight(), par1EntityPlayerMP.itemInWorldManager.getGameType()));
+        par1EntityPlayerMP.playerNetServerHandler.sendPacket(new Packet9Respawn(par1EntityPlayerMP.dimension, (byte)par1EntityPlayerMP.worldObj.difficultySetting, worldserver1.getWorldInfo().getTerrainType(), worldserver1.getHeight(), par1EntityPlayerMP.itemInWorldManager.getGameType()));
         worldserver.removePlayer(par1EntityPlayerMP);
         par1EntityPlayerMP.isDead = false;
         double d = par1EntityPlayerMP.posX;
@@ -352,7 +353,7 @@ public class ServerConfigurationManager
         par1EntityPlayerMP.playerNetServerHandler.teleportTo(par1EntityPlayerMP.posX, par1EntityPlayerMP.posY, par1EntityPlayerMP.posZ, par1EntityPlayerMP.rotationYaw, par1EntityPlayerMP.rotationPitch);
         par1EntityPlayerMP.setWorld(worldserver1);
         par1EntityPlayerMP.itemInWorldManager.setWorld(worldserver1);
-        func_28170_a(par1EntityPlayerMP, worldserver1);
+        updateTimeAndWeather(par1EntityPlayerMP, worldserver1);
         func_30008_g(par1EntityPlayerMP);
     }
 
@@ -866,7 +867,10 @@ public class ServerConfigurationManager
         loadWhiteList();
     }
 
-    public void func_28170_a(EntityPlayerMP par1EntityPlayerMP, WorldServer par2WorldServer)
+    /**
+     * Updates the time and weather for the given player to those of the given world
+     */
+    public void updateTimeAndWeather(EntityPlayerMP par1EntityPlayerMP, WorldServer par2WorldServer)
     {
         par1EntityPlayerMP.playerNetServerHandler.sendPacket(new Packet4UpdateTime(par2WorldServer.getWorldTime()));
 
@@ -896,5 +900,30 @@ public class ServerConfigurationManager
     public int getMaxPlayers()
     {
         return maxPlayers;
+    }
+
+    public String[] func_52019_t()
+    {
+        return mcServer.worldMngr[0].getSaveHandler().getPlayerNBTManager().func_52007_g();
+    }
+
+    private void func_52018_u()
+    {
+        PlayerUsageSnooper playerusagesnooper = new PlayerUsageSnooper("server");
+        playerusagesnooper.addData("version", mcServer.getVersion());
+        playerusagesnooper.addData("os_name", System.getProperty("os.name"));
+        playerusagesnooper.addData("os_version", System.getProperty("os.version"));
+        playerusagesnooper.addData("os_architecture", System.getProperty("os.arch"));
+        playerusagesnooper.addData("memory_total", Long.valueOf(Runtime.getRuntime().totalMemory()));
+        playerusagesnooper.addData("memory_max", Long.valueOf(Runtime.getRuntime().maxMemory()));
+        playerusagesnooper.addData("memory_free", Long.valueOf(Runtime.getRuntime().freeMemory()));
+        playerusagesnooper.addData("java_version", System.getProperty("java.version"));
+        playerusagesnooper.addData("cpu_cores", Integer.valueOf(Runtime.getRuntime().availableProcessors()));
+        playerusagesnooper.addData("players_current", Integer.valueOf(playersOnline()));
+        playerusagesnooper.addData("players_max", Integer.valueOf(getMaxPlayers()));
+        playerusagesnooper.addData("players_seen", Integer.valueOf(func_52019_t().length));
+        playerusagesnooper.addData("uses_auth", Boolean.valueOf(mcServer.onlineMode));
+        playerusagesnooper.addData("server_brand", mcServer.getServerBrand());
+        playerusagesnooper.sendReport();
     }
 }

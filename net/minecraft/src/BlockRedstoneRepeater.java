@@ -24,7 +24,7 @@ public class BlockRedstoneRepeater extends BlockDirectional
     }
 
     /**
-     * If this block doesn't render as an ordinary block it will return false (examples: signs, buttons, stairs, etc)
+     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
      */
     public boolean renderAsNormalBlock()
     {
@@ -139,7 +139,7 @@ public class BlockRedstoneRepeater extends BlockDirectional
             return false;
         }
 
-        int i = func_48132_b(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
+        int i = getDirection(par1IBlockAccess.getBlockMetadata(par2, par3, par4));
 
         if (i == 0 && par5 == 3)
         {
@@ -161,7 +161,7 @@ public class BlockRedstoneRepeater extends BlockDirectional
 
     /**
      * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, blockID
+     * their own) Args: x, y, z, neighbor blockID
      */
     public void onNeighborBlockChange(World par1World, int par2, int par3, int par4, int par5)
     {
@@ -169,6 +169,12 @@ public class BlockRedstoneRepeater extends BlockDirectional
         {
             dropBlockAsItem(par1World, par2, par3, par4, par1World.getBlockMetadata(par2, par3, par4), 0);
             par1World.setBlockWithNotify(par2, par3, par4, 0);
+            par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
             return;
         }
 
@@ -188,7 +194,7 @@ public class BlockRedstoneRepeater extends BlockDirectional
 
     private boolean ignoreTick(World par1World, int par2, int par3, int par4, int par5)
     {
-        int i = func_48132_b(par5);
+        int i = getDirection(par5);
 
         switch (i)
         {
@@ -230,7 +236,7 @@ public class BlockRedstoneRepeater extends BlockDirectional
     }
 
     /**
-     * Called when a block is using an item and passed in who placed it. Args: x, y, z, entityLiving
+     * Called when the block is placed in the world.
      */
     public void onBlockPlacedBy(World par1World, int par2, int par3, int par4, EntityLiving par5EntityLiving)
     {
@@ -264,6 +270,11 @@ public class BlockRedstoneRepeater extends BlockDirectional
     {
         if (isRepeaterPowered)
         {
+            par1World.notifyBlocksOfNeighborChange(par2 + 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2 - 1, par3, par4, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 + 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3, par4 - 1, blockID);
+            par1World.notifyBlocksOfNeighborChange(par2, par3 - 1, par4, blockID);
             par1World.notifyBlocksOfNeighborChange(par2, par3 + 1, par4, blockID);
         }
 

@@ -38,12 +38,12 @@ public class WorldServer extends World
     {
         if (!mcServer.spawnPeacefulMobs && ((par1Entity instanceof EntityAnimal) || (par1Entity instanceof EntityWaterMob)))
         {
-            par1Entity.setEntityDead();
+            par1Entity.setDead();
         }
 
         if (!mcServer.field_44002_p && (par1Entity instanceof INpc))
         {
-            par1Entity.setEntityDead();
+            par1Entity.setDead();
         }
 
         if (par1Entity.riddenByEntity == null || !(par1Entity.riddenByEntity instanceof EntityPlayer))
@@ -104,7 +104,7 @@ public class WorldServer extends World
     }
 
     /**
-     * generates a spawn point for this world
+     * Finds an initial spawn location upon creating a new world
      */
     protected void generateSpawnPoint()
     {
@@ -210,7 +210,7 @@ public class WorldServer extends World
     }
 
     /**
-     * update's all weather states.
+     * Updates all weather states.
      */
     protected void updateWeather()
     {
