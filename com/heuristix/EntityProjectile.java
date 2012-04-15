@@ -84,7 +84,7 @@ public abstract class EntityProjectile extends Entity {
         if (inGround) {
             ticksInGround++;
             if (ticksInGround >= getMaxGroundTicks()) {
-                setEntityDead();
+                setDead();
             }
             return;
         }
@@ -122,7 +122,7 @@ public abstract class EntityProjectile extends Entity {
         if (position != null) {
             if (position.entityHit != null && !(position.entityHit instanceof EntityProjectile) && onEntityHit(position.entityHit)) {
                 worldObj.playSoundAtEntity(owner, getHitSound(), 1.0f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
-                setEntityDead();
+                setDead();
             } else {
                 onBlockHit(position);
                 xTile = position.blockX;
