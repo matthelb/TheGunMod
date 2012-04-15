@@ -32,6 +32,10 @@ public class mod_Guns extends ModMP {
 
     public static boolean DEBUG = false;
 
+    private static final Properties DEFAULT_CONFIG = new Properties();
+    private File gunsDir;
+    private int blockArmoryId;
+
     private static final Map<String, Class> classes = new HashMap<String, Class>();
 
     private static int uniqueId;
@@ -42,6 +46,12 @@ public class mod_Guns extends ModMP {
         ReflectionFacade names = ReflectionFacade.getInstance();
         names.putName(World.class, "World", "gd");
         names.putName(EntityLiving.class, "EntityLiving", "nc");
+
+        DEFAULT_CONFIG.setProperty("block.armory.id", String.valueOf(212));
+        DEFAULT_CONFIG.setProperty("guns.dir", Util.getHeuristixDir("guns").getAbsolutePath());
+        mod_Guns mod = new mod_Guns();
+        DEFAULT_CONFIG.setProperty("guns.version", mod.getModVersion());
+        mod = null;
     }
 
     public mod_Guns() {
@@ -49,14 +59,31 @@ public class mod_Guns extends ModMP {
 
 
     public String getModVersion() {
-        return "0.9.941";
+        return "0.9.96";
     }
 
     public Properties getConfig() throws IOException {
-        return null;
+        File configFile = Util.getHeuristixFile("guns", "server-config.ini");
+        Properties config = DEFAULT_CONFIG;
+        if(configFile.exists()) {
+            config.load(new FileInputStream(configFile));
+            if(config.getProperty("guns.version").equals(DEFAULT_CONFIG.getProperty("guns.version"))) {
+                return config;
+            } else {
+                for(Map.Entry<Object, Object> entry : DEFAULT_CONFIG.entrySet()) {
+                    if(!config.contains(entry.getKey())) {
+                        config.put(entry.getKey(), entry.getValue());
+                    }
+                }
+            }
+        }
+        config.store(new FileOutputStream(configFile), "TheGunMod v" + getVersion() + " Configuration");
+        return config;
     }
 
     public void loadConfig(Properties config) {
+        gunsDir = new File(config.getProperty("guns.dir"));
+        blockArmoryId = Integer.parseInt(config.getProperty("block.armory.id"));
     }
 
     public void load() {
@@ -79,12 +106,11 @@ public class mod_Guns extends ModMP {
         Util.setPacketId(PacketDamageItem.class, PacketDamageItem.PACKET_ID, true, true);
         Util.setPacketId(PacketOpenCraftGuns.class, PacketOpenCraftGuns.PACKET_ID, true, true);
         Util.setPacketId(PacketCraftGunsArrowClick.class, PacketCraftGunsArrowClick.PACKET_ID, true, true);
-        registerBlock(new BlockCraftGuns(212));
+        registerBlock(new BlockCraftGuns(blockArmoryId));
         ModLoader.setInGameHook(this, true, false);
     }
 
     private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException {
-        File gunsDir = Util.getHeuristixDir("guns");
         if (gunsDir != null) {
             if (!gunsDir.exists()) {
                 gunsDir.mkdirs();
@@ -214,7 +240,7 @@ public class mod_Guns extends ModMP {
     }
 
     public File getLogFile() {
-        return Util.getHeuristixFile("", "server-log.txt");
+        return Util.getHeuristixFile("guns", "server-log.txt");
     }
 
 }
