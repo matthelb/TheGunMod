@@ -50,13 +50,13 @@ public class ContainerCraftGuns extends Container {
         for (int i = 0; i < COLUMNS; i++) {
             addSlot(new Slot(player.inventory, i, PIXEL_FIRST_ACTION_SLOT.x + (i * SLOT_SIZE), PIXEL_FIRST_ACTION_SLOT.y));
         }
-        if(!creative) {
+        //if(!creative) {
             for (int row = 0; row < 3; row++)  {
                 for (int column = 0; column < COLUMNS; column++) {
                     addSlot(new Slot(player.inventory, column + (row * COLUMNS) + COLUMNS, PIXEL_FIRST_INVENTORY_SLOT.x + (column * SLOT_SIZE), PIXEL_FIRST_INVENTORY_SLOT.y + (row * SLOT_SIZE)));
                 }
             }
-        }
+        //}
         updateCurrentGun(index);
     }
 
@@ -132,13 +132,13 @@ public class ContainerCraftGuns extends Container {
             } else {
                 if (inventoryPlayer.getItemStack() != null) {
                     if (mouseButton == 0) {
-                        player.func_48153_a(inventoryPlayer.getItemStack());
+                        player.dropPlayerItem(inventoryPlayer.getItemStack());
                         Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(inventoryPlayer.getItemStack());
                         inventoryPlayer.setItemStack(null);
                     }
                     if (mouseButton == 1) {
                         ItemStack tempStack = inventoryPlayer.getItemStack().splitStack(1);
-                        player.func_48153_a(tempStack);
+                        player.dropPlayerItem(tempStack);
                         Util.getMinecraft((EntityPlayerSP) player).playerController.func_35639_a(tempStack);
                         if (inventoryPlayer.getItemStack().stackSize == 0) {
                             inventoryPlayer.setItemStack(null);

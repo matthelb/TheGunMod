@@ -34,8 +34,9 @@ public class mod_Guns extends ModMP {
     private KeyBinding reloadKeybinding = new KeyBinding("key.reload", Keyboard.KEY_R);
     private KeyBinding zoomKeybinding = new KeyBinding("key.zoom", Keyboard.KEY_Z);
     private File gunsDir;
+    private int blockArmoryId;
 
-    public static boolean DEBUG = false;
+    public static boolean DEBUG = true;
 
     private boolean justAttemptedFire;
     private boolean reflectionInit;
@@ -58,6 +59,7 @@ public class mod_Guns extends ModMP {
         names.putField(ItemRenderer.class, "mc", "a");
         names.putField(ItemRenderer.class, "prevEquippedProgress", "d");
 
+        DEFAULT_CONFIG.setProperty("block.armory.id", String.valueOf(212));
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
         DEFAULT_CONFIG.setProperty("key.zoom", Keyboard.getKeyName(Keyboard.KEY_Z));
         DEFAULT_CONFIG.setProperty("guns.dir", Util.getHeuristixDir("guns").getAbsolutePath());
@@ -73,7 +75,7 @@ public class mod_Guns extends ModMP {
     }
 
     public String getModVersion() {
-        return "0.9.941";
+        return "0.9.96";
     }
 
     @Override
@@ -109,7 +111,7 @@ public class mod_Guns extends ModMP {
         BufferedImage blockTextures = getImageResource("/heuristix/gun-blocks.png");
         if(blockTextures != null) {
             Integer[] textureIndices = registerTextures(false, blockTextures, 16);
-            BlockCraftGuns block = new BlockCraftGuns(212);
+            BlockCraftGuns block = new BlockCraftGuns(blockArmoryId);
             registerBlock(block, textureIndices[0]);
             block.setSideTextureIndex(textureIndices[1]);
             block.setBottomTextureIndex(textureIndices[2]);
@@ -148,6 +150,7 @@ public class mod_Guns extends ModMP {
         reloadKeybinding = new KeyBinding("key.reload", Keyboard.getKeyIndex(config.getProperty("key.reload")));
         zoomKeybinding = new KeyBinding("key.zoom", Keyboard.getKeyIndex(config.getProperty("key.zoom")));
         gunsDir = new File(config.getProperty("guns.dir"));
+        blockArmoryId = Integer.parseInt(config.getProperty("block.armory.id"));
     }
 
     private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException, ClassNotFoundException {

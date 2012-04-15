@@ -210,7 +210,7 @@ public class GunItemRenderer extends ItemRenderer {
         int i = mc.theWorld.getLightBrightnessForSkyBlocks(MathHelper.floor_double(((EntityPlayer) (entityplayersp)).posX), MathHelper.floor_double(((EntityPlayer) (entityplayersp)).posY), MathHelper.floor_double(((EntityPlayer) (entityplayersp)).posZ), 0);
         int k = i % 0x10000;
         int l = i / 0x10000;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapEnabled, (float) k / 1.0F, (float) l / 1.0F);
+        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) k / 1.0F, (float) l / 1.0F);
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         //Set color
         if (itemstack != null) {
