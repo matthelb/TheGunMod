@@ -36,7 +36,7 @@ public class mod_Guns extends ModMP {
     private File gunsDir;
     private int blockArmoryId;
 
-    public static boolean DEBUG = true;
+    public static boolean DEBUG = false;
 
     private boolean justAttemptedFire;
     private boolean reflectionInit;
