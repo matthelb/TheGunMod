@@ -1,10 +1,9 @@
 package com.heuristix.guns;
 
-import com.heuristix.Util;
-import com.heuristix.util.Quaternion;
+import com.heuristix.guns.util.Quaternion;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.MovingObjectPosition;
-import net.minecraft.src.Vec3D;
+import net.minecraft.src.Vec3;
 import net.minecraft.src.World;
 
 /**
@@ -22,19 +21,19 @@ public class EntityGuidedRocketGrenade extends EntityRocketGrenade {
     public void onUpdate() {
         super.onUpdate();
         if (getOwner() != null) {
-            Vec3D ownerPos = getOwner().getPosition(1);
-            Vec3D projectedPos = Util.getProjectedPoint(ownerPos, getOwner().getLook(1), 1000);
+            Vec3 ownerPos = getOwner().getPosition(1);
+            Vec3 projectedPos = Util.getProjectedPoint(ownerPos, getOwner().getLook(1), 1000);
             MovingObjectPosition rayTrace = worldObj.rayTraceBlocks(ownerPos, projectedPos);
-            Vec3D vec = null;
+            Vec3 vec = null;
             if (rayTrace != null) {
                 vec = rayTrace.hitVec;
             }
             if (vec == null) {
                 vec = projectedPos;
             }
-            Vec3D position = Vec3D.createVector(posX, posY, posZ);
-            Vec3D direction = vec.subtract(position);
-            Vec3D rotationAxis = vec.crossProduct(direction).normalize();
+            Vec3 position = Vec3.createVectorHelper(posX, posY, posZ);
+            Vec3 direction = vec.subtract(position);
+            Vec3 rotationAxis = vec.crossProduct(direction).normalize();
             float theta = (float) Math.acos(direction.dotProduct(vec));
             Quaternion quaternion = new Quaternion(0.0f, rotationPitch, rotationYaw);
             quaternion.rotate(rotationAxis, theta);

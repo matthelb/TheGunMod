@@ -1,5 +1,7 @@
 package com.heuristix;
 
+import com.heuristix.guns.Scope;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Matt
@@ -45,6 +47,11 @@ public class ItemGunBase extends ItemGun {
     @Override
     public String getReloadSound() {
         return "";
+    }
+
+    @Override
+    public int getReloadParts() {
+        return 1;
     }
 
     @Override

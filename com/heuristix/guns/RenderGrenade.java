@@ -1,6 +1,5 @@
 package com.heuristix.guns;
 
-import com.heuristix.Util;
 import net.minecraft.src.Entity;
 import net.minecraft.src.Render;
 import net.minecraft.src.Tessellator;

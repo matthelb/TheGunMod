@@ -1,6 +1,5 @@
 package com.heuristix.guns;
 
-import com.heuristix.FireMode;
 import com.heuristix.ItemGunBase;
 import com.heuristix.ItemProjectile;
 

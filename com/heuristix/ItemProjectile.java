@@ -1,6 +1,7 @@
 package com.heuristix;
 
-import com.heuristix.util.Log;
+import com.heuristix.guns.ItemCustom;
+import com.heuristix.guns.util.Log;
 import net.minecraft.src.*;
 
 import java.util.HashMap;
@@ -19,6 +20,7 @@ public abstract class ItemProjectile extends ItemCustom {
     public ItemProjectile(int id) {
         super(id);
         this.classes = new HashMap<ItemProjectileShooter, Class<? extends EntityProjectile>>();
+        this.setCreativeTab(CreativeTabs.tabCombat);
     }
 
     public Class<? extends EntityProjectile> getProjectileClass(ItemProjectileShooter shooter) {
@@ -43,7 +45,7 @@ public abstract class ItemProjectile extends ItemCustom {
     }
 
     public Object[] getCraftingRecipe() {
-        return new Object[]{Item.ingotIron, 1 / 8f, Item.gunpowder, 1 / 16f};
+        return new Object[]{ingotIron, 1 / 8f, gunpowder, 1 / 16f};
     }
 
     public boolean isShapelessRecipe() {

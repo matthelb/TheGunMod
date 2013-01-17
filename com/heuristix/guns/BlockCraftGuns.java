@@ -1,7 +1,5 @@
 package com.heuristix.guns;
 
-import com.heuristix.CustomEntity;
-import com.heuristix.Util;
 import net.minecraft.src.*;
 
 /**
@@ -16,17 +14,16 @@ public class BlockCraftGuns extends Block implements CustomEntity {
 
     public BlockCraftGuns(int id) {
         super(id, Material.iron);
+        this.setCreativeTab(CreativeTabs.tabDecorations);
     }
 
     @Override
-    public boolean blockActivated(World world, int x, int y, int z, EntityPlayer player) {
-        if(player instanceof EntityPlayerSP) {
-            if(!world.isRemote) {
-                ModLoader.openGUI(player, new GuiCraftGuns(new ContainerCraftGuns(player, Util.isCreative((EntityPlayerSP) player))));
-            }
-            return true;
+    public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+        if (!world.isRemote) {
+            ContainerCraftGuns container = new ContainerCraftGuns(player, world.getWorldInfo().getGameType() == EnumGameType.CREATIVE);
+            Util.displayGUI((EntityPlayerMP) player, container.getInventoryBasic(), container);
         }
-        return false;
+        return true;
     }
 
     @Override

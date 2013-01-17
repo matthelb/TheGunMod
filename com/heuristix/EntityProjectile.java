@@ -1,8 +1,10 @@
 package com.heuristix;
 
-import com.heuristix.util.ReflectionFacade;
+import com.heuristix.guns.Util;
+import com.heuristix.guns.util.ReflectionFacade;
 import net.minecraft.src.*;
 
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -15,13 +17,12 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
     static {
-        ReflectionFacade.getInstance().putField(Entity.class, "heartsLife", "Y");
-        ReflectionFacade.getInstance().putField(EntityLiving.class, "heartsHalvesLife", "ba");
-        ReflectionFacade.getInstance().putField(EntityLiving.class, "naturalArmorRating", "cc");
+        //TODO add new obfuscation names
+        ReflectionFacade.getInstance().putField(Entity.class, "hurtResistantTime", "ae");
     }
 
     public EntityLiving owner;
-    private Vec3D start;
+    private Vec3 start;
 
     private int xTile;
     private int yTile;
@@ -41,7 +42,7 @@ public abstract class EntityProjectile extends Entity {
         super(world);
         this.owner = owner;
         setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, owner.rotationYaw + (Util.randomFloat(-getSpread(), getSpread())), owner.rotationPitch + (Util.randomFloat(-getSpread(), getSpread())));
-        this.start = Vec3D.createVector(posX, posY, posZ);
+        this.start = Vec3.createVectorHelper(posX, posY, posZ);
         setVelocity(computeVelocity());
         changeVelocity(getSpeed());
     }
@@ -51,7 +52,7 @@ public abstract class EntityProjectile extends Entity {
         this.posX = x;
         this.posY = y;
         this.posZ = z;
-        this.start = Vec3D.createVector(posX, posY, posZ);
+        this.start = Vec3.createVectorHelper(posX, posY, posZ);
         setVelocity(computeVelocity());
         changeVelocity(getSpeed());
     }
@@ -74,77 +75,141 @@ public abstract class EntityProjectile extends Entity {
 
     public void onUpdate() {
         super.onUpdate();
-        if(!worldObj.isRemote) {
-            if(prevRotationPitch == 0 && prevRotationYaw == 0) {
-                float horizontalDist = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
-                prevRotationYaw = rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180) / Util.PI) + Util.randomFloat(-getSpread(), getSpread());
-                prevRotationPitch = rotationPitch = (float)((Math.atan2(motionY, horizontalDist) * 180) / Util.PI) + Util.randomFloat(-getSpread(), getSpread());
-                setVelocity(computeVelocity());
-                changeVelocity(getSpeed());
+        if (prevRotationPitch == 0 && prevRotationYaw == 0) {
+            float change = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
+            prevRotationYaw = rotationYaw = (float) (Math.atan2(motionX, motionZ) * 180 / Math.PI);
+            prevRotationPitch = rotationPitch = (float) (Math.atan2(motionY, change) * 180 / Math.PI);
+        }
+        int currentBlockId = worldObj.getBlockId(xTile, yTile, zTile);
+        if (currentBlockId > 0) {
+            Block.blocksList[currentBlockId].setBlockBoundsBasedOnState(worldObj, xTile, yTile, zTile);
+            AxisAlignedBB var2 = Block.blocksList[currentBlockId].getCollisionBoundingBoxFromPool(worldObj, xTile, yTile, zTile);
+            if (var2 != null && var2.isVecInside(Vec3.vec3dPool.getVecFromPool(posX, posY, posZ))) {
+                inGround = true;
             }
-            if (inGround) {
-                ticksInGround++;
-                if (ticksInGround >= getMaxGroundTicks()) {
+        }
+        if (inGround) {
+            currentBlockId = worldObj.getBlockId(xTile, yTile, zTile);
+            int currentBlockMetadata = worldObj.getBlockMetadata(xTile, yTile, zTile);
+
+            if (currentBlockId == inTile && currentBlockMetadata == inData) {
+                ++ticksInGround;
+                if (ticksInGround > getMaxGroundTicks()) {
                     setDead();
                 }
-                return;
+            } else {
+                inGround = false;
+                motionX *= rand.nextFloat() * 0.2f;
+                motionY *= rand.nextFloat() * 0.2f;
+                motionZ *= rand.nextFloat() * 0.2f;
+                ticksInGround = 0;
+                ticksInAir = 0;
             }
-            Vec3D currentLocation = getPosition();
-            Vec3D newLocation = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
-            MovingObjectPosition position = worldObj.rayTraceBlocks_do_do(currentLocation, newLocation, false, true);
-            currentLocation = getPosition();
-            newLocation = Vec3D.createVector(posX + motionX, posY + motionY, posZ + motionZ);
+        } else {
+            ++ticksInAir;
+            Vec3 positionVector = Vec3.vec3dPool.getVecFromPool(posX, posY, posZ);
+            Vec3 newPositionVector = Vec3.vec3dPool.getVecFromPool(posX + motionX, posY + motionY, posZ + motionZ);
+            MovingObjectPosition position = worldObj.rayTraceBlocks_do_do(positionVector, newPositionVector, false, true);
+            positionVector = Vec3.vec3dPool.getVecFromPool(posX, posY, posZ);
+            newPositionVector = Vec3.vec3dPool.getVecFromPool(posX + motionX, posY + motionY, posZ + motionZ);
             if (position != null) {
-                newLocation = Vec3D.createVector(position.hitVec.xCoord, position.hitVec.yCoord, position.hitVec.zCoord);
+                newPositionVector = Vec3.vec3dPool.getVecFromPool(position.hitVec.xCoord, position.hitVec.yCoord, position.hitVec.zCoord);
             }
-            Entity hit = null;
-            List<Entity> list = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1, 1, 1));
-            double d = 0;
-            for (Entity entity : list) {
-                if (!entity.canBeCollidedWith() || entity == owner && ticksInAir < 5) {
-                    continue;
-                }
-                float expandAmount = 0.3f;
-                AxisAlignedBB aabb = entity.boundingBox.expand(expandAmount, expandAmount, expandAmount);
-                MovingObjectPosition position1 = aabb.calculateIntercept(currentLocation, newLocation);
-                if (position1 == null) {
-                    continue;
-                }
-                double d1 = currentLocation.distanceTo(position1.hitVec);
-                if (d1 < d || d == 0) {
-                    hit = entity;
-                    d = d1;
+
+            List entitiesWithinAABB = worldObj.getEntitiesWithinAABBExcludingEntity(this, boundingBox.addCoord(motionX, motionY, motionZ).expand(1.0D, 1.0D, 1.0D));
+
+            Iterator itr = entitiesWithinAABB.iterator();
+            Entity closetEntity = null;
+            double closestDist = 0;
+            while (itr.hasNext()) {
+                Entity entity = (Entity) itr.next();
+
+                if (entity.canBeCollidedWith() && (entity != owner || ticksInAir >= 5)) {
+                    float padding = 0.3f;
+                    AxisAlignedBB var12 = entity.boundingBox.expand(padding, padding, padding);
+                    MovingObjectPosition intercept = var12.calculateIntercept(positionVector, newPositionVector);
+                    if (intercept != null) {
+                        double dist = positionVector.distanceTo(intercept.hitVec);
+                        if (dist < closestDist || closestDist == 0) {
+                            closetEntity = entity;
+                            closestDist = dist;
+                        }
+                    }
                 }
             }
 
-            if (hit != null) {
-                position = new MovingObjectPosition(hit);
+            if (closetEntity != null) {
+                position = new MovingObjectPosition(closetEntity);
             }
+
+            float motionHyp;
+
             if (position != null) {
-                if (position.entityHit != null && !(position.entityHit instanceof EntityProjectile) && onEntityHit(position.entityHit)) {
-                    worldObj.playSoundAtEntity(owner, getHitSound(), 1.0f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
-                    setDead();
+                if (position.entityHit != null) {
+                    if (position.entityHit != null && !(position.entityHit instanceof EntityProjectile) && onEntityHit(position.entityHit)) {
+                        worldObj.playSoundAtEntity(owner, getHitSound(), 1.0f, 1.2f / (rand.nextFloat() * 0.2f + 0.9f));
+                        setDead();
+                    } else {
+                            motionX *= -0.10000000149011612D;
+                            motionY *= -0.10000000149011612D;
+                            motionZ *= -0.10000000149011612D;
+                            rotationYaw += 180.0F;
+                            prevRotationYaw += 180.0F;
+                            ticksInAir = 0;
+                    }
                 } else {
-                    if(onBlockHit(position)) {
+                    if (onBlockHit(position)) {
                         xTile = position.blockX;
                         yTile = position.blockY;
                         zTile = position.blockZ;
                         inTile = worldObj.getBlockId(xTile, yTile, zTile);
                         inData = worldObj.getBlockMetadata(xTile, yTile, zTile);
-                        motionX = (float) (position.hitVec.xCoord - posX);
-                        motionY = (float) (position.hitVec.yCoord - posY);
-                        motionZ = (float) (position.hitVec.zCoord - posZ);
-                        float f1 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
-                        posX -= (motionX / f1) * 0.05000000074505806D;
-                        posY -= (motionY / f1) * 0.05000000074505806D;
-                        posZ -= (motionZ / f1) * 0.05000000074505806D;
-                        //worldObj.playSoundAtEntity(this, getMoveSound(), 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
+                        motionX = (double) ((float) (position.hitVec.xCoord - posX));
+                        motionY = (double) ((float) (position.hitVec.yCoord - posY));
+                        motionZ = (double) ((float) (position.hitVec.zCoord - posZ));
+                        motionHyp = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
+                        posX -= motionX / (double) motionHyp * 0.05000000074505806D;
+                        posY -= motionY / (double) motionHyp * 0.05000000074505806D;
+                        posZ -= motionZ / (double) motionHyp * 0.05000000074505806D;
+                        worldObj.playSoundAtEntity(this, getMoveSound(), 1.0F, 1.2F / (rand.nextFloat() * 0.2F + 0.9F));
                         inGround = true;
                     }
                 }
             }
+            /*if (isCrit) {
+                for (int i = 0; i < 4; ++i) {
+                    worldObj.spawnParticle("crit", posX + motionX * i / 4.0, posY + motionY * i / 4.0, posZ + motionZ * i / 4.0, -motionX, -motionY + 0.2, -motionZ);
+                }
+            }  */
+            posX += motionX;
+            posY += motionY;
+            posZ += motionZ;
+            motionHyp = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
+            rotationYaw = (float) (Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
+            for (rotationPitch = (float) (Math.atan2(motionY, (double) motionHyp) * 180.0D / Math.PI); rotationPitch - prevRotationPitch < -180.0F; prevRotationPitch -= 360.0F) {
+                ;
+            }
+            while (rotationPitch - prevRotationPitch >= 180) {
+                prevRotationPitch += 360;
+            }
+
+            while (rotationYaw - prevRotationYaw < -180) {
+                prevRotationYaw -= 360;
+            }
+            while (rotationYaw - prevRotationYaw >= 180) {
+                prevRotationYaw += 360;
+            }
+            rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2f;
+            rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2f;
+            if (isInWater()) {
+                for (int i = 0; i < 4; ++i) {
+                    float var27 = 0.25f;
+                    worldObj.spawnParticle("bubble", posX - motionX * var27, posY - motionY * var27, posZ - motionZ * var27, motionX, motionY, motionZ);
+                }
+            }
             motionY -= GRAVITY * getMass();
-            setPosition(posX + motionX, posY + motionY, posZ + motionZ);
+            setPosition(posX, posY, posZ);
+            doBlockCollisions();
         }
     }
 
@@ -200,19 +265,19 @@ public abstract class EntityProjectile extends Entity {
         motionZ *= zFactor;
     }
 
-    public final void setVelocity(Vec3D velocity) {
+    public final void setVelocity(Vec3 velocity) {
         setVelocity(velocity.xCoord, velocity.yCoord, velocity.zCoord);
     }
 
-    public final Vec3D computeVelocity() {
+    public final Vec3 computeVelocity() {
         float yawRadians = Util.toRadians(rotationYaw);
         float pitchRadians = Util.toRadians(rotationPitch);
         float cosPitch = MathHelper.cos(pitchRadians);
-        return Vec3D.createVector(-MathHelper.sin(yawRadians) * cosPitch, -MathHelper.sin(pitchRadians), MathHelper.cos(yawRadians) * cosPitch);
+        return Vec3.createVectorHelper(-MathHelper.sin(yawRadians) * cosPitch, -MathHelper.sin(pitchRadians), MathHelper.cos(yawRadians) * cosPitch);
     }
 
-    public Vec3D getPosition() {
-        return Vec3D.createVector(posX, posY, posZ);
+    public Vec3 getPosition() {
+        return Vec3.createVectorHelper(posX, posY, posZ);
     }
 
     public EntityLiving getOwner() {
@@ -221,14 +286,7 @@ public abstract class EntityProjectile extends Entity {
 
     public boolean damageEntityWithoutDelay(Entity entity, int damage) {
         DamageSource source = new EntityDamageSource("living", owner);
-        int health = (Integer) ReflectionFacade.getInstance().getFieldValue(Entity.class, entity, "heartsLife");
-        int healthHalves = 0;
-        int armorRating = 0;
-        if(entity instanceof EntityLiving) {
-            healthHalves = (Integer) ReflectionFacade.getInstance().getFieldValue(EntityLiving.class, entity, "heartsHalvesLife");
-            armorRating = (Integer) ReflectionFacade.getInstance().getFieldValue(EntityLiving.class, entity, "naturalArmorRating");
-        }
-        final int finalDamage = damage + ((health > healthHalves / 2) ? armorRating : 0);
-        return entity.attackEntityFrom(source, finalDamage);
+        ReflectionFacade.getInstance().setFieldValue(Entity.class, entity, "hurtResistantTime", 0);
+        return entity.attackEntityFrom(source, damage);
     }
 }

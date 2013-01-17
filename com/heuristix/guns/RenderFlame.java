@@ -1,6 +1,5 @@
 package com.heuristix.guns;
 
-import com.heuristix.ModMP;
 import net.minecraft.src.Entity;
 import net.minecraft.src.Render;
 import net.minecraft.src.Tessellator;
@@ -31,9 +30,9 @@ public class RenderFlame extends Render {
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
         t.setNormal(0, 1, 0);
-        float corner0 = (TEXTURE_INDEX % ModMP.PIXELS_PER_ICON) / ModMP.PIXELS_PER_ICON;
+        float corner0 = (TEXTURE_INDEX % Mod.PIXELS_PER_ICON) / Mod.PIXELS_PER_ICON;
         float corner1 = corner0 + 0.0624375f;
-        float corner2 = (TEXTURE_INDEX / ModMP.PIXELS_PER_ICON) / ModMP.PIXELS_PER_ICON;
+        float corner2 = (TEXTURE_INDEX / Mod.PIXELS_PER_ICON) / Mod.PIXELS_PER_ICON;
         float corner3 = corner2 + 0.0624375f;
         t.addVertexWithUV(-SCALE, -SCALE, 0, corner0, corner3);
         t.addVertexWithUV(SCALE, -SCALE, 0, corner1, corner3);

@@ -1,10 +1,9 @@
 package com.heuristix;
 
-import com.heuristix.net.PacketFireProjectile;
-import net.minecraft.client.Minecraft;
+import com.heuristix.guns.ItemCustom;
+import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.World;
-import net.minecraft.src.mod_Guns;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,6 +27,7 @@ public abstract class ItemProjectileShooter extends ItemCustom {
         super(id);
         this.maxStackSize = 1;
         this.projectile = projectile;
+        this.setCreativeTab(CreativeTabs.tabCombat);
     }
 
     /**
@@ -43,12 +43,12 @@ public abstract class ItemProjectileShooter extends ItemCustom {
 
     public abstract String getShootSound();
 
-    protected boolean handleAmmunitionConsumption(EntityPlayer player, Minecraft mc) {
+    protected boolean handleAmmunitionConsumption(EntityPlayer player) {
         return player.inventory.consumeInventoryItem(projectile.shiftedIndex);
     }
 
-    public void fire(World world, EntityPlayer player, Minecraft mc) {
-        if (canShoot() && handleAmmunitionConsumption(player, mc)) {
+    public void fire(World world, EntityPlayer player) {
+        if (canShoot() && handleAmmunitionConsumption(player)) {
             for (int i = 0; i < getRoundsPerShot(); i++) {
                 if (!fireProjectile(world, player, i == 0)) {
                     break;
@@ -60,12 +60,12 @@ public abstract class ItemProjectileShooter extends ItemCustom {
         }
     }
 
-    public void burst(World world, EntityPlayer player, Minecraft mc) {
+    public void burst(World world, EntityPlayer player) {
         if (bursts < 2) {
             if(canFire()) {
-                if(handleAmmunitionConsumption(player, mc)) {
+                if(handleAmmunitionConsumption(player)) {
                     if (fireProjectile(world, player, true)) {
-                    ++bursts;
+                        ++bursts;
                     }
                 } else {
                     bursts = 0;
@@ -83,14 +83,7 @@ public abstract class ItemProjectileShooter extends ItemCustom {
             float rand = itemRand.nextFloat();
             world.playSoundAtEntity(player, getShootSound(), rand + 0.5f, 1.0f / (rand * 0.4f + 0.8f));
         }
-        if (!world.isRemote) {
-            spawnProjectile(world, player);
-        } else {
-            PacketFireProjectile packet = new PacketFireProjectile();
-            packet.dataInt = new int[1];
-            packet.dataInt[0] = shiftedIndex;
-            Util.sendPacket(packet, mod_Guns.class);
-        }
+        spawnProjectile(world, player);
         lastRound = System.currentTimeMillis();
         onFire(world, player);
         if (getFireMode() == FIRE_MODE_BURST) {

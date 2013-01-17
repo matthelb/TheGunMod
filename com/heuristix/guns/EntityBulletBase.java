@@ -1,5 +1,6 @@
 package com.heuristix.guns;
 
+import com.heuristix.guns.EntityBullet;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.World;
 

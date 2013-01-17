@@ -1,7 +1,11 @@
 package com.heuristix;
 
+import com.heuristix.guns.Scope;
+import com.heuristix.guns.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.src.*;
+
+import java.awt.image.BufferedImage;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,6 +19,7 @@ public abstract class ItemGun extends ItemProjectileShooter {
     private long reloadFinishTime;
     private EntityPlayer reloadingPlayer;
     private ItemStack reloadingStack;
+    private BufferedImage customScope;
 
     public ItemGun(int id, ItemProjectile projectile) {
         super(id, projectile);
@@ -35,12 +40,15 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     public abstract String getReloadSound();
 
-    public boolean handleAmmunitionConsumption(EntityPlayer player, Minecraft mc) {
+    public abstract int getReloadParts();
+
+    public boolean handleAmmunitionConsumption(EntityPlayer player) {
         ItemStack gun = player.getCurrentEquippedItem();
-        if (isReloading())
-            stopReloading(mc);
+        if (isReloading()) {
+            stopReloading();
+        }
         if (gun.getItemDamage() < gun.getMaxDamage()) {
-            Util.damageItem(gun, player, 1, mod_Guns.class, mc.theWorld);
+            gun.damageItem(1, player);
             return true;
         }
         return false;
@@ -51,19 +59,19 @@ public abstract class ItemGun extends ItemProjectileShooter {
         double factor = Math.max(0.75, Math.min(Util.nextGaussian() + 1, 1.25));
         mod_Guns.recoilY += Math.min(factor * getRecoilY(), player.rotationPitch + 90.0F);
         mod_Guns.recoilX += factor * getRecoilX();
-        Vec3D pos = Util.getProjectedPoint(player, 0.8);
+        Vec3 pos = Util.getProjectedPoint(player, 0.8);
         float radians = Util.toRadians(player.rotationYaw);
         world.spawnParticle("smoke", pos.xCoord - (MathHelper.cos(radians) * 0.3f), pos.yCoord, pos.zCoord - (MathHelper.sin(radians) * 0.3f), 0, 0, 0);
         //world.entityJoinedWorld(new EntityFlash(world, player.posX, player.posY + player.getEyeHeight(), player.posZ, 15, 1, 2));
     }
 
-    public boolean reload(EntityPlayer player, Minecraft mc) {
+    public boolean reload(EntityPlayer player) {
         ItemStack equipped = player.getCurrentEquippedItem();
         if (equipped != null && equipped.itemID == shiftedIndex && equipped.getItemDamage() > 0) {
             if (!reloading) {
                 int slot = Util.getItemSlot(player.inventory, getProjectile().shiftedIndex);
                 if (slot != -1) {
-                    Util.playStreamingAtEntity(player, getReloadSound(), "guns.reloading", 1.0f, 1.0f / (itemRand.nextFloat() * 0.4f + 0.8f), mc);
+                    Util.playStreamingAtEntity(player, getReloadSound(), "guns.reloading", 1.0f, 1.0f / (itemRand.nextFloat() * 0.4f + 0.8f));
                     reloading = true;
                     reloadFinishTime = System.currentTimeMillis() + getReloadTime();
                     reloadingPlayer = player;
@@ -76,17 +84,20 @@ public abstract class ItemGun extends ItemProjectileShooter {
         return false;
     }
 
-    public void finishReloading(Minecraft mc) {
-        int amount = Math.min(Util.getCount(reloadingPlayer.inventory, getProjectile().shiftedIndex), Math.min(reloadingStack.getItemDamage(), reloadingStack.getMaxDamage()));
-        Util.damageItem(reloadingStack, reloadingPlayer, -amount, mod_Guns.class, mc.theWorld);
+    public void finishReloading() {
+        int amount = Math.min(Util.getCount(reloadingPlayer.inventory, getProjectile().shiftedIndex), Math.min(reloadingStack.getItemDamage(), reloadingStack.getMaxDamage() / getReloadParts()));
+        reloadingStack.damageItem(-amount, reloadingPlayer);
         Util.remove(reloadingPlayer.inventory, getProjectile().shiftedIndex, amount);
-        stopReloading(mc);
+        stopReloading();
     }
 
-    public void stopReloading(Minecraft mc) {
-        Util.playStreamingAtEntity(reloadingPlayer, null, "guns.reloading", 0.0f, 0.0f, mc);
+    public void stopReloading() {
+        Util.playStreamingAtEntity(reloadingPlayer, null, "guns.reloading", 0.0f, 0.0f);
         reloadFinishTime = System.currentTimeMillis();
         reloading = false;
+        if(reloadingStack.isItemDamaged()) {
+            reload(reloadingPlayer);
+        }
     }
 
     public int getCraftingAmount() {
@@ -128,8 +139,8 @@ public abstract class ItemGun extends ItemProjectileShooter {
             int gunPowder = (entityProjectile == null) ? 1 : (int) MathHelper.sqrt_float(entityProjectile.getEffectiveRange());
             int iron = (entityProjectile == null) ? 1 : entityProjectile.getDamage() / 2;
             craftingRecipe =  new Object[]{
-                Item.ingotIron, iron,
-                Item.gunpowder, gunPowder,
+                    ingotIron, iron,
+                    gunpowder, gunPowder,
                 Item.diamond, diamond
             };
         }
@@ -139,5 +150,13 @@ public abstract class ItemGun extends ItemProjectileShooter {
     @Override
     public boolean isFull3D() {
         return true;
+    }
+
+    public BufferedImage getCustomScope() {
+        return customScope;
+    }
+
+    public void setCustomScope(BufferedImage image) {
+        this.customScope = image;
     }
 }

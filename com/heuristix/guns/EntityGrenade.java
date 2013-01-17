@@ -1,7 +1,7 @@
 package com.heuristix.guns;
 
 import com.heuristix.EntityProjectile;
-import com.heuristix.Util;
+import net.minecraft.src.Entity;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.MovingObjectPosition;
 import net.minecraft.src.World;
@@ -35,10 +35,16 @@ public class EntityGrenade extends EntityProjectile {
     }
 
     @Override
-    public boolean onBlockHit(MovingObjectPosition position) {
-        if(!worldObj.isRemote) {
-            worldObj.createExplosion(this, posX, posY, posZ, getDamage());
+    public boolean onEntityHit(Entity hit) {
+        if(super.onEntityHit(hit)) {
+            return onBlockHit(null);
         }
+        return false;
+    }
+
+    @Override
+    public boolean onBlockHit(MovingObjectPosition position) {
+        worldObj.createExplosion(this, posX, posY, posZ, getDamage(), true);
         return true;
     }
 
