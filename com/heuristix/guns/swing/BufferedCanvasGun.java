@@ -1,21 +1,17 @@
 package com.heuristix.guns.swing;
 
-import com.heuristix.guns.Util;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
 
-import javax.imageio.ImageIO;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+
+import com.heuristix.guns.Util;
 
 /**
  * Created by IntelliJ IDEA.

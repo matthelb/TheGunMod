@@ -1,10 +1,20 @@
 package com.heuristix.guns;
 
-import com.heuristix.ItemGun;
-import net.minecraft.src.*;
+import java.awt.Point;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.src.ModLoader;
+import net.minecraft.src.mod_Guns;
+
 import org.lwjgl.opengl.GL11;
 
-import java.awt.*;
+import com.heuristix.ItemGun;
+import com.heuristix.guns.util.InventoryHelper;
 
 /**
  * Created by IntelliJ IDEA.
@@ -70,7 +80,7 @@ public class GuiCraftGuns extends GuiContainer {
                             ItemStack stack = slot.getStack();
                             if(stack != null) {
                                 int amount = (int) (Math.max(1, Math.round(stack.stackSize * ((Number) craftingCost[index + 1]).doubleValue())));
-                                int color = (Util.getCount(mc.thePlayer.inventory, item.shiftedIndex) < amount ? COLOR_RED : COLOR_GREEN);
+                                int color = (InventoryHelper.getCount(mc.thePlayer.inventory, item.itemID) < amount ? COLOR_RED : COLOR_GREEN);
                                 renderItemIcon(item, amount, (int) (xPoints[i] + (c * 16 * scale)), (int) (yPoint + (r * 16 * scale)), scale, color);
                             }
                         }

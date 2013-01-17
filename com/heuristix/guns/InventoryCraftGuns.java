@@ -1,7 +1,7 @@
 package com.heuristix.guns;
 
-import net.minecraft.src.InventoryBasic;
-import net.minecraft.src.ItemStack;
+import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.item.ItemStack;
 
 /**
  * Created by IntelliJ IDEA.

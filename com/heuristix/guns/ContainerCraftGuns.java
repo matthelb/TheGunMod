@@ -1,13 +1,20 @@
 package com.heuristix.guns;
 
-import com.heuristix.ItemGun;
-import com.heuristix.guns.util.Pair;
-import net.minecraft.src.Container;
-import net.minecraft.src.*;
-
-import java.awt.*;
+import java.awt.Point;
 import java.util.LinkedList;
 import java.util.List;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.InventoryBasic;
+import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+
+import com.heuristix.ItemGun;
+import com.heuristix.guns.util.InventoryHelper;
+import com.heuristix.guns.util.Pair;
 
 /**
  * Created by IntelliJ IDEA.
@@ -108,13 +115,13 @@ public class ContainerCraftGuns extends Container {
                         for (int i = 0; i < transferCost.length; i += 2) {
                             Item item = (Item) transferCost[i];
                             int amount = (int) Math.max(1, Math.round(((Number) transferCost[i + 1]).doubleValue() * stack.stackSize));
-                            if (Util.getCount(inventoryPlayer, item.shiftedIndex) < amount) {
+                            if (InventoryHelper.getCount(inventoryPlayer, item.itemID) < amount) {
                                 return null;
                             }
                             validItems.add(new Pair<Item, Integer>(item, amount));
                             if (i == transferCost.length - 2) {
                                 for (int j = 0; j < validItems.size(); j++) {
-                                    if (!Util.remove(inventoryPlayer, validItems.get(j).getFirst().shiftedIndex, validItems.get(j).getSecond())) {
+                                    if (!InventoryHelper.remove(inventoryPlayer, validItems.get(j).getFirst().itemID, validItems.get(j).getSecond())) {
                                         return null;
                                     }
                                 }

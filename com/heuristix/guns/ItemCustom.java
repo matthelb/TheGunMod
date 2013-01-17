@@ -1,6 +1,6 @@
 package com.heuristix.guns;
 
-import net.minecraft.src.Item;
+import net.minecraft.item.Item;
 
 /**
  * Created by IntelliJ IDEA.

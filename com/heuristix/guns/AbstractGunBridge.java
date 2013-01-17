@@ -1,11 +1,5 @@
 package com.heuristix.guns;
 
-import com.heuristix.*;
-import com.heuristix.guns.asm.ByteVector;
-import com.heuristix.guns.asm.Opcodes;
-import com.heuristix.guns.util.*;
-import net.minecraft.src.World;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.Constructor;
@@ -13,6 +7,23 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import net.minecraft.world.World;
+
+import com.heuristix.EntityProjectile;
+import com.heuristix.ItemGun;
+import com.heuristix.ItemGunBase;
+import com.heuristix.ItemProjectile;
+import com.heuristix.ItemProjectileBase;
+import com.heuristix.guns.asm.ByteVector;
+import com.heuristix.guns.asm.Opcodes;
+import com.heuristix.guns.util.BytecodeValue;
+import com.heuristix.guns.util.ClassDescriptor;
+import com.heuristix.guns.util.ExtensibleClassVisitor;
+import com.heuristix.guns.util.InvokeMethod;
+import com.heuristix.guns.util.Log;
+import com.heuristix.guns.util.Method;
+import com.heuristix.guns.util.Pair;
 
 /**
  * Created by IntelliJ IDEA.

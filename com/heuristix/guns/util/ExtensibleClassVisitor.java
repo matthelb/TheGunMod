@@ -1,11 +1,17 @@
 package com.heuristix.guns.util;
 
-import com.heuristix.guns.Util;
-import com.heuristix.guns.asm.*;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Map;
+
+import com.heuristix.guns.Util;
+import com.heuristix.guns.asm.ByteVector;
+import com.heuristix.guns.asm.ClassReader;
+import com.heuristix.guns.asm.ClassVisitor;
+import com.heuristix.guns.asm.ClassWriter;
+import com.heuristix.guns.asm.MethodVisitor;
+import com.heuristix.guns.asm.MethodWriter;
+import com.heuristix.guns.asm.Opcodes;
 
 /**
  * Created by IntelliJ IDEA.

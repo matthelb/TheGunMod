@@ -1,11 +1,17 @@
 package com.heuristix;
 
-import com.heuristix.guns.Scope;
-import com.heuristix.guns.Util;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
-
 import java.awt.image.BufferedImage;
+
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.src.mod_Guns;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+
+import com.heuristix.guns.Util;
+import com.heuristix.guns.util.InventoryHelper;
 
 /**
  * Created by IntelliJ IDEA.
@@ -67,9 +73,9 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     public boolean reload(EntityPlayer player) {
         ItemStack equipped = player.getCurrentEquippedItem();
-        if (equipped != null && equipped.itemID == shiftedIndex && equipped.getItemDamage() > 0) {
+        if (equipped != null && equipped.itemID == itemID && equipped.getItemDamage() > 0) {
             if (!reloading) {
-                int slot = Util.getItemSlot(player.inventory, getProjectile().shiftedIndex);
+                int slot = InventoryHelper.getItemSlot(player.inventory, getProjectile().itemID);
                 if (slot != -1) {
                     Util.playStreamingAtEntity(player, getReloadSound(), "guns.reloading", 1.0f, 1.0f / (itemRand.nextFloat() * 0.4f + 0.8f));
                     reloading = true;
@@ -85,9 +91,9 @@ public abstract class ItemGun extends ItemProjectileShooter {
     }
 
     public void finishReloading() {
-        int amount = Math.min(Util.getCount(reloadingPlayer.inventory, getProjectile().shiftedIndex), Math.min(reloadingStack.getItemDamage(), reloadingStack.getMaxDamage() / getReloadParts()));
+        int amount = Math.min(InventoryHelper.getCount(reloadingPlayer.inventory, getProjectile().itemID), Math.min(reloadingStack.getItemDamage(), reloadingStack.getMaxDamage() / getReloadParts()));
         reloadingStack.damageItem(-amount, reloadingPlayer);
-        Util.remove(reloadingPlayer.inventory, getProjectile().shiftedIndex, amount);
+        InventoryHelper.remove(reloadingPlayer.inventory, getProjectile().itemID, amount);
         stopReloading();
     }
 
@@ -158,5 +164,9 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
     public void setCustomScope(BufferedImage image) {
         this.customScope = image;
+    }
+    
+    public String getIconPath() {
+        return "heuristix/guns";
     }
 }

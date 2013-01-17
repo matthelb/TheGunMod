@@ -1,8 +1,7 @@
 package com.heuristix.guns;
 
-import com.heuristix.guns.EntityGrenade;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.World;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.world.World;
 
 /**
  * Created by IntelliJ IDEA.

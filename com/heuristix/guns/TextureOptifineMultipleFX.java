@@ -1,9 +1,9 @@
 package com.heuristix.guns;
 
-import net.minecraft.src.Config;
-
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+
+import net.minecraft.src.Config;
 
 /**
  * Created by IntelliJ IDEA.

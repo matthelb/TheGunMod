@@ -1,9 +1,9 @@
 package com.heuristix.guns;
 
-import net.minecraft.src.TextureFX;
-
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+
+import net.minecraft.client.renderer.texturefx.TextureFX;
 
 /**
  * Created by IntelliJ IDEA.

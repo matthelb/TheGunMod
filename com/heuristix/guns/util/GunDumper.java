@@ -1,17 +1,19 @@
 package com.heuristix.guns.util;
 
-import com.heuristix.EntityProjectile;
-import com.heuristix.ItemGunBase;
-import com.heuristix.ItemProjectileBase;
-import com.heuristix.guns.*;
-import com.heuristix.guns.asm.Opcodes;
-import net.minecraft.src.mod_Guns;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.HashMap;
+
+import net.minecraft.src.mod_Guns;
+
+import com.heuristix.EntityProjectile;
+import com.heuristix.ItemGunBase;
+import com.heuristix.ItemProjectileBase;
+import com.heuristix.guns.Gun;
+import com.heuristix.guns.Util;
+import com.heuristix.guns.asm.Opcodes;
 
 /**
  * Created by IntelliJ IDEA.

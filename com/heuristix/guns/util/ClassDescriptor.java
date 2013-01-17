@@ -1,12 +1,17 @@
 package com.heuristix.guns.util;
 
-import com.heuristix.guns.asm.*;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import com.heuristix.guns.asm.AnnotationVisitor;
+import com.heuristix.guns.asm.Attribute;
+import com.heuristix.guns.asm.ClassReader;
+import com.heuristix.guns.asm.ClassVisitor;
+import com.heuristix.guns.asm.FieldVisitor;
+import com.heuristix.guns.asm.MethodVisitor;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,10 +1,13 @@
-package com.heuristix.guns;
+package com.heuristix.guns.render;
 
-import net.minecraft.src.Entity;
-import net.minecraft.src.Render;
-import net.minecraft.src.Tessellator;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.entity.Entity;
+
 import org.lwjgl.opengl.EXTRescaleNormal;
 import org.lwjgl.opengl.GL11;
+
+import com.heuristix.guns.HMod;
 
 /**
  * Created by IntelliJ IDEA.
@@ -30,9 +33,9 @@ public class RenderFlame extends Render {
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
         t.setNormal(0, 1, 0);
-        float corner0 = (TEXTURE_INDEX % Mod.PIXELS_PER_ICON) / Mod.PIXELS_PER_ICON;
+        float corner0 = (TEXTURE_INDEX % HMod.PIXELS_PER_ICON) / HMod.PIXELS_PER_ICON;
         float corner1 = corner0 + 0.0624375f;
-        float corner2 = (TEXTURE_INDEX / Mod.PIXELS_PER_ICON) / Mod.PIXELS_PER_ICON;
+        float corner2 = (TEXTURE_INDEX / HMod.PIXELS_PER_ICON) / HMod.PIXELS_PER_ICON;
         float corner3 = corner2 + 0.0624375f;
         t.addVertexWithUV(-SCALE, -SCALE, 0, corner0, corner3);
         t.addVertexWithUV(SCALE, -SCALE, 0, corner1, corner3);

@@ -1,13 +1,18 @@
 package com.heuristix.guns.swing;
 
-import com.heuristix.guns.Util;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.*;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+
+import com.heuristix.guns.Util;
 
 /**
  * Created by IntelliJ IDEA.

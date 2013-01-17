@@ -1,8 +1,10 @@
-package com.heuristix.guns;
+package com.heuristix.guns.render;
 
-import net.minecraft.src.Entity;
-import net.minecraft.src.Render;
-import net.minecraft.src.Tessellator;
+import com.heuristix.guns.Util;
+
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.entity.Entity;
 
 /**
  * Created by IntelliJ IDEA.

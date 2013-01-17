@@ -1,6 +1,13 @@
 package com.heuristix.guns;
 
-import net.minecraft.src.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
+import net.minecraft.world.EnumGameType;
+import net.minecraft.world.World;
 
 /**
  * Created by IntelliJ IDEA.

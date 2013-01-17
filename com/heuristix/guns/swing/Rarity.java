@@ -1,6 +1,6 @@
 package com.heuristix.guns.swing;
 
-import java.awt.*;
+import java.awt.Color;
 
 /**
  * Created by IntelliJ IDEA.

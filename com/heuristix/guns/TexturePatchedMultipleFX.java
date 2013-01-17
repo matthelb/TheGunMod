@@ -1,9 +1,9 @@
 package com.heuristix.guns;
 
-import com.pclewis.mcpatcher.mod.TileSize;
-
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
+
+import com.pclewis.mcpatcher.mod.TileSize;
 
 /**
  * Created by IntelliJ IDEA.

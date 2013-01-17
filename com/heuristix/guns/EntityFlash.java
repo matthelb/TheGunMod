@@ -1,6 +1,10 @@
 package com.heuristix.guns;
 
-import net.minecraft.src.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.World;
 
 /**
  * Created by IntelliJ IDEA.

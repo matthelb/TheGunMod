@@ -1,6 +1,5 @@
 package com.heuristix;
 
-import com.heuristix.guns.Scope;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,10 +79,6 @@ public class ItemGunBase extends ItemGun {
     }
 
     public String getName() {
-        return null;
-    }
-
-    public String getIconPath() {
         return null;
     }
 

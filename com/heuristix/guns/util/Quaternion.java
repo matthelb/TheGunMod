@@ -1,7 +1,7 @@
 package com.heuristix.guns.util;
 
-import net.minecraft.src.MathHelper;
-import net.minecraft.src.Vec3;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 
 /**
  * Created by IntelliJ IDEA.

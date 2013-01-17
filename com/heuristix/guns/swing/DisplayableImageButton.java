@@ -1,10 +1,5 @@
 package com.heuristix.guns.swing;
 
-import com.heuristix.guns.Util;
-import com.heuristix.guns.util.Log;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +7,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+
+import com.heuristix.guns.Util;
+import com.heuristix.guns.util.Log;
 
 public class DisplayableImageButton extends DisplayableFileButton {
 

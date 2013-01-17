@@ -1,14 +1,14 @@
 package com.heuristix.guns.util;
 
-import com.heuristix.guns.Gun;
-import com.heuristix.guns.Util;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.heuristix.guns.Gun;
+import com.heuristix.guns.Util;
 
 /**
  * Created by IntelliJ IDEA.

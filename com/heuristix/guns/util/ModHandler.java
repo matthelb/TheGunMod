@@ -1,10 +1,10 @@
 package com.heuristix.guns.util;
 
-import com.heuristix.guns.IMod;
-
 import java.io.IOException;
 import java.util.logging.FileHandler;
 import java.util.logging.LogRecord;
+
+import com.heuristix.guns.IMod;
 
 /**
  * Created by IntelliJ IDEA.

@@ -1,11 +1,16 @@
 package com.heuristix;
 
-import com.heuristix.guns.ItemCustom;
-import com.heuristix.guns.util.Log;
-import net.minecraft.src.*;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.src.mod_Guns;
+import net.minecraft.world.World;
+
+import com.heuristix.guns.ItemCustom;
+import com.heuristix.guns.util.Log;
 
 /**
  * Created by IntelliJ IDEA.

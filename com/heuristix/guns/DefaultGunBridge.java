@@ -1,16 +1,9 @@
 package com.heuristix.guns;
 
-import com.heuristix.guns.util.Log;
-import com.heuristix.guns.util.ReverseBuffer;
-import net.minecraft.src.mod_Guns;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.heuristix.guns.util.ReverseBuffer;
 
 /**
  * Created by IntelliJ IDEA.

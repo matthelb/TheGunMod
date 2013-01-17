@@ -1,11 +1,23 @@
 package com.heuristix;
 
-import com.heuristix.guns.Util;
-import com.heuristix.guns.util.ReflectionFacade;
-import net.minecraft.src.*;
-
 import java.util.Iterator;
 import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.boss.EntityDragonPart;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+
+import com.heuristix.guns.Util;
+import com.heuristix.guns.util.ReflectionFacade;
 
 /**
  * Created by IntelliJ IDEA.

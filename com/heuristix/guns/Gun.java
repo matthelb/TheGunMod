@@ -1,18 +1,19 @@
 package com.heuristix.guns;
 
-import com.heuristix.guns.asm.ByteVector;
-import com.heuristix.guns.util.Buffer;
-import com.heuristix.guns.util.Log;
-import com.heuristix.guns.util.Pair;
-import com.heuristix.guns.util.ReverseBuffer;
-import net.minecraft.src.mod_Guns;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
+import net.minecraft.src.mod_Guns;
+
+import com.heuristix.guns.asm.ByteVector;
+import com.heuristix.guns.util.Buffer;
+import com.heuristix.guns.util.Log;
+import com.heuristix.guns.util.Pair;
+import com.heuristix.guns.util.ReverseBuffer;
 
 /**
  * Created by IntelliJ IDEA.

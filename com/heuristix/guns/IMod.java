@@ -1,7 +1,6 @@
 package com.heuristix.guns;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Properties;
 
 /**

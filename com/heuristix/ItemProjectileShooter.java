@@ -1,9 +1,10 @@
 package com.heuristix;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+
 import com.heuristix.guns.ItemCustom;
-import net.minecraft.src.CreativeTabs;
-import net.minecraft.src.EntityPlayer;
-import net.minecraft.src.World;
 
 /**
  * Created by IntelliJ IDEA.
@@ -44,7 +45,7 @@ public abstract class ItemProjectileShooter extends ItemCustom {
     public abstract String getShootSound();
 
     protected boolean handleAmmunitionConsumption(EntityPlayer player) {
-        return player.inventory.consumeInventoryItem(projectile.shiftedIndex);
+        return player.inventory.consumeInventoryItem(projectile.itemID);
     }
 
     public void fire(World world, EntityPlayer player) {

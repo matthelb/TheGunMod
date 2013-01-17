@@ -1,9 +1,9 @@
 package com.heuristix.guns.util;
 
-import com.heuristix.guns.IMod;
-
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
+
+import com.heuristix.guns.IMod;
 
 /**
  * Created by IntelliJ IDEA.

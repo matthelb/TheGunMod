@@ -1,20 +1,78 @@
 package net.minecraft.src;
 
 
-import com.heuristix.*;
-import com.heuristix.guns.*;
-import com.heuristix.guns.asm.Opcodes;
-import com.heuristix.guns.util.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+
+import javax.imageio.ImageIO;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.NetServerHandler;
+import net.minecraft.network.packet.Packet23VehicleSpawn;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.world.World;
+
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.*;
+import com.heuristix.EntityProjectile;
+import com.heuristix.ItemGun;
+import com.heuristix.ItemGunBase;
+import com.heuristix.ItemProjectile;
+import com.heuristix.ItemProjectileBase;
+import com.heuristix.ItemProjectileShooter;
+import com.heuristix.guns.AbstractGunBridge;
+import com.heuristix.guns.BlockCraftGuns;
+import com.heuristix.guns.ContainerCraftGuns;
+import com.heuristix.guns.DefaultGunBridge;
+import com.heuristix.guns.EntityBullet;
+import com.heuristix.guns.EntityFlame;
+import com.heuristix.guns.EntityGrenade;
+import com.heuristix.guns.EntityIncendiaryBullet;
+import com.heuristix.guns.EntityRocketGrenade;
+import com.heuristix.guns.GuiCraftGuns;
+import com.heuristix.guns.Gun;
+import com.heuristix.guns.GunBridge;
+import com.heuristix.guns.GunItemRenderer;
+import com.heuristix.guns.HMod;
+import com.heuristix.guns.Scope;
+import com.heuristix.guns.Util;
+import com.heuristix.guns.asm.Opcodes;
+import com.heuristix.guns.render.RenderBullet;
+import com.heuristix.guns.render.RenderFlame;
+import com.heuristix.guns.render.RenderGrenade;
+import com.heuristix.guns.render.RenderRocketGrenade;
+import com.heuristix.guns.util.ClassDescriptor;
+import com.heuristix.guns.util.ExtensibleClassVisitor;
+import com.heuristix.guns.util.InvokeMethod;
+import com.heuristix.guns.util.Log;
+import com.heuristix.guns.util.Method;
+import com.heuristix.guns.util.Pair;
+import com.heuristix.guns.util.ReflectionFacade;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,7 +80,7 @@ import java.util.*;
  * Date: 9/1/11
  * Time: 9:47 AM
  */
-public class mod_Guns extends Mod {
+public class mod_Guns extends HMod {
 
     public static final int MOUSE_LEFT = 0;
     public static final int MOUSE_RIGHT = 1;

@@ -1,15 +1,34 @@
 package com.heuristix.guns;
 
-import com.heuristix.guns.util.Log;
-import com.heuristix.guns.util.ReflectionFacade;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.logging.Level;
 
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.*;
-import java.util.logging.Level;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundPool;
+import net.minecraft.client.renderer.texturefx.TextureFX;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
+import net.minecraft.src.BaseMod;
+import net.minecraft.src.ModLoader;
+
+import com.heuristix.guns.util.Log;
+import com.heuristix.guns.util.ReflectionFacade;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,7 +36,7 @@ import java.util.logging.Level;
  * Date: 9/1/11
  * Time: 10:12 AM
  */
-public abstract class Mod extends BaseMod implements IMod {
+public abstract class HMod extends BaseMod implements IMod {
 
     //TODO change for new release
     public static final String CURRENT_VERSION = "1.4.5";
@@ -35,7 +54,7 @@ public abstract class Mod extends BaseMod implements IMod {
     private static final String[] SOUND_KEYS = {"sounds", "music", "streaming"};
     private static Class<? extends TextureMultipleFX> currentHDTextureClass;
 
-    public Mod() {
+    public HMod() {
         this.textures = new HashSet<TextureFX>();
         this.sounds = new HashMap();
     }

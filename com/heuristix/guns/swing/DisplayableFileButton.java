@@ -1,8 +1,5 @@
 package com.heuristix.guns.swing;
 
-import com.heuristix.guns.util.Log;
-
-import javax.swing.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DropTarget;
@@ -11,6 +8,10 @@ import java.awt.dnd.DropTargetDropEvent;
 import java.io.File;
 import java.util.List;
 import java.util.TooManyListenersException;
+
+import javax.swing.JButton;
+
+import com.heuristix.guns.util.Log;
 
 public class DisplayableFileButton extends JButton implements FileChooserCallback {
 

@@ -1,10 +1,11 @@
 package com.heuristix.guns;
 
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
+
 import com.heuristix.guns.util.Quaternion;
-import net.minecraft.src.EntityLiving;
-import net.minecraft.src.MovingObjectPosition;
-import net.minecraft.src.Vec3;
-import net.minecraft.src.World;
 
 /**
  * Created by IntelliJ IDEA.

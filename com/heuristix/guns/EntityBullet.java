@@ -1,7 +1,12 @@
 package com.heuristix.guns;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.World;
+
 import com.heuristix.EntityProjectile;
-import net.minecraft.src.*;
 
 /**
  * Created by IntelliJ IDEA.

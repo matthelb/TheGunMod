@@ -1,24 +1,67 @@
 package com.heuristix.guns;
 
-import com.heuristix.guns.util.Log;
-import com.heuristix.guns.util.ReflectionFacade;
-import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
-import net.minecraft.src.Container;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.opengl.GL11;
-import paulscode.sound.SoundSystem;
-
-import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.nio.ByteBuffer;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
 import java.util.jar.JarFile;
+
+import javax.imageio.ImageIO;
+
+import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundManager;
+import net.minecraft.client.audio.SoundPool;
+import net.minecraft.client.audio.SoundPoolEntry;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderEngine;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.src.BaseMod;
+import net.minecraft.src.ModLoader;
+import net.minecraft.src.mod_Guns;
+import net.minecraft.util.Vec3;
+
+import org.lwjgl.BufferUtils;
+import org.lwjgl.opengl.GL11;
+
+import paulscode.sound.SoundSystem;
+
+import com.heuristix.guns.util.Log;
+import com.heuristix.guns.util.ReflectionFacade;
 
 /**
  * Created by IntelliJ IDEA.
@@ -74,45 +117,6 @@ public class Util {
 
     public static float toDegrees(double radians) {
         return (float) (radians * 180 / PI);
-    }
-
-    public static boolean remove(InventoryPlayer inventory, int id, int amount) {
-        while (amount > 0) {
-            int slot = getItemSlot(inventory, id);
-            if (slot == -1)
-                return false;
-            ItemStack stack = inventory.getStackInSlot(slot);
-            if (stack != null) {
-                int reduce = Math.min(stack.stackSize, amount);
-                if (reduce > amount)
-                    reduce = amount;
-                inventory.decrStackSize(slot, amount);
-                if ((amount -= reduce) == 0)
-                    break;
-            }
-        }
-        return true;
-    }
-
-    public static int getItemSlot(InventoryPlayer inventory, int id) {
-        for (int i = 0; i < inventory.mainInventory.length; i++) {
-            if (inventory.mainInventory[i] != null && inventory.mainInventory[i].itemID == id)
-                return i;
-        }
-        return -1;
-    }
-
-    public static int getCount(InventoryPlayer inventory, int id) {
-        int count = 0;
-        ItemStack[][] stacks = new ItemStack[][]{inventory.mainInventory, inventory.armorInventory};
-        for (int i = 0; i < stacks.length; i++) {
-            for (int j = 0; j < stacks[i].length; j++) {
-                ItemStack is = stacks[i][j];
-                if (is != null && is.itemID == id)
-                    count += (is.stackSize == 0) ? 1 : is.stackSize;
-            }
-        }
-        return count;
     }
 
     private static File HOME_DIRECTORY;
@@ -278,6 +282,7 @@ public class Util {
             File file = File.createTempFile(name, format);
             out = new FileOutputStream(file);
             out.write(value);
+            file.deleteOnExit();
             return file;
         } catch (IOException e) {
             Log.getLogger().throwing(Util.class.getName(), "getTempFile(String name, String format, byte[] value)", e);

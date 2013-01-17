@@ -1,9 +1,8 @@
 package com.heuristix.guns.swing;
 
-import com.heuristix.guns.Util;
-
 import java.io.File;
-import java.util.LinkedList;
+
+import com.heuristix.guns.Util;
 
 public class DisplayableBytesButton extends DisplayableFileButton {
 

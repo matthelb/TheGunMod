@@ -1,11 +1,31 @@
 package com.heuristix.guns;
 
-import com.heuristix.ItemGun;
-import com.heuristix.guns.util.ReflectionFacade;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
-import net.minecraft.src.*;
+import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.MapItemRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.item.EnumAction;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.MathHelper;
+import net.minecraft.world.storage.MapData;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import com.heuristix.ItemGun;
+import com.heuristix.guns.util.ReflectionFacade;
 
 /**
  * Created by IntelliJ IDEA.
@@ -260,7 +280,7 @@ public class GunItemRenderer extends ItemRenderer {
         float var16;
         RenderPlayer var18;
 
-        if (var7 != null && var7.itemID == Item.map.shiftedIndex) {
+        if (var7 != null && var7.itemID == Item.map.itemID) {
             GL11.glPushMatrix();
             var6 = 0.8F;
             var13 = var3.getSwingProgress(par1);
