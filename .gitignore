@@ -1,4 +1,5 @@
 #
-com/heuristix/util/ThreadImageWrite.java
-net/minecraft/src/mod_Picraft.java
-net/minecraft/src/mod_Test.java
+.settings
+bin
+.project
+.classpath
