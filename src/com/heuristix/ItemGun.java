@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 
 import com.heuristix.guns.Util;
 import com.heuristix.guns.client.handler.GunClientTickHandler;
+import com.heuristix.guns.client.render.TextureManager;
 import com.heuristix.guns.helper.InventoryHelper;
 
 /**
@@ -165,5 +166,10 @@ public abstract class ItemGun extends ItemProjectileShooter {
     public void setCustomScope(BufferedImage image) {
         this.customScope = image;
     }
+
+	@Override
+	public String getTextureFile() {
+		return "/" + TextureManager.getCurrentTextureFileName();
+	}
     
 }

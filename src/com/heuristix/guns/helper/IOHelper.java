@@ -98,31 +98,50 @@ public class IOHelper {
 	        if (!folder.exists()) {
 	            folder.mkdirs();
 	        }
-	        return folder;
 	    }
-	    return null;
+	    return folder;
 	}
 
-	public static File getTempFile(String name, String format, byte[] value) {
-	    FileOutputStream out = null;
-	    try {
-	        File file = File.createTempFile(name, format);
+	public static File getSysTempFile(String name, String format, byte[] value) {
+		try {
+			return getTempFile(File.createTempFile(name, format), value);
+		} catch (IOException e) {
+			Log.getLogger().throwing(IOHelper.class.getName(), "getSysTempFile(String name, String format, byte[] value)", e);
+		}
+		return null;
+	}
+	
+	public static File getHeuristixTempFile(String folder, String name, byte[] value) {
+		return getTempFile(getHeuristixFile(folder, "tmp" + File.separator + name), value);
+	}
+	
+	public static File getTempFile(File file) {
+		file.deleteOnExit();
+		return file;
+	}
+	
+	public static File getTempFile(File file, byte[] value) {
+		FileOutputStream out = null;
+		try {
+			File parent = file.getParentFile();
+			if (!parent.exists()) {
+				parent.mkdirs();
+			}
 	        out = new FileOutputStream(file);
 	        out.write(value);
-	        file.deleteOnExit();
-	        return file;
+	        return getTempFile(file);
 	    } catch (IOException e) {
-	        Log.getLogger().throwing(IOHelper.class.getName(), "getTempFile(String name, String format, byte[] value)", e);
+	        Log.getLogger().throwing(IOHelper.class.getName(), "getTempFile(File file, byte[] value)", e);
 	    } finally {
 	        if (out != null) {
 	            try {
 	                out.close();
 	            } catch (IOException e) {
-	                Log.getLogger().throwing(IOHelper.class.getName(), "getTempFile(String name, String format, byte[] value)", e);
+	                Log.getLogger().throwing(IOHelper.class.getName(), "getTempFile(File file, byte[] value)", e);
 	            }
 	        }
 	    }
-	    return null;
+		return null;
 	}
 
 	public static File getFile(String name, File dir) {

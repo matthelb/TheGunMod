@@ -2,7 +2,7 @@ package com.heuristix.guns.client;
 
 public interface Resources {
 	
-	String PATH = "heuristix/guns/";
+	String PATH = "/heuristix/guns/";
 	
 	String BLOCK_TEXTURES = PATH + "blocks.png";
 	

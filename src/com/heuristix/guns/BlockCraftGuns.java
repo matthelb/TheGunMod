@@ -1,8 +1,8 @@
 package com.heuristix.guns;
 
+import com.heuristix.TheGunMod;
 import com.heuristix.guns.client.Resources;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,9 +17,7 @@ import net.minecraft.world.World;
  * Date: 1/18/12
  * Time: 6:04 PM
  */
-public class BlockCraftGuns extends Block implements CustomEntity {
-
-    private int sideTexture, bottomTexture;
+public class BlockCraftGuns extends BlockCustom {
 
     public BlockCraftGuns(int id) {
         super(id, Material.iron);
@@ -28,21 +26,18 @@ public class BlockCraftGuns extends Block implements CustomEntity {
 
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-        if (!world.isRemote) {
-            ContainerCraftGuns container = new ContainerCraftGuns(player, world.getWorldInfo().getGameType() == EnumGameType.CREATIVE);
-            Util.displayGUI((EntityPlayerMP) player, container.getInventoryBasic(), container);
-        }
+        player.openGui(TheGunMod._instance, ContainerCraftGuns.INVENTORY_TYPE, world, x, y, z);
         return true;
     }
 
     @Override
     public int getBlockTextureFromSide(int side) {
         if(side == 0) {
-            return bottomTexture;
+            return 2;
         } else if(side == 1) {
-            return blockIndexInTexture;
+            return 0;
         } else {
-            return sideTexture;
+            return 1;
         }
     }
 

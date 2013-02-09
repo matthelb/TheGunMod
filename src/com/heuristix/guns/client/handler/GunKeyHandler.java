@@ -22,7 +22,7 @@ public class GunKeyHandler extends KeyHandler {
 	}
 	
 	public GunKeyHandler(int reloadKey, int zoomKey) {
-		super(new KeyBinding[]{new KeyBinding("key.reload", reloadKey), new KeyBinding("key.zoom", zoomKey)});
+		super(new KeyBinding[]{new KeyBinding("key.reload", reloadKey), new KeyBinding("key.zoom", zoomKey)}, new boolean[]{false, false});
 		
 	}
 

@@ -9,6 +9,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import com.heuristix.guns.ItemCustom;
+import com.heuristix.guns.client.render.TextureManager;
 import com.heuristix.guns.util.Log;
 
 /**
@@ -55,5 +56,10 @@ public abstract class ItemProjectile extends ItemCustom {
     public boolean isShapelessRecipe() {
         return false;
     }
+
+	@Override
+	public String getTextureFile() {
+		return "/" + TextureManager.getCurrentTextureFileName();
+	}
 
 }

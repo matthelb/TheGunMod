@@ -150,9 +150,9 @@ public final class ReflectionFacade {
                     return null;
                 }
             }
-        method.setAccessible(true);
-        classMethods.put(name, method);
-        methods.put(clazz, classMethods);
+	        method.setAccessible(true);
+	        classMethods.put(name, method);
+	        methods.put(clazz, classMethods);
         } catch (NoClassDefFoundError e) {
             Log.getLogger().fine("Class not found " + clazz);
         }

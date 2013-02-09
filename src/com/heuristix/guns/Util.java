@@ -3,21 +3,16 @@ package com.heuristix.guns;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.Modifier;
-import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.jar.JarFile;
 
-import javax.imageio.ImageIO;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -47,7 +42,6 @@ import net.minecraft.src.BaseMod;
 import net.minecraft.src.ModLoader;
 import net.minecraft.util.Vec3;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
 import paulscode.sound.SoundSystem;
@@ -488,61 +482,6 @@ public class Util {
         GL11.glPopMatrix();
     }
 
-    public static final int BITS_PER_PIXEL = 4;
-
-    public static ByteBuffer getScreenBytes(int width, int height) {
-        GL11.glReadBuffer(GL11.GL_FRONT);
-        ByteBuffer buffer = BufferUtils.createByteBuffer(width * height * BITS_PER_PIXEL);
-        GL11.glReadPixels(0, 0, width, height,  GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, buffer);
-        return buffer;
-    }
-
-    public static BufferedImage getScreenImage(int width, int height) {
-        return getScreenImage(width, height, getScreenBytes(width, height));
-    }
-
-    public static BufferedImage getScreenImage(int width, int height, ByteBuffer buffer) {
-        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        for(int x = 0; x < width; x++) {
-            for(int y = 0; y < height; y++) {
-                int i = (x + (width * y)) * BITS_PER_PIXEL;
-                int color = ((buffer.get(i + 3) & 0xFF) << 24) | ((buffer.get(i) & 0xFF) << 16) | ((buffer.get(i + 1) & 0xFF) << 8) | (buffer.get(i + 2) & 0xFF);
-                image.setRGB(x, height - (y + 1), color);
-            }
-        }
-        return image;
-    }
-
-    public static BufferedImage readImage(byte[] bytes) {
-        return readImage(new ByteArrayInputStream(bytes));
-    }
-
-    public static BufferedImage readImage(InputStream in) {
-        try {
-            return ImageIO.read(in);
-        } catch (IOException e) {
-            Log.getLogger().throwing(Util.class.getName(), "writeImage(BufferedImage image, String format, OutputStream out)", e);
-        }
-        return null;
-    }
-
-    public static byte[] writeImage(BufferedImage image, String format) {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        if(writeImage(image, format, out)) {
-            return out.toByteArray();
-        }
-        return null;
-    }
-
-    public static boolean writeImage(BufferedImage image, String format, OutputStream out) {
-        try {
-            return ImageIO.write(image, format, out);
-        } catch (IOException e) {
-            Log.getLogger().throwing(Util.class.getName(), "writeImage(BufferedImage image, String format, OutputStream out)", e);
-        }
-        return false;
-    }
-
     public static Dimension getTextureDimensions(boolean items, RenderEngine engine) {
         if(!isDefaultTextureBound(items, engine)) {
             engine.bindTexture(items ? engine.getTexture("/gui/items.png") : engine.getTexture("/terrain.png"));
@@ -559,10 +498,10 @@ public class Util {
     }
 
     public static byte[] resizeImageBytes(byte[] bytes, int width, int height, String format) {
-        BufferedImage image = readImage(bytes);
+        BufferedImage image = ImageHelper.readImage(bytes);
         if(image != null) {
             ImageHelper.resizeImage(image, width, height);
-            return writeImage(image, format);
+            return ImageHelper.writeImage(image, format);
         }
         return null;
     }

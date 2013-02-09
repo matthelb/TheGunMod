@@ -53,7 +53,6 @@ public abstract class EntityProjectile extends Entity {
         super(world);
         this.owner = owner;
         setLocationAndAngles(owner.posX, owner.posY + owner.getEyeHeight(), owner.posZ, owner.rotationYaw + (com.heuristix.guns.helper.MathHelper.randomFloat(-getSpread(), getSpread())), owner.rotationPitch + (com.heuristix.guns.helper.MathHelper.randomFloat(-getSpread(), getSpread())));
-        this.start = Vec3.createVectorHelper(posX, posY, posZ);
         setVelocity(computeVelocity());
         changeVelocity(getSpeed());
     }
@@ -67,8 +66,16 @@ public abstract class EntityProjectile extends Entity {
         setVelocity(computeVelocity());
         changeVelocity(getSpeed());
     }
+    
+    
 
-    public abstract int getDamage();
+    @Override
+	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch) {
+		super.setLocationAndAngles(x, y, z, yaw, pitch);
+		this.start = Vec3.createVectorHelper(posX, posY, posZ);
+	}
+
+	public abstract int getDamage();
 
     public abstract float getSpeed();
 

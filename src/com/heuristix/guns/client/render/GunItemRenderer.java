@@ -13,6 +13,8 @@ import net.minecraftforge.client.IItemRenderer;
 
 public class GunItemRenderer extends ItemRenderer implements IItemRenderer {
 
+	private ItemGun lastGun;
+	
 	public GunItemRenderer(Minecraft minecraft) {
 		super(minecraft);
 	}

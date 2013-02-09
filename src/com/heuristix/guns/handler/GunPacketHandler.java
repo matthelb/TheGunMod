@@ -19,9 +19,8 @@ import cpw.mods.fml.common.network.Player;
 public class GunPacketHandler implements IPacketHandler {
 
 	public static final int PACKET_FIRE = 0;
-	public static final int PACKET_BURST = 1;
-	public static final int PACKET_RELOAD = 2;
-	public static final int PACKET_STOP_RELOADING = 3;
+	public static final int PACKET_RELOAD = 1;
+	public static final int PACKET_STOP_RELOADING = 2;
 
 	@Override
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
@@ -36,9 +35,6 @@ public class GunPacketHandler implements IPacketHandler {
 	                        switch (in.readInt()) {
 	                            case PACKET_FIRE:
 	                                shooter.fire(p.worldObj, p);
-	                                break;
-	                            case PACKET_BURST:
-	                                shooter.burst(p.worldObj, p);
 	                                break;
 	                            case PACKET_RELOAD:
 	                                if (shooter instanceof ItemGun) {

@@ -1,86 +1,102 @@
 package com.heuristix.guns;
 
-import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+import java.util.logging.Level;
+
 import com.heuristix.guns.client.render.TextureManager;
 import com.heuristix.guns.helper.IOHelper;
+import com.heuristix.guns.helper.MathHelper;
+import com.heuristix.guns.util.Log;
+import com.heuristix.guns.util.ReflectionFacade;
 
+import net.minecraft.client.texturepacks.ITexturePack;
+import net.minecraft.item.ItemBlock;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
+import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.TextureFXManager;
+import cpw.mods.fml.common.LoaderException;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class BaseMod implements IMod {
 
-	private final List<Map<String, byte[]>> sounds;
-	
-	@SideOnly(Side.CLIENT)
-	private final TextureManager textureManager;
+	protected final SoundManager soundManager;
+	protected final TextureManager textureManager;
 	
 	public BaseMod() {
-		this.sounds = new ArrayList<Map<String, byte[]>>(3);
+		this.soundManager = new SoundManager();
 		this.textureManager = new TextureManager();
 	}
+	
+	public final void load() {
+        try {
+            Log.addHandler(this);
+        } catch (IOException e) {
+            Log.getLogger().log(Level.SEVERE, "Could not initiate LogHandler for " + this.getClass());
+        }
+        try {
+            File configFile = getConfigFile();
+            Properties defaultConfig = getDefaultConfig();
+            Properties config = defaultConfig;
+            if (configFile.exists()) {
+                config.load(new FileInputStream(configFile));
+                if (!config.getProperty(getPropertiesId() + ".version").equals(defaultConfig.getProperty(getPropertiesId() + ".version"))) {
+                    for (Map.Entry<Object, Object> entry : defaultConfig.entrySet()) {
+                        if (!config.contains(entry.getKey())) {
+                            config.put(entry.getKey(), entry.getValue());
+                        }
+                    }
+                }
+            }
+            config.store(new FileOutputStream(configFile), getModName() + " v" + getModVersion() + " Configuration");
+            loadConfig(config);
+        } catch (IOException e) {
+            Log.fine("Failed to read config file for " + getClass().getName(), getClass());
+        }
+    }
 	
 	public void registerItem(ItemCustom item) {
 		item.setItemName(item.getName().toLowerCase().replaceAll(" ", "_"));
 		LanguageRegistry.addName(item, item.getName());
-	}
-
-	public void registerSound(String path, byte[] data) {
-		registerSoundEffect(0, path, data);
-	}
-	
-	public void registerMusic(String path, byte[] data) {
-		registerSoundEffect(1, path, data);
+		try {
+			GameRegistry.registerItem(item, item.getItemName());
+		} catch (LoaderException ignored) { }
 	}
 	
-	public void registerStreaming(String path, byte[] data) {
-		registerSoundEffect(2, path, data);
-	}
-	
-	public void registerSoundEffect(int index, String path, byte[] data) {
-		Map<String, byte[]> sounds = this.sounds.get(index);
-		if (sounds == null) {
-			sounds = new HashMap<String, byte[]>();	
-		}
-		sounds.put(path, data);
-		this.sounds.set(index, sounds);
+	public void registerBlock(BlockCustom block) {
+		block.setBlockName(block.getName().toLowerCase().replaceAll(" ", "_"));
+		LanguageRegistry.addName(block, block.getName());
+		GameRegistry.registerBlock(block, ItemBlock.class, block.getBlockName());
 		
 	}
-	
-	public int registerTexture(BufferedImage... images) {
-		return textureManager.registerTexture(images);
-	}
 
-	protected void registerAllSounds(SoundLoadEvent event) {
-		for (int i = 0; i < sounds.size(); i++) {
-			Map<String, byte[]> sounds = this.sounds.get(i);
-			if (sounds != null) {
-				for (Map.Entry<String, byte[]> entry : sounds.entrySet()) {
-					String name = entry.getKey();
-					File soundFile = IOHelper.getTempFile(name.replaceAll("/", "."), null, entry.getValue());
-					if (soundFile != null) {
-						switch (i) {
-							case 0:
-								event.manager.addSound(name, soundFile);
-								break;
-							case 1:
-								event.manager.addMusic(name, soundFile);
-								break;
-							case 2:
-								event.manager.addStreaming(name, soundFile);
-								break;
-							default:
-								break;
-						}
-					}
-				}
+	public void registerAllSounds(SoundLoadEvent event) {
+		soundManager.registerAllSound(event.manager, getPropertiesId());
+	}
+	
+	public void registerTextures() {
+		File folder = textureManager.writeTemporaryTextures(getPropertiesId());
+		if (folder != null) {
+			try {
+				addURLToClassLoader(folder.toURI().toURL(), (URLClassLoader) ITexturePack.class.getClassLoader());
+				MinecraftForgeClient.preloadTexture("/" + TextureManager.getCurrentTextureFileName());
+				//int currentSize = FMLClientHandler.instance().getClient().renderEngine.texturePack.getSelectedTexturePack().getTexturePackResolution();
+				//TextureFXManager.instance().setTextureDimensions(currentSize, currentSize);
+			} catch (MalformedURLException e) {
+				Log.throwing(getClass(), "registerTextures()", e, getClass());
 			}
 		}
 	}
@@ -93,6 +109,14 @@ public abstract class BaseMod implements IMod {
 	@Override
 	public String getModVersion() {
 		return getClass().getAnnotation(Mod.class).version();
+	}
+	
+	public void addURLToClassLoader(URL url, URLClassLoader loader) {
+		ReflectionFacade.getInstance().invokeMethod(URLClassLoader.class, loader, "addURL", url);
+	}
+	
+	static {
+		ReflectionFacade.getInstance().putMethod(URLClassLoader.class, "addURL", "", URL.class);
 	}
 	
 }

@@ -30,12 +30,13 @@ public class GunClientTickHandler extends GunTickHandler {
 	public static final int MOUSE_LEFT = 0;
 	public static final int MOUSE_RIGHT = 1;
 
+	private ItemProjectileShooter lastShooter;
 	private boolean justAttemptedFire;
 	private boolean reflectionInit;
 	
 	public static int recoilY, recoilX;
-	public static float currentZoom;
-	public static boolean isZoomed;
+	static float currentZoom;
+	static boolean isZoomed;
 
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {
@@ -44,29 +45,33 @@ public class GunClientTickHandler extends GunTickHandler {
 			initReflection(minecraft);
 			reflectionInit = true;
 		}
-		ItemProjectileShooter shooter = TheGunMod.getEquippedShooter(minecraft.thePlayer);
-		if (shooter != null) {
-			if (minecraft.inGameHasFocus) {
-				if (Mouse.isButtonDown(MOUSE_RIGHT)) {
-					if ((shooter.getFireMode() == ItemProjectileShooter.FIRE_MODE_AUTO || !justAttemptedFire) && !shooter.isBursting()) {
-						ModLoader.clientSendPacket(GunPacketHandler.getShooterActionPacket(shooter.itemID, GunPacketHandler.PACKET_FIRE));
-						justAttemptedFire = true;
+		if (minecraft.inGameHasFocus) {
+			ItemProjectileShooter shooter = TheGunMod.getEquippedShooter(minecraft.thePlayer);
+			if (shooter != null) {
+				if (minecraft.inGameHasFocus) {
+					if (Mouse.isButtonDown(MOUSE_RIGHT)) {
+						if ((shooter.getFireMode() == ItemProjectileShooter.FIRE_MODE_AUTO || !justAttemptedFire) && !shooter.isBursting()) {
+							ModLoader.clientSendPacket(GunPacketHandler.getShooterActionPacket(shooter.itemID, GunPacketHandler.PACKET_FIRE));
+							justAttemptedFire = true;
+						}
+					} else {
+						justAttemptedFire = false;
 					}
+					if (shooter instanceof ItemGun) {
+						applyRecoil(minecraft.thePlayer, (ItemGun) shooter);
+					}
+				}
+				boolean in = (minecraft.gameSettings.thirdPersonView == 0) && (shooter != null) && (shooter instanceof ItemGun) && isZoomed;
+				System.out.println(in);
+				if (shooter.equals(lastShooter)) {
+					zoom(minecraft, (ItemGun) shooter, in);
+					lastShooter = shooter;
+					
 				} else {
-					justAttemptedFire = false;
+					currentZoom = 1.0f;
+					isZoomed = false;
+					zoom(minecraft, null, in);
 				}
-				if (shooter instanceof ItemGun) {
-					applyRecoil(minecraft.thePlayer, (ItemGun) shooter);
-				}
-			}
-			boolean in = (minecraft.gameSettings.thirdPersonView == 0) && (shooter != null) && (shooter instanceof ItemGun) && isZoomed;
-			if (shooter instanceof ItemGun) {
-				zoom(minecraft, (ItemGun) shooter, in);
-				
-			} else {
-				currentZoom = 1.0f;
-				isZoomed = false;
-				zoom(minecraft, null, in);
 			}
 		}
 	}
@@ -114,9 +119,9 @@ public class GunClientTickHandler extends GunTickHandler {
     }
 	
 	private void zoom(Minecraft mc, ItemGun gun, boolean in) {
-        float increment = 0.1f + (((gun != null) ? gun.getZoom() : 0) / 30f);
+        float increment = 0.1f + (((gun != null) ? gun.getZoom() : 0) / 10f);
         GunClientTickHandler.currentZoom = (GunClientTickHandler.currentZoom + ((in) ? increment : -increment));
-        GunClientTickHandler.currentZoom = (in) ? Math.min(gun.getZoom(), GunClientTickHandler.currentZoom) : Math.max(1, GunClientTickHandler.currentZoom);
+        GunClientTickHandler.currentZoom = (in && gun != null) ? Math.min(gun.getZoom(), GunClientTickHandler.currentZoom) : Math.max(1, GunClientTickHandler.currentZoom);
         ReflectionFacade.getInstance().setFieldValue(EntityRenderer.class, mc.entityRenderer, "cameraZoom", (in && gun != null && gun.getZoom() > 1) ? Math.min(GunClientTickHandler.currentZoom, gun.getZoom()) : Math.max(GunClientTickHandler.currentZoom, 1));
         if (gun != null && gun.getScope() > 0 && (in || GunClientTickHandler.currentZoom != 1)) {
             Scope.values()[gun.getScope()].renderOverlay(gun, mc);

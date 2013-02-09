@@ -7,8 +7,6 @@ import net.minecraft.entity.Entity;
 import org.lwjgl.opengl.EXTRescaleNormal;
 import org.lwjgl.opengl.GL11;
 
-import com.heuristix.guns.HMod;
-
 /**
  * Created by IntelliJ IDEA.
  * User: Matt
@@ -33,9 +31,9 @@ public class RenderFlame extends Render {
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
         t.setNormal(0, 1, 0);
-        float corner0 = (TEXTURE_INDEX % HMod.PIXELS_PER_ICON) / HMod.PIXELS_PER_ICON;
+        float corner0 = (TEXTURE_INDEX % 16) / 16;
         float corner1 = corner0 + 0.0624375f;
-        float corner2 = (TEXTURE_INDEX / HMod.PIXELS_PER_ICON) / HMod.PIXELS_PER_ICON;
+        float corner2 = (TEXTURE_INDEX / 16) / 16;
         float corner3 = corner2 + 0.0624375f;
         t.addVertexWithUV(-SCALE, -SCALE, 0, corner0, corner3);
         t.addVertexWithUV(SCALE, -SCALE, 0, corner1, corner3);

@@ -10,6 +10,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import com.heuristix.TheGunMod;
 import com.heuristix.guns.IMod;
 import com.heuristix.guns.helper.IOHelper;
 
@@ -21,6 +22,8 @@ import com.heuristix.guns.helper.IOHelper;
  */
 public class Log {
 
+	public static final boolean DEBUG = TheGunMod.DEBUG;
+	
     private static File defaultLog = IOHelper.getHeuristixFile("", "log.txt");
 
     private static Logger logger;
@@ -111,5 +114,8 @@ public class Log {
 
     public static void log(LogRecord record) {
         getLogger().log(record);
+        if (DEBUG) {
+        	System.out.print(record.toString());
+        }
     }
 }

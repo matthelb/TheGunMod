@@ -13,9 +13,9 @@ import com.heuristix.guns.client.Resources;
  */
 public enum Scope {
     NONE(""),
-    SNIPER("%blur%/" + Resources.SNIPER_SCOPE_TEXTURE),
-    HOLOGRAPHIC_SIGHT("%blur%/" + Resources.HOLOGRAPHIC_SCOPE_TEXTURE),
-    ADVANCED_COMBAT_OPTICAL_GUNSIGHT("%blur%/" + Resources.ACOG_SCOPE_TEXTURE),
+    SNIPER("%blur%" + Resources.SNIPER_SCOPE_TEXTURE),
+    HOLOGRAPHIC_SIGHT("%blur%" + Resources.HOLOGRAPHIC_SCOPE_TEXTURE),
+    ADVANCED_COMBAT_OPTICAL_GUNSIGHT("%blur%" + Resources.ACOG_SCOPE_TEXTURE),
     CUSTOM(null);
 
     private String path;

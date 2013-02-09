@@ -37,10 +37,12 @@ public class ExtensibleClassVisitor extends ClassVisitor {
 
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-        if ((access & Opcodes.ACC_ABSTRACT) != 0)
+        if ((access & Opcodes.ACC_ABSTRACT) != 0) {
             access &= ~Opcodes.ACC_ABSTRACT;
-        if ((access & Opcodes.ACC_INTERFACE) != 0)
+        }
+        if ((access & Opcodes.ACC_INTERFACE) != 0) {
             access &= ~Opcodes.ACC_INTERFACE;
+        }
         cv.visit(version, access, className, signature, (extend) ? name : superName, null);
     }
 
@@ -124,8 +126,8 @@ public class ExtensibleClassVisitor extends ClassVisitor {
         cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
         cr.accept(cw, ClassReader.SKIP_DEBUG);
         //org.objectweb.asm.util.CheckClassAdapter.verify(new org.objectweb.asm.ClassReader(cw.toByteArray()), false, new PrintWriter(System.out));
-        //java.io.File file = new java.io.File(className + ".class");
-        //new java.io.FileOutputStream(file).write(cw.toByteArray());
+        java.io.File file = new java.io.File(className + ".class");
+        new java.io.FileOutputStream(file).write(cw.toByteArray());
         return cw.toByteArray();
     }
 

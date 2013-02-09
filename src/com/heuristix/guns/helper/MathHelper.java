@@ -86,4 +86,8 @@ public class MathHelper {
 	public static float toDegrees(double radians) {
 	    return (float) (radians * 180 / PI);
 	}
+	
+	public static int roundUp(int n, int r) {
+		return (int) (Math.ceil((float) n / r) * r);
+	}
 }

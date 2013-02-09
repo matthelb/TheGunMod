@@ -64,7 +64,7 @@ public abstract class AbstractGunBridge implements GunBridge {
 
                 String projectileType = ClassDescriptor.getClassDescription(Opcodes.ASM4, gunClasses.get(0).getSecond()).getSuperName();
                 HashMap<String, Method> methods = new HashMap<String, Method>();
-                String worldClass = (deobfuscate) ? "net/minecraft/src/World" : OBFUSCATED_CLASS_NAMES.get(0).getFirst(), entityLivingClass = (deobfuscate) ? "net/minecraft/src/EntityLiving" : OBFUSCATED_CLASS_NAMES.get(0).getSecond();
+                String worldClass = (deobfuscate) ? "net/minecraft/world/World" : OBFUSCATED_CLASS_NAMES.get(0).getFirst(), entityLivingClass = (deobfuscate) ? "net/minecraft/entity/EntityLiving" : OBFUSCATED_CLASS_NAMES.get(0).getSecond();
                 for (int i = 0; i < OBFUSCATED_CLASS_NAMES.size(); i++) {
                     Pair<String, String> obfuscatedNames = OBFUSCATED_CLASS_NAMES.get(i);
                     methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V",
@@ -150,15 +150,15 @@ public abstract class AbstractGunBridge implements GunBridge {
         methods.put("getSpread()F", new Method(new BytecodeValue(getSpread())));
 
         Class<?> clazz = getProjectileType().getProjectileType();
-        methods.put("<init>(Lnet/minecraft/src/World;Lnet/minecraft/src/EntityLiving;)V",
+        methods.put("<init>(Lnet/minecraft/world/World;Lnet/minecraft/entity/EntityLiving;)V",
                 new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";L" + OBFUSCATED_CLASS_NAMES.get(0).getSecond() + ";)V",
                         new InvokeMethod(SUPER_WORLD_ENTITY, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>",
                                 "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";L" + OBFUSCATED_CLASS_NAMES.get(0).getSecond() + ";)V", false, true, false)));
-        methods.put("<init>(Lnet/minecraft/src/World;)V",
+        methods.put("<init>(Lnet/minecraft/world/World;)V",
                 new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V",
                     new InvokeMethod(SUPER_WORLD, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>", "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";)V", false, true, false)));
 
-        methods.put("<init>(Lnet/minecraft/src/World;DDD)V",
+        methods.put("<init>(Lnet/minecraft/world/World;DDD)V",
                 new Method("(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";DDD)V",
                 new InvokeMethod(SUPER_WORLD_COORDS, new int[]{Opcodes.RETURN}, clazz.getCanonicalName().replace('.', '/'), "<init>", "(L" + OBFUSCATED_CLASS_NAMES.get(0).getFirst() + ";DDD)V", false, true, false)));
         String name = "Entity" + getProjectileName().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "") + getGunName().replaceAll(NON_ALPHA_NUMERICAL_REGEX, "");
@@ -224,45 +224,6 @@ public abstract class AbstractGunBridge implements GunBridge {
 
         out.write(outBytes.data);
     }
-
-    /*protected List<byte[]> getResources() throws IOException {
-        List<byte[]> resources = new LinkedList<byte[]>();
-        byte[] bytes;
-        ByteArrayOutputStream imageOut = new ByteArrayOutputStream();
-        ImageIO.write(getProjectileImage(0), "png", imageOut);
-        bytes = imageOut.toByteArray();
-        resources.add(bytes);
-
-        imageOut = new ByteArrayOutputStream();
-        ImageIO.write(getGunImage(0), "png", imageOut);
-        bytes = imageOut.toByteArray();
-        resources.add(bytes);
-
-        resources.add(getShootSoundBytes());
-        resources.add(getReloadSoundBytes());
-        for(int i = 0; i < 2; i++) {
-            for(int j = 1; j < 6; j++) {
-                RenderedImage image = (i == 0) ? getGunImage(j) : getProjectileImage(j);
-                if(image != null) {
-                    imageOut = new ByteArrayOutputStream();
-                    ImageIO.write(image, "png", imageOut);
-                    bytes = imageOut.toByteArray();
-                    resources.add(bytes);
-                } else {
-                    resources.add(new byte[1]);
-                }
-            }
-        }
-        return resources;
-    } */
-
-    /*protected Pair<String, int[]>[] getProperties() {
-        Pair<String, int[]>[] properties = new Pair[PROPERTIES];
-        properties[0] = new Pair<String, int[]>("itemGunId", ReverseBuffer.getInt(getGunId()));
-        properties[1] = new Pair<String, int[]>("itemBulletId", ReverseBuffer.getInt(getProjectileId()));
-        properties[2] = new Pair<String, int[]>("versionCreated", Util.getIntArray(Util.getStringBytes(VERSION)));
-        return properties;
-    }*/
 
     protected abstract int getGunId();
 

@@ -3,7 +3,6 @@ package com.heuristix;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -21,27 +20,22 @@ import javax.imageio.ImageIO;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.renderer.EntityRenderer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.RenderEngine;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.NetServerHandler;
-import net.minecraft.network.packet.Packet23VehicleSpawn;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.src.ModLoader;
-import net.minecraft.world.World;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.event.TextureLoadEvent;
+import net.minecraftforge.client.event.sound.SoundLoadEvent;
+import net.minecraftforge.event.ForgeSubscribe;
 
 import com.heuristix.guns.AbstractGunBridge;
 import com.heuristix.guns.BaseMod;
 import com.heuristix.guns.BlockCraftGuns;
 import com.heuristix.guns.CommonProxy;
-import com.heuristix.guns.ContainerCraftGuns;
 import com.heuristix.guns.DefaultGunBridge;
 import com.heuristix.guns.Gun;
 import com.heuristix.guns.GunBridge;
@@ -49,9 +43,8 @@ import com.heuristix.guns.Scope;
 import com.heuristix.guns.Util;
 import com.heuristix.guns.asm.Opcodes;
 import com.heuristix.guns.client.Resources;
-import com.heuristix.guns.client.handler.GunClientTickHandler;
 import com.heuristix.guns.client.handler.GunKeyHandler;
-import com.heuristix.guns.client.render.GunItemRenderer;
+import com.heuristix.guns.client.render.TextureManager;
 import com.heuristix.guns.helper.IOHelper;
 import com.heuristix.guns.util.ClassDescriptor;
 import com.heuristix.guns.util.ExtensibleClassVisitor;
@@ -66,11 +59,9 @@ import com.heuristix.guns.handler.GunPacketHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.Mod.PostInit;
 import cpw.mods.fml.common.Mod.PreInit;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
@@ -86,13 +77,12 @@ public class TheGunMod extends BaseMod {
     private File gunsDir;
     private int blockArmoryId;
     private int projectileTrackerId;
+    private SoundLoadEvent event;
     
     //TODO change for release
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     private static final int BASE_PROJECTILE_TRACKER_ID = 100;
-
-    
     
     static {
         //TODO add new obfuscation names
@@ -100,7 +90,8 @@ public class TheGunMod extends BaseMod {
         names.putField(RenderManager.class, "itemRenderer", "f");
         names.putField(EntityRenderer.class, "cameraZoom", "X");
         names.putField(EntityRenderer.class, "itemRenderer", "c");
-
+        names.putField(RenderEngine.class, "imageData", "g");
+        
         DEFAULT_CONFIG.setProperty("block.armory.id", String.valueOf(212));
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
         DEFAULT_CONFIG.setProperty("key.zoom", Keyboard.getKeyName(Keyboard.KEY_Z));
@@ -127,40 +118,59 @@ public class TheGunMod extends BaseMod {
 	@SidedProxy(clientSide = "com.heuristix.guns.client.ClientProxy", serverSide = "com.heuristix.guns.CommonProxy")
 	public static CommonProxy proxy;
 	
+	@ForgeSubscribe
+	public void loadSounds(SoundLoadEvent event) {
+		this.event = event;
+	}
+	
+	@ForgeSubscribe
+	public void onTexturePackChange(TextureLoadEvent event) {
+		MinecraftForgeClient.preloadTexture("/" + TextureManager.getTextureFileName(event.pack.getTexturePackResolution()));
+	}
+	
 	@PreInit
     public void preInit(FMLPreInitializationEvent event) {
+		load();
     }
    
 	@Init
     public void load(FMLInitializationEvent event) {
-    	try {
-            initItems();
+		int guns = 0;
+		try {
+            guns = initItems();
         } catch (Exception e) {
             Log.fine("Failed to initialize items", getClass());
             Log.throwing(getClass(), "load()", e, getClass());
         }
-        registerSounds();
-        proxy.registerKeyHandler(new GunKeyHandler(reloadKey, zoomKey));
-        proxy.registerTickHandler();
-        proxy.registerRenderers();
-        NetworkRegistry.instance().registerGuiHandler(this, new GunGuiHandler());
+		if (guns > 0) {
+	        registerSounds();
+	        proxy.registerKeyHandler(new GunKeyHandler(reloadKey, zoomKey));
+	        proxy.registerTickHandler();
+	        proxy.registerRenderers();
+	        proxy.registerTextures(this);
+	        registerBlock(new BlockCraftGuns(blockArmoryId));
+	        NetworkRegistry.instance().registerGuiHandler(this, new GunGuiHandler());
+		}
     }
+	
+	public void registerSounds() {
+		File hitSound = IOHelper.getFile(Resources.HIT_SOUND, IOHelper.getHeuristixDir("sounds"));
+	    if (hitSound != null) {
+	        soundManager.registerSound("guns/" + Resources.HIT_SOUND, IOHelper.read(hitSound));
+	    } else {
+	        Log.fine("Missing sound file hit.ogg in .minecraft/heuristix/sounds/ directory");
+	    }
+	    File moveSound = IOHelper.getFile(Resources.MOVE_SOUND, IOHelper.getHeuristixDir("sounds"));
+	    if (moveSound != null) {
+	    	soundManager.registerSound("guns/" + Resources.MOVE_SOUND, IOHelper.read(moveSound));
+	    } else {
+	        Log.fine("Missing sound file move.ogg in .minecraft/heuristix/sounds/ directory");
+	    }
+	    if (event != null) {
+	    	registerAllSounds(event);
+	    }
+	}
     
-    public void registerSounds() {
-    	File hitSound = IOHelper.getFile(Resources.HIT_SOUND, IOHelper.getHeuristixDir("sounds"));
-        if (hitSound != null) {
-            registerSound("guns/" + Resources.HIT_SOUND, IOHelper.read(hitSound));
-        } else {
-            Log.fine("Missing sound file hit.ogg in .minecraft/heuristix/sounds/ directory");
-        }
-        File moveSound = IOHelper.getFile(Resources.MOVE_SOUND, IOHelper.getHeuristixDir("sounds"));
-        if (moveSound != null) {
-            registerSound("guns/" + Resources.MOVE_SOUND, IOHelper.read(moveSound));
-        } else {
-            Log.fine("Missing sound file move.ogg in .minecraft/heuristix/sounds/ directory");
-        }
-    }
-
     public File getConfigFile() {
         return IOHelper.getHeuristixFile("guns", "config.ini");
     }
@@ -184,8 +194,9 @@ public class TheGunMod extends BaseMod {
         return IOHelper.getHeuristixFile("guns", "log.txt");
     }
 
-    private void initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException, ClassNotFoundException {
-        if (gunsDir != null) {
+    private int initItems() throws NoSuchMethodException, IOException, InvocationTargetException, IllegalAccessException, InstantiationException, ClassNotFoundException {
+    	int registered = 0;
+    	if (gunsDir != null) {
             if (!gunsDir.exists()) {
                 gunsDir.mkdirs();
             } else {
@@ -216,6 +227,7 @@ public class TheGunMod extends BaseMod {
                             gun = new Gun(IOHelper.read(f));
                         }
                         registerGun(gun, DEBUG);
+                        registered++;
                     } else {
                         Log.fine("Could not load gun " + f.getName(), getClass());
                     }
@@ -225,6 +237,7 @@ public class TheGunMod extends BaseMod {
         } else {
             Log.fine("Could not find .minecraft directory. Are you using an obscure operating system?", getClass());
         }
+        return registered;
     }
 
     public void registerGun(Gun gun, boolean deobfuscate) throws IOException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, InstantiationException {
@@ -235,7 +248,7 @@ public class TheGunMod extends BaseMod {
         if (entityProjectileClass == null) {
             String projectileType = ClassDescriptor.getClassDescription(Opcodes.ASM4, gunClasses.get(0).getSecond()).getSuperName();
             HashMap<String, Method> methods = new HashMap<String, Method>();
-            String worldClass = (deobfuscate) ? "net/minecraft/src/World" : AbstractGunBridge.OBFUSCATED_CLASS_NAMES.get(0).getFirst(), entityLivingClass = (deobfuscate) ? "net/minecraft/src/EntityLiving" : AbstractGunBridge.OBFUSCATED_CLASS_NAMES.get(0).getSecond();
+            String worldClass = (deobfuscate) ? "net/minecraft/world/World" : AbstractGunBridge.OBFUSCATED_CLASS_NAMES.get(0).getFirst(), entityLivingClass = (deobfuscate) ? "net/minecraft/entity/EntityLiving" : AbstractGunBridge.OBFUSCATED_CLASS_NAMES.get(0).getSecond();
             for (int i = 0; i < AbstractGunBridge.OBFUSCATED_CLASS_NAMES.size(); i++) {
                 Pair<String, String> obfuscatedNames = AbstractGunBridge.OBFUSCATED_CLASS_NAMES.get(i);
                 methods.put("<init>(L" + obfuscatedNames.getFirst() + ";L" + obfuscatedNames.getSecond() + ";)V",
@@ -275,7 +288,8 @@ public class TheGunMod extends BaseMod {
             }
         }
         if (itemProjectile != null) {
-            itemProjectile.setIconIndex(registerTexture(projectileTextures.toArray(new BufferedImage[projectileTextures.size()])));
+            itemProjectile.setIconIndex(textureManager.registerTexture(projectileTextures.toArray(new BufferedImage[projectileTextures.size()])));
+            itemProjectile.setTextureFile("/" + TextureManager.TEXTURE_FILE_NAME_FORMAT);
             registerItem(itemProjectile);
         }
 
@@ -289,11 +303,12 @@ public class TheGunMod extends BaseMod {
             itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemProjectile);
         }
         if (itemGun != null) {
-            itemGun.setIconIndex(registerTexture(gunTextures.toArray(new BufferedImage[projectileTextures.size()])));
+            itemGun.setIconIndex(textureManager.registerTexture(gunTextures.toArray(new BufferedImage[projectileTextures.size()])));
+            itemGun.setTextureFile("/" + TextureManager.TEXTURE_FILE_NAME_FORMAT);
             registerItem(itemGun);
-            registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get("shootSound"));
+            soundManager.registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get("shootSound"));
             if (resources.get("reloadSound") != null) {
-                registerStreaming(itemGun.getReloadSound().replaceFirst("\\.", "/") + ".ogg", resources.get("reloadSound"));
+            	soundManager.registerStreaming(itemGun.getReloadSound().replaceFirst("\\.", "/") + ".ogg", resources.get("reloadSound"));
             }
             if (itemGun.getScope() == Scope.CUSTOM.ordinal()) {
                 itemGun.setCustomScope(ImageIO.read(new ByteArrayInputStream(resources.get("customScope"))));
