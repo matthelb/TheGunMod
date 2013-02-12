@@ -3,6 +3,8 @@ package com.heuristix.guns.client.render;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import net.minecraft.client.Minecraft;
+
 import com.heuristix.guns.helper.IOHelper;
 import com.heuristix.guns.helper.ImageHelper;
 import com.heuristix.guns.helper.MathHelper;
@@ -41,8 +43,8 @@ public class TextureManager {
 	public File writeTemporaryTextures(String folder) {
 		File f = null;
 		for (TextureList list : textures) {
-			f = IOHelper.getHeuristixTempFile(folder, getTextureFileName(list.getSize()),
-					ImageHelper.writeImage(list.toBufferedImage(), TEXTURE_FILE_FORMAT));
+			f = IOHelper.getHeuristixTempFile(folder, getTextureFileName(list.getSize()));
+			ImageHelper.writeImage(list.toBufferedImage(), TEXTURE_FILE_FORMAT, f);
 		}
 		return (f == null) ? f : f.getParentFile();
 	}
@@ -52,7 +54,15 @@ public class TextureManager {
 	}
 	
 	public static String getCurrentTextureFileName() {
-		return getTextureFileName(FMLClientHandler.instance().getClient().renderEngine.texturePack.getSelectedTexturePack().getTexturePackResolution());
+		return getTextureFileName(getCurrentTextureSize());
+	}
+	
+	public static int getCurrentTextureSize() {
+		Minecraft client = FMLClientHandler.instance().getClient();
+		if (client != null) {
+			return client.renderEngine.texturePack.getSelectedTexturePack().getTexturePackResolution();
+		}
+		return 16;
 	}
 	
 }

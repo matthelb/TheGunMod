@@ -4,6 +4,7 @@ import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.RenderEngine;
 import net.minecraftforge.client.MinecraftForgeClient;
 
+import com.heuristix.ItemGun;
 import com.heuristix.TheGunMod;
 import com.heuristix.guns.CommonProxy;
 import com.heuristix.guns.EntityBullet;
@@ -12,6 +13,7 @@ import com.heuristix.guns.EntityGrenade;
 import com.heuristix.guns.EntityIncendiaryBullet;
 import com.heuristix.guns.EntityRocketGrenade;
 import com.heuristix.guns.client.handler.GunClientTickHandler;
+import com.heuristix.guns.client.render.GunItemRenderer;
 import com.heuristix.guns.client.render.RenderBullet;
 import com.heuristix.guns.client.render.RenderFlame;
 import com.heuristix.guns.client.render.RenderGrenade;
@@ -27,6 +29,8 @@ import cpw.mods.fml.relauncher.Side;
 
 public class ClientProxy extends CommonProxy {
 
+	private GunItemRenderer renderer;
+	
 	@Override
 	public void registerKeyHandler(KeyHandler handler) {
 		KeyBindingRegistry.registerKeyBinding(handler);
@@ -53,6 +57,14 @@ public class ClientProxy extends CommonProxy {
 		ReflectionFacade.getInstance().setFieldValue(RenderEngine.class, FMLClientHandler.instance().getClient().renderEngine, "imageData", GLAllocation.createDirectByteBuffer(268435456));
 		mod.registerTextures();
 		MinecraftForgeClient.preloadTexture(Resources.BLOCK_TEXTURES);
+	}
+	
+	@Override 
+	public void registerItemRenderer(ItemGun item) {
+		if (renderer == null) {
+			renderer = new GunItemRenderer(FMLClientHandler.instance().getClient());
+		}
+		MinecraftForgeClient.registerItemRenderer(item.itemID, renderer);
 	}
 	
 }

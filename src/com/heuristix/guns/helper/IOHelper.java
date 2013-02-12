@@ -115,6 +115,10 @@ public class IOHelper {
 		return getTempFile(getHeuristixFile(folder, "tmp" + File.separator + name), value);
 	}
 	
+	public static File getHeuristixTempFile(String folder, String name) {
+		return getTempFile(getHeuristixFile(folder, "tmp" + File.separator + name));
+	}
+	
 	public static File getTempFile(File file) {
 		file.deleteOnExit();
 		return file;

@@ -1,5 +1,6 @@
 package com.heuristix.guns.helper;
 
+import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -121,4 +122,8 @@ public class ImageHelper {
         }
         return closest;
     }
+	
+	public static BufferedImage getCompatibleImage(int width, int height, int transparency) {
+		return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(width, height, transparency);
+	}
 }

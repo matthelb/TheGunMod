@@ -3,9 +3,9 @@ package com.heuristix.guns;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 
-import com.heuristix.guns.helper.ImageHelper;
-
 import net.minecraft.client.renderer.texturefx.TextureFX;
+
+import com.heuristix.guns.helper.ImageHelper;
 
 /**
  * Created by IntelliJ IDEA.

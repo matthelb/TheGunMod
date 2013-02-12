@@ -72,7 +72,7 @@ public class ContainerCraftGuns extends Container {
     }
 
     public void onArrowClick(int i) {
-        index = MathHelper.maxmin(index + ((i == 0) ? -1 : 1), 0, GUN_ITEM_STACKS.size() - 1);
+        index = MathHelper.maxmin(index + ((i == 0) ? -1 : 1), GUN_ITEM_STACKS.size() - 1, 0);
         updateCurrentGun(index);
     }
 

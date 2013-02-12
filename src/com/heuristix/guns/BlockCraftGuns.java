@@ -1,15 +1,13 @@
 package com.heuristix.guns;
 
-import com.heuristix.TheGunMod;
-import com.heuristix.guns.client.Resources;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
-import net.minecraft.world.EnumGameType;
 import net.minecraft.world.World;
+
+import com.heuristix.TheGunMod;
+import com.heuristix.guns.client.Resources;
 
 /**
  * Created by IntelliJ IDEA.

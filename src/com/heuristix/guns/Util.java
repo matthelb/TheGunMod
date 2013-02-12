@@ -11,8 +11,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.jar.JarFile;
-
 
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -181,18 +179,6 @@ public class Util {
                 sndSystem.setVolume(stream, 0.5f * volume);
                 sndSystem.play(stream);
             }
-    }
-
-
-    static {
-        ReflectionFacade names = ReflectionFacade.getInstance();
-        //TODO add new obfuscation names
-        names.putField(SoundManager.class, "options", "f");
-        names.putField(EntityPlayerSP.class, "mc", "c");
-        names.putField(RenderItem.class, "renderBlocks", "g");
-        names.putMethod(Packet.class, "addIdClassMapping", "a", int.class, boolean.class, boolean.class, Class.class);
-        names.putMethod(ClassLoader.class, "defineClass", "", String.class, byte[].class, int.class, int.class);
-        names.putField(EntityPlayerMP.class, "currentWindowId", "cs");
     }
 
     public static SoundPool[] getSoundPools(SoundManager sndManager) {

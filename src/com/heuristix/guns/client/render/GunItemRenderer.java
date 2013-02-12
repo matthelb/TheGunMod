@@ -2,51 +2,58 @@ package com.heuristix.guns.client.render;
 
 import java.util.EnumSet;
 
-import org.lwjgl.opengl.GL11;
-
-import com.heuristix.ItemGun;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 
-public class GunItemRenderer extends ItemRenderer implements IItemRenderer {
+import org.lwjgl.opengl.GL11;
 
+import com.heuristix.ItemGun;
+import com.heuristix.guns.util.ReflectionFacade;
+
+public class GunItemRenderer extends ItemRenderer implements IItemRenderer {
+	
+	private final Minecraft mc;
 	private ItemGun lastGun;
+	private boolean currentlyRendering;
 	
 	public GunItemRenderer(Minecraft minecraft) {
 		super(minecraft);
+		this.mc = minecraft;
 	}
 
 	@Override
 	public boolean handleRenderType(ItemStack item, ItemRenderType type) {
-		return (item.getItem() instanceof ItemGun) && EnumSet.of(ItemRenderType.EQUIPPED, ItemRenderType.INVENTORY).contains(type);
+		return !currentlyRendering && (item.getItem() instanceof ItemGun) && EnumSet.of(ItemRenderType.EQUIPPED).contains(type);
 	}
 
 	@Override
 	public boolean shouldUseRenderHelper(ItemRenderType type, ItemStack item, ItemRendererHelper helper) {
-		return false;
+		return true;
 	}
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		switch (type) {
-			case EQUIPPED:
-				ItemGun gun = (ItemGun) item.getItem();
-				if (gun.isReloading()) {
-					GL11.glTranslatef(0, getReloadingTranslation(), 0);
-				}
-				break;
-			case INVENTORY:
-				break;
-			default:
-				break;
+		ItemGun gun = (ItemGun) item.getItem();
+		if (gun.isReloading()) {
+			GL11.glTranslatef(0, getReloadingTranslation(gun.getReloadPercent()), 0);
 		}
+		currentlyRendering = true;
+		GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+		renderItem((EntityLiving) data[1], item, 0);
+		currentlyRendering = false;
+		lastGun = gun;
 	}
 	
-	public float getReloadingTranslation() {
-		return 0;
+	public float getReloadingTranslation(float percent) {
+		return (float) (4 * Math.pow(percent - 0.5f, 2)) - 1;
+	}
+
+	public static void setItemToRender(ItemStack item, ItemRenderer itemRenderer) {
+		System.out.println(ReflectionFacade.getInstance().getFieldValue(ItemRenderer.class, itemRenderer, "itemToRender") + " to " + item);
+		ReflectionFacade.getInstance().setFieldValue(ItemRenderer.class, itemRenderer, "itemToRender", item);
 	}
 	
 }

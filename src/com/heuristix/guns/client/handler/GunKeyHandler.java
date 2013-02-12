@@ -2,17 +2,19 @@ package com.heuristix.guns.client.handler;
 
 import java.util.EnumSet;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.src.ModLoader;
+
 import com.heuristix.ItemGun;
 import com.heuristix.ItemProjectileShooter;
 import com.heuristix.TheGunMod;
 import com.heuristix.guns.handler.GunPacketHandler;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.src.ModLoader;
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class GunKeyHandler extends KeyHandler {
 
@@ -45,14 +47,15 @@ public class GunKeyHandler extends KeyHandler {
             		ItemGun gun = (ItemGun) shooter;
 	            	switch (kb.keyDescription) {
 		            	case "key.reload":
-		            		ModLoader.clientSendPacket(GunPacketHandler.getShooterActionPacket(gun.itemID, GunPacketHandler.PACKET_RELOAD));
-	                        GunClientTickHandler.isZoomed = false;
+		            		PacketDispatcher.sendPacketToServer(GunPacketHandler.getShooterActionPacket(gun.itemID, GunPacketHandler.PACKET_RELOAD));
+		            		GunClientTickHandler.isZoomed = false;
 		            		break;
 		            	case "key.zoom":
 		            		if (gun.getZoom() > 1.0f || gun.getScope() > 0) {
 	                            GunClientTickHandler.isZoomed = !GunClientTickHandler.isZoomed;
+	                            GunClientTickHandler.lastShooter = gun;
 	                            if (gun.isReloading()) {
-	                                ModLoader.clientSendPacket(GunPacketHandler.getShooterActionPacket(gun.itemID, GunPacketHandler.PACKET_STOP_RELOADING));
+	                            	PacketDispatcher.sendPacketToServer(GunPacketHandler.getShooterActionPacket(gun.itemID, GunPacketHandler.PACKET_STOP_RELOADING));
 	                            }
 	                        }
 		            		break;

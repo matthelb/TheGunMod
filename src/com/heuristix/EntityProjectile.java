@@ -27,10 +27,6 @@ import com.heuristix.guns.util.ReflectionFacade;
 public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
-    static {
-        //TODO add new obfuscation names
-        ReflectionFacade.getInstance().putField(Entity.class, "hurtResistantTime", "ae");
-    }
 
     public EntityLiving owner;
     private Vec3 start;

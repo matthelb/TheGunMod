@@ -1,10 +1,11 @@
 package com.heuristix.guns.handler;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+
 import com.heuristix.guns.ContainerCraftGuns;
 import com.heuristix.guns.GuiCraftGuns;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class GunGuiHandler implements IGuiHandler {

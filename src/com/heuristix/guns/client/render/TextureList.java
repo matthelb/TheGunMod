@@ -4,8 +4,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import com.heuristix.guns.helper.MathHelper;
-
 public class TextureList extends ArrayList<BufferedImage> {
 
 	private static final long serialVersionUID = 480341644348642125L;
@@ -32,7 +30,7 @@ public class TextureList extends ArrayList<BufferedImage> {
 	
 	public BufferedImage toBufferedImage() {
 		int width = getSize() * 16, height = getSize() * 16;//MathHelper.roundUp(size(), 16) / 16 * getSize();
-		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);//ImageHelper.getCompatibleImage(width, height, Transparency.BITMASK);
 		Graphics2D g = image.createGraphics();
 		for (int i = 0; i < size(); i++) {
 			BufferedImage t = this.get(i);

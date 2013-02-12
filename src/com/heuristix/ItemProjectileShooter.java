@@ -5,6 +5,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 import com.heuristix.guns.ItemCustom;
+import com.heuristix.guns.handler.GunPacketHandler;
+
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 
 /**
  * Created by IntelliJ IDEA.
@@ -98,6 +102,7 @@ public abstract class ItemProjectileShooter extends ItemCustom {
     }
 
     public void onFire(World world, EntityPlayer player) {
+    	PacketDispatcher.sendPacketToPlayer(GunPacketHandler.getShooterInfoPacket(GunPacketHandler.PACKET_FIRE_SUCCESS), (Player) player);
     }
 
     public final ItemProjectile getProjectile() {

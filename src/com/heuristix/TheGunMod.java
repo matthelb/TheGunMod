@@ -18,19 +18,28 @@ import java.util.Properties;
 
 import javax.imageio.ImageIO;
 
-import org.lwjgl.input.Keyboard;
-
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.SoundManager;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderEngine;
+import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.TextureLoadEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
+
+import org.lwjgl.input.Keyboard;
 
 import com.heuristix.guns.AbstractGunBridge;
 import com.heuristix.guns.BaseMod;
@@ -45,6 +54,8 @@ import com.heuristix.guns.asm.Opcodes;
 import com.heuristix.guns.client.Resources;
 import com.heuristix.guns.client.handler.GunKeyHandler;
 import com.heuristix.guns.client.render.TextureManager;
+import com.heuristix.guns.handler.GunGuiHandler;
+import com.heuristix.guns.handler.GunPacketHandler;
 import com.heuristix.guns.helper.IOHelper;
 import com.heuristix.guns.util.ClassDescriptor;
 import com.heuristix.guns.util.ExtensibleClassVisitor;
@@ -53,9 +64,8 @@ import com.heuristix.guns.util.Log;
 import com.heuristix.guns.util.Method;
 import com.heuristix.guns.util.Pair;
 import com.heuristix.guns.util.ReflectionFacade;
-import com.heuristix.guns.handler.GunGuiHandler;
-import com.heuristix.guns.handler.GunPacketHandler;
 
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
 import cpw.mods.fml.common.Mod.Instance;
@@ -68,7 +78,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 @Mod(modid="TheGunMod", name="TheGunMod", version="1.2.2")
-@NetworkMod(clientSideRequired=true, serverSideRequired=false, channels={"TGMShootAction", "TGMArrowClick"}, packetHandler=GunPacketHandler.class)
+@NetworkMod(clientSideRequired=true, serverSideRequired=false, channels={"TGMShootAction", "TGMArrowClick", "TGMInfo"}, packetHandler=GunPacketHandler.class)
 public class TheGunMod extends BaseMod {
 
 	private static final Properties DEFAULT_CONFIG = new Properties();
@@ -81,16 +91,20 @@ public class TheGunMod extends BaseMod {
     
     //TODO change for release
     public static final boolean DEBUG = true;
-
-    private static final int BASE_PROJECTILE_TRACKER_ID = 100;
     
     static {
         //TODO add new obfuscation names
         ReflectionFacade names = ReflectionFacade.getInstance();
-        names.putField(RenderManager.class, "itemRenderer", "f");
         names.putField(EntityRenderer.class, "cameraZoom", "X");
-        names.putField(EntityRenderer.class, "itemRenderer", "c");
         names.putField(RenderEngine.class, "imageData", "g");
+        names.putField(Entity.class, "hurtResistantTime", "ae");
+        names.putField(ItemRenderer.class, "itemToRender", "c");
+        names.putField(SoundManager.class, "options", "f");
+        names.putField(EntityPlayerSP.class, "mc", "c");
+        names.putField(RenderItem.class, "renderBlocks", "g");
+        names.putMethod(Packet.class, "addIdClassMapping", "a", int.class, boolean.class, boolean.class, Class.class);
+        names.putMethod(ClassLoader.class, "defineClass", "", String.class, byte[].class, int.class, int.class);
+        names.putField(EntityPlayerMP.class, "currentWindowId", "cs");
         
         DEFAULT_CONFIG.setProperty("block.armory.id", String.valueOf(212));
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
@@ -109,7 +123,6 @@ public class TheGunMod extends BaseMod {
         this.nameToEntityProjectileClassMap = new HashMap<String, Class<?>>();
         this.nameToItemProjectileMap = new HashMap<String, ItemProjectile>();
         this.trackerIdToEntityProjectileClassMap = new HashMap<Integer, Class<? extends EntityProjectile>>();
-        this.projectileTrackerId = BASE_PROJECTILE_TRACKER_ID;
     }
     
 	@Instance("TheGunMod")
@@ -119,17 +132,20 @@ public class TheGunMod extends BaseMod {
 	public static CommonProxy proxy;
 	
 	@ForgeSubscribe
-	public void loadSounds(SoundLoadEvent event) {
+	public void onSoundLoadEvent(SoundLoadEvent event) {
 		this.event = event;
 	}
 	
 	@ForgeSubscribe
 	public void onTexturePackChange(TextureLoadEvent event) {
-		MinecraftForgeClient.preloadTexture("/" + TextureManager.getTextureFileName(event.pack.getTexturePackResolution()));
+		if (isTexturesRegistered()) {
+			MinecraftForgeClient.preloadTexture("/" + TextureManager.getTextureFileName(event.pack.getTexturePackResolution()));
+		}
 	}
 	
 	@PreInit
     public void preInit(FMLPreInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(this);
 		load();
     }
    
@@ -151,6 +167,7 @@ public class TheGunMod extends BaseMod {
 	        registerBlock(new BlockCraftGuns(blockArmoryId));
 	        NetworkRegistry.instance().registerGuiHandler(this, new GunGuiHandler());
 		}
+		
     }
 	
 	public void registerSounds() {
@@ -289,7 +306,6 @@ public class TheGunMod extends BaseMod {
         }
         if (itemProjectile != null) {
             itemProjectile.setIconIndex(textureManager.registerTexture(projectileTextures.toArray(new BufferedImage[projectileTextures.size()])));
-            itemProjectile.setTextureFile("/" + TextureManager.TEXTURE_FILE_NAME_FORMAT);
             registerItem(itemProjectile);
         }
 
@@ -304,8 +320,8 @@ public class TheGunMod extends BaseMod {
         }
         if (itemGun != null) {
             itemGun.setIconIndex(textureManager.registerTexture(gunTextures.toArray(new BufferedImage[projectileTextures.size()])));
-            itemGun.setTextureFile("/" + TextureManager.TEXTURE_FILE_NAME_FORMAT);
             registerItem(itemGun);
+            proxy.registerItemRenderer(itemGun);
             soundManager.registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get("shootSound"));
             if (resources.get("reloadSound") != null) {
             	soundManager.registerStreaming(itemGun.getReloadSound().replaceFirst("\\.", "/") + ".ogg", resources.get("reloadSound"));

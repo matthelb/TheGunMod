@@ -7,25 +7,19 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
-
-import com.heuristix.guns.client.render.TextureManager;
-import com.heuristix.guns.helper.IOHelper;
-import com.heuristix.guns.helper.MathHelper;
-import com.heuristix.guns.util.Log;
-import com.heuristix.guns.util.ReflectionFacade;
 
 import net.minecraft.client.texturepacks.ITexturePack;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.client.TextureFXManager;
+
+import com.heuristix.guns.client.render.TextureManager;
+import com.heuristix.guns.util.Log;
+import com.heuristix.guns.util.ReflectionFacade;
+
 import cpw.mods.fml.common.LoaderException;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -36,6 +30,8 @@ public abstract class BaseMod implements IMod {
 	protected final SoundManager soundManager;
 	protected final TextureManager textureManager;
 	
+	private boolean texturesRegistered, soundsRegistered;
+
 	public BaseMod() {
 		this.soundManager = new SoundManager();
 		this.textureManager = new TextureManager();
@@ -84,7 +80,8 @@ public abstract class BaseMod implements IMod {
 	}
 
 	public void registerAllSounds(SoundLoadEvent event) {
-		soundManager.registerAllSound(event.manager, getPropertiesId());
+		soundManager.registerAllSounds(event.manager, getPropertiesId());
+		soundsRegistered = true;
 	}
 	
 	public void registerTextures() {
@@ -93,13 +90,22 @@ public abstract class BaseMod implements IMod {
 			try {
 				addURLToClassLoader(folder.toURI().toURL(), (URLClassLoader) ITexturePack.class.getClassLoader());
 				MinecraftForgeClient.preloadTexture("/" + TextureManager.getCurrentTextureFileName());
-				//int currentSize = FMLClientHandler.instance().getClient().renderEngine.texturePack.getSelectedTexturePack().getTexturePackResolution();
-				//TextureFXManager.instance().setTextureDimensions(currentSize, currentSize);
+				texturesRegistered = true;
 			} catch (MalformedURLException e) {
 				Log.throwing(getClass(), "registerTextures()", e, getClass());
 			}
 		}
+		
 	}
+	
+	public boolean isTexturesRegistered() {
+		return texturesRegistered;
+	}
+
+	public boolean isSoundsRegistered() {
+		return soundsRegistered;
+	}
+
 	
 	@Override
 	public String getModName() {

@@ -24,6 +24,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import net.minecraft.client.Minecraft;
+
 import com.heuristix.TheGunMod;
 import com.heuristix.guns.AbstractGunBridge;
 import com.heuristix.guns.FireMode;
@@ -55,6 +57,8 @@ public class GunCreator extends AbstractGunBridge {
                 int newTab = JOptionPane.showConfirmDialog(frame, "Open gun in new tab?", "New tab?", JOptionPane.YES_NO_OPTION);
                 if (newTab == JOptionPane.YES_OPTION) {
                     addNewTab(file.getName());
+                } else {
+                	tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), file.getName());
                 }
                 read(new Gun(bytes), true);
             } catch (Exception e) {
@@ -161,6 +165,9 @@ public class GunCreator extends AbstractGunBridge {
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
+    	if (args.length == 1 && args[0].equals("srcmod")) {
+    		Minecraft.GUN_CREATOR_SRC_MOD = true;
+    	}
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
                 try {

@@ -35,13 +35,13 @@ public class SoundManager {
 		
 	}
 	
-	public void registerAllSound(net.minecraft.client.audio.SoundManager manager, String folder) {
+	public void registerAllSounds(net.minecraft.client.audio.SoundManager manager, String folder) {
 		for (int i = 0; i < soundMaps.length; i++) {
 			SoundMap sounds = soundMaps[i];
 			if (sounds != null) {
 				for (Map.Entry<String, byte[]> entry : sounds.entrySet()) {
 					String name = entry.getKey();
-					File soundFile = IOHelper.getHeuristixTempFile(folder, name.replaceAll("/", "."), entry.getValue());
+					File soundFile = IOHelper.getSysTempFile(name.replaceAll("/", "."), null, entry.getValue());
 					if (soundFile != null) {
 						switch (i) {
 							case 0:

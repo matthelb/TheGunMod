@@ -1,7 +1,9 @@
 package com.heuristix.guns;
 
+import com.heuristix.ItemGun;
 import com.heuristix.TheGunMod;
 import com.heuristix.guns.handler.GunServerTickHandler;
+
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -22,6 +24,9 @@ public class CommonProxy {
 	
 	public void registerTextures(TheGunMod mod) {
 		
+	}
+
+	public void registerItemRenderer(ItemGun item) {	
 	}
 
 }

@@ -8,13 +8,16 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.src.ModLoader;
 
 import org.lwjgl.opengl.GL11;
 
 import com.heuristix.ItemGun;
 import com.heuristix.TheGunMod;
+import com.heuristix.guns.client.Resources;
 import com.heuristix.guns.helper.InventoryHelper;
+import com.heuristix.guns.helper.RenderHelper;
+
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 /**
  * Created by IntelliJ IDEA.
@@ -80,8 +83,8 @@ public class GuiCraftGuns extends GuiContainer {
                             ItemStack stack = slot.getStack();
                             if(stack != null) {
                                 int amount = (int) (Math.max(1, Math.round(stack.stackSize * ((Number) craftingCost[index + 1]).doubleValue())));
-                                int color = (InventoryHelper.getCount(mc.thePlayer.inventory, item.itemID) < amount ? COLOR_RED : COLOR_GREEN);
-                                renderItemIcon(item, amount, (int) (xPoints[i] + (c * 16 * scale)), (int) (yPoint + (r * 16 * scale)), scale, color);
+                                renderItemIcon(item, amount, (int) (xPoints[i] + (c * 16 * scale)), (int) (yPoint + (r * 16 * scale)), scale,
+                                		(InventoryHelper.getCount(mc.thePlayer.inventory, item.itemID) < amount ? COLOR_RED : COLOR_GREEN));
                             }
                         }
                     }
@@ -90,17 +93,15 @@ public class GuiCraftGuns extends GuiContainer {
         }
     }
 
-    private void renderItemIcon(Item item, int amount, int x, int y, float scale, int overlayTextColor) {
+    private void renderItemIcon(Item item, int amount, int x, int y, float scale, int color) {
         ItemStack stack = new ItemStack(item, amount);
-        itemRenderer.renderItemIntoGUI(fontRenderer, mc.renderEngine, stack, x, y);
-        itemRenderer.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, stack, x, y);
-        /*Util.drawItemIntoGui(Util.getBlockRender(itemRenderer), fontRenderer, mc.renderEngine, stack, x, y, itemRenderer.zLevel, true, scale);
-        Util.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, stack, 1, x, y, overlayTextColor, scale);   */
+        RenderHelper.renderItemIntoGUI(itemRenderer, fontRenderer, mc.renderEngine, stack, x, y, scale);
+        RenderHelper.renderItemOverlayIntoGUI(itemRenderer, fontRenderer, mc.renderEngine, stack, x, y, scale, color); 
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-        int texture = mc.renderEngine.getTexture("/heuristix/guns/craftguns.png");
+        int texture = mc.renderEngine.getTexture(Resources.CRAFT_GUNS_TEXTURE);
         GL11.glColor4f(1, 1, 1, 1);
         mc.renderEngine.bindTexture(texture);
         int x = getX();
@@ -120,77 +121,11 @@ public class GuiCraftGuns extends GuiContainer {
             if(ARROW[i].contains(x - getX(),y - getY())) {
                 mouseOverArrow[i] = false;
                 container.onArrowClick(i);
-                if(mc.theWorld.isRemote) {
-                    ModLoader.clientSendPacket(TheGunMod.getArrowClickPacket(i));
-                }
+                PacketDispatcher.sendPacketToServer(TheGunMod.getArrowClickPacket(i));
             }
         }
     }
-
-    /*protected void handleMouseClick(Slot slot, int par2, int par3, boolean par4) {
-        super.handleMouseClick(slot, par2, par3, par4);
-        ItemStack var6;
-        InventoryPlayer var9;
-        if (slot != null) {
-            if (slot.inventory == container.getInventoryBasic()) {
-                var9 = this.mc.thePlayer.inventory;
-                var6 = var9.getItemStack();
-                ItemStack var7 = slot.getStack();
-
-                if (var6 != null && var7 != null && var6.isItemEqual(var7)) {
-                    if (par3 == 0) {
-                        if (par4) {
-                            var6.stackSize = var6.getMaxStackSize();
-                        } else if (var6.stackSize < var6.getMaxStackSize()) {
-                            ++var6.stackSize;
-                        }
-                    } else if (var6.stackSize <= 1) {
-                        var9.setItemStack((ItemStack) null);
-                    } else {
-                        --var6.stackSize;
-                    }
-                } else if (var7 != null && var6 == null) {
-                    boolean var8 = false;
-
-                    if (!var8) {
-                        var9.setItemStack(ItemStack.copyItemStack(var7));
-                        var6 = var9.getItemStack();
-
-                        if (par4) {
-                            var6.stackSize = var6.getMaxStackSize();
-                        }
-                    }
-                } else {
-                    var9.setItemStack((ItemStack) null);
-                }
-            } else {
-                this.inventorySlots.slotClick(slot.slotNumber, par3, par4, this.mc.thePlayer);
-                ItemStack var10 = this.inventorySlots.getSlot(slot.slotNumber).getStack();
-                this.mc.playerController.sendSlotPacket(var10, slot.slotNumber - this.inventorySlots.inventorySlots.size() + 9 + 36);
-            }
-        } else {
-            var9 = this.mc.thePlayer.inventory;
-
-            if (var9.getItemStack() != null) {
-                if (par3 == 0) {
-                    this.mc.thePlayer.dropPlayerItem(var9.getItemStack());
-                    this.mc.playerController.func_78752_a(var9.getItemStack());
-                    var9.setItemStack((ItemStack) null);
-                }
-
-                if (par3 == 1) {
-                    var6 = var9.getItemStack().splitStack(1);
-                    this.mc.thePlayer.dropPlayerItem(var6);
-                    this.mc.playerController.func_78752_a(var6);
-
-                    if (var9.getItemStack().stackSize == 0) {
-                        var9.setItemStack((ItemStack) null);
-                    }
-                }
-            }
-        }
-    } */
-
+    
     @Override
     protected void mouseMovedOrUp(int x, int y, int mouseButton) {
         super.mouseMovedOrUp(x, y, mouseButton);

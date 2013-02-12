@@ -10,6 +10,8 @@ public interface Resources {
 	String HOLOGRAPHIC_SCOPE_TEXTURE = PATH + "holographic.png";
 	String ACOG_SCOPE_TEXTURE = PATH + "acog.png";
 	
+	String CRAFT_GUNS_TEXTURE = PATH + "craftguns.png";
+	
 	String MOVE_SOUND = "move.ogg";
 	String HIT_SOUND = "hit.ogg";
 	
