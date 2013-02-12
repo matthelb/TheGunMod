@@ -77,7 +77,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
-@Mod(modid="TheGunMod", name="TheGunMod", version="1.2.2")
+@Mod(modid="TheGunMod", name="TheGunMod", version="2.0.0")
 @NetworkMod(clientSideRequired=true, serverSideRequired=false, channels={"TGMShootAction", "TGMArrowClick", "TGMInfo"}, packetHandler=GunPacketHandler.class)
 public class TheGunMod extends BaseMod {
 
@@ -90,7 +90,7 @@ public class TheGunMod extends BaseMod {
     private SoundLoadEvent event;
     
     //TODO change for release
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     
     static {
         //TODO add new obfuscation names
