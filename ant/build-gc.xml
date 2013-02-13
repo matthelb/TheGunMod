@@ -1,0 +1,56 @@
+<project name="GunCreator" default="main">
+    
+    <property name="project.dir" value="../" />
+	<property name="bin.dir" value="${project.dir}/bin/" />
+	<property name="build.dir" value="build" />
+	<property name="classes.dir" value="${build.dir}/classes" />
+	<property name="jar.dir" value="bin" />
+	<property name="project.version" value="1.5.0" />
+	<property name="forge.dir" value="../../forge" />
+	<property name="mcp.dir" value="${forge.dir}/mcp" />
+	<property name="one-jar.dist.dir" value="C:/Users/Matt/My Files/Development/Java/lib/one-jar"/>
+	<import file="${one-jar.dist.dir}/one-jar-ant-task.xml" optional="true" />
+	
+	<target name="copy">
+	    <delete dir="${classes.dir}" />
+		<copy todir="${classes.dir}">
+			<fileset dir="${mcp.dir}/eclipse/Minecraft/bin">
+				<include name="**/*.class"/>
+			</fileset>
+		</copy> 
+		<copy todir="${classes.dir}" overwrite="true">
+			<fileset dir="${bin.dir}">
+				<include name="**/*.class"/>
+			</fileset>
+		</copy>  
+	</target>
+	
+    <target name="package" depends="copy">
+		<delete dir="${jar.dir}" />
+		<mkdir dir="${jar.dir}" />
+		<!--
+		<jar destfile="${jar.dir}/${ant.project.name}-${project.version}.jar" basedir="${classes.dir}">
+			<manifest>
+                <attribute name="Main-Class" value="com.heuristix.guns.swing.GunCreator"/>
+            </manifest>
+		</jar>
+		-->
+		<one-jar destfile="${jar.dir}/${ant.project.name}-${project.version}.jar">
+		    <main>
+                <fileset dir="${classes.dir}"/>              
+            </main>
+            <lib>
+                <fileset dir="${mcp.dir}/lib" />
+                <fileset dir="${mcp.dir}/jars/bin">
+                	<include name="**/*.jar" />    
+                </fileset>
+            </lib>
+            <manifest>
+                <attribute name="One-Jar-Main-Class" value="com.heuristix.guns.swing.GunCreator"/>
+            </manifest>
+		</one-jar>
+	</target>
+	
+	<target name="main" depends="package" />
+
+</project>

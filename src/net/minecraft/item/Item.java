@@ -30,7 +30,7 @@ import net.minecraftforge.common.ChestGenHooks;
 
 public class Item
 {
-    private CreativeTabs tabToDisplayOn = null;
+	private CreativeTabs tabToDisplayOn = null;
 
     /** The RNG used by the Item subclasses. */
     protected static Random itemRand = new Random();
@@ -726,6 +726,7 @@ public class Item
     /* =========================================================== FORGE START ===============================================================*/
     public boolean isDefaultTexture = true;
     private String currentTexture = "/gui/items.png";
+
 
     /**
      * Called when a player drops the item into the world,

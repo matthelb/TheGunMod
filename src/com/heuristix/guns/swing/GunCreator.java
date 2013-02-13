@@ -165,9 +165,7 @@ public class GunCreator extends AbstractGunBridge {
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
-    	if (args.length == 1 && args[0].equals("srcmod")) {
-    		Minecraft.GUN_CREATOR_SRC_MOD = true;
-    	}
+    	Minecraft.GUN_CREATOR_SRC_MOD = true;
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
                 try {

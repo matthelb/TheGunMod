@@ -77,7 +77,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
-@Mod(modid="TheGunMod", name="TheGunMod", version="2.0.0")
+@Mod(modid="TheGunMod", name="TheGunMod", version="%VERSION%")
 @NetworkMod(clientSideRequired=true, serverSideRequired=false, channels={"TGMShootAction", "TGMArrowClick", "TGMInfo"}, packetHandler=GunPacketHandler.class)
 public class TheGunMod extends BaseMod {
 
@@ -101,10 +101,10 @@ public class TheGunMod extends BaseMod {
         names.putField(ItemRenderer.class, "itemToRender", "c");
         names.putField(SoundManager.class, "options", "f");
         names.putField(EntityPlayerSP.class, "mc", "c");
-        names.putField(RenderItem.class, "renderBlocks", "g");
+        names.putField(RenderItem.class, "itemRenderBlocks", "h");
         names.putMethod(Packet.class, "addIdClassMapping", "a", int.class, boolean.class, boolean.class, Class.class);
         names.putMethod(ClassLoader.class, "defineClass", "", String.class, byte[].class, int.class, int.class);
-        names.putField(EntityPlayerMP.class, "currentWindowId", "cs");
+        names.putField(EntityPlayerMP.class, "currentWindowId", "ct");
         
         DEFAULT_CONFIG.setProperty("block.armory.id", String.valueOf(212));
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));

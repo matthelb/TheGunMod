@@ -95,8 +95,8 @@
 		<copy todir="${mcpsrc.dir}/minecraft">
 			<fileset dir="${src.dir}/common" />
 			<filterset>
-				<filter token="VERSION" value="${project.version.full}" />
-				<filter token="BUILD_NUMBER" value="${build.number}" />
+				<filter token="%VERSION%" value="${project.version.full}" />
+				<filter token="%BUILD_NUMBER%" value="${build.number}" />
 			</filterset>
 		</copy>
 
