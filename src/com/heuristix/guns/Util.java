@@ -59,6 +59,10 @@ public class Util {
 
     private Util() { }
 
+    static {
+        ReflectionFacade.getInstance().putMethod(ClassLoader.class, "defineClass", "", String.class, byte[].class, int.class, int.class);
+    }
+    
     public static byte[] getStringBytes(String string) {
         byte[] stringBytes = string.getBytes();
         byte[] bytes = new byte[stringBytes.length + 1];
@@ -217,38 +221,7 @@ public class Util {
         }
         return null;
     }
-
-    public static RenderBlocks getBlockRender(RenderItem renderItem) {
-        return (RenderBlocks) ReflectionFacade.getInstance().getFieldValue(RenderItem.class, renderItem, "renderBlocks");
-    }
-
-    public static ModelBiped getModelBiped(RenderPlayer render) {
-        return (ModelBiped) ReflectionFacade.getInstance().getFieldValue(RenderPlayer.class, render, "modelBipedMain");
-    }
-
-    public static BaseMod getLoadedMod(Class<?> clazz) {
-        List<BaseMod> mods = ModLoader.getLoadedMods();
-        Iterator<BaseMod> itr = mods.iterator();
-        while(itr.hasNext()) {
-            BaseMod next = (BaseMod) itr.next();
-            if(next.getClass().equals(clazz))
-                return next;
-        }
-        return null;
-    }
-
-    public static int getModMPId(BaseMod mod) {
-        return mod.toString().hashCode();
-    }
-
-    public static int getModMPId(Class<?> clazz) {
-        return getModMPId(getLoadedMod(clazz));
-    }
-
-    public static void setPacketId(Class<?> packetClass, int id, boolean client, boolean server) {
-         ReflectionFacade.getInstance().invokeMethod(Packet.class, null, "addIdClassMapping", id, client, server, packetClass);
-    }
-
+    
     public static String getStringFromBytes(int[] bytes) {
         int i = 0;
         while (bytes[i++] != 10) ;

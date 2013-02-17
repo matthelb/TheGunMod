@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EffectRenderer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
@@ -1380,7 +1379,7 @@ public class Block
         }
 
         canBlockGrass[0] = true;
-        if (!Minecraft.GUN_CREATOR_SRC_MOD) {
+        if (!MinecraftForge.GUN_CREATOR_SRC_MOD) {
         	StatList.initBreakableStats();
         }
     }

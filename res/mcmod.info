@@ -1,0 +1,19 @@
+[
+{
+  "modid": "TheGunMod",
+  "name": "BuildCraft",
+  "description": "Adds customizable guns, flamethrowers, rockets, and grenades to Minecraft!",
+  "version": "@VERSION@",
+  "credits": "Created by Heuristix",
+  "logoFile": "/heuristix/guns/logo.png",
+  "mcversion": "1.4.7",
+  "url": "http://www.minecraftforum.net/index.php?showtopic=716219",
+  "updateUrl": "",
+  "authors": [ "Heuristix" ],
+  "parent":"",
+  "screenshots": [],
+  "dependencies": [
+     "mod_MinecraftForge"
+  ]
+}
+]

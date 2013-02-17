@@ -12,8 +12,8 @@ import net.minecraft.item.ItemStack;
 import org.lwjgl.opengl.GL11;
 
 import com.heuristix.ItemGun;
-import com.heuristix.TheGunMod;
 import com.heuristix.guns.client.Resources;
+import com.heuristix.guns.handler.GunPacketHandler;
 import com.heuristix.guns.helper.InventoryHelper;
 import com.heuristix.guns.helper.RenderHelper;
 
@@ -121,7 +121,7 @@ public class GuiCraftGuns extends GuiContainer {
             if(ARROW[i].contains(x - getX(),y - getY())) {
                 mouseOverArrow[i] = false;
                 container.onArrowClick(i);
-                PacketDispatcher.sendPacketToServer(TheGunMod.getArrowClickPacket(i));
+                PacketDispatcher.sendPacketToServer(GunPacketHandler.getArrowClickPacket(i));
             }
         }
     }

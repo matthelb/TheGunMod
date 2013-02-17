@@ -1,6 +1,7 @@
 package com.heuristix.guns.helper;
 
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,8 +11,12 @@ import java.io.InputStream;
 import java.net.URL;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.server.MinecraftServer;
 
 import com.heuristix.guns.util.Log;
+
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 public class IOHelper {
 	
@@ -76,7 +81,12 @@ public class IOHelper {
 	}
 
 	public static File getMinecraftDir(String dir) {
-	    File minecraftDir = Minecraft.getMinecraftDir();
+		File minecraftDir;
+		if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+			minecraftDir = Minecraft.getMinecraftDir();
+		} else {
+			minecraftDir = new File(System.getProperty("user.dir"));
+		}
 	    if (minecraftDir != null) {
 	        return new File(minecraftDir.getAbsolutePath() + File.separator + dir);
 	    }
@@ -161,6 +171,15 @@ public class IOHelper {
 	        HOME_DIRECTORY = new File(System.getProperty("user.home"));
 	    }
 	    return HOME_DIRECTORY;
+	}
+
+	public static byte[] writeIntsToByteArray(int... data) throws IOException {
+	    ByteArrayOutputStream bOut = new ByteArrayOutputStream();
+	    DataOutputStream out = new DataOutputStream(bOut);
+	    for (int i : data) {
+	        out.writeInt(i);
+	    }
+	    return bOut.toByteArray();
 	}
 	
 }

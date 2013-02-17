@@ -15,6 +15,7 @@ import com.heuristix.guns.ContainerCraftGuns;
 import com.heuristix.guns.FireMode;
 import com.heuristix.guns.client.handler.GunClientTickHandler;
 import com.heuristix.guns.client.render.GunItemRenderer;
+import com.heuristix.guns.helper.IOHelper;
 import com.heuristix.guns.util.Log;
 
 import cpw.mods.fml.client.FMLClientHandler;
@@ -102,9 +103,18 @@ public class GunPacketHandler implements IPacketHandler {
         }
 	}
 
+	public static Packet250CustomPayload getArrowClickPacket(int arrow) {
+	    try {
+	        return new Packet250CustomPayload("TGMArrowClick", IOHelper.writeIntsToByteArray(arrow));
+	    } catch (IOException e) {
+	        Log.throwing(TheGunMod.class, "getArrowClickPacket(int arrow)", e, TheGunMod.class);
+	    }
+	    return null;
+	}
+
 	public static Packet250CustomPayload getShooterActionPacket(int shiftedIndex, int action) {
 	    try {
-	        return new Packet250CustomPayload("TGMShootAction", TheGunMod.writeIntsToByteArray(shiftedIndex, action));
+	        return new Packet250CustomPayload("TGMShootAction", IOHelper.writeIntsToByteArray(shiftedIndex, action));
 	    } catch (IOException e) {
 	        Log.throwing(TheGunMod.class, "getShooterActionPacket(int shiftedIndex, int action)", e, TheGunMod.class);
 	    }
@@ -113,7 +123,7 @@ public class GunPacketHandler implements IPacketHandler {
 	
 	public static Packet250CustomPayload getShooterInfoPacket(int... info) {
 		try {
-	        return new Packet250CustomPayload("TGMInfo", TheGunMod.writeIntsToByteArray(info));
+	        return new Packet250CustomPayload("TGMInfo", IOHelper.writeIntsToByteArray(info));
 	    } catch (IOException e) {
 	        Log.throwing(TheGunMod.class, "getShooterActionPacket(int shiftedIndex, int action)", e, TheGunMod.class);
 	    }

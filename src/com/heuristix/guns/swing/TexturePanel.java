@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import com.heuristix.guns.helper.ImageHelper;
+import com.heuristix.guns.helper.MathHelper;
 
 /**
  * Created by IntelliJ IDEA.
@@ -43,7 +44,7 @@ public class TexturePanel extends JPanel {
                 panel.setLayout(new FlowLayout());
                 textures[i][j] = new DisplayableImageButton();
                 textures[i][j].setPreferredSize(new Dimension(64, 64));
-                int size = (int)Math.pow(2, 4 + j);
+                int size = MathHelper.pow(2, 4 + j);
                 panel.add(new JLabel(size + "x" + size));
                 panel.add(textures[i][j]);
                 panels[i].add(panel);
@@ -66,7 +67,6 @@ public class TexturePanel extends JPanel {
         int index = getTextureIndex(image.getWidth());
         int size = getTextureSize(index);
         textures[(gun) ? 0 : 1][index].updateImage(ImageHelper.resizeImage(image, size, size));
-
     }
 
     public Map<Integer, BufferedImage> getTextures(boolean gun) {

@@ -10,7 +10,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 import com.heuristix.guns.Util;
-import com.heuristix.guns.client.handler.GunClientTickHandler;
 import com.heuristix.guns.client.render.TextureManager;
 import com.heuristix.guns.helper.InventoryHelper;
 

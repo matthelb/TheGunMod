@@ -30,10 +30,12 @@ public class TextureManager {
 		int textureIndex = -1;
 		for (BufferedImage image : images) {
 			int index = MathHelper.log2(image.getWidth()) - 4;
-			textureIndex = textures[index].addTexture(image);
+			if (textureIndex == -1 || textures[index].size() <= textureIndex) {
+				textureIndex = textures[index].addTexture(image);
+			}
 		}
 		for (int i = 0; i < textures.length; i++) {
-			if (textures[i].size() == textureIndex) {
+			if (textures[i].size() <= textureIndex) {
 				textures[i].addTexture(ImageHelper.getClosestTexture(textures[i].getSize(), images));
 			}
 		}

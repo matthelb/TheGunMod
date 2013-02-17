@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.heuristix.guns.helper.IOHelper;
 
@@ -52,5 +53,9 @@ public class FileChooserActionListener implements ActionListener {
 
     public void setLastSelectedFile(File file) {
         this.lastSelectedFile = file;
+    }
+    
+    public void setFileFilter(String description, String... extensions) {
+    	fileChooser.setFileFilter(new FileNameExtensionFilter(description, extensions));
     }
 }

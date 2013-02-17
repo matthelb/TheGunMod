@@ -59,7 +59,7 @@ public class BufferedCanvasGun extends BufferedCanvas implements DocumentListene
     }
 
     private void propertyChanged(String property, String value) {
-        switch (property) {
+        /*switch (property) {
             case "damage":
                 break;
             case "range":
@@ -90,20 +90,22 @@ public class BufferedCanvasGun extends BufferedCanvas implements DocumentListene
                 break;
             default:
                 break;
-        }
+        }*/
         repaint();
     }
 
     @Override
     public void textureChanged(DisplayableImageButton b, BufferedImage texture) {
-        texture = ImageHelper.resizeImage(texture, 160, 160);
-        AffineTransform af = AffineTransform.getTranslateInstance(0.5 * texture.getHeight(), 0.5 * texture.getWidth());
-        af.rotate(-Math.PI / 4 * 0.95);
-        af.translate(-0.3 * texture.getHeight(), -0.3 * texture.getWidth());
-        AffineTransformOp rotate = new AffineTransformOp(af, AffineTransformOp.TYPE_BILINEAR);
-        gun = new BufferedImage((int) (texture.getWidth() * 1.5), texture.getHeight(), texture.getType());
-        rotate.filter(texture, gun);
-        repaint();
+    	if (gun == null || texture.getWidth() >= gun.getWidth()) {
+	        texture = ImageHelper.resizeImage(texture, 160, 160);
+	        AffineTransform af = AffineTransform.getTranslateInstance(0.5 * texture.getHeight(), 0.5 * texture.getWidth());
+	        af.rotate(-Math.PI / 4 * 0.95);
+	        af.translate(-0.3 * texture.getHeight(), -0.3 * texture.getWidth());
+	        AffineTransformOp rotate = new AffineTransformOp(af, AffineTransformOp.TYPE_BILINEAR);
+	        gun = new BufferedImage((int) (texture.getWidth() * 1.5), texture.getHeight(), texture.getType());
+	        rotate.filter(texture, gun);
+	        repaint();
+    	}
     }
 
     private static String getDocumentText(Document d) {

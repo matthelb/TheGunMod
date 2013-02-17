@@ -52,7 +52,6 @@ public class GunItemRenderer extends ItemRenderer implements IItemRenderer {
 	}
 
 	public static void setItemToRender(ItemStack item, ItemRenderer itemRenderer) {
-		System.out.println(ReflectionFacade.getInstance().getFieldValue(ItemRenderer.class, itemRenderer, "itemToRender") + " to " + item);
 		ReflectionFacade.getInstance().setFieldValue(ItemRenderer.class, itemRenderer, "itemToRender", item);
 	}
 	

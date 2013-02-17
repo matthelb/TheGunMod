@@ -8,7 +8,6 @@ import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -27,6 +26,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ChestGenHooks;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Item
 {
@@ -249,7 +249,7 @@ public class Item
 
         itemsList[256 + par1] = this;
         
-        if (!Minecraft.GUN_CREATOR_SRC_MOD) {
+        if (!MinecraftForge.GUN_CREATOR_SRC_MOD) {
         	GameData.newItemAdded(this);
         }
 
@@ -718,7 +718,7 @@ public class Item
 
     static
     {
-    	if (!Minecraft.GUN_CREATOR_SRC_MOD) {
+    	if (!MinecraftForge.GUN_CREATOR_SRC_MOD) {
     		StatList.initStats();
     	}
     }

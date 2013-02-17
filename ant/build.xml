@@ -9,7 +9,7 @@
 	
 	<property name="download.dir" value="../../download" />
 	<property name="classes.dir" value="${build.dir}/classes" />
-	<property name="jar.dir" value="bin" />
+	<property name="jar.dir" value="bin/mod" />
 
 	<property name="forge.dir" value="../../forge" />
 	<property name="mcp.dir" value="${forge.dir}/mcp" />
@@ -43,7 +43,7 @@
 
 	<!-- Set full version -->
 	<target name="initialize-version" depends="version-provided,version-not-provided">
-		<property name="project.version.full" value="${project.version}.${build.number}" />
+		<property name="project.version.full" value="${project.version}" />
 	</target>
 
 	<!-- Set unknown build number -->
@@ -90,13 +90,17 @@
 
 		<delete dir="${classes.dir}" />
 		<mkdir dir="${classes.dir}" />
-
+		<!-- Backup sources -->
+		<delete dir="${mcp.dir}/temp/src" />
+		<copy todir="${mcp.dir}/temp/src">
+			<fileset dir="${mcpsrc.dir}/minecraft" />    
+		</copy>
 		<!-- Copy sources -->
-		<copy todir="${mcpsrc.dir}/minecraft">
-			<fileset dir="${src.dir}/common" />
+		<copy todir="${mcpsrc.dir}/minecraft" overwrite="true">
+			<fileset dir="${src.dir}" />
 			<filterset>
-				<filter token="%VERSION%" value="${project.version.full}" />
-				<filter token="%BUILD_NUMBER%" value="${build.number}" />
+				<filter token="VERSION" value="${project.version.full}" />
+				<filter token="BUILD_NUMBER" value="${build.number}" />
 			</filterset>
 		</copy>
 
@@ -134,19 +138,22 @@
 		<!-- Copy resources -->
 		<copy todir="${classes.dir}">
 			<fileset dir="${resources.dir}">
-				<exclude name="build.xml" />
+			    <filter token="VERSION" value="${project.version.full}" />
 			</fileset>
 		</copy>
 
 		<!-- Copy localizations -->
-		<copy todir="${classes.dir}" failonerror="false">
+		<!--<copy todir="${classes.dir}" failonerror="false">
 			<fileset dir="${lang.dir}">
 				<exclude name="README.md" />
 			</fileset>
-		</copy>
+		</copy>-->
 
 		<!-- Reset src dir to post-forge-install state -->
-		<delete dir="${mcpsrc.dir}/minecraft/buildcraft" />
+		<delete dir="${mcpsrc.dir}/minecraft/" />
+		<copy todir="${mcpsrc.dir}/minecraft">
+		    <fileset dir="${mcp.dir}/temp/src" />
+		</copy>
 
 	</target>
 
@@ -154,15 +161,7 @@
 	<target name="package" depends="compile">
 		<delete dir="${jar.dir}" />
 		<mkdir dir="${jar.dir}" />
-		<jar
-			destfile="${jar.dir}/${ant.project.name}-${mc.version}-${project.version.full}.jar"
-			basedir="${classes.dir}" />
-		<copy todir="${jar.dir}/changelog">
-			<fileset dir="${resources.dir}/changelog">
-				<include name="*" />
-			</fileset>
-		</copy>
-
+		<jar destfile="${jar.dir}/${ant.project.name}-${mc.version}-${project.version.full}.jar" basedir="${classes.dir}" />
 	</target>
 
 	<!-- Default target to run -->

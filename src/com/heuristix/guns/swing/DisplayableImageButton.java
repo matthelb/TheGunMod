@@ -26,7 +26,7 @@ public class DisplayableImageButton extends DisplayableFileButton {
     }
 
     public DisplayableImageButton(File file) {
-        super(file);
+        super(file, "Image files", "JPEG", "JPG", "JIF", "JFIF", "JPE", "JFI", "PNG", "GIF", "BMP", "DIB", "WBMP");
         this.listeners = new LinkedList<TextureChangedListener>();
     }
 

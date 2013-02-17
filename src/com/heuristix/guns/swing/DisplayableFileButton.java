@@ -21,12 +21,17 @@ public class DisplayableFileButton extends JButton implements FileChooserCallbac
     private File file;
 
     public DisplayableFileButton() {
-        this(null);
+    	this(null);
+    }
+    
+    public DisplayableFileButton(String description, String... extensions) {
+        this(null, description, extensions);
     }
 
-    public DisplayableFileButton(File file) {
+    public DisplayableFileButton(File file, String description, String... extensions) {
         this.file = file;
         init();
+        fileChooserListener.setFileFilter(description, extensions);
     }
 
     private void init() {

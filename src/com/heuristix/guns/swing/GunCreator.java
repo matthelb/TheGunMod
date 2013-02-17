@@ -24,7 +24,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import net.minecraft.client.Minecraft;
+import net.minecraftforge.common.MinecraftForge;
+
 
 import com.heuristix.TheGunMod;
 import com.heuristix.guns.AbstractGunBridge;
@@ -35,6 +36,7 @@ import com.heuristix.guns.Scope;
 import com.heuristix.guns.helper.IOHelper;
 import com.heuristix.guns.util.Log;
 import com.heuristix.guns.util.ReverseBuffer;
+
 
 /**
  * Created by IntelliJ IDEA.
@@ -73,8 +75,9 @@ public class GunCreator extends AbstractGunBridge {
             int index = fileName.lastIndexOf('.');
             if (index > -1) {
                 String extension = fileName.substring(index);
-                if (!extension.toLowerCase().equals(".gun2"))
+                if (!extension.toLowerCase().equals(".gun2")) {
                     fileName = fileName.substring(0, index) + "gun2";
+                }
             } else {
                 fileName = fileName + ".gun2";
             }
@@ -82,11 +85,13 @@ public class GunCreator extends AbstractGunBridge {
             FileOutputStream out = null;
             try {
                 out = new FileOutputStream(file);
-                if (out != null)
+                if (out != null) {
                     write(out);
+                }
             } catch (IOException e) {
                 Log.throwing(getClass(), "selectedFile(File file)", e, TheGunMod.class);
             } finally {
+            	tabbedPane.setTitleAt(tabbedPane.getSelectedIndex(), file.getName());
                 if (out != null) {
                     try {
                         out.close();
@@ -165,7 +170,7 @@ public class GunCreator extends AbstractGunBridge {
     }
 
     public static void main(String[] args) throws InvocationTargetException, InterruptedException {
-    	Minecraft.GUN_CREATOR_SRC_MOD = true;
+    	MinecraftForge.GUN_CREATOR_SRC_MOD = true;
         SwingUtilities.invokeAndWait(new Runnable() {
             public void run() {
                 try {

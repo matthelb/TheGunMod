@@ -9,13 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.StatCollector;
+import net.minecraftforge.common.MinecraftForge;
 
 public class StatList
 {
@@ -292,7 +292,7 @@ public class StatList
 
     static
     {
-    	if (!Minecraft.GUN_CREATOR_SRC_MOD) {
+    	if (!MinecraftForge.GUN_CREATOR_SRC_MOD) {
     		AchievementList.init();
     	}
         blockStatsInitialized = false;
