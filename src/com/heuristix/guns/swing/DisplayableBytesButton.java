@@ -15,7 +15,7 @@ public class DisplayableBytesButton extends DisplayableFileButton {
     }
 
     public DisplayableBytesButton(File file) {
-        super(file, "All files", "*");
+        super(file, null);
     }
 
     public boolean updateFile(File file) {

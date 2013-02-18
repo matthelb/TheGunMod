@@ -55,7 +55,7 @@ public class FileChooserActionListener implements ActionListener {
         this.lastSelectedFile = file;
     }
     
-    public void setFileFilter(String description, String... extensions) {
-    	fileChooser.setFileFilter(new FileNameExtensionFilter(description, extensions));
+    public void setFileFilter(FileNameExtensionFilter filter) {
+    	fileChooser.setFileFilter(filter);
     }
 }

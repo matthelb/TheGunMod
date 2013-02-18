@@ -10,6 +10,7 @@ import com.heuristix.guns.helper.ImageHelper;
 import com.heuristix.guns.helper.MathHelper;
 
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.client.TextureFXManager;
 
 public class TextureManager {
 	
@@ -62,7 +63,7 @@ public class TextureManager {
 	public static int getCurrentTextureSize() {
 		Minecraft client = FMLClientHandler.instance().getClient();
 		if (client != null) {
-			return client.renderEngine.texturePack.getSelectedTexturePack().getTexturePackResolution();
+			return TextureFXManager.instance().getTextureDimensions(client.renderEngine.getTexture("/gui/items.png")).width >> 4;
 		}
 		return 16;
 	}

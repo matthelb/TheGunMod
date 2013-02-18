@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.TooManyListenersException;
 
 import javax.swing.JButton;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.heuristix.guns.util.Log;
 
@@ -29,12 +30,16 @@ public class DisplayableFileButton extends JButton implements FileChooserCallbac
     }
 
     public DisplayableFileButton(File file, String description, String... extensions) {
-        this.file = file;
-        init();
-        fileChooserListener.setFileFilter(description, extensions);
+    	this(file, new FileNameExtensionFilter(description, extensions));
     }
 
-    private void init() {
+    public DisplayableFileButton(File file, FileNameExtensionFilter filter) {
+    	this.file = file;
+        init();
+        fileChooserListener.setFileFilter(filter);
+	}
+
+	private void init() {
         DropTarget target = new DropTarget();
         try {
             target.addDropTargetListener(new DropTargetAdapter() {

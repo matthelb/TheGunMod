@@ -53,7 +53,7 @@ public class TheGunMod extends BaseMod {
     private GunManager gunManager;
     
     //TODO change for release
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
     
     static {
         //TODO add new obfuscation names

@@ -1,7 +1,7 @@
 [
 {
   "modid": "TheGunMod",
-  "name": "BuildCraft",
+  "name": "TheGunMod",
   "description": "Adds customizable guns, flamethrowers, rockets, and grenades to Minecraft!",
   "version": "@VERSION@",
   "credits": "Created by Heuristix",

@@ -166,7 +166,7 @@ public abstract class ItemGun extends ItemProjectileShooter {
 
 	@Override
 	public String getTextureFile() {
-		return "/" + TextureManager.getCurrentTextureFileName();
+  		return "/" + TextureManager.getCurrentTextureFileName();
 	}
     
 }
