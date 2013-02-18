@@ -129,4 +129,47 @@ public class RenderHelper {
         t.draw();
     }
 
+	public static void renderCuboid(Tessellator t, double x, double y, double z, float yaw, float pitch, float scaleX, float scaleY, float scaleZ, float r, float g, float b, float a) {
+	    GL11.glPushMatrix();
+	    GL11.glDisable(GL11.GL_TEXTURE_2D);
+	    GL11.glColor4f(r, g, b, a);
+	    GL11.glTranslated(x, y, z);
+	    GL11.glRotatef(pitch, -1, 0, 0);
+	    GL11.glRotatef(yaw, 0, -1, 0);
+	    t.startDrawingQuads();
+	    t.setNormal(0, 0, -1);
+	    t.addVertexWithUV(-scaleX, scaleY, -scaleZ, 0, 1);
+	    t.addVertexWithUV(scaleX, scaleY, -scaleZ, 1, 1);
+	    t.addVertexWithUV(scaleX, -scaleY, -scaleZ, 1, 0);
+	    t.addVertexWithUV(-scaleX, -scaleY, -scaleZ, 0, 0);
+	    t.setNormal(0, 0, 1);
+	    t.addVertexWithUV(-scaleX, -scaleY, scaleZ, 0, 1);
+	    t.addVertexWithUV(scaleX, -scaleY, scaleZ, 1, 1);
+	    t.addVertexWithUV(scaleX, scaleY, scaleZ, 1, 0);
+	    t.addVertexWithUV(-scaleX, scaleY, scaleZ, 0, 0);
+	    t.setNormal(0, -1, 0);
+	    t.addVertexWithUV(-scaleX, -scaleY, -scaleZ, 0, 1);
+	    t.addVertexWithUV(scaleX, -scaleY, -scaleZ, 1, 1);
+	    t.addVertexWithUV(scaleX, -scaleY, scaleZ, 1, 0);
+	    t.addVertexWithUV(-scaleX, -scaleY, scaleZ, 0, 0);
+	    t.setNormal(0, 1, 0);
+	    t.addVertexWithUV(-scaleX, scaleY, scaleZ, 0, 1);
+	    t.addVertexWithUV(scaleX, scaleY, scaleZ, 1, 1);
+	    t.addVertexWithUV(scaleX, scaleY, -scaleZ, 1, 0);
+	    t.addVertexWithUV(-scaleX, scaleY, -scaleZ, 0, 0);
+	    t.setNormal(-1, 0, 0);
+	    t.addVertexWithUV(-scaleX, -scaleY, scaleZ, 0, 1);
+	    t.addVertexWithUV(-scaleX, scaleY, scaleZ, 1, 1);
+	    t.addVertexWithUV(-scaleX, scaleY, -scaleZ, 1, 0);
+	    t.addVertexWithUV(-scaleX, -scaleY, -scaleZ, 0, 0);
+	    t.setNormal(1, 0, 0);
+	    t.addVertexWithUV(scaleX, -scaleY, -scaleZ, 0, 1);
+	    t.addVertexWithUV(scaleX, scaleY, -scaleZ, 1, 1);
+	    t.addVertexWithUV(scaleX, scaleY, scaleZ, 1, 0);
+	    t.addVertexWithUV(scaleX, -scaleY, scaleZ, 0, 0);
+	    t.draw();
+	    GL11.glEnable(GL11.GL_TEXTURE_2D);
+	    GL11.glPopMatrix();
+	}
+
 }

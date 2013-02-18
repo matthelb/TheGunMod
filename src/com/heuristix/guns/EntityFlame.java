@@ -10,6 +10,9 @@ import net.minecraft.world.World;
 
 import com.heuristix.guns.helper.MathHelper;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 /**
  * Created by IntelliJ IDEA.
  * User: Matt
@@ -20,14 +23,20 @@ public class EntityFlame extends EntityIncendiaryBullet {
 
     public EntityFlame(World world) {
         super(world);
+        this.width = 0.5f;
+        this.height = 0.5f;
     }
 
     public EntityFlame(World world, EntityLiving entityliving) {
         super(world, entityliving);
+        this.width = 0.5f;
+        this.height = 0.5f;
     }
 
     public EntityFlame(World world, double x, double y, double z) {
         super(world, x, y, z);
+        this.width = 0.5f;
+        this.height = 0.5f;
     }
 
     /*@Override
@@ -77,8 +86,16 @@ public class EntityFlame extends EntityIncendiaryBullet {
         }
         return false;
     }
+    
+    
 
-    public float getSpeed() {
+    @Override
+	@SideOnly(Side.CLIENT)
+	public boolean canRenderOnFire() {
+		return true;
+	}
+
+	public float getSpeed() {
         return 1;
     }
 
