@@ -68,6 +68,8 @@ public class GunPanel extends JPanel {
         northPanel.add(new JLabel("Gun Name:"));
         nameField = new JTextField();
         nameField.setPreferredSize(COMPONENT_SIZE);
+        nameField.getDocument().addDocumentListener(canvas);
+        nameField.getDocument().putProperty("guns.property", "name");
         northPanel.add(nameField);
 
         GridLayout columned = new GridLayout(0, 2, 5, 5);

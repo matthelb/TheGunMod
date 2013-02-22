@@ -6,7 +6,7 @@
   "version": "@VERSION@",
   "credits": "Created by Heuristix",
   "logoFile": "/heuristix/guns/logo.png",
-  "mcversion": "1.4.7",
+  "mcversion": "@MCVERSION@",
   "url": "http://www.minecraftforum.net/index.php?showtopic=716219",
   "updateUrl": "",
   "authors": [ "Heuristix" ],

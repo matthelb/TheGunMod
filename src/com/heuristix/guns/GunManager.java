@@ -126,7 +126,7 @@ public class GunManager {
 				} finally {
 					fout.close();
 				}
-				Log.fine(String.format("Updated gun file %s from version %s to %s", entry.getKey().substring(entry.getKey().lastIndexOf(File.separator)),
+				Log.fine(String.format("Updated gun file %s from version %s to %s", entry.getKey(),
 						 ((Pair<String, byte[]>) entry.getValue()).getFirst(), AbstractGunBridge.VERSION), tgm.getClass());
 			}
 		}

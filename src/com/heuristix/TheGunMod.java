@@ -53,7 +53,7 @@ public class TheGunMod extends BaseMod {
     private GunManager gunManager;
     
     //TODO change for release
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
     
     static {
         //TODO add new obfuscation names
@@ -73,7 +73,7 @@ public class TheGunMod extends BaseMod {
     }
     
 	@Instance("TheGunMod")
-	public static TheGunMod _instance;
+	public static TheGunMod instance;
 	
 	@SidedProxy(clientSide = "com.heuristix.guns.client.ClientProxy", serverSide = "com.heuristix.guns.CommonProxy")
 	public static CommonProxy proxy;

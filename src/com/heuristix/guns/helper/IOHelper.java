@@ -96,7 +96,9 @@ public class IOHelper {
 	public static File getHeuristixFile(String path, String name) {
 	    File folder = IOHelper.getHeuristixDir(path);
 	    if(folder != null) {
-	        return new File(folder.getAbsolutePath() + File.separator + name);
+	        File f = new File(folder.getAbsolutePath() + File.separator + name);
+	        f.getParentFile().mkdirs();
+	        return f;
 	    }
 	    return null;
 	}
