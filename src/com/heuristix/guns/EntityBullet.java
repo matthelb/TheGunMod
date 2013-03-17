@@ -35,7 +35,7 @@ public class EntityBullet extends EntityProjectile {
 
     @Override
     public float getSpeed() {
-        return 128f;
+        return 0.01f;
     }
 
     @Override

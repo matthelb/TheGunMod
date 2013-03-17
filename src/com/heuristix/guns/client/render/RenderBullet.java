@@ -6,7 +6,7 @@ package com.heuristix.guns.client.render;
  * Date: 9/5/11
  * Time: 7:42 PM
  */
-public class RenderBullet extends RenderCube {
+public class RenderBullet extends RenderProjectile {
 
 	private static final float SCALE = 0.02f;
     private static final float GRAY_LIGHTNESS = 0.4f;

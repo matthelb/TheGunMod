@@ -12,6 +12,7 @@ import java.net.URL;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.common.MinecraftForge;
 
 import com.heuristix.guns.util.Log;
 

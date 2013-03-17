@@ -88,21 +88,23 @@ public abstract class ItemProjectileShooter extends ItemCustom {
             float rand = itemRand.nextFloat();
             world.playSoundAtEntity(player, getShootSound(), rand + 0.5f, 1.0f / (rand * 0.4f + 0.8f));
         }
-        spawnProjectile(world, player);
+        EntityProjectile p = spawnProjectile(world, player);
         lastRound = System.currentTimeMillis();
-        onFire(world, player);
+        onFire(world, p, player);
         if (getFireMode() == FIRE_MODE_BURST) {
             isBursting = true;
         }
         return true;
     }
 
-    public void spawnProjectile(World world, EntityPlayer player) {
-        world.spawnEntityInWorld(projectile.newProjectile(world, player, this));
+    public EntityProjectile spawnProjectile(World world, EntityPlayer player) {
+    	EntityProjectile p = projectile.newProjectile(world, player, this);
+        world.spawnEntityInWorld(p);
+        return p;
     }
 
-    public void onFire(World world, EntityPlayer player) {
-    	PacketDispatcher.sendPacketToPlayer(GunPacketHandler.getShooterInfoPacket(GunPacketHandler.PACKET_FIRE_SUCCESS), (Player) player);
+    public void onFire(World world, EntityProjectile p, EntityPlayer player) {
+    	PacketDispatcher.sendPacketToPlayer(GunPacketHandler.getShooterInfoPacket(GunPacketHandler.PACKET_FIRE_SUCCESS, p.entityId), (Player) player);
     }
 
     public final ItemProjectile getProjectile() {

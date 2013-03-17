@@ -1,7 +1,7 @@
 [
 {
-  "modid": "TheGunMod",
-  "name": "TheGunMod",
+  "modid": "@NAME@",
+  "name": "@NAME@",
   "description": "Adds customizable guns, flamethrowers, rockets, and grenades to Minecraft!",
   "version": "@VERSION@",
   "credits": "Created by Heuristix",

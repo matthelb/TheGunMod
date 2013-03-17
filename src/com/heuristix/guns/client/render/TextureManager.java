@@ -19,6 +19,7 @@ public class TextureManager {
 	public static final String TEXTURE_FILE_NAME_FORMAT = TEXTURE_FILE_NAME + "_%d." + TEXTURE_FILE_FORMAT;
 	
 	private TextureList[] textures;
+	private int maxResolution;
 	
 	public TextureManager() {
 		this.textures = new TextureList[6];
@@ -43,11 +44,15 @@ public class TextureManager {
 		return textureIndex;
 	}
 	
+	public void setMaxResolution(int resolution) {
+		maxResolution = MathHelper.log2(resolution) - 4;
+	}
+	
 	public File writeTemporaryTextures(String folder) {
 		File f = null;
-		for (TextureList list : textures) {
-			f = IOHelper.getHeuristixTempFile(folder, getTextureFileName(list.getSize()));
-			ImageHelper.writeImage(list.toBufferedImage(), TEXTURE_FILE_FORMAT, f);
+		for (int i = 0; i <= maxResolution; i++) {
+			f = IOHelper.getHeuristixTempFile(folder, getTextureFileName(textures[i].getSize()));
+			ImageHelper.writeImage(textures[i].toBufferedImage(), TEXTURE_FILE_FORMAT, f);
 		}
 		return (f == null) ? f : f.getParentFile();
 	}

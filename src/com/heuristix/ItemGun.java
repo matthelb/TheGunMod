@@ -59,8 +59,8 @@ public abstract class ItemGun extends ItemProjectileShooter {
     }
 
     @Override
-    public void onFire(World world, EntityPlayer player) {
-    	super.onFire(world, player);
+    public void onFire(World world, EntityProjectile p, EntityPlayer player) {
+    	super.onFire(world, p,player);
         Vec3 pos = Util.getProjectedPoint(player, 0.8);
         float radians = com.heuristix.guns.helper.MathHelper.toRadians(player.rotationYaw);
         world.spawnParticle("smoke", pos.xCoord - (MathHelper.cos(radians) * 0.3f), pos.yCoord, pos.zCoord - (MathHelper.sin(radians) * 0.3f), 0, 0, 0);

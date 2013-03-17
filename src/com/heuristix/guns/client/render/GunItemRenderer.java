@@ -11,17 +11,16 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import com.heuristix.ItemGun;
+import com.heuristix.guns.client.handler.GunClientTickHandler;
 import com.heuristix.guns.util.ReflectionFacade;
 
 public class GunItemRenderer extends ItemRenderer implements IItemRenderer {
 	
-	private final Minecraft mc;
-	private ItemGun lastGun;
 	private boolean currentlyRendering;
+	private ItemGun lastGun;
 	
 	public GunItemRenderer(Minecraft minecraft) {
 		super(minecraft);
-		this.mc = minecraft;
 	}
 
 	@Override
@@ -36,15 +35,17 @@ public class GunItemRenderer extends ItemRenderer implements IItemRenderer {
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
-		ItemGun gun = (ItemGun) item.getItem();
-		if (gun.isReloading()) {
-			GL11.glTranslatef(0, getReloadingTranslation(gun.getReloadPercent()), 0);
+		if (!GunClientTickHandler.isZoomed) {
+			ItemGun gun = (ItemGun) item.getItem();
+			if (gun.isReloading()) {
+				GL11.glTranslatef(0, getReloadingTranslation(gun.getReloadPercent()), 0);
+			}
+			currentlyRendering = true;
+			GL11.glTranslatef(0.5f, 0.5f, 0.5f);
+			renderItem((EntityLiving) data[1], item, 0);
+			currentlyRendering = false;
+			lastGun = gun;
 		}
-		currentlyRendering = true;
-		GL11.glTranslatef(0.5f, 0.5f, 0.5f);
-		renderItem((EntityLiving) data[1], item, 0);
-		currentlyRendering = false;
-		lastGun = gun;
 	}
 	
 	public float getReloadingTranslation(float percent) {

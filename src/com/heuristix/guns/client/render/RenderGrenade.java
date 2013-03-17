@@ -6,7 +6,7 @@ package com.heuristix.guns.client.render;
  * Date: 11/26/11
  * Time: 3:43 PM
  */
-public class RenderGrenade extends RenderCube {
+public class RenderGrenade extends RenderProjectile {
 	
 	public static final float SCALE = 0.025f;
 

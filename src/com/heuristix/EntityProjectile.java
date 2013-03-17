@@ -28,7 +28,7 @@ public abstract class EntityProjectile extends Entity {
 
     public static final float GRAVITY = 1;
 
-    public EntityLiving owner;
+    private EntityLiving owner;
     private Vec3 start;
 
     private int xTile;
@@ -63,8 +63,6 @@ public abstract class EntityProjectile extends Entity {
         changeVelocity(getSpeed());
     }
     
-    
-
     @Override
 	public void setLocationAndAngles(double x, double y, double z, float yaw, float pitch) {
 		super.setLocationAndAngles(x, y, z, yaw, pitch);
@@ -190,11 +188,6 @@ public abstract class EntityProjectile extends Entity {
                     }
                 }
             }
-            /*if (isCrit) {
-                for (int i = 0; i < 4; ++i) {
-                    worldObj.spawnParticle("crit", posX + motionX * i / 4.0, posY + motionY * i / 4.0, posZ + motionZ * i / 4.0, -motionX, -motionY + 0.2, -motionZ);
-                }
-            }  */
             posX += motionX;
             posY += motionY;
             posZ += motionZ;
@@ -206,7 +199,6 @@ public abstract class EntityProjectile extends Entity {
             while (rotationPitch - prevRotationPitch >= 180) {
                 prevRotationPitch += 360;
             }
-
             while (rotationYaw - prevRotationYaw < -180) {
                 prevRotationYaw -= 360;
             }
@@ -230,7 +222,6 @@ public abstract class EntityProjectile extends Entity {
     public boolean onEntityHit(Entity hit) {
         if (hit != null && (hit instanceof EntityLiving || hit instanceof EntityDragonPart)) {
             return damageEntityWithoutDelay(hit, Math.round(getDamage() * getDamageModifier()));
-                //ReflectionFacade.getInstance().invokeMethod(EntityLiving.class, hit, "damageEntity", new EntityDamageSource("living", owner), Math.round(getDamage() * getDamageModifier()));
         }
         return false;
     }
@@ -294,6 +285,10 @@ public abstract class EntityProjectile extends Entity {
         return Vec3.createVectorHelper(posX, posY, posZ);
     }
 
+    public void setOwner(EntityLiving owner) {
+    	this.owner = owner;
+    }
+    
     public EntityLiving getOwner() {
         return owner;
     }

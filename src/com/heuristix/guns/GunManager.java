@@ -74,7 +74,7 @@ public class GunManager {
 				}
 			})) {
 				if (f.getName().toLowerCase().endsWith(".gun2")) {
-					if (loadGun(f.getName(), new FileInputStream(f))) {
+					if (loadGun(f.getAbsolutePath(), new FileInputStream(f))) {
 						registered++;
 					}
 				} else {
@@ -126,7 +126,7 @@ public class GunManager {
 				} finally {
 					fout.close();
 				}
-				Log.fine(String.format("Updated gun file %s from version %s to %s", entry.getKey(),
+				Log.fine(String.format("Updated gun file %s from version %s to %s", entry.getKey().substring(entry.getKey().lastIndexOf(File.separatorChar)),
 						 ((Pair<String, byte[]>) entry.getValue()).getFirst(), AbstractGunBridge.VERSION), tgm.getClass());
 			}
 		}

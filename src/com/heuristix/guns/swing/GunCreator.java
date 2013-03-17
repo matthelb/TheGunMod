@@ -451,8 +451,10 @@ public class GunCreator extends AbstractGunBridge {
     protected void addResource(String resource, byte[] value) {
         if(resource.contains("gun") || resource.contains("projectile")) {
             try {
-                BufferedImage image = ImageIO.read(new ByteArrayInputStream(value));
-                ((GunPanel) tabbedPane.getSelectedComponent()).texturePanel.setTexture(image, resource.contains("gun"));
+            	if (value.length > 0) {
+	                BufferedImage image = ImageIO.read(new ByteArrayInputStream(value));
+	                ((GunPanel) tabbedPane.getSelectedComponent()).texturePanel.setTexture(image, resource.contains("gun"));
+            	}
             } catch (IOException e) {
                 Log.throwing(getClass(), "addResource(String resource, byte[] value)", e, TheGunMod.class);
             }
@@ -462,7 +464,9 @@ public class GunCreator extends AbstractGunBridge {
             ((GunPanel) tabbedPane.getSelectedComponent()).reloadSoundButton.updateButton(getReloadSound(), value);
         } else if(resource.contains("customScope")) {
             try {
-                ((GunPanel) tabbedPane.getSelectedComponent()).customScopeButton.updateImage(ImageIO.read(new ByteArrayInputStream(value)));
+            	if (value.length > 0) {
+            		((GunPanel) tabbedPane.getSelectedComponent()).customScopeButton.updateImage(ImageIO.read(new ByteArrayInputStream(value)));
+            	}
             } catch (IOException e) {
                 Log.throwing(getClass(), "addResource(String resource, byte[] value)", e, TheGunMod.class);
             }

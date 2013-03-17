@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
+import com.heuristix.EntityProjectile;
 import com.heuristix.ItemGun;
 import com.heuristix.ItemProjectileShooter;
 import com.heuristix.TheGunMod;
@@ -79,6 +80,8 @@ public class GunPacketHandler implements IPacketHandler {
 	            			case "TGMInfo":
 	            				switch (in.readInt()) {
 	            					case PACKET_FIRE_SUCCESS:
+	            						EntityProjectile projectile = (EntityProjectile) FMLClientHandler.instance().getClient().theWorld.getEntityByID(in.readInt());
+	            						projectile.setOwner(p);
 	            						ItemProjectileShooter shooter = TheGunMod.getEquippedShooter(p);
 	    			                    if (shooter != null && shooter instanceof ItemGun) {
 		            						double factor = Math.max(0.75, Math.min(com.heuristix.guns.helper.MathHelper.nextGaussian() + 1, 1.25));

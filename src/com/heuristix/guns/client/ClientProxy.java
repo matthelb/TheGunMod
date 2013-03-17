@@ -60,7 +60,7 @@ public class ClientProxy extends CommonProxy {
 	
 	@Override 
 	public void registerTextures(TheGunMod mod) {
-		ReflectionFacade.getInstance().setFieldValue(RenderEngine.class, FMLClientHandler.instance().getClient().renderEngine, "imageData", GLAllocation.createDirectByteBuffer(268435456));
+		//ReflectionFacade.getInstance().setFieldValue(RenderEngine.class, FMLClientHandler.instance().getClient().renderEngine, "imageData", GLAllocation.createDirectByteBuffer(1048576));
 		mod.registerTextures();
 		MinecraftForgeClient.preloadTexture(Resources.BLOCK_TEXTURES);
 	}
@@ -75,6 +75,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerObfuscatedNames() {
+		super.registerObfuscatedNames();
 		ReflectionFacade names = ReflectionFacade.getInstance();
         names.putField(EntityRenderer.class, "cameraZoom", "X");
         names.putField(RenderEngine.class, "imageData", "g");
@@ -83,7 +84,6 @@ public class ClientProxy extends CommonProxy {
         names.putField(Entity.class, "hurtResistantTime", "ae");
         names.putField(RenderItem.class, "itemRenderBlocks", "h");
         names.putField(SoundManager.class, "options", "f");
-        
 	}
 	
 	

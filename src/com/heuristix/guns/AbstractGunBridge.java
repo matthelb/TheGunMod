@@ -33,7 +33,7 @@ import com.heuristix.guns.util.Pair;
  */
 public abstract class AbstractGunBridge implements GunBridge {
 
-    public static final String VERSION = "1.5.1";
+    public static final String VERSION = "1.5.3";
 
     public static final List<Pair<String, String>> OBFUSCATED_CLASS_NAMES = new LinkedList<Pair<String, String>>();
 
@@ -182,8 +182,16 @@ public abstract class AbstractGunBridge implements GunBridge {
 
         methods.clear();
         methods.put("getName()Ljava/lang/String;", new Method(new BytecodeValue(getGunName())));
-        methods.put("getShootSound()Ljava/lang/String;", new Method(new BytecodeValue("guns." + getShootSound().substring(0,getShootSound().indexOf(".")))));
-        methods.put("getReloadSound()Ljava/lang/String;", new Method(new BytecodeValue("guns." + getReloadSound().substring(0, getReloadSound().indexOf(".")))));
+        String shootSound = getShootSound();
+        if (shootSound == null || shootSound.isEmpty()) {
+        	shootSound = ".";
+        }
+        methods.put("getShootSound()Ljava/lang/String;", new Method(new BytecodeValue("guns." + shootSound.substring(0, shootSound.indexOf(".")))));
+        String reloadSound = getReloadSound();
+        if (reloadSound == null || reloadSound.isEmpty()) {
+        	reloadSound = ".";
+        }
+        methods.put("getReloadSound()Ljava/lang/String;", new Method(new BytecodeValue("guns." + reloadSound.substring(0, reloadSound.indexOf(".")))));
         methods.put("getShotsPerMinute()I", new Method(new BytecodeValue(getShotsPerMinute())));
         methods.put("getFireMode()I", new Method(new BytecodeValue((getFireMode()).ordinal())));
         methods.put("getReloadTime()I", new Method(new BytecodeValue(getReloadTime())));
@@ -209,6 +217,9 @@ public abstract class AbstractGunBridge implements GunBridge {
             stringBytes = Util.getStringBytes(entry.getKey());
             outBytes.putByteArray(stringBytes, 0, stringBytes.length);
             bytes = entry.getValue();
+            if (bytes == null) {
+            	bytes = new byte[0];
+            }
             outBytes.putInt(bytes.length);
             outBytes.putByteArray(bytes, 0, bytes.length);
         }
@@ -219,6 +230,9 @@ public abstract class AbstractGunBridge implements GunBridge {
             stringBytes = Util.getStringBytes(entry.getKey());
             outBytes.putByteArray(stringBytes, 0, stringBytes.length);
             bytes = Util.getByteArray(entry.getValue());
+            if (bytes == null) {
+            	bytes = new byte[0];
+            }
             outBytes.putInt(bytes.length);
             outBytes.putByteArray(bytes, 0, bytes.length);
         }

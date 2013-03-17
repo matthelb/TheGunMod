@@ -32,7 +32,7 @@ public class GunClientTickHandler extends GunTickHandler {
 
 	public static int recoilY, recoilX;
 	static float currentZoom;
-	static boolean isZoomed;
+	public static boolean isZoomed;
 	static ItemProjectileShooter lastShooter;
 
 	@Override

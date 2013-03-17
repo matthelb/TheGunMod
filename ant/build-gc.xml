@@ -6,7 +6,7 @@
 	<property name="resources.dir" value="../res" />
 	<property name="classes.dir" value="${build.dir}/classes" />
 	<property name="jar.dir" value="bin/gc" />
-	<property name="project.version" value="1.5.1" />
+	<property name="project.version" value="1.5.3" />
 	<property name="forge.dir" value="../../forge" />
 	<property name="mcp.dir" value="${forge.dir}/mcp" />
 	<property name="one-jar.dist.dir" value="C:/Users/Matt/My Files/Development/Java/lib/one-jar"/>

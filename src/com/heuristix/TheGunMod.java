@@ -38,7 +38,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
-@Mod(modid="TheGunMod", name="TheGunMod", version="@VERSION@")
+@Mod(modid="@NAME@", name="@NAME@", version="@VERSION@")
 @NetworkMod(clientSideRequired=true, serverSideRequired=false, channels={"TGMShootAction", "TGMArrowClick", "TGMInfo"}, packetHandler=GunPacketHandler.class)
 public class TheGunMod extends BaseMod {
 
@@ -61,13 +61,12 @@ public class TheGunMod extends BaseMod {
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
         DEFAULT_CONFIG.setProperty("key.zoom", Keyboard.getKeyName(Keyboard.KEY_Z));
         DEFAULT_CONFIG.setProperty("guns.dir", IOHelper.getHeuristixDir("guns").getAbsolutePath());
+        DEFAULT_CONFIG.setProperty("guns.max_resolution", String.valueOf(256));
         TheGunMod mod = new TheGunMod();
         DEFAULT_CONFIG.setProperty("guns.version", mod.getModVersion());
         mod = null;
     }
     
-    
-
     public TheGunMod() {
         this.gunManager = new GunManager(this);
     }
@@ -151,6 +150,7 @@ public class TheGunMod extends BaseMod {
         zoomKey = Keyboard.getKeyIndex(config.getProperty("key.zoom"));
         gunsDir = new File(config.getProperty("guns.dir"));
         blockArmoryId = Integer.parseInt(config.getProperty("block.armory.id"));
+        textureManager.setMaxResolution(256);
     }
 
     public String getPropertiesId() {
