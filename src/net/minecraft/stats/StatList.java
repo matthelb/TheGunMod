@@ -139,38 +139,38 @@ public class StatList
     {
         if (blockStatsInitialized && itemStatsInitialized)
         {
-            HashSet var0 = new HashSet();
-            Iterator var1 = CraftingManager.getInstance().getRecipeList().iterator();
+            HashSet hashset = new HashSet();
+            Iterator iterator = CraftingManager.getInstance().getRecipeList().iterator();
 
-            while (var1.hasNext())
+            while (iterator.hasNext())
             {
-                IRecipe var2 = (IRecipe)var1.next();
+                IRecipe irecipe = (IRecipe)iterator.next();
 
-                if (var2.getRecipeOutput() != null)
+                if (irecipe.getRecipeOutput() != null)
                 {
-                    var0.add(Integer.valueOf(var2.getRecipeOutput().itemID));
+                    hashset.add(Integer.valueOf(irecipe.getRecipeOutput().itemID));
                 }
             }
 
-            var1 = FurnaceRecipes.smelting().getSmeltingList().values().iterator();
+            iterator = FurnaceRecipes.smelting().getSmeltingList().values().iterator();
 
-            while (var1.hasNext())
+            while (iterator.hasNext())
             {
-                ItemStack var4 = (ItemStack)var1.next();
-                var0.add(Integer.valueOf(var4.itemID));
+                ItemStack itemstack = (ItemStack)iterator.next();
+                hashset.add(Integer.valueOf(itemstack.itemID));
             }
 
             objectCraftStats = new StatBase[32000];
-            var1 = var0.iterator();
+            iterator = hashset.iterator();
 
-            while (var1.hasNext())
+            while (iterator.hasNext())
             {
-                Integer var5 = (Integer)var1.next();
+                Integer integer = (Integer)iterator.next();
 
-                if (Item.itemsList[var5.intValue()] != null)
+                if (Item.itemsList[integer.intValue()] != null)
                 {
-                    String var3 = StatCollector.translateToLocalFormatted("stat.craftItem", new Object[] {Item.itemsList[var5.intValue()].getStatName()});
-                    objectCraftStats[var5.intValue()] = (new StatCrafting(16842752 + var5.intValue(), var3, var5.intValue())).registerStat();
+                    String s = StatCollector.translateToLocalFormatted("stat.craftItem", new Object[] {Item.itemsList[integer.intValue()].getStatName()});
+                    objectCraftStats[integer.intValue()] = (new StatCrafting(16842752 + integer.intValue(), s, integer.intValue())).registerStat();
                 }
             }
 
@@ -183,20 +183,20 @@ public class StatList
      */
     private static StatBase[] initMinableStats(String par0Str, int par1)
     {
-        StatBase[] var2 = new StatBase[Block.blocksList.length];
+        StatBase[] astatbase = new StatBase[Block.blocksList.length];
 
-        for (int var3 = 0; var3 < Block.blocksList.length; ++var3)
+        for (int j = 0; j < Block.blocksList.length; ++j)
         {
-            if (Block.blocksList[var3] != null && Block.blocksList[var3].getEnableStats())
+            if (Block.blocksList[j] != null && Block.blocksList[j].getEnableStats())
             {
-                String var4 = StatCollector.translateToLocalFormatted(par0Str, new Object[] {Block.blocksList[var3].translateBlockName()});
-                var2[var3] = (new StatCrafting(par1 + var3, var4, var3)).registerStat();
-                objectMineStats.add((StatCrafting)var2[var3]);
+                String s1 = StatCollector.translateToLocalFormatted(par0Str, new Object[] {Block.blocksList[j].getLocalizedName()});
+                astatbase[j] = (new StatCrafting(par1 + j, s1, j)).registerStat();
+                objectMineStats.add((StatCrafting)astatbase[j]);
             }
         }
 
-        replaceAllSimilarBlocks(var2);
-        return var2;
+        replaceAllSimilarBlocks(astatbase);
+        return astatbase;
     }
 
     /**
@@ -209,16 +209,16 @@ public class StatList
             par0ArrayOfStatBase = new StatBase[32000];
         }
 
-        for (int var5 = par3; var5 < par4; ++var5)
+        for (int l = par3; l < par4; ++l)
         {
-            if (Item.itemsList[var5] != null)
+            if (Item.itemsList[l] != null)
             {
-                String var6 = StatCollector.translateToLocalFormatted(par1Str, new Object[] {Item.itemsList[var5].getStatName()});
-                par0ArrayOfStatBase[var5] = (new StatCrafting(par2 + var5, var6, var5)).registerStat();
+                String s1 = StatCollector.translateToLocalFormatted(par1Str, new Object[] {Item.itemsList[l].getStatName()});
+                par0ArrayOfStatBase[l] = (new StatCrafting(par2 + l, s1, l)).registerStat();
 
-                if (var5 >= 256)
+                if (l >= 256)
                 {
-                    itemStats.add((StatCrafting)par0ArrayOfStatBase[var5]);
+                    itemStats.add((StatCrafting)par0ArrayOfStatBase[l]);
                 }
             }
         }
@@ -234,12 +234,12 @@ public class StatList
             par0ArrayOfStatBase = new StatBase[32000];
         }
 
-        for (int var5 = par3; var5 < par4; ++var5)
+        for (int l = par3; l < par4; ++l)
         {
-            if (Item.itemsList[var5] != null && Item.itemsList[var5].isDamageable())
+            if (Item.itemsList[l] != null && Item.itemsList[l].isDamageable())
             {
-                String var6 = StatCollector.translateToLocalFormatted(par1Str, new Object[] {Item.itemsList[var5].getStatName()});
-                par0ArrayOfStatBase[var5] = (new StatCrafting(par2 + var5, var6, var5)).registerStat();
+                String s1 = StatCollector.translateToLocalFormatted(par1Str, new Object[] {Item.itemsList[l].getStatName()});
+                par0ArrayOfStatBase[l] = (new StatCrafting(par2 + l, s1, l)).registerStat();
             }
         }
 
@@ -255,7 +255,7 @@ public class StatList
         replaceSimilarBlocks(par0ArrayOfStatBase, Block.waterStill.blockID, Block.waterMoving.blockID);
         replaceSimilarBlocks(par0ArrayOfStatBase, Block.lavaStill.blockID, Block.lavaStill.blockID);
         replaceSimilarBlocks(par0ArrayOfStatBase, Block.pumpkinLantern.blockID, Block.pumpkin.blockID);
-        replaceSimilarBlocks(par0ArrayOfStatBase, Block.stoneOvenActive.blockID, Block.stoneOvenIdle.blockID);
+        replaceSimilarBlocks(par0ArrayOfStatBase, Block.furnaceBurning.blockID, Block.furnaceIdle.blockID);
         replaceSimilarBlocks(par0ArrayOfStatBase, Block.oreRedstoneGlowing.blockID, Block.oreRedstone.blockID);
         replaceSimilarBlocks(par0ArrayOfStatBase, Block.redstoneRepeaterActive.blockID, Block.redstoneRepeaterIdle.blockID);
         replaceSimilarBlocks(par0ArrayOfStatBase, Block.torchRedstoneActive.blockID, Block.torchRedstoneIdle.blockID);

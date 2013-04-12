@@ -218,8 +218,8 @@ public class GunManager {
             }
         }
         if (itemProjectile != null) {
-            itemProjectile.setIconIndex(tgm.textureManager.registerTexture(projectileTextures.toArray(new BufferedImage[projectileTextures.size()])));
-            tgm.registerItem(itemProjectile);
+        	tgm.registerItem(itemProjectile);
+            tgm.textureMap.put("items:" + itemProjectile.getUnlocalizedName(), projectileTextures.toArray(new BufferedImage[projectileTextures.size()]));
         }
 
         Class<? > itemGunClass = nameToEntityProjectileClassMap.get(gunClasses.get(2).getFirst());
@@ -232,8 +232,8 @@ public class GunManager {
             itemGun = (ItemGun) itemGunConstructor.newInstance(gun.getItemGunId(), itemProjectile);
         }
         if (itemGun != null) {
-            itemGun.setIconIndex(tgm.textureManager.registerTexture(gunTextures.toArray(new BufferedImage[projectileTextures.size()])));
-            tgm.registerItem(itemGun);
+        	tgm.registerItem(itemGun);
+            tgm.textureMap.put("items:" + itemGun.getUnlocalizedName(), gunTextures.toArray(new BufferedImage[projectileTextures.size()]));
             TheGunMod.proxy.registerItemRenderer(itemGun);
             tgm.soundManager.registerSound(itemGun.getShootSound().replaceFirst("\\.", "/") + ".ogg", resources.get("shootSound"));
             if (resources.get("reloadSound") != null) {

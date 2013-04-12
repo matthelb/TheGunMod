@@ -1,13 +1,18 @@
 package com.heuristix.guns;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 
 import com.heuristix.TheGunMod;
 import com.heuristix.guns.client.Resources;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,9 +22,12 @@ import com.heuristix.guns.client.Resources;
  */
 public class BlockCraftGuns extends BlockCustom {
 
+	private Icon[] icons;
+	
     public BlockCraftGuns(int id) {
         super(id, Material.iron);
         this.setCreativeTab(CreativeTabs.tabDecorations);
+        this.icons = new Icon[2];
     }
 
     @Override
@@ -29,17 +37,27 @@ public class BlockCraftGuns extends BlockCustom {
     }
 
     @Override
-    public int getBlockTextureFromSide(int side) {
+    @SideOnly(Side.CLIENT)
+    public Icon getBlockTextureFromSideAndMetadata(int side, int damage) {
         if(side == 0) {
-            return 2;
+            return icons[1];
         } else if(side == 1) {
-            return 0;
+            return blockIcon;
         } else {
-            return 1;
+            return icons[0];
         }
     }
+    
+    
+    @Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister iconRegister) {
+		blockIcon = iconRegister.registerIcon("guns:craft_guns_top");
+		icons[0] = iconRegister.registerIcon("guns:craft_guns_bottom");
+		icons[1] = iconRegister.registerIcon("guns:craft_guns_side");
+	}
 
-    public String getName() {
+	public String getName() {
         return "Armory";
     }
 
@@ -67,8 +85,4 @@ public class BlockCraftGuns extends BlockCustom {
         return false;
     }
 
-    @Override
-    public String getTextureFile() {
-    	return Resources.BLOCK_TEXTURES;
-    }
 }

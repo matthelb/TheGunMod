@@ -272,70 +272,6 @@ public class Util {
         t.addVertex(x + x1, y + 0, 0);
         t.draw();
     }
-
-    public static void drawItemIntoGui(RenderBlocks renderBlocks, FontRenderer fontRenderer, RenderEngine renderEngine, ItemStack itemStack, double x, double y, double z, boolean useColor, float scale) {
-        int itemId = itemStack.itemID;
-        int iconIndex = itemStack.getIconIndex();
-        int damage = itemStack.getItemDamage();
-        if (itemId < 256 && RenderBlocks.renderItemIn3d(Block.blocksList[itemId].getRenderType())) {
-            renderEngine.bindTexture(renderEngine.getTexture("/terrain.png"));
-            Block block = Block.blocksList[itemId];
-            GL11.glPushMatrix();
-            GL11.glTranslatef((float) x - 2, (float)y + 3, -3F + (float)z);
-            GL11.glScalef(10, 10, 10);
-            GL11.glTranslatef(1, 0.5f, 1);
-            GL11.glScalef(1, 1, -1);
-            GL11.glRotatef(210, 1, 0, 0);
-            GL11.glRotatef(45, 0, 1, 0);
-            if (useColor) {
-                int color = itemStack.getItem().getColorFromItemStack(itemStack, 0);
-                float r = (color >> 16 & 0xFF) / 255f;
-                float g = (color >> 8 & 0xFF) / 255f;
-                float b = (color & 0xFF) / 255f;
-                GL11.glColor4f(r, g, b, 1);
-            }
-            GL11.glRotatef(-90, 0, 1, 0);
-            renderBlocks.useInventoryTint = useColor;
-            renderBlocks.renderBlockAsItem(block, damage, 1);
-            renderBlocks.useInventoryTint = true;
-            GL11.glPopMatrix();
-        } else if (Item.itemsList[itemId].requiresMultipleRenderPasses()) {
-            GL11.glDisable(GL11.GL_LIGHTING);
-            renderEngine.bindTexture(renderEngine.getTexture("/gui/items.png"));
-            for (int k1 = 0; k1 <= 1; k1++)
-            {
-                int actualIconIndex = Item.itemsList[itemId].getIconFromDamageForRenderPass(damage, k1);
-                if (useColor) {
-                    int color = itemStack.getItem().getColorFromItemStack(itemStack, 0);
-                    float r = (float)(color >> 16 & 0xff) / 255F;
-                    float g = (float)(color >> 8 & 0xff) / 255F;
-                    float b = (float)(color & 0xff) / 255F;
-                    GL11.glColor4f(r, g, b, 1.0F);
-                }
-                renderTexturedQuad(Tessellator.instance, x, y, z, (actualIconIndex % 16) * 16, (actualIconIndex / 16) * 16, (int) (16 * scale), (int) (16 * scale), 16, 16);
-            }
-
-            GL11.glEnable(GL11.GL_LIGHTING);
-        } else if (iconIndex >= 0) {
-            GL11.glDisable(GL11.GL_LIGHTING);
-            if (itemId < 256) {
-                renderEngine.bindTexture(renderEngine.getTexture("/terrain.png"));
-            }
-            else {
-                renderEngine.bindTexture(renderEngine.getTexture("/gui/items.png"));
-            }
-            if (useColor) {
-                int color = itemStack.getItem().getColorFromItemStack(itemStack, 0);
-                float r = (float)(color >> 16 & 0xff) / 255F;
-                float g = (float)(color >> 8 & 0xff) / 255F;
-                float b = (float)(color & 0xff) / 255F;
-                GL11.glColor4f(r, g, b, 1.0F);
-            }
-            renderTexturedQuad(Tessellator.instance, x, y, z, (iconIndex % 16) * 16, (iconIndex / 16) * 16, (int) (16 * scale), (int) (16 * scale), 16, 16);
-            GL11.glEnable(GL11.GL_LIGHTING);
-        }
-        GL11.glEnable(GL11.GL_CULL_FACE);
-    }
     
     public static void renderTexturedQuad(Tessellator t, double x, double y, double z, double iconX, double iconY, double width, double height, double iconWidth, int iconHeight) {
         float scaleFactor1 = 0.00390625F;
@@ -400,7 +336,7 @@ public class Util {
 
     public static Dimension getTextureDimensions(boolean items, RenderEngine engine) {
         if(!isDefaultTextureBound(items, engine)) {
-            engine.bindTexture(items ? engine.getTexture("/gui/items.png") : engine.getTexture("/terrain.png"));
+            engine.bindTexture(items ? "/gui/items.png" : "/terrain.png");
         }
         return new Dimension(GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH) / 16, GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT) / 16);
     }

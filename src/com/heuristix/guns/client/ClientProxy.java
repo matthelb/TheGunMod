@@ -62,7 +62,6 @@ public class ClientProxy extends CommonProxy {
 	public void registerTextures(TheGunMod mod) {
 		//ReflectionFacade.getInstance().setFieldValue(RenderEngine.class, FMLClientHandler.instance().getClient().renderEngine, "imageData", GLAllocation.createDirectByteBuffer(1048576));
 		mod.registerTextures();
-		MinecraftForgeClient.preloadTexture(Resources.BLOCK_TEXTURES);
 	}
 	
 	@Override 

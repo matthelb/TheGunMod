@@ -35,7 +35,7 @@ public class EntityBullet extends EntityProjectile {
 
     @Override
     public float getSpeed() {
-        return 0.01f;
+        return 128;
     }
 
     @Override
@@ -75,8 +75,8 @@ public class EntityBullet extends EntityProjectile {
             World world = worldObj;
             world.playAuxSFX(2001, x, y, z, block.blockID + world.getBlockMetadata(x, y, z) * 256);
             int i1 = world.getBlockMetadata(x, y, z);
-            boolean notified = world.setBlockWithNotify(x, y, z, 0);
-            if (block != null && notified) {
+            world.notifyBlockChange(x, y, z, 0);
+            if (block != null) {
                 block.onBlockDestroyedByPlayer(world, x, y, z, i1);
             }
             return true;

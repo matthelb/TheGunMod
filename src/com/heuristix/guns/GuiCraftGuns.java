@@ -96,14 +96,13 @@ public class GuiCraftGuns extends GuiContainer {
     private void renderItemIcon(Item item, int amount, int x, int y, float scale, int color) {
         ItemStack stack = new ItemStack(item, amount);
         RenderHelper.renderItemIntoGUI(itemRenderer, fontRenderer, mc.renderEngine, stack, x, y, scale);
-        RenderHelper.renderItemOverlayIntoGUI(itemRenderer, fontRenderer, mc.renderEngine, stack, x, y, scale, color); 
+        RenderHelper.renderItemOverlayIntoGUI(fontRenderer, mc.renderEngine, stack, x, y, scale, color); 
     }
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j) {
-        int texture = mc.renderEngine.getTexture(Resources.CRAFT_GUNS_TEXTURE);
         GL11.glColor4f(1, 1, 1, 1);
-        mc.renderEngine.bindTexture(texture);
+        mc.renderEngine.bindTexture(Resources.CRAFT_GUNS_TEXTURE);
         int x = getX();
         int y = getY();
         drawTexturedModalRect(x, y, 0, 0, xSize, ySize);

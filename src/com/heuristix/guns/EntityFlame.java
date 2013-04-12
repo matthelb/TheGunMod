@@ -39,13 +39,6 @@ public class EntityFlame extends EntityIncendiaryBullet {
         this.height = 0.5f;
     }
 
-    /*@Override
-    public void onUpdate() {
-        super.onUpdate();
-        if(isEntityAlive())
-            worldObj.spawnParticle("flame", posX + rand.nextFloat(), posY + rand.nextFloat(), posZ + rand.nextFloat(), 0, 0, 0);
-    }*/
-
     @Override
     public boolean onEntityHit(Entity hit) {
         if(super.onEntityHit(hit)) {
@@ -81,7 +74,7 @@ public class EntityFlame extends EntityIncendiaryBullet {
         }
         if (worldObj.getBlockId(x, y, z) == 0) {
             worldObj.playSoundEffect(posX, posY, posZ, "fire.ignite", 1.0f, MathHelper.nextFloat() * 0.25f + 0.8f);
-            worldObj.setBlockWithNotify(x, y, z, Block.fire.blockID);
+            worldObj.setBlock(x, y, z, Block.fire.blockID);
             return true;
         }
         return false;
@@ -92,7 +85,7 @@ public class EntityFlame extends EntityIncendiaryBullet {
     @Override
 	@SideOnly(Side.CLIENT)
 	public boolean canRenderOnFire() {
-		return true;
+		return !isWithinDistanceOfOwner(2);
 	}
 
 	public float getSpeed() {

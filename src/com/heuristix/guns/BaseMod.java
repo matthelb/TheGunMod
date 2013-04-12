@@ -17,6 +17,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 
 import com.heuristix.guns.client.render.TextureManager;
+import com.heuristix.guns.client.render.TextureMap;
 import com.heuristix.guns.util.Log;
 import com.heuristix.guns.util.ReflectionFacade;
 
@@ -28,13 +29,13 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 public abstract class BaseMod implements IMod {
 
 	protected final SoundManager soundManager;
-	protected final TextureManager textureManager;
+	protected final TextureMap textureMap;
 	
 	private boolean texturesRegistered, soundsRegistered;
 
 	public BaseMod() {
 		this.soundManager = new SoundManager();
-		this.textureManager = new TextureManager();
+		this.textureMap = new TextureMap();
 	}
 	
 	public final void load() {
@@ -65,17 +66,17 @@ public abstract class BaseMod implements IMod {
     }
 	
 	public void registerItem(ItemCustom item) {
-		item.setItemName(item.getName().toLowerCase().replaceAll(" ", "_"));
+		item.setUnlocalizedName(item.getName().toLowerCase().replaceAll(" ", "_"));
 		LanguageRegistry.addName(item, item.getName());
 		try {
-			GameRegistry.registerItem(item, item.getItemName());
+			GameRegistry.registerItem(item, item.getUnlocalizedName());
 		} catch (LoaderException ignored) { }
 	}
 	
 	public void registerBlock(BlockCustom block) {
-		block.setBlockName(block.getName().toLowerCase().replaceAll(" ", "_"));
+		block.setUnlocalizedName(block.getName().toLowerCase().replaceAll(" ", "_"));
 		LanguageRegistry.addName(block, block.getName());
-		GameRegistry.registerBlock(block, ItemBlock.class, block.getBlockName());
+		GameRegistry.registerBlock(block, ItemBlock.class, block.getUnlocalizedName());
 		
 	}
 
@@ -85,17 +86,7 @@ public abstract class BaseMod implements IMod {
 	}
 	
 	public void registerTextures() {
-		File folder = textureManager.writeTemporaryTextures(getPropertiesId());
-		if (folder != null) {
-			try {
-				addURLToClassLoader(folder.toURI().toURL(), (URLClassLoader) ITexturePack.class.getClassLoader());
-				MinecraftForgeClient.preloadTexture("/" + TextureManager.getCurrentTextureFileName());
-				texturesRegistered = true;
-			} catch (MalformedURLException e) {
-				Log.throwing(getClass(), "registerTextures()", e, getClass());
-			}
-		}
-		
+		textureMap.writeTemporaryTextures(getPropertiesId());		
 	}
 	
 	public boolean isTexturesRegistered() {
@@ -106,6 +97,9 @@ public abstract class BaseMod implements IMod {
 		return soundsRegistered;
 	}
 
+	public TextureMap getTextureMap() {
+		return textureMap;
+	}
 	
 	@Override
 	public String getModName() {

@@ -123,6 +123,7 @@ public class ImageHelper {
         return closest;
     }
 	
+	
 	public static BufferedImage getCompatibleImage(int width, int height, int transparency) {
 		return GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration().createCompatibleImage(width, height, transparency);
 	}

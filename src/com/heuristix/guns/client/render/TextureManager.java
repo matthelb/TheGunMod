@@ -28,7 +28,7 @@ public class TextureManager {
 		}
 	}
 	
-	public int registerTexture(BufferedImage... images) {
+	public int registerTexture(String name, BufferedImage... images) {
 		int textureIndex = -1;
 		for (BufferedImage image : images) {
 			int index = MathHelper.log2(image.getWidth()) - 4;
@@ -68,7 +68,7 @@ public class TextureManager {
 	public static int getCurrentTextureSize() {
 		Minecraft client = FMLClientHandler.instance().getClient();
 		if (client != null) {
-			return TextureFXManager.instance().getTextureDimensions(client.renderEngine.getTexture("/gui/items.png")).width >> 4;
+			return TextureFXManager.instance().getTextureDimensions("/gui/items.png").width >> 4;
 		}
 		return 16;
 	}

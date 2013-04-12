@@ -12,6 +12,8 @@ import net.minecraftforge.client.event.TextureLoadEvent;
 import net.minecraftforge.client.event.sound.SoundLoadEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 import org.lwjgl.input.Keyboard;
 
@@ -56,12 +58,11 @@ public class TheGunMod extends BaseMod {
     public static final boolean DEBUG = false;
     
     static {
-        //TODO add new obfuscation names
         DEFAULT_CONFIG.setProperty("block.armory.id", String.valueOf(212));
         DEFAULT_CONFIG.setProperty("key.reload", Keyboard.getKeyName(Keyboard.KEY_R));
         DEFAULT_CONFIG.setProperty("key.zoom", Keyboard.getKeyName(Keyboard.KEY_Z));
         DEFAULT_CONFIG.setProperty("guns.dir", IOHelper.getHeuristixDir("guns").getAbsolutePath());
-        DEFAULT_CONFIG.setProperty("guns.max_resolution", String.valueOf(256));
+        DEFAULT_CONFIG.setProperty("guns.max_resolution", String.valueOf(16));
         TheGunMod mod = new TheGunMod();
         DEFAULT_CONFIG.setProperty("guns.version", mod.getModVersion());
         mod = null;
@@ -71,7 +72,7 @@ public class TheGunMod extends BaseMod {
         this.gunManager = new GunManager(this);
     }
     
-	@Instance("TheGunMod")
+	@Instance("@NAME@")
 	public static TheGunMod instance;
 	
 	@SidedProxy(clientSide = "com.heuristix.guns.client.ClientProxy", serverSide = "com.heuristix.guns.CommonProxy")
@@ -85,9 +86,9 @@ public class TheGunMod extends BaseMod {
 	
 	@SideOnly(Side.CLIENT)
 	@ForgeSubscribe
-	public void onTexturePackChange(TextureLoadEvent event) {
-		if (isTexturesRegistered()) {
-			MinecraftForgeClient.preloadTexture("/" + TextureManager.getTextureFileName(event.pack.getTexturePackResolution()));
+	public void onPlayerInteract(PlayerInteractEvent event) {
+		if (event.action == Action.RIGHT_CLICK_BLOCK && getEquippedShooter(event.entityPlayer) != null) {
+			event.setCanceled(true);
 		}
 	}
 	
@@ -150,7 +151,7 @@ public class TheGunMod extends BaseMod {
         zoomKey = Keyboard.getKeyIndex(config.getProperty("key.zoom"));
         gunsDir = new File(config.getProperty("guns.dir"));
         blockArmoryId = Integer.parseInt(config.getProperty("block.armory.id"));
-        textureManager.setMaxResolution(256);
+        textureMap.setMaxResolution(Integer.parseInt(config.getProperty("guns.max_resolution")));
     }
 
     public String getPropertiesId() {

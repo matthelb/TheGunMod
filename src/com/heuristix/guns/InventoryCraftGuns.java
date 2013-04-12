@@ -11,8 +11,8 @@ import net.minecraft.item.ItemStack;
  */
 public class InventoryCraftGuns extends InventoryBasic {
 
-    public InventoryCraftGuns(String name, int size) {
-        super(name, size);
+    public InventoryCraftGuns(String name, boolean localized, int size) {
+        super(name, localized, size);
     }
 
     @Override

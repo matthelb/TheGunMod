@@ -2,6 +2,9 @@ package com.heuristix;
 
 import java.awt.image.BufferedImage;
 
+import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.renderer.texture.TextureStitched;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,7 +14,11 @@ import net.minecraft.world.World;
 
 import com.heuristix.guns.Util;
 import com.heuristix.guns.client.render.TextureManager;
+import com.heuristix.guns.client.render.TextureStitchedCustom;
 import com.heuristix.guns.helper.InventoryHelper;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Created by IntelliJ IDEA.
@@ -165,8 +172,17 @@ public abstract class ItemGun extends ItemProjectileShooter {
     }
 
 	@Override
-	public String getTextureFile() {
-  		return "/" + TextureManager.getCurrentTextureFileName();
+	@SideOnly(Side.CLIENT)
+	public void updateIcons(IconRegister iconRegister) {
+		if (iconRegister instanceof TextureMap && TheGunMod.instance != null) {
+			String name = getUnlocalizedName().substring(getUnlocalizedName().indexOf('.') + 1);
+			TextureStitched texture = new TextureStitchedCustom(name, TheGunMod.instance);
+			((TextureMap) iconRegister).setTextureEntry(name, texture);
+			iconIndex = texture;
+			//registerIcon("guns:" + getUnlocalizedName().substring(getUnlocalizedName().indexOf('.') + 1));
+		}
 	}
+    
+    
     
 }

@@ -19,7 +19,7 @@ public class RenderProjectile extends RenderCube {
 	}
 
 	public void renderEntityProjectile(EntityProjectile entity, double x, double y, double z, float yaw, float pitch) {
-		if (entity.getPosition().subtract(entity.getOwner().getPosition(1)).lengthVector() > 1) {
+		if (!entity.isWithinDistanceOfOwner(2)) {
 			super.doRender(entity, x, y, z, yaw, pitch);
 		}
 	}

@@ -52,7 +52,7 @@ public class ContainerCraftGuns extends Container {
     private int index;
 
     public ContainerCraftGuns(EntityPlayer player, boolean creative) {
-        this.inventory = new InventoryCraftGuns("guns.crafting", 2);
+        this.inventory = new InventoryCraftGuns("guns.crafting", true, 2);
         addSlotToContainer(new Slot(inventory, 0, PIXEL_CURRENT_GUN_SLOT.x, PIXEL_CURRENT_GUN_SLOT.y));
         addSlotToContainer(new Slot(inventory, 1, PIXEL_CURRENT_PROJECTILE_SLOT.x, PIXEL_CURRENT_PROJECTILE_SLOT.y));
         for (int row = 0; row < 3; row++) {

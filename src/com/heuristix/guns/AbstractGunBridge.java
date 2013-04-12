@@ -45,6 +45,7 @@ public abstract class AbstractGunBridge implements GunBridge {
 
     static {
         //TODO add new obfuscation names (update version)
+    	OBFUSCATED_CLASS_NAMES.add(new Pair<String, String>("aab", "ng"));
     	OBFUSCATED_CLASS_NAMES.add(new Pair<String, String>("yc", "md"));
         OBFUSCATED_CLASS_NAMES.add(new Pair<String, String>("xv", "md"));
         OBFUSCATED_CLASS_NAMES.add(new Pair<String, String>("xe", "ln"));
